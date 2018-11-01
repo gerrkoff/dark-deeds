@@ -1,8 +1,9 @@
 import * as React from 'react'
 import { connect } from 'react-redux'
 
-export function mapStateToProps({ tasks }: any) {
+export function mapStateToProps({ tasks, router }: any) {
     return {
+        path: router.location.pathname,
         tasks
     }
 }
@@ -10,12 +11,14 @@ export function mapStateToProps({ tasks }: any) {
 export default connect(mapStateToProps)(Hello)
 
 interface IProps {
-    tasks: any
+    tasks: any,
+    path: string
 }
-function Hello({ tasks }: IProps) {
+function Hello({ tasks, path }: IProps) {
     return (
         <div>
             {tasks.loading ? 'LOADING' : 'NOT LOADING'}
+            {path}
         </div>
     )
 }
