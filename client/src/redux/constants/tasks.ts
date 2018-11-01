@@ -1,0 +1,2 @@
+export const TASKS_LOADING = 'TASKS_LOADING'
+export type TASKS_LOADING = typeof TASKS_LOADING
