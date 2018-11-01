@@ -1,10 +1,14 @@
 {
-  "extends": ["tslint:recommended", "tslint-react", "tslint-config-prettier"],
-  "linterOptions": {
-    "exclude": [
-      "config/**/*.js",
-      "node_modules/**/*.ts",
-      "coverage/lcov-report/*.js"
-    ]
-  }
+    "extends": ["tslint:recommended", "tslint-react", "tslint-config-prettier", "tslint-config-standard"],
+    "linterOptions": {
+      "exclude": [
+        "config/**/*.js",
+        "node_modules/**/*.ts",
+        "coverage/lcov-report/*.js"
+      ]
+    },
+    "rules": {
+      "ter-indent": [true, 4, { "SwitchCase": 1 }],
+      "space-before-function-paren": [true, "never"]
+    }
 }
