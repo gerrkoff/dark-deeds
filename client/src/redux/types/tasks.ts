@@ -1,3 +1,6 @@
+import { Task } from '../../models'
+
 export interface ITasksState {
-    loading: boolean
+    loading: boolean,
+    tasks: Task[]
 }

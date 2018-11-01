@@ -1,16 +1,18 @@
-import { push, RouterAction } from 'connected-react-router'
+import { push } from 'connected-react-router'
 import { connect } from 'react-redux'
-import { Dispatch } from 'redux'
 import { App } from '../components/app'
+import { loadTasks } from '../redux/actions'
 
-function mapStateToProps({ router }: any) {
+function mapStateToProps({ router, tasks }: any) {
     return {
+        appLoading: tasks.loading,
         path: router.location.pathname
     }
 }
 
-function mapDispatchToProps(dispatch: Dispatch<RouterAction>) {
+function mapDispatchToProps(dispatch: any) {
     return {
+        loadTasks: () => dispatch(loadTasks()),
         navigateTo: (path: string) => dispatch(push(path))
     }
 }

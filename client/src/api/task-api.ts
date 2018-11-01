@@ -2,7 +2,7 @@ import { Task } from '../models'
 
 const service = {
     fetchTasks(): Promise<Task[]> {
-        return new Promise(resolve => setTimeout(() => resolve(tasks), 3000))
+        return new Promise(resolve => setTimeout(() => resolve(tasks), 1000))
     }
 }
 

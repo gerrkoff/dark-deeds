@@ -5,6 +5,7 @@ import * as ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
 import { Route, Switch } from 'react-router-dom'
 import { applyMiddleware, compose, createStore } from 'redux'
+import thunk from 'redux-thunk'
 import { NotFound } from './components/app'
 import { Day } from './components/day'
 import { Overview } from './components/overview'
@@ -23,7 +24,8 @@ const store = createStore<any, any, any, any>(
     {},
     compose(
         applyMiddleware(
-          routerMiddleware(history)
+          routerMiddleware(history),
+          thunk
         )
     )
 )
