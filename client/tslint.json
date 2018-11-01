@@ -10,6 +10,7 @@
     "rules": {
       "ter-indent": [true, 4, { "SwitchCase": 1 }],
       "space-before-function-paren": [true, "never"],
-      "jsx-no-lambda": false
+      "jsx-no-lambda": false,
+      "no-console": false
     }
 }
