@@ -2,12 +2,8 @@ import { DateHelper } from '../../helpers'
 
 test('[toDateFromSpecialFormat] positive', () => {
     const result = DateHelper.toDateFromSpecialFormat('20180704')
-    if (result === null) {
-        throw new Error('result should not be null')
-    } else {
-        expect(result.getTime())
-            .toBe(new Date(2018, 6, 4).getTime())
-    }
+    expect(result!.getTime())
+        .toBe(new Date(2018, 6, 4).getTime())
 })
 
 test('[toDateFromSpecialFormat] null if incorrect string', () => {

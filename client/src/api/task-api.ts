@@ -68,7 +68,7 @@ function genDate(date: Date, dayDiff: number): Date {
 
 function getTask(id: number, dayDiff: number | null): Task {
     const task = new Task(id, `${id} ${todoSamples[rand(4) - 1]}`, null)
-    if (dayDiff != null) {
+    if (dayDiff !== null) {
         task.dateTime = genDate(monday, dayDiff)
     }
     return task
