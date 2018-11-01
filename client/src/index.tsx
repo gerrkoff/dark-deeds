@@ -6,6 +6,9 @@ import { Provider } from 'react-redux'
 import { Route, Switch } from 'react-router-dom'
 import { applyMiddleware, compose, createStore } from 'redux'
 import { NotFound } from './components/app'
+import { Day } from './components/day'
+import { Overview } from './components/overview'
+import { Settings } from './components/settings'
 import App from './containers/App'
 import rootReducer from './redux/reducers'
 import registerServiceWorker from './registerServiceWorker'
@@ -30,10 +33,9 @@ ReactDOM.render(
         <ConnectedRouter history={history}>
             <App>
                 <Switch>
-                    {/*<Route path="/" exact component={Overview} />
-                    <Route path="/day/:date" component={Day} />
-                    <Route path="/new" component={New} />
-                    <Route path="/settings" component={Settings} />*/}
+                    <Route path='/' exact={true} component={Overview} />
+                    <Route path='/day/:date' component={Day} />
+                    <Route path='/settings' component={Settings} />
                     <Route path='*' component={NotFound} />
                 </Switch>
             </App>
