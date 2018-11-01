@@ -3,8 +3,9 @@ import { createBrowserHistory } from 'history'
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
+import { Route, Switch } from 'react-router-dom'
 import { applyMiddleware, compose, createStore } from 'redux'
-import Test from './containers/Test'
+import { App, NotFound } from './components/app'
 import rootReducer from './redux/reducers'
 import registerServiceWorker from './registerServiceWorker'
 
@@ -26,7 +27,15 @@ const store = createStore<any, any, any, any>(
 ReactDOM.render(
     <Provider store={store}>
         <ConnectedRouter history={history}>
-            <Test />
+            <App>
+                <Switch>
+                    {/*<Route path="/" exact component={Overview} />
+                    <Route path="/day/:date" component={Day} />
+                    <Route path="/new" component={New} />
+                    <Route path="/settings" component={Settings} />*/}
+                    <Route path='*' component={NotFound} />
+                </Switch>
+            </App>
         </ConnectedRouter>
     </Provider>,
     document.getElementById('root') as HTMLElement
