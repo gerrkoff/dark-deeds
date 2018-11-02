@@ -1,0 +1,28 @@
+#day-card {
+    padding: 0.25rem 0.25rem 0.5rem 0.25rem;
+    font-size: 0.75rem;
+    height: 100%;
+}
+
+.day-card-expired {
+    background-color: #1F2329 !important;
+    box-shadow: none !important;
+}
+
+.day-card-title {
+    width: 100%;
+    display: inline-block;
+    text-align: center;
+}
+
+.day-card-tasks-view {
+    min-width: 15rem;
+    min-height: 3rem;
+    height: 100%;
+}
+
+@media screen and (min-width: 1200px) {
+    .day-card-tasks-view {
+        min-width: 9rem;
+    }
+}
