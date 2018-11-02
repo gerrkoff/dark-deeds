@@ -1,5 +1,5 @@
 import { TasksAction } from '../actions'
-import { TASKS_LOADING, TASKS_LOADING_FAILED, TASKS_LOADING_SUCCESS } from '../constants'
+import { TASKS_LOADING, TASKS_LOADING_FAILED, TASKS_LOADING_SUCCESS, TASKS_LOCAL_UPDATE } from '../constants'
 import { ITasksState } from '../types'
 
 const inittialState: ITasksState = {
@@ -16,11 +16,15 @@ export function tasks(state: ITasksState = inittialState, action: TasksAction): 
         case TASKS_LOADING_SUCCESS:
             return { ...state,
                 loading: false,
-                tasks: action.tasks
+                tasks: [...action.tasks]
             }
         case TASKS_LOADING_FAILED:
             return { ...state,
                 loading: false
+            }
+        case TASKS_LOCAL_UPDATE:
+            return { ...state,
+                tasks: [...action.tasks]
             }
     }
     return state

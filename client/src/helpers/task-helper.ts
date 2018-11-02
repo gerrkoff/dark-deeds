@@ -81,7 +81,7 @@ const service = {
         task.dateTime = targetDate === 0 ? null : new Date(targetDate)
         task.updated = true
 
-        return [...tasks]
+        return tasks
     }
 }
 

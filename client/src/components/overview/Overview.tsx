@@ -8,7 +8,8 @@ import { Task } from '../../models'
 import { DaysBlock, NoDateCard } from './'
 
 interface IProps {
-    tasks: Task[]
+    tasks: Task[],
+    updateTasks: (tasks: Task[]) => void
 }
 export class Overview extends React.Component<IProps> {
     private drake: any
@@ -68,15 +69,15 @@ export class Overview extends React.Component<IProps> {
             return
         }
 
-        this.setState({
-            tasks: TaskHelper.moveTask(
+        this.props.updateTasks(
+            TaskHelper.moveTask(
                 this.props.tasks,
                 getId(el),
                 getId(target),
                 getId(source),
                 sibling ? getId(sibling) : null
             )
-        })
+        )
     }
 
     private updateDndContainers = () => {
