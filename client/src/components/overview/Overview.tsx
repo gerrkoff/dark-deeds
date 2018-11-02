@@ -1,57 +1,33 @@
 import * as React from 'react'
 // @ts-ignore
 import dragula from 'react-dragula'
-import { Accordion, Dimmer, Loader } from 'semantic-ui-react'
+import { Accordion } from 'semantic-ui-react'
 
-import { TaskApi } from '../../api'
 import { DateHelper, TaskHelper } from '../../helpers'
 import { Task } from '../../models'
 import { DaysBlock, NoDateCard } from './'
 
-interface IState {
-    isLoading: boolean,
+interface IProps {
     tasks: Task[]
 }
-export class Overview extends React.PureComponent<{}, IState> {
+export class Overview extends React.Component<IProps> {
     private drake: any
 
-    constructor(props: {}) {
-        super(props)
-        this.state = {
-            isLoading: true,
-            tasks: []
-        }
-    }
-
     public componentDidMount() {
-        TaskApi.fetchTasks()
-            .then(x => this.setState({
-                isLoading: false,
-                tasks: x
-            }))
-            .catch(x => { console.log('x :', x) })
-
         this.drake = dragula().on('drop', this.dndHandler)
+        this.updateDndContainers()
     }
 
     public componentDidUpdate() {
-        this.drake.containers = [].slice.call(document.querySelectorAll('div.dragula-container'))
+        this.updateDndContainers()
     }
 
     public render() {
         // TODO: remove
-        console.log(`overview render ${new Date().toTimeString()}`)
+        // console.log(`overview render ${new Date().toTimeString()}`)
 
         const today = DateHelper.dayStart(new Date())
-        const model = TaskHelper.evalModel(this.state.tasks, today)
-
-        if (this.state.isLoading) {
-            return (
-                <Dimmer active page>
-                    <Loader />
-                </Dimmer>
-            )
-        }
+        const model = TaskHelper.evalModel(this.props.tasks, today)
 
         const panels = [{
             content: { content: (<NoDateCard tasks={model.noDate} />) },
@@ -94,13 +70,17 @@ export class Overview extends React.PureComponent<{}, IState> {
 
         this.setState({
             tasks: TaskHelper.moveTask(
-                this.state.tasks,
+                this.props.tasks,
                 getId(el),
                 getId(target),
                 getId(source),
                 sibling ? getId(sibling) : null
             )
         })
+    }
+
+    private updateDndContainers = () => {
+        this.drake.containers = [].slice.call(document.querySelectorAll('div.dragula-container'))
     }
 }
 
