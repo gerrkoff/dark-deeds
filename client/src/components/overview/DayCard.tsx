@@ -6,11 +6,11 @@ import '../../styles/day-card.css'
 
 interface IProps {
     day: DayCardModel,
-    expiredDate: Date
+    expiredDate?: Date
 }
 export class DayCard extends React.Component<IProps> {
     public render() {
-        const className = this.props.day.date < this.props.expiredDate ? 'day-card-expired' : ''
+        const className = this.props.expiredDate && this.props.day.date < this.props.expiredDate ? 'day-card-expired' : ''
         this.props.day.tasks.sort((x, y) => x.order > y.order ? 1 : 0)
         return (
             <Segment id='day-card' className={ className } inverted raised>
