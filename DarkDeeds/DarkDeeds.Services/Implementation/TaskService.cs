@@ -11,8 +11,8 @@ namespace DarkDeeds.Services.Implementation
         {
             var list = new List<TaskDto>
             {
-                new TaskDto{Id = 1},
-                new TaskDto{Id = 2}
+                new TaskDto{Id = 1, Title = "Test 1"},
+                new TaskDto{Id = 2, Title = "Test 2"}
             };
             return await Task.FromResult(list);
         }

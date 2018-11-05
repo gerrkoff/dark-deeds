@@ -28,7 +28,7 @@ export function loadTasks(): (dispatch: Dispatch) => Promise<void> {
         dispatch({ type: constants.TASKS_LOADING })
 
         try {
-            const tasks = await TaskApi.fetchTasks()
+            const tasks = await TaskApi.loadTasks()
             dispatch({ type: constants.TASKS_LOADING_SUCCESS, tasks })
         } catch (err) {
             dispatch({ type: constants.TASKS_LOADING_FAILED })

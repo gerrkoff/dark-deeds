@@ -1,8 +1,10 @@
 import { Task } from '../models'
+import baseUrl from './base-url'
 
 const service = {
-    fetchTasks(): Promise<Task[]> {
-        return new Promise(resolve => setTimeout(() => resolve(tasks), 1000))
+    loadTasks(): Promise<Task[]> {
+        return fetch(baseUrl + 'api/tasks')
+            .then(x => x.json())
     }
 }
 
