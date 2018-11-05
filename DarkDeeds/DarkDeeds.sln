@@ -4,6 +4,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.Api", "DarkDeeds.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.Models", "DarkDeeds.Models\DarkDeeds.Models.csproj", "{35484869-3EDF-43CE-90BD-0A69C8300468}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.Services", "DarkDeeds.Services\DarkDeeds.Services.csproj", "{9C8EA434-0378-4B6F-88A0-54756128E52C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{35484869-3EDF-43CE-90BD-0A69C8300468}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{35484869-3EDF-43CE-90BD-0A69C8300468}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{35484869-3EDF-43CE-90BD-0A69C8300468}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9C8EA434-0378-4B6F-88A0-54756128E52C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9C8EA434-0378-4B6F-88A0-54756128E52C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9C8EA434-0378-4B6F-88A0-54756128E52C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9C8EA434-0378-4B6F-88A0-54756128E52C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

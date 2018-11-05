@@ -2,44 +2,33 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DarkDeeds.Models;
+using DarkDeeds.Services.Interface;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DarkDeeds.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ValuesController : ControllerBase
+    public class TasksController : ControllerBase
     {
-        // GET api/values
+        private readonly ITaskService _taskService;
+
+        public TasksController(ITaskService taskService)
+        {
+            _taskService = taskService;
+        }
+
         [HttpGet]
-        public ActionResult<IEnumerable<string>> Get()
+        public async Task<IEnumerable<TaskDto>> Get()
         {
-            return new string[] {"value1", "value2"};
+            return await _taskService.LoadTasksAsync();
         }
-
-        // GET api/values/5
-        [HttpGet("{id}")]
-        public ActionResult<string> Get(int id)
-        {
-            return "value";
-        }
-
-        // POST api/values
+        
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<IEnumerable<TaskDto>> Post([FromBody] ICollection<TaskDto> tasks)
         {
-        }
-
-        // PUT api/values/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/values/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
+            return await _taskService.SaveTasksAsync(tasks);
         }
     }
 }
