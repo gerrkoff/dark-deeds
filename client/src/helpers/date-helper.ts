@@ -1,3 +1,5 @@
+import { IDateable } from '../models/interfaces/idateable'
+
 const service = {
     toDateFromSpecialFormat(s: string): Date | null {
         if (!/^\d{8}$/.test(s)) {
@@ -28,6 +30,16 @@ const service = {
         const day = date.getDay()
         const diff = date.getDate() - day + (day === 0 ? -6 : 1)
         return new Date(date.setDate(diff))
+    },
+
+    fixDates(dateables: IDateable[]): IDateable[] {
+        const fixed = [...dateables]
+        fixed.forEach(x => {
+            if (x.dateTime) {
+                x.dateTime = new Date(x.dateTime)
+            }
+        })
+        return fixed
     }
 }
 

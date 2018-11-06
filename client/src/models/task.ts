@@ -1,4 +1,6 @@
-export class Task {
+import { IDateable } from './'
+
+export class Task implements IDateable {
     constructor(
         public id: number,
         public title: string,
