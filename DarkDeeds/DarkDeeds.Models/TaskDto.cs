@@ -7,5 +7,6 @@ namespace DarkDeeds.Models
         public int Id { get; set; }
         public DateTime? DateTime { get; set; }
         public string Title { get; set; }
+        public int Order { get; set; }
     }
 }
