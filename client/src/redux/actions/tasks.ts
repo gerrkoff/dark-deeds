@@ -21,10 +21,22 @@ export interface ITasksLocalUpdate {
     tasks: Task[]
 }
 
-export type TasksAction = ITasksLoading | ITasksLoadingSuccess | ITasksLoadingFailed | ITasksLocalUpdate
+export interface ITasksSaving {
+    type: constants.TASKS_SAVING
+}
 
-export function loadTasks(): (dispatch: Dispatch) => Promise<void> {
-    return async(dispatch: Dispatch) => {
+export interface ITasksSavingSuccess {
+    type: constants.TASKS_SAVING_SUCCESS
+}
+
+export interface ITasksSavingFailed {
+    type: constants.TASKS_SAVING_FAILED
+}
+
+export type TasksAction = ITasksLoading | ITasksLoadingSuccess | ITasksLoadingFailed | ITasksLocalUpdate | ITasksSaving | ITasksSavingSuccess | ITasksSavingFailed
+
+export function loadTasks() {
+    return async(dispatch: Dispatch<TasksAction>) => {
         dispatch({ type: constants.TASKS_LOADING })
 
         try {
@@ -38,4 +50,17 @@ export function loadTasks(): (dispatch: Dispatch) => Promise<void> {
 
 export function localUpdateTasks(tasks: Task[]): ITasksLocalUpdate {
     return { type: constants.TASKS_LOCAL_UPDATE, tasks }
+}
+
+export function saveTasks(tasks: Task[]) {
+    return async(dispatch: Dispatch<TasksAction>) => {
+        dispatch({ type: constants.TASKS_SAVING })
+
+        try {
+            await TaskApi.loadTasks()
+            dispatch({ type: constants.TASKS_SAVING_SUCCESS })
+        } catch (err) {
+            dispatch({ type: constants.TASKS_SAVING_FAILED })
+        }
+    }
 }
