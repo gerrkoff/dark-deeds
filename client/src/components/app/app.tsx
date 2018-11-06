@@ -17,7 +17,7 @@ interface IProps {
 export class App extends React.PureComponent<IProps> {
     public componentDidMount() {
         this.props.loadTasks()
-        setInterval(this.saveTasksIfUpdated, 15 * 1000)
+        setInterval(this.saveTasksIfUpdated, 5 * 1000) // TODO: should be greater
     }
 
     public render() {
@@ -41,8 +41,6 @@ export class App extends React.PureComponent<IProps> {
         if (updated.length === 0 || this.props.tasksSaving) {
             return
         }
-
-        console.log(`saving ${updated.length} items ${new Date()}`)
 
         this.props.saveTasks(updated)
     }
