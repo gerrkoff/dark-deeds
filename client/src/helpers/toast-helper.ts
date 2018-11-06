@@ -1,32 +1,36 @@
-import { toast } from 'react-toastify'
+import { toast, ToastOptions } from 'react-toastify'
+
+const defaultOptions: ToastOptions = {
+    progressClassName: 'toast-progress'
+}
 
 const service = {
-    success(msg: string, options = {}): number {
+    success(msg: string, options: ToastOptions = {}): number {
         return toast.success(msg, {
-            ...options,
             className: 'toast-success',
-            progressClassName: 'toast-progress'
+            ...defaultOptions,
+            ...options
         })
     },
     error(msg: string, options = {}): number {
         return toast.error(msg, {
-            ...options,
             className: 'toast-error',
-            progressClassName: 'toast-progress'
+            ...defaultOptions,
+            ...options
         })
     },
     warn(msg: string, options = {}): number {
         return toast.warn(msg, {
-            ...options,
             className: 'toast-warn',
-            progressClassName: 'toast-progress'
+            ...defaultOptions,
+            ...options
         })
     },
     info(msg: string, options = {}): number {
         return toast.info(msg, {
-            ...options,
             className: 'toast-info',
-            progressClassName: 'toast-progress'
+            ...defaultOptions,
+            ...options
         })
     },
     errorCommon(err: any): number {
