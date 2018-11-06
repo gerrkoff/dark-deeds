@@ -32,9 +32,6 @@ const service = {
             ...defaultOptions,
             ...options
         })
-    },
-    errorCommon(err: any): number {
-        return this.error('Error!')
     }
 }
 

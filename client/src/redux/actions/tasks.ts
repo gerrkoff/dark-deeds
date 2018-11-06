@@ -58,13 +58,12 @@ export function saveTasks(tasks: Task[]) {
         dispatch({ type: constants.TASKS_SAVING })
 
         try {
-            await TaskApi.loadTasks()
+            await TaskApi.saveTasks(tasks)
             dispatch({ type: constants.TASKS_SAVING_SUCCESS })
             ToastHelper.info(`${tasks.length} items were updated`)
         } catch (err) {
             dispatch({ type: constants.TASKS_SAVING_FAILED })
-            console.log('err :', err)
-            ToastHelper.errorCommon(err)
+            ToastHelper.error(`Error occured while updating items`)
         }
     }
 }

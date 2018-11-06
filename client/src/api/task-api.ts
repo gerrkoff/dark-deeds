@@ -1,12 +1,24 @@
 import { DateHelper } from '../helpers'
 import { Task } from '../models'
-import baseUrl from './base-url'
+import { Api } from './api'
 
 const service = {
-    loadTasks(): Promise<Task[]> {
-        return fetch(baseUrl + 'api/tasks')
-            .then<Task[]>(x => x.json())
-            .then<Task[]>(x => DateHelper.fixDates(x) as Task[])
+    async loadTasks(): Promise<Task[]> {
+        try {
+            const result = await Api.get<Task[]>('api/tasks')
+            return DateHelper.fixDates(result) as Task[]
+        } catch (err) {
+            throw err
+        }
+    },
+
+    async saveTasks(tasks: Task[]): Promise<Task[]> {
+        try {
+            const result = await Api.post<Task[]>('api/tasks', tasks)
+            return DateHelper.fixDates(result) as Task[]
+        } catch (err) {
+            throw err
+        }
     }
 }
 
