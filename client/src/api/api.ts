@@ -16,6 +16,9 @@ const service = {
     async post<T>(api: string, data: any): Promise<T> {
         const result = await fetch(baseUrl + api, {
             body: JSON.stringify(data),
+            headers: {
+                'Content-Type': 'application/json'
+            },
             method: 'POST'
         })
 
