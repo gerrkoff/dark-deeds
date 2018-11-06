@@ -1,3 +1,4 @@
+import { Task } from '../../models'
 import { TasksAction } from '../actions'
 import { TASKS_LOADING, TASKS_LOADING_FAILED, TASKS_LOADING_SUCCESS, TASKS_LOCAL_UPDATE, TASKS_SAVING, TASKS_SAVING_FAILED, TASKS_SAVING_SUCCESS } from '../constants'
 import { ITasksState } from '../types'
@@ -33,8 +34,8 @@ export function tasks(state: ITasksState = inittialState, action: TasksAction): 
             }
         case TASKS_SAVING_SUCCESS:
             return { ...state,
-                saving: false
-                // TODO: tasks' updated to false
+                saving: false,
+                tasks: clearTasksUpdate(state.tasks)
             }
         case TASKS_SAVING_FAILED:
             return { ...state,
@@ -42,4 +43,10 @@ export function tasks(state: ITasksState = inittialState, action: TasksAction): 
             }
     }
     return state
+}
+
+function clearTasksUpdate(updatedTasks: Task[]): Task[] {
+    const nonupdatedTasks = [...updatedTasks]
+    nonupdatedTasks.forEach(x => x.updated = false)
+    return nonupdatedTasks
 }

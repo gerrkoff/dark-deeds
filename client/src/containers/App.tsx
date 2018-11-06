@@ -8,7 +8,8 @@ function mapStateToProps({ router, tasks }: any) {
     return {
         appLoading: tasks.loading,
         path: router.location.pathname,
-        tasks: tasks.tasks
+        tasks: tasks.tasks,
+        tasksSaving: tasks.saving
     }
 }
 

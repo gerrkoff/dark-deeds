@@ -8,6 +8,7 @@ interface IProps {
     children: React.ReactNode,
     path: string,
     tasks: Task[],
+    tasksSaving: boolean,
     navigateTo: (path: string) => void,
     loadTasks: () => void,
     saveTasks: (tasks: Task[]) => void
@@ -15,6 +16,7 @@ interface IProps {
 export class App extends React.PureComponent<IProps> {
     public componentDidMount() {
         this.props.loadTasks()
+        setInterval(this.saveTasksIfUpdated, 15 * 1000)
     }
 
     public render() {
@@ -29,5 +31,17 @@ export class App extends React.PureComponent<IProps> {
                 </Dimmer>
             </React.Fragment>
         )
+    }
+
+    private saveTasksIfUpdated = () => {
+        const updated = this.props.tasks.filter(x => x.updated)
+
+        if (updated.length === 0 || this.props.tasksSaving) {
+            return
+        }
+
+        console.log(`saving ${updated.length} items ${new Date()}`)
+
+        this.props.saveTasks(updated)
     }
 }
