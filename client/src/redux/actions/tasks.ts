@@ -1,5 +1,6 @@
 import { Dispatch } from 'redux'
 import { TaskApi } from '../../api/task-api'
+import { ToastHelper } from '../../helpers'
 import { Task } from '../../models'
 import * as constants from '../constants'
 
@@ -59,8 +60,11 @@ export function saveTasks(tasks: Task[]) {
         try {
             await TaskApi.loadTasks()
             dispatch({ type: constants.TASKS_SAVING_SUCCESS })
+            ToastHelper.info(`${tasks.length} items were updated`)
         } catch (err) {
             dispatch({ type: constants.TASKS_SAVING_FAILED })
+            console.log('err :', err)
+            ToastHelper.errorCommon(err)
         }
     }
 }

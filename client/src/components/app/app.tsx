@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { ToastContainer } from 'react-toastify'
 import { Container, Dimmer, Loader } from 'semantic-ui-react'
 import { Task } from '../../models'
 import { Toolbar } from './'
@@ -29,6 +30,7 @@ export class App extends React.PureComponent<IProps> {
                 <Dimmer active={this.props.appLoading}>
                     <Loader />
                 </Dimmer>
+                <ToastContainer />
             </React.Fragment>
         )
     }
