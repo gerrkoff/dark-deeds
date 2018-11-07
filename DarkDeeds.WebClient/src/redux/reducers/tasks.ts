@@ -82,6 +82,5 @@ function localAddTask(task: Task, localTasks: Task[]): Task[] {
     task.order = maxOrder + 1
     task.updated = true
 
-    console.log('task :', task)
     return [...localTasks, task]
 }

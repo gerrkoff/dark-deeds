@@ -24,9 +24,6 @@ export class Overview extends React.Component<IProps> {
     }
 
     public render() {
-        // TODO: remove
-        // console.log(`overview render ${new Date().toTimeString()}`)
-
         const today = DateHelper.dayStart(new Date())
         const model = TaskHelper.evalModel(this.props.tasks, today)
 

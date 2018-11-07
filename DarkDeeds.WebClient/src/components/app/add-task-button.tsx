@@ -1,8 +1,7 @@
 import * as React from 'react'
 import { Button, Icon, Input, Modal } from 'semantic-ui-react'
-import { TaskHelper } from '../../helpers'
+import { KeyConstants, TaskHelper } from '../../helpers'
 import { Task } from '../../models'
-
 import '../../styles/add-task-button.css'
 
 interface IProps {
@@ -18,6 +17,12 @@ export class AddTaskButton extends React.PureComponent<IProps, IState> {
         this.state = { modalOpen: false, taskModel: '' }
     }
 
+    public componentDidUpdate(prevProps: IProps, prevState: IState) {
+        if (this.state.modalOpen && !prevState.modalOpen) {
+            document.getElementById('taskAdd_titleInput')!.focus()
+        }
+    }
+
     public render() {
         return (
             <Modal basic size='small'
@@ -31,7 +36,9 @@ export class AddTaskButton extends React.PureComponent<IProps, IState> {
                     <Input focus fluid inverted
                         placeholder='1231 2359 31 December, 23:59 ...'
                         value={this.state.taskModel}
-                        onChange={(_event, data) => this.handleTaskModelChange(data.value)} />
+                        onChange={(_event, data) => this.handleTaskModelChange(data.value)}
+                        onKeyUp={this.handleKeyUp}
+                        id='taskAdd_titleInput' />
                 </Modal.Content>
                 <Modal.Actions>
                     <Button basic color='red' inverted onClick={this.handleClose}>
@@ -48,8 +55,15 @@ export class AddTaskButton extends React.PureComponent<IProps, IState> {
     private handleOpen = () => this.setState({ modalOpen: true })
     private handleClose = () => this.setState({ modalOpen: false })
     private handleTaskModelChange = (value: string) => this.setState({ taskModel: value })
+
     private handleSave = () => {
         this.props.addNewTask(TaskHelper.createTaskFromText(this.state.taskModel))
         this.setState({ modalOpen: false, taskModel: '' })
+    }
+
+    private handleKeyUp = (e: KeyboardEvent) => {
+        if (e.key === KeyConstants.ENTER) {
+            this.handleSave()
+        }
     }
 }
