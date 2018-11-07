@@ -2,7 +2,7 @@ import * as React from 'react'
 import { ToastContainer } from 'react-toastify'
 import { Container, Dimmer, Loader } from 'semantic-ui-react'
 import { Task } from '../../models'
-import { Toolbar } from './'
+import { AddTaskButton, Toolbar } from './'
 
 interface IProps {
     appLoading: boolean,
@@ -27,6 +27,7 @@ export class App extends React.PureComponent<IProps> {
                 <Container>
                     {this.props.children}
                 </Container>
+                <AddTaskButton />
                 <Dimmer active={this.props.appLoading}>
                     <Loader />
                 </Dimmer>
