@@ -23,6 +23,14 @@ export class AddTaskButton extends React.PureComponent<IProps, IState> {
         }
     }
 
+    public componentDidMount() {
+        document.addEventListener('keyup', this.handleGlobalKeyUp)
+    }
+
+    public componentWillUnmount() {
+        document.removeEventListener('keyup', this.handleGlobalKeyUp)
+    }
+
     public render() {
         return (
             <Modal basic size='small'
@@ -37,7 +45,7 @@ export class AddTaskButton extends React.PureComponent<IProps, IState> {
                         placeholder='1231 2359 31 December, 23:59 ...'
                         value={this.state.taskModel}
                         onChange={(_event, data) => this.handleTaskModelChange(data.value)}
-                        onKeyUp={this.handleKeyUp}
+                        onKeyUp={this.handleInputKeyUp}
                         id='taskAdd_titleInput' />
                 </Modal.Content>
                 <Modal.Actions>
@@ -57,13 +65,23 @@ export class AddTaskButton extends React.PureComponent<IProps, IState> {
     private handleTaskModelChange = (value: string) => this.setState({ taskModel: value })
 
     private handleSave = () => {
+        if (this.state.taskModel.length === 0) {
+            return
+        }
+
         this.props.addNewTask(TaskHelper.createTaskFromText(this.state.taskModel))
         this.setState({ modalOpen: false, taskModel: '' })
     }
 
-    private handleKeyUp = (e: KeyboardEvent) => {
+    private handleInputKeyUp = (e: KeyboardEvent) => {
         if (e.key === KeyConstants.ENTER) {
             this.handleSave()
+        }
+    }
+
+    private handleGlobalKeyUp = (e: KeyboardEvent) => {
+        if (e.key === KeyConstants.ENTER && e.ctrlKey) {
+            this.handleOpen()
         }
     }
 }
