@@ -2,7 +2,7 @@ import { push } from 'connected-react-router'
 import { connect } from 'react-redux'
 import { App } from '../components/app'
 import { Task } from '../models'
-import { loadTasks, saveTasks } from '../redux/actions'
+import { loadTasks, localAddTask, saveTasks } from '../redux/actions'
 
 function mapStateToProps({ router, tasks }: any) {
     return {
@@ -15,6 +15,7 @@ function mapStateToProps({ router, tasks }: any) {
 
 function mapDispatchToProps(dispatch: any) {
     return {
+        addNewTask: (task: Task) => dispatch(localAddTask(task)),
         loadTasks: () => dispatch(loadTasks()),
         navigateTo: (path: string) => dispatch(push(path)),
         saveTasks: (tasks: Task[]) => dispatch(saveTasks(tasks))

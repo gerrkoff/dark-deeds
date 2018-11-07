@@ -5,14 +5,15 @@ import { Task } from '../../models'
 import { AddTaskButton, Toolbar } from './'
 
 interface IProps {
-    appLoading: boolean,
-    children: React.ReactNode,
-    path: string,
-    tasks: Task[],
-    tasksSaving: boolean,
-    navigateTo: (path: string) => void,
-    loadTasks: () => void,
+    appLoading: boolean
+    children: React.ReactNode
+    path: string
+    tasks: Task[]
+    tasksSaving: boolean
+    navigateTo: (path: string) => void
+    loadTasks: () => void
     saveTasks: (tasks: Task[]) => void
+    addNewTask: (task: Task) => void
 }
 export class App extends React.PureComponent<IProps> {
     public componentDidMount() {
@@ -27,7 +28,7 @@ export class App extends React.PureComponent<IProps> {
                 <Container>
                     {this.props.children}
                 </Container>
-                <AddTaskButton />
+                <AddTaskButton addNewTask={this.props.addNewTask} />
                 <Dimmer active={this.props.appLoading}>
                     <Loader />
                 </Dimmer>

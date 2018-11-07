@@ -82,6 +82,17 @@ const service = {
         task.updated = true
 
         return tasks
+    },
+
+    createTaskFromText(text: string): Task {
+        // TODO: implement
+        return {
+            dateTime: new Date(),
+            id: 0,
+            order: 0,
+            title: 'Test',
+            updated: false
+        }
     }
 }
 

@@ -1,13 +1,19 @@
 import * as React from 'react'
 import { Button, Icon, Input, Modal } from 'semantic-ui-react'
+import { TaskHelper } from '../../helpers'
+import { Task } from '../../models'
+
 import '../../styles/add-task-button.css'
 
+interface IProps {
+    addNewTask: (task: Task) => void
+}
 interface IState {
     modalOpen: boolean,
     taskModel: string
 }
-export class AddTaskButton extends React.PureComponent<{}, IState> {
-    constructor(props: {}) {
+export class AddTaskButton extends React.PureComponent<IProps, IState> {
+    constructor(props: IProps) {
         super(props)
         this.state = { modalOpen: false, taskModel: '' }
     }
@@ -31,7 +37,7 @@ export class AddTaskButton extends React.PureComponent<{}, IState> {
                     <Button basic color='red' inverted onClick={this.handleClose}>
                         <Icon name='remove' /> Cancel
                     </Button>
-                    <Button color='green' inverted>
+                    <Button color='green' inverted onClick={this.handleSave}>
                         <Icon name='checkmark' /> Save
                     </Button>
                 </Modal.Actions>
@@ -42,4 +48,8 @@ export class AddTaskButton extends React.PureComponent<{}, IState> {
     private handleOpen = () => this.setState({ modalOpen: true })
     private handleClose = () => this.setState({ modalOpen: false })
     private handleTaskModelChange = (value: string) => this.setState({ taskModel: value })
+    private handleSave = () => {
+        this.props.addNewTask(TaskHelper.createTaskFromText(this.state.taskModel))
+        this.setState({ modalOpen: false, taskModel: '' })
+    }
 }

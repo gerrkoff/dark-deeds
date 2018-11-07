@@ -1,6 +1,6 @@
 import { Task } from '../../models'
 import { TasksAction } from '../actions'
-import { TASKS_LOADING, TASKS_LOADING_FAILED, TASKS_LOADING_SUCCESS, TASKS_LOCAL_UPDATE, TASKS_SAVING, TASKS_SAVING_FAILED, TASKS_SAVING_SUCCESS } from '../constants'
+import { TASKS_LOADING, TASKS_LOADING_FAILED, TASKS_LOADING_SUCCESS, TASKS_LOCAL_ADD, TASKS_LOCAL_UPDATE, TASKS_SAVING, TASKS_SAVING_FAILED, TASKS_SAVING_SUCCESS } from '../constants'
 import { ITasksState } from '../types'
 
 const inittialState: ITasksState = {
@@ -41,6 +41,10 @@ export function tasks(state: ITasksState = inittialState, action: TasksAction): 
             return { ...state,
                 saving: false
             }
+        case TASKS_LOCAL_ADD:
+            return { ...state,
+                tasks: localAddTask(action.task, state.tasks)
+            }
     }
     return state
 }
@@ -58,4 +62,19 @@ function updateTasksFromServer(localTasks: Task[], updatedTasks: Task[]): Task[]
         }
     })
     return newTasks
+}
+
+function localAddTask(task: Task, localTasks: Task[]): Task[] {
+    let minId = Math.min(...localTasks.map(x => x.id))
+    if (minId > -1) {
+        minId = -1
+    } else {
+        minId--
+    }
+
+    task.id = minId
+
+    // TODO: implement order
+
+    return [...localTasks, task]
 }
