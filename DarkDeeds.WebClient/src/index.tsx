@@ -12,7 +12,7 @@ import { Settings } from './components/settings'
 import App from './containers/App'
 import Overview from './containers/Overview'
 import rootReducer from './redux/reducers'
-import registerServiceWorker from './registerServiceWorker'
+// import registerServiceWorker from './registerServiceWorker'
 
 import 'react-dragula/dist/dragula.min.css'
 import 'react-toastify/dist/ReactToastify.css'
@@ -47,4 +47,6 @@ ReactDOM.render(
     </Provider>,
     document.getElementById('root') as HTMLElement
 )
-registerServiceWorker()
+
+// TODO: research
+// registerServiceWorker()
