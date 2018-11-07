@@ -10,11 +10,21 @@ namespace DarkDeeds.Services.Implementation
     {
         public async Task<IEnumerable<TaskDto>> LoadTasksAsync()
         {
-            return await Task.FromResult(GenTasks());
+            var list = new List<TaskDto>
+            {
+                new TaskDto {Id = 1, Title = "Test 1", Order = 1, DateTime = DateTime.Today},
+                new TaskDto {Id = 2, Title = "Test 2", Order = 2, DateTime = DateTime.Today.AddDays(1)}
+            };
+            return await Task.FromResult(list);
+            //return await Task.FromResult(GenTasks());
         }
 
         public async Task<IEnumerable<TaskDto>> SaveTasksAsync(ICollection<TaskDto> tasks)
         {
+            foreach (var taskDto in tasks)
+            {
+                taskDto.Title += "!";
+            }
             return await Task.FromResult(tasks);
         }
 

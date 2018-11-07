@@ -28,6 +28,7 @@ export interface ITasksSaving {
 
 export interface ITasksSavingSuccess {
     type: constants.TASKS_SAVING_SUCCESS
+    tasks: Task[]
 }
 
 export interface ITasksSavingFailed {
@@ -58,8 +59,8 @@ export function saveTasks(tasks: Task[]) {
         dispatch({ type: constants.TASKS_SAVING })
 
         try {
-            await TaskApi.saveTasks(tasks)
-            dispatch({ type: constants.TASKS_SAVING_SUCCESS })
+            const tasksFromServer = await TaskApi.saveTasks(tasks)
+            dispatch({ type: constants.TASKS_SAVING_SUCCESS, tasks: tasksFromServer })
             ToastHelper.info(`${tasks.length} items were updated`)
         } catch (err) {
             dispatch({ type: constants.TASKS_SAVING_FAILED })

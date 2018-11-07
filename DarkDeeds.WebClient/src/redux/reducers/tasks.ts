@@ -35,7 +35,7 @@ export function tasks(state: ITasksState = inittialState, action: TasksAction): 
         case TASKS_SAVING_SUCCESS:
             return { ...state,
                 saving: false,
-                tasks: clearTasksUpdate(state.tasks)
+                tasks: updateTasksFromServer(state.tasks, action.tasks)
             }
         case TASKS_SAVING_FAILED:
             return { ...state,
@@ -45,8 +45,17 @@ export function tasks(state: ITasksState = inittialState, action: TasksAction): 
     return state
 }
 
-function clearTasksUpdate(updatedTasks: Task[]): Task[] {
-    const nonupdatedTasks = [...updatedTasks]
-    nonupdatedTasks.forEach(x => x.updated = false)
-    return nonupdatedTasks
+function updateTasksFromServer(localTasks: Task[], updatedTasks: Task[]): Task[] {
+    const newTasks = [...localTasks]
+    updatedTasks.forEach(updatedTask => {
+        const taskIndex = newTasks.findIndex(x => x.id === updatedTask.id)
+        if (taskIndex > -1) {
+            newTasks[taskIndex] = {
+                ...newTasks[taskIndex],
+                ...updatedTask,
+                updated: false
+            }
+        }
+    })
+    return newTasks
 }
