@@ -48,12 +48,12 @@ test('[dayStart] positive', () => {
 })
 
 test('[fixDates] positive', () => {
-    const arr: any = [new Task(1, ''), { id: 2, dateTime: '2018-11-14T22:00:00+04:00' }]
+    const arr: any = [new Task(1, ''), { clientId: 2, dateTime: '2018-11-14T22:00:00+04:00' }]
     const result = DateHelper.fixDates(arr) as Task[]
 
     expect(result).not.toBe(arr)
-    expect(result.find(x => x.id === 1)!.dateTime).toBeNull()
-    expect(result.find(x => x.id === 2)!.dateTime!.getTime())
+    expect(result.find(x => x.clientId === 1)!.dateTime).toBeNull()
+    expect(result.find(x => x.clientId === 2)!.dateTime!.getTime())
         .toBe(new Date(2018, 10, 14, 22).getTime())
 })
 

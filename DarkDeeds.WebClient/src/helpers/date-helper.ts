@@ -43,6 +43,9 @@ const service = {
     },
 
     equalDatesByStart(dateX: Date | null, dateY: Date | null): boolean {
+        if (dateX === null && dateY === null) {
+            return true
+        }
         if (dateX === null || dateY === null) {
             return false
         }

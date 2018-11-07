@@ -40,7 +40,7 @@ const service = {
     },
 
     moveTask(tasks: Task[], taskId: number, targetDate: number, sourceDate: number, siblingId: number | null): Task[] {
-        const task = tasks.find(x => x.id === taskId)
+        const task = tasks.find(x => x.clientId === taskId)
 
         if (task === undefined) {
             return tasks
@@ -51,7 +51,7 @@ const service = {
             ? tasks.filter(x => taskDateToStart(x.dateTime) === sourceDate)
             : targetTasks
         const siblingTask = siblingId && targetTasks
-            ? targetTasks.find(x => x.id === siblingId)
+            ? targetTasks.find(x => x.clientId === siblingId)
             : null
 
         if (sourceTasks) {
@@ -86,6 +86,7 @@ const service = {
 
     createTaskFromText(text: string): Task {
         const task = {
+            clientId: 0,
             id: 0,
             order: 0,
             title: text,

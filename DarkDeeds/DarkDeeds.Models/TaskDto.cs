@@ -8,5 +8,6 @@ namespace DarkDeeds.Models
         public DateTime? DateTime { get; set; }
         public string Title { get; set; }
         public int Order { get; set; }
+        public int ClientId { get; set; }
     }
 }

@@ -53,11 +53,12 @@ export function tasks(state: ITasksState = inittialState, action: TasksAction): 
 function updateTasksFromServer(localTasks: Task[], updatedTasks: Task[]): Task[] {
     const newTasks = [...localTasks]
     updatedTasks.forEach(updatedTask => {
-        const taskIndex = newTasks.findIndex(x => x.id === updatedTask.id)
+        const taskIndex = newTasks.findIndex(x => x.clientId === updatedTask.clientId)
         if (taskIndex > -1) {
             newTasks[taskIndex] = {
                 ...newTasks[taskIndex],
                 ...updatedTask,
+                clientId: updatedTask.id,
                 updated: false
             }
         }
@@ -66,7 +67,7 @@ function updateTasksFromServer(localTasks: Task[], updatedTasks: Task[]): Task[]
 }
 
 function localAddTask(task: Task, localTasks: Task[]): Task[] {
-    let minId = Math.min(...localTasks.map(x => x.id))
+    let minId = Math.min(...localTasks.map(x => x.clientId))
     if (minId > -1) {
         minId = -1
     } else {
@@ -78,7 +79,7 @@ function localAddTask(task: Task, localTasks: Task[]): Task[] {
         .map(x => x.order)
     const maxOrder = sameDayTaskOrders.length === 0 ? 0 : Math.max(...sameDayTaskOrders)
 
-    task.id = minId
+    task.clientId = minId
     task.order = maxOrder + 1
     task.updated = true
 

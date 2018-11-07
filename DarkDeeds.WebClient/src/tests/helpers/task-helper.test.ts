@@ -40,13 +40,13 @@ test('[moveTask] positive', () => {
 
     const result = TaskHelper.moveTask(tasks, 4, new Date(2018, 9, 9).getTime(), new Date(2018, 9, 10).getTime(), 2)
 
-    expect(result.find(x => x.id === 1)!.order).toBe(1)
-    expect(result.find(x => x.id === 2)!.order).toBe(3)
-    expect(result.find(x => x.id === 3)!.order).toBe(4)
-    expect(result.find(x => x.id === 4)!.order).toBe(2)
-    expect(result.find(x => x.id === 5)!.order).toBe(1)
+    expect(result.find(x => x.clientId === 1)!.order).toBe(1)
+    expect(result.find(x => x.clientId === 2)!.order).toBe(3)
+    expect(result.find(x => x.clientId === 3)!.order).toBe(4)
+    expect(result.find(x => x.clientId === 4)!.order).toBe(2)
+    expect(result.find(x => x.clientId === 5)!.order).toBe(1)
 
-    expect(result.find(x => x.id === 4)!.dateTime!.getTime()).toBe(new Date(2018, 9, 9).getTime())
+    expect(result.find(x => x.clientId === 4)!.dateTime!.getTime()).toBe(new Date(2018, 9, 9).getTime())
 })
 
 test('[moveTask] move as last', () => {
@@ -58,9 +58,9 @@ test('[moveTask] move as last', () => {
 
     const result = TaskHelper.moveTask(tasks, 3, new Date(2018, 9, 9).getTime(), new Date(2018, 9, 10).getTime(), null)
 
-    expect(result.find(x => x.id === 1)!.order).toBe(10)
-    expect(result.find(x => x.id === 2)!.order).toBe(2)
-    expect(result.find(x => x.id === 3)!.order).toBe(11)
+    expect(result.find(x => x.clientId === 1)!.order).toBe(10)
+    expect(result.find(x => x.clientId === 2)!.order).toBe(2)
+    expect(result.find(x => x.clientId === 3)!.order).toBe(11)
 })
 
 test('[moveTask] same list reorder', () => {
@@ -73,10 +73,10 @@ test('[moveTask] same list reorder', () => {
 
     const result = TaskHelper.moveTask(tasks, 2, new Date(2018, 9, 9).getTime(), new Date(2018, 9, 9).getTime(), 4)
 
-    expect(result.find(x => x.id === 1)!.order).toBe(4)
-    expect(result.find(x => x.id === 2)!.order).toBe(1)
-    expect(result.find(x => x.id === 3)!.order).toBe(3)
-    expect(result.find(x => x.id === 4)!.order).toBe(2)
+    expect(result.find(x => x.clientId === 1)!.order).toBe(4)
+    expect(result.find(x => x.clientId === 2)!.order).toBe(1)
+    expect(result.find(x => x.clientId === 3)!.order).toBe(3)
+    expect(result.find(x => x.clientId === 4)!.order).toBe(2)
 })
 
 test('[moveTask] same list as last', () => {
@@ -89,16 +89,16 @@ test('[moveTask] same list as last', () => {
 
     const result = TaskHelper.moveTask(tasks, 4, new Date(2018, 9, 9).getTime(), new Date(2018, 9, 9).getTime(), null)
 
-    expect(result.find(x => x.id === 1)!.order).toBe(3)
-    expect(result.find(x => x.id === 2)!.order).toBe(2)
-    expect(result.find(x => x.id === 3)!.order).toBe(1)
-    expect(result.find(x => x.id === 4)!.order).toBe(4)
+    expect(result.find(x => x.clientId === 1)!.order).toBe(3)
+    expect(result.find(x => x.clientId === 2)!.order).toBe(2)
+    expect(result.find(x => x.clientId === 3)!.order).toBe(1)
+    expect(result.find(x => x.clientId === 4)!.order).toBe(4)
 })
 
 test('[createTaskFromText] no date and time', () => {
     const result = TaskHelper.createTaskFromText('Test!')
 
-    expect(result.id).toBe(0)
+    expect(result.clientId).toBe(0)
     expect(result.order).toBe(0)
     expect(result.updated).toBe(false)
     expect(result.title).toBe('Test!')

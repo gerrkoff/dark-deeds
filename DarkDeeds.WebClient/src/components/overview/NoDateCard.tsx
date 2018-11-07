@@ -13,7 +13,7 @@ export class NoDateCard extends React.PureComponent<IProps> {
             <Segment raised inverted id='no-date-card'>
                 <List bulleted className='no-date-card-tasks-view dragula-container' data-id={0}>
                     {this.props.tasks.map(x =>
-                        <List.Item key={x.id} data-id={x.id}>{x.title}</List.Item>
+                        <List.Item key={x.clientId} data-id={x.clientId}>{x.title}</List.Item>
                     )}
                 </List>
             </Segment>

@@ -8,12 +8,14 @@ namespace DarkDeeds.Services.Implementation
 {
     public class TaskService : ITaskService
     {
+        private static int Count = 1000;
+        
         public async Task<IEnumerable<TaskDto>> LoadTasksAsync()
         {
             var list = new List<TaskDto>
             {
-                new TaskDto {Id = 1, Title = "Test 1", Order = 1, DateTime = DateTime.Today},
-                new TaskDto {Id = 2, Title = "Test 2", Order = 2, DateTime = DateTime.Today.AddDays(1)}
+                new TaskDto {Id = 1, Title = "Test 1", Order = 1, DateTime = DateTime.Today, ClientId = 1},
+                new TaskDto {Id = 2, Title = "Test 2", Order = 2, DateTime = DateTime.Today.AddDays(1), ClientId = 2}
             };
             return await Task.FromResult(list);
             //return await Task.FromResult(GenTasks());
@@ -24,6 +26,7 @@ namespace DarkDeeds.Services.Implementation
             foreach (var taskDto in tasks)
             {
                 taskDto.Title += "!";
+                if (taskDto.ClientId < 0) taskDto.Id = Count++;
             }
             return await Task.FromResult(tasks);
         }

@@ -19,7 +19,7 @@ export class DayCard extends React.PureComponent<IProps> {
                 </span>
                 <List bulleted className='day-card-tasks-view dragula-container' data-id={this.props.day.date.getTime()}>
                     {this.props.day.tasks.map((x: Task) =>
-                        <List.Item key={x.id} data-id={x.id}>{x.title}</List.Item>
+                        <List.Item key={x.clientId} data-id={x.clientId}>{x.title}</List.Item>
                     )}
                 </List>
             </Segment>
