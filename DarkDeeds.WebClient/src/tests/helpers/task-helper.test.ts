@@ -94,3 +94,49 @@ test('[moveTask] same list as last', () => {
     expect(result.find(x => x.id === 3)!.order).toBe(1)
     expect(result.find(x => x.id === 4)!.order).toBe(4)
 })
+
+test('[createTaskFromText] no date and time', () => {
+    const result = TaskHelper.createTaskFromText('Test!')
+
+    expect(result.id).toBe(0)
+    expect(result.order).toBe(0)
+    expect(result.updated).toBe(false)
+    expect(result.title).toBe('Test!')
+    expect(result.dateTime).toBe(null)
+})
+
+test('[createTaskFromText] date and no time', () => {
+    const result = TaskHelper.createTaskFromText('1231 Test!')
+    const currentYear = new Date().getFullYear()
+
+    expect(result.title).toBe('Test!')
+    expect(result.dateTime!.getTime())
+        .toBe(new Date(currentYear, 11, 31, 0, 0, 0).getTime())
+})
+
+test('[createTaskFromText] date and no time 2', () => {
+    const result = TaskHelper.createTaskFromText('0101Test!!!')
+    const currentYear = new Date().getFullYear()
+
+    expect(result.title).toBe('Test!!!')
+    expect(result.dateTime!.getTime())
+        .toBe(new Date(currentYear, 0, 1, 0, 0, 0).getTime())
+})
+
+test('[createTaskFromText] date and time', () => {
+    const result = TaskHelper.createTaskFromText('1231 2359 Test!')
+    const currentYear = new Date().getFullYear()
+
+    expect(result.title).toBe('Test!')
+    expect(result.dateTime!.getTime())
+        .toBe(new Date(currentYear, 11, 31, 23, 59, 0).getTime())
+})
+
+test('[createTaskFromText] date and time 2', () => {
+    const result = TaskHelper.createTaskFromText('0101 0101Test!!!')
+    const currentYear = new Date().getFullYear()
+
+    expect(result.title).toBe('Test!!!')
+    expect(result.dateTime!.getTime())
+        .toBe(new Date(currentYear, 0, 1, 1, 1, 0).getTime())
+})

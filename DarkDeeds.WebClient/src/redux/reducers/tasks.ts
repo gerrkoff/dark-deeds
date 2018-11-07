@@ -73,12 +73,15 @@ function localAddTask(task: Task, localTasks: Task[]): Task[] {
         minId--
     }
 
-    const maxOrder = Math.max(...localTasks
+    const sameDayTaskOrders = localTasks
         .filter(x => DateHelper.equalDatesByStart(x.dateTime, task.dateTime))
-        .map(x => x.order))
+        .map(x => x.order)
+    const maxOrder = sameDayTaskOrders.length === 0 ? 0 : Math.max(...sameDayTaskOrders)
 
     task.id = minId
     task.order = maxOrder + 1
+    task.updated = true
 
+    console.log('task :', task)
     return [...localTasks, task]
 }

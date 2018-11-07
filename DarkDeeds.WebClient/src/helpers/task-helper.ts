@@ -85,13 +85,42 @@ const service = {
     },
 
     createTaskFromText(text: string): Task {
-        // TODO: implement
-        return {
-            dateTime: new Date(),
+        const task = {
             id: 0,
             order: 0,
-            title: 'Test',
+            title: text,
             updated: false
+        }
+
+        if (/^\d{4}\s\d{4}/.test(text)) {
+            task.title = text.substr(9).trim()
+            const month = Number(text.substr(0, 2))
+            const day = Number(text.substr(2, 2))
+            const currentYear = new Date().getFullYear()
+            const hour = Number(text.substr(5, 2))
+            const minute = Number(text.substr(7, 2))
+
+            return {
+                ...task,
+                dateTime: new Date(currentYear, month - 1, day, hour, minute)
+            }
+        }
+
+        if (/^\d{4}/.test(text)) {
+            task.title = text.substr(4).trim()
+            const month = Number(text.substr(0, 2))
+            const day = Number(text.substr(2, 2))
+            const currentYear = new Date().getFullYear()
+
+            return {
+                ...task,
+                dateTime: new Date(currentYear, month - 1, day)
+            }
+        }
+
+        return {
+            ...task,
+            dateTime: null
         }
     }
 }
