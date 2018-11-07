@@ -19,7 +19,7 @@
   },
   "scripts": {
     "start": "BROWSER=none react-scripts-ts start",
-    "build": "react-scripts-ts build",
+    "build": "react-scripts-ts build && npx copyfiles \"build/**\" \"../DarkDeeds/DarkDeeds.Api/wwwroot\" -u 1 -e build && echo files copied",
     "test": "react-scripts-ts test --env=jsdom",
     "eject": "react-scripts-ts eject"
   },
@@ -33,6 +33,7 @@
     "@types/react-redux": "^6.0.9",
     "@types/react-router": "^4.4.0",
     "@types/react-router-dom": "^4.3.1",
+    "copyfiles": "^2.1.0",
     "enzyme": "^3.7.0",
     "enzyme-adapter-react-16": "^1.6.0",
     "react-test-renderer": "^16.6.0",
