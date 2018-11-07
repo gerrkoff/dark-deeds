@@ -11,7 +11,7 @@ interface IProps {
     tasks: Task[],
     updateTasks: (tasks: Task[]) => void
 }
-export class Overview extends React.Component<IProps> {
+export class Overview extends React.PureComponent<IProps> {
     private drake: any
 
     public componentDidMount() {

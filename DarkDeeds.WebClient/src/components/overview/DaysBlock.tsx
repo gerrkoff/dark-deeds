@@ -9,7 +9,7 @@ interface IProps {
     daysInRow?: number,
     expiredDate?: Date
 }
-export class DaysBlock extends React.Component<IProps> {
+export class DaysBlock extends React.PureComponent<IProps> {
     public render() {
         const blocks = []
 

@@ -8,7 +8,7 @@ interface IProps {
         }
     }
 }
-export class Day extends React.Component<IProps> {
+export class Day extends React.PureComponent<IProps> {
     public render() {
         const dateParam = DateHelper.toDateFromSpecialFormat(this.props.match.params.date)
 

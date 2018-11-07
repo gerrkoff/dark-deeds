@@ -6,7 +6,7 @@ import '../../styles/no-date-card.css'
 interface IProps {
     tasks: Task[]
 }
-export class NoDateCard extends React.Component<IProps> {
+export class NoDateCard extends React.PureComponent<IProps> {
     public render() {
         this.props.tasks.sort((x, y) => x.order > y.order ? 1 : 0)
         return (
