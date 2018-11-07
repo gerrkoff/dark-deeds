@@ -42,7 +42,7 @@ export class AddTaskButton extends React.PureComponent<IProps, IState> {
                 <Modal.Header>New task</Modal.Header>
                 <Modal.Content>
                     <Input focus fluid inverted
-                        placeholder='1231 2359 31 December, 23:59 ...'
+                        placeholder='1231 2359 December 31, 23:59 ...'
                         value={this.state.taskModel}
                         onChange={(_event, data) => this.handleTaskModelChange(data.value)}
                         onKeyUp={this.handleInputKeyUp}
