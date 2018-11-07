@@ -40,6 +40,13 @@ const service = {
             }
         })
         return fixed
+    },
+
+    equalDatesByStart(dateX: Date | null, dateY: Date | null): boolean {
+        if (dateX === null || dateY === null) {
+            return false
+        }
+        return this.dayStart(dateX).getTime() === this.dayStart(dateY).getTime()
     }
 }
 

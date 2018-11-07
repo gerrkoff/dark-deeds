@@ -56,3 +56,7 @@ test('[fixDates] positive', () => {
     expect(result.find(x => x.id === 2)!.dateTime!.getTime())
         .toBe(new Date(2018, 10, 14, 22).getTime())
 })
+
+test('[equalDatesByStart] positive', () => {
+    expect(DateHelper.equalDatesByStart(new Date(2018, 9, 17, 10, 10, 10), new Date(2018, 9, 17, 12, 12, 12))).toBeTruthy()
+})

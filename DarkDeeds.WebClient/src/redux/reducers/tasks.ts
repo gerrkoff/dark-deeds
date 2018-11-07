@@ -1,3 +1,4 @@
+import { DateHelper } from '../../helpers'
 import { Task } from '../../models'
 import { TasksAction } from '../actions'
 import { TASKS_LOADING, TASKS_LOADING_FAILED, TASKS_LOADING_SUCCESS, TASKS_LOCAL_ADD, TASKS_LOCAL_UPDATE, TASKS_SAVING, TASKS_SAVING_FAILED, TASKS_SAVING_SUCCESS } from '../constants'
@@ -72,9 +73,12 @@ function localAddTask(task: Task, localTasks: Task[]): Task[] {
         minId--
     }
 
-    task.id = minId
+    const maxOrder = Math.max(...localTasks
+        .filter(x => DateHelper.equalDatesByStart(x.dateTime, task.dateTime))
+        .map(x => x.order))
 
-    // TODO: implement order
+    task.id = minId
+    task.order = maxOrder + 1
 
     return [...localTasks, task]
 }
