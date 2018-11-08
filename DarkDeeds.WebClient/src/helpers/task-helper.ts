@@ -85,7 +85,7 @@ const service = {
     },
 
     // TODO: implement future year support
-    createTaskFromText(text: string): TaskModel {
+    convertStringToModel(text: string): TaskModel {
         const model = new TaskModel(text)
 
         if (/^\d{4}\s\d{4}/.test(text)) {

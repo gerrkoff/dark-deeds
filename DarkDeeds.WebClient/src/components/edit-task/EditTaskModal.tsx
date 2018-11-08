@@ -49,7 +49,7 @@ export class EditTaskModal extends React.PureComponent<IProps> {
             return
         }
 
-        const taskModel = TaskHelper.createTaskFromText(this.props.model)
+        const taskModel = TaskHelper.convertStringToModel(this.props.model)
         this.props.saveTask(taskModel, this.props.clientId)
         this.props.changeModel('')
         this.props.closeModal()

@@ -96,14 +96,14 @@ test('[moveTask] same list as last', () => {
 })
 
 test('[createTaskFromText] no date and time', () => {
-    const result = TaskHelper.createTaskFromText('Test!')
+    const result = TaskHelper.convertStringToModel('Test!')
 
     expect(result.title).toBe('Test!')
     expect(result.dateTime).toBe(null)
 })
 
 test('[createTaskFromText] date and no time', () => {
-    const result = TaskHelper.createTaskFromText('1231 Test!')
+    const result = TaskHelper.convertStringToModel('1231 Test!')
     const currentYear = new Date().getFullYear()
 
     expect(result.title).toBe('Test!')
@@ -112,7 +112,7 @@ test('[createTaskFromText] date and no time', () => {
 })
 
 test('[createTaskFromText] date and no time 2', () => {
-    const result = TaskHelper.createTaskFromText('0101Test!!!')
+    const result = TaskHelper.convertStringToModel('0101Test!!!')
     const currentYear = new Date().getFullYear()
 
     expect(result.title).toBe('Test!!!')
@@ -121,7 +121,7 @@ test('[createTaskFromText] date and no time 2', () => {
 })
 
 test('[createTaskFromText] date and time', () => {
-    const result = TaskHelper.createTaskFromText('1231 2359 Test!')
+    const result = TaskHelper.convertStringToModel('1231 2359 Test!')
     const currentYear = new Date().getFullYear()
 
     expect(result.title).toBe('Test!')
@@ -130,7 +130,7 @@ test('[createTaskFromText] date and time', () => {
 })
 
 test('[createTaskFromText] date and time 2', () => {
-    const result = TaskHelper.createTaskFromText('0101 0101Test!!!')
+    const result = TaskHelper.convertStringToModel('0101 0101Test!!!')
     const currentYear = new Date().getFullYear()
 
     expect(result.title).toBe('Test!!!')
