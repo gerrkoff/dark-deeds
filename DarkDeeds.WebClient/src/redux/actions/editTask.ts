@@ -3,6 +3,7 @@ import * as constants from '../constants'
 export interface IEditTaskModalOpen {
     type: constants.EDITTASK_MODALOPEN
     open: boolean
+    clientId: number
 }
 
 export interface IEditTaskModel {
@@ -12,8 +13,8 @@ export interface IEditTaskModel {
 
 export type EditTaskAction = IEditTaskModalOpen | IEditTaskModel
 
-export function openEditTaskModal(open: boolean): IEditTaskModalOpen {
-    return { type: constants.EDITTASK_MODALOPEN, open }
+export function openEditTaskModal(open: boolean, clientId: number = 0): IEditTaskModalOpen {
+    return { type: constants.EDITTASK_MODALOPEN, open, clientId }
 }
 
 export function changeEditTaskModel(model: string): IEditTaskModel {

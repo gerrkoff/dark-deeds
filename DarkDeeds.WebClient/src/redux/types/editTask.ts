@@ -1,4 +1,5 @@
 export interface IEditTaskState {
-    modalOpen: boolean,
+    modalOpen: boolean
     taskModel: string
+    clientId: number
 }

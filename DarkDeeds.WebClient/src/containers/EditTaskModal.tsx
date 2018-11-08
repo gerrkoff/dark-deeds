@@ -5,6 +5,7 @@ import { changeEditTaskModel, localAddTask, openEditTaskModal } from '../redux/a
 
 function mapStateToProps({ editTask }: any) {
     return {
+        clientId: editTask.clientId,
         model: editTask.taskModel,
         open: editTask.modalOpen
     }

@@ -6,6 +6,7 @@ import { Task } from '../../models'
 interface IProps {
     open: boolean
     model: string
+    clientId: number
     saveTask: (task: Task) => void
     closeModal: () => void
     changeModel: (value: string) => void
@@ -48,7 +49,9 @@ export class EditTaskModal extends React.PureComponent<IProps> {
             return
         }
 
-        this.props.saveTask(TaskHelper.createTaskFromText(this.props.model))
+        const task = TaskHelper.createTaskFromText(this.props.model)
+        task.clientId = this.props.clientId
+        this.props.saveTask(task)
         this.props.changeModel('')
         this.props.closeModal()
     }
