@@ -4,7 +4,7 @@ import { Container, Dimmer, Loader } from 'semantic-ui-react'
 import EditTaskModal from '../../containers/EditTaskModal'
 import { Task } from '../../models'
 import { AddTaskButton } from '../edit-task'
-import { Toolbar } from './'
+import { Shortcuts, Toolbar } from './'
 
 interface IProps {
     appLoading: boolean
@@ -36,6 +36,7 @@ export class App extends React.PureComponent<IProps> {
                     <Loader />
                 </Dimmer>
                 <ToastContainer />
+                <Shortcuts openEditTask={this.props.openEditTask} />
             </React.Fragment>
         )
     }

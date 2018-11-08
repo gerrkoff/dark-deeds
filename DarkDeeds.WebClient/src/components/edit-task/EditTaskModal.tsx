@@ -7,7 +7,7 @@ interface IProps {
     open: boolean
     model: string
     saveTask: (task: Task) => void
-    openModal: (open: boolean) => void
+    closeModal: () => void
     changeModel: (value: string) => void
 }
 export class EditTaskModal extends React.PureComponent<IProps> {
@@ -17,17 +17,9 @@ export class EditTaskModal extends React.PureComponent<IProps> {
         }
     }
 
-    public componentDidMount() {
-        document.addEventListener('keyup', this.handleGlobalKeyUp)
-    }
-
-    public componentWillUnmount() {
-        document.removeEventListener('keyup', this.handleGlobalKeyUp)
-    }
-
     public render() {
         return (
-            <Modal basic size='small' open={this.props.open} onClose={this.handleClose}>
+            <Modal basic size='small' open={this.props.open} onClose={this.props.closeModal}>
                 <Modal.Header>New task</Modal.Header>
                 <Modal.Content>
                     <Input focus fluid inverted
@@ -38,7 +30,7 @@ export class EditTaskModal extends React.PureComponent<IProps> {
                         id='taskAdd_titleInput' />
                 </Modal.Content>
                 <Modal.Actions>
-                    <Button basic color='red' inverted onClick={this.handleClose}>
+                    <Button basic color='red' inverted onClick={this.props.closeModal}>
                         <Icon name='remove' /> Cancel
                     </Button>
                     <Button color='green' inverted onClick={this.handleSave}>
@@ -49,8 +41,6 @@ export class EditTaskModal extends React.PureComponent<IProps> {
         )
     }
 
-    private handleOpen = () => this.props.openModal(true)
-    private handleClose = () => this.props.openModal(false)
     private handleTaskModelChange = (value: string) => this.props.changeModel(value)
 
     private handleSave = () => {
@@ -60,18 +50,12 @@ export class EditTaskModal extends React.PureComponent<IProps> {
 
         this.props.saveTask(TaskHelper.createTaskFromText(this.props.model))
         this.props.changeModel('')
-        this.props.openModal(false)
+        this.props.closeModal()
     }
 
     private handleInputKeyUp = (e: KeyboardEvent) => {
         if (e.key === KeyConstants.ENTER) {
             this.handleSave()
-        }
-    }
-
-    private handleGlobalKeyUp = (e: KeyboardEvent) => {
-        if (e.key === KeyConstants.ENTER && e.ctrlKey) {
-            this.handleOpen()
         }
     }
 }

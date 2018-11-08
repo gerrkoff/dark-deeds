@@ -13,9 +13,9 @@ function mapStateToProps({ editTask }: any) {
 function mapDispatchToProps(dispatch: any) {
     return {
         changeModel: (value: string) => dispatch(changeEditTaskModel(value)),
-        openModal: (open: boolean) => dispatch(openEditTaskModal(open)),
+        closeModal: () => dispatch(openEditTaskModal(false)),
         saveTask: (task: Task) => dispatch(localAddTask(task))
     }
 }
-console.log('EditTaskModal :', EditTaskModal)
+
 export default connect(mapStateToProps, mapDispatchToProps)(EditTaskModal)
