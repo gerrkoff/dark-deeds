@@ -1,3 +1,3 @@
-export * from './app'
-export * from './not-found'
-export * from './toolbar'
+export * from './App'
+export * from './NotFound'
+export * from './Toolbar'
