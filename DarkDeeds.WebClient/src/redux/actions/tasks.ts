@@ -22,8 +22,8 @@ export interface ITasksLocalUpdate {
     tasks: Task[]
 }
 
-export interface ITasksLocalAdd {
-    type: constants.TASKS_LOCAL_ADD
+export interface ITasksLocalUpdateTask {
+    type: constants.TASKS_LOCAL_UPDATE_TASK
     task: Task
 }
 
@@ -40,7 +40,7 @@ export interface ITasksSavingFailed {
     type: constants.TASKS_SAVING_FAILED
 }
 
-export type TasksAction = ITasksLoading | ITasksLoadingSuccess | ITasksLoadingFailed | ITasksLocalUpdate | ITasksSaving | ITasksSavingSuccess | ITasksSavingFailed | ITasksLocalAdd
+export type TasksAction = ITasksLoading | ITasksLoadingSuccess | ITasksLoadingFailed | ITasksLocalUpdate | ITasksSaving | ITasksSavingSuccess | ITasksSavingFailed | ITasksLocalUpdateTask
 
 export function loadTasks() {
     return async(dispatch: Dispatch<TasksAction>) => {
@@ -59,8 +59,8 @@ export function localUpdateTasks(tasks: Task[]): ITasksLocalUpdate {
     return { type: constants.TASKS_LOCAL_UPDATE, tasks }
 }
 
-export function localAddTask(task: Task): ITasksLocalAdd {
-    return { type: constants.TASKS_LOCAL_ADD, task }
+export function localUpdateTask(task: Task): ITasksLocalUpdateTask {
+    return { type: constants.TASKS_LOCAL_UPDATE_TASK, task }
 }
 
 export function saveTasks(tasks: Task[]) {
