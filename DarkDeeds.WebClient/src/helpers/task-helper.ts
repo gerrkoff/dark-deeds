@@ -84,6 +84,7 @@ const service = {
         return tasks
     },
 
+    // TODO: implement future year support
     createTaskFromText(text: string): TaskModel {
         const model = new TaskModel(text)
 
@@ -117,6 +118,21 @@ const service = {
             ...model,
             dateTime: null
         }
+    },
+
+    // TODO: implement future year support
+    convertModelToString(model: TaskModel): string {
+        if (model.dateTime === null) {
+            return model.title
+        }
+
+        const s = `${str2digits(model.dateTime.getMonth() + 1)}${str2digits(model.dateTime.getDate())}`
+
+        if (!model.withTIme) {
+            return `${s} ${model.title}`
+        }
+
+        return `${s} ${str2digits(model.dateTime.getHours())}${str2digits(model.dateTime.getMinutes())} ${model.title}`
     }
 }
 
@@ -126,6 +142,10 @@ function taskDateToStart(date: Date | null): number {
     } else {
         return 0
     }
+}
+
+function str2digits(n: number): string {
+    return n < 10 ? '0' + n : n.toString()
 }
 
 export { service as TaskHelper }

@@ -1,5 +1,5 @@
 import { TaskHelper } from '../../helpers'
-import { Task } from '../../models'
+import { Task, TaskModel } from '../../models'
 
 function task(year: number, month: number, date: number, id: number = 0, order: number = 0): Task {
     return new Task(id, '', new Date(year, month, date), order)
@@ -136,4 +136,24 @@ test('[createTaskFromText] date and time 2', () => {
     expect(result.title).toBe('Test!!!')
     expect(result.dateTime!.getTime())
         .toBe(new Date(currentYear, 0, 1, 1, 1, 0).getTime())
+})
+
+test('[createTaskFromText] no date', () => {
+    const result = TaskHelper.convertModelToString(new TaskModel('Test!'))
+    expect(result).toBe('Test!')
+})
+
+test('[createTaskFromText] date & no time', () => {
+    const result = TaskHelper.convertModelToString(new TaskModel('Test!', new Date(2018, 11, 11)))
+    expect(result).toBe('1211 Test!')
+})
+
+test('[createTaskFromText] date & time', () => {
+    const result = TaskHelper.convertModelToString(new TaskModel('Test!', new Date(2018, 11, 11, 23, 59), true))
+    expect(result).toBe('1211 2359 Test!')
+})
+
+test('[createTaskFromText] date & time less ten', () => {
+    const result = TaskHelper.convertModelToString(new TaskModel('Test!', new Date(2018, 0, 1, 1, 1), true))
+    expect(result).toBe('0101 0101 Test!')
 })

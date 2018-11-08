@@ -1,5 +1,6 @@
+import { TaskHelper } from '../../helpers'
 import { EditTaskAction } from '../actions'
-import { EDITTASK_MODALOPEN, EDITTASK_TASKMODEL } from '../constants'
+import { EDITTASK_MODALOPEN, EDITTASK_SET_MODEL, EDITTASK_TASKMODEL } from '../constants'
 import { IEditTaskState } from '../types'
 
 const inittialState: IEditTaskState = {
@@ -18,6 +19,10 @@ export function editTask(state: IEditTaskState = inittialState, action: EditTask
         case EDITTASK_TASKMODEL:
             return { ...state,
                 taskModel: action.model
+            }
+        case EDITTASK_SET_MODEL:
+            return { ...state,
+                taskModel: TaskHelper.convertModelToString(action.model)
             }
     }
     return state
