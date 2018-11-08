@@ -26,3 +26,8 @@
         min-width: 9rem;
     }
 }
+
+.day-card-add-task {
+    padding-left: 0.75rem;
+    cursor: pointer;
+}

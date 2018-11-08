@@ -9,7 +9,8 @@ import { DaysBlock, NoDateCard } from './'
 
 interface IProps {
     tasks: Task[],
-    updateTasks: (tasks: Task[]) => void
+    updateTasks: (tasks: Task[]) => void,
+    openAddTaskModalForSpecDay: (date: Date) => void
 }
 export class Overview extends React.PureComponent<IProps> {
     private drake: any
@@ -42,14 +43,14 @@ export class Overview extends React.PureComponent<IProps> {
         }
 
         panels.push({
-            content: { content: (<DaysBlock days={model.current} daysInRow={7} expiredDate={today} />) },
+            content: { content: (<DaysBlock days={model.current} daysInRow={7} expiredDate={today} openAddTaskModalForSpecDay={this.props.openAddTaskModalForSpecDay} />) },
             key: 'current',
             title: 'Current'
         })
 
         if (model.future.length > 0) {
             panels.push({
-                content: { content: (<DaysBlock days={model.future} expiredDate={today} />) },
+                content: { content: (<DaysBlock days={model.future} expiredDate={today} openAddTaskModalForSpecDay={this.props.openAddTaskModalForSpecDay} />) },
                 key: 'future',
                 title: 'Future'
             })

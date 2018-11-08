@@ -1,3 +1,4 @@
+import { Dispatch } from 'redux'
 import { TaskModel } from '../../models'
 import * as constants from '../constants'
 
@@ -29,4 +30,11 @@ export function changeEditTaskModel(model: string): IEditTaskModel {
 
 export function setEditTaskModel(model: TaskModel): IEditTaskSetModel {
     return { type: constants.EDITTASK_SET_MODEL, model }
+}
+
+export function openEditTaskWithModel(model: TaskModel) {
+    return async(dispatch: Dispatch<EditTaskAction>) => {
+        dispatch(setEditTaskModel(model))
+        dispatch(openEditTaskModal(true))
+    }
 }

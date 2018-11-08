@@ -1,12 +1,13 @@
 import * as React from 'react'
-import { List, Segment } from 'semantic-ui-react'
+import { Icon, List, Segment } from 'semantic-ui-react'
 import { DateHelper } from '../../helpers'
 import { DayCardModel, Task } from '../../models'
 import '../../styles/day-card.css'
 
 interface IProps {
     day: DayCardModel,
-    expiredDate?: Date
+    expiredDate?: Date,
+    openAddTaskModalForSpecDay?: (date: Date) => void
 }
 export class DayCard extends React.PureComponent<IProps> {
     public render() {
@@ -16,6 +17,11 @@ export class DayCard extends React.PureComponent<IProps> {
             <Segment id='day-card' className={ className } inverted raised>
                 <span className='day-card-title'>
                     {DateHelper.toLabel(this.props.day.date)}
+                    {
+                        this.props.openAddTaskModalForSpecDay !== undefined
+                            ? <Icon name='plus' className='day-card-add-task' onClick={this.handleAdd} />
+                            : <React.Fragment />
+                    }
                 </span>
                 <List bulleted className='day-card-tasks-view dragula-container' data-id={this.props.day.date.getTime()}>
                     {this.props.day.tasks.map((x: Task) =>
@@ -24,5 +30,11 @@ export class DayCard extends React.PureComponent<IProps> {
                 </List>
             </Segment>
         )
+    }
+
+    private handleAdd = () => {
+        if (this.props.openAddTaskModalForSpecDay) {
+            this.props.openAddTaskModalForSpecDay(this.props.day.date)
+        }
     }
 }

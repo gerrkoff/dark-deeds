@@ -1,7 +1,7 @@
 import { connect } from 'react-redux'
 import { Overview } from '../components/overview'
-import { Task } from '../models'
-import { localUpdateTasks } from '../redux/actions'
+import { Task, TaskModel } from '../models'
+import { localUpdateTasks, openEditTaskWithModel } from '../redux/actions'
 
 function mapStateToProps({ tasks }: any) {
     return {
@@ -11,6 +11,7 @@ function mapStateToProps({ tasks }: any) {
 
 function mapDispatchToProps(dispatch: any) {
     return {
+        openAddTaskModalForSpecDay: (date: Date) => dispatch(openEditTaskWithModel(new TaskModel('', date))),
         updateTasks: (tasks: Task[]) => dispatch(localUpdateTasks(tasks))
     }
 }

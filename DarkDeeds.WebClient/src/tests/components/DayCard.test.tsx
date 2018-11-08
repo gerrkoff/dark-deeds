@@ -40,3 +40,13 @@ test('renders ready for drag-n-drop', () => {
     const component = enzyme.shallow(<DayCard day={model} />)
     expect(component.find('.dragula-container').length).toBe(1)
 })
+
+test('renders icon for adding', () => {
+    let model = new DayCardModel(new Date())
+    let component = enzyme.shallow(<DayCard day={model} openAddTaskModalForSpecDay={() => alert()} />)
+    expect(component.find('.day-card-add-task').length).toBe(1)
+
+    model = new DayCardModel(new Date())
+    component = enzyme.shallow(<DayCard day={model} />)
+    expect(component.find('.day-card-add-task').length).toBe(0)
+})

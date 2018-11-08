@@ -7,7 +7,8 @@ import '../../styles/days-block.css'
 interface IProps {
     days: DayCardModel[],
     daysInRow?: number,
-    expiredDate?: Date
+    expiredDate?: Date,
+    openAddTaskModalForSpecDay?: (date: Date) => void
 }
 export class DaysBlock extends React.PureComponent<IProps> {
     public render() {
@@ -34,7 +35,7 @@ export class DaysBlock extends React.PureComponent<IProps> {
                     <div className='days-block' key={x[0].date.getTime()}>
                         {x.map(y =>
                             <div className='days-block-item' key={y.date.getTime()}>
-                                <DayCard day={y} expiredDate={this.props.expiredDate} />
+                                <DayCard day={y} expiredDate={this.props.expiredDate} openAddTaskModalForSpecDay={this.props.openAddTaskModalForSpecDay} />
                             </div>
                         )}
                     </div>
