@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Button, Icon, Input, Modal } from 'semantic-ui-react'
+import { Button, Icon, Input, Label, Modal } from 'semantic-ui-react'
 import { KeyConstants, TaskHelper } from '../../helpers'
 import { TaskModel } from '../../models'
 
@@ -11,7 +11,15 @@ interface IProps {
     closeModal: () => void
     changeModel: (value: string) => void
 }
-export class EditTaskModal extends React.PureComponent<IProps> {
+interface IState {
+    invalidTitle: boolean
+}
+export class EditTaskModal extends React.PureComponent<IProps, IState> {
+    constructor(props: IProps) {
+        super(props)
+        this.state = { invalidTitle: false }
+    }
+
     public componentDidUpdate(prevProps: IProps) {
         if (this.props.open && !prevProps.open) {
             document.getElementById('taskAdd_titleInput')!.focus()
@@ -29,6 +37,11 @@ export class EditTaskModal extends React.PureComponent<IProps> {
                         onChange={(_event, data) => this.handleTaskModelChange(data.value)}
                         onKeyUp={this.handleInputKeyUp}
                         id='taskAdd_titleInput' />
+                    {
+                        this.state.invalidTitle
+                            ? <Label color='red' pointing>Please enter non-empty title</Label>
+                            : <React.Fragment />
+                    }
                 </Modal.Content>
                 <Modal.Actions>
                     <Button basic color='red' inverted onClick={this.props.closeModal}>
@@ -42,14 +55,24 @@ export class EditTaskModal extends React.PureComponent<IProps> {
         )
     }
 
-    private handleTaskModelChange = (value: string) => this.props.changeModel(value)
+    private handleTaskModelChange = (value: string) => {
+        this.setState({ invalidTitle: false })
+        this.props.changeModel(value)
+    }
 
     private handleSave = () => {
         if (this.props.model.length === 0) {
+            this.setState({ invalidTitle: true })
             return
         }
 
         const taskModel = TaskHelper.convertStringToModel(this.props.model)
+
+        if (taskModel.title.length === 0) {
+            this.setState({ invalidTitle: true })
+            return
+        }
+
         this.props.saveTask(taskModel, this.props.clientId)
         this.props.changeModel('')
         this.props.closeModal()
