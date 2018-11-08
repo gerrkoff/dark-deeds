@@ -1,8 +1,10 @@
 import * as React from 'react'
 import { ToastContainer } from 'react-toastify'
 import { Container, Dimmer, Loader } from 'semantic-ui-react'
+import EditTaskModal from '../../containers/EditTaskModal'
 import { Task } from '../../models'
-import { AddTaskButton, Toolbar } from './'
+import { AddTaskButton } from '../edit-task'
+import { Toolbar } from './'
 
 interface IProps {
     appLoading: boolean
@@ -13,7 +15,7 @@ interface IProps {
     navigateTo: (path: string) => void
     loadTasks: () => void
     saveTasks: (tasks: Task[]) => void
-    addNewTask: (task: Task) => void
+    openEditTask: () => void
 }
 export class App extends React.PureComponent<IProps> {
     public componentDidMount() {
@@ -28,7 +30,8 @@ export class App extends React.PureComponent<IProps> {
                 <Container>
                     {this.props.children}
                 </Container>
-                <AddTaskButton addNewTask={this.props.addNewTask} />
+                <AddTaskButton openModal={this.props.openEditTask} />
+                <EditTaskModal />
                 <Dimmer active={this.props.appLoading}>
                     <Loader />
                 </Dimmer>

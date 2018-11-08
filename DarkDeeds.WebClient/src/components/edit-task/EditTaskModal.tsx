@@ -2,23 +2,17 @@ import * as React from 'react'
 import { Button, Icon, Input, Modal } from 'semantic-ui-react'
 import { KeyConstants, TaskHelper } from '../../helpers'
 import { Task } from '../../models'
-import '../../styles/add-task-button.css'
 
 interface IProps {
-    addNewTask: (task: Task) => void
+    open: boolean
+    model: string
+    saveTask: (task: Task) => void
+    openModal: (open: boolean) => void
+    changeModel: (value: string) => void
 }
-interface IState {
-    modalOpen: boolean,
-    taskModel: string
-}
-export class AddTaskButton extends React.PureComponent<IProps, IState> {
-    constructor(props: IProps) {
-        super(props)
-        this.state = { modalOpen: false, taskModel: '' }
-    }
-
-    public componentDidUpdate(prevProps: IProps, prevState: IState) {
-        if (this.state.modalOpen && !prevState.modalOpen) {
+export class EditTaskModal extends React.PureComponent<IProps> {
+    public componentDidUpdate(prevProps: IProps) {
+        if (this.props.open && !prevProps.open) {
             document.getElementById('taskAdd_titleInput')!.focus()
         }
     }
@@ -33,17 +27,12 @@ export class AddTaskButton extends React.PureComponent<IProps, IState> {
 
     public render() {
         return (
-            <Modal basic size='small'
-                trigger={<Button circular icon='plus' id='add-task-button' onClick={this.handleOpen}/>}
-                open={this.state.modalOpen}
-                onClose={this.handleClose}
-            >
-
+            <Modal basic size='small' open={this.props.open} onClose={this.handleClose}>
                 <Modal.Header>New task</Modal.Header>
                 <Modal.Content>
                     <Input focus fluid inverted
                         placeholder='1231 2359 December 31, 23:59 ...'
-                        value={this.state.taskModel}
+                        value={this.props.model}
                         onChange={(_event, data) => this.handleTaskModelChange(data.value)}
                         onKeyUp={this.handleInputKeyUp}
                         id='taskAdd_titleInput' />
@@ -60,17 +49,18 @@ export class AddTaskButton extends React.PureComponent<IProps, IState> {
         )
     }
 
-    private handleOpen = () => this.setState({ modalOpen: true })
-    private handleClose = () => this.setState({ modalOpen: false })
-    private handleTaskModelChange = (value: string) => this.setState({ taskModel: value })
+    private handleOpen = () => this.props.openModal(true)
+    private handleClose = () => this.props.openModal(false)
+    private handleTaskModelChange = (value: string) => this.props.changeModel(value)
 
     private handleSave = () => {
-        if (this.state.taskModel.length === 0) {
+        if (this.props.model.length === 0) {
             return
         }
 
-        this.props.addNewTask(TaskHelper.createTaskFromText(this.state.taskModel))
-        this.setState({ modalOpen: false, taskModel: '' })
+        this.props.saveTask(TaskHelper.createTaskFromText(this.props.model))
+        this.props.changeModel('')
+        this.props.openModal(false)
     }
 
     private handleInputKeyUp = (e: KeyboardEvent) => {
