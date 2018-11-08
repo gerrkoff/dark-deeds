@@ -1,13 +1,13 @@
 import * as React from 'react'
 import { Button, Icon, Input, Modal } from 'semantic-ui-react'
 import { KeyConstants, TaskHelper } from '../../helpers'
-import { Task } from '../../models'
+import { TaskModel } from '../../models'
 
 interface IProps {
     open: boolean
     model: string
     clientId: number
-    saveTask: (task: Task) => void
+    saveTask: (taskModel: TaskModel, clientId: number) => void
     closeModal: () => void
     changeModel: (value: string) => void
 }
@@ -49,9 +49,8 @@ export class EditTaskModal extends React.PureComponent<IProps> {
             return
         }
 
-        const task = TaskHelper.createTaskFromText(this.props.model)
-        task.clientId = this.props.clientId
-        this.props.saveTask(task)
+        const taskModel = TaskHelper.createTaskFromText(this.props.model)
+        this.props.saveTask(taskModel, this.props.clientId)
         this.props.changeModel('')
         this.props.closeModal()
     }

@@ -1,7 +1,7 @@
 import { Dispatch } from 'redux'
 import { TaskApi } from '../../api/task-api'
 import { ToastHelper } from '../../helpers'
-import { Task } from '../../models'
+import { Task, TaskModel } from '../../models'
 import * as constants from '../constants'
 
 export interface ITasksLoading {
@@ -24,7 +24,8 @@ export interface ITasksLocalUpdate {
 
 export interface ITasksLocalUpdateTask {
     type: constants.TASKS_LOCAL_UPDATE_TASK
-    task: Task
+    taskModel: TaskModel
+    clientId: number
 }
 
 export interface ITasksSaving {
@@ -59,8 +60,8 @@ export function localUpdateTasks(tasks: Task[]): ITasksLocalUpdate {
     return { type: constants.TASKS_LOCAL_UPDATE, tasks }
 }
 
-export function localUpdateTask(task: Task): ITasksLocalUpdateTask {
-    return { type: constants.TASKS_LOCAL_UPDATE_TASK, task }
+export function localUpdateTask(taskModel: TaskModel, clientId: number): ITasksLocalUpdateTask {
+    return { type: constants.TASKS_LOCAL_UPDATE_TASK, taskModel, clientId }
 }
 
 export function saveTasks(tasks: Task[]) {

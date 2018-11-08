@@ -98,9 +98,6 @@ test('[moveTask] same list as last', () => {
 test('[createTaskFromText] no date and time', () => {
     const result = TaskHelper.createTaskFromText('Test!')
 
-    expect(result.clientId).toBe(0)
-    expect(result.order).toBe(0)
-    expect(result.updated).toBe(false)
     expect(result.title).toBe('Test!')
     expect(result.dateTime).toBe(null)
 })

@@ -1,4 +1,4 @@
-import { DayCardModel, OverviewModel, Task } from '../models'
+import { DayCardModel, OverviewModel, Task, TaskModel } from '../models'
 import { DateHelper } from './'
 
 const service = {
@@ -84,17 +84,11 @@ const service = {
         return tasks
     },
 
-    createTaskFromText(text: string): Task {
-        const task = {
-            clientId: 0,
-            id: 0,
-            order: 0,
-            title: text,
-            updated: false
-        }
+    createTaskFromText(text: string): TaskModel {
+        const model = new TaskModel(text)
 
         if (/^\d{4}\s\d{4}/.test(text)) {
-            task.title = text.substr(9).trim()
+            model.title = text.substr(9).trim()
             const month = Number(text.substr(0, 2))
             const day = Number(text.substr(2, 2))
             const currentYear = new Date().getFullYear()
@@ -102,25 +96,25 @@ const service = {
             const minute = Number(text.substr(7, 2))
 
             return {
-                ...task,
+                ...model,
                 dateTime: new Date(currentYear, month - 1, day, hour, minute)
             }
         }
 
         if (/^\d{4}/.test(text)) {
-            task.title = text.substr(4).trim()
+            model.title = text.substr(4).trim()
             const month = Number(text.substr(0, 2))
             const day = Number(text.substr(2, 2))
             const currentYear = new Date().getFullYear()
 
             return {
-                ...task,
+                ...model,
                 dateTime: new Date(currentYear, month - 1, day)
             }
         }
 
         return {
-            ...task,
+            ...model,
             dateTime: null
         }
     }

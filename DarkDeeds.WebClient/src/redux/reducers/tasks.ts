@@ -1,5 +1,5 @@
 import { DateHelper } from '../../helpers'
-import { Task } from '../../models'
+import { Task, TaskModel } from '../../models'
 import { TasksAction } from '../actions'
 import { TASKS_LOADING, TASKS_LOADING_FAILED, TASKS_LOADING_SUCCESS, TASKS_LOCAL_UPDATE, TASKS_LOCAL_UPDATE_TASK, TASKS_SAVING, TASKS_SAVING_FAILED, TASKS_SAVING_SUCCESS } from '../constants'
 import { ITasksState } from '../types'
@@ -44,7 +44,7 @@ export function tasks(state: ITasksState = inittialState, action: TasksAction): 
             }
         case TASKS_LOCAL_UPDATE_TASK:
             return { ...state,
-                tasks: localUpdateTask(action.task, state.tasks)
+                tasks: localUpdateTask(action.taskModel, action.clientId, state.tasks)
             }
     }
     return state
@@ -66,24 +66,23 @@ function updateTasksFromServer(localTasks: Task[], updatedTasks: Task[]): Task[]
     return newTasks
 }
 
-function localUpdateTask(task: Task, localTasks: Task[]): Task[] {
-    const taskIndex = localTasks.findIndex(x => x.clientId === task.clientId)
+function localUpdateTask(model: TaskModel, clientId: number, localTasks: Task[]): Task[] {
+    const taskIndex = localTasks.findIndex(x => x.clientId === clientId)
 
     if (taskIndex > -1) {
         const newTasks = [...localTasks]
         newTasks[taskIndex] = {
             ...newTasks[taskIndex],
-            ...task,
-            id: newTasks[taskIndex].id,
+            ...model,
             updated: true
         }
         return newTasks
     } else {
-        return localAddTask(task, localTasks)
+        return localAddTask(model, localTasks)
     }
 }
 
-function localAddTask(task: Task, localTasks: Task[]): Task[] {
+function localAddTask(model: TaskModel, localTasks: Task[]): Task[] {
     let minId = Math.min(...localTasks.map(x => x.clientId))
     if (minId > -1) {
         minId = -1
@@ -92,13 +91,17 @@ function localAddTask(task: Task, localTasks: Task[]): Task[] {
     }
 
     const sameDayTaskOrders = localTasks
-        .filter(x => DateHelper.equalDatesByStart(x.dateTime, task.dateTime))
+        .filter(x => DateHelper.equalDatesByStart(x.dateTime, model.dateTime))
         .map(x => x.order)
     const maxOrder = sameDayTaskOrders.length === 0 ? 0 : Math.max(...sameDayTaskOrders)
 
-    task.clientId = minId
-    task.order = maxOrder + 1
-    task.updated = true
+    const task = {
+        ...model,
+        clientId: minId,
+        id: 0,
+        order: maxOrder + 1,
+        updated: true
+    }
 
     return [...localTasks, task]
 }

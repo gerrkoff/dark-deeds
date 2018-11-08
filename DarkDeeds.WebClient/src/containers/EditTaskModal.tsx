@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import { EditTaskModal } from '../components/edit-task'
-import { Task } from '../models'
+import { TaskModel } from '../models'
 import { changeEditTaskModel, localUpdateTask, openEditTaskModal } from '../redux/actions'
 
 function mapStateToProps({ editTask }: any) {
@@ -15,7 +15,7 @@ function mapDispatchToProps(dispatch: any) {
     return {
         changeModel: (value: string) => dispatch(changeEditTaskModel(value)),
         closeModal: () => dispatch(openEditTaskModal(false)),
-        saveTask: (task: Task) => dispatch(localUpdateTask(task))
+        saveTask: (taskModel: TaskModel, clientId: number) => dispatch(localUpdateTask(taskModel, clientId))
     }
 }
 
