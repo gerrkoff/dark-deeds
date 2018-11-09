@@ -33,8 +33,8 @@ export class DayCardHeader extends React.PureComponent<IProps> {
         const mouseOverEnabled = this.props.mouseOver
         return (
             <span className='day-card-header'
-                onMouseEnter={mouseOverEnabled ? this.handleMouseEnter : undefined}
-                onMouseLeave={mouseOverEnabled ? this.handleMouseLeave : undefined}
+                onPointerEnter={mouseOverEnabled ? this.handleMouseEnter : undefined}
+                onPointerLeave={mouseOverEnabled ? this.handleMouseLeave : undefined}
             >
                 {DateHelper.toLabel(this.props.date)}
             </span>
