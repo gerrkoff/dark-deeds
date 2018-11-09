@@ -1,24 +1,15 @@
+/*
 import * as React from 'react'
 import { Button, Popup } from 'semantic-ui-react'
 import { DateHelper } from '../../helpers'
 import '../../styles/day-card-header.css'
 
 interface IProps {
-    date: Date
+    date: Date,
     openAddTaskModalForSpecDay?: (date: Date) => void
     mouseOver?: (isOver: boolean) => void
 }
-interface IState {
-    menuPopupOpen: boolean
-}
-export class DayCardHeader extends React.PureComponent<IProps, IState> {
-    constructor(props: IProps) {
-        super(props)
-        this.state = {
-            menuPopupOpen: false
-        }
-    }
-
+export class DayCardHeader extends React.PureComponent<IProps> {
     public render() {
         const addDisabled = !this.props.openAddTaskModalForSpecDay
         return (
@@ -27,9 +18,6 @@ export class DayCardHeader extends React.PureComponent<IProps, IState> {
                     inverted
                     position='bottom left'
                     on='click'
-                    open={this.state.menuPopupOpen}
-                    onClose={this.handleMenuPopupClose}
-                    onOpen={this.handleMenuPopupOpen}
                     trigger={this.renderContent()}
                     content={
                         <React.Fragment>
@@ -68,14 +56,8 @@ export class DayCardHeader extends React.PureComponent<IProps, IState> {
 
     private handleAdd = () => {
         if (this.props.openAddTaskModalForSpecDay) {
-            this.setState({ menuPopupOpen: false })
             this.props.openAddTaskModalForSpecDay(this.props.date)
         }
     }
-
-    private handleMenuPopupClose = () => this.setState({ menuPopupOpen: false })
-    private handleMenuPopupOpen = () => {
-        this.handleMouseEnter()
-        this.setState({ menuPopupOpen: true })
-    }
 }
+*/
