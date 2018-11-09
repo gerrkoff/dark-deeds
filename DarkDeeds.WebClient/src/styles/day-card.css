@@ -9,12 +9,6 @@
     box-shadow: none !important;
 }
 
-.day-card-title {
-    width: 100%;
-    display: inline-block;
-    text-align: center;
-}
-
 .day-card-tasks-view {
     min-width: 15rem;
     min-height: 3rem;

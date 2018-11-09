@@ -1,0 +1,6 @@
+.day-card-header {
+    width: 100%;
+    display: inline-block;
+    text-align: center;
+    cursor: pointer;
+}
