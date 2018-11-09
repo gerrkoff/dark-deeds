@@ -4,6 +4,8 @@
     display: inline-block;
     margin-left: -0.5rem;
     padding-left: 0.5rem;
+    padding-top: 0.1rem;
+    padding-bottom: 0.1rem;
 }
 
 .task-item:hover {
