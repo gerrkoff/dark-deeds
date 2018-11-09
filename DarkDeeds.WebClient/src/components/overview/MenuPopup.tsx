@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { Menu, MenuItemProps, Popup } from 'semantic-ui-react'
-import '../../styles/day-card-header.css'
+import '../../styles/menu-popup.css'
 
 interface IProps {
     content: React.ReactNode
@@ -23,6 +23,7 @@ export class MenuPopup extends React.PureComponent<IProps, IState> {
                 <Popup
                     position='bottom left'
                     on='click'
+                    className='menu-popup'
                     open={this.state.menuPopupOpen}
                     onClose={this.handleMenuPopupClose}
                     onOpen={this.handleMenuPopupOpen}
