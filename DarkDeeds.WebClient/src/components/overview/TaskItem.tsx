@@ -1,6 +1,8 @@
 import * as React from 'react'
-import { Button, Popup } from 'semantic-ui-react'
+import { MenuItemProps } from 'semantic-ui-react'
 import { Task } from '../../models'
+import { MenuPopup } from './'
+
 import '../../styles/task-item.css'
 
 interface IProps {
@@ -8,22 +10,27 @@ interface IProps {
 }
 export class TaskItem extends React.PureComponent<IProps> {
     public render() {
+        const menuItemProps = new Array<MenuItemProps>()
+        menuItemProps.push({
+            content: 'Complete',
+            disabled: true,
+            name: 'complete'
+        })
+        menuItemProps.push({
+            content: 'Edit',
+            disabled: true,
+            name: 'edit'
+        })
+        menuItemProps.push({
+            content: 'Delete',
+            disabled: true,
+            name: 'delete'
+        })
+
         return (
-            <React.Fragment>
-                <Popup
-                    inverted
-                    position='bottom left'
-                    on='click'
-                    trigger={<span className='task-item'>{this.props.task.title}</span>}
-                    content={
-                        <React.Fragment>
-                            <Button basic inverted color='green' content='Complete' />
-                            <Button basic inverted color='green' content='Edit' />
-                            <Button basic inverted color='green' content='Delete' />
-                        </React.Fragment>
-                    }
-                />
-            </React.Fragment>
+            <MenuPopup
+                content={<span className='task-item'>{this.props.task.title}</span>}
+                menuItemProps={menuItemProps} />
         )
     }
 }

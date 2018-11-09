@@ -5,7 +5,7 @@ import '../../styles/day-card-header.css'
 interface IProps {
     content: React.ReactNode
     menuItemProps: MenuItemProps[]
-    menuPopupClose: () => void
+    menuPopupClose?: () => void
 }
 interface IState {
     menuPopupOpen: boolean
@@ -21,7 +21,6 @@ export class MenuPopup extends React.PureComponent<IProps, IState> {
     public render() {
         return (
                 <Popup
-                    inverted
                     position='bottom left'
                     on='click'
                     open={this.state.menuPopupOpen}
@@ -61,7 +60,9 @@ export class MenuPopup extends React.PureComponent<IProps, IState> {
     private handleMenuPopupClose = () => this.setState({ menuPopupOpen: false })
 
     private handleMenuPopupOpen = () => {
-        this.props.menuPopupClose()
+        if (this.props.menuPopupClose) {
+            this.props.menuPopupClose()
+        }
         this.setState({ menuPopupOpen: true })
     }
 }
