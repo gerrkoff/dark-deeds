@@ -1,63 +1,67 @@
-/*
 import * as React from 'react'
-import { Button, Popup } from 'semantic-ui-react'
-import { DateHelper } from '../../helpers'
+import { Menu, MenuItemProps, Popup } from 'semantic-ui-react'
 import '../../styles/day-card-header.css'
 
 interface IProps {
-    date: Date,
-    openAddTaskModalForSpecDay?: (date: Date) => void
-    mouseOver?: (isOver: boolean) => void
+    content: React.ReactNode
+    menuItemProps: MenuItemProps[]
+    menuPopupClose: () => void
 }
-export class DayCardHeader extends React.PureComponent<IProps> {
+interface IState {
+    menuPopupOpen: boolean
+}
+export class MenuPopup extends React.PureComponent<IProps, IState> {
+    constructor(props: IProps) {
+        super(props)
+        this.state = {
+            menuPopupOpen: false
+        }
+    }
+
     public render() {
-        const addDisabled = !this.props.openAddTaskModalForSpecDay
         return (
-            <React.Fragment>
                 <Popup
                     inverted
                     position='bottom left'
                     on='click'
-                    trigger={this.renderContent()}
-                    content={
-                        <React.Fragment>
-                            <Button basic inverted color='green' content='Add' onClick={this.handleAdd} disabled={addDisabled}/>
-                            <Button basic inverted color='green' content='View' />
-                        </React.Fragment>
-                    }
+                    open={this.state.menuPopupOpen}
+                    onClose={this.handleMenuPopupClose}
+                    onOpen={this.handleMenuPopupOpen}
+                    trigger={this.props.content}
+                    content={this.renderMenu()}
                 />
-            </React.Fragment>
         )
     }
 
-    private renderContent = () => {
-        const mouseOverEnabled = this.props.mouseOver
+    private renderMenu() {
+        const adjustedProps = [...this.props.menuItemProps]
+
+        adjustedProps.forEach(x => {
+            if (x.onClick) {
+                x.onClick = this.injectClosing(x.onClick)
+            }
+        })
+
         return (
-            <span className='day-card-header'
-                onPointerEnter={mouseOverEnabled ? this.handleMouseEnter : undefined}
-                onPointerLeave={mouseOverEnabled ? this.handleMouseLeave : undefined}
-            >
-                {DateHelper.toLabel(this.props.date)}
-            </span>
+            <Menu size='mini' vertical>
+                {this.props.menuItemProps.map(x =>
+                    <Menu.Item {...x} key={x.name} />
+                )}
+            </Menu>
         )
     }
 
-    private handleMouseEnter = () => {
-        if (this.props.mouseOver) {
-            this.props.mouseOver(true)
+    private injectClosing = (func: any) => {
+        return (event: any, data: any) => {
+            this.handleMenuPopupClose()
+            func(event, data)
         }
     }
 
-    private handleMouseLeave = () => {
-        if (this.props.mouseOver) {
-            this.props.mouseOver(false)
-        }
-    }
+    private handleMenuPopupClose = () => this.setState({ menuPopupOpen: false })
 
-    private handleAdd = () => {
-        if (this.props.openAddTaskModalForSpecDay) {
-            this.props.openAddTaskModalForSpecDay(this.props.date)
-        }
+    private handleMenuPopupOpen = () => {
+        this.props.menuPopupClose()
+        this.setState({ menuPopupOpen: true })
     }
 }
-*/

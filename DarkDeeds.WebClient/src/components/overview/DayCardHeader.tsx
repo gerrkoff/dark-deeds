@@ -1,6 +1,8 @@
 import * as React from 'react'
-import { Button, Popup } from 'semantic-ui-react'
+import { MenuItemProps } from 'semantic-ui-react'
 import { DateHelper } from '../../helpers'
+import { MenuPopup } from './'
+
 import '../../styles/day-card-header.css'
 
 interface IProps {
@@ -20,25 +22,21 @@ export class DayCardHeader extends React.PureComponent<IProps, IState> {
     }
 
     public render() {
-        const addDisabled = !this.props.openAddTaskModalForSpecDay
+        const menuItemProps = new Array<MenuItemProps>()
+        menuItemProps.push({
+            content: 'Add',
+            disabled: !this.props.openAddTaskModalForSpecDay,
+            name: 'add',
+            onClick: this.handleAdd
+        })
+        menuItemProps.push({
+            content: 'View',
+            disabled: true,
+            name: 'view'
+        })
+
         return (
-            <React.Fragment>
-                <Popup
-                    inverted
-                    position='bottom left'
-                    on='click'
-                    open={this.state.menuPopupOpen}
-                    onClose={this.handleMenuPopupClose}
-                    onOpen={this.handleMenuPopupOpen}
-                    trigger={this.renderContent()}
-                    content={
-                        <React.Fragment>
-                            <Button basic inverted color='green' content='Add' onClick={this.handleAdd} disabled={addDisabled}/>
-                            <Button basic inverted color='green' content='View' />
-                        </React.Fragment>
-                    }
-                />
-            </React.Fragment>
+            <MenuPopup content={this.renderContent()} menuPopupClose={this.handleMouseEnter} menuItemProps={menuItemProps}/>
         )
     }
 
@@ -68,14 +66,7 @@ export class DayCardHeader extends React.PureComponent<IProps, IState> {
 
     private handleAdd = () => {
         if (this.props.openAddTaskModalForSpecDay) {
-            this.setState({ menuPopupOpen: false })
             this.props.openAddTaskModalForSpecDay(this.props.date)
         }
-    }
-
-    private handleMenuPopupClose = () => this.setState({ menuPopupOpen: false })
-    private handleMenuPopupOpen = () => {
-        this.handleMouseEnter()
-        this.setState({ menuPopupOpen: true })
     }
 }
