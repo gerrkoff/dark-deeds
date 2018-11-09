@@ -2,6 +2,8 @@ import * as React from 'react'
 import { Icon, List, Segment } from 'semantic-ui-react'
 import { DateHelper } from '../../helpers'
 import { DayCardModel, Task } from '../../models'
+import { TaskItem } from './'
+
 import '../../styles/day-card.css'
 
 interface IProps {
@@ -25,7 +27,9 @@ export class DayCard extends React.PureComponent<IProps> {
                 </span>
                 <List bulleted className='day-card-tasks-view dragula-container' data-id={this.props.day.date.getTime()}>
                     {this.props.day.tasks.map((x: Task) =>
-                        <List.Item key={x.clientId} data-id={x.clientId}>{x.title}</List.Item>
+                        <List.Item key={x.clientId} data-id={x.clientId}>
+                            <TaskItem task={x}/>
+                        </List.Item>
                     )}
                 </List>
             </Segment>
