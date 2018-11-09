@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { MenuItemProps } from 'semantic-ui-react'
+import { Icon, MenuItemProps } from 'semantic-ui-react'
 import { DateHelper } from '../../helpers'
 import { MenuPopup } from './'
 
@@ -24,13 +24,13 @@ export class DayCardHeader extends React.PureComponent<IProps, IState> {
     public render() {
         const menuItemProps = new Array<MenuItemProps>()
         menuItemProps.push({
-            content: 'Add',
+            content: <span><Icon name='plus' />Add</span>,
             disabled: !this.props.openAddTaskModalForSpecDay,
             name: 'add',
             onClick: this.handleAdd
         })
         menuItemProps.push({
-            content: 'View',
+            content: <span><Icon name='list ul' />View</span>,
             disabled: true,
             name: 'view'
         })

@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { MenuItemProps } from 'semantic-ui-react'
+import { Icon, MenuItemProps } from 'semantic-ui-react'
 import { Task } from '../../models'
 import { MenuPopup } from './'
 
@@ -12,17 +12,18 @@ export class TaskItem extends React.PureComponent<IProps> {
     public render() {
         const menuItemProps = new Array<MenuItemProps>()
         menuItemProps.push({
-            content: 'Complete',
+            content: <span><Icon name='check' />Complete</span>,
             disabled: true,
             name: 'complete'
         })
         menuItemProps.push({
-            content: 'Edit',
+            content: <span><Icon name='pencil' />Edit</span>,
             disabled: true,
             name: 'edit'
         })
         menuItemProps.push({
-            content: 'Delete',
+            color: 'red',
+            content: <span><Icon name='delete' />Delete</span>,
             disabled: true,
             name: 'delete'
         })
