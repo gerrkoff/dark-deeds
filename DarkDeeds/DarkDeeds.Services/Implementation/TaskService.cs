@@ -99,7 +99,8 @@ namespace DarkDeeds.Services.Implementation
             var task = new TaskDto
             {
                 Id = id,
-                Title = $"{id} {TodoSamples[Rand.Next(2)]}"
+                Title = $"{id} {TodoSamples[Rand.Next(2)]}",
+                ClientId = id
             };
 
             if (dayDiff.HasValue)
