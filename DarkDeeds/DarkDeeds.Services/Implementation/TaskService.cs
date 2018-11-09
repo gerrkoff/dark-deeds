@@ -8,7 +8,7 @@ namespace DarkDeeds.Services.Implementation
 {
     public class TaskService : ITaskService
     {
-        private static int Count = 1000;
+        private static int Count = 1000000;
         
         public async Task<IEnumerable<TaskDto>> LoadTasksAsync()
         {
