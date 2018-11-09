@@ -1,7 +1,7 @@
 import * as React from 'react'
-import { Button, Icon, Popup } from 'semantic-ui-react'
+import { Button, Popup } from 'semantic-ui-react'
 import { Task } from '../../models'
-import '../../styles/day-card.css'
+import '../../styles/task-item.css'
 
 interface IProps {
     task: Task
@@ -11,9 +11,10 @@ export class TaskItem extends React.PureComponent<IProps> {
         return (
             <React.Fragment>
                 <Popup
-                    hoverable inverted
+                    inverted
                     position='bottom left'
-                    trigger={<Icon name='chevron right' />}
+                    on='click'
+                    trigger={<span className='task-item'>{this.props.task.title}</span>}
                     content={
                         <React.Fragment>
                             <Button basic inverted color='green' content='Complete' />
@@ -22,8 +23,6 @@ export class TaskItem extends React.PureComponent<IProps> {
                         </React.Fragment>
                     }
                 />
-
-                {this.props.task.title}
             </React.Fragment>
         )
     }

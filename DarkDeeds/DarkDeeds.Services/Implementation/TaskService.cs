@@ -17,8 +17,8 @@ namespace DarkDeeds.Services.Implementation
                 new TaskDto {Id = 1, Title = "Test 1", Order = 1, DateTime = DateTime.Today, ClientId = 1},
                 new TaskDto {Id = 2, Title = "Test 2", Order = 2, DateTime = DateTime.Today.AddDays(1), ClientId = 2}
             };
-            return await Task.FromResult(list);
-            //return await Task.FromResult(GenTasks());
+            //return await Task.FromResult(list);
+            return await Task.FromResult(GenTasks());
         }
 
         public async Task<IEnumerable<TaskDto>> SaveTasksAsync(ICollection<TaskDto> tasks)

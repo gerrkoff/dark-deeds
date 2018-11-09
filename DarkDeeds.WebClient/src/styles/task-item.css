@@ -1,0 +1,12 @@
+.task-item {
+    cursor: pointer;
+    width: 100%;
+    display: inline-block;
+    margin-left: -0.5rem;
+    padding-left: 0.5rem;
+}
+
+.task-item:hover {
+    border-radius: 2px;
+    background: rgba(191,214,229, 0.2);
+}
