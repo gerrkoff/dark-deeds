@@ -6,6 +6,7 @@ import '../../styles/day-card-header.css'
 interface IProps {
     date: Date,
     openAddTaskModalForSpecDay?: (date: Date) => void
+    mouseOver?: (isOver: boolean) => void
 }
 export class DayCardHeader extends React.PureComponent<IProps> {
     public render() {
@@ -16,7 +17,7 @@ export class DayCardHeader extends React.PureComponent<IProps> {
                     inverted
                     position='bottom left'
                     on='click'
-                    trigger={<span className='day-card-header'>{DateHelper.toLabel(this.props.date)}</span>}
+                    trigger={this.renderContent()}
                     content={
                         <React.Fragment>
                             <Button basic inverted color='green' content='Add' onClick={this.handleAdd} disabled={addDisabled}/>
@@ -26,6 +27,30 @@ export class DayCardHeader extends React.PureComponent<IProps> {
                 />
             </React.Fragment>
         )
+    }
+
+    private renderContent = () => {
+        const mouseOverEnabled = this.props.mouseOver
+        return (
+            <span className='day-card-header'
+                onMouseEnter={mouseOverEnabled ? this.handleMouseEnter : undefined}
+                onMouseLeave={mouseOverEnabled ? this.handleMouseLeave : undefined}
+            >
+                {DateHelper.toLabel(this.props.date)}
+            </span>
+        )
+    }
+
+    private handleMouseEnter = () => {
+        if (this.props.mouseOver) {
+            this.props.mouseOver(true)
+        }
+    }
+
+    private handleMouseLeave = () => {
+        if (this.props.mouseOver) {
+            this.props.mouseOver(false)
+        }
     }
 
     private handleAdd = () => {
