@@ -164,3 +164,24 @@ test('[tasksEqual] positive', () => {
     expect(TaskHelper.tasksEqual(new Task(1, '1', new Date(2018), 1, false, 1), new Task(1, '1', new Date(2018), 1, false, 1))).toBeTruthy()
     expect(TaskHelper.tasksEqual(new Task(1, '1', new Date(2018), 1, false, 1), new Task(2, '2', new Date(2019), 2, false, 2))).not.toBeTruthy()
 })
+
+test('[sortTasks] positive', () => {
+    const tasks = [
+        new Task(1, '', new Date(2018, 1, 1), 1, false, 0, false, false, false),
+        new Task(2, '', new Date(2018, 1, 1), 4, false, 0, false, false, false),
+        new Task(3, '', new Date(2018, 1, 1, 10), 0, false, 0, false, false, true),
+        new Task(4, '', new Date(2018, 1, 1), 3, false, 0, false, false, false),
+        new Task(5, '', new Date(2018, 1, 1, 8), 0, false, 0, false, false, true),
+        new Task(6, '', new Date(2018, 1, 1), 2, false, 0, false, false, false),
+        new Task(7, '', new Date(2018, 1, 1, 15), 0, false, 0, false, false, true)
+    ]
+    const result = TaskHelper.sortTasks(tasks)
+
+    expect(result[0].clientId).toBe(1)
+    expect(result[1].clientId).toBe(6)
+    expect(result[2].clientId).toBe(4)
+    expect(result[3].clientId).toBe(2)
+    expect(result[4].clientId).toBe(5)
+    expect(result[5].clientId).toBe(3)
+    expect(result[6].clientId).toBe(7)
+})

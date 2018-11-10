@@ -14,9 +14,9 @@ namespace DarkDeeds.Services.Implementation
         {
             var list = new List<TaskDto>
             {
-                new TaskDto {Id = 1, Title = "Test 1", Order = 1, DateTime = DateTime.Today, ClientId = 1},
-                new TaskDto {Id = 2, Title = "Test 2", Order = 2, DateTime = DateTime.Today, ClientId = 2},
-                new TaskDto {Id = 3, Title = "Test 3", Order = 3, DateTime = DateTime.Today, ClientId = 3},
+                new TaskDto {Id = 1, Title = "Test 1", Order = 0, DateTime = DateTime.Today.AddHours(10), ClientId = 1, WithTime = true},
+                new TaskDto {Id = 2, Title = "Test 2", Order = 1, DateTime = DateTime.Today, ClientId = 2},
+                new TaskDto {Id = 3, Title = "Test 3", Order = 0, DateTime = DateTime.Today.AddHours(5), ClientId = 3, WithTime = true},
             };
             return await Task.FromResult(list);
             //return await Task.FromResult(GenTasks());

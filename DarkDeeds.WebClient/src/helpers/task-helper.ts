@@ -58,7 +58,7 @@ const service = {
 
         if (sourceTasks) {
             sourceTasks.forEach(x => {
-                if (x.order > task.order) {
+                if (x.order > task.order && !x.withTime) {
                     x.order--
                     x.updated = true
                 }
@@ -72,7 +72,7 @@ const service = {
         } else {
             const newOrder = siblingTask.order
             targetTasks.forEach(x => {
-                if (x.order >= newOrder) {
+                if (x.order >= newOrder && !x.withTime) {
                     x.order++
                     x.updated = true
                 }
@@ -153,6 +153,29 @@ const service = {
             && taskA.id === taskB.id
             && taskA.completed === taskB.completed
             && taskA.deleted === taskB.deleted
+    },
+
+    sortTasks(tasks: Task[]): Task[] {
+        tasks.sort((x, y) => {
+            if (x.withTime && !y.withTime) {
+                return 1
+            }
+
+            if (!x.withTime && y.withTime) {
+                return 0
+            }
+
+            if (!x.withTime && !y.withTime) {
+                return x.order > y.order ? 1 : 0
+            }
+
+            if (x.withTime && y.withTime) {
+                return x.dateTime! > y.dateTime! ? 1 : 0
+            }
+
+            return 0
+        })
+        return tasks
     }
 }
 
