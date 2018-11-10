@@ -12,7 +12,7 @@ function mapStateToProps({ tasks }: any) {
 function mapDispatchToProps(dispatch: any) {
     return {
         confirmAction: (content: React.ReactNode, action: () => void, header: string) => dispatch(openModalConfirm(content, action, header)),
-        openTaskModal: (model: TaskModel) => dispatch(openEditTaskWithModel(model)),
+        openTaskModal: (model: TaskModel, id?: number) => dispatch(openEditTaskWithModel(model, id)),
         setTaskStatuses: (clientId: number, completed?: boolean, deleted?: boolean) => dispatch(setTaskStatuses(clientId, completed, deleted)),
         updateTasks: (tasks: Task[]) => dispatch(localUpdateTasks(tasks))
     }

@@ -8,7 +8,7 @@ import '../../styles/day-card-header.css'
 
 interface IProps {
     date: Date
-    openTaskModal?: (model: TaskModel) => void
+    openTaskModal?: (model: TaskModel, id?: number) => void
     mouseOver?: (isOver: boolean) => void
 }
 interface IState {
