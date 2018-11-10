@@ -3,13 +3,13 @@ import * as React from 'react'
 import dragula from 'react-dragula'
 import { Accordion } from 'semantic-ui-react'
 import { DateHelper, TaskHelper } from '../../helpers'
-import { DayCardModel, Task } from '../../models'
+import { DayCardModel, Task, TaskModel } from '../../models'
 import { DaysBlock, NoDateCard } from './'
 
 interface IProps {
     tasks: Task[],
     updateTasks: (tasks: Task[]) => void,
-    openAddTaskModalForSpecDay: (date: Date) => void
+    openTaskModal: (model: TaskModel) => void
     setTaskStatuses?: (clientId: number, completed?: boolean, deleted?: boolean) => void
     confirmAction?: (content: React.ReactNode, action: () => void, header: string) => void
 }
@@ -69,7 +69,7 @@ export class Overview extends React.PureComponent<IProps> {
                 days={model}
                 daysInRow={daysInRow}
                 expiredDate={today}
-                openAddTaskModalForSpecDay={this.props.openAddTaskModalForSpecDay}
+                openTaskModal={this.props.openTaskModal}
                 setTaskStatuses={this.props.setTaskStatuses}
                 confirmAction={this.props.confirmAction} />
         )

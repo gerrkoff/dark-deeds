@@ -1,13 +1,14 @@
 import * as React from 'react'
 import { Icon, MenuItemProps } from 'semantic-ui-react'
 import { DateHelper } from '../../helpers'
+import { TaskModel } from '../../models'
 import { MenuPopup } from './'
 
 import '../../styles/day-card-header.css'
 
 interface IProps {
     date: Date
-    openAddTaskModalForSpecDay?: (date: Date) => void
+    openTaskModal?: (model: TaskModel) => void
     mouseOver?: (isOver: boolean) => void
 }
 interface IState {
@@ -25,7 +26,7 @@ export class DayCardHeader extends React.PureComponent<IProps, IState> {
         const menuItemProps = new Array<MenuItemProps>()
         menuItemProps.push({
             content: <span><Icon name='plus' />Add</span>,
-            disabled: !this.props.openAddTaskModalForSpecDay,
+            disabled: !this.props.openTaskModal,
             name: 'add',
             onClick: this.handleAdd
         })
@@ -65,8 +66,8 @@ export class DayCardHeader extends React.PureComponent<IProps, IState> {
     }
 
     private handleAdd = () => {
-        if (this.props.openAddTaskModalForSpecDay) {
-            this.props.openAddTaskModalForSpecDay(this.props.date)
+        if (this.props.openTaskModal) {
+            this.props.openTaskModal(new TaskModel('', this.props.date))
         }
     }
 }

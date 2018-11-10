@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { DayCardModel } from '../../models'
+import { DayCardModel, TaskModel } from '../../models'
 import { DayCard } from './'
 
 import '../../styles/days-block.css'
@@ -8,7 +8,7 @@ interface IProps {
     days: DayCardModel[],
     daysInRow?: number,
     expiredDate?: Date,
-    openAddTaskModalForSpecDay?: (date: Date) => void
+    openTaskModal?: (model: TaskModel) => void
     setTaskStatuses?: (clientId: number, completed?: boolean, deleted?: boolean) => void
     confirmAction?: (content: React.ReactNode, action: () => void, header: string) => void
 }
@@ -38,7 +38,7 @@ export class DaysBlock extends React.PureComponent<IProps> {
                         {x.map(y =>
                             <div className='days-block-item' key={y.date.getTime()}>
                                 <DayCard day={y} expiredDate={this.props.expiredDate}
-                                    openAddTaskModalForSpecDay={this.props.openAddTaskModalForSpecDay}
+                                    openTaskModal={this.props.openTaskModal}
                                     setTaskStatuses={this.props.setTaskStatuses}
                                     confirmAction={this.props.confirmAction} />
                             </div>
