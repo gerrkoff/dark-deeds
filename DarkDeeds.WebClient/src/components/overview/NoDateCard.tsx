@@ -8,7 +8,7 @@ import '../../styles/no-date-card.css'
 interface IProps {
     tasks: Task[]
     setTaskStatuses?: (clientId: number, completed?: boolean, deleted?: boolean) => void
-    confirmAction?: (content: React.ReactNode, action: () => void) => void
+    confirmAction?: (content: React.ReactNode, action: () => void, header: string) => void
 }
 export class NoDateCard extends React.PureComponent<IProps> {
     public render() {

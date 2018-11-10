@@ -11,7 +11,7 @@ interface IProps {
     updateTasks: (tasks: Task[]) => void,
     openAddTaskModalForSpecDay: (date: Date) => void
     setTaskStatuses?: (clientId: number, completed?: boolean, deleted?: boolean) => void
-    confirmAction?: (content: React.ReactNode, action: () => void) => void
+    confirmAction?: (content: React.ReactNode, action: () => void, header: string) => void
 }
 export class Overview extends React.PureComponent<IProps> {
     private drake: any

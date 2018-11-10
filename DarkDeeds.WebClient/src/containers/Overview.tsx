@@ -11,7 +11,7 @@ function mapStateToProps({ tasks }: any) {
 
 function mapDispatchToProps(dispatch: any) {
     return {
-        confirmAction: (content: React.ReactNode, action: () => void) => dispatch(openModalConfirm(content, action)),
+        confirmAction: (content: React.ReactNode, action: () => void, header: string) => dispatch(openModalConfirm(content, action, header)),
         openAddTaskModalForSpecDay: (date: Date) => dispatch(openEditTaskWithModel(new TaskModel('', date))),
         setTaskStatuses: (clientId: number, completed?: boolean, deleted?: boolean) => dispatch(setTaskStatuses(clientId, completed, deleted)),
         updateTasks: (tasks: Task[]) => dispatch(localUpdateTasks(tasks))

@@ -17,7 +17,7 @@ export function modalConfirm(state: IModalConfirmState = inittialState, action: 
                 action: action.action,
                 content: action.content,
                 header: action.header === undefined ? 'Confirm action' : action.header,
-                headerIcon: action.headerIcon === undefined ? 'plus' : action.headerIcon,
+                headerIcon: action.headerIcon === undefined ? 'question' : action.headerIcon,
                 open: true
             }
         case MODALCONFIRM_CLOSE:
