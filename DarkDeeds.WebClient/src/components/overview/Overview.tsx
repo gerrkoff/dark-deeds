@@ -9,7 +9,7 @@ import { DaysBlock, NoDateCard } from './'
 interface IProps {
     tasks: Task[],
     updateTasks: (tasks: Task[]) => void,
-    openTaskModal: (model: TaskModel) => void
+    openTaskModal: (model: TaskModel, id?: number) => void
     setTaskStatuses?: (clientId: number, completed?: boolean, deleted?: boolean) => void
     confirmAction?: (content: React.ReactNode, action: () => void, header: string) => void
 }

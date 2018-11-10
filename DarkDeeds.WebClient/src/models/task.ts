@@ -1,6 +1,6 @@
-import { IDateable } from './'
+import { TaskModel } from './'
 
-export class Task implements IDateable {
+export class Task implements TaskModel {
     constructor(
         public clientId: number,
         public title: string,
@@ -9,7 +9,8 @@ export class Task implements IDateable {
         public updated: boolean = false,
         public id: number = 0,
         public completed: boolean = false,
-        public deleted: boolean = false
+        public deleted: boolean = false,
+        public withTime: boolean = false
     ) {}
 
     // Change model - change tasksEqual method in TaskHelper

@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { Icon, MenuItemProps } from 'semantic-ui-react'
-import { Task } from '../../models'
+import { Task, TaskModel } from '../../models'
 import { MenuPopup } from './'
 
 import '../../styles/task-item.css'
@@ -9,6 +9,7 @@ interface IProps {
     task: Task
     setTaskStatuses?: (clientId: number, completed?: boolean, deleted?: boolean) => void
     confirmAction?: (content: React.ReactNode, action: () => void, header: string) => void
+    openTaskModal?: (model: TaskModel, id?: number) => void
 }
 export class TaskItem extends React.PureComponent<IProps> {
     public render() {
@@ -21,8 +22,9 @@ export class TaskItem extends React.PureComponent<IProps> {
         })
         menuItemProps.push({
             content: <span><Icon name='pencil' />Edit</span>,
-            disabled: true,
-            name: 'edit'
+            disabled: !this.props.openTaskModal,
+            name: 'edit',
+            onClick: this.handleEdit
         })
         menuItemProps.push({
             color: 'red',
@@ -54,6 +56,12 @@ export class TaskItem extends React.PureComponent<IProps> {
     private handleDelete = () => {
         if (this.props.setTaskStatuses) {
             this.props.setTaskStatuses(this.props.task.clientId, undefined, true)
+        }
+    }
+
+    private handleEdit = () => {
+        if (this.props.openTaskModal) {
+            this.props.openTaskModal(this.props.task, this.props.task.clientId)
         }
     }
 }

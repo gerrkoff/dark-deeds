@@ -130,7 +130,7 @@ const service = {
 
         const s = `${str2digits(model.dateTime.getMonth() + 1)}${str2digits(model.dateTime.getDate())}`
 
-        if (!model.withTIme) {
+        if (!model.withTime) {
             return `${s} ${model.title}`
         }
 

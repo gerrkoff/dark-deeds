@@ -8,7 +8,7 @@ interface IProps {
     days: DayCardModel[],
     daysInRow?: number,
     expiredDate?: Date,
-    openTaskModal?: (model: TaskModel) => void
+    openTaskModal?: (model: TaskModel, id?: number) => void
     setTaskStatuses?: (clientId: number, completed?: boolean, deleted?: boolean) => void
     confirmAction?: (content: React.ReactNode, action: () => void, header: string) => void
 }

@@ -32,9 +32,9 @@ export function setEditTaskModel(model: TaskModel): IEditTaskSetModel {
     return { type: constants.EDITTASK_SET_MODEL, model }
 }
 
-export function openEditTaskWithModel(model: TaskModel) {
+export function openEditTaskWithModel(model: TaskModel, id: number = 0) {
     return async(dispatch: Dispatch<EditTaskAction>) => {
         dispatch(setEditTaskModel(model))
-        dispatch(openEditTaskModal(true))
+        dispatch(openEditTaskModal(true, id))
     }
 }
