@@ -2,6 +2,7 @@ import * as React from 'react'
 import { ToastContainer } from 'react-toastify'
 import { Container, Dimmer, Loader } from 'semantic-ui-react'
 import EditTaskModal from '../../containers/EditTaskModal'
+import ModalConfirm from '../../containers/ModalConfirm'
 import { Task } from '../../models'
 import { AddTaskButton } from '../edit-task'
 import { Shortcuts, Toolbar } from './'
@@ -37,6 +38,7 @@ export class App extends React.PureComponent<IProps> {
                 </Dimmer>
                 <ToastContainer />
                 <Shortcuts openEditTask={this.props.openEditTask} />
+                <ModalConfirm />
             </React.Fragment>
         )
     }

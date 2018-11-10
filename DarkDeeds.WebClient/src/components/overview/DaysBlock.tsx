@@ -10,6 +10,7 @@ interface IProps {
     expiredDate?: Date,
     openAddTaskModalForSpecDay?: (date: Date) => void
     setTaskStatuses?: (clientId: number, completed?: boolean, deleted?: boolean) => void
+    confirmAction?: (content: React.ReactNode, action: () => void) => void
 }
 export class DaysBlock extends React.PureComponent<IProps> {
     public render() {
@@ -38,7 +39,8 @@ export class DaysBlock extends React.PureComponent<IProps> {
                             <div className='days-block-item' key={y.date.getTime()}>
                                 <DayCard day={y} expiredDate={this.props.expiredDate}
                                     openAddTaskModalForSpecDay={this.props.openAddTaskModalForSpecDay}
-                                    setTaskStatuses={this.props.setTaskStatuses} />
+                                    setTaskStatuses={this.props.setTaskStatuses}
+                                    confirmAction={this.props.confirmAction} />
                             </div>
                         )}
                     </div>

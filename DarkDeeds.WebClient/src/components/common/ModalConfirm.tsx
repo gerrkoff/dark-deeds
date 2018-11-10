@@ -1,0 +1,42 @@
+import * as React from 'react'
+import { Button, Header, Icon, Modal } from 'semantic-ui-react'
+import '../../styles/menu-popup.css'
+
+interface IProps {
+    action: () => void
+    close: () => void
+    content: React.ReactNode
+    header: string
+    headerIcon: string
+    open: boolean
+}
+export class ModalConfirm extends React.PureComponent<IProps> {
+    public render() {
+        return (
+                <Modal basic
+                    open={this.props.open}
+                    onClose={this.props.close}
+                    size='small'>
+
+                    <Header icon={this.props.headerIcon} content={this.props.header} />
+                    <Modal.Content>
+                        {this.props.content}
+                    </Modal.Content>
+                    <Modal.Actions>
+                        <Button color='red' basic onClick={this.props.close} inverted>
+                            <Icon name='checkmark' /> No
+                        </Button>
+                        <Button color='green' onClick={this.handleConfirm} inverted>
+                            <Icon name='checkmark' /> Yes
+                        </Button>
+                    </Modal.Actions>
+                </Modal>
+        )
+    }
+
+    private handleConfirm = () => {
+        this.props.action()
+        this.props.close()
+
+    }
+}

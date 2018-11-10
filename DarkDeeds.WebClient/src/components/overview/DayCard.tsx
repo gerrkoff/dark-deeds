@@ -10,6 +10,7 @@ interface IProps {
     expiredDate?: Date,
     openAddTaskModalForSpecDay?: (date: Date) => void
     setTaskStatuses?: (clientId: number, completed?: boolean, deleted?: boolean) => void
+    confirmAction?: (content: React.ReactNode, action: () => void) => void
 }
 interface IState {
     headerHovered: boolean
@@ -34,7 +35,7 @@ export class DayCard extends React.PureComponent<IProps, IState> {
                 <List bulleted className='day-card-tasks-view dragula-container' data-id={this.props.day.date.getTime()}>
                     {this.props.day.tasks.map((x: Task) =>
                         <List.Item key={x.clientId} data-id={x.clientId}>
-                            <TaskItem task={x} setTaskStatuses={this.props.setTaskStatuses}/>
+                            <TaskItem task={x} setTaskStatuses={this.props.setTaskStatuses} confirmAction={this.props.confirmAction}/>
                         </List.Item>
                     )}
                 </List>

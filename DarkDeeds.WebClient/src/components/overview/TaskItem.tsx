@@ -8,6 +8,7 @@ import '../../styles/task-item.css'
 interface IProps {
     task: Task
     setTaskStatuses?: (clientId: number, completed?: boolean, deleted?: boolean) => void
+    confirmAction?: (content: React.ReactNode, action: () => void) => void
 }
 export class TaskItem extends React.PureComponent<IProps> {
     public render() {
@@ -28,7 +29,7 @@ export class TaskItem extends React.PureComponent<IProps> {
             content: <span><Icon name='delete' />Delete</span>,
             disabled: !this.props.setTaskStatuses,
             name: 'delete',
-            onClick: this.handleDelete
+            onClick: this.handleDeleteConfirm
         })
 
         return (
@@ -41,6 +42,12 @@ export class TaskItem extends React.PureComponent<IProps> {
     private handleComplete = () => {
         if (this.props.setTaskStatuses) {
             this.props.setTaskStatuses(this.props.task.clientId, !this.props.task.completed)
+        }
+    }
+
+    private handleDeleteConfirm = () => {
+        if (this.props.confirmAction) {
+            this.props.confirmAction('Test', this.handleDelete)
         }
     }
 
