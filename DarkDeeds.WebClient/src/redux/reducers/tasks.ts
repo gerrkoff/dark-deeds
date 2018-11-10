@@ -65,7 +65,8 @@ function updateTasksFromServerAfterSaving(localTasks: Task[], updatedTasks: Task
             } else {
                 newTasks[taskIndex] = {
                     ...newTasks[taskIndex],
-                    clientId: updatedTask.id
+                    clientId: updatedTask.id,
+                    id: updatedTask.id
                 }
                 newTasks[taskIndex].updated = !TaskHelper.tasksEqual(newTasks[taskIndex], updatedTask)
             }
