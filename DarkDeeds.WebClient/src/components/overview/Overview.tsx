@@ -11,6 +11,7 @@ interface IProps {
     tasks: Task[],
     updateTasks: (tasks: Task[]) => void,
     openAddTaskModalForSpecDay: (date: Date) => void
+    setTaskStatuses?: (clientId: number, completed?: boolean, deleted?: boolean) => void
 }
 export class Overview extends React.PureComponent<IProps> {
     private drake: any
@@ -29,28 +30,28 @@ export class Overview extends React.PureComponent<IProps> {
         const model = TaskHelper.evalModel(this.props.tasks, today)
 
         const panels = [{
-            content: { content: (<NoDateCard tasks={model.noDate} />) },
+            content: { content: (<NoDateCard tasks={model.noDate} setTaskStatuses={this.props.setTaskStatuses} />) },
             key: 'no-date',
             title: 'No date'
         }]
 
         if (model.expired.length > 0) {
             panels.push({
-                content: { content: (<DaysBlock days={model.expired} expiredDate={today} />) },
+                content: { content: (<DaysBlock days={model.expired} expiredDate={today} setTaskStatuses={this.props.setTaskStatuses} />) },
                 key: 'expired',
                 title: 'Expired'
             })
         }
 
         panels.push({
-            content: { content: (<DaysBlock days={model.current} daysInRow={7} expiredDate={today} openAddTaskModalForSpecDay={this.props.openAddTaskModalForSpecDay} />) },
+            content: { content: (<DaysBlock days={model.current} daysInRow={7} expiredDate={today} openAddTaskModalForSpecDay={this.props.openAddTaskModalForSpecDay} setTaskStatuses={this.props.setTaskStatuses} />) },
             key: 'current',
             title: 'Current'
         })
 
         if (model.future.length > 0) {
             panels.push({
-                content: { content: (<DaysBlock days={model.future} expiredDate={today} openAddTaskModalForSpecDay={this.props.openAddTaskModalForSpecDay} />) },
+                content: { content: (<DaysBlock days={model.future} expiredDate={today} openAddTaskModalForSpecDay={this.props.openAddTaskModalForSpecDay} setTaskStatuses={this.props.setTaskStatuses} />) },
                 key: 'future',
                 title: 'Future'
             })

@@ -41,7 +41,14 @@ export interface ITasksSavingFailed {
     type: constants.TASKS_SAVING_FAILED
 }
 
-export type TasksAction = ITasksLoading | ITasksLoadingSuccess | ITasksLoadingFailed | ITasksLocalUpdate | ITasksSaving | ITasksSavingSuccess | ITasksSavingFailed | ITasksLocalUpdateTask
+export interface ITasksSetTaskStatuses {
+    type: constants.TASKS_SET_TASK_STATUSES
+    clientId: number
+    completed?: boolean
+    deleted?: boolean
+}
+
+export type TasksAction = ITasksLoading | ITasksLoadingSuccess | ITasksLoadingFailed | ITasksLocalUpdate | ITasksSaving | ITasksSavingSuccess | ITasksSavingFailed | ITasksLocalUpdateTask | ITasksSetTaskStatuses
 
 export function loadTasks() {
     return async(dispatch: Dispatch<TasksAction>) => {
@@ -77,4 +84,8 @@ export function saveTasks(tasks: Task[]) {
             ToastHelper.error(`Error occured while updating items`)
         }
     }
+}
+
+export function setTaskStatuses(clientId: number, completed?: boolean, deleted?: boolean): ITasksSetTaskStatuses {
+    return { type: constants.TASKS_SET_TASK_STATUSES, clientId, completed, deleted }
 }

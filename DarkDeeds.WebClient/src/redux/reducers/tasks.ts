@@ -1,7 +1,7 @@
 import { DateHelper, TaskHelper } from '../../helpers'
 import { Task, TaskModel } from '../../models'
 import { TasksAction } from '../actions'
-import { TASKS_LOADING, TASKS_LOADING_FAILED, TASKS_LOADING_SUCCESS, TASKS_LOCAL_UPDATE, TASKS_LOCAL_UPDATE_TASK, TASKS_SAVING, TASKS_SAVING_FAILED, TASKS_SAVING_SUCCESS } from '../constants'
+import { TASKS_LOADING, TASKS_LOADING_FAILED, TASKS_LOADING_SUCCESS, TASKS_LOCAL_UPDATE, TASKS_LOCAL_UPDATE_TASK, TASKS_SAVING, TASKS_SAVING_FAILED, TASKS_SAVING_SUCCESS, TASKS_SET_TASK_STATUSES } from '../constants'
 import { ITasksState } from '../types'
 
 const inittialState: ITasksState = {
@@ -45,6 +45,10 @@ export function tasks(state: ITasksState = inittialState, action: TasksAction): 
         case TASKS_LOCAL_UPDATE_TASK:
             return { ...state,
                 tasks: localUpdateTask(action.taskModel, action.clientId, state.tasks)
+            }
+        case TASKS_SET_TASK_STATUSES:
+            return { ...state,
+                tasks: updateStatuses(state.tasks, action.clientId, action.completed, action.deleted)
             }
     }
     return state
@@ -104,4 +108,29 @@ function localAddTask(model: TaskModel, localTasks: Task[]): Task[] {
     }
 
     return [...localTasks, task]
+}
+
+function updateStatuses(localTasks: Task[], clientId: number, completed?: boolean, deleted?: boolean) {
+    const taskIndex = localTasks.findIndex(x => x.clientId === clientId)
+
+    if (taskIndex < 0 || completed !== undefined && deleted !== undefined) {
+        return localTasks
+    }
+
+    const newTasks = [...localTasks]
+    newTasks[taskIndex] = {
+        ...newTasks[taskIndex],
+        updated: true
+    }
+
+    if (completed !== undefined) {
+        newTasks[taskIndex].completed = completed
+    }
+
+    if (deleted !== undefined) {
+        console.log('delete ', clientId)
+        // newTasks[taskIndex].deleted = deleted
+    }
+
+    return newTasks
 }

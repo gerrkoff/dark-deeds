@@ -7,14 +7,16 @@ import '../../styles/task-item.css'
 
 interface IProps {
     task: Task
+    setTaskStatuses?: (clientId: number, completed?: boolean, deleted?: boolean) => void
 }
 export class TaskItem extends React.PureComponent<IProps> {
     public render() {
         const menuItemProps = new Array<MenuItemProps>()
         menuItemProps.push({
-            content: <span><Icon name='check' />Complete</span>,
-            disabled: true,
-            name: 'complete'
+            content: <span><Icon name='check' />{this.props.task.completed ? 'Uncomplete' : 'Complete'}</span>,
+            disabled: !this.props.setTaskStatuses,
+            name: 'complete',
+            onClick: this.handleComplete
         })
         menuItemProps.push({
             content: <span><Icon name='pencil' />Edit</span>,
@@ -24,8 +26,9 @@ export class TaskItem extends React.PureComponent<IProps> {
         menuItemProps.push({
             color: 'red',
             content: <span><Icon name='delete' />Delete</span>,
-            disabled: true,
-            name: 'delete'
+            disabled: !this.props.setTaskStatuses,
+            name: 'delete',
+            onClick: this.handleDelete
         })
 
         return (
@@ -33,6 +36,18 @@ export class TaskItem extends React.PureComponent<IProps> {
                 content={renderContent(this.props.task)}
                 menuItemProps={menuItemProps} />
         )
+    }
+
+    private handleComplete = () => {
+        if (this.props.setTaskStatuses) {
+            this.props.setTaskStatuses(this.props.task.clientId, !this.props.task.completed)
+        }
+    }
+
+    private handleDelete = () => {
+        if (this.props.setTaskStatuses) {
+            this.props.setTaskStatuses(this.props.task.clientId, undefined, true)
+        }
     }
 }
 
