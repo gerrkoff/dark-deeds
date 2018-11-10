@@ -30,7 +30,7 @@ export class Overview extends React.PureComponent<IProps> {
         const model = TaskHelper.evalModel(this.props.tasks, today)
 
         const panels = [{
-            content: { content: (<NoDateCard tasks={model.noDate} setTaskStatuses={this.props.setTaskStatuses} confirmAction={this.props.confirmAction} />) },
+            content: { content: (<NoDateCard tasks={model.noDate} setTaskStatuses={this.props.setTaskStatuses} confirmAction={this.props.confirmAction} openTaskModal={this.props.openTaskModal} />) },
             key: 'no-date',
             title: 'No date'
         }]
