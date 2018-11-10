@@ -157,3 +157,10 @@ test('[createTaskFromText] date & time less ten', () => {
     const result = TaskHelper.convertModelToString(new TaskModel('Test!', new Date(2018, 0, 1, 1, 1), true))
     expect(result).toBe('0101 0101 Test!')
 })
+
+test('[tasksEqual] positive', () => {
+    expect(TaskHelper.tasksEqual(new Task(1, '1', null, 1, false, 1), new Task(1, '1', null, 1, false, 1))).toBeTruthy()
+    expect(TaskHelper.tasksEqual(new Task(1, '1', null, 1, false, 1), new Task(1, '1', new Date(), 1, false, 1))).not.toBeTruthy()
+    expect(TaskHelper.tasksEqual(new Task(1, '1', new Date(2018), 1, false, 1), new Task(1, '1', new Date(2018), 1, false, 1))).toBeTruthy()
+    expect(TaskHelper.tasksEqual(new Task(1, '1', new Date(2018), 1, false, 1), new Task(2, '2', new Date(2019), 2, false, 2))).not.toBeTruthy()
+})

@@ -133,6 +133,22 @@ const service = {
         }
 
         return `${s} ${str2digits(model.dateTime.getHours())}${str2digits(model.dateTime.getMinutes())} ${model.title}`
+    },
+
+    tasksEqual(taskA: Task, taskB: Task): boolean {
+        let dateEquals = false
+        if (taskA.dateTime === null && taskB.dateTime === null) {
+            dateEquals = true
+        } else if (taskA.dateTime !== null && taskB.dateTime !== null) {
+            dateEquals = taskA.dateTime.getTime() === taskB.dateTime.getTime()
+        } else {
+            dateEquals = false
+        }
+
+        return dateEquals
+            && taskA.title === taskB.title
+            && taskA.order === taskB.order
+            && taskA.id === taskB.id
     }
 }
 

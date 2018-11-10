@@ -25,7 +25,6 @@ namespace DarkDeeds.Services.Implementation
         {
             foreach (var taskDto in tasks)
             {
-                taskDto.Title += "!";
                 if (taskDto.ClientId < 0) taskDto.Id = Count++;
             }
             return await Task.FromResult(tasks);

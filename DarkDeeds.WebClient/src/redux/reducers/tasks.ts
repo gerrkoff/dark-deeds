@@ -1,4 +1,4 @@
-import { DateHelper } from '../../helpers'
+import { DateHelper, TaskHelper } from '../../helpers'
 import { Task, TaskModel } from '../../models'
 import { TasksAction } from '../actions'
 import { TASKS_LOADING, TASKS_LOADING_FAILED, TASKS_LOADING_SUCCESS, TASKS_LOCAL_UPDATE, TASKS_LOCAL_UPDATE_TASK, TASKS_SAVING, TASKS_SAVING_FAILED, TASKS_SAVING_SUCCESS } from '../constants'
@@ -36,7 +36,7 @@ export function tasks(state: ITasksState = inittialState, action: TasksAction): 
         case TASKS_SAVING_SUCCESS:
             return { ...state,
                 saving: false,
-                tasks: updateTasksFromServer(state.tasks, action.tasks)
+                tasks: updateTasksFromServerAfterSaving(state.tasks, action.tasks)
             }
         case TASKS_SAVING_FAILED:
             return { ...state,
@@ -50,17 +50,16 @@ export function tasks(state: ITasksState = inittialState, action: TasksAction): 
     return state
 }
 
-function updateTasksFromServer(localTasks: Task[], updatedTasks: Task[]): Task[] {
+function updateTasksFromServerAfterSaving(localTasks: Task[], updatedTasks: Task[]): Task[] {
     const newTasks = [...localTasks]
     updatedTasks.forEach(updatedTask => {
         const taskIndex = newTasks.findIndex(x => x.clientId === updatedTask.clientId)
         if (taskIndex > -1) {
             newTasks[taskIndex] = {
                 ...newTasks[taskIndex],
-                ...updatedTask,
-                clientId: updatedTask.id,
-                updated: false
+                clientId: updatedTask.id
             }
+            newTasks[taskIndex].updated = !TaskHelper.tasksEqual(newTasks[taskIndex], updatedTask)
         }
     })
     return newTasks
