@@ -15,10 +15,11 @@ namespace DarkDeeds.Services.Implementation
             var list = new List<TaskDto>
             {
                 new TaskDto {Id = 1, Title = "Test 1", Order = 1, DateTime = DateTime.Today, ClientId = 1},
-                new TaskDto {Id = 2, Title = "Test 2", Order = 2, DateTime = DateTime.Today.AddDays(1), ClientId = 2}
+                new TaskDto {Id = 2, Title = "Test 2", Order = 2, DateTime = DateTime.Today, ClientId = 2},
+                new TaskDto {Id = 3, Title = "Test 3", Order = 3, DateTime = DateTime.Today, ClientId = 3},
             };
-            //return await Task.FromResult(list);
-            return await Task.FromResult(GenTasks());
+            return await Task.FromResult(list);
+            //return await Task.FromResult(GenTasks());
         }
 
         public async Task<IEnumerable<TaskDto>> SaveTasksAsync(ICollection<TaskDto> tasks)

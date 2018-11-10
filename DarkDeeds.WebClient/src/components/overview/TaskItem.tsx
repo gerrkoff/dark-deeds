@@ -13,7 +13,7 @@ export class TaskItem extends React.PureComponent<IProps> {
     public render() {
         const menuItemProps = new Array<MenuItemProps>()
         menuItemProps.push({
-            content: <span><Icon name='check' />{this.props.task.completed ? 'Uncomplete' : 'Complete'}</span>,
+            content: <span><Icon name='check' />{this.props.task.completed ? 'Undo complete' : 'Complete'}</span>,
             disabled: !this.props.setTaskStatuses,
             name: 'complete',
             onClick: this.handleComplete

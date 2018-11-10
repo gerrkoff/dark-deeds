@@ -3,6 +3,8 @@ import { DateHelper } from './'
 
 const service = {
     evalModel(tasks: Task[], now: Date): OverviewModel {
+        tasks = tasks.filter(x => !x.deleted)
+
         const model = new OverviewModel()
         const currentStart = DateHelper.monday(DateHelper.dayStart(now))
         const futureStart = new Date(currentStart)
@@ -149,6 +151,8 @@ const service = {
             && taskA.title === taskB.title
             && taskA.order === taskB.order
             && taskA.id === taskB.id
+            && taskA.completed === taskB.completed
+            && taskA.deleted === taskB.deleted
     }
 }
 

@@ -8,7 +8,8 @@ export class Task implements IDateable {
         public order: number = 0,
         public updated: boolean = false,
         public id: number = 0,
-        public completed: boolean = false
+        public completed: boolean = false,
+        public deleted: boolean = false
     ) {}
 
     // Change model - change tasksEqual method in TaskHelper

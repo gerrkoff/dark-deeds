@@ -59,11 +59,16 @@ function updateTasksFromServerAfterSaving(localTasks: Task[], updatedTasks: Task
     updatedTasks.forEach(updatedTask => {
         const taskIndex = newTasks.findIndex(x => x.clientId === updatedTask.clientId)
         if (taskIndex > -1) {
-            newTasks[taskIndex] = {
-                ...newTasks[taskIndex],
-                clientId: updatedTask.id
+
+            if (updatedTask.deleted) {
+                newTasks.splice(taskIndex, 1)
+            } else {
+                newTasks[taskIndex] = {
+                    ...newTasks[taskIndex],
+                    clientId: updatedTask.id
+                }
+                newTasks[taskIndex].updated = !TaskHelper.tasksEqual(newTasks[taskIndex], updatedTask)
             }
-            newTasks[taskIndex].updated = !TaskHelper.tasksEqual(newTasks[taskIndex], updatedTask)
         }
     })
     return newTasks
@@ -102,6 +107,7 @@ function localAddTask(model: TaskModel, localTasks: Task[]): Task[] {
         ...model,
         clientId: minId,
         completed: false,
+        deleted: false,
         id: 0,
         order: maxOrder + 1,
         updated: true
@@ -128,8 +134,18 @@ function updateStatuses(localTasks: Task[], clientId: number, completed?: boolea
     }
 
     if (deleted !== undefined) {
-        console.log('delete ', clientId)
-        // newTasks[taskIndex].deleted = deleted
+        newTasks[taskIndex].deleted = deleted
+
+        if (deleted) {
+            const sameDayTasks = localTasks.filter(x => DateHelper.equalDatesByStart(x.dateTime, newTasks[taskIndex].dateTime))
+            if (sameDayTasks) {
+                sameDayTasks.forEach(x => {
+                    if (x.order > newTasks[taskIndex].order) {
+                        x.order--
+                    }
+                })
+            }
+        }
     }
 
     return newTasks

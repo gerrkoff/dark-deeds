@@ -10,5 +10,6 @@ namespace DarkDeeds.Models
         public int Order { get; set; }
         public int ClientId { get; set; }
         public bool Completed { get; set; }
+        public bool Deleted { get; set; }
     }
 }
