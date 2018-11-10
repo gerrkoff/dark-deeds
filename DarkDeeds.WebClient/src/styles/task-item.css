@@ -12,3 +12,8 @@
     border-radius: 2px;
     background: rgba(191, 214, 229, 0.5);
 }
+
+.task-item-completed {
+    text-decoration: line-through;
+    color: #282c34;
+}

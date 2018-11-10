@@ -99,7 +99,8 @@ namespace DarkDeeds.Services.Implementation
             {
                 Id = id,
                 Title = $"{id} {TodoSamples[Rand.Next(2)]}",
-                ClientId = id
+                ClientId = id,
+                Completed = Rand.Next(3) == 2
             };
 
             if (dayDiff.HasValue)

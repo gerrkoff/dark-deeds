@@ -9,5 +9,6 @@ namespace DarkDeeds.Models
         public string Title { get; set; }
         public int Order { get; set; }
         public int ClientId { get; set; }
+        public bool Completed { get; set; }
     }
 }

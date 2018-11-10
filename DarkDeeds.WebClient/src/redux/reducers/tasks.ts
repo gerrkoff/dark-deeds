@@ -97,6 +97,7 @@ function localAddTask(model: TaskModel, localTasks: Task[]): Task[] {
     const task = {
         ...model,
         clientId: minId,
+        completed: false,
         id: 0,
         order: maxOrder + 1,
         updated: true

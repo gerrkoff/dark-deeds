@@ -30,8 +30,15 @@ export class TaskItem extends React.PureComponent<IProps> {
 
         return (
             <MenuPopup
-                content={<span className='task-item'>{this.props.task.title}</span>}
+                content={renderContent(this.props.task)}
                 menuItemProps={menuItemProps} />
         )
     }
+}
+
+function renderContent(task: Task): React.ReactNode {
+    const className = 'task-item' + (task.completed ? ' task-item-completed' : '')
+    return (
+        <span className={className}>{task.title}</span>
+    )
 }
