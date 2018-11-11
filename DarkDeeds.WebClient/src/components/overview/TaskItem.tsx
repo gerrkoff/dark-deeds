@@ -68,7 +68,17 @@ export class TaskItem extends React.PureComponent<IProps> {
 
 function renderContent(task: Task): React.ReactNode {
     const className = 'task-item' + (task.completed ? ' task-item-completed' : '')
+    let text = ''
+    if (task.withTime) {
+        text += `${str2digits(task.dateTime!.getHours())}:${str2digits(task.dateTime!.getMinutes())} `
+    }
+    text += task.title
+
     return (
-        <span className={className}>{task.title}</span>
+        <span className={className}>{text}</span>
     )
+}
+
+function str2digits(n: number): string {
+    return n < 10 ? '0' + n : n.toString()
 }
