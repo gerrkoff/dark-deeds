@@ -80,7 +80,8 @@ const service = {
             task.order = newOrder
         }
 
-        task.dateTime = targetDate === 0 ? null : new Date(targetDate)
+        const targetDateAsDate = new Date(targetDate)
+        task.dateTime = targetDate === 0 ? null : new Date(targetDateAsDate.getFullYear(), targetDateAsDate.getMonth(), targetDateAsDate.getDate(), task.dateTime!.getHours(), task.dateTime!.getMinutes())
         task.updated = true
 
         return tasks
@@ -100,7 +101,8 @@ const service = {
 
             return {
                 ...model,
-                dateTime: new Date(currentYear, month - 1, day, hour, minute)
+                dateTime: new Date(currentYear, month - 1, day, hour, minute),
+                withTime: true
             }
         }
 
