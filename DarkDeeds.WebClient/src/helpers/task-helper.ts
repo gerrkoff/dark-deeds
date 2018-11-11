@@ -56,28 +56,29 @@ const service = {
             ? targetTasks.find(x => x.clientId === siblingId)
             : null
 
-        if (sourceTasks) {
-            sourceTasks.forEach(x => {
-                if (x.order > task.order && !x.withTime) {
-                    x.order--
-                    x.updated = true
-                }
-            })
-        }
-
-        if (!siblingTask) {
-            task.order = targetTasks.length > 0
-                ? targetTasks.reduce((max, p) => p.order > max.order ? p : max, targetTasks[0]).order + 1
-                : 1
-        } else {
-            const newOrder = siblingTask.order
-            targetTasks.forEach(x => {
-                if (x.order >= newOrder && !x.withTime) {
-                    x.order++
-                    x.updated = true
-                }
-            })
-            task.order = newOrder
+        if (!task.withTime) {
+            if (sourceTasks) {
+                sourceTasks.forEach(x => {
+                    if (x.order > task.order && !x.withTime) {
+                        x.order--
+                        x.updated = true
+                    }
+                })
+            }
+            if (!siblingTask) {
+                task.order = targetTasks.length > 0
+                    ? targetTasks.filter(x => !x.withTime).reduce((max, p) => p.order > max.order ? p : max, targetTasks[0]).order + 1
+                    : 1
+            } else {
+                const newOrder = siblingTask.order
+                targetTasks.forEach(x => {
+                    if (x.order >= newOrder && !x.withTime) {
+                        x.order++
+                        x.updated = true
+                    }
+                })
+                task.order = newOrder
+            }
         }
 
         const targetDateAsDate = new Date(targetDate)
