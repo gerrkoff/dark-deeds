@@ -6,6 +6,7 @@ const service = {
     async loadTasks(): Promise<Task[]> {
         try {
             const result = await Api.get<Task[]>('api/tasks')
+            result.forEach(x => x.clientId = x.id)
             return DateHelper.fixDates(result) as Task[]
         } catch (err) {
             throw err

@@ -15,12 +15,13 @@ namespace DarkDeeds.Services.Implementation
         {
             var list = new List<TaskDto>
             {
-                new TaskDto {Id = 1, Title = "Test 1", Order = 0, DateTime = DateTime.Today.AddHours(10), ClientId = 1, TimeType = TaskTimeTypeEnum.ConcreteTime},
-                new TaskDto {Id = 2, Title = "Test 2", Order = 1, DateTime = DateTime.Today, ClientId = 2, TimeType = TaskTimeTypeEnum.NoTime},
-                new TaskDto {Id = 3, Title = "Test 3", Order = 0, DateTime = DateTime.Today.AddHours(5), ClientId = 3, TimeType = TaskTimeTypeEnum.ConcreteTime},
+                new TaskDto {Id = 1, Title = "Test 1", Order = 0, DateTime = DateTime.Today.AddHours(10), TimeType = TaskTimeTypeEnum.ConcreteTime},
+                new TaskDto {Id = 2, Title = "Test 2", Order = 1, DateTime = DateTime.Today, TimeType = TaskTimeTypeEnum.NoTime},
+                new TaskDto {Id = 3, Title = "Test 3", Order = 0, DateTime = DateTime.Today.AddHours(5), TimeType = TaskTimeTypeEnum.ConcreteTime},
                 new TaskDto {Id = 4, Title = "Test 4", Order = 2, DateTime = DateTime.Today, ClientId = 4, TimeType = TaskTimeTypeEnum.NoTime},
-                new TaskDto {Id = 5, Title = "Test 5", Order = 0, DateTime = DateTime.Today.AddHours(5), ClientId = 5, TimeType = TaskTimeTypeEnum.AfterTime},
-                new TaskDto {Id = 6, Title = "Test 5", Order = 0, DateTime = DateTime.Today.AddHours(3), ClientId = 6, TimeType = TaskTimeTypeEnum.AfterTime},
+                new TaskDto {Id = 5, Title = "Test 5", Order = 2, DateTime = DateTime.Today.AddHours(5), TimeType = TaskTimeTypeEnum.AfterTime},
+                new TaskDto {Id = 6, Title = "Test 6", Order = 0, DateTime = DateTime.Today.AddHours(3), TimeType = TaskTimeTypeEnum.AfterTime},
+                new TaskDto {Id = 7, Title = "Test 7", Order = 1, DateTime = DateTime.Today.AddHours(5), TimeType = TaskTimeTypeEnum.AfterTime},
             };
             return await Task.FromResult(list);
             //return await Task.FromResult(GenTasks());
