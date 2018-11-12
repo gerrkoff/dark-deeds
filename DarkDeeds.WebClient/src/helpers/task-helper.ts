@@ -41,6 +41,7 @@ const service = {
         return model
     },
 
+    // TODO: adjust for after time
     moveTask(tasks: Task[], taskId: number, targetDate: number, sourceDate: number, siblingId: number | null): Task[] {
         const task = tasks.find(x => x.clientId === taskId)
 
@@ -160,7 +161,7 @@ const service = {
             && taskA.timeType === taskB.timeType
     },
 
-    // TODO: fix
+    // TODO: adjust for aftertime
     sortTasks(tasks: Task[]): Task[] {
         tasks.sort((x, y) => {
             if (x.timeType === TaskTimeTypeEnum.ConcreteTime && y.timeType === TaskTimeTypeEnum.NoTime) {
