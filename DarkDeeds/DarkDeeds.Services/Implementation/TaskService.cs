@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using DarkDeeds.Common.Enums;
 using DarkDeeds.Models;
 using DarkDeeds.Services.Interface;
 
@@ -14,9 +15,9 @@ namespace DarkDeeds.Services.Implementation
         {
             var list = new List<TaskDto>
             {
-                new TaskDto {Id = 1, Title = "Test 1", Order = 0, DateTime = DateTime.Today.AddHours(10), ClientId = 1, WithTime = true},
+                new TaskDto {Id = 1, Title = "Test 1", Order = 0, DateTime = DateTime.Today.AddHours(10), ClientId = 1, TimeType = TaskTimeTypeEnum.ConcreteTime},
                 new TaskDto {Id = 2, Title = "Test 2", Order = 1, DateTime = DateTime.Today, ClientId = 2},
-                new TaskDto {Id = 3, Title = "Test 3", Order = 0, DateTime = DateTime.Today.AddHours(5), ClientId = 3, WithTime = true},
+                new TaskDto {Id = 3, Title = "Test 3", Order = 0, DateTime = DateTime.Today.AddHours(5), ClientId = 3, TimeType = TaskTimeTypeEnum.ConcreteTime},
                 new TaskDto {Id = 4, Title = "Test 4", Order = 2, DateTime = DateTime.Today, ClientId = 4},
                 new TaskDto {Id = 5, Title = "Test 5", Order = 3, DateTime = DateTime.Today, ClientId = 5},
             };
@@ -103,7 +104,8 @@ namespace DarkDeeds.Services.Implementation
                 Id = id,
                 Title = $"{id} {TodoSamples[Rand.Next(2)]}",
                 ClientId = id,
-                Completed = Rand.Next(3) == 2
+                Completed = Rand.Next(3) == 2,
+                TimeType = TaskTimeTypeEnum.NoTime
             };
 
             if (dayDiff.HasValue)

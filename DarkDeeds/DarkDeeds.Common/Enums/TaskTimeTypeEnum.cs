@@ -1,7 +1,10 @@
 namespace DarkDeeds.Common.Enums
 {
-    public enum TaskTypeEnum
+    public enum TaskTimeTypeEnum
     {
-        
+        None,
+        NoTime,
+        ConcreteTime,
+        AfterTime
     }
 }

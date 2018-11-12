@@ -4,8 +4,4 @@
         <TargetFramework>netstandard2.0</TargetFramework>
     </PropertyGroup>
 
-    <ItemGroup>
-      <ProjectReference Include="..\DarkDeeds.Common\DarkDeeds.Common.csproj" />
-    </ItemGroup>
-
 </Project>
