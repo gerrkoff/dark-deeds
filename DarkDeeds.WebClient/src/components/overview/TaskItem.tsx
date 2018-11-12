@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { Icon, MenuItemProps } from 'semantic-ui-react'
-import { Task, TaskModel } from '../../models'
+import { Task, TaskModel, TaskTimeTypeEnum } from '../../models'
 import { MenuPopup } from './'
 
 import '../../styles/task-item.css'
@@ -69,7 +69,7 @@ export class TaskItem extends React.PureComponent<IProps> {
 function renderContent(task: Task): React.ReactNode {
     const className = 'task-item' + (task.completed ? ' task-item-completed' : '')
     let text = ''
-    if (task.withTime) {
+    if (task.timeType !== TaskTimeTypeEnum.NoTime) {
         text += `${str2digits(task.dateTime!.getHours())}:${str2digits(task.dateTime!.getMinutes())} `
     }
     text += task.title

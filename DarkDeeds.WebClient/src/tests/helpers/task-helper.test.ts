@@ -1,5 +1,5 @@
 import { TaskHelper } from '../../helpers'
-import { Task, TaskModel } from '../../models'
+import { Task, TaskModel, TaskTimeTypeEnum } from '../../models'
 
 function task(year: number, month: number, date: number, id: number = 0, order: number = 0): Task {
     return new Task(id, '', new Date(year, month, date), order)
@@ -95,14 +95,14 @@ test('[moveTask] same list as last', () => {
     expect(result.find(x => x.clientId === 4)!.order).toBe(4)
 })
 
-test('[createTaskFromText] no date and time', () => {
+test('[convertStringToModel] no date and time', () => {
     const result = TaskHelper.convertStringToModel('Test!')
 
     expect(result.title).toBe('Test!')
     expect(result.dateTime).toBe(null)
 })
 
-test('[createTaskFromText] date and no time', () => {
+test('[convertStringToModel] date and no time', () => {
     const result = TaskHelper.convertStringToModel('1231 Test!')
     const currentYear = new Date().getFullYear()
 
@@ -111,7 +111,7 @@ test('[createTaskFromText] date and no time', () => {
         .toBe(new Date(currentYear, 11, 31, 0, 0, 0).getTime())
 })
 
-test('[createTaskFromText] date and no time 2', () => {
+test('[convertStringToModel] date and no time 2', () => {
     const result = TaskHelper.convertStringToModel('0101Test!!!')
     const currentYear = new Date().getFullYear()
 
@@ -120,7 +120,7 @@ test('[createTaskFromText] date and no time 2', () => {
         .toBe(new Date(currentYear, 0, 1, 0, 0, 0).getTime())
 })
 
-test('[createTaskFromText] date and time', () => {
+test('[convertStringToModel] date and time', () => {
     const result = TaskHelper.convertStringToModel('1231 2359 Test!')
     const currentYear = new Date().getFullYear()
 
@@ -129,7 +129,7 @@ test('[createTaskFromText] date and time', () => {
         .toBe(new Date(currentYear, 11, 31, 23, 59, 0).getTime())
 })
 
-test('[createTaskFromText] date and time 2', () => {
+test('[convertStringToModel] date and time 2', () => {
     const result = TaskHelper.convertStringToModel('0101 0101Test!!!')
     const currentYear = new Date().getFullYear()
 
@@ -138,23 +138,23 @@ test('[createTaskFromText] date and time 2', () => {
         .toBe(new Date(currentYear, 0, 1, 1, 1, 0).getTime())
 })
 
-test('[createTaskFromText] no date', () => {
+test('[convertModelToString] no date', () => {
     const result = TaskHelper.convertModelToString(new TaskModel('Test!'))
     expect(result).toBe('Test!')
 })
 
-test('[createTaskFromText] date & no time', () => {
+test('[convertModelToString] date & no time', () => {
     const result = TaskHelper.convertModelToString(new TaskModel('Test!', new Date(2018, 11, 11)))
     expect(result).toBe('1211 Test!')
 })
 
-test('[createTaskFromText] date & time', () => {
-    const result = TaskHelper.convertModelToString(new TaskModel('Test!', new Date(2018, 11, 11, 23, 59), true))
+test('[convertModelToString] date & time', () => {
+    const result = TaskHelper.convertModelToString(new TaskModel('Test!', new Date(2018, 11, 11, 23, 59), TaskTimeTypeEnum.ConcreteTime))
     expect(result).toBe('1211 2359 Test!')
 })
 
-test('[createTaskFromText] date & time less ten', () => {
-    const result = TaskHelper.convertModelToString(new TaskModel('Test!', new Date(2018, 0, 1, 1, 1), true))
+test('[convertModelToString] date & time less ten', () => {
+    const result = TaskHelper.convertModelToString(new TaskModel('Test!', new Date(2018, 0, 1, 1, 1), TaskTimeTypeEnum.AfterTime))
     expect(result).toBe('0101 0101 Test!')
 })
 
@@ -167,13 +167,13 @@ test('[tasksEqual] positive', () => {
 
 test('[sortTasks] positive', () => {
     const tasks = [
-        new Task(1, '', new Date(2018, 1, 1), 1, false, 0, false, false, false),
-        new Task(2, '', new Date(2018, 1, 1), 4, false, 0, false, false, false),
-        new Task(3, '', new Date(2018, 1, 1, 10), 0, false, 0, false, false, true),
-        new Task(4, '', new Date(2018, 1, 1), 3, false, 0, false, false, false),
-        new Task(5, '', new Date(2018, 1, 1, 8), 0, false, 0, false, false, true),
-        new Task(6, '', new Date(2018, 1, 1), 2, false, 0, false, false, false),
-        new Task(7, '', new Date(2018, 1, 1, 15), 0, false, 0, false, false, true)
+        new Task(1, '', new Date(2018, 1, 1), 1, false, 0, false, false, TaskTimeTypeEnum.NoTime),
+        new Task(2, '', new Date(2018, 1, 1), 4, false, 0, false, false, TaskTimeTypeEnum.NoTime),
+        new Task(3, '', new Date(2018, 1, 1, 10), 0, false, 0, false, false, TaskTimeTypeEnum.ConcreteTime),
+        new Task(4, '', new Date(2018, 1, 1), 3, false, 0, false, false, TaskTimeTypeEnum.NoTime),
+        new Task(5, '', new Date(2018, 1, 1, 8), 0, false, 0, false, false, TaskTimeTypeEnum.ConcreteTime),
+        new Task(6, '', new Date(2018, 1, 1), 2, false, 0, false, false, TaskTimeTypeEnum.NoTime),
+        new Task(7, '', new Date(2018, 1, 1, 15), 0, false, 0, false, false, TaskTimeTypeEnum.ConcreteTime)
     ]
     const result = TaskHelper.sortTasks(tasks)
 

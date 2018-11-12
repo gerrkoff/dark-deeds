@@ -1,9 +1,9 @@
-import { IDateable } from './'
+import { IDateable, TaskTimeTypeEnum } from './'
 
 export class TaskModel implements IDateable {
     constructor(
         public title: string,
         public dateTime: Date | null = null,
-        public withTime: boolean = false
+        public timeType: TaskTimeTypeEnum = TaskTimeTypeEnum.NoTime
     ) {}
 }

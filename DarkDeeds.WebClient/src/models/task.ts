@@ -1,4 +1,4 @@
-import { TaskModel } from './'
+import { TaskModel, TaskTimeTypeEnum } from './'
 
 export class Task implements TaskModel {
     constructor(
@@ -10,7 +10,7 @@ export class Task implements TaskModel {
         public id: number = 0,
         public completed: boolean = false,
         public deleted: boolean = false,
-        public withTime: boolean = false
+        public timeType: TaskTimeTypeEnum = TaskTimeTypeEnum.NoTime
     ) {}
 
     // Change model - change tasksEqual method in TaskHelper

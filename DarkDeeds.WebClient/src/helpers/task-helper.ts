@@ -1,4 +1,4 @@
-import { DayCardModel, OverviewModel, Task, TaskModel } from '../models'
+import { DayCardModel, OverviewModel, Task, TaskModel, TaskTimeTypeEnum } from '../models'
 import { DateHelper } from './'
 
 const service = {
@@ -56,10 +56,10 @@ const service = {
             ? targetTasks.find(x => x.clientId === siblingId)
             : null
 
-        if (!task.withTime) {
+        if (task.timeType === TaskTimeTypeEnum.NoTime) {
             if (sourceTasks) {
                 sourceTasks.forEach(x => {
-                    if (x.order > task.order && !x.withTime) {
+                    if (x.order > task.order && x.timeType === TaskTimeTypeEnum.NoTime) {
                         x.order--
                         x.updated = true
                     }
@@ -67,12 +67,12 @@ const service = {
             }
             if (!siblingTask) {
                 task.order = targetTasks.length > 0
-                    ? targetTasks.filter(x => !x.withTime).reduce((max, p) => p.order > max.order ? p : max, targetTasks[0]).order + 1
+                    ? targetTasks.filter(x => x.timeType === TaskTimeTypeEnum.NoTime).reduce((max, p) => p.order > max.order ? p : max, targetTasks[0]).order + 1
                     : 1
             } else {
                 const newOrder = siblingTask.order
                 targetTasks.forEach(x => {
-                    if (x.order >= newOrder && !x.withTime) {
+                    if (x.order >= newOrder && x.timeType === TaskTimeTypeEnum.NoTime) {
                         x.order++
                         x.updated = true
                     }
@@ -103,7 +103,7 @@ const service = {
             return {
                 ...model,
                 dateTime: new Date(currentYear, month - 1, day, hour, minute),
-                withTime: true
+                timeType: TaskTimeTypeEnum.ConcreteTime
             }
         }
 
@@ -115,7 +115,8 @@ const service = {
 
             return {
                 ...model,
-                dateTime: new Date(currentYear, month - 1, day)
+                dateTime: new Date(currentYear, month - 1, day),
+                timeType: TaskTimeTypeEnum.NoTime
             }
         }
 
@@ -133,7 +134,7 @@ const service = {
 
         const s = `${str2digits(model.dateTime.getMonth() + 1)}${str2digits(model.dateTime.getDate())}`
 
-        if (!model.withTime) {
+        if (model.timeType === TaskTimeTypeEnum.NoTime) {
             return `${s} ${model.title}`
         }
 
@@ -156,23 +157,25 @@ const service = {
             && taskA.id === taskB.id
             && taskA.completed === taskB.completed
             && taskA.deleted === taskB.deleted
+            && taskA.timeType === taskB.timeType
     },
 
+    // TODO: fix
     sortTasks(tasks: Task[]): Task[] {
         tasks.sort((x, y) => {
-            if (x.withTime && !y.withTime) {
+            if (x.timeType === TaskTimeTypeEnum.ConcreteTime && y.timeType === TaskTimeTypeEnum.NoTime) {
                 return 1
             }
 
-            if (!x.withTime && y.withTime) {
+            if (x.timeType === TaskTimeTypeEnum.NoTime && y.timeType === TaskTimeTypeEnum.ConcreteTime) {
                 return 0
             }
 
-            if (!x.withTime && !y.withTime) {
+            if (x.timeType === TaskTimeTypeEnum.NoTime && y.timeType === TaskTimeTypeEnum.NoTime) {
                 return x.order > y.order ? 1 : 0
             }
 
-            if (x.withTime && y.withTime) {
+            if (x.timeType === TaskTimeTypeEnum.ConcreteTime && y.timeType === TaskTimeTypeEnum.ConcreteTime) {
                 return x.dateTime! > y.dateTime! ? 1 : 0
             }
 
