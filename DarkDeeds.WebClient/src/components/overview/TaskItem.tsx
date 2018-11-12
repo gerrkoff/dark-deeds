@@ -70,6 +70,10 @@ function renderContent(task: Task): React.ReactNode {
     const className = 'task-item' + (task.completed ? ' task-item-completed' : '')
     let text = ''
     if (task.timeType !== TaskTimeTypeEnum.NoTime) {
+        if (task.timeType === TaskTimeTypeEnum.AfterTime) {
+            text += '> '
+        }
+
         text += `${str2digits(task.dateTime!.getHours())}:${str2digits(task.dateTime!.getMinutes())} `
     }
     text += task.title
