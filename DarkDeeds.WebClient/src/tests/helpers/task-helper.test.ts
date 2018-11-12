@@ -168,12 +168,14 @@ test('[tasksEqual] positive', () => {
 test('[sortTasks] positive', () => {
     const tasks = [
         new Task(1, '', new Date(2018, 1, 1), 1, false, 0, false, false, TaskTimeTypeEnum.NoTime),
+        new Task(8, '', new Date(2018, 1, 1, 10), 0, false, 0, false, false, TaskTimeTypeEnum.AfterTime),
         new Task(2, '', new Date(2018, 1, 1), 4, false, 0, false, false, TaskTimeTypeEnum.NoTime),
         new Task(3, '', new Date(2018, 1, 1, 10), 0, false, 0, false, false, TaskTimeTypeEnum.ConcreteTime),
         new Task(4, '', new Date(2018, 1, 1), 3, false, 0, false, false, TaskTimeTypeEnum.NoTime),
         new Task(5, '', new Date(2018, 1, 1, 8), 0, false, 0, false, false, TaskTimeTypeEnum.ConcreteTime),
         new Task(6, '', new Date(2018, 1, 1), 2, false, 0, false, false, TaskTimeTypeEnum.NoTime),
-        new Task(7, '', new Date(2018, 1, 1, 15), 0, false, 0, false, false, TaskTimeTypeEnum.ConcreteTime)
+        new Task(7, '', new Date(2018, 1, 1, 15), 0, false, 0, false, false, TaskTimeTypeEnum.ConcreteTime),
+        new Task(9, '', new Date(2018, 1, 1, 8), 0, false, 0, false, false, TaskTimeTypeEnum.AfterTime)
     ]
     const result = TaskHelper.sortTasks(tasks)
 
@@ -182,6 +184,8 @@ test('[sortTasks] positive', () => {
     expect(result[2].clientId).toBe(4)
     expect(result[3].clientId).toBe(2)
     expect(result[4].clientId).toBe(5)
-    expect(result[5].clientId).toBe(3)
-    expect(result[6].clientId).toBe(7)
+    expect(result[5].clientId).toBe(9)
+    expect(result[6].clientId).toBe(3)
+    expect(result[7].clientId).toBe(8)
+    expect(result[8].clientId).toBe(7)
 })

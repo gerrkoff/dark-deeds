@@ -164,22 +164,13 @@ const service = {
     // TODO: adjust for aftertime
     sortTasks(tasks: Task[]): Task[] {
         tasks.sort((x, y) => {
-            if (x.timeType === TaskTimeTypeEnum.ConcreteTime && y.timeType === TaskTimeTypeEnum.NoTime) {
-                return 1
+            const xOrders = evalOrders(x)
+            const yOrders = evalOrders(y)
+            for (let i = 0; i < xOrders.length; i++) {
+                if (xOrders[i] !== yOrders[i]) {
+                    return xOrders[i] > yOrders[i] ? 1 : 0
+                }
             }
-
-            if (x.timeType === TaskTimeTypeEnum.NoTime && y.timeType === TaskTimeTypeEnum.ConcreteTime) {
-                return 0
-            }
-
-            if (x.timeType === TaskTimeTypeEnum.NoTime && y.timeType === TaskTimeTypeEnum.NoTime) {
-                return x.order > y.order ? 1 : 0
-            }
-
-            if (x.timeType === TaskTimeTypeEnum.ConcreteTime && y.timeType === TaskTimeTypeEnum.ConcreteTime) {
-                return x.dateTime! > y.dateTime! ? 1 : 0
-            }
-
             return 0
         })
         return tasks
@@ -196,6 +187,15 @@ function taskDateToStart(date: Date | null): number {
 
 function str2digits(n: number): string {
     return n < 10 ? '0' + n : n.toString()
+}
+
+function evalOrders(task: Task): number[] {
+    const orders: number[] = []
+    orders.push(task.timeType === TaskTimeTypeEnum.NoTime ? 0 : 1)
+    orders.push(task.dateTime === null ? 0 : task.dateTime.getTime())
+    orders.push(task.timeType === TaskTimeTypeEnum.ConcreteTime ? 0 : 1)
+    orders.push(task.order)
+    return orders
 }
 
 export { service as TaskHelper }
