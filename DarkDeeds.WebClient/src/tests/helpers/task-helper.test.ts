@@ -295,6 +295,22 @@ test('[moveTask] move concrete time and adjust source aftertime to be after time
     expect(taskRes2.timeType).toBe(TaskTimeTypeEnum.AfterTime)
 })
 
+test('[moveTask] move concrete time and no adjust if source and target are the same', () => {
+    const tasks: Task[] = [
+        task(2018, 9, 10, 4, 0, TaskTimeTypeEnum.ConcreteTime, 12),
+        task(2018, 9, 10, 8, 1, TaskTimeTypeEnum.AfterTime, 12)
+    ]
+
+    const result = TaskHelper.moveTask(tasks, 4, new Date(2018, 9, 10).getTime(), new Date(2018, 9, 10).getTime(), null)
+
+    expect(result.find(x => x.clientId === 4)!.order).toBe(0)
+
+    const taskRes = result.find(x => x.clientId === 8)!
+    expect(taskRes.order).toBe(1)
+    expect(taskRes.dateTime!.getTime()).toBe(new Date(2018, 9, 10, 12).getTime())
+    expect(taskRes.timeType).toBe(TaskTimeTypeEnum.AfterTime)
+})
+
 test('[convertStringToModel] no date and time', () => {
     const result = TaskHelper.convertStringToModel('Test!')
 

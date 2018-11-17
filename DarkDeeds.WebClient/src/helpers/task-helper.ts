@@ -66,15 +66,17 @@ const service = {
             task.dateTime = null
 
         } else if (task.timeType === TaskTimeTypeEnum.ConcreteTime) {
-            const sourceTasksSorted = this.sortTasks(tasks.filter(x => taskDateToStart(x.dateTime) === sourceDate))
-            const taskBeforeOldIndex = sourceTasksSorted.findIndex(x => x.clientId === oldTask.clientId) - 1
-            if (taskBeforeOldIndex !== -1) {
-                taskBeforeOldData = {
-                    dateTime: new Date(sourceTasksSorted[taskBeforeOldIndex].dateTime!),
-                    order: sourceTasksSorted[taskBeforeOldIndex].order + 1,
-                    timeType: sourceTasksSorted[taskBeforeOldIndex].timeType === TaskTimeTypeEnum.NoTime
-                        ? TaskTimeTypeEnum.NoTime
-                        : TaskTimeTypeEnum.AfterTime
+            if (targetDate !== sourceDate) {
+                const sourceTasksSorted = this.sortTasks(tasks.filter(x => taskDateToStart(x.dateTime) === sourceDate))
+                const taskBeforeOldIndex = sourceTasksSorted.findIndex(x => x.clientId === oldTask.clientId) - 1
+                if (taskBeforeOldIndex !== -1) {
+                    taskBeforeOldData = {
+                        dateTime: new Date(sourceTasksSorted[taskBeforeOldIndex].dateTime!),
+                        order: sourceTasksSorted[taskBeforeOldIndex].order + 1,
+                        timeType: sourceTasksSorted[taskBeforeOldIndex].timeType === TaskTimeTypeEnum.NoTime
+                            ? TaskTimeTypeEnum.NoTime
+                            : TaskTimeTypeEnum.AfterTime
+                    }
                 }
             }
 
@@ -128,7 +130,10 @@ const service = {
                 }
             }
 
-            if (oldTask.timeType === TaskTimeTypeEnum.ConcreteTime && tasks[i].dateTime && tasks[i].dateTime!.getTime() === oldTask.dateTime!.getTime()) {
+            if (oldTask.timeType === TaskTimeTypeEnum.ConcreteTime
+                    && targetDate !== sourceDate
+                    && tasks[i].dateTime
+                    && tasks[i].dateTime!.getTime() === oldTask.dateTime!.getTime()) {
                 tasks[i] = {
                     ...tasks[i],
                     dateTime: new Date(taskBeforeOldData.dateTime),
