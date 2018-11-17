@@ -1,5 +1,5 @@
 import { DateHelper } from '../../helpers'
-// import { Task } from '../../models'
+import { Task } from '../../models'
 
 test('[toDateFromSpecialFormat] positive', () => {
     const result = DateHelper.toDateFromSpecialFormat('20180704')
@@ -46,8 +46,7 @@ test('[dayStart] positive', () => {
     expect(DateHelper.dayStart(new Date(2018, 9, 17, 10, 10, 10)).getTime())
         .toBe(new Date(2018, 9, 17).getTime())
 })
-// TODO: fix it
-/*
+
 test('[fixDates] positive', () => {
     const arr: any = [new Task(1, ''), { clientId: 2, dateTime: '2018-11-14T22:00:00+04:00' }]
     const result = DateHelper.fixDates(arr) as Task[]
@@ -55,9 +54,9 @@ test('[fixDates] positive', () => {
     expect(result).not.toBe(arr)
     expect(result.find(x => x.clientId === 1)!.dateTime).toBeNull()
     expect(result.find(x => x.clientId === 2)!.dateTime!.getTime())
-        .toBe(new Date(2018, 10, 14, 22).getTime())
+        .toBe(new Date(Date.UTC(2018, 10, 14, 18)).getTime())
 })
-*/
+
 test('[equalDatesByStart] positive', () => {
     expect(DateHelper.equalDatesByStart(new Date(2018, 9, 17, 10, 10, 10), new Date(2018, 9, 17, 12, 12, 12))).toBeTruthy()
 })
