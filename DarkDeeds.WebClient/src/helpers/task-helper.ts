@@ -43,50 +43,77 @@ const service = {
 
     // TODO: adjust for after time
     moveTask(tasks: Task[], taskId: number, targetDate: number, sourceDate: number, siblingId: number | null): Task[] {
-        const task = tasks.find(x => x.clientId === taskId)
+        const taskIndex = tasks.findIndex(x => x.clientId === taskId)
 
-        if (task === undefined) {
+        if (taskIndex === -1) {
             return tasks
         }
 
-        const targetTasks = tasks.filter(x => taskDateToStart(x.dateTime) === targetDate)
-        const sourceTasks = targetDate !== sourceDate
-            ? tasks.filter(x => taskDateToStart(x.dateTime) === sourceDate)
-            : targetTasks
-        const siblingTask = siblingId && targetTasks
-            ? targetTasks.find(x => x.clientId === siblingId)
-            : null
+        const oldTask = tasks[taskIndex]
+        tasks[taskIndex] = {
+            ...tasks[taskIndex],
+            updated: true
+        }
+        const task = tasks[taskIndex]
 
-        if (task.timeType === TaskTimeTypeEnum.NoTime) {
-            if (sourceTasks) {
-                sourceTasks.forEach(x => {
-                    if (x.order > task.order && x.timeType === TaskTimeTypeEnum.NoTime) {
-                        x.order--
-                        x.updated = true
-                    }
-                })
-            }
-            if (!siblingTask) {
-                task.order = targetTasks.length > 0
-                    ? targetTasks.filter(x => x.timeType === TaskTimeTypeEnum.NoTime).reduce((max, p) => p.order > max.order ? p : max, targetTasks[0]).order + 1
+        // CHANGE TASK
+        if (targetDate === 0) {
+            task.timeType = TaskTimeTypeEnum.NoTime
+            task.dateTime = null
+
+        } else if (task.timeType === TaskTimeTypeEnum.ConcreteTime) {
+            task.dateTime = new Date(targetDate)
+            task.dateTime.setHours(oldTask.dateTime!.getHours())
+            task.dateTime.setMinutes(oldTask.dateTime!.getMinutes())
+
+        } else {
+            const targetTasksSorted = this.sortTasks(tasks.filter(x => taskDateToStart(x.dateTime) === targetDate))
+            const previosSiblingIndex = siblingId
+                ? targetTasksSorted.findIndex(x => x.clientId === siblingId) - 1
+                : targetTasksSorted.length - 1
+            const sameGroup = previosSiblingIndex !== -1
+                ? tasksInTheSameGroup(oldTask, targetTasksSorted[previosSiblingIndex])
+                : false
+
+            if (previosSiblingIndex === -1 || targetTasksSorted[previosSiblingIndex].timeType === TaskTimeTypeEnum.NoTime) {
+                task.timeType = TaskTimeTypeEnum.NoTime
+                task.dateTime = new Date(targetDate)
+                task.order = previosSiblingIndex !== -1
+                    ? targetTasksSorted[previosSiblingIndex].order + (sameGroup ? 0 : 1)
                     : 1
             } else {
-                const newOrder = siblingTask.order
-                targetTasks.forEach(x => {
-                    if (x.order >= newOrder && x.timeType === TaskTimeTypeEnum.NoTime) {
-                        x.order++
-                        x.updated = true
-                    }
-                })
-                task.order = newOrder
+                task.timeType = TaskTimeTypeEnum.AfterTime
+                task.dateTime = new Date(targetTasksSorted[previosSiblingIndex].dateTime!)
+                task.order = targetTasksSorted[previosSiblingIndex].timeType === TaskTimeTypeEnum.AfterTime
+                    ? targetTasksSorted[previosSiblingIndex].order + (sameGroup ? 0 : 1)
+                    : 1
             }
         }
 
-        const targetDateAsDate = new Date(targetDate)
-        task.dateTime = targetDate === 0 ? null : new Date(targetDateAsDate.getFullYear(), targetDateAsDate.getMonth(), targetDateAsDate.getDate(), task.dateTime!.getHours(), task.dateTime!.getMinutes())
-        task.updated = true
+        // ADJUST OTHER TASKS ORDER
+        for (let i = 0; i < tasks.length; i++) {
+            if (tasks[i].clientId === task.clientId) {
+                continue
+            }
 
-        return tasks
+            if (tasks[i].order > oldTask.order && tasksInTheSameGroup(tasks[i], oldTask)) {
+                tasks[i] = {
+                    ...tasks[i],
+                    order: tasks[i].order - 1,
+                    updated: true
+                }
+            }
+
+            if (tasks[i].order >= task.order && tasksInTheSameGroup(tasks[i], task)) {
+                tasks[i] = {
+                    ...tasks[i],
+                    order: tasks[i].order + 1,
+                    updated: true
+                }
+            }
+        }
+
+        return [...tasks]
     },
 
     // TODO: implement future year support
@@ -161,7 +188,6 @@ const service = {
             && taskA.timeType === taskB.timeType
     },
 
-    // TODO: adjust for aftertime
     sortTasks(tasks: Task[]): Task[] {
         tasks.sort((x, y) => {
             const xOrders = evalOrders(x)
@@ -196,6 +222,11 @@ function evalOrders(task: Task): number[] {
     orders.push(task.timeType === TaskTimeTypeEnum.ConcreteTime ? 0 : 1)
     orders.push(task.order)
     return orders
+}
+
+function tasksInTheSameGroup(taskA: Task, taskB: Task): boolean {
+    return taskA.timeType === taskB.timeType && taskA.timeType === TaskTimeTypeEnum.NoTime && taskDateToStart(taskA.dateTime) === taskDateToStart(taskB.dateTime)
+        || taskA.timeType === taskB.timeType && taskA.timeType === TaskTimeTypeEnum.AfterTime && taskA.dateTime!.getTime() === taskB.dateTime!.getTime()
 }
 
 export { service as TaskHelper }

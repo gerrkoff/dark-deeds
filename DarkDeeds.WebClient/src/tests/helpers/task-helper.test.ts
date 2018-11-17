@@ -1,8 +1,8 @@
 import { TaskHelper } from '../../helpers'
 import { Task, TaskModel, TaskTimeTypeEnum } from '../../models'
 
-function task(year: number, month: number, date: number, id: number = 0, order: number = 0): Task {
-    return new Task(id, '', new Date(year, month, date), order)
+function task(year: number, month: number, date: number, id: number = 0, order: number = 0, timeType: TaskTimeTypeEnum = TaskTimeTypeEnum.NoTime, hours: number = 0, minutes: number = 0): Task {
+    return new Task(id, '', new Date(year, month, date, hours, minutes), order, false, 0, false, false, timeType)
 }
 
 test('[evalModel] positive', () => {
@@ -93,6 +93,117 @@ test('[moveTask] same list as last', () => {
     expect(result.find(x => x.clientId === 2)!.order).toBe(2)
     expect(result.find(x => x.clientId === 3)!.order).toBe(1)
     expect(result.find(x => x.clientId === 4)!.order).toBe(4)
+})
+
+test('[moveTask] move concrete time', () => {
+    const tasks: Task[] = [
+        task(2018, 9, 9, 1, 1),
+        task(2018, 9, 9, 2, 0, TaskTimeTypeEnum.ConcreteTime),
+        task(2018, 9, 9, 3, 2),
+        task(2018, 9, 10, 4, 0, TaskTimeTypeEnum.ConcreteTime),
+        task(2018, 9, 10, 5, 1)
+    ]
+
+    const result = TaskHelper.moveTask(tasks, 4, new Date(2018, 9, 9).getTime(), new Date(2018, 9, 10).getTime(), 1)
+
+    expect(result.find(x => x.clientId === 1)!.order).toBe(1)
+    expect(result.find(x => x.clientId === 2)!.order).toBe(0)
+    expect(result.find(x => x.clientId === 3)!.order).toBe(2)
+    expect(result.find(x => x.clientId === 4)!.order).toBe(0)
+    expect(result.find(x => x.clientId === 5)!.order).toBe(1)
+
+    expect(result.find(x => x.clientId === 4)!.dateTime!.getTime()).toBe(new Date(2018, 9, 9).getTime())
+})
+
+// to no time
+// to after time from no time - adjust time and order
+// to after time from after time - adjust time and order
+test('[moveTask] move after time - from after time to after time', () => {
+    const tasks: Task[] = [
+        task(2018, 9, 9, 1, 1),
+        task(2018, 9, 9, 2, 0, TaskTimeTypeEnum.ConcreteTime, 12, 0),
+        task(2018, 9, 9, 3, 2),
+        task(2018, 9, 10, 4, 0, TaskTimeTypeEnum.AfterTime, 14, 5),
+        task(2018, 9, 10, 5, 1)
+    ]
+
+    const result = TaskHelper.moveTask(tasks, 4, new Date(2018, 9, 9).getTime(), new Date(2018, 9, 10).getTime(), null)
+
+    expect(result.find(x => x.clientId === 1)!.order).toBe(1)
+    expect(result.find(x => x.clientId === 2)!.order).toBe(0)
+    expect(result.find(x => x.clientId === 3)!.order).toBe(2)
+    expect(result.find(x => x.clientId === 5)!.order).toBe(1)
+
+    const movedTask = result.find(x => x.clientId === 4)!
+    expect(movedTask.order).toBe(1)
+    expect(movedTask.dateTime!.getTime()).toBe(new Date(2018, 9, 9, 12).getTime())
+    expect(movedTask.timeType).toBe(TaskTimeTypeEnum.AfterTime)
+})
+
+test('[moveTask] move after time - from no time to after time', () => {
+    const tasks: Task[] = [
+        task(2018, 9, 9, 1, 1),
+        task(2018, 9, 9, 2, 0, TaskTimeTypeEnum.ConcreteTime, 12),
+        task(2018, 9, 9, 3, 0, TaskTimeTypeEnum.ConcreteTime, 13),
+        task(2018, 9, 10, 4, 1),
+        task(2018, 9, 10, 5, 2)
+    ]
+
+    const result = TaskHelper.moveTask(tasks, 4, new Date(2018, 9, 9).getTime(), new Date(2018, 9, 10).getTime(), 3)
+
+    expect(result.find(x => x.clientId === 1)!.order).toBe(1)
+    expect(result.find(x => x.clientId === 2)!.order).toBe(0)
+    expect(result.find(x => x.clientId === 3)!.order).toBe(0)
+    expect(result.find(x => x.clientId === 5)!.order).toBe(1)
+
+    const movedTask = result.find(x => x.clientId === 4)!
+    expect(movedTask.order).toBe(1)
+    expect(movedTask.dateTime!.getTime()).toBe(new Date(2018, 9, 9, 12).getTime())
+    expect(movedTask.timeType).toBe(TaskTimeTypeEnum.AfterTime)
+})
+
+test('[moveTask] move after time - from after time to no time', () => {
+    const tasks: Task[] = [
+        task(2018, 9, 9, 1, 1),
+        task(2018, 9, 9, 2, 0, TaskTimeTypeEnum.ConcreteTime, 12),
+        task(2018, 9, 10, 3, 0, TaskTimeTypeEnum.ConcreteTime, 13),
+        task(2018, 9, 10, 4, 1, TaskTimeTypeEnum.AfterTime, 13),
+        task(2018, 9, 10, 5, 1)
+    ]
+
+    const result = TaskHelper.moveTask(tasks, 4, new Date(2018, 9, 9).getTime(), new Date(2018, 9, 10).getTime(), 2)
+
+    expect(result.find(x => x.clientId === 1)!.order).toBe(1)
+    expect(result.find(x => x.clientId === 2)!.order).toBe(0)
+    expect(result.find(x => x.clientId === 3)!.order).toBe(0)
+    expect(result.find(x => x.clientId === 5)!.order).toBe(1)
+
+    const movedTask = result.find(x => x.clientId === 4)!
+    expect(movedTask.order).toBe(2)
+    expect(movedTask.dateTime!.getTime()).toBe(new Date(2018, 9, 9).getTime())
+    expect(movedTask.timeType).toBe(TaskTimeTypeEnum.NoTime)
+})
+
+test('[moveTask] moving to no date (reset type)', () => {
+    const tasks: Task[] = [
+        task(2018, 9, 9, 1, 1),
+        task(2018, 9, 9, 2, 0, TaskTimeTypeEnum.ConcreteTime, 12),
+        task(2018, 9, 10, 3, 0, TaskTimeTypeEnum.ConcreteTime, 13),
+        task(2018, 9, 10, 4, 1, TaskTimeTypeEnum.AfterTime, 13),
+        task(2018, 9, 10, 5, 2, TaskTimeTypeEnum.AfterTime, 13)
+    ]
+
+    const result = TaskHelper.moveTask(tasks, 4, 0, new Date(2018, 9, 10).getTime(), null)
+
+    expect(result.find(x => x.clientId === 1)!.order).toBe(1)
+    expect(result.find(x => x.clientId === 2)!.order).toBe(0)
+    expect(result.find(x => x.clientId === 3)!.order).toBe(0)
+    expect(result.find(x => x.clientId === 5)!.order).toBe(1)
+
+    const movedTask = result.find(x => x.clientId === 4)!
+    expect(movedTask.order).toBe(1)
+    expect(movedTask.dateTime).toBeNull()
+    expect(movedTask.timeType).toBe(TaskTimeTypeEnum.NoTime)
 })
 
 test('[convertStringToModel] no date and time', () => {
