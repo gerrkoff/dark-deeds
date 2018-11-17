@@ -41,7 +41,6 @@ const service = {
         return model
     },
 
-    // TODO: adjust for after time
     moveTask(tasks: Task[], taskId: number, targetDate: number, sourceDate: number, siblingId: number | null): Task[] {
         const taskIndex = tasks.findIndex(x => x.clientId === taskId)
 
@@ -55,6 +54,11 @@ const service = {
             updated: true
         }
         const task = tasks[taskIndex]
+        let taskBeforeOldData = {
+            dateTime: new Date(sourceDate),
+            order: 1,
+            timeType: TaskTimeTypeEnum.NoTime
+        }
 
         // CHANGE TASK
         if (targetDate === 0) {
@@ -62,6 +66,18 @@ const service = {
             task.dateTime = null
 
         } else if (task.timeType === TaskTimeTypeEnum.ConcreteTime) {
+            const sourceTasksSorted = this.sortTasks(tasks.filter(x => taskDateToStart(x.dateTime) === sourceDate))
+            const taskBeforeOldIndex = sourceTasksSorted.findIndex(x => x.clientId === oldTask.clientId) - 1
+            if (taskBeforeOldIndex !== -1) {
+                taskBeforeOldData = {
+                    dateTime: new Date(sourceTasksSorted[taskBeforeOldIndex].dateTime!),
+                    order: sourceTasksSorted[taskBeforeOldIndex].order + 1,
+                    timeType: sourceTasksSorted[taskBeforeOldIndex].timeType === TaskTimeTypeEnum.NoTime
+                        ? TaskTimeTypeEnum.NoTime
+                        : TaskTimeTypeEnum.AfterTime
+                }
+            }
+
             task.dateTime = new Date(targetDate)
             task.dateTime.setHours(oldTask.dateTime!.getHours())
             task.dateTime.setMinutes(oldTask.dateTime!.getMinutes())
@@ -90,7 +106,7 @@ const service = {
             }
         }
 
-        // ADJUST OTHER TASKS ORDER
+        // ADJUST OTHER TASKS
         for (let i = 0; i < tasks.length; i++) {
             if (tasks[i].clientId === task.clientId) {
                 continue
@@ -108,6 +124,16 @@ const service = {
                 tasks[i] = {
                     ...tasks[i],
                     order: tasks[i].order + 1,
+                    updated: true
+                }
+            }
+
+            if (oldTask.timeType === TaskTimeTypeEnum.ConcreteTime && tasks[i].dateTime && tasks[i].dateTime!.getTime() === oldTask.dateTime!.getTime()) {
+                tasks[i] = {
+                    ...tasks[i],
+                    dateTime: new Date(taskBeforeOldData.dateTime),
+                    order: taskBeforeOldData.order++,
+                    timeType: taskBeforeOldData.timeType,
                     updated: true
                 }
             }

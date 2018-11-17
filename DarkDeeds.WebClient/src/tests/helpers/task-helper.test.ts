@@ -98,9 +98,9 @@ test('[moveTask] same list as last', () => {
 test('[moveTask] move concrete time', () => {
     const tasks: Task[] = [
         task(2018, 9, 9, 1, 1),
-        task(2018, 9, 9, 2, 0, TaskTimeTypeEnum.ConcreteTime),
+        task(2018, 9, 9, 2, 0, TaskTimeTypeEnum.ConcreteTime, 11),
         task(2018, 9, 9, 3, 2),
-        task(2018, 9, 10, 4, 0, TaskTimeTypeEnum.ConcreteTime),
+        task(2018, 9, 10, 4, 0, TaskTimeTypeEnum.ConcreteTime, 12),
         task(2018, 9, 10, 5, 1)
     ]
 
@@ -112,12 +112,9 @@ test('[moveTask] move concrete time', () => {
     expect(result.find(x => x.clientId === 4)!.order).toBe(0)
     expect(result.find(x => x.clientId === 5)!.order).toBe(1)
 
-    expect(result.find(x => x.clientId === 4)!.dateTime!.getTime()).toBe(new Date(2018, 9, 9).getTime())
+    expect(result.find(x => x.clientId === 4)!.dateTime!.getTime()).toBe(new Date(2018, 9, 9, 12).getTime())
 })
 
-// to no time
-// to after time from no time - adjust time and order
-// to after time from after time - adjust time and order
 test('[moveTask] move after time - from after time to after time', () => {
     const tasks: Task[] = [
         task(2018, 9, 9, 1, 1),
@@ -204,6 +201,98 @@ test('[moveTask] moving to no date (reset type)', () => {
     expect(movedTask.order).toBe(1)
     expect(movedTask.dateTime).toBeNull()
     expect(movedTask.timeType).toBe(TaskTimeTypeEnum.NoTime)
+})
+
+test('[moveTask] move concrete time and adjust source aftertime to be no time', () => {
+    const tasks: Task[] = [
+        task(2018, 9, 9, 1, 1),
+        task(2018, 9, 9, 2, 0, TaskTimeTypeEnum.ConcreteTime, 11),
+        task(2018, 9, 9, 3, 2),
+        task(2018, 9, 10, 4, 0, TaskTimeTypeEnum.ConcreteTime, 12),
+        task(2018, 9, 10, 5, 1),
+        task(2018, 9, 10, 6, 1, TaskTimeTypeEnum.AfterTime, 12),
+        task(2018, 9, 10, 7, 2, TaskTimeTypeEnum.AfterTime, 12)
+    ]
+
+    const result = TaskHelper.moveTask(tasks, 4, new Date(2018, 9, 9).getTime(), new Date(2018, 9, 10).getTime(), 1)
+
+    expect(result.find(x => x.clientId === 1)!.order).toBe(1)
+    expect(result.find(x => x.clientId === 2)!.order).toBe(0)
+    expect(result.find(x => x.clientId === 3)!.order).toBe(2)
+    expect(result.find(x => x.clientId === 4)!.order).toBe(0)
+    expect(result.find(x => x.clientId === 5)!.order).toBe(1)
+
+    const taskRes1 = result.find(x => x.clientId === 6)!
+    expect(taskRes1.order).toBe(2)
+    expect(taskRes1.dateTime!.getTime()).toBe(new Date(2018, 9, 10).getTime())
+    expect(taskRes1.timeType).toBe(TaskTimeTypeEnum.NoTime)
+
+    const taskRes2 = result.find(x => x.clientId === 7)!
+    expect(taskRes2.order).toBe(3)
+    expect(taskRes2.dateTime!.getTime()).toBe(new Date(2018, 9, 10).getTime())
+    expect(taskRes2.timeType).toBe(TaskTimeTypeEnum.NoTime)
+})
+
+test('[moveTask] move concrete time and adjust source aftertime to be after time (concrete time)', () => {
+    const tasks: Task[] = [
+        task(2018, 9, 9, 1, 1),
+        task(2018, 9, 9, 2, 0, TaskTimeTypeEnum.ConcreteTime, 11),
+        task(2018, 9, 9, 3, 2),
+        task(2018, 9, 10, 4, 0, TaskTimeTypeEnum.ConcreteTime, 12),
+        task(2018, 9, 10, 5, 0, TaskTimeTypeEnum.ConcreteTime, 11),
+        task(2018, 9, 10, 6, 1, TaskTimeTypeEnum.AfterTime, 12),
+        task(2018, 9, 10, 7, 2, TaskTimeTypeEnum.AfterTime, 12)
+    ]
+
+    const result = TaskHelper.moveTask(tasks, 4, new Date(2018, 9, 9).getTime(), new Date(2018, 9, 10).getTime(), 1)
+
+    expect(result.find(x => x.clientId === 1)!.order).toBe(1)
+    expect(result.find(x => x.clientId === 2)!.order).toBe(0)
+    expect(result.find(x => x.clientId === 3)!.order).toBe(2)
+    expect(result.find(x => x.clientId === 4)!.order).toBe(0)
+    expect(result.find(x => x.clientId === 5)!.order).toBe(0)
+
+    const taskRes1 = result.find(x => x.clientId === 6)!
+    expect(taskRes1.order).toBe(1)
+    expect(taskRes1.dateTime!.getTime()).toBe(new Date(2018, 9, 10, 11).getTime())
+    expect(taskRes1.timeType).toBe(TaskTimeTypeEnum.AfterTime)
+
+    const taskRes2 = result.find(x => x.clientId === 7)!
+    expect(taskRes2.order).toBe(2)
+    expect(taskRes2.dateTime!.getTime()).toBe(new Date(2018, 9, 10, 11).getTime())
+    expect(taskRes2.timeType).toBe(TaskTimeTypeEnum.AfterTime)
+})
+
+test('[moveTask] move concrete time and adjust source aftertime to be after time (after time)', () => {
+    const tasks: Task[] = [
+        task(2018, 9, 9, 1, 1),
+        task(2018, 9, 9, 2, 0, TaskTimeTypeEnum.ConcreteTime, 11),
+        task(2018, 9, 9, 3, 2),
+        task(2018, 9, 10, 4, 0, TaskTimeTypeEnum.ConcreteTime, 12),
+        task(2018, 9, 10, 5, 0, TaskTimeTypeEnum.ConcreteTime, 11),
+        task(2018, 9, 10, 6, 1, TaskTimeTypeEnum.AfterTime, 12),
+        task(2018, 9, 10, 7, 2, TaskTimeTypeEnum.AfterTime, 12),
+        task(2018, 9, 10, 8, 1, TaskTimeTypeEnum.AfterTime, 11)
+    ]
+
+    const result = TaskHelper.moveTask(tasks, 4, new Date(2018, 9, 9).getTime(), new Date(2018, 9, 10).getTime(), 1)
+
+    expect(result.find(x => x.clientId === 1)!.order).toBe(1)
+    expect(result.find(x => x.clientId === 2)!.order).toBe(0)
+    expect(result.find(x => x.clientId === 3)!.order).toBe(2)
+    expect(result.find(x => x.clientId === 4)!.order).toBe(0)
+    expect(result.find(x => x.clientId === 5)!.order).toBe(0)
+    expect(result.find(x => x.clientId === 8)!.order).toBe(1)
+
+    const taskRes1 = result.find(x => x.clientId === 6)!
+    expect(taskRes1.order).toBe(2)
+    expect(taskRes1.dateTime!.getTime()).toBe(new Date(2018, 9, 10, 11).getTime())
+    expect(taskRes1.timeType).toBe(TaskTimeTypeEnum.AfterTime)
+
+    const taskRes2 = result.find(x => x.clientId === 7)!
+    expect(taskRes2.order).toBe(3)
+    expect(taskRes2.dateTime!.getTime()).toBe(new Date(2018, 9, 10, 11).getTime())
+    expect(taskRes2.timeType).toBe(TaskTimeTypeEnum.AfterTime)
 })
 
 test('[convertStringToModel] no date and time', () => {
