@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using DarkDeeds.Common.Enums;
+using AutoMapper.QueryableExtensions;
 using DarkDeeds.Data.Entity;
 using DarkDeeds.Data.Repository;
 using DarkDeeds.Models;
@@ -23,20 +22,7 @@ namespace DarkDeeds.Services.Implementation
         
         public async Task<IEnumerable<TaskDto>> LoadTasksAsync()
         {
-            var q = await _tasksRepository.GetAll().ToListAsync();
-            
-            var list = new List<TaskDto>
-            {
-                new TaskDto {Id = 1, Title = "Test 1", Order = 0, DateTime = DateTime.Today.AddHours(10), TimeType = TaskTimeTypeEnum.ConcreteTime},
-                new TaskDto {Id = 2, Title = "Test 2", Order = 1, DateTime = DateTime.Today, TimeType = TaskTimeTypeEnum.NoTime},
-                new TaskDto {Id = 3, Title = "Test 3", Order = 0, DateTime = DateTime.Today.AddHours(5), TimeType = TaskTimeTypeEnum.ConcreteTime},
-                new TaskDto {Id = 4, Title = "Test 4", Order = 2, DateTime = DateTime.Today, ClientId = 4, TimeType = TaskTimeTypeEnum.NoTime},
-                new TaskDto {Id = 5, Title = "Test 5", Order = 2, DateTime = DateTime.Today.AddHours(5), TimeType = TaskTimeTypeEnum.AfterTime},
-                new TaskDto {Id = 6, Title = "Test 6", Order = 0, DateTime = DateTime.Today.AddHours(3), TimeType = TaskTimeTypeEnum.AfterTime},
-                new TaskDto {Id = 7, Title = "Test 7", Order = 1, DateTime = DateTime.Today.AddHours(5), TimeType = TaskTimeTypeEnum.AfterTime},
-            };
-            return await Task.FromResult(list);
-            //return await Task.FromResult(GenTasks());
+            return await _tasksRepository.GetAll().ProjectTo<TaskDto>().ToListAsync();
         }
 
         public async Task<IEnumerable<TaskDto>> SaveTasksAsync(ICollection<TaskDto> tasks)
@@ -47,89 +33,5 @@ namespace DarkDeeds.Services.Implementation
             }
             return await Task.FromResult(tasks);
         }
-
-        
-        // TODO: remove
-        #region GENTASKS
-        
-        private static readonly Random Rand = new Random();
-        private static readonly DateTime Monday = CurrentMonday();
-        private static readonly string[] TodoSamples = {
-            "Some todo",
-            "Some todo some todo some todo some todo some todo",
-            "Some very long todo some very long todo some very long todo some very long todo some very long todo some very long todo some very long todo"
-        };
-
-        
-
-        private static ICollection<TaskDto> GenTasks()
-        {
-            var list = new List<TaskDto>();
-            
-            // CURRENT
-            for (int i = 1; i <= 14; i++)
-            {
-                for (int j = 0; j < Rand.Next(1, 9); j++)
-                {
-                    list.Add(GenTask(i * 10 + j, Rand.Next(13)));
-                }
-            }
-
-            // NO DATE
-            for (int i = 1; i <= Rand.Next(1, 9); i++)
-            {
-                list.Add(GenTask(i, null));
-            }
-
-            // FUTURE
-            for (int i = 1; i <= 5; i++)
-            {
-                for (int j = 0; j < Rand.Next(1, 9); j++)
-                {
-                    list.Add(GenTask(i * 1000 + j, Rand.Next(30) + 14));
-                }
-            }
-
-            // EXPIRED
-            for (int i = 1; i <= 3; i++)
-            {
-                for (int j = 0; j < Rand.Next(1, 9); j++)
-                {
-                    list.Add(GenTask(i * 10000 + j, 0 - Rand.Next(1, 9)));
-                }
-            }
-
-            list.Sort((x, y) => x.Id.CompareTo(y.Id));
-            int order = 1;
-            list.ForEach(x => x.Order = order++);
-
-            return list;
-        }
-
-        private static DateTime CurrentMonday()
-        {
-            DateTime today = DateTime.Today;
-            int diff = (7 + (today.DayOfWeek - DayOfWeek.Monday)) % 7;
-            return today.AddDays(-1 * diff).Date; 
-        }
-        
-        private static TaskDto GenTask(int id, int? dayDiff)
-        {
-            var task = new TaskDto
-            {
-                Id = id,
-                Title = $"{id} {TodoSamples[Rand.Next(2)]}",
-                ClientId = id,
-                Completed = Rand.Next(3) == 2,
-                TimeType = TaskTimeTypeEnum.NoTime
-            };
-
-            if (dayDiff.HasValue)
-                task.DateTime = Monday.AddDays(dayDiff.Value).AddHours(Rand.Next(23)).AddMinutes(Rand.Next(59));
-
-            return task;
-        }
-        
-        #endregion
     }
 }

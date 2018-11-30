@@ -1,4 +1,6 @@
-﻿using DarkDeeds.Api.Filters;
+﻿using AutoMapper;
+using DarkDeeds.Api.Filters;
+using DarkDeeds.AutoMapper;
 using DarkDeeds.Data.Context;
 using DarkDeeds.Data.Repository;
 using DarkDeeds.Services.Implementation;
@@ -29,6 +31,8 @@ namespace DarkDeeds.Api
             
             services.AddDbContext<DarkDeedsContext>(options => options.UseSqlServer("Server=localhost,1433;Database=darkdeeds_0;User=sa;Password=Password1"));
             services.AddScoped<DbContext, DarkDeedsContext>();
+            
+            Mapper.Initialize(cfg => cfg.AddProfile<MappingProfile>());
             
             services.AddMvc(options =>
                 {
