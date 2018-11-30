@@ -1,0 +1,3 @@
+dotnet ef migrations add N001_Init -s ../DarkDeeds.Api/DarkDeeds.Api.csproj
+dotnet ef database update -s ../DarkDeeds.Api/DarkDeeds.Api.csproj 
+dotnet ef database drop -s ../DarkDeeds.Api/DarkDeeds.Api.csproj 

@@ -1,8 +1,10 @@
-﻿using DarkDeeds.Services.Implementation;
+﻿using DarkDeeds.Data.Context;
+using DarkDeeds.Services.Implementation;
 using DarkDeeds.Services.Interface;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -21,6 +23,9 @@ namespace DarkDeeds.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddScoped<ITaskService, TaskService>();
+            
+            services.AddDbContext<DarkDeedsContext>(options => options.UseSqlServer("Server=localhost,1433;Database=darkdeeds_0;User=sa;Password=Password1"));
+            services.AddScoped<DbContext, DarkDeedsContext>();
             
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }

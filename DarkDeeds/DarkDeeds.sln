@@ -8,6 +8,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.Services", "DarkD
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.Common", "DarkDeeds.Common\DarkDeeds.Common.csproj", "{151ABEA7-A243-4674-86CA-B83F261B4454}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.Data", "DarkDeeds.Data\DarkDeeds.Data.csproj", "{FDCF6E06-01B7-4B5C-8561-D3D2EAF61387}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +32,9 @@ Global
 		{151ABEA7-A243-4674-86CA-B83F261B4454}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{151ABEA7-A243-4674-86CA-B83F261B4454}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{151ABEA7-A243-4674-86CA-B83F261B4454}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FDCF6E06-01B7-4B5C-8561-D3D2EAF61387}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FDCF6E06-01B7-4B5C-8561-D3D2EAF61387}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FDCF6E06-01B7-4B5C-8561-D3D2EAF61387}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FDCF6E06-01B7-4B5C-8561-D3D2EAF61387}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
