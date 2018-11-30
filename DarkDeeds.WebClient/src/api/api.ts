@@ -1,6 +1,6 @@
 import baseUrl from './base-url'
 
-const DEFAULT_ERROR_MESSAGE = 'Something went wrong'
+const DEFAULT_ERROR_MESSAGE = 'An error has occured.'
 const service = {
     get<T>(api: string): Promise<T> {
         return sendRequest(`GET ${api}`, () =>
@@ -22,18 +22,27 @@ const service = {
 }
 
 async function sendRequest<T>(apiName: string, requestCreator: () => Promise<Response>): Promise<T> {
+    const prefix = `API ${apiName} |`
     let result
     try {
         result = await requestCreator()
     } catch (error) {
-        console.error(`API ${apiName} | `, error)
+        console.error(prefix, error)
         throw error
     }
 
-    if (result.ok) {
+    const contentType = result.headers.get('content-type')
+    const isJson = contentType && contentType.indexOf('application/json') !== -1
+
+    if (result.ok && isJson) {
         return await result.json() as T
     } else {
-        console.error(`API ${apiName} | Status: `, result.statusText)
+        if (result.ok) {
+            console.error(prefix, 'Response must be JSON')
+        } else {
+            console.error(prefix, `${result.status} | ${result.statusText}`)
+        }
+        console.error('Response body: ', isJson ? await result.json() : await result.text())
         throw new Error(DEFAULT_ERROR_MESSAGE)
     }
 }
