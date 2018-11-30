@@ -59,6 +59,7 @@ export function loadTasks() {
             dispatch({ type: constants.TASKS_LOADING_SUCCESS, tasks })
         } catch (err) {
             dispatch({ type: constants.TASKS_LOADING_FAILED })
+            ToastHelper.error(`Error occured while loading tasks`)
         }
     }
 }
@@ -78,10 +79,10 @@ export function saveTasks(tasks: Task[]) {
         try {
             const tasksFromServer = await TaskApi.saveTasks(tasks)
             dispatch({ type: constants.TASKS_SAVING_SUCCESS, tasks: tasksFromServer })
-            ToastHelper.info(`${tasks.length} items were updated`)
+            ToastHelper.info(`${tasks.length} tasks were updated`)
         } catch (err) {
             dispatch({ type: constants.TASKS_SAVING_FAILED })
-            ToastHelper.error(`Error occured while updating items`)
+            ToastHelper.error(`Error occured while updating tasks`)
         }
     }
 }
