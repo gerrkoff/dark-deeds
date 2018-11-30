@@ -2,17 +2,29 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using DarkDeeds.Common.Enums;
+using DarkDeeds.Data.Entity;
+using DarkDeeds.Data.Repository;
 using DarkDeeds.Models;
 using DarkDeeds.Services.Interface;
+using Microsoft.EntityFrameworkCore;
 
 namespace DarkDeeds.Services.Implementation
 {
     public class TaskService : ITaskService
     {
+        private readonly IRepository<TaskEntity> _tasksRepository;
+        
+        public TaskService(IRepository<TaskEntity> tasksRepository)
+        {
+            _tasksRepository = tasksRepository;
+        }
+        
         private static int Count = 1000000;
         
         public async Task<IEnumerable<TaskDto>> LoadTasksAsync()
         {
+            var q = await _tasksRepository.GetAll().ToListAsync();
+            
             var list = new List<TaskDto>
             {
                 new TaskDto {Id = 1, Title = "Test 1", Order = 0, DateTime = DateTime.Today.AddHours(10), TimeType = TaskTimeTypeEnum.ConcreteTime},
@@ -47,7 +59,9 @@ namespace DarkDeeds.Services.Implementation
             "Some todo some todo some todo some todo some todo",
             "Some very long todo some very long todo some very long todo some very long todo some very long todo some very long todo some very long todo"
         };
+
         
+
         private static ICollection<TaskDto> GenTasks()
         {
             var list = new List<TaskDto>();

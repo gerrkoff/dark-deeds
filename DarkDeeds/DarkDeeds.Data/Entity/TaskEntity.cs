@@ -2,7 +2,7 @@ using DarkDeeds.Data.Entity.Base;
 
 namespace DarkDeeds.Data.Entity
 {
-    public class TaskEntity : BaseEntity
+    public class TaskEntity : DeletableEntity
     {
         
     }

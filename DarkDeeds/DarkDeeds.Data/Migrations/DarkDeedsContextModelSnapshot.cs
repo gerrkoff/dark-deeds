@@ -24,6 +24,8 @@ namespace DarkDeeds.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<bool>("IsDeleted");
+
                     b.HasKey("Id");
 
                     b.ToTable("Tasks");

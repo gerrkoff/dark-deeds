@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DarkDeeds.Data.Migrations
 {
     [DbContext(typeof(DarkDeedsContext))]
-    [Migration("20181130174405_N001_Init")]
+    [Migration("20181130182240_N001_Init")]
     partial class N001_Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,6 +25,8 @@ namespace DarkDeeds.Data.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<bool>("IsDeleted");
 
                     b.HasKey("Id");
 
