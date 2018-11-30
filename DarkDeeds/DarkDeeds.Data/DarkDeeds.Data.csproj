@@ -19,4 +19,8 @@
       </Reference>
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\DarkDeeds.Common\DarkDeeds.Common.csproj" />
+    </ItemGroup>
+
 </Project>

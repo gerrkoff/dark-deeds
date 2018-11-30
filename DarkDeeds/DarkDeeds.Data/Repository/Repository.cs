@@ -24,7 +24,7 @@ namespace DarkDeeds.Data.Repository
         
         public IQueryable<T> GetAll()
         {
-            return Entities.AsQueryable();
+            return Entities.Where(x => !x.IsDeleted).AsQueryable();
         }
 
         public async Task SaveAsync(T entity)
