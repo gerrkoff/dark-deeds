@@ -311,6 +311,38 @@ test('[moveTask] move concrete time and no adjust if source and target are the s
     expect(taskRes.timeType).toBe(TaskTimeTypeEnum.AfterTime)
 })
 
+test('[moveTask] same list no date 1', () => {
+    const tasks: Task[] = [
+        new Task(1, '', null, 1, false, 0, false, false, TaskTimeTypeEnum.NoTime),
+        new Task(2, '', null, 2, false, 0, false, false, TaskTimeTypeEnum.NoTime),
+        new Task(3, '', null, 4, false, 0, false, false, TaskTimeTypeEnum.NoTime),
+        new Task(4, '', null, 3, false, 0, false, false, TaskTimeTypeEnum.NoTime)
+    ]
+
+    const result = TaskHelper.moveTask(tasks, 4, 0, 0, 1)
+
+    expect(result.find(x => x.clientId === 1)!.order).toBe(2)
+    expect(result.find(x => x.clientId === 2)!.order).toBe(3)
+    expect(result.find(x => x.clientId === 3)!.order).toBe(4)
+    expect(result.find(x => x.clientId === 4)!.order).toBe(1)
+})
+
+test('[moveTask] same list no date 2', () => {
+    const tasks: Task[] = [
+        new Task(1, '', null, 1, false, 0, false, false, TaskTimeTypeEnum.NoTime),
+        new Task(2, '', null, 2, false, 0, false, false, TaskTimeTypeEnum.NoTime),
+        new Task(3, '', null, 4, false, 0, false, false, TaskTimeTypeEnum.NoTime),
+        new Task(4, '', null, 3, false, 0, false, false, TaskTimeTypeEnum.NoTime)
+    ]
+
+    const result = TaskHelper.moveTask(tasks, 3, 0, 0, 4)
+
+    expect(result.find(x => x.clientId === 1)!.order).toBe(1)
+    expect(result.find(x => x.clientId === 2)!.order).toBe(2)
+    expect(result.find(x => x.clientId === 3)!.order).toBe(3)
+    expect(result.find(x => x.clientId === 4)!.order).toBe(4)
+})
+
 test('[convertStringToModel] no date and time', () => {
     const result = TaskHelper.convertStringToModel('Test!')
 

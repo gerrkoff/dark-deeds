@@ -61,11 +61,7 @@ const service = {
         }
 
         // CHANGE TASK
-        if (targetDate === 0) {
-            task.timeType = TaskTimeTypeEnum.NoTime
-            task.dateTime = null
-
-        } else if (task.timeType === TaskTimeTypeEnum.ConcreteTime) {
+        if (task.timeType === TaskTimeTypeEnum.ConcreteTime) {
             if (targetDate !== sourceDate) {
                 const sourceTasksSorted = this.sortTasks(tasks.filter(x => taskDateToStart(x.dateTime) === sourceDate))
                 const taskBeforeOldIndex = sourceTasksSorted.findIndex(x => x.clientId === oldTask.clientId) - 1
@@ -89,21 +85,21 @@ const service = {
             const previosSiblingIndex = siblingId
                 ? targetTasksSorted.findIndex(x => x.clientId === siblingId) - 1
                 : targetTasksSorted.length - 1
-            const sameGroup = previosSiblingIndex !== -1
-                ? tasksInTheSameGroup(oldTask, targetTasksSorted[previosSiblingIndex])
+            const sameGroupAsc = previosSiblingIndex !== -1
+                ? tasksInTheSameGroup(oldTask, targetTasksSorted[previosSiblingIndex]) && targetTasksSorted[previosSiblingIndex].order > task.order
                 : false
 
             if (previosSiblingIndex === -1 || targetTasksSorted[previosSiblingIndex].timeType === TaskTimeTypeEnum.NoTime) {
                 task.timeType = TaskTimeTypeEnum.NoTime
-                task.dateTime = new Date(targetDate)
+                task.dateTime = targetDate === 0 ? null : new Date(targetDate)
                 task.order = previosSiblingIndex !== -1
-                    ? targetTasksSorted[previosSiblingIndex].order + (sameGroup ? 0 : 1)
+                    ? targetTasksSorted[previosSiblingIndex].order + (sameGroupAsc ? 0 : 1)
                     : 1
             } else {
                 task.timeType = TaskTimeTypeEnum.AfterTime
                 task.dateTime = new Date(targetTasksSorted[previosSiblingIndex].dateTime!)
                 task.order = targetTasksSorted[previosSiblingIndex].timeType === TaskTimeTypeEnum.AfterTime
-                    ? targetTasksSorted[previosSiblingIndex].order + (sameGroup ? 0 : 1)
+                    ? targetTasksSorted[previosSiblingIndex].order + (sameGroupAsc ? 0 : 1)
                     : 1
             }
         }
