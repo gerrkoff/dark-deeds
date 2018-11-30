@@ -1,4 +1,5 @@
-﻿using DarkDeeds.Data.Context;
+﻿using DarkDeeds.Api.Filters;
+using DarkDeeds.Data.Context;
 using DarkDeeds.Data.Repository;
 using DarkDeeds.Services.Implementation;
 using DarkDeeds.Services.Interface;
@@ -29,7 +30,11 @@ namespace DarkDeeds.Api
             services.AddDbContext<DarkDeedsContext>(options => options.UseSqlServer("Server=localhost,1433;Database=darkdeeds_0;User=sa;Password=Password1"));
             services.AddScoped<DbContext, DarkDeedsContext>();
             
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddMvc(options =>
+                {
+                    options.Filters.Add(typeof(ExceptionHandlerFilter));
+                })
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
