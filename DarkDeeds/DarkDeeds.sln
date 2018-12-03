@@ -12,6 +12,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.Data", "DarkDeeds
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.AutoMapper", "DarkDeeds.AutoMapper\DarkDeeds.AutoMapper.csproj", "{A2A5F3FD-FEE4-43BB-B6FD-365683822DF3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.Enums", "DarkDeeds.Enums\DarkDeeds.Enums.csproj", "{5FEED9C6-06ED-4438-B8B7-8C49CC7F43B6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -42,5 +44,9 @@ Global
 		{A2A5F3FD-FEE4-43BB-B6FD-365683822DF3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A2A5F3FD-FEE4-43BB-B6FD-365683822DF3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A2A5F3FD-FEE4-43BB-B6FD-365683822DF3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5FEED9C6-06ED-4438-B8B7-8C49CC7F43B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5FEED9C6-06ED-4438-B8B7-8C49CC7F43B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5FEED9C6-06ED-4438-B8B7-8C49CC7F43B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5FEED9C6-06ED-4438-B8B7-8C49CC7F43B6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

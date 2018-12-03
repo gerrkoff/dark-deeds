@@ -1,5 +1,5 @@
 ﻿using System;
-using DarkDeeds.Common.Enums;
+using DarkDeeds.Enums;
 
 namespace DarkDeeds.Models
 {

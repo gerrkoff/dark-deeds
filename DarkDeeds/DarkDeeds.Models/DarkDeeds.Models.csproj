@@ -5,7 +5,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\DarkDeeds.Common\DarkDeeds.Common.csproj" />
+      <ProjectReference Include="..\DarkDeeds.Enums\DarkDeeds.Enums.csproj" />
     </ItemGroup>
 
 </Project>

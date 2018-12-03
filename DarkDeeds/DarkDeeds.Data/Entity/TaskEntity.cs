@@ -1,6 +1,7 @@
 using System;
-using DarkDeeds.Common.Enums;
+using System.ComponentModel.DataAnnotations.Schema;
 using DarkDeeds.Data.Entity.Base;
+using DarkDeeds.Enums;
 
 namespace DarkDeeds.Data.Entity
 {
@@ -13,5 +14,8 @@ namespace DarkDeeds.Data.Entity
         public TaskTimeTypeEnum TimeType { get; set; }
         
         public bool IsCompleted { get; set; }
+        
+        [NotMapped]
+        public int ClientId { get; set; }
     }
 }

@@ -1,4 +1,4 @@
-namespace DarkDeeds.Common.Enums
+namespace DarkDeeds.Enums
 {
     public enum TaskTimeTypeEnum
     {

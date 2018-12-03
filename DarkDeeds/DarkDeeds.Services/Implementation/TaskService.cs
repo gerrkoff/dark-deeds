@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using DarkDeeds.Common.Enums;
+using DarkDeeds.Common.Extensions;
 using DarkDeeds.Data.Entity;
 using DarkDeeds.Data.Repository;
 using DarkDeeds.Models;
@@ -21,20 +20,30 @@ namespace DarkDeeds.Services.Implementation
             _tasksRepository = tasksRepository;
         }
         
-        private static int Count = 1000000;
-        
         public async Task<IEnumerable<TaskDto>> LoadTasksAsync()
         {
-            return await _tasksRepository.GetAll().ProjectTo<TaskDto>().ToListAsync();
+            return (await _tasksRepository.GetAll().ProjectTo<TaskDto>().ToListAsync()).ToUtcDate();
         }
 
+        // TODO: unit test
         public async Task<IEnumerable<TaskDto>> SaveTasksAsync(ICollection<TaskDto> tasks)
         {
-            foreach (var taskDto in tasks)
-            {
-                if (taskDto.ClientId < 0) taskDto.Id = Count++;
+            var savedTasks = Mapper.Map<ICollection<TaskEntity>>(tasks);
+            foreach (var task in savedTasks)
+            {                
+                if (task.IsDeleted)
+                {
+                    await _tasksRepository.DeleteAsync(task);
+                }
+                else
+                {
+                    if (task.ClientId < 0)
+                        task.Id = 0;
+                    await _tasksRepository.SaveAsync(task);
+                }
             }
-            return await Task.FromResult(tasks);
+
+            return Mapper.Map<List<TaskDto>>(savedTasks);
         }
     }
 }
