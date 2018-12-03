@@ -143,57 +143,69 @@ const service = {
         return [...tasks]
     },
 
-    // TODO: implement future year support
     convertStringToModel(text: string): TaskModel {
-        const model = new TaskModel(text)
+        let year: number = new Date().getFullYear()
+        let month: number = 0
+        let day: number = 1
+        let hour: number = 0
+        let minute: number = 0
+        let timeType: TaskTimeTypeEnum = TaskTimeTypeEnum.NoTime
+        let noDate: boolean = true
 
-        if (/^\d{4}\s\d{4}/.test(text)) {
-            model.title = text.substr(9).trim()
-            const month = Number(text.substr(0, 2))
-            const day = Number(text.substr(2, 2))
-            const currentYear = new Date().getFullYear()
-            const hour = Number(text.substr(5, 2))
-            const minute = Number(text.substr(7, 2))
-
-            return {
-                ...model,
-                dateTime: new Date(currentYear, month - 1, day, hour, minute),
-                timeType: TaskTimeTypeEnum.ConcreteTime
-            }
+        if (/^\d{8}\s/.test(text)) {
+            year = Number(text.substr(0, 4))
+            month = Number(text.substr(4, 2))
+            day = Number(text.substr(6, 2))
+            noDate = false
+            text = text.slice(9)
+        } else if (/^\d{4}\s/.test(text)) {
+            month = Number(text.substr(0, 2))
+            day = Number(text.substr(2, 2))
+            noDate = false
+            text = text.slice(5)
         }
 
-        if (/^\d{4}/.test(text)) {
-            model.title = text.substr(4).trim()
-            const month = Number(text.substr(0, 2))
-            const day = Number(text.substr(2, 2))
-            const currentYear = new Date().getFullYear()
-
-            return {
-                ...model,
-                dateTime: new Date(currentYear, month - 1, day),
-                timeType: TaskTimeTypeEnum.NoTime
-            }
+        if (/^\d{4}\s/.test(text)) {
+            hour = Number(text.substr(0, 2))
+            minute = Number(text.substr(2, 2))
+            timeType = TaskTimeTypeEnum.ConcreteTime
+            text = text.slice(5)
+        } else if (/^>\d{4}\s/.test(text)) {
+            hour = Number(text.substr(1, 2))
+            minute = Number(text.substr(3, 2))
+            timeType = TaskTimeTypeEnum.AfterTime
+            text = text.slice(6)
         }
 
         return {
-            ...model,
-            dateTime: null
+            dateTime: noDate ? null : new Date(year, month - 1, day, hour, minute),
+            timeType,
+            title: text
         }
     },
 
-    // TODO: implement future year support
     convertModelToString(model: TaskModel): string {
         if (model.dateTime === null) {
             return model.title
         }
 
-        const s = `${str2digits(model.dateTime.getMonth() + 1)}${str2digits(model.dateTime.getDate())}`
+        let s: string = ''
 
-        if (model.timeType === TaskTimeTypeEnum.NoTime) {
-            return `${s} ${model.title}`
+        if (new Date().getFullYear() !== model.dateTime.getFullYear()) {
+            s += `${model.dateTime.getFullYear()}`
         }
 
-        return `${s} ${str2digits(model.dateTime.getHours())}${str2digits(model.dateTime.getMinutes())} ${model.title}`
+        s += `${str2digits(model.dateTime.getMonth() + 1)}${str2digits(model.dateTime.getDate())} `
+
+        if (model.timeType === TaskTimeTypeEnum.NoTime) {
+            return `${s}${model.title}`
+        }
+
+        if (model.timeType === TaskTimeTypeEnum.AfterTime) {
+            s += '>'
+        }
+
+        return `${s}${str2digits(model.dateTime.getHours())}${str2digits(model.dateTime.getMinutes())} ${model.title}`
     },
 
     tasksEqual(taskA: Task, taskB: Task): boolean {

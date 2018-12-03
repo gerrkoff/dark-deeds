@@ -348,6 +348,7 @@ test('[convertStringToModel] no date and time', () => {
 
     expect(result.title).toBe('Test!')
     expect(result.dateTime).toBe(null)
+    expect(result.timeType).toBe(TaskTimeTypeEnum.NoTime)
 })
 
 test('[convertStringToModel] date and no time', () => {
@@ -357,15 +358,15 @@ test('[convertStringToModel] date and no time', () => {
     expect(result.title).toBe('Test!')
     expect(result.dateTime!.getTime())
         .toBe(new Date(currentYear, 11, 31, 0, 0, 0).getTime())
+    expect(result.timeType).toBe(TaskTimeTypeEnum.NoTime)
 })
 
-test('[convertStringToModel] date and no time 2', () => {
+test('[convertStringToModel] date and no time 2 - not working w/o space', () => {
     const result = TaskHelper.convertStringToModel('0101Test!!!')
-    const currentYear = new Date().getFullYear()
 
-    expect(result.title).toBe('Test!!!')
-    expect(result.dateTime!.getTime())
-        .toBe(new Date(currentYear, 0, 1, 0, 0, 0).getTime())
+    expect(result.title).toBe('0101Test!!!')
+    expect(result.dateTime).toBe(null)
+    expect(result.timeType).toBe(TaskTimeTypeEnum.NoTime)
 })
 
 test('[convertStringToModel] date and time', () => {
@@ -375,15 +376,35 @@ test('[convertStringToModel] date and time', () => {
     expect(result.title).toBe('Test!')
     expect(result.dateTime!.getTime())
         .toBe(new Date(currentYear, 11, 31, 23, 59, 0).getTime())
+    expect(result.timeType).toBe(TaskTimeTypeEnum.ConcreteTime)
 })
 
-test('[convertStringToModel] date and time 2', () => {
+test('[convertStringToModel] date and time 2 - not working w/o space', () => {
     const result = TaskHelper.convertStringToModel('0101 0101Test!!!')
     const currentYear = new Date().getFullYear()
 
-    expect(result.title).toBe('Test!!!')
+    expect(result.title).toBe('0101Test!!!')
     expect(result.dateTime!.getTime())
-        .toBe(new Date(currentYear, 0, 1, 1, 1, 0).getTime())
+        .toBe(new Date(currentYear, 0, 1, 0, 0, 0).getTime())
+    expect(result.timeType).toBe(TaskTimeTypeEnum.NoTime)
+})
+
+test('[convertStringToModel] date and no time with year', () => {
+    const result = TaskHelper.convertStringToModel('20170101 Test')
+
+    expect(result.title).toBe('Test')
+    expect(result.dateTime!.getTime())
+        .toBe(new Date(2017, 0, 1, 0, 0, 0).getTime())
+    expect(result.timeType).toBe(TaskTimeTypeEnum.NoTime)
+})
+
+test('[convertStringToModel] date and after time with year', () => {
+    const result = TaskHelper.convertStringToModel('20171010 >0211 Test')
+
+    expect(result.title).toBe('Test')
+    expect(result.dateTime!.getTime())
+        .toBe(new Date(2017, 9, 10, 2, 11, 0).getTime())
+    expect(result.timeType).toBe(TaskTimeTypeEnum.AfterTime)
 })
 
 test('[convertModelToString] no date', () => {
@@ -403,7 +424,7 @@ test('[convertModelToString] date & time', () => {
 
 test('[convertModelToString] date & time less ten', () => {
     const result = TaskHelper.convertModelToString(new TaskModel('Test!', new Date(2018, 0, 1, 1, 1), TaskTimeTypeEnum.AfterTime))
-    expect(result).toBe('0101 0101 Test!')
+    expect(result).toBe('0101 >0101 Test!')
 })
 
 test('[tasksEqual] positive', () => {
