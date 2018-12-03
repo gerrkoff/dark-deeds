@@ -33,6 +33,11 @@ namespace DarkDeeds.Data.Repository
             {
                 Entities.Add(entity);
             }
+            else
+            {
+                Entities.Attach(entity);
+                _context.Entry(entity).State = EntityState.Modified;
+            }
 
             await _context.SaveChangesAsync();
         }
