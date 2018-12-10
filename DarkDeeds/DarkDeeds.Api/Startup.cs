@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using DarkDeeds.Api.Filters;
 using DarkDeeds.AutoMapper;
+using DarkDeeds.Common.Settings;
 using DarkDeeds.Data.Context;
 using DarkDeeds.Data.Entity;
 using DarkDeeds.Data.Repository;
@@ -30,6 +31,8 @@ namespace DarkDeeds.Api
         {
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             services.AddScoped<ITaskService, TaskService>();
+            services.AddScoped<IAccountService, AccountService>();
+            services.AddScoped<ITokenService, TokenService>();
             
             // TODO: move to settings
             const string constring = "Server=localhost,1433;Database=darkdeeds;User=sa;Password=Password1";
@@ -39,6 +42,8 @@ namespace DarkDeeds.Api
             ConfigIdentity(services);
             
             Mapper.Initialize(cfg => cfg.AddProfile<MappingProfile>());
+            
+            services.Configure<AuthSettings>(options => Configuration.GetSection("Auth").Bind(options));
             
             services.AddMvc(options =>
                 {
@@ -57,8 +62,7 @@ namespace DarkDeeds.Api
             builder
                 .AddDefaultTokenProviders()
                 .AddEntityFrameworkStores<DarkDeedsContext>();
-
-            services.AddScoped<SignInManager<UserEntity>>();
+            
             services.AddScoped<UserManager<UserEntity>>();
         }
 

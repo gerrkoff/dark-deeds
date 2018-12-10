@@ -1,6 +1,8 @@
 using AutoMapper;
 using DarkDeeds.Data.Entity;
 using DarkDeeds.Models;
+using DarkDeeds.Models.Account;
+using DarkDeeds.Services.Entity;
 
 namespace DarkDeeds.AutoMapper
 {
@@ -15,6 +17,10 @@ namespace DarkDeeds.AutoMapper
             CreateMap<TaskDto, TaskEntity>()
                 .ForMember(x => x.IsCompleted, e => e.MapFrom(x => x.Completed))
                 .ForMember(x => x.IsDeleted, e => e.MapFrom(x => x.Deleted));
+
+            CreateMap<CurrentUser, CurrentUserDto>()
+                .ForMember(x => x.Username, e => e.MapFrom(x => x.DisplayName))
+                .ForMember(x => x.UserLoggedIn, e => e.MapFrom(x => !string.IsNullOrEmpty(x.Username)));
         }
     }
 }

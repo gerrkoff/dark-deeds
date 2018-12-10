@@ -8,4 +8,10 @@
       <ProjectReference Include="..\DarkDeeds.Enums\DarkDeeds.Enums.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="System.ComponentModel.Annotations">
+        <Version>4.5.0</Version>
+      </PackageReference>
+    </ItemGroup>
+
 </Project>
