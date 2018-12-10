@@ -29,43 +29,17 @@ namespace DarkDeeds.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
-            services.AddScoped<ITaskService, TaskService>();
-            services.AddScoped<IAccountService, AccountService>();
-            services.AddScoped<ITokenService, TokenService>();
-            
-            // TODO: move to settings
-            const string constring = "Server=localhost,1433;Database=darkdeeds;User=sa;Password=Password1";
-            services.AddDbContext<DarkDeedsContext>(options => options.UseSqlServer(constring));
-            services.AddScoped<DbContext, DarkDeedsContext>();
-            
-            ConfigIdentity(services);
-            
-            Mapper.Initialize(cfg => cfg.AddProfile<MappingProfile>());
-            
-            services.Configure<AuthSettings>(options => Configuration.GetSection("Auth").Bind(options));
-            
-            services.AddMvc(options =>
-                {
-                    options.Filters.Add(typeof(ExceptionHandlerFilter));
-                })
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services
+                .RegisterServices()
+                .ConfigureAutomapper()
+                .ConfigureDatabase()
+                .ConfigureSettings(Configuration)
+                .ConfigureAuthentication(Configuration)
+                .AddIdentity()
+//                .AddCompression()    TODO: enable it 
+                .ConfigureMvc();
         }
         
-        public void ConfigIdentity(IServiceCollection services)
-        {
-            IdentityBuilder builder = services.AddIdentityCore<UserEntity>(options =>
-            {
-                options.Password.RequiredLength = 8;
-            });
-            builder = new IdentityBuilder(builder.UserType, typeof(IdentityRole), builder.Services);
-            builder
-                .AddDefaultTokenProviders()
-                .AddEntityFrameworkStores<DarkDeedsContext>();
-            
-            services.AddScoped<UserManager<UserEntity>>();
-        }
-
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
@@ -80,7 +54,7 @@ namespace DarkDeeds.Api
             }
             
             app.UseStaticFiles();
-            
+            app.UseAuthentication();
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
