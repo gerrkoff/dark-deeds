@@ -2,6 +2,6 @@
 {
     public enum RegisterResultEnum
     {
-        Unknown, Success, UsernameAlreadyExists
+        Unknown, Success, UsernameAlreadyExists, PasswordInsecure
     }
 }

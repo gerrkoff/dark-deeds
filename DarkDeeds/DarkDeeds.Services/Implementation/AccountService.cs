@@ -13,6 +13,19 @@ namespace DarkDeeds.Services.Implementation
         private readonly UserManager<UserEntity> _userManager;
         private readonly ITokenService _tokenService;
 
+        #region Identity errors
+        private static readonly IdentityErrorDescriber ErrorDescriber = new IdentityErrorDescriber();
+        private static readonly string DuplicateUserNameCode = ErrorDescriber.DuplicateUserName(string.Empty).Code;
+        private static readonly string[] PasswordErrorCodes = {
+            ErrorDescriber.PasswordRequiresDigit().Code,
+            ErrorDescriber.PasswordRequiresLower().Code,
+            ErrorDescriber.PasswordRequiresNonAlphanumeric().Code,
+            ErrorDescriber.PasswordTooShort(0).Code,
+            ErrorDescriber.PasswordRequiresUniqueChars(0).Code
+        };
+        
+        #endregion
+
         public AccountService(UserManager<UserEntity> userManager, ITokenService tokenService)
         {
             _userManager = userManager;
@@ -31,11 +44,14 @@ namespace DarkDeeds.Services.Implementation
                 result.Result = RegisterResultEnum.Success;
                 result.Token = _tokenService.GetToken(user);
             }
-            else if (createUserResult.Errors.Any(x => string.Equals(x.Code, "DuplicateUserName")))
+            else if (createUserResult.Errors.Any(x => string.Equals(x.Code, DuplicateUserNameCode)))
             {
                 result.Result = RegisterResultEnum.UsernameAlreadyExists;
             }
-            // TODO: password is too simple case
+            else if (createUserResult.Errors.Any(x => PasswordErrorCodes.Contains(x.Code)))
+            {
+                result.Result = RegisterResultEnum.PasswordInsecure;
+            }
             else
             {
                 result.Result = RegisterResultEnum.Unknown;
@@ -66,5 +82,5 @@ namespace DarkDeeds.Services.Implementation
 
             return result;
         }
-	}
+    }
 }
