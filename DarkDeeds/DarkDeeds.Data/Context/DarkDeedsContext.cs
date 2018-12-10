@@ -1,9 +1,10 @@
 using DarkDeeds.Data.Entity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace DarkDeeds.Data.Context
 {
-    public class DarkDeedsContext : DbContext
+    public class DarkDeedsContext : IdentityDbContext<UserEntity>
     {
         public DarkDeedsContext(DbContextOptions<DarkDeedsContext> options) : base(options)
         {
