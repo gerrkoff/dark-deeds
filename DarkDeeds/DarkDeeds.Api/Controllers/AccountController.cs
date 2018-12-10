@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DarkDeeds.Api.Controllers
 {
-    [Route("api/[controller]/[action]")]
+    [Route("api/[controller]")]
     [ApiController]
     public class AccountController : BaseUserController
     {
@@ -18,14 +18,14 @@ namespace DarkDeeds.Api.Controllers
             _accountService = accountService;
         }
 
-        [HttpPost]
+        [HttpPost(nameof(Register))]
         public async Task<RegisterResultDto> Register(RegisterInfoDto registerInfo)
         {
             Validate();
             return await _accountService.Register(registerInfo);
         }
 
-        [HttpPost]
+        [HttpPost(nameof(Login))]
         public async Task<LoginResultDto> Login(LoginInfoDto loginInfo)
         {
             Validate();
