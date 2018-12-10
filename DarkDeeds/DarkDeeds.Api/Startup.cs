@@ -29,6 +29,7 @@ namespace DarkDeeds.Api
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             services.AddScoped<ITaskService, TaskService>();
             
+            // TODO: move to settings
             services.AddDbContext<DarkDeedsContext>(options => options.UseSqlServer("Server=localhost,1433;Database=darkdeeds_0;User=sa;Password=Password1"));
             services.AddScoped<DbContext, DarkDeedsContext>();
             
