@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { Route, Switch } from 'react-router-dom'
+import { Container, Dimmer, Loader } from 'semantic-ui-react'
 import App from '../../containers/App'
 import Overview from '../../containers/Overview'
 import { Day } from '../day'
@@ -20,22 +21,27 @@ export class AppRouting extends React.PureComponent<IProps> {
     public render() {
         return (
             <React.Fragment>
-            { this.props.initialLogginIn ? <div>LOADING</div> : <React.Fragment />}
-            { this.props.userAuthenticated
-                ?
-                <App>
-                    <Switch>
-                        <Route path='/' exact={true} component={Overview} />
-                        <Route path='/day/:date' component={Day} />
-                        <Route path='/settings' component={Settings} />
-                        <Route path='*' component={NotFound} />
-                    </Switch>
-                </App>
-                :
-                <Switch>
-                    <Route path='*' component={Login} />
-                </Switch>
-            }
+                {this.props.userAuthenticated
+                    ?
+                    <App>
+                        <Switch>
+                            <Route path='/' exact={true} component={Overview} />
+                            <Route path='/day/:date' component={Day} />
+                            <Route path='/settings' component={Settings} />
+                            <Route path='*' component={NotFound} />
+                        </Switch>
+                    </App>
+                    :
+                    <Container>
+                        <Switch>
+                            <Route path='*' component={Login} />
+                        </Switch>
+                    </Container>
+                }
+                {/* TODO: maybe some other loader */}
+                <Dimmer active={this.props.initialLogginIn}>
+                    <Loader />
+                </Dimmer>
             </React.Fragment>
         )
     }
