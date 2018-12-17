@@ -21,28 +21,39 @@ export class AppRouting extends React.PureComponent<IProps> {
     public render() {
         return (
             <React.Fragment>
-                {this.props.userAuthenticated
-                    ?
-                    <App>
-                        <Switch>
-                            <Route path='/' exact={true} component={Overview} />
-                            <Route path='/day/:date' component={Day} />
-                            <Route path='/settings' component={Settings} />
-                            <Route path='*' component={NotFound} />
-                        </Switch>
-                    </App>
-                    :
-                    <Container>
-                        <Switch>
-                            <Route path='*' component={Login} />
-                        </Switch>
-                    </Container>
-                }
+                {this.renderRoutes()}
                 {/* TODO: maybe some other loader */}
                 <Dimmer active={this.props.initialLogginIn}>
                     <Loader />
                 </Dimmer>
             </React.Fragment>
         )
+    }
+
+    private renderRoutes = () => {
+        if (this.props.initialLogginIn) {
+            return (<React.Fragment />)
+        }
+
+        if (this.props.userAuthenticated) {
+            return (
+                <App>
+                    <Switch>
+                        <Route path='/' exact={true} component={Overview} />
+                        <Route path='/day/:date' component={Day} />
+                        <Route path='/settings' component={Settings} />
+                        <Route path='*' component={NotFound} />
+                    </Switch>
+                </App>
+            )
+        } else {
+            return (
+                <Container>
+                    <Switch>
+                        <Route path='*' component={Login} />
+                    </Switch>
+                </Container>
+            )
+        }
     }
 }
