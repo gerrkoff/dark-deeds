@@ -8,12 +8,19 @@ import { Settings } from '../settings'
 import { NotFound } from './'
 
 interface IProps {
+    initialLogginIn: boolean
     userAuthenticated: boolean
+    initialLogin: () => void
 }
 export class AppRouting extends React.PureComponent<IProps> {
+    public componentDidMount() {
+        this.props.initialLogin()
+    }
+
     public render() {
         return (
             <React.Fragment>
+            { this.props.initialLogginIn ? <div>LOADING</div> : <React.Fragment />}
             { this.props.userAuthenticated
                 ?
                 <App>

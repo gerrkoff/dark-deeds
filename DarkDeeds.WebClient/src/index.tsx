@@ -5,7 +5,7 @@ import * as ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
 import { applyMiddleware, compose, createStore } from 'redux'
 import thunk from 'redux-thunk'
-import { AppRouting } from './components/app'
+import AppRouting from './containers/AppRouting'
 import rootReducer from './redux/reducers'
 // import registerServiceWorker from './registerServiceWorker'
 
@@ -30,7 +30,7 @@ const store = createStore<any, any, any, any>(
 ReactDOM.render(
     <Provider store={store}>
         <ConnectedRouter history={history}>
-            <AppRouting userAuthenticated={false} />
+            <AppRouting />
         </ConnectedRouter>
     </Provider>,
     document.getElementById('root') as HTMLElement
