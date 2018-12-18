@@ -9,7 +9,6 @@ export interface ILoginProcessing {
 export interface ILoginSigninFinish {
     type: constants.LOGIN_SIGNIN_FINISH
     result: SigninResultEnum
-    userName: string
 }
 
 export interface ILoginInitialLogginIn {
@@ -25,10 +24,10 @@ export function initialLogin() {
     }
 }
 
-export function signin(login: string, password: string) {
+export function signin(username: string, password: string) {
     return async(dispatch: Dispatch<LoginAction>) => {
         dispatch(processing())
-        setTimeout(() => dispatch(signinResult(SigninResultEnum.Success, 'Test')), 3000)
+        setTimeout(() => dispatch(signinResult(SigninResultEnum.Success)), 3000)
     }
 }
 
@@ -40,6 +39,6 @@ function initialLogginIn(): ILoginInitialLogginIn {
     return { type: constants.LOGIN_INITIAL_LOGGING_IN }
 }
 
-function signinResult(result: SigninResultEnum, userName: string = ''): ILoginSigninFinish {
-    return { type: constants.LOGIN_SIGNIN_FINISH, result, userName }
+function signinResult(result: SigninResultEnum): ILoginSigninFinish {
+    return { type: constants.LOGIN_SIGNIN_FINISH, result }
 }

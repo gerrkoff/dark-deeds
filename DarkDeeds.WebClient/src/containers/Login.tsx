@@ -10,7 +10,7 @@ function mapStateToProps({ login }: any) {
 
 function mapDispatchToProps(dispatch: any) {
     return {
-        signin: (login: string, password: string) => dispatch(signin(login, password))
+        signin: (username: string, password: string) => dispatch(signin(username, password))
     }
 }
 

@@ -3,16 +3,16 @@ import { Button, Form, Segment } from 'semantic-ui-react'
 
 interface IProps {
     processing: boolean
-    signin: (login: string, password: string) => void
+    signin: (username: string, password: string) => void
 }
 interface IState {
-    login: string
+    username: string
     password: string
 }
 export class Login extends React.PureComponent<IProps, IState> {
     constructor(props: IProps) {
         super(props)
-        this.state = { login: '', password: '' }
+        this.state = { username: '', password: '' }
     }
 
     public render() {
@@ -20,8 +20,8 @@ export class Login extends React.PureComponent<IProps, IState> {
             <Segment inverted>
                 <Form inverted>
                     <Form.Field>
-                        <label>Login</label>
-                        <input placeholder='Login' value={this.state.login} onChange={(e) => this.handleInput('login', e.target.value)} />
+                        <label>Username</label>
+                        <input placeholder='Username' value={this.state.username} onChange={(e) => this.handleInput('username', e.target.value)} />
                     </Form.Field>
                     <Form.Field>
                         <label>Password</label>
@@ -35,8 +35,8 @@ export class Login extends React.PureComponent<IProps, IState> {
 
     private handleInput = (field: string, value: string) => {
         switch (field) {
-            case 'login':
-                this.setState({ login: value })
+            case 'username':
+                this.setState({ username: value })
                 break
             case 'password':
                 this.setState({ password: value })
@@ -45,6 +45,6 @@ export class Login extends React.PureComponent<IProps, IState> {
     }
 
     private handleSignin = () => {
-        this.props.signin(this.state.login, this.state.password)
+        this.props.signin(this.state.username, this.state.password)
     }
 }

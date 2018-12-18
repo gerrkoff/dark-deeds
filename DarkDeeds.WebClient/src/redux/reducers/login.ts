@@ -26,8 +26,7 @@ export function login(state: ILoginState = initialState, action: LoginAction): I
                 initialLogginIn: false,
                 processing: false,
                 signinResult: action.result,
-                userAuthenticated: action.result === SigninResultEnum.Success,
-                userName: action.userName
+                userAuthenticated: action.result === SigninResultEnum.Success
             }
     }
     return state
