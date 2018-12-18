@@ -1,10 +1,15 @@
+import { StorageHelper } from '../helpers'
 import baseUrl from './base-url'
 
 const DEFAULT_ERROR_MESSAGE = 'An error has occured.'
 const service = {
     get<T>(api: string): Promise<T> {
         return sendRequest(`GET ${api}`, () =>
-            fetch(baseUrl + api)
+            fetch(baseUrl + api, {
+                headers: {
+                    'Authorization': 'Bearer ' + StorageHelper.Load(StorageHelper.TokenKey)
+                }
+            })
         )
     },
 
@@ -13,6 +18,7 @@ const service = {
             fetch(baseUrl + api, {
                 body: JSON.stringify(data),
                 headers: {
+                    'Authorization': 'Bearer ' + StorageHelper.Load(StorageHelper.TokenKey),
                     'Content-Type': 'application/json'
                 },
                 method: 'POST'
