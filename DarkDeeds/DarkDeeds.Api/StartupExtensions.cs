@@ -29,6 +29,14 @@ namespace DarkDeeds.Api
             IdentityBuilder builder = services.AddIdentityCore<UserEntity>(options =>
             {
                 options.Password.RequiredLength = 8;
+#if DEBUG
+                options.Password.RequiredLength = 3;
+                options.Password.RequiredUniqueChars = 0;
+                options.Password.RequireDigit = false;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequireNonAlphanumeric = false;
+#endif
             });
             builder = new IdentityBuilder(builder.UserType, typeof(IdentityRole), builder.Services);
             builder
