@@ -29,8 +29,8 @@ export type LoginAction = ILoginProcessing | ILoginSigninFinish | ILoginInitialL
 export function initialLogin() {
     return async(dispatch: Dispatch<LoginAction>) => {
         dispatch(setInitialLogginIn(true))
-        await new Promise(resolve => setTimeout(resolve, 2000))
-        dispatch(currentUser(false))
+        const currentUserResult = await LoginApi.current()
+        dispatch(currentUser(currentUserResult.userAuthenticated, currentUserResult.username))
         dispatch(setInitialLogginIn(false))
     }
 }
@@ -46,7 +46,8 @@ export function signin(username: string, password: string) {
 
             if (result === SigninResultEnum.Success) {
                 StorageHelper.Save(StorageHelper.TokenKey, apiResult.token)
-                // TODO: load user
+                const currentUserResult = await LoginApi.current()
+                dispatch(currentUser(currentUserResult.userAuthenticated, currentUserResult.username))
             }
         } catch (err) {
             result = SigninResultEnum.Unknown
