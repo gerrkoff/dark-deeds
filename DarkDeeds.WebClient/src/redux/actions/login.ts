@@ -1,6 +1,6 @@
 import { Dispatch } from 'redux'
 import { LoginApi } from '../../api'
-import { ToastHelper } from '../../helpers'
+import { StorageHelper, ToastHelper } from '../../helpers'
 import { SigninResultEnum } from '../../models'
 import * as constants from '../constants'
 
@@ -41,13 +41,18 @@ export function signin(username: string, password: string) {
 
         let result: SigninResultEnum
         try {
-            result = (await LoginApi.signin(username, password)).result
-            // TODO: save token
-            // TODO: load user
+            const apiResult = await LoginApi.signin(username, password)
+            result = apiResult.result
+
+            if (result === SigninResultEnum.Success) {
+                StorageHelper.Save(StorageHelper.TokenKey, apiResult.token)
+                // TODO: load user
+            }
         } catch (err) {
             result = SigninResultEnum.Unknown
             ToastHelper.error(`Error occured while signin`)
         }
+
         dispatch(signinResult(result))
     }
 }
