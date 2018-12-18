@@ -18,18 +18,18 @@ namespace DarkDeeds.Api.Controllers
             _accountService = accountService;
         }
 
-        [HttpPost(nameof(Register))]
-        public async Task<RegisterResultDto> Register(RegisterInfoDto registerInfo)
+        [HttpPost(nameof(SignUp))]
+        public async Task<RegisterResultDto> SignUp(RegisterInfoDto registerInfo)
         {
             Validate();
-            return await _accountService.Register(registerInfo);
+            return await _accountService.SignUp(registerInfo);
         }
 
-        [HttpPost(nameof(Login))]
-        public async Task<LoginResultDto> Login(LoginInfoDto loginInfo)
+        [HttpPost(nameof(SignIn))]
+        public async Task<LoginResultDto> SignIn(LoginInfoDto loginInfo)
         {
             Validate();
-            return await _accountService.Login(loginInfo);
+            return await _accountService.SignIn(loginInfo);
         }
 
         [HttpGet]

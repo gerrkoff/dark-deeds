@@ -32,7 +32,7 @@ namespace DarkDeeds.Services.Implementation
             _tokenService = tokenService;
         }
 
-        public async Task<RegisterResultDto> Register(RegisterInfoDto registerInfo)
+        public async Task<RegisterResultDto> SignUp(RegisterInfoDto registerInfo)
         {
             var result = new RegisterResultDto();
 
@@ -60,7 +60,7 @@ namespace DarkDeeds.Services.Implementation
             return result;
         }
 
-        public async Task<LoginResultDto> Login(LoginInfoDto loginInfo)
+        public async Task<LoginResultDto> SignIn(LoginInfoDto loginInfo)
         {
             var result = new LoginResultDto();
 
