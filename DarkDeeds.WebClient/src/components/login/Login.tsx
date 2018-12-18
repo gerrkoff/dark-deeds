@@ -1,8 +1,10 @@
 import * as React from 'react'
-import { Button, Form, Segment } from 'semantic-ui-react'
+import { Button, Form, Message, Segment } from 'semantic-ui-react'
+import { SigninResultEnum } from '../../models'
 
 interface IProps {
     processing: boolean
+    signinResult: SigninResultEnum
     signin: (username: string, password: string) => void
 }
 interface IState {
@@ -16,6 +18,7 @@ export class Login extends React.PureComponent<IProps, IState> {
     }
 
     public render() {
+        const showErrorCredMsg = !this.props.processing && this.props.signinResult === SigninResultEnum.WrongUsernamePassword
         return (
             <Segment inverted>
                 <Form inverted>
@@ -27,6 +30,10 @@ export class Login extends React.PureComponent<IProps, IState> {
                         <label>Password</label>
                         <input placeholder='Password' value={this.state.password} onChange={(e) => this.handleInput('password', e.target.value)} />
                     </Form.Field>
+                    <Message negative
+                        header='Wrong credentials'
+                        content='The username or password you entered is incorrect'
+                        hidden={!showErrorCredMsg} />
                     <Button onClick={this.handleSignin} loading={this.props.processing}>Submit</Button>
                 </Form>
             </Segment>

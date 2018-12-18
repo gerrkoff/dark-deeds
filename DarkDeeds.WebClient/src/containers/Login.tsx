@@ -4,7 +4,8 @@ import { signin } from '../redux/actions'
 
 function mapStateToProps({ login }: any) {
     return {
-        processing: login.processing
+        processing: login.processing,
+        signinResult: login.signinResult
     }
 }
 
