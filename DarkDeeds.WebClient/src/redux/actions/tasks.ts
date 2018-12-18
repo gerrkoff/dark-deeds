@@ -1,5 +1,5 @@
 import { Dispatch } from 'redux'
-import { TaskApi } from '../../api/task-api'
+import { TaskApi } from '../../api'
 import { ToastHelper } from '../../helpers'
 import { Task, TaskModel } from '../../models'
 import * as constants from '../constants'

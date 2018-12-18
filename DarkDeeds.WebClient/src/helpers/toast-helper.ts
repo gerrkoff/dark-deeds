@@ -3,7 +3,7 @@ import { toast, ToastOptions } from 'react-toastify'
 const defaultOptions: ToastOptions = {
     progressClassName: 'toast-progress'
 }
-
+// TODO: add common error
 const service = {
     success(msg: string, options: ToastOptions = {}): number {
         return toast.success(msg, {

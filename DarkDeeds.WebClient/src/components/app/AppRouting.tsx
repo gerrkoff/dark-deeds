@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { Route, Switch } from 'react-router-dom'
+import { ToastContainer } from 'react-toastify'
 import { Container, Dimmer, Loader } from 'semantic-ui-react'
 import App from '../../containers/App'
 import Login from '../../containers/Login'
@@ -48,10 +49,12 @@ export class AppRouting extends React.PureComponent<IProps> {
             )
         } else {
             return (
+                // TODO: create common app component
                 <Container>
                     <Switch>
                         <Route path='*' component={Login} />
                     </Switch>
+                    <ToastContainer />
                 </Container>
             )
         }
