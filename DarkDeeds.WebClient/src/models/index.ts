@@ -10,4 +10,5 @@ export * from './enums/signin-result-enum'
 export * from './enums/signup-result-enum'
 
 export * from './login/signin-result'
+export * from './login/signup-result'
 export * from './login/current-user-info'

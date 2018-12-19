@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import { Login } from '../components/login'
-import { signin } from '../redux/actions'
+import { signin, signup } from '../redux/actions'
 
 function mapStateToProps({ login }: any) {
     return {
@@ -14,7 +14,7 @@ function mapStateToProps({ login }: any) {
 function mapDispatchToProps(dispatch: any) {
     return {
         signin: (username: string, password: string) => dispatch(signin(username, password)),
-        signup: (username: string, password: string) => console.log('signup', username, password)
+        signup: (username: string, password: string) => dispatch(signup(username, password))
     }
 }
 
