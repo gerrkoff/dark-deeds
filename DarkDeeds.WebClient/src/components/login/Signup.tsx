@@ -50,7 +50,7 @@ export class Signup extends React.PureComponent<IProps, IState> {
                     content={inputErrorText}
                     hidden={!showErrorCredMsg} />
                 <Form.Group inline>
-                    <span>Already signed up?&nbsp;<a href='' onClick={this.handleSwitchForm}>Login here</a>&nbsp;instead.</span>
+                    <span>Already have an account?&nbsp;<a href='' onClick={this.handleSwitchForm}>Sign in here.</a></span>
                     <Form.Button onClick={this.handleSubmit} loading={this.props.processing}>Sign up</Form.Button>
                 </Form.Group>
             </React.Fragment>

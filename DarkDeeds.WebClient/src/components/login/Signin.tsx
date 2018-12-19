@@ -38,7 +38,7 @@ export class Signin extends React.PureComponent<IProps, IState> {
                     content='The username or password you entered is incorrect'
                     hidden={!showErrorCredMsg} />
                 <Form.Group inline>
-                    <span>Haven't got account yet?&nbsp;<a href='' onClick={this.handleSwitchForm}>Sign up here</a>&nbsp;instead.</span>
+                    <span>Haven't got an account yet?&nbsp;<a href='' onClick={this.handleSwitchForm}>Sign up here.</a></span>
                     <Form.Button onClick={this.handleSubmit} loading={this.props.processing}>Sign in</Form.Button>
                 </Form.Group>
             </React.Fragment>
