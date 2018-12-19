@@ -4,15 +4,17 @@ import { signin } from '../redux/actions'
 
 function mapStateToProps({ login }: any) {
     return {
-        formSignin: false,
+        formSignin: login.formSignin,
         processing: login.processing,
-        signinResult: login.signinResult
+        signinResult: login.signinResult,
+        signupResult: login.signupResult
     }
 }
 
 function mapDispatchToProps(dispatch: any) {
     return {
-        signin: (username: string, password: string) => dispatch(signin(username, password))
+        signin: (username: string, password: string) => dispatch(signin(username, password)),
+        signup: (username: string, password: string) => console.log('signup', username, password)
     }
 }
 

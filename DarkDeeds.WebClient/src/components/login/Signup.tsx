@@ -1,10 +1,10 @@
 import * as React from 'react'
-import { Button, Form } from 'semantic-ui-react'
-// import { SigninResultEnum } from '../../models'
+import { Button, Form, Message } from 'semantic-ui-react'
+import { SignupResultEnum } from '../../models'
 
 interface IProps {
     processing: boolean
-    // signinResult: SigninResultEnum
+    signupResult: SignupResultEnum
     signup: (username: string, password: string) => void
 }
 interface IState {
@@ -19,13 +19,18 @@ export class Signup extends React.PureComponent<IProps, IState> {
     }
 
     public render() {
-        // const showErrorCredMsg = !this.props.processing && this.props.signinResult === SigninResultEnum.WrongUsernamePassword
+        const inputErrorText = this.inputErrorText()
+        const showErrorCredMsg = !this.props.processing && inputErrorText !== ''
         return (
             <React.Fragment>
                 <Form.Field>
                     <label>Username</label>
                     <input placeholder='Username' value={this.state.username} onChange={(e) => this.handleInput('username', e.target.value)} />
                 </Form.Field>
+                <Message info
+                    header='Enter secure password'
+                    // TODO: adjust rule
+                    content='Here is password rule' />
                 <Form.Field>
                     <label>Password</label>
                     <input placeholder='Password' type='password' value={this.state.password} onChange={(e) => this.handleInput('password', e.target.value)} />
@@ -34,10 +39,10 @@ export class Signup extends React.PureComponent<IProps, IState> {
                     <label>Confirm password</label>
                     <input placeholder='Confirm password' type='password' value={this.state.passwordConfirm} onChange={(e) => this.handleInput('passwordConfirm', e.target.value)} />
                 </Form.Field>
-                {/* <Message negative
-                    header='Wrong credentials'
-                    content='The username or password you entered is incorrect'
-                    hidden={!showErrorCredMsg} /> */}
+                <Message negative
+                    header='Incorrect data'
+                    content={inputErrorText}
+                    hidden={!showErrorCredMsg} />
                 <Button onClick={this.handleSubmit} loading={this.props.processing}>Submit</Button>
             </React.Fragment>
         )
@@ -59,5 +64,16 @@ export class Signup extends React.PureComponent<IProps, IState> {
 
     private handleSubmit = () => {
         this.props.signup(this.state.username, this.state.password)
+    }
+
+    private inputErrorText = (): string => {
+        switch (this.props.signupResult) {
+            case SignupResultEnum.UsernameAlreadyExists:
+                return 'User already exists'
+            case SignupResultEnum.PasswordInsecure:
+                return 'Password is insecure'
+            default:
+                return ''
+        }
     }
 }
