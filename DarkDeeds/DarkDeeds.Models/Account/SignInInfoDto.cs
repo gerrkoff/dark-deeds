@@ -2,7 +2,7 @@
 
 namespace DarkDeeds.Models.Account
 {
-    public class LoginInfoDto
+    public class SignInInfoDto
     {
         [Required]
         public string Username { get; set; }

@@ -2,7 +2,7 @@
 
 namespace DarkDeeds.Models.Account
 {
-    public class RegisterInfoDto
+    public class SignUpInfoDto
     {
         [Required]
         [MaxLength(30)]

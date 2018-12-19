@@ -32,51 +32,51 @@ namespace DarkDeeds.Services.Implementation
             _tokenService = tokenService;
         }
 
-        public async Task<RegisterResultDto> SignUp(RegisterInfoDto registerInfo)
+        public async Task<SignUpResultDto> SignUp(SignUpInfoDto signUpInfo)
         {
-            var result = new RegisterResultDto();
+            var result = new SignUpResultDto();
 
-            var user = new UserEntity { UserName = registerInfo.Username, DisplayName = registerInfo.Username };
-            IdentityResult createUserResult = await _userManager.CreateAsync(user, registerInfo.Password);
+            var user = new UserEntity { UserName = signUpInfo.Username, DisplayName = signUpInfo.Username };
+            IdentityResult createUserResult = await _userManager.CreateAsync(user, signUpInfo.Password);
 
             if (createUserResult.Succeeded)
             {
-                result.Result = RegisterResultEnum.Success;
+                result.Result = SignUpResultEnum.Success;
                 result.Token = _tokenService.GetToken(user);
             }
             else if (createUserResult.Errors.Any(x => string.Equals(x.Code, DuplicateUserNameCode)))
             {
-                result.Result = RegisterResultEnum.UsernameAlreadyExists;
+                result.Result = SignUpResultEnum.UsernameAlreadyExists;
             }
             else if (createUserResult.Errors.Any(x => PasswordErrorCodes.Contains(x.Code)))
             {
-                result.Result = RegisterResultEnum.PasswordInsecure;
+                result.Result = SignUpResultEnum.PasswordInsecure;
             }
             else
             {
-                result.Result = RegisterResultEnum.Unknown;
+                result.Result = SignUpResultEnum.Unknown;
             }
 
             return result;
         }
 
-        public async Task<LoginResultDto> SignIn(LoginInfoDto loginInfo)
+        public async Task<SignInResultDto> SignIn(SignInInfoDto signInInfo)
         {
-            var result = new LoginResultDto();
+            var result = new SignInResultDto();
 
-            UserEntity user = await _userManager.FindByNameAsync(loginInfo.Username);
+            UserEntity user = await _userManager.FindByNameAsync(signInInfo.Username);
 
             if (user == null)
             {
-                result.Result = LoginResultEnum.WrongUsernamePassword;
+                result.Result = SignInResultEnum.WrongUsernamePassword;
             }
-            else if (!await _userManager.CheckPasswordAsync(user, loginInfo.Password))
+            else if (!await _userManager.CheckPasswordAsync(user, signInInfo.Password))
             {
-                result.Result = LoginResultEnum.WrongUsernamePassword;
+                result.Result = SignInResultEnum.WrongUsernamePassword;
             }
             else
             {
-                result.Result = LoginResultEnum.Success;
+                result.Result = SignInResultEnum.Success;
                 result.Token = _tokenService.GetToken(user);
             }
 

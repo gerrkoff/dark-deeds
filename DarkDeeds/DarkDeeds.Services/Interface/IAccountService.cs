@@ -5,7 +5,7 @@ namespace DarkDeeds.Services.Interface
 {
     public interface IAccountService
     {
-        Task<RegisterResultDto> SignUp(RegisterInfoDto registerInfo);
-        Task<LoginResultDto> SignIn(LoginInfoDto loginInfo);
+        Task<SignUpResultDto> SignUp(SignUpInfoDto signUpInfo);
+        Task<SignInResultDto> SignIn(SignInInfoDto signInInfo);
 	}
 }

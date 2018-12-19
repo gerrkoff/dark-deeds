@@ -2,9 +2,9 @@
 
 namespace DarkDeeds.Models.Account
 {
-    public class LoginResultDto
+    public class SignInResultDto
     {
         public string Token { get; set; }
-        public LoginResultEnum Result { get; set; }
+        public SignInResultEnum Result { get; set; }
     }
 }
