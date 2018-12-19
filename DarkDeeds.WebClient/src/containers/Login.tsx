@@ -4,6 +4,7 @@ import { signin } from '../redux/actions'
 
 function mapStateToProps({ login }: any) {
     return {
+        formSignin: false,
         processing: login.processing,
         signinResult: login.signinResult
     }
