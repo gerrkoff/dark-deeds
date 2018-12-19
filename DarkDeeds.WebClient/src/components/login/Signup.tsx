@@ -6,6 +6,7 @@ interface IProps {
     processing: boolean
     signupResult: SignupResultEnum
     signup: (username: string, password: string) => void
+    switchForm: (formSignin: boolean) => void
 }
 interface IState {
     username: string
@@ -43,7 +44,7 @@ export class Signup extends React.PureComponent<IProps, IState> {
                     header='Incorrect data'
                     content={inputErrorText}
                     hidden={!showErrorCredMsg} />
-                <Button onClick={this.handleSubmit} loading={this.props.processing}>Submit</Button>
+                <Button onClick={this.handleSubmit} loading={this.props.processing}>Sign up</Button>
             </React.Fragment>
         )
     }

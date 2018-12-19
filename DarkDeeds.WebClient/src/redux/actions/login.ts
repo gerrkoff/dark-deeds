@@ -29,7 +29,12 @@ export interface ILoginCurrentUser {
     userName?: string
 }
 
-export type LoginAction = ILoginProcessing | ILoginSigninFinish | ILoginSignupFinish | ILoginInitialLogginIn | ILoginCurrentUser
+export interface ILoginSwitchForm {
+    type: constants.LOGIN_SWITCH_FORM
+    formSignin: boolean
+}
+
+export type LoginAction = ILoginProcessing | ILoginSigninFinish | ILoginSignupFinish | ILoginInitialLogginIn | ILoginCurrentUser | ILoginSwitchForm
 
 export function initialLogin() {
     return async(dispatch: Dispatch<LoginAction>) => {
@@ -89,6 +94,10 @@ export function signup(username: string, password: string) {
 
         dispatch(signupResult(result))
     }
+}
+
+export function switchForm(formSignin: boolean): ILoginSwitchForm {
+    return { type: constants.LOGIN_SWITCH_FORM, formSignin }
 }
 
 function processing(): ILoginProcessing {
