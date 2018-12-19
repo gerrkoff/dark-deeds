@@ -29,8 +29,13 @@ export type LoginAction = ILoginProcessing | ILoginSigninFinish | ILoginInitialL
 export function initialLogin() {
     return async(dispatch: Dispatch<LoginAction>) => {
         dispatch(setInitialLogginIn(true))
-        const currentUserResult = await LoginApi.current()
-        dispatch(currentUser(currentUserResult.userAuthenticated, currentUserResult.username))
+        try {
+            const currentUserResult = await LoginApi.current()
+            dispatch(currentUser(currentUserResult.userAuthenticated, currentUserResult.username))
+        } catch {
+            ToastHelper.error(`Error occured while login`)
+        }
+
         dispatch(setInitialLogginIn(false))
     }
 }
