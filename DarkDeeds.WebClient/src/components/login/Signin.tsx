@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Button, Form, Message } from 'semantic-ui-react'
+import { Form, Message } from 'semantic-ui-react'
 import { SigninResultEnum } from '../../models'
 
 interface IProps {
@@ -22,19 +22,25 @@ export class Signin extends React.PureComponent<IProps, IState> {
         const showErrorCredMsg = !this.props.processing && this.props.signinResult === SigninResultEnum.WrongUsernamePassword
         return (
             <React.Fragment>
-                <Form.Field>
-                    <label>Username</label>
-                    <input placeholder='Username' value={this.state.username} onChange={(e) => this.handleInput('username', e.target.value)} />
-                </Form.Field>
-                <Form.Field>
-                    <label>Password</label>
-                    <input placeholder='Password' type='password' value={this.state.password} onChange={(e) => this.handleInput('password', e.target.value)} />
-                </Form.Field>
+                <Form.Input
+                    label='Username'
+                    placeholder='Username'
+                    value={this.state.username}
+                    onChange={(e: any) => this.handleInput('username', e.target.value)} />
+                <Form.Input
+                    label='Password'
+                    placeholder='Password'
+                    type='password'
+                    value={this.state.password}
+                    onChange={(e: any) => this.handleInput('password', e.target.value)} />
                 <Message negative
                     header='Wrong credentials'
                     content='The username or password you entered is incorrect'
                     hidden={!showErrorCredMsg} />
-                <Button onClick={this.handleSubmit} loading={this.props.processing}>Sign in</Button>
+                <Form.Group inline>
+                    <span>Haven't got account yet?&nbsp;<a href='' onClick={this.handleSwitchForm}>Sign up here</a>&nbsp;instead.</span>
+                    <Form.Button onClick={this.handleSubmit} loading={this.props.processing}>Sign in</Form.Button>
+                </Form.Group>
             </React.Fragment>
         )
     }
@@ -52,5 +58,10 @@ export class Signin extends React.PureComponent<IProps, IState> {
 
     private handleSubmit = () => {
         this.props.signin(this.state.username, this.state.password)
+    }
+
+    private handleSwitchForm = (e: React.MouseEvent<HTMLAnchorElement>) => {
+        e.preventDefault()
+        this.props.switchForm(false)
     }
 }

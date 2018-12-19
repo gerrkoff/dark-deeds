@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Button, Form, Message } from 'semantic-ui-react'
+import { Form, Message } from 'semantic-ui-react'
 import { SignupResultEnum } from '../../models'
 
 interface IProps {
@@ -24,27 +24,35 @@ export class Signup extends React.PureComponent<IProps, IState> {
         const showErrorCredMsg = !this.props.processing && inputErrorText !== ''
         return (
             <React.Fragment>
-                <Form.Field>
-                    <label>Username</label>
-                    <input placeholder='Username' value={this.state.username} onChange={(e) => this.handleInput('username', e.target.value)} />
-                </Form.Field>
+                <Form.Input
+                    label='Username'
+                    placeholder='Username'
+                    value={this.state.username}
+                    onChange={(e: any) => this.handleInput('username', e.target.value)} />
                 <Message info
                     header='Enter secure password'
                     // TODO: adjust rule
                     content='Here is password rule' />
-                <Form.Field>
-                    <label>Password</label>
-                    <input placeholder='Password' type='password' value={this.state.password} onChange={(e) => this.handleInput('password', e.target.value)} />
-                </Form.Field>
-                <Form.Field>
-                    <label>Confirm password</label>
-                    <input placeholder='Confirm password' type='password' value={this.state.passwordConfirm} onChange={(e) => this.handleInput('passwordConfirm', e.target.value)} />
-                </Form.Field>
+                <Form.Input
+                    label='Password'
+                    placeholder='Password'
+                    type='password'
+                    value={this.state.password}
+                    onChange={(e: any) => this.handleInput('password', e.target.value)} />
+                <Form.Input
+                    label='Confirm password'
+                    placeholder='Confirm password'
+                    type='password'
+                    value={this.state.passwordConfirm}
+                    onChange={(e: any) => this.handleInput('passwordConfirm', e.target.value)} />
                 <Message negative
                     header='Incorrect data'
                     content={inputErrorText}
                     hidden={!showErrorCredMsg} />
-                <Button onClick={this.handleSubmit} loading={this.props.processing}>Sign up</Button>
+                <Form.Group inline>
+                    <span>Already signed up?&nbsp;<a href='' onClick={this.handleSwitchForm}>Login here</a>&nbsp;instead.</span>
+                    <Form.Button onClick={this.handleSubmit} loading={this.props.processing}>Sign up</Form.Button>
+                </Form.Group>
             </React.Fragment>
         )
     }
@@ -65,6 +73,11 @@ export class Signup extends React.PureComponent<IProps, IState> {
 
     private handleSubmit = () => {
         this.props.signup(this.state.username, this.state.password)
+    }
+
+    private handleSwitchForm = (e: React.MouseEvent<HTMLAnchorElement>) => {
+        e.preventDefault()
+        this.props.switchForm(true)
     }
 
     private inputErrorText = (): string => {
