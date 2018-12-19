@@ -1,6 +1,6 @@
 ﻿namespace DarkDeeds.Enums
 {
-    public enum LoginResultEnum
+    public enum SignInResultEnum
     {
         Unknown, Success, WrongUsernamePassword
     }
