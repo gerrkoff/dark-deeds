@@ -1,0 +1,8 @@
+#login-container {
+    max-width: 30rem;
+    margin: auto;
+}
+
+.submit-btn button {
+    width: 10rem;
+}

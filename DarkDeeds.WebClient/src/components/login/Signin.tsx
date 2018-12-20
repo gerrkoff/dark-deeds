@@ -2,6 +2,8 @@ import * as React from 'react'
 import { Form, Message } from 'semantic-ui-react'
 import { SigninResultEnum } from '../../models'
 
+import '../../styles/login.css'
+
 interface IProps {
     processing: boolean
     signinResult: SigninResultEnum
@@ -37,10 +39,8 @@ export class Signin extends React.PureComponent<IProps, IState> {
                     header='Wrong credentials'
                     content='The username or password you entered is incorrect'
                     hidden={!showErrorCredMsg} />
-                <Form.Group inline>
-                    <span>Haven't got an account yet?&nbsp;<a href='' onClick={this.handleSwitchForm}>Sign up here.</a></span>
-                    <Form.Button onClick={this.handleSubmit} loading={this.props.processing}>Sign in</Form.Button>
-                </Form.Group>
+                <Form.Button onClick={this.handleSubmit} loading={this.props.processing} className='submit-btn'>Sign in</Form.Button>
+                <span>Haven't got an account yet?&nbsp;<a href='' onClick={this.handleSwitchForm}>Sign up here.</a></span>
             </React.Fragment>
         )
     }
