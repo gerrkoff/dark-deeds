@@ -36,10 +36,9 @@ export class Signin extends React.PureComponent<IProps, IState> {
                     value={this.state.password}
                     onChange={(e: any) => this.handleInput('password', e.target.value)} />
                 <Message negative
-                    header='Wrong credentials'
                     content='The username or password you entered is incorrect'
                     hidden={!showErrorCredMsg} />
-                <Form.Button onClick={this.handleSubmit} loading={this.props.processing} className='submit-btn'>Sign in</Form.Button>
+                <Form.Button onClick={this.handleSubmit} loading={this.props.processing} className='submit-btn' primary>Sign in</Form.Button>
                 <span>Haven't got an account yet?&nbsp;<a href='' onClick={this.handleSwitchForm}>Sign up here.</a></span>
             </React.Fragment>
         )

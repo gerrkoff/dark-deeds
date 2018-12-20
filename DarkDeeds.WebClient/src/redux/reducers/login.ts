@@ -4,7 +4,7 @@ import { LOGIN_CURRENT_USER, LOGIN_INITIAL_LOGGING_IN, LOGIN_PROCESSING, LOGIN_S
 import { ILoginState } from '../types'
 
 const initialState: ILoginState = {
-    formSignin: false,
+    formSignin: true,
     initialLogginIn: false,
     processing: false,
     signinResult: SigninResultEnum.Unknown,
@@ -40,7 +40,9 @@ export function login(state: ILoginState = initialState, action: LoginAction): I
             }
         case LOGIN_SWITCH_FORM:
             return { ...state,
-                formSignin: action.formSignin
+                formSignin: action.formSignin,
+                signinResult: SigninResultEnum.Unknown,
+                signupResult: SignupResultEnum.Unknown
             }
     }
     return state

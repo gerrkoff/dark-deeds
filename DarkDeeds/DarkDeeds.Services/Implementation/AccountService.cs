@@ -15,6 +15,7 @@ namespace DarkDeeds.Services.Implementation
 
         #region Identity errors
         private static readonly IdentityErrorDescriber ErrorDescriber = new IdentityErrorDescriber();
+        private static readonly string InvalidUsernameCode = ErrorDescriber.InvalidUserName(string.Empty).Code;
         private static readonly string DuplicateUserNameCode = ErrorDescriber.DuplicateUserName(string.Empty).Code;
         private static readonly string[] PasswordErrorCodes = {
             ErrorDescriber.PasswordRequiresDigit().Code,
@@ -47,6 +48,10 @@ namespace DarkDeeds.Services.Implementation
             else if (createUserResult.Errors.Any(x => string.Equals(x.Code, DuplicateUserNameCode)))
             {
                 result.Result = SignUpResultEnum.UsernameAlreadyExists;
+            }
+            else if (createUserResult.Errors.Any(x => string.Equals(x.Code, InvalidUsernameCode)))
+            {
+                result.Result = SignUpResultEnum.InvalidUsername;
             }
             else if (createUserResult.Errors.Any(x => PasswordErrorCodes.Contains(x.Code)))
             {
