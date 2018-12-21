@@ -12,6 +12,8 @@
       "space-before-function-paren": [true, "never"],
       "jsx-no-lambda": false,
       "no-console": false,
-      "jsx-boolean-value": false
+      "jsx-boolean-value": false,
+      "object-literal-sort-keys": false,
+      "ordered-imports": false
     }
 }

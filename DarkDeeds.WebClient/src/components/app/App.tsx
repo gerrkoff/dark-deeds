@@ -17,6 +17,10 @@ interface IProps {
     loadTasks: () => void
     saveTasks: (tasks: Task[]) => void
     openEditTask: () => void
+
+    initialLogginIn: boolean
+    userAuthenticated: boolean
+    initialLogin: () => void
 }
 export class App extends React.PureComponent<IProps> {
     public componentDidMount() {
