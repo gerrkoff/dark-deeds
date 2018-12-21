@@ -96,6 +96,13 @@ export function signup(username: string, password: string) {
     }
 }
 
+export function signout() {
+    return async(dispatch: Dispatch<LoginAction>) => {
+        StorageHelper.Clear(StorageHelper.TokenKey)
+        dispatch(currentUser(false))
+    }
+}
+
 export function switchForm(formSignin: boolean): ILoginSwitchForm {
     return { type: constants.LOGIN_SWITCH_FORM, formSignin }
 }
