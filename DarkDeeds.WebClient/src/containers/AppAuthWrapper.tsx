@@ -1,6 +1,6 @@
 import { push } from 'connected-react-router'
 import { connect } from 'react-redux'
-import { App } from '../components/app'
+import { AppAuthWrapper } from '../components/app'
 import { Task } from '../models'
 import { loadTasks, openEditTaskModal, saveTasks, initialLogin } from '../redux/actions'
 
@@ -25,4 +25,4 @@ function mapDispatchToProps(dispatch: any) {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(App)
+export default connect(mapStateToProps, mapDispatchToProps)(AppAuthWrapper)

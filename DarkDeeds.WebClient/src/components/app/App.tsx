@@ -3,12 +3,11 @@ import { ToastContainer } from 'react-toastify'
 import { Container, Dimmer, Loader } from 'semantic-ui-react'
 import EditTaskModal from '../../containers/EditTaskModal'
 import ModalConfirm from '../../containers/ModalConfirm'
-import Login from '../../containers/Login'
 import { Task } from '../../models'
 import { AddTaskButton } from '../edit-task'
 import { Shortcuts, Toolbar } from './'
 
-interface IProps {
+export interface IAppProps {
     appLoading: boolean
     children: React.ReactNode
     path: string
@@ -18,24 +17,14 @@ interface IProps {
     loadTasks: () => void
     saveTasks: (tasks: Task[]) => void
     openEditTask: () => void
-
-    initialLogginIn: boolean
-    userAuthenticated: boolean
-    initialLogin: () => void
 }
-export class App extends React.PureComponent<IProps> {
+export class App extends React.PureComponent<IAppProps> {
     public componentDidMount() {
-        // this.props.loadTasks()
-        // setInterval(this.saveTasksIfUpdated, 5 * 1000) // TODO: should be greater
-
-        this.props.initialLogin()
+        this.props.loadTasks()
+        setInterval(this.saveTasksIfUpdated, 5 * 1000) // TODO: should be greater
     }
 
     public render() {
-        if (!this.props.userAuthenticated) {
-            return this.renderLoginPage()
-        }
-
         return (
             <React.Fragment>
                 <Toolbar path={this.props.path} navigateTo={this.props.navigateTo} />
@@ -44,7 +33,7 @@ export class App extends React.PureComponent<IProps> {
                 </Container>
                 <AddTaskButton openModal={this.props.openEditTask} />
                 <EditTaskModal />
-                <Dimmer active={this.props.appLoading && false}>
+                <Dimmer active={this.props.appLoading}>
                     <Loader />
                 </Dimmer>
                 <ToastContainer />
@@ -54,23 +43,13 @@ export class App extends React.PureComponent<IProps> {
         )
     }
 
-    private renderLoginPage = () => {
-        return (
-            // TODO: create common app component
-            <Container>
-                <Login />
-                <ToastContainer />
-            </Container>
-        )
+    private saveTasksIfUpdated = () => {
+        const updated = this.props.tasks.filter(x => x.updated)
+
+        if (updated.length === 0 || this.props.tasksSaving) {
+            return
+        }
+
+        this.props.saveTasks(updated)
     }
-
-    // private saveTasksIfUpdated = () => {
-    //     const updated = this.props.tasks.filter(x => x.updated)
-
-    //     if (updated.length === 0 || this.props.tasksSaving) {
-    //         return
-    //     }
-
-    //     this.props.saveTasks(updated)
-    // }
 }

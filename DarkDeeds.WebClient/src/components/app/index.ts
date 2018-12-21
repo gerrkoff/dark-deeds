@@ -1,4 +1,5 @@
 export * from './App'
+export * from './AppAuthWrapper'
 export * from './AppRouting'
 export * from './NotFound'
 export * from './Toolbar'
