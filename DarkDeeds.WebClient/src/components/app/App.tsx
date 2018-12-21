@@ -1,5 +1,4 @@
 import * as React from 'react'
-import { ToastContainer } from 'react-toastify'
 import { Container, Dimmer, Loader } from 'semantic-ui-react'
 import EditTaskModal from '../../containers/EditTaskModal'
 import ModalConfirm from '../../containers/ModalConfirm'
@@ -36,7 +35,6 @@ export class App extends React.PureComponent<IAppProps> {
                 <Dimmer active={this.props.appLoading}>
                     <Loader />
                 </Dimmer>
-                <ToastContainer />
                 <Shortcuts openEditTask={this.props.openEditTask} />
                 <ModalConfirm />
             </React.Fragment>

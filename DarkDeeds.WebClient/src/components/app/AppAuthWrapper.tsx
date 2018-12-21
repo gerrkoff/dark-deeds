@@ -22,6 +22,7 @@ export class AppAuthWrapper extends React.PureComponent<IProps> {
                 <Dimmer active={this.props.initialLogginIn}>
                     <Loader />
                 </Dimmer>
+                <ToastContainer />
             </React.Fragment>
         )
     }
@@ -35,10 +36,8 @@ export class AppAuthWrapper extends React.PureComponent<IProps> {
             return (<App {...this.props} />)
         } else {
             return (
-                // TODO: create common app component
                 <Container>
                     <Login />
-                    <ToastContainer />
                 </Container>
             )
         }
