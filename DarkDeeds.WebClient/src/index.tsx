@@ -5,7 +5,7 @@ import * as ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
 import { applyMiddleware, compose, createStore } from 'redux'
 import thunk from 'redux-thunk'
-import AppRouting from './containers/AppRouting'
+import { AppRouting } from './components/app'
 import rootReducer from './redux/reducers'
 // import registerServiceWorker from './registerServiceWorker'
 
