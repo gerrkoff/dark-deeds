@@ -2,8 +2,9 @@ import { connect } from 'react-redux'
 import { Overview } from '../components/overview'
 import { Task, TaskModel } from '../models'
 import { localUpdateTasks, openEditTaskWithModel, openModalConfirm, setTaskStatuses } from '../redux/actions'
+import { IAppState } from '../redux/types'
 
-function mapStateToProps({ tasks }: any) {
+function mapStateToProps({ tasks }: IAppState) {
     return {
         tasks: tasks.tasks
     }

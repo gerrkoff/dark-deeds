@@ -1,8 +1,9 @@
 import { connect } from 'react-redux'
 import { Login } from '../components/login'
 import { signin, signup, switchForm } from '../redux/actions'
+import { IAppState } from '../redux/types'
 
-function mapStateToProps({ login }: any) {
+function mapStateToProps({ login }: IAppState) {
     return {
         formSignin: login.formSignin,
         processing: login.processing,

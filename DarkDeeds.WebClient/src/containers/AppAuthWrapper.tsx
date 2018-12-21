@@ -3,8 +3,9 @@ import { connect } from 'react-redux'
 import { AppAuthWrapper } from '../components/app'
 import { Task } from '../models'
 import { loadTasks, openEditTaskModal, saveTasks, initialLogin } from '../redux/actions'
+import { IAppState } from '../redux/types'
 
-function mapStateToProps({ router, tasks, login }: any) {
+function mapStateToProps({ router, tasks, login }: IAppState) {
     return {
         appLoading: tasks.loading,
         path: router.location.pathname,

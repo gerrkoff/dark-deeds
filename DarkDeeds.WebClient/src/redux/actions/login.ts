@@ -1,4 +1,5 @@
 import { Dispatch } from 'redux'
+import { push as navigateTo, RouterAction } from 'connected-react-router'
 import { LoginApi } from '../../api'
 import { StorageHelper, ToastHelper } from '../../helpers'
 import { SigninResultEnum, SignupResultEnum } from '../../models'
@@ -40,8 +41,7 @@ export function initialLogin() {
     return async(dispatch: Dispatch<LoginAction>) => {
         dispatch(setInitialLogginIn(true))
         try {
-            const currentUserResult = await LoginApi.current()
-            dispatch(currentUser(currentUserResult.userAuthenticated, currentUserResult.username))
+            await loadCurrentUser(dispatch)
         } catch {
             ToastHelper.error(`Error occured while login`)
         }
@@ -61,8 +61,7 @@ export function signin(username: string, password: string) {
 
             if (result === SigninResultEnum.Success) {
                 StorageHelper.Save(StorageHelper.TokenKey, apiResult.token)
-                const currentUserResult = await LoginApi.current()
-                dispatch(currentUser(currentUserResult.userAuthenticated, currentUserResult.username))
+                await loadCurrentUser(dispatch)
             }
         } catch (err) {
             result = SigninResultEnum.Unknown
@@ -84,8 +83,7 @@ export function signup(username: string, password: string) {
 
             if (result === SignupResultEnum.Success) {
                 StorageHelper.Save(StorageHelper.TokenKey, apiResult.token)
-                const currentUserResult = await LoginApi.current()
-                dispatch(currentUser(currentUserResult.userAuthenticated, currentUserResult.username))
+                await loadCurrentUser(dispatch)
             }
         } catch (err) {
             result = SignupResultEnum.Unknown
@@ -97,8 +95,9 @@ export function signup(username: string, password: string) {
 }
 
 export function signout() {
-    return async(dispatch: Dispatch<LoginAction>) => {
+    return async(dispatch: Dispatch<LoginAction | RouterAction>) => {
         StorageHelper.Clear(StorageHelper.TokenKey)
+        dispatch(navigateTo('/'))
         dispatch(currentUser(false))
     }
 }
@@ -125,4 +124,9 @@ function signupResult(result: SignupResultEnum): ILoginSignupFinish {
 
 function currentUser(userAuthenticated: boolean, userName?: string): ILoginCurrentUser {
     return { type: constants.LOGIN_CURRENT_USER, userAuthenticated, userName }
+}
+
+async function loadCurrentUser(dispatch: Dispatch<LoginAction>) {
+    const currentUserResult = await LoginApi.current()
+    dispatch(currentUser(currentUserResult.userAuthenticated, currentUserResult.username))
 }

@@ -2,8 +2,9 @@ import { connect } from 'react-redux'
 import { EditTaskModal } from '../components/edit-task'
 import { TaskModel } from '../models'
 import { changeEditTaskModel, localUpdateTask, openEditTaskModal } from '../redux/actions'
+import { IAppState } from '../redux/types'
 
-function mapStateToProps({ editTask }: any) {
+function mapStateToProps({ editTask }: IAppState) {
     return {
         clientId: editTask.clientId,
         model: editTask.taskModel,
