@@ -10,8 +10,8 @@ export class Settings extends React.PureComponent<IProps> {
         console.log(this.props.username)
         return (
             <Segment inverted>
-                <span>Hi, {this.props.username}!</span>
-                <Button onClick={this.props.signout}>Sign out</Button>
+                <span>Hi, {this.props.username}!</span><br/><br/>
+                <Button onClick={this.props.signout} size='mini'>Sign out</Button>
             </Segment>
         )
     }
