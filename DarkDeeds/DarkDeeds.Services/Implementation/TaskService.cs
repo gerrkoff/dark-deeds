@@ -24,6 +24,7 @@ namespace DarkDeeds.Services.Implementation
             _tasksRepository = tasksRepository;
         }
         
+        // TODO: unit test
         public async Task<IEnumerable<TaskDto>> LoadTasksAsync(CurrentUser user)
         {
             return (
@@ -59,7 +60,6 @@ namespace DarkDeeds.Services.Implementation
             return Mapper.Map<List<TaskDto>>(savedTasks);
         }
 
-        // TODO: unit test
         public void CheckIfUserCanEditTasks(ICollection<TaskDto> tasks, CurrentUser user)
         {
             int[] taskIds = tasks.Select(x => x.Id).ToArray();
