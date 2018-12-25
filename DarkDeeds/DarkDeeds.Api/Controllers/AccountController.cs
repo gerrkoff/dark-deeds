@@ -3,6 +3,7 @@ using AutoMapper;
 using DarkDeeds.Api.Controllers.Base;
 using DarkDeeds.Models.Account;
 using DarkDeeds.Services.Interface;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DarkDeeds.Api.Controllers
@@ -18,6 +19,7 @@ namespace DarkDeeds.Api.Controllers
             _accountService = accountService;
         }
 
+        [AllowAnonymous]
         [HttpPost(nameof(SignUp))]
         public async Task<SignUpResultDto> SignUp(SignUpInfoDto signUpInfo)
         {
@@ -25,6 +27,7 @@ namespace DarkDeeds.Api.Controllers
             return await _accountService.SignUp(signUpInfo);
         }
 
+        [AllowAnonymous]
         [HttpPost(nameof(SignIn))]
         public async Task<SignInResultDto> SignIn(SignInInfoDto signInInfo)
         {
