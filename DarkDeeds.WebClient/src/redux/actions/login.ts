@@ -48,7 +48,7 @@ export function initialLogin() {
         try {
             await loadCurrentUser(dispatch)
         } catch {
-            ToastHelper.error(`Error occured while login`)
+            ToastHelper.errorProcess('login')
         }
 
         dispatch(setInitialLogginIn(false))
@@ -70,7 +70,7 @@ export function signin(username: string, password: string) {
             }
         } catch (err) {
             result = SigninResultEnum.Unknown
-            ToastHelper.error(`Error occured while signin`)
+            ToastHelper.errorProcess('signin')
         }
 
         dispatch(signinResult(result))
@@ -92,7 +92,7 @@ export function signup(username: string, password: string) {
             }
         } catch (err) {
             result = SignupResultEnum.Unknown
-            ToastHelper.error(`Error occured while signup`)
+            ToastHelper.errorProcess('signup')
         }
 
         dispatch(signupResult(result))

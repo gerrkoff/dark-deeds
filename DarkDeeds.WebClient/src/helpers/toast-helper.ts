@@ -3,7 +3,7 @@ import { toast, ToastOptions } from 'react-toastify'
 const defaultOptions: ToastOptions = {
     progressClassName: 'toast-progress'
 }
-// TODO: add common error
+
 const service = {
     success(msg: string, options: ToastOptions = {}): number {
         return toast.success(msg, {
@@ -32,6 +32,10 @@ const service = {
             ...defaultOptions,
             ...options
         })
+    },
+
+    errorProcess(process: string, options = {}): number {
+        return this.error(`Error occured while ${process}`, options)
     }
 }
 
