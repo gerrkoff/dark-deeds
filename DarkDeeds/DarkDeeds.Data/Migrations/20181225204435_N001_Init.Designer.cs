@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DarkDeeds.Data.Migrations
 {
     [DbContext(typeof(DarkDeedsContext))]
-    [Migration("20181210183545_N001_Init")]
+    [Migration("20181225204435_N001_Init")]
     partial class N001_Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -39,7 +39,12 @@ namespace DarkDeeds.Data.Migrations
 
                     b.Property<string>("Title");
 
+                    b.Property<string>("UserId")
+                        .IsRequired();
+
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Tasks");
                 });
@@ -205,6 +210,14 @@ namespace DarkDeeds.Data.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
+                });
+
+            modelBuilder.Entity("DarkDeeds.Data.Entity.TaskEntity", b =>
+                {
+                    b.HasOne("DarkDeeds.Data.Entity.UserEntity", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

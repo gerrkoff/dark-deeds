@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using DarkDeeds.Data.Entity.Base;
 using DarkDeeds.Enums;
@@ -17,5 +18,8 @@ namespace DarkDeeds.Data.Entity
         
         [NotMapped]
         public int ClientId { get; set; }
+        
+        [Required]
+        public UserEntity User { get; set; }
     }
 }
