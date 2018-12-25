@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using DarkDeeds.Api.Controllers.Base;
 using DarkDeeds.Models;
 using DarkDeeds.Services.Interface;
 using Microsoft.AspNetCore.Mvc;
@@ -8,7 +9,7 @@ namespace DarkDeeds.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class TasksController : ControllerBase
+    public class TasksController : BaseUserController
     {
         private readonly ITaskService _taskService;
 
@@ -20,13 +21,13 @@ namespace DarkDeeds.Api.Controllers
         [HttpGet]
         public async Task<IEnumerable<TaskDto>> Get()
         {
-            return await _taskService.LoadTasksAsync();
+            return await _taskService.LoadTasksAsync(GetUser());
         }
         
         [HttpPost]
         public async Task<IEnumerable<TaskDto>> Post([FromBody] ICollection<TaskDto> tasks)
         {
-            return await _taskService.SaveTasksAsync(tasks);
+            return await _taskService.SaveTasksAsync(tasks, GetUser());
         }
     }
 }
