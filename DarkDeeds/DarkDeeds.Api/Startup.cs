@@ -31,8 +31,8 @@ namespace DarkDeeds.Api
         {
             services
                 .RegisterServices()
-                .ConfigureAutomapper()
-                .ConfigureDatabase()
+                .ConfigureAutoMapper()
+                .ConfigureDatabase(Configuration)
                 .ConfigureSettings(Configuration)
                 .ConfigureAuthentication(Configuration)
                 .AddIdentity()

@@ -58,7 +58,7 @@ namespace DarkDeeds.Api
             return services;
         }
         
-        public static IServiceCollection ConfigureAutomapper(this IServiceCollection services)
+        public static IServiceCollection ConfigureAutoMapper(this IServiceCollection services)
         {
             Mapper.Initialize(cfg => cfg.AddProfile<MappingProfile>());
             return services;
@@ -70,11 +70,10 @@ namespace DarkDeeds.Api
             return services;
         }
         
-        public static IServiceCollection ConfigureDatabase(this IServiceCollection services)
-        {
-            // TODO: move to settings
-            const string constring = "Server=localhost,1433;Database=darkdeeds;User=sa;Password=Password1";
-            services.AddDbContext<DarkDeedsContext>(options => options.UseSqlServer(constring));
+        public static IServiceCollection ConfigureDatabase(this IServiceCollection services, IConfiguration configuration)
+        {            
+            string connectionString = configuration.GetConnectionString("appDb");
+            services.AddDbContext<DarkDeedsContext>(options => options.UseSqlServer(connectionString));
             services.AddScoped<DbContext, DarkDeedsContext>();
             return services;
         }
