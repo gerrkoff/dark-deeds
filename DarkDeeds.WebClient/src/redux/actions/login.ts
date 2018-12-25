@@ -39,6 +39,11 @@ export type LoginAction = ILoginProcessing | ILoginSigninFinish | ILoginSignupFi
 
 export function initialLogin() {
     return async(dispatch: Dispatch<LoginAction>) => {
+        const token = StorageHelper.Load(StorageHelper.TokenKey)
+        if (token === null || token === '') {
+            return
+        }
+
         dispatch(setInitialLogginIn(true))
         try {
             await loadCurrentUser(dispatch)
