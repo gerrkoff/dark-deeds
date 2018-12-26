@@ -45,7 +45,7 @@ export class Signup extends React.PureComponent<IProps, IState> {
                         value={this.state.password}
                         onChange={(e: any) => this.handleInput('password', e.target.value)}
                     />}
-                    content='Your password must contain...'
+                    content='Your password must have more than 6 characters and contain at least one lowercase letter, one uppercase letter, one numeric digit, and one special character'
                     on='focus'
                     position='bottom right' />
                 <Form.Input
