@@ -1,11 +1,7 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using AutoMapper.QueryableExtensions;
-using DarkDeeds.Common.Extensions;
 using DarkDeeds.Data.Entity;
-using DarkDeeds.Models;
 using DarkDeeds.Services.Entity;
 using DarkDeeds.Services.Implementation;
 using Xunit;
@@ -27,6 +23,19 @@ namespace DarkDeeds.Tests.Services
             var result = (await service.LoadTasksAsync(new CurrentUser {UserId = "1"})).ToList();
             Assert.Equal(1, result.Count);
             Assert.Equal(1000, result[0].Id);
+        }
+        
+        [Fact]
+        public async Task AdjustDateToUtc()
+        {
+            var repo = Helper.CreateRepoMock(
+                new TaskEntity {UserId = "1", DateTime = new DateTime()}
+            ).Object;
+            
+            var service = new TaskService(repo);
+
+            var result = (await service.LoadTasksAsync(new CurrentUser {UserId = "1"})).ToList();
+            Assert.Equal(DateTimeKind.Utc, result[0].DateTime.Value.Kind);
         }
     }
 }
