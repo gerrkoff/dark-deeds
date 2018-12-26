@@ -10,6 +10,7 @@ using DarkDeeds.Data.Repository;
 using DarkDeeds.Models;
 using DarkDeeds.Services.Entity;
 using DarkDeeds.Services.Interface;
+using Microsoft.EntityFrameworkCore;
 
 namespace DarkDeeds.Services.Implementation
 {
@@ -37,7 +38,7 @@ namespace DarkDeeds.Services.Implementation
         // TODO: unit test
         public async Task<IEnumerable<TaskDto>> SaveTasksAsync(ICollection<TaskDto> tasks, CurrentUser user)
         {
-            CheckIfUserCanEditTasks(tasks, user);
+            await CheckIfUserCanEditTasks(tasks, user);
             
             var savedTasks = Mapper.Map<ICollection<TaskEntity>>(tasks);
             foreach (var task in savedTasks)
@@ -58,10 +59,11 @@ namespace DarkDeeds.Services.Implementation
             return Mapper.Map<List<TaskDto>>(savedTasks);
         }
 
-        public void CheckIfUserCanEditTasks(ICollection<TaskDto> tasks, CurrentUser user)
+        public async Task CheckIfUserCanEditTasks(ICollection<TaskDto> tasks, CurrentUser user)
         {
             int[] taskIds = tasks.Select(x => x.Id).ToArray();
-            bool notUserTasks = _tasksRepository.GetAll().Any(x =>
+            
+            bool notUserTasks = await _tasksRepository.GetAll().AnySafeAsync(x =>
                 !string.Equals(x.UserId, user.UserId) &&
                 taskIds.Contains(x.Id)); 
             
