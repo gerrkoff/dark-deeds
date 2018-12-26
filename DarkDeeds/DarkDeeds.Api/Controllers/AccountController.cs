@@ -35,6 +35,7 @@ namespace DarkDeeds.Api.Controllers
             return await _accountService.SignIn(signInInfo);
         }
 
+        [AllowAnonymous]
         [HttpGet]
         public CurrentUserDto Current()
         {
