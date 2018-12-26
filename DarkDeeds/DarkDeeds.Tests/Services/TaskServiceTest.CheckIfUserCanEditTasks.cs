@@ -1,17 +1,13 @@
-using System.Linq;
 using DarkDeeds.Common.Exceptions;
 using DarkDeeds.Data.Entity;
-using DarkDeeds.Data.Entity.Base;
-using DarkDeeds.Data.Repository;
 using DarkDeeds.Models;
 using DarkDeeds.Services.Entity;
 using DarkDeeds.Services.Implementation;
-using Moq;
 using Xunit;
 
 namespace DarkDeeds.Tests.Services
 {
-    public partial class TaskServiceTest
+    public partial class TaskServiceTest : BaseTest
     {
         [Fact]
         public void ThrowIfThereIsNotUserTask()

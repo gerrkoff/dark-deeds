@@ -10,8 +10,6 @@ using DarkDeeds.Data.Repository;
 using DarkDeeds.Models;
 using DarkDeeds.Services.Entity;
 using DarkDeeds.Services.Interface;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 
 namespace DarkDeeds.Services.Implementation
 {
@@ -30,9 +28,9 @@ namespace DarkDeeds.Services.Implementation
             return (
                 await _tasksRepository
                     .GetAll()
-                    .Where(x => string.Equals(x.User.Id, user.UserId))
+                    .Where(x => string.Equals(x.UserId, user.UserId))
                     .ProjectTo<TaskDto>()
-                    .ToListAsync()
+                    .ToListSafeAsync()
             ).ToUtcDate();
         }
 
