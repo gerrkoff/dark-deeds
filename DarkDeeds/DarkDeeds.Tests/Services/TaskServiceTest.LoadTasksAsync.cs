@@ -11,7 +11,7 @@ namespace DarkDeeds.Tests.Services
     public partial class TaskServiceTest
     {
         [Fact]
-        public async Task ReturnOnlyUserTask()
+        public async Task LoadTasksAsync_ReturnOnlyUserTask()
         {
             var repo = Helper.CreateRepoMock(
                 new TaskEntity {UserId = "1", Id = 1000},
@@ -26,7 +26,7 @@ namespace DarkDeeds.Tests.Services
         }
         
         [Fact]
-        public async Task AdjustDateToUtc()
+        public async Task LoadTasksAsync_AdjustDateToUtc()
         {
             var repo = Helper.CreateRepoMock(
                 new TaskEntity {UserId = "1", DateTime = new DateTime()}

@@ -11,7 +11,7 @@ namespace DarkDeeds.Tests.Services
     public partial class TaskServiceTest : BaseTest
     {
         [Fact]
-        public async Task ThrowIfThereIsNotUserTask()
+        public async Task CheckIfUserCanEditTasks_ThrowIfThereIsNotUserTask()
         {
             var repo = Helper.CreateRepoMock(
                 new TaskEntity {UserId = "1", Id = 1},
@@ -27,7 +27,7 @@ namespace DarkDeeds.Tests.Services
         }
 
         [Fact]
-        public async Task NoExceptionIfAllTasksAreUser()
+        public async Task CheckIfUserCanEditTasks_NoExceptionIfAllTasksAreUser()
         {
             var repo = Helper.CreateRepoMock(
                 new TaskEntity {UserId = "1", Id = 1},

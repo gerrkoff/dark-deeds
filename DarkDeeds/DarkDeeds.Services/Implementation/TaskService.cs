@@ -23,7 +23,6 @@ namespace DarkDeeds.Services.Implementation
             _tasksRepository = tasksRepository;
         }
         
-        // TODO: unit test
         public async Task<IEnumerable<TaskDto>> LoadTasksAsync(CurrentUser user)
         {
             return (
@@ -35,7 +34,6 @@ namespace DarkDeeds.Services.Implementation
             ).ToUtcDate();
         }
 
-        // TODO: unit test
         public async Task<IEnumerable<TaskDto>> SaveTasksAsync(ICollection<TaskDto> tasks, CurrentUser user)
         {
             await CheckIfUserCanEditTasks(tasks, user);
@@ -50,8 +48,11 @@ namespace DarkDeeds.Services.Implementation
                 else
                 {
                     if (task.ClientId < 0)
+                    {
+                        task.UserId = user.UserId;
                         task.Id = 0;
-                    task.UserId = user.UserId;
+                    }
+                    
                     await _tasksRepository.SaveAsync(task);
                 }
             }
