@@ -6,7 +6,7 @@ using System.Runtime.Serialization;
 using System.Security.Permissions;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
-namespace DarkDeeds.Common.Exceptions
+namespace DarkDeeds.Api.Exceptions
 {
     [Serializable]
     public class ModelValidationException : Exception

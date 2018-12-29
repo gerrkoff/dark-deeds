@@ -1,4 +1,4 @@
-﻿using DarkDeeds.Common.Exceptions;
+﻿using DarkDeeds.Api.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DarkDeeds.Api.Controllers.Base
