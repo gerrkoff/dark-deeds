@@ -15,14 +15,28 @@ interface IProps {
 }
 export class Overview extends React.PureComponent<IProps> {
     private drake: any
+    private scrollable: boolean = true
 
     public componentDidMount() {
-        this.drake = dragula().on('drop', this.dndHandler)
+        this.drake = dragula()
+            .on('drag', () => this.scrollable = false)
+            .on('dragend', () => this.scrollable = true)
+            .on('drop', (el: HTMLElement, target: HTMLElement, source: HTMLElement, sibling: HTMLElement) => {
+                this.scrollable = true
+                this.dndHandler(el, target, source, sibling)
+            })
+
+        document.addEventListener('touchmove', this.touchMoveHandler, { passive: false })
         this.updateDndContainers()
     }
 
     public componentDidUpdate() {
         this.updateDndContainers()
+    }
+
+    public componentWillUnmount() {
+        console.log('overview unmount')
+        document.removeEventListener('touchmove', this.touchMoveHandler)
     }
 
     public render() {
@@ -94,6 +108,12 @@ export class Overview extends React.PureComponent<IProps> {
 
     private updateDndContainers = () => {
         this.drake.containers = [].slice.call(document.querySelectorAll('div.dragula-container'))
+    }
+
+    private touchMoveHandler = (e: Event) => {
+        if (!this.scrollable) {
+            e.preventDefault()
+        }
     }
 }
 
