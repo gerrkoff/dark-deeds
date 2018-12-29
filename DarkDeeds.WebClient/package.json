@@ -21,6 +21,7 @@
     "start": "BROWSER=none react-scripts-ts start",
     "build": "react-scripts-ts build && npx copyfiles \"build/**\" \"../DarkDeeds/DarkDeeds.Api/wwwroot\" -u 1 -e build && echo files copied",
     "test": "react-scripts-ts test --env=jsdom",
+    "test_nowatch": "CI=true react-scripts-ts test --env=jsdom",
     "eject": "react-scripts-ts eject"
   },
   "devDependencies": {
