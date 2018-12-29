@@ -55,7 +55,7 @@ namespace DarkDeeds.Tests.Services
             await service.SaveTasksAsync(new[] {item}, new CurrentUser {UserId = "1"});
             
             repoMock.Verify(x => x.GetAll());
-            repoMock.Verify(x => x.SaveAsync(It.Is<TaskEntity>(y => y.Id == 1000)));
+            repoMock.Verify(x => x.SaveAsync(It.Is<TaskEntity>(y => y.Id == 1000 && y.UserId == "1")));
             repoMock.VerifyNoOtherCalls();
         }
         

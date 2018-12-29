@@ -48,11 +48,8 @@ namespace DarkDeeds.Services.Implementation
                 else
                 {
                     if (task.ClientId < 0)
-                    {
-                        task.UserId = user.UserId;
                         task.Id = 0;
-                    }
-                    
+                    task.UserId = user.UserId;
                     await _tasksRepository.SaveAsync(task);
                 }
             }
