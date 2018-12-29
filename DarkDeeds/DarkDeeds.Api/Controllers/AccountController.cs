@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DarkDeeds.Api.Controllers
 {
+    [AllowAnonymous]
     [Route("api/[controller]")]
     [ApiController]
     public class AccountController : BaseUserController
@@ -19,7 +20,6 @@ namespace DarkDeeds.Api.Controllers
             _accountService = accountService;
         }
 
-        [AllowAnonymous]
         [HttpPost(nameof(SignUp))]
         public async Task<SignUpResultDto> SignUp(SignUpInfoDto signUpInfo)
         {
@@ -27,7 +27,6 @@ namespace DarkDeeds.Api.Controllers
             return await _accountService.SignUp(signUpInfo);
         }
 
-        [AllowAnonymous]
         [HttpPost(nameof(SignIn))]
         public async Task<SignInResultDto> SignIn(SignInInfoDto signInInfo)
         {
@@ -35,7 +34,6 @@ namespace DarkDeeds.Api.Controllers
             return await _accountService.SignIn(signInInfo);
         }
 
-        [AllowAnonymous]
         [HttpGet]
         public CurrentUserDto Current()
         {
