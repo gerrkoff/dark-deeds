@@ -1,4 +1,6 @@
 ﻿using System.IO;
+using System.Reflection;
+using DarkDeeds.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -22,6 +24,18 @@ namespace DarkDeeds.Api.Controllers
                 Path.Combine(_hostingEnvironment.WebRootPath, "index.html"),
                 new MediaTypeHeaderValue("text/html")
             );
+        }
+        
+        [Route("api/build-info")]
+        [HttpGet]
+        public BuildInfoDto BuildInfo()
+        {
+            return new BuildInfoDto
+            {
+                Version = Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>()
+                    .InformationalVersion
+            };
+
         }
     }
 }
