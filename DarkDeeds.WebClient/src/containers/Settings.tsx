@@ -3,9 +3,10 @@ import { Settings } from '../components/settings'
 import { signout } from '../redux/actions'
 import { IAppState } from '../redux/types'
 
-function mapStateToProps({ login }: IAppState) {
+function mapStateToProps({ login, general }: IAppState) {
     return {
-        username: login.userName
+        username: login.userName,
+        appVersion: general.appVersion
     }
 }
 

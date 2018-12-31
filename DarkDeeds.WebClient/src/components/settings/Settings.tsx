@@ -1,8 +1,10 @@
 import * as React from 'react'
-import { Segment, Button } from 'semantic-ui-react'
+import { Segment } from 'semantic-ui-react'
+import { UserInfo, BuildInfo } from './'
 
 interface IProps {
     username: string
+    appVersion: string
     signout: () => void
 }
 export class Settings extends React.PureComponent<IProps> {
@@ -10,8 +12,8 @@ export class Settings extends React.PureComponent<IProps> {
         console.log(this.props.username)
         return (
             <Segment inverted>
-                <span>Hi, {this.props.username}!</span><br/><br/>
-                <Button onClick={this.props.signout} size='mini'>Sign out</Button>
+                <UserInfo username={this.props.username} signout={this.props.signout} />
+                <BuildInfo appVersion={this.props.appVersion} />
             </Segment>
         )
     }
