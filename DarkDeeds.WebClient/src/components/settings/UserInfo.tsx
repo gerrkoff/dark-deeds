@@ -10,7 +10,7 @@ export class UserInfo extends React.PureComponent<IProps> {
     public render() {
         return (
             <React.Fragment>
-                <SettingsDivider label='User Information' />
+                <SettingsDivider label='User Information' icon='user outline' />
                 <span>Hi, {this.props.username}!</span><br/><br/>
                 <Button onClick={this.props.signout} size='mini'>Sign out</Button>
             </React.Fragment>

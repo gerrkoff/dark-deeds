@@ -8,7 +8,7 @@ export class BuildInfo extends React.PureComponent<IProps> {
     public render() {
         return (
             <React.Fragment>
-                <SettingsDivider label='Build Information' />
+                <SettingsDivider label='Build Information' icon='user outline' />
                 <span>App version: {this.props.appVersion}</span><br/>
             </React.Fragment>
         )
