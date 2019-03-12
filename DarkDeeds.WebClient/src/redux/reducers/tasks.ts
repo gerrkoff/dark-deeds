@@ -1,7 +1,7 @@
 import { DateHelper, TaskHelper } from '../../helpers'
 import { Task, TaskModel } from '../../models'
 import { TasksAction } from '../actions'
-import { TASKS_LOADING, TASKS_LOADING_FAILED, TASKS_LOADING_SUCCESS, TASKS_LOCAL_UPDATE, TASKS_LOCAL_UPDATE_TASK, TASKS_SAVING, TASKS_SAVING_FAILED, TASKS_SAVING_SUCCESS, TASKS_SET_TASK_STATUSES } from '../constants'
+import { TASKS_LOADING, TASKS_LOADING_FAILED, TASKS_LOADING_SUCCESS, TASKS_LOCAL_UPDATE, TASKS_LOCAL_UPDATE_TASK, TASKS_SAVING, TASKS_SAVING_FAILED, TASKS_SAVING_SUCCESS, TASKS_SET_TASK_STATUSES, TASKS_PUSH_FROM_SERVER } from '../constants'
 import { ITasksState } from '../types'
 
 const inittialState: ITasksState = {
@@ -35,8 +35,11 @@ export function tasks(state: ITasksState = inittialState, action: TasksAction): 
             }
         case TASKS_SAVING_SUCCESS:
             return { ...state,
-                saving: false,
-                tasks: updateTasksFromServerAfterSaving(state.tasks, action.tasks)
+                saving: false
+            }
+        case TASKS_PUSH_FROM_SERVER:
+            return { ...state,
+                tasks: pushTasksFromServer(state.tasks, action.tasks, action.localUpdate)
             }
         case TASKS_SAVING_FAILED:
             return { ...state,
@@ -54,22 +57,35 @@ export function tasks(state: ITasksState = inittialState, action: TasksAction): 
     return state
 }
 
-function updateTasksFromServerAfterSaving(localTasks: Task[], updatedTasks: Task[]): Task[] {
+// TODO: tests
+function pushTasksFromServer(localTasks: Task[], updatedTasks: Task[], localUpdate: boolean): Task[] {
     const newTasks = [...localTasks]
     updatedTasks.forEach(updatedTask => {
-        const taskIndex = newTasks.findIndex(x => x.clientId === updatedTask.clientId)
+        const taskIndex = newTasks.findIndex(x =>
+            (x.clientId > 0 || x.clientId < 0 && localUpdate) &&
+            x.clientId === updatedTask.clientId)
         if (taskIndex > -1) {
 
             if (updatedTask.deleted) {
                 newTasks.splice(taskIndex, 1)
-            } else {
+            } else if (localUpdate) {
                 newTasks[taskIndex] = {
                     ...newTasks[taskIndex],
                     clientId: updatedTask.id,
                     id: updatedTask.id
                 }
                 newTasks[taskIndex].updated = !TaskHelper.tasksEqual(newTasks[taskIndex], updatedTask)
+            } else {
+                newTasks[taskIndex] = {
+                    ...updatedTask,
+                    clientId: updatedTask.id
+                }
             }
+        } else {
+            newTasks.push({
+                ...updatedTask,
+                clientId: updatedTask.id
+            })
         }
     })
     return newTasks

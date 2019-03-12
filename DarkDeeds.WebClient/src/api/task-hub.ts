@@ -1,22 +1,33 @@
 import * as signalR from '@aspnet/signalr'
-import { ToastHelper } from '../helpers'
 import baseUrl from './base-url'
+import { Task } from 'src/models'
+import { DateHelper, StorageHelper } from 'src/helpers'
 
 const connection = new signalR.HubConnectionBuilder()
-    .withUrl(baseUrl + 'ws/task')
+    .withUrl(baseUrl + 'ws/task', {
+        accessTokenFactory: () => StorageHelper.Load(StorageHelper.TokenKey) as string
+    })
     .build()
 
-connection.start()
-    .then(() => test())
-    .catch(err => {
-        console.error(err)
-        ToastHelper.errorProcess('initializing task hub connection')
-    })
+const service = {
+    hubStart(): Promise<void> {
+        return connection.start()
+    },
 
-function test() {
-    connection.on('helloWorld', (message: string) => {
-        ToastHelper.info(`Hub Hello World: ${message}`)
-    })
+    hubStop(): Promise<void> {
+        connection.off('update')
+        return connection.stop()
+    },
 
-    connection.send('helloWorld', 'HI!!1').catch(() => console.log('qqq'))
+    hubSubscribe(
+        update: (tasks: Task[], localUpdate: boolean) => void
+    ) {
+        connection.on('update', (tasks, localUpdate) => update(DateHelper.fixDates(tasks) as Task[], localUpdate))
+    },
+
+    saveTasks(tasks: Task[]): Promise<void> {
+        return connection.send('save', tasks)
+    }
 }
+
+export { service as TaskHub }
