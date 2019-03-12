@@ -8,7 +8,7 @@ using DarkDeeds.Common.Extensions;
 using DarkDeeds.Data.Entity;
 using DarkDeeds.Data.Repository;
 using DarkDeeds.Models;
-using DarkDeeds.Services.Entity;
+using DarkDeeds.Models.Entity;
 using DarkDeeds.Services.Interface;
 using Microsoft.EntityFrameworkCore;
 

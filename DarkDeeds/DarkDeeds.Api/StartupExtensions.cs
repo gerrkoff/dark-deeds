@@ -1,6 +1,7 @@
 using System;
 using System.IO.Compression;
 using System.Text;
+using System.Threading.Tasks;
 using AutoMapper;
 using DarkDeeds.Api.Filters;
 using DarkDeeds.AutoMapper;
@@ -109,6 +110,21 @@ namespace DarkDeeds.Api
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(authSettings.Key)),
                         ValidateIssuerSigningKey = true,
                         ClockSkew = TimeSpan.Zero
+                    };
+                    
+                    options.Events = new JwtBearerEvents
+                    {
+                        OnMessageReceived = context =>
+                        {
+                            var accessToken = context.Request.Query["access_token"];
+                            var path = context.HttpContext.Request.Path;
+                            if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/ws"))
+                            {
+                                context.Token = accessToken;
+                            }
+
+                            return Task.CompletedTask;
+                        }
                     };
                 });
 

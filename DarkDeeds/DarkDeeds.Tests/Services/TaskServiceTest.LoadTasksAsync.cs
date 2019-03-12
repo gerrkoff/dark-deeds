@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using DarkDeeds.Data.Entity;
-using DarkDeeds.Services.Entity;
+using DarkDeeds.Models.Entity;
 using DarkDeeds.Services.Implementation;
 using Xunit;
 
