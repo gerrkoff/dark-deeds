@@ -78,10 +78,10 @@ function pushTasksFromServer(localTasks: Task[], updatedTasks: Task[], localUpda
             } else {
                 newTasks[taskIndex] = {
                     ...updatedTask,
-                    clientId: updatedTask.id
+                    updated: false
                 }
             }
-        } else {
+        } else if (!updatedTask.deleted) {
             newTasks.push({
                 ...updatedTask,
                 clientId: updatedTask.id
