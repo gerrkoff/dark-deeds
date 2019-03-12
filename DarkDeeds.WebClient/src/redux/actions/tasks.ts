@@ -3,7 +3,6 @@ import { TaskApi, TaskHub } from '../../api'
 import { ToastHelper } from '../../helpers'
 import { Task, TaskModel } from '../../models'
 import * as constants from '../constants'
-import { deprecate } from 'util';
 
 export interface ITasksLoading {
     type: constants.TASKS_LOADING
@@ -78,7 +77,7 @@ export function localUpdateTask(taskModel: TaskModel, clientId: number): ITasksL
     return { type: constants.TASKS_LOCAL_UPDATE_TASK, taskModel, clientId }
 }
 
-deprecate
+// TODO: remove, it's deprecated
 export function saveTasks(tasks: Task[]) {
     return async(dispatch: Dispatch<TasksAction>) => {
         dispatch({ type: constants.TASKS_SAVING })
