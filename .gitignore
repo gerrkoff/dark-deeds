@@ -20,3 +20,5 @@ appsettings.Development.json
 DarkDeeds/DarkDeeds.Tests/obj
 DarkDeeds/DarkDeeds.Tests/bin
 Deploy/src
+.DS_Store
+DarkDeeds/DarkDeeds.sln.DotSettings.user

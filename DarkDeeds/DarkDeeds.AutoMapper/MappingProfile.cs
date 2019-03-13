@@ -2,7 +2,7 @@ using AutoMapper;
 using DarkDeeds.Data.Entity;
 using DarkDeeds.Models;
 using DarkDeeds.Models.Account;
-using DarkDeeds.Services.Entity;
+using DarkDeeds.Models.Entity;
 
 namespace DarkDeeds.AutoMapper
 {

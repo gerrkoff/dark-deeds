@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DarkDeeds.Services.Entity
+namespace DarkDeeds.Models.Entity
 {
     public class CurrentUser
     {

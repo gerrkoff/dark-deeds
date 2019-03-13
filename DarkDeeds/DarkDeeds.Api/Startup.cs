@@ -1,5 +1,7 @@
-﻿using AutoMapper;
+﻿using System.Diagnostics;
+using AutoMapper;
 using DarkDeeds.Api.Filters;
+using DarkDeeds.Api.Hubs;
 using DarkDeeds.AutoMapper;
 using DarkDeeds.Common.Settings;
 using DarkDeeds.Data.Context;
@@ -38,6 +40,8 @@ namespace DarkDeeds.Api
                 .AddIdentity()
 //                .AddCompression()    TODO: enable it 
                 .ConfigureMvc();
+
+            services.AddSignalR();
         }
         
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -46,7 +50,11 @@ namespace DarkDeeds.Api
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
+                app.UseCors(builder => builder
+                    .SetIsOriginAllowed(origin => origin.EndsWith("localhost:3000"))
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .AllowCredentials());
             }
             else
             {
@@ -55,6 +63,10 @@ namespace DarkDeeds.Api
             
             app.UseStaticFiles();
             app.UseAuthentication();
+            app.UseSignalR(options =>
+            {
+                options.MapHub<TaskHub>("/ws/task");
+            });
             app.UseMvc(routes =>
             {
                 routes.MapRoute(

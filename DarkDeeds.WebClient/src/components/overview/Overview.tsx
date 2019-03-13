@@ -35,7 +35,6 @@ export class Overview extends React.PureComponent<IProps> {
     }
 
     public componentWillUnmount() {
-        console.log('overview unmount')
         document.removeEventListener('touchmove', this.touchMoveHandler)
     }
 

@@ -16,11 +16,21 @@ export interface IAppProps {
     loadTasks: () => void
     saveTasks: (tasks: Task[]) => void
     openEditTask: () => void
+    startTaskHub: () => void
+    stopTaskHub: () => void
 }
 export class App extends React.PureComponent<IAppProps> {
+    private saveTaskInterval: NodeJS.Timeout
+
     public componentDidMount() {
         this.props.loadTasks()
-        setInterval(this.saveTasksIfUpdated, 5 * 1000) // TODO: should be greater
+        this.props.startTaskHub()
+        this.saveTaskInterval = setInterval(this.saveTasksIfUpdated, 5 * 1000) // TODO: should be greater
+    }
+
+    public componentWillUnmount() {
+        this.props.stopTaskHub()
+        clearInterval(this.saveTaskInterval)
     }
 
     public render() {

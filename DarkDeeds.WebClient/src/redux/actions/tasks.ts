@@ -1,5 +1,5 @@
 import { Dispatch } from 'redux'
-import { TaskApi } from '../../api'
+import { TaskApi, TaskHub } from '../../api'
 import { ToastHelper } from '../../helpers'
 import { Task, TaskModel } from '../../models'
 import * as constants from '../constants'
@@ -34,7 +34,12 @@ export interface ITasksSaving {
 
 export interface ITasksSavingSuccess {
     type: constants.TASKS_SAVING_SUCCESS
+}
+
+export interface ITasksPushFromServer {
+    type: constants.TASKS_PUSH_FROM_SERVER
     tasks: Task[]
+    localUpdate: boolean
 }
 
 export interface ITasksSavingFailed {
@@ -48,7 +53,7 @@ export interface ITasksSetTaskStatuses {
     deleted?: boolean
 }
 
-export type TasksAction = ITasksLoading | ITasksLoadingSuccess | ITasksLoadingFailed | ITasksLocalUpdate | ITasksSaving | ITasksSavingSuccess | ITasksSavingFailed | ITasksLocalUpdateTask | ITasksSetTaskStatuses
+export type TasksAction = ITasksLoading | ITasksLoadingSuccess | ITasksLoadingFailed | ITasksLocalUpdate | ITasksSaving | ITasksSavingSuccess | ITasksSavingFailed | ITasksLocalUpdateTask | ITasksSetTaskStatuses | ITasksPushFromServer
 
 export function loadTasks() {
     return async(dispatch: Dispatch<TasksAction>) => {
@@ -72,6 +77,7 @@ export function localUpdateTask(taskModel: TaskModel, clientId: number): ITasksL
     return { type: constants.TASKS_LOCAL_UPDATE_TASK, taskModel, clientId }
 }
 
+// TODO: remove, it's deprecated
 export function saveTasks(tasks: Task[]) {
     return async(dispatch: Dispatch<TasksAction>) => {
         dispatch({ type: constants.TASKS_SAVING })
@@ -89,4 +95,42 @@ export function saveTasks(tasks: Task[]) {
 
 export function setTaskStatuses(clientId: number, completed?: boolean, deleted?: boolean): ITasksSetTaskStatuses {
     return { type: constants.TASKS_SET_TASK_STATUSES, clientId, completed, deleted }
+}
+
+let taskHubIsReady = false
+
+export function startTaskHub() {
+    return async(dispatch: Dispatch<TasksAction>) => {
+        taskHubIsReady = false
+        await TaskHub.hubStart()
+        TaskHub.hubSubscribe((tasksFromServer, localUpdate) =>
+            dispatch({ type: constants.TASKS_PUSH_FROM_SERVER, tasks: tasksFromServer, localUpdate }))
+        taskHubIsReady = true
+    }
+}
+
+export function stopTaskHub() {
+    return async(dispatch: Dispatch<TasksAction>) => {
+        taskHubIsReady = false
+        await TaskHub.hubStop()
+    }
+}
+
+export function saveTasksHub(tasks: Task[]) {
+    return async(dispatch: Dispatch<TasksAction>) => {
+        if (!taskHubIsReady) {
+            return
+        }
+
+        dispatch({ type: constants.TASKS_SAVING })
+
+        try {
+            await TaskHub.saveTasks(tasks)
+            dispatch({ type: constants.TASKS_SAVING_SUCCESS })
+            ToastHelper.info(`${tasks.length} tasks were updated`)
+        } catch (err) {
+            dispatch({ type: constants.TASKS_SAVING_FAILED })
+            ToastHelper.errorProcess('updating tasks')
+        }
+    }
 }

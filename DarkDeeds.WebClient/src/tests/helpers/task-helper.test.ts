@@ -413,17 +413,17 @@ test('[convertModelToString] no date', () => {
 })
 
 test('[convertModelToString] date & no time', () => {
-    const result = TaskHelper.convertModelToString(new TaskModel('Test!', new Date(2018, 11, 11)))
+    const result = TaskHelper.convertModelToString(new TaskModel('Test!', new Date(new Date().getFullYear(), 11, 11)))
     expect(result).toBe('1211 Test!')
 })
 
 test('[convertModelToString] date & time', () => {
-    const result = TaskHelper.convertModelToString(new TaskModel('Test!', new Date(2018, 11, 11, 23, 59), TaskTimeTypeEnum.ConcreteTime))
+    const result = TaskHelper.convertModelToString(new TaskModel('Test!', new Date(new Date().getFullYear(), 11, 11, 23, 59), TaskTimeTypeEnum.ConcreteTime))
     expect(result).toBe('1211 2359 Test!')
 })
 
 test('[convertModelToString] date & time less ten', () => {
-    const result = TaskHelper.convertModelToString(new TaskModel('Test!', new Date(2018, 0, 1, 1, 1), TaskTimeTypeEnum.AfterTime))
+    const result = TaskHelper.convertModelToString(new TaskModel('Test!', new Date(new Date().getFullYear(), 0, 1, 1, 1), TaskTimeTypeEnum.AfterTime))
     expect(result).toBe('0101 >0101 Test!')
 })
 
