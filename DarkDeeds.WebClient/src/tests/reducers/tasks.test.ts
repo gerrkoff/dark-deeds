@@ -7,9 +7,10 @@ import { Task } from '../../models'
 function createState(
     tasks: Task[] = [],
     loading: boolean = true,
-    saving: boolean = false
+    saving: boolean = false,
+    notSaved: boolean = false
     ): ITasksState {
-    return { loading, saving, tasks }
+    return { loading, saving, tasks, notSaved }
 }
 
 function createTask(clientId: number = 1, id: number = 1, title: string = '', deleted: boolean = false): Task {

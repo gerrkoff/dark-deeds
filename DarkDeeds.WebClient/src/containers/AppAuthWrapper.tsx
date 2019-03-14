@@ -11,6 +11,7 @@ function mapStateToProps({ router, tasks, login }: IAppState) {
         path: router.location.pathname,
         tasks: tasks.tasks,
         tasksSaving: tasks.saving,
+        tasksNotSaved: tasks.notSaved,
         initialLogginIn: login.initialLogginIn,
         userAuthenticated: login.userAuthenticated
     }

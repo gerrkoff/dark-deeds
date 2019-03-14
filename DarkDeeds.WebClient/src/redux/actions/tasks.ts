@@ -121,13 +121,12 @@ export function saveTasksHub(tasks: Task[]) {
         if (!taskHubIsReady) {
             return
         }
-
         dispatch({ type: constants.TASKS_SAVING })
 
         try {
             await TaskHub.saveTasks(tasks)
             dispatch({ type: constants.TASKS_SAVING_SUCCESS })
-            ToastHelper.info(`${tasks.length} tasks were updated`)
+            console.log(`${tasks.length} tasks were updated`)
         } catch (err) {
             dispatch({ type: constants.TASKS_SAVING_FAILED })
             ToastHelper.errorProcess('updating tasks')
