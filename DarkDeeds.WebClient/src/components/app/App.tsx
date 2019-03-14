@@ -4,7 +4,7 @@ import EditTaskModal from '../../containers/EditTaskModal'
 import ModalConfirm from '../../containers/ModalConfirm'
 import { Task } from '../../models'
 import { AddTaskButton } from '../edit-task'
-import { Shortcuts, Toolbar } from './'
+import { Shortcuts, Toolbar, NotSavedIndicator } from './'
 
 export interface IAppProps {
     appLoading: boolean
@@ -12,6 +12,7 @@ export interface IAppProps {
     path: string
     tasks: Task[]
     tasksSaving: boolean
+    tasksNotSaved: boolean
     navigateTo: (path: string) => void
     loadTasks: () => void
     saveTasks: (tasks: Task[]) => void
@@ -47,6 +48,7 @@ export class App extends React.PureComponent<IAppProps> {
                 </Dimmer>
                 <Shortcuts openEditTask={this.props.openEditTask} />
                 <ModalConfirm />
+                <NotSavedIndicator active={this.props.tasksNotSaved} />
             </React.Fragment>
         )
     }

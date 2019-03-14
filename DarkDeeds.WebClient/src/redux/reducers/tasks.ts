@@ -7,10 +7,12 @@ import { ITasksState } from '../types'
 const inittialState: ITasksState = {
     loading: true,
     saving: false,
+    notSaved: false,
     tasks: []
 }
 
 export function tasks(state: ITasksState = inittialState, action: TasksAction): ITasksState {
+    let newTasks: Task[]
     switch (action.type) {
         case TASKS_LOADING:
             return { ...state,
@@ -26,8 +28,10 @@ export function tasks(state: ITasksState = inittialState, action: TasksAction): 
                 loading: false
             }
         case TASKS_LOCAL_UPDATE:
+            newTasks = [...action.tasks]
             return { ...state,
-                tasks: [...action.tasks]
+                tasks: newTasks,
+                notSaved: evalNotSaved(newTasks)
             }
         case TASKS_SAVING:
             return { ...state,
@@ -38,26 +42,35 @@ export function tasks(state: ITasksState = inittialState, action: TasksAction): 
                 saving: false
             }
         case TASKS_PUSH_FROM_SERVER:
+            newTasks = pushTasksFromServer(state.tasks, action.tasks, action.localUpdate)
             return { ...state,
-                tasks: pushTasksFromServer(state.tasks, action.tasks, action.localUpdate)
+                tasks: newTasks,
+                notSaved: evalNotSaved(newTasks)
             }
         case TASKS_SAVING_FAILED:
             return { ...state,
                 saving: false
             }
         case TASKS_LOCAL_UPDATE_TASK:
+            newTasks = localUpdateTask(action.taskModel, action.clientId, state.tasks)
             return { ...state,
-                tasks: localUpdateTask(action.taskModel, action.clientId, state.tasks)
+                tasks: newTasks,
+                notSaved: evalNotSaved(newTasks)
             }
         case TASKS_SET_TASK_STATUSES:
+            newTasks = updateStatuses(state.tasks, action.clientId, action.completed, action.deleted)
             return { ...state,
-                tasks: updateStatuses(state.tasks, action.clientId, action.completed, action.deleted)
+                tasks: newTasks,
+                notSaved: evalNotSaved(newTasks)
             }
     }
     return state
 }
 
-// TODO: tests
+function evalNotSaved(newTasks: Task[]) {
+    return newTasks.some(x => x.updated)
+}
+
 function pushTasksFromServer(localTasks: Task[], updatedTasks: Task[], localUpdate: boolean): Task[] {
     const newTasks = [...localTasks]
     updatedTasks.forEach(updatedTask => {
