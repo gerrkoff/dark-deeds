@@ -29,6 +29,8 @@ export class MenuPopup extends React.PureComponent<IProps, IState> {
                     onOpen={this.handleMenuPopupOpen}
                     trigger={this.props.content}
                     content={this.renderMenu()}
+                    closeOnDocumentClick
+                    hideOnScroll
                 />
         )
     }
