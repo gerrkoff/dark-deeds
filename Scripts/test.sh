@@ -1,7 +1,6 @@
  STATUS=$(git status)
- if [ "$STATUS" != "On branch master Your branch is up to date with 'origin/master'. nothing to commit, working tree clean" ]
+ if [[ $STATUS != *"Your branch is up to date"* ]] || [[ $STATUS != *"nothing to commit, working tree clean"* ]]
  then
-    echo $STATUS
     echo Current branch is not clean
     exit 1
 else
