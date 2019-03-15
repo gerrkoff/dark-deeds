@@ -7,16 +7,18 @@ else
     echo Current branch is clean, move on
 fi
 
+git checkout master
+git pull
 git checkout staging
-git pull origin staging
-git merge origin master
+git pull
+git merge master
 
 sh bump-version.sh
 git commit -m 'bump version' ../DarkDeeds/DarkDeeds.Api/DarkDeeds.Api.csproj
 
 git push
 git checkout master
-git merge origin staging
+git merge staging
 git push
 
 echo
