@@ -5,7 +5,7 @@
     cursor: pointer;
 }
 
-.day-card-header:hover {
+.day-card-header:hover, .day-card-header:active {
     border-radius: 2px;
     background: rgba(191, 214, 229, 0.5);
 }

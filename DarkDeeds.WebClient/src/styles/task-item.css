@@ -8,7 +8,7 @@
     padding-bottom: 0.1rem;
 }
 
-.task-item:hover {
+.task-item:hover, .task-item:active {
     border-radius: 2px;
     background: rgba(191, 214, 229, 0.5);
 }
