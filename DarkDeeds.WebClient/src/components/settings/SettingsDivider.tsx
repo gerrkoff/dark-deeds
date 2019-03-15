@@ -9,15 +9,11 @@ export class SettingsDivider extends React.PureComponent<IProps> {
     public render() {
         return (
             <Divider horizontal inverted>
-                <Header as='h5' style={styles}>
+                <Header as='h5' className='settings-divider'>
                     <Icon name={this.props.icon as any} />
                     {this.props.label}
                 </Header>
             </Divider>
         )
     }
-}
-
-const styles = {
-    color: 'white'
 }

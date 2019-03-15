@@ -2,6 +2,8 @@ import * as React from 'react'
 import { Segment } from 'semantic-ui-react'
 import { UserInfo, BuildInfo } from './'
 
+import '../../styles/settings.css'
+
 interface IProps {
     username: string
     appVersion: string
