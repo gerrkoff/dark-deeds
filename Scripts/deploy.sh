@@ -10,5 +10,9 @@ fi
 git checkout staging
 git pull origin staging
 git merge origin/master
+
+sh bump-version.sh
+git commit -m 'bump version' '../DarkDeeds/DarkDeeds.Api/DarkDeeds.Api.csproj'
+
 git push
 git checkout master
