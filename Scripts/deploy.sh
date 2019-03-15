@@ -18,3 +18,6 @@ git push
 git checkout master
 git merge origin/staging
 git push
+
+echo
+echo 'Successfully merged to staging'
