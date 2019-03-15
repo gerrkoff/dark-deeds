@@ -37,32 +37,25 @@ export class DayCardHeader extends React.PureComponent<IProps, IState> {
         })
 
         return (
-            <MenuPopup content={this.renderContent()} menuPopupClose={this.handleMouseEnter} menuItemProps={menuItemProps}/>
+            <MenuPopup
+                content={this.renderContent()}
+                changeVisibility={this.handleMenuChangeVisibility}
+                menuItemProps={menuItemProps} />
         )
     }
 
     private renderContent = () => {
-        const mouseOverEnabled = this.props.mouseOver
+        const className = 'day-card-header'
+            + (this.state.menuPopupOpen ? ' day-card-header-selected' : '')
         return (
-            <span className='day-card-header'
-                onPointerEnter={mouseOverEnabled ? this.handleMouseEnter : undefined}
-                onPointerLeave={mouseOverEnabled ? this.handleMouseLeave : undefined}
-            >
+            <span className={className}>
                 {DateHelper.toLabel(this.props.date)}
             </span>
         )
     }
 
-    private handleMouseEnter = () => {
-        if (this.props.mouseOver) {
-            // this.props.mouseOver(true)
-        }
-    }
-
-    private handleMouseLeave = () => {
-        if (this.props.mouseOver) {
-            // this.props.mouseOver(false)
-        }
+    private handleMenuChangeVisibility = (open: boolean) => {
+        this.setState({ menuPopupOpen: open })
     }
 
     private handleAdd = () => {

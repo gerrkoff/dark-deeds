@@ -5,7 +5,7 @@ import '../../styles/menu-popup.css'
 interface IProps {
     content: React.ReactNode
     menuItemProps: MenuItemProps[]
-    menuPopupClose?: () => void
+    changeVisibility?: (open: boolean) => void
 }
 interface IState {
     menuPopupOpen: boolean
@@ -62,11 +62,16 @@ export class MenuPopup extends React.PureComponent<IProps, IState> {
         }
     }
 
-    private handleMenuPopupClose = () => this.setState({ menuPopupOpen: false })
+    private handleMenuPopupClose = () => {
+        if (this.props.changeVisibility) {
+            this.props.changeVisibility(false)
+        }
+        this.setState({ menuPopupOpen: false })
+    }
 
     private handleMenuPopupOpen = () => {
-        if (this.props.menuPopupClose) {
-            this.props.menuPopupClose()
+        if (this.props.changeVisibility) {
+            this.props.changeVisibility(true)
         }
         this.setState({ menuPopupOpen: true })
     }

@@ -11,7 +11,17 @@ interface IProps {
     confirmAction?: (content: React.ReactNode, action: () => void, header: string) => void
     openTaskModal?: (model: TaskModel, id?: number) => void
 }
-export class TaskItem extends React.PureComponent<IProps> {
+interface IState {
+    menuPopupOpen: boolean
+}
+export class TaskItem extends React.PureComponent<IProps, IState> {
+    constructor(props: IProps) {
+        super(props)
+        this.state = {
+            menuPopupOpen: false
+        }
+    }
+
     public render() {
         const menuItemProps = new Array<MenuItemProps>()
         menuItemProps.push({
@@ -36,7 +46,8 @@ export class TaskItem extends React.PureComponent<IProps> {
 
         return (
             <MenuPopup
-                content={renderContent(this.props.task)}
+                content={renderContent(this.props.task, this.state.menuPopupOpen)}
+                changeVisibility={this.handleMenuChangeVisibility}
                 menuItemProps={menuItemProps} />
         )
     }
@@ -64,10 +75,16 @@ export class TaskItem extends React.PureComponent<IProps> {
             this.props.openTaskModal(this.props.task, this.props.task.clientId)
         }
     }
+
+    private handleMenuChangeVisibility = (open: boolean) => {
+        this.setState({ menuPopupOpen: open })
+    }
 }
 
-function renderContent(task: Task): React.ReactNode {
-    const className = 'task-item' + (task.completed ? ' task-item-completed' : '')
+function renderContent(task: Task, menuOpen: boolean): React.ReactNode {
+    const className = 'task-item'
+        + (task.completed ? ' task-item-completed' : '')
+        + (menuOpen ? ' task-item-selected' : '')
     let text = ''
     if (task.timeType !== TaskTimeTypeEnum.NoTime) {
         if (task.timeType === TaskTimeTypeEnum.AfterTime) {

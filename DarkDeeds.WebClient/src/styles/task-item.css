@@ -8,9 +8,9 @@
     padding-bottom: 0.1rem;
 }
 
-.task-item:hover, .task-item:active {
+.task-item-selected {
     border-radius: 2px;
-    background: rgba(191, 214, 229, 0.5);
+    background: rgba(191, 214, 229, 0.1);
 }
 
 .task-item-completed {
