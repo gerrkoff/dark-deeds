@@ -21,6 +21,7 @@ git checkout master
 git merge staging
 git push
 
+echo
 echo "()___)____________)"
 echo
 echo 'Successfully merged to staging'
