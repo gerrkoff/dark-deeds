@@ -1,3 +1,7 @@
+html {
+    font-size: 16px;
+}
+
 body {
     background-color: #282c34;
 }
@@ -5,4 +9,10 @@ body {
 /* Force semantic-ui raised segment to bring shadow back */
 .ui.inverted.raised.segment {
     box-shadow: 0 2px 4px 0 #353A45,0 2px 10px 0 #353A45;
+}
+
+@media only screen and (min-width: 1400px) {
+    .ui.container {
+        width: 1350px;
+    }
 }
