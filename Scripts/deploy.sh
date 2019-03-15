@@ -22,6 +22,5 @@ git merge staging
 git push
 
 echo
-echo "()___)____________)"
+echo "()___)____________)   Successfully merged to staging"
 echo
-echo 'Successfully merged to staging'
