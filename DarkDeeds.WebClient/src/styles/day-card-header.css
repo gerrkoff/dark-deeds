@@ -4,3 +4,8 @@
     text-align: center;
     cursor: pointer;
 }
+
+.day-card-header:hover {
+    border-radius: 2px;
+    background: rgba(191, 214, 229, 0.5);
+}

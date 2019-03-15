@@ -9,7 +9,7 @@ import '../../styles/day-card-header.css'
 interface IProps {
     date: Date
     openTaskModal?: (model: TaskModel, id?: number) => void
-    mouseOver?: (isOver: boolean) => void
+    mouseOver?: (isOver: boolean) => void // TODO: remove?
 }
 interface IState {
     menuPopupOpen: boolean
@@ -55,13 +55,13 @@ export class DayCardHeader extends React.PureComponent<IProps, IState> {
 
     private handleMouseEnter = () => {
         if (this.props.mouseOver) {
-            this.props.mouseOver(true)
+            // this.props.mouseOver(true)
         }
     }
 
     private handleMouseLeave = () => {
         if (this.props.mouseOver) {
-            this.props.mouseOver(false)
+            // this.props.mouseOver(false)
         }
     }
 
