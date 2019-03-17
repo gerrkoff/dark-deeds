@@ -26,12 +26,14 @@ export class App extends React.PureComponent<IAppProps> {
     public componentDidMount() {
         this.props.loadTasks()
         this.props.startTaskHub()
-        this.saveTaskInterval = setInterval(this.saveTasksIfUpdated, 5 * 1000) // TODO: should be greater
+        this.saveTaskInterval = setInterval(this.saveTasksIfUpdated, 5 * 1000)
+        window.onbeforeunload = this.confirmExit
     }
 
     public componentWillUnmount() {
         this.props.stopTaskHub()
         clearInterval(this.saveTaskInterval)
+        window.onbeforeunload = null
     }
 
     public render() {
@@ -61,5 +63,12 @@ export class App extends React.PureComponent<IAppProps> {
         }
 
         this.props.saveTasks(updated)
+    }
+
+    private confirmExit = (event: BeforeUnloadEvent): string | void => {
+        if (this.props.tasksNotSaved) {
+            this.saveTasksIfUpdated()
+            return ''
+        }
     }
 }
