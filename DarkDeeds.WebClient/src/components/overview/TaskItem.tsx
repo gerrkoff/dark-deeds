@@ -117,12 +117,12 @@ function str2digits(n: number): string {
 }
 
 class TouchMoveDelay {
-    private elem: HTMLElement
+    private elem: HTMLElement | undefined
     private timeout: NodeJS.Timeout
     private delay: number
     private draggable: boolean
 
-    constructor(elem: HTMLElement, delay: number) {
+    constructor(elem: HTMLElement | undefined, delay: number) {
         this.elem = elem
         if (this.elem === undefined) {
             return
