@@ -124,6 +124,9 @@ class TouchMoveDelay {
 
     constructor(elem: HTMLElement, delay: number) {
         this.elem = elem
+        if (this.elem === undefined) {
+            return
+        }
         this.delay = delay
         this.elem.addEventListener('touchstart', this.handleTouchStart)
         this.elem.addEventListener('touchmove', this.handleTouchMove, { passive: true })
@@ -131,6 +134,9 @@ class TouchMoveDelay {
     }
 
     public destroy = () => {
+        if (this.elem === undefined) {
+            return
+        }
         this.elem.removeEventListener('touchstart', this.handleTouchStart)
         this.elem.removeEventListener('touchmove', this.handleTouchMove)
         this.elem.removeEventListener('touchend', this.handleTouchEnd)
