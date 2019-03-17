@@ -14,29 +14,18 @@ interface IProps {
     confirmAction?: (content: React.ReactNode, action: () => void, header: string) => void
 }
 export class Overview extends React.PureComponent<IProps> {
-    private drake: any
-    private scrollable: boolean = true
+    private dragula: DragulaWrapper
 
     public componentDidMount() {
-        this.drake = dragula()
-            .on('drag', () => this.scrollable = false)
-            .on('dragend', () => this.scrollable = true)
-            .on('drop', (el: HTMLElement, target: HTMLElement, source: HTMLElement, sibling: HTMLElement) => {
-                this.scrollable = true
-                this.dndHandler(el, target, source, sibling)
-            })
-
-        document.addEventListener('touchmove', this.touchMoveHandler, { passive: false })
-        this.updateDndContainers()
+        this.dragula = new DragulaWrapper(this.dndHandler)
     }
 
     public componentDidUpdate() {
-        this.updateDndContainers()
+        this.dragula.updateContainers()
     }
 
     public componentWillUnmount() {
-        document.removeEventListener('touchmove', this.touchMoveHandler)
-        this.drake.destroy()
+        this.dragula.destroy()
     }
 
     public render() {
@@ -90,7 +79,7 @@ export class Overview extends React.PureComponent<IProps> {
     }
 
     private dndHandler = (el: HTMLElement, target: HTMLElement, source: HTMLElement, sibling: HTMLElement) => {
-        this.drake.cancel(true)
+        this.dragula.cancel()
         if (!target || !source) {
             return
         }
@@ -105,9 +94,40 @@ export class Overview extends React.PureComponent<IProps> {
             )
         )
     }
+}
 
-    private updateDndContainers = () => {
+function getId(el: HTMLElement): number {
+    return Number(el.dataset.id)
+}
+
+class DragulaWrapper {
+    private drake: any
+    private scrollable: boolean = true
+
+    constructor(dndHandler: (el: HTMLElement, target: HTMLElement, source: HTMLElement, sibling: HTMLElement) => void) {
+        this.drake = dragula()
+            .on('drag', () => this.scrollable = false)
+            .on('dragend', () => this.scrollable = true)
+            .on('drop', (el: HTMLElement, target: HTMLElement, source: HTMLElement, sibling: HTMLElement) => {
+                this.scrollable = true
+                dndHandler(el, target, source, sibling)
+            })
+
+        document.addEventListener('touchmove', this.touchMoveHandler, { passive: false })
+        this.updateContainers()
+    }
+
+    public destroy() {
+        document.removeEventListener('touchmove', this.touchMoveHandler)
+        this.drake.destroy()
+    }
+
+    public updateContainers = () => {
         this.drake.containers = [].slice.call(document.querySelectorAll('div.dragula-container'))
+    }
+
+    public cancel = () => {
+        this.drake.cancel(true)
     }
 
     private touchMoveHandler = (e: Event) => {
@@ -115,8 +135,4 @@ export class Overview extends React.PureComponent<IProps> {
             e.preventDefault()
         }
     }
-}
-
-function getId(el: HTMLElement): number {
-    return Number(el.dataset.id)
 }
