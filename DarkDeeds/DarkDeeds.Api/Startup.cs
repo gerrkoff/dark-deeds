@@ -61,6 +61,7 @@ namespace DarkDeeds.Api
                 app.UseHsts();
             }
             
+            app.UseResponseCompression();
             app.UseStaticFiles();
             app.UseAuthentication();
             app.UseSignalR(options =>
