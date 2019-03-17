@@ -38,7 +38,7 @@ namespace DarkDeeds.Api
                 .ConfigureSettings(Configuration)
                 .ConfigureAuthentication(Configuration)
                 .AddIdentity()
-//                .AddCompression()    TODO: enable it 
+                .AddCompression() 
                 .ConfigureMvc();
 
             services.AddSignalR();
