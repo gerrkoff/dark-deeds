@@ -36,6 +36,7 @@ export class Overview extends React.PureComponent<IProps> {
 
     public componentWillUnmount() {
         document.removeEventListener('touchmove', this.touchMoveHandler)
+        this.drake.destroy()
     }
 
     public render() {

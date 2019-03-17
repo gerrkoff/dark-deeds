@@ -15,11 +15,22 @@ interface IState {
     menuPopupOpen: boolean
 }
 export class TaskItem extends React.PureComponent<IProps, IState> {
+    private elem: HTMLSpanElement
+    private touchMoveDelay: TouchMoveDelay
+
     constructor(props: IProps) {
         super(props)
         this.state = {
             menuPopupOpen: false
         }
+    }
+
+    public componentDidMount() {
+        this.touchMoveDelay = new TouchMoveDelay(this.elem, 500)
+    }
+
+    public componentWillUnmount() {
+        this.touchMoveDelay.destroy()
     }
 
     public render() {
@@ -46,9 +57,29 @@ export class TaskItem extends React.PureComponent<IProps, IState> {
 
         return (
             <MenuPopup
-                content={renderContent(this.props.task, this.state.menuPopupOpen)}
+                content={this.renderContent()}
                 changeVisibility={this.handleMenuChangeVisibility}
                 menuItemProps={menuItemProps} />
+        )
+    }
+
+    private renderContent = (): React.ReactNode => {
+        const task = this.props.task
+        const className = 'task-item'
+            + (task.completed ? ' task-item-completed' : '')
+            + (this.state.menuPopupOpen ? ' task-item-selected' : '')
+        let text = ''
+        if (task.timeType !== TaskTimeTypeEnum.NoTime) {
+            if (task.timeType === TaskTimeTypeEnum.AfterTime) {
+                text += '> '
+            }
+
+            text += `${str2digits(task.dateTime!.getHours())}:${str2digits(task.dateTime!.getMinutes())} `
+        }
+        text += task.title
+
+        return (
+            <span ref={elem => this.elem = elem!} className={className}>{text}</span>
         )
     }
 
@@ -81,25 +112,45 @@ export class TaskItem extends React.PureComponent<IProps, IState> {
     }
 }
 
-function renderContent(task: Task, menuOpen: boolean): React.ReactNode {
-    const className = 'task-item'
-        + (task.completed ? ' task-item-completed' : '')
-        + (menuOpen ? ' task-item-selected' : '')
-    let text = ''
-    if (task.timeType !== TaskTimeTypeEnum.NoTime) {
-        if (task.timeType === TaskTimeTypeEnum.AfterTime) {
-            text += '> '
-        }
-
-        text += `${str2digits(task.dateTime!.getHours())}:${str2digits(task.dateTime!.getMinutes())} `
-    }
-    text += task.title
-
-    return (
-        <span className={className}>{text}</span>
-    )
-}
-
 function str2digits(n: number): string {
     return n < 10 ? '0' + n : n.toString()
+}
+
+class TouchMoveDelay {
+    private elem: HTMLElement
+    private timeout: NodeJS.Timeout
+    private delay: number
+    private draggable: boolean
+
+    constructor(elem: HTMLElement, delay: number) {
+        this.elem = elem
+        this.delay = delay
+        this.elem.addEventListener('touchstart', this.handleTouchStart)
+        this.elem.addEventListener('touchmove', this.handleTouchMove, { passive: true })
+        this.elem.addEventListener('touchend', this.handleTouchEnd)
+    }
+
+    public destroy = () => {
+        this.elem.removeEventListener('touchstart', this.handleTouchStart)
+        this.elem.removeEventListener('touchmove', this.handleTouchMove)
+        this.elem.removeEventListener('touchend', this.handleTouchEnd)
+    }
+
+    private handleTouchStart = (event: Event) => {
+        this.timeout = setTimeout(() => {
+            this.draggable = true
+        }, this.delay)
+    }
+
+    private handleTouchMove = (event: Event) => {
+        if (!this.draggable) {
+            event.stopPropagation()
+            clearTimeout(this.timeout)
+        }
+    }
+
+    private handleTouchEnd = (event: Event) => {
+        clearTimeout(this.timeout)
+        this.draggable = false
+    }
 }
