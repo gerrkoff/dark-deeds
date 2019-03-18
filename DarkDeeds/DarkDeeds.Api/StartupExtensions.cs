@@ -55,6 +55,8 @@ namespace DarkDeeds.Api
             services.AddScoped<ITaskService, TaskService>();
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<ITokenService, TokenService>();
+            services.AddScoped<IBotProcessMessageService, BotProcessMessageService>();
+            services.AddScoped<IBotSendMessageService, BotSendMessageService>();
             return services;
         }
         
