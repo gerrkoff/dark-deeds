@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 namespace DarkDeeds.Api.Controllers
 {
     [AllowAnonymous]
-    [Route("api/[controller]")]
     public class BotController : ControllerBase
     {
         private readonly IBotProcessMessageService _botProcessMessageService;
@@ -16,9 +15,10 @@ namespace DarkDeeds.Api.Controllers
             _botProcessMessageService = botProcessMessageService;
         }
 
-        public void ProcessMessage(UpdateDto update)
+        public string Process(UpdateDto update)
         {
             _botProcessMessageService.ProcessMessage(update);
+            return "Bot";
         } 
     }
 }

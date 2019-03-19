@@ -70,13 +70,17 @@ namespace DarkDeeds.Api
             });
             app.UseMvc(routes =>
             {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
- 
-                routes.MapSpaFallbackRoute(
-                    name: "spa-fallback",
-                    defaults: new { controller = "Home", action = "Index" });
+                routes
+                    .MapRoute(
+                        name: "default",
+                        template: "{controller=Home}/{action=Index}/{id?}")
+                    .MapRoute(
+                        name: "bot",
+                        template: $"api/bot/{Configuration["Bot"]}",
+                        defaults: new {controller = "Bot", action = "Process"})
+                    .MapSpaFallbackRoute(
+                        name: "spa-fallback",
+                        defaults: new { controller = "Home", action = "Index" });
             });
         }
     }
