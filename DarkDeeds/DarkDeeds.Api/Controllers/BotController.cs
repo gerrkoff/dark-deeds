@@ -1,4 +1,4 @@
-﻿using DarkDeeds.Models.Telegram;
+﻿using DarkDeeds.Models.Bot;
 using DarkDeeds.Services.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -15,7 +15,8 @@ namespace DarkDeeds.Api.Controllers
             _botProcessMessageService = botProcessMessageService;
         }
 
-        public string Process(UpdateDto update)
+        [HttpPost]
+        public string Process([FromBody] UpdateDto update)
         {
             _botProcessMessageService.ProcessMessage(update);
             return "Bot";

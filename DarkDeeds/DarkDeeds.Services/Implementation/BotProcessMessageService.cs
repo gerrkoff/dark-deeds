@@ -1,4 +1,4 @@
-using DarkDeeds.Models.Telegram;
+using DarkDeeds.Models.Bot;
 using DarkDeeds.Services.Interface;
 
 namespace DarkDeeds.Services.Implementation

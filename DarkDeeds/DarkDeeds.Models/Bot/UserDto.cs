@@ -1,6 +1,6 @@
 using Newtonsoft.Json;
 
-namespace DarkDeeds.Models.Telegram
+namespace DarkDeeds.Models.Bot
 {
     public class UserDto
     {
