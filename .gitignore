@@ -22,3 +22,5 @@ DarkDeeds/DarkDeeds.Tests/bin
 Deploy/src
 .DS_Store
 DarkDeeds/DarkDeeds.sln.DotSettings.user
+DarkDeeds/DarkDeeds.BotIntegration/obj
+DarkDeeds/DarkDeeds.BotIntegration/bin

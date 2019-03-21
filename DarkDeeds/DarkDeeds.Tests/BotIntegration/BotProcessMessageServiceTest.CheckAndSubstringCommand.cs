@@ -1,11 +1,9 @@
-using DarkDeeds.Models.Bot;
-using DarkDeeds.Services.Implementation;
-using DarkDeeds.Services.Interface;
-using Microsoft.VisualStudio.TestPlatform.Utilities;
+using DarkDeeds.BotIntegration.Implementation;
+using DarkDeeds.BotIntegration.Interface;
 using Moq;
 using Xunit;
 
-namespace DarkDeeds.Tests.Services
+namespace DarkDeeds.Tests.BotIntegration
 {
     public partial class BotProcessMessageServiceTest : BaseTest
     {
@@ -17,7 +15,7 @@ namespace DarkDeeds.Tests.Services
 
             var result = service.CheckAndTrimCommand("/todo", "/todo qwerty", out string args);
 
-            Assert.Equal(true, result);
+            Assert.True(result);
             Assert.Equal("qwerty", args);
         }
         
@@ -29,7 +27,7 @@ namespace DarkDeeds.Tests.Services
 
             var result = service.CheckAndTrimCommand("/todo", "/todo", out string args);
 
-            Assert.Equal(true, result);
+            Assert.True(result);
             Assert.Equal(string.Empty, args);
         }
         
@@ -41,7 +39,7 @@ namespace DarkDeeds.Tests.Services
 
             var result = service.CheckAndTrimCommand("/todo", "/todo ", out string args);
 
-            Assert.Equal(true, result);
+            Assert.True(result);
             Assert.Equal(string.Empty, args);
         }
         
@@ -53,7 +51,7 @@ namespace DarkDeeds.Tests.Services
 
             var result = service.CheckAndTrimCommand("/todo", "/todo1 qwerty", out string args);
 
-            Assert.Equal(false, result);
+            Assert.False(result);
             Assert.Equal(string.Empty, args);
         }
     }

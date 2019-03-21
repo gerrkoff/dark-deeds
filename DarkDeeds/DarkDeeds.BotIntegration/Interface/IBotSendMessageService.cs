@@ -1,4 +1,4 @@
-namespace DarkDeeds.Services.Interface
+namespace DarkDeeds.BotIntegration.Interface
 {
     public interface IBotSendMessageService
     {

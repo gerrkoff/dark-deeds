@@ -1,18 +1,11 @@
 using Newtonsoft.Json;
 
-namespace DarkDeeds.Models.Bot
+namespace DarkDeeds.BotIntegration.Dto
 {
-    public class ChatDto
+    public class UserDto
     {
         [JsonProperty(PropertyName = "id")]
         public int Id { get; set; }
-        
-        // private, group, supergroup, channel
-        [JsonProperty(PropertyName = "type")]
-        public string Type { get; set; }
-        
-        [JsonProperty(PropertyName = "title")]
-        public string Title { get; set; }
         
         [JsonProperty(PropertyName = "first_name")]
         public string FirstName { get; set; }

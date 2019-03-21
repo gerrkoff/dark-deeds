@@ -1,10 +1,10 @@
-using DarkDeeds.Models.Bot;
-using DarkDeeds.Services.Implementation;
-using DarkDeeds.Services.Interface;
+using DarkDeeds.BotIntegration.Dto;
+using DarkDeeds.BotIntegration.Implementation;
+using DarkDeeds.BotIntegration.Interface;
 using Moq;
 using Xunit;
 
-namespace DarkDeeds.Tests.Services
+namespace DarkDeeds.Tests.BotIntegration
 {
     public partial class BotProcessMessageServiceTest : BaseTest
     {

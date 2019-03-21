@@ -21,7 +21,7 @@ namespace DarkDeeds.Tests.Services
             var service = new TaskService(repo);
 
             var result = (await service.LoadTasksAsync(new CurrentUser {UserId = "1"})).ToList();
-            Assert.Equal(1, result.Count);
+            Assert.Single(result);
             Assert.Equal(1000, result[0].Id);
         }
         

@@ -80,7 +80,7 @@ namespace DarkDeeds.Api
                         defaults: new {controller = "Bot", action = "Process"})
                     .MapSpaFallbackRoute(
                         name: "spa-fallback",
-                        defaults: new { controller = "Home", action = "Index" });
+                        defaults: new {controller = "Home", action = "Index"});
             });
         }
     }

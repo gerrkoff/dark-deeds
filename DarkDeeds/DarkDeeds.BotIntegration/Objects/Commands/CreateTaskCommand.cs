@@ -1,4 +1,4 @@
-namespace DarkDeeds.Models.Bot.Commands
+namespace DarkDeeds.BotIntegration.Objects.Commands
 {
     public class CreateTaskCommand
     {

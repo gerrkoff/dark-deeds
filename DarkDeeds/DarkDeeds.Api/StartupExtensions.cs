@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using AutoMapper;
 using DarkDeeds.Api.Filters;
 using DarkDeeds.AutoMapper;
+using DarkDeeds.BotIntegration.Implementation;
+using DarkDeeds.BotIntegration.Interface;
 using DarkDeeds.Common.Settings;
 using DarkDeeds.Data.Context;
 using DarkDeeds.Data.Entity;

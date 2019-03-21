@@ -1,7 +1,7 @@
 using System.Diagnostics;
-using DarkDeeds.Services.Interface;
+using DarkDeeds.BotIntegration.Interface;
 
-namespace DarkDeeds.Services.Implementation
+namespace DarkDeeds.BotIntegration.Implementation
 {
     public class BotSendMessageService : IBotSendMessageService
     {

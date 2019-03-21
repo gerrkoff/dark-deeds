@@ -1,8 +1,8 @@
-using DarkDeeds.Models.Bot;
-using DarkDeeds.Models.Bot.Commands;
-using DarkDeeds.Services.Interface;
+using DarkDeeds.BotIntegration.Dto;
+using DarkDeeds.BotIntegration.Interface;
+using DarkDeeds.BotIntegration.Objects.Commands;
 
-namespace DarkDeeds.Services.Implementation
+namespace DarkDeeds.BotIntegration.Implementation
 {
     public class BotProcessMessageService : IBotProcessMessageService
     {

@@ -1,6 +1,6 @@
 using Newtonsoft.Json;
 
-namespace DarkDeeds.Models.Bot
+namespace DarkDeeds.BotIntegration.Dto
 {
     public class UpdateDto
     {
