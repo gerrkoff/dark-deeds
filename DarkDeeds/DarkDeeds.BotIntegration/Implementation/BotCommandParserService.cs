@@ -6,7 +6,8 @@ namespace DarkDeeds.BotIntegration.Implementation
 {
     public class BotCommandParserService : IBotCommandParserService
     {
-        const string Todo = "/todo";
+        const string TodoCommand = "/todo";
+        const string StartCommand = "/start";
 
         private readonly ITaskParserService _taskParserService;
 
@@ -17,8 +18,12 @@ namespace DarkDeeds.BotIntegration.Implementation
 
         public BotCommand ParseCommand(string command)
         {
-            if (CheckAndTrimCommand(Todo, command, out var args))
+            string args;
+            if (CheckAndTrimCommand(TodoCommand, command, out args))
                 return new ShowTodoCommand(args);
+            
+            if (CheckAndTrimCommand(StartCommand, command, out args))
+                return new StartCommand(args);
 
             if (!command.StartsWith("/"))
                 return new CreateTaskCommand(_taskParserService.ParseTask(command));

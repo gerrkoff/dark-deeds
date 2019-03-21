@@ -62,6 +62,7 @@ namespace DarkDeeds.Api
             services.AddScoped<IBotCommandParserService, BotCommandParserService>();
             services.AddScoped<IBotProcessShowTodoService, BotProcessShowTodoService>();
             services.AddScoped<IBotProcessCreateTaskService, BotProcessCreateTaskService>();
+            services.AddScoped<IBotProcessStartService, BotProcessStartService>();
             services.AddScoped<IBotProcessMessageService, BotProcessMessageService>();
             services.AddScoped<IBotSendMessageService>(provider => new BotSendMessageService(configuration["Bot"]));
             return services;
