@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using DarkDeeds.BotIntegration.Dto;
 using DarkDeeds.BotIntegration.Interface;
 using DarkDeeds.BotIntegration.Objects.Commands;
@@ -10,40 +11,41 @@ namespace DarkDeeds.BotIntegration.Implementation
         private readonly IBotCommandParserService _botCommandParserService;
         private readonly IBotProcessShowTodoService _botProcessShowTodoService;
         private readonly IBotProcessCreateTaskService _botProcessCreateTaskService;
+        private readonly IBotProcessStartService _botProcessStartService;
 
         public BotProcessMessageService(
             IBotSendMessageService botSendMessageService,
             IBotCommandParserService botCommandParserService,
             IBotProcessShowTodoService botProcessShowTodoService, 
-            IBotProcessCreateTaskService botProcessCreateTaskService)
+            IBotProcessCreateTaskService botProcessCreateTaskService,
+            IBotProcessStartService botProcessStartService)
         {
             _botSendMessageService = botSendMessageService;
             _botCommandParserService = botCommandParserService;
             _botProcessShowTodoService = botProcessShowTodoService;
             _botProcessCreateTaskService = botProcessCreateTaskService;
+            _botProcessStartService = botProcessStartService;
         }
 
-        public void ProcessMessage(UpdateDto update)
+        public Task ProcessMessageAsync(UpdateDto update)
         {
             string text = update.Message.Text.Trim();
+            int userChatId = update.Message.Chat.Id;
 
             BotCommand command = _botCommandParserService.ParseCommand(text);
-            const int userChatId = 383469310;
-            command.UserChatId = userChatId;
+            if (command != null)
+                command.UserChatId = userChatId;
 
             if (command is ShowTodoCommand showTodoCommand)
-            {
-                _botProcessShowTodoService.Process(showTodoCommand);
-                return;
-            }
+                return _botProcessShowTodoService.ProcessAsync(showTodoCommand);
 
             if (command is CreateTaskCommand createTaskCommand)
-            {
-                _botProcessCreateTaskService.Process(createTaskCommand);
-                return;
-            }
+                return _botProcessCreateTaskService.ProcessAsync(createTaskCommand);
+            
+            if (command is StartCommand startCommand)
+                return _botProcessStartService.ProcessAsync(startCommand);
 
-            _botSendMessageService.SendUnknownCommand(userChatId);
+            return _botSendMessageService.SendUnknownCommandAsync(userChatId);
         }
     }
 }

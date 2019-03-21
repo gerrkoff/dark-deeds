@@ -1,6 +1,7 @@
 using System;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using DarkDeeds.BotIntegration.Dto;
 using DarkDeeds.BotIntegration.Interface;
 using DarkDeeds.Common.Exceptions;
@@ -17,19 +18,19 @@ namespace DarkDeeds.BotIntegration.Implementation
             _apiSendMessage = string.Format(_apiSendMessage, botToken);
         }
 
-        public void SendUnknownCommand(int userChatId) => SendMessage(new SendMessageDto
+        public Task SendUnknownCommandAsync(int userChatId) => SendMessage(new SendMessageDto
         {
             ChatId = userChatId,
             Text = "Unknown command"
         });
 
-        public void SendText(int userChatId, string text) => SendMessage(new SendMessageDto
+        public Task SendTextAsync(int userChatId, string text) => SendMessage(new SendMessageDto
         {
             ChatId = userChatId,
             Text = text
         });
 
-        private async void SendMessage(SendMessageDto message)
+        private async Task SendMessage(SendMessageDto message)
         {
             var client = new HttpClient();
             string messageSerialized = JsonConvert.SerializeObject(message);

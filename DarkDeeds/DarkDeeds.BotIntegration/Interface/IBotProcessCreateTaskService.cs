@@ -1,9 +1,10 @@
+using System.Threading.Tasks;
 using DarkDeeds.BotIntegration.Objects.Commands;
 
 namespace DarkDeeds.BotIntegration.Interface
 {
     public interface IBotProcessCreateTaskService
     {
-        void Process(CreateTaskCommand command);
+        Task ProcessAsync(CreateTaskCommand command);
     }
 }

@@ -1,9 +1,10 @@
+using System.Threading.Tasks;
 using DarkDeeds.BotIntegration.Dto;
 
 namespace DarkDeeds.BotIntegration.Interface
 {
     public interface IBotProcessMessageService
     {
-        void ProcessMessage(UpdateDto update);
+        Task ProcessMessageAsync(UpdateDto update);
     }
 }

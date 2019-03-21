@@ -1,4 +1,5 @@
-﻿using DarkDeeds.BotIntegration.Dto;
+﻿using System.Threading.Tasks;
+using DarkDeeds.BotIntegration.Dto;
 using DarkDeeds.BotIntegration.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -16,9 +17,9 @@ namespace DarkDeeds.Api.Controllers
         }
 
         [HttpPost]
-        public void Process([FromBody] UpdateDto update)
+        public Task Process([FromBody] UpdateDto update)
         {
-            _botProcessMessageService.ProcessMessage(update);
+            return _botProcessMessageService.ProcessMessageAsync(update);
         }
     }
 }

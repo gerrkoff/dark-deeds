@@ -1,3 +1,5 @@
+using System;
+using System.Threading.Tasks;
 using DarkDeeds.BotIntegration.Dto;
 using DarkDeeds.BotIntegration.Implementation;
 using DarkDeeds.BotIntegration.Interface;
@@ -7,49 +9,96 @@ using Xunit;
 
 namespace DarkDeeds.Tests.BotIntegration
 {
-    public partial class BotProcessMessageServiceTest : BaseTest
+    public class BotProcessMessageServiceTest : BaseTest
     {
+        private UpdateDto UpdateEmpty => new UpdateDto
+        {
+            Message = new MessageDto
+            {
+                Text = string.Empty,
+                Chat = new ChatDto
+                {
+                    Id = 1
+                }
+            }
+        };
+        
         [Fact]
-        public void BotProcessMessageServiceTest_SendUnknownCommand()
+        public async Task BotProcessMessageServiceTest_SendUnknownCommand()
         {
             var commandParserMock = new Mock<IBotCommandParserService>();
             commandParserMock.Setup(x => x.ParseCommand(It.IsAny<string>())).Returns<BotCommand>(null);
             var sendMsgMock = new Mock<IBotSendMessageService>();
-            var service = new BotProcessMessageService(sendMsgMock.Object, commandParserMock.Object, null, null);
+            var service = new BotProcessMessageService(
+                sendMsgMock.Object, 
+                commandParserMock.Object,
+                null, 
+                null, 
+                null);
 
-            service.ProcessMessage(new UpdateDto {Message = new MessageDto {Text = ""}});
+            await service.ProcessMessageAsync(UpdateEmpty);
             
-            sendMsgMock.Verify(x => x.SendUnknownCommand(It.IsAny<int>()));
+            sendMsgMock.Verify(x => x.SendUnknownCommandAsync(It.IsAny<int>()));
             sendMsgMock.VerifyNoOtherCalls();
         }
         
         [Fact]
-        public void BotProcessMessageServiceTest_RunShowTodoCommand()
+        public async Task BotProcessMessageServiceTest_RunShowTodoCommand()
         {
             var command = new ShowTodoCommand("");
             var commandParserMock = new Mock<IBotCommandParserService>();
             commandParserMock.Setup(x => x.ParseCommand(It.IsAny<string>())).Returns(command);
             var commandMock = new Mock<IBotProcessShowTodoService>();
-            var service = new BotProcessMessageService(null, commandParserMock.Object, commandMock.Object, null);
+            var service = new BotProcessMessageService(
+                null, 
+                commandParserMock.Object,
+                commandMock.Object,
+                null,
+                null);
 
-            service.ProcessMessage(new UpdateDto {Message = new MessageDto {Text = ""}});
+            await service.ProcessMessageAsync(UpdateEmpty);
             
-            commandMock.Verify(x => x.Process(command));
+            commandMock.Verify(x => x.ProcessAsync(command));
             commandMock.VerifyNoOtherCalls();
         }
         
         [Fact]
-        public void BotProcessMessageServiceTest_RunCreateTaskCommand()
+        public async Task BotProcessMessageServiceTest_RunCreateTaskCommand()
         {
             var command = new CreateTaskCommand(null);
             var commandParserMock = new Mock<IBotCommandParserService>();
             commandParserMock.Setup(x => x.ParseCommand(It.IsAny<string>())).Returns(command);
             var commandMock = new Mock<IBotProcessCreateTaskService>();
-            var service = new BotProcessMessageService(null, commandParserMock.Object, null, commandMock.Object);
+            var service = new BotProcessMessageService(
+                null, 
+                commandParserMock.Object, 
+                null, 
+                commandMock.Object,
+                null);
 
-            service.ProcessMessage(new UpdateDto {Message = new MessageDto {Text = ""}});
+            await service.ProcessMessageAsync(UpdateEmpty);
             
-            commandMock.Verify(x => x.Process(command));
+            commandMock.Verify(x => x.ProcessAsync(command));
+            commandMock.VerifyNoOtherCalls();
+        }
+        
+        [Fact]
+        public async Task BotProcessMessageServiceTest_RunStartCommand()
+        {
+            var command = new StartCommand(Guid.NewGuid().ToString());
+            var commandParserMock = new Mock<IBotCommandParserService>();
+            commandParserMock.Setup(x => x.ParseCommand(It.IsAny<string>())).Returns(command);
+            var commandMock = new Mock<IBotProcessStartService>();
+            var service = new BotProcessMessageService(
+                null, 
+                commandParserMock.Object, 
+                null, 
+                null,
+                commandMock.Object);
+
+            await service.ProcessMessageAsync(UpdateEmpty);
+            
+            commandMock.Verify(x => x.ProcessAsync(command));
             commandMock.VerifyNoOtherCalls();
         }
     }
