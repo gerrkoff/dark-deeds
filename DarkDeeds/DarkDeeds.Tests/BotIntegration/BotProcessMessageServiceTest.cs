@@ -19,7 +19,7 @@ namespace DarkDeeds.Tests.BotIntegration
 
             service.ProcessMessage(new UpdateDto {Message = new MessageDto {Text = ""}});
             
-            sendMsgMock.Verify(x => x.SendUnknownCommand());
+            sendMsgMock.Verify(x => x.SendUnknownCommand(It.IsAny<int>()));
             sendMsgMock.VerifyNoOtherCalls();
         }
         

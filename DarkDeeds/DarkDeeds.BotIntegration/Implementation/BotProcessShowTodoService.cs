@@ -14,7 +14,7 @@ namespace DarkDeeds.BotIntegration.Implementation
 
         public void Process(ShowTodoCommand command)
         {
-            _botSendMessageService.SendText($"Show todo {command.Day}");
+            _botSendMessageService.SendText(command.UserChatId, $"Show todo {command.Day}");
         }
     }
 }

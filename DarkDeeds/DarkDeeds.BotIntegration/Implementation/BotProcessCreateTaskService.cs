@@ -14,7 +14,7 @@ namespace DarkDeeds.BotIntegration.Implementation
 
         public void Process(CreateTaskCommand command)
         {
-            _botSendMessageService.SendText($"Create task: {command.Task.Title}");
+            _botSendMessageService.SendText(command.UserChatId, $"Create task: {command.Task.Title}");
         }
     }
 }

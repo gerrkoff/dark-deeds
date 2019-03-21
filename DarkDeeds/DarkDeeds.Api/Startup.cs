@@ -32,7 +32,7 @@ namespace DarkDeeds.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services
-                .RegisterServices()
+                .RegisterServices(Configuration)
                 .ConfigureAutoMapper()
                 .ConfigureDatabase(Configuration)
                 .ConfigureSettings(Configuration)

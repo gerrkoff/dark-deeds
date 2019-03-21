@@ -19,7 +19,7 @@ namespace DarkDeeds.Tests.BotIntegration
 
             var result = service.ParseCommand("Some task");
 
-            Assert.IsType(typeof(CreateTaskCommand), result);
+            Assert.IsType<CreateTaskCommand>(result);
         }
         
         [Fact]
@@ -29,7 +29,7 @@ namespace DarkDeeds.Tests.BotIntegration
 
             var result = service.ParseCommand("/todo");
 
-            Assert.IsType(typeof(ShowTodoCommand), result);
+            Assert.IsType<ShowTodoCommand>(result);
             Assert.Equal(DateTime.Today, ((ShowTodoCommand) result).Day);
         }
     }

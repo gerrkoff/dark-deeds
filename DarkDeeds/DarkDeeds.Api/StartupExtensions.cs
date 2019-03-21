@@ -51,14 +51,19 @@ namespace DarkDeeds.Api
             return services;
         }
 
-        public static IServiceCollection RegisterServices(this IServiceCollection services)
+        public static IServiceCollection RegisterServices(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             services.AddScoped<ITaskService, TaskService>();
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<ITokenService, TokenService>();
+            services.AddScoped<ITaskParserService, TaskParserService>();
+            
+            services.AddScoped<IBotCommandParserService, BotCommandParserService>();
+            services.AddScoped<IBotProcessShowTodoService, BotProcessShowTodoService>();
+            services.AddScoped<IBotProcessCreateTaskService, BotProcessCreateTaskService>();
             services.AddScoped<IBotProcessMessageService, BotProcessMessageService>();
-            services.AddScoped<IBotSendMessageService, BotSendMessageService>();
+            services.AddScoped<IBotSendMessageService>(provider => new BotSendMessageService(configuration["Bot"]));
             return services;
         }
         

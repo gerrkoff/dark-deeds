@@ -28,6 +28,8 @@ namespace DarkDeeds.BotIntegration.Implementation
             string text = update.Message.Text.Trim();
 
             BotCommand command = _botCommandParserService.ParseCommand(text);
+            const int userChatId = 383469310;
+            command.UserChatId = userChatId;
 
             if (command is ShowTodoCommand showTodoCommand)
             {
@@ -41,7 +43,7 @@ namespace DarkDeeds.BotIntegration.Implementation
                 return;
             }
 
-            _botSendMessageService.SendUnknownCommand();
+            _botSendMessageService.SendUnknownCommand(userChatId);
         }
     }
 }

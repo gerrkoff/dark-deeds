@@ -2,7 +2,7 @@ namespace DarkDeeds.BotIntegration.Interface
 {
     public interface IBotSendMessageService
     {
-        void SendUnknownCommand();
-        void SendText(string text);
+        void SendUnknownCommand(int userChatId);
+        void SendText(int userChatId, string text);
     }
 }
