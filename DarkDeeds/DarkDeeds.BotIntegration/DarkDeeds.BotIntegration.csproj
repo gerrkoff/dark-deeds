@@ -15,4 +15,9 @@
       </PackageReference>
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\DarkDeeds.Models\DarkDeeds.Models.csproj" />
+      <ProjectReference Include="..\DarkDeeds.Services\DarkDeeds.Services.csproj" />
+    </ItemGroup>
+
 </Project>

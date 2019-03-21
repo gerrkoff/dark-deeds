@@ -1,12 +1,14 @@
+using DarkDeeds.Models;
+
 namespace DarkDeeds.BotIntegration.Objects.Commands
 {
-    public class CreateTaskCommand
+    public class CreateTaskCommand : BotCommand
     {
-        public string Task { get; private set; }
+        public TaskDto Task { get; }
 
-        public CreateTaskCommand(string args)
+        public CreateTaskCommand(TaskDto task)
         {
-            Task = args;
+            Task = task;
         }
     }
 }

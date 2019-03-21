@@ -2,13 +2,14 @@ using System;
 
 namespace DarkDeeds.BotIntegration.Objects.Commands
 {
-    public class ShowTodoCommand
+    public class ShowTodoCommand : BotCommand
     {
-        public DateTime Day { get; private set; }
+        public DateTime Day { get; }
 
         public ShowTodoCommand(string args)
         {
-            Day = DateTime.Today;
+            if (string.IsNullOrWhiteSpace(args))
+                Day = DateTime.Today;
         }
     }
 }

@@ -7,57 +7,41 @@ namespace DarkDeeds.BotIntegration.Implementation
     public class BotProcessMessageService : IBotProcessMessageService
     {
         private readonly IBotSendMessageService _botSendMessageService;
+        private readonly IBotCommandParserService _botCommandParserService;
+        private readonly IBotProcessShowTodoService _botProcessShowTodoService;
+        private readonly IBotProcessCreateTaskService _botProcessCreateTaskService;
 
-        public BotProcessMessageService(IBotSendMessageService botSendMessageService)
+        public BotProcessMessageService(
+            IBotSendMessageService botSendMessageService,
+            IBotCommandParserService botCommandParserService,
+            IBotProcessShowTodoService botProcessShowTodoService, 
+            IBotProcessCreateTaskService botProcessCreateTaskService)
         {
             _botSendMessageService = botSendMessageService;
+            _botCommandParserService = botCommandParserService;
+            _botProcessShowTodoService = botProcessShowTodoService;
+            _botProcessCreateTaskService = botProcessCreateTaskService;
         }
 
         public void ProcessMessage(UpdateDto update)
         {
             string text = update.Message.Text.Trim();
-            
-            const string todo = "/todo";
 
-            if (CheckAndTrimCommand(todo, text, out var args))
+            BotCommand command = _botCommandParserService.ParseCommand(text);
+
+            if (command is ShowTodoCommand showTodoCommand)
             {
-                ProcessShowTodoCommand(new ShowTodoCommand(args));
+                _botProcessShowTodoService.Process(showTodoCommand);
                 return;
             }
 
-            if (!text.StartsWith("/"))
+            if (command is CreateTaskCommand createTaskCommand)
             {
-                ProcessCreateTaskCommand(new CreateTaskCommand(text));
+                _botProcessCreateTaskService.Process(createTaskCommand);
                 return;
             }
-            
+
             _botSendMessageService.SendUnknownCommand();
-        }
-
-        public bool CheckAndTrimCommand(string command, string text, out string args)
-        {
-            args = string.Empty;
-
-            if (string.Equals(text, command))
-                return true;
-
-            if (text.StartsWith(command + " "))
-            {
-                args = text.Substring(command.Length + 1).Trim();
-                return true;
-            }
-
-            return false;
-        }
-
-        private void ProcessShowTodoCommand(ShowTodoCommand cmd)
-        {
-            _botSendMessageService.SendText($"Show todo {cmd.Day}");
-        }
-        
-        private void ProcessCreateTaskCommand(CreateTaskCommand cmd)
-        {
-            _botSendMessageService.SendText($"Create task: {cmd.Task}");
         }
     }
 }
