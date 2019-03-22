@@ -6,5 +6,6 @@ namespace DarkDeeds.BotIntegration.Interface
     {
         Task SendUnknownCommandAsync(int userChatId);
         Task SendTextAsync(int userChatId, string text);
+        Task SendFailedAsync(int userChatId);
     }
 }

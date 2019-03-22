@@ -1,6 +1,7 @@
 using System;
 using System.Net;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 using DarkDeeds.BotIntegration.Dto;
 using DarkDeeds.BotIntegration.Interface;
@@ -30,11 +31,27 @@ namespace DarkDeeds.BotIntegration.Implementation
             Text = text
         });
 
+        public async Task SendFailedAsync(int userChatId)
+        {
+            try
+            {
+                await SendMessage(new SendMessageDto
+                {
+                    ChatId = userChatId,
+                    Text = "Failed"
+                });
+            }
+            catch
+            {
+                // TODO: log it
+            }
+        }
+
         private async Task SendMessage(SendMessageDto message)
         {
             var client = new HttpClient();
             string messageSerialized = JsonConvert.SerializeObject(message);
-            HttpContent content = new StringContent(messageSerialized);
+            HttpContent content = new StringContent(messageSerialized, Encoding.UTF8, "application/json");
             HttpResponseMessage response = await client.PostAsync(new Uri(_apiSendMessage), content);
             if (response.StatusCode != HttpStatusCode.OK)
                 throw new ServiceException("Bot integration failed. Response: " +
