@@ -10,14 +10,14 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DarkDeeds.Data.Migrations
 {
     [DbContext(typeof(DarkDeedsContext))]
-    [Migration("20181225204435_N001_Init")]
+    [Migration("20190322065134_N001_Init")]
     partial class N001_Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.2.0-rtm-35687")
+                .HasAnnotation("ProductVersion", "2.2.2-servicing-10034")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -83,6 +83,10 @@ namespace DarkDeeds.Data.Migrations
                     b.Property<bool>("PhoneNumberConfirmed");
 
                     b.Property<string>("SecurityStamp");
+
+                    b.Property<int>("TelegramChatId");
+
+                    b.Property<string>("TelegramChatKey");
 
                     b.Property<bool>("TwoFactorEnabled");
 
