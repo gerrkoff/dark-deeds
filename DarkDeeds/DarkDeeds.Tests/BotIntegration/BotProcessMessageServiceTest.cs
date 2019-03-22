@@ -85,7 +85,7 @@ namespace DarkDeeds.Tests.BotIntegration
         [Fact]
         public async Task BotProcessMessageServiceTest_RunStartCommand()
         {
-            var command = new StartCommand(Guid.NewGuid().ToString());
+            var command = new StartCommand(string.Empty);
             var commandParserMock = new Mock<IBotCommandParserService>();
             commandParserMock.Setup(x => x.ParseCommand(It.IsAny<string>())).Returns(command);
             var commandMock = new Mock<IBotProcessStartService>();

@@ -5,8 +5,8 @@ namespace DarkDeeds.Services.Interface
 {
     public interface ITelegramService
     {
-        Task<Guid> GenerateKey(string userId);
-        Task UpdateChatId(Guid userChatKey, int chatId);
+        Task<string> GenerateKey(string userId);
+        Task UpdateChatId(string userChatKey, int chatId);
         Task<string> GetUserId(int chatId);
     }
 }

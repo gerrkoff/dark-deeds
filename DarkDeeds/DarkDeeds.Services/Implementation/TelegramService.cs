@@ -1,24 +1,48 @@
 using System;
 using System.Threading.Tasks;
+using DarkDeeds.Common.Exceptions;
+using DarkDeeds.Data.Entity;
 using DarkDeeds.Services.Interface;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace DarkDeeds.Services.Implementation
 {
     public class TelegramService : ITelegramService
     {
-        public Task<Guid> GenerateKey(string userId)
+        private readonly UserManager<UserEntity> _userManager;
+
+        public TelegramService(UserManager<UserEntity> userManager)
         {
-            return Task.FromResult(Guid.NewGuid());
+            _userManager = userManager;
         }
 
-        public Task UpdateChatId(Guid userChatKey, int chatId)
+        public async Task<string> GenerateKey(string userId)
         {
-            return Task.CompletedTask;
+            UserEntity user = await _userManager.FindByIdAsync(userId);
+            user.TelegramChatKey = Guid.NewGuid().ToString();
+            IdentityResult result = await _userManager.UpdateAsync(user);
+
+            if (!result.Succeeded)
+                throw new ServiceException("Error while generating telegram chat key");
+
+            return user.TelegramChatKey;
         }
 
-        public Task<string> GetUserId(int chatId)
+        public async Task UpdateChatId(string userChatKey, int chatId)
         {
-            return Task.FromResult("");
+            UserEntity user = await _userManager.Users.SingleAsync(x => x.TelegramChatKey == userChatKey);
+            user.TelegramChatId = chatId;
+            IdentityResult result = await _userManager.UpdateAsync(user);
+
+            if (!result.Succeeded)
+                throw new ServiceException("Error while updating telegram chat id");
+        }
+
+        public async Task<string> GetUserId(int chatId)
+        {
+            UserEntity user = await _userManager.Users.SingleAsync(x => x.TelegramChatId == chatId);
+            return user.Id;
         }
     }
 }

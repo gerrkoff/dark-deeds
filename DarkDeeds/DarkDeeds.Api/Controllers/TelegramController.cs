@@ -18,7 +18,7 @@ namespace DarkDeeds.Api.Controllers
         }
 
         [HttpGet]
-        public Task<Guid> Key()
+        public Task<string> Key()
         {
             return _telegramService.GenerateKey(GetUser().UserId);
         }
