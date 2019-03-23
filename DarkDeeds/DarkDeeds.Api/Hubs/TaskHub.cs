@@ -23,7 +23,7 @@ namespace DarkDeeds.Api.Hubs
         public async Task Save(ICollection<TaskDto> tasks)
         {
             CurrentUser user = ((ClaimsIdentity) Context.User.Identity).ToCurrentUser();
-            IEnumerable<TaskDto> updatedTasks = await _taskService.SaveTasksAsync(tasks, user);
+            IEnumerable<TaskDto> updatedTasks = await _taskService.SaveTasksAsync(tasks, user.UserId);
             await Clients.Caller.SendAsync("update", updatedTasks, true);
             await Clients.Others.SendAsync("update", updatedTasks, false);
         }

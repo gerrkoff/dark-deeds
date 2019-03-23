@@ -21,13 +21,13 @@ namespace DarkDeeds.Api.Controllers
         [HttpGet]
         public async Task<IEnumerable<TaskDto>> Get()
         {
-            return await _taskService.LoadTasksAsync(GetUser());
+            return await _taskService.LoadTasksAsync(GetUser().UserId);
         }
         
         [HttpPost]
         public async Task<IEnumerable<TaskDto>> Post([FromBody] ICollection<TaskDto> tasks)
         {
-            return await _taskService.SaveTasksAsync(tasks, GetUser());
+            return await _taskService.SaveTasksAsync(tasks, GetUser().UserId);
         }
     }
 }

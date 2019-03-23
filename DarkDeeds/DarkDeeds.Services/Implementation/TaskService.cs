@@ -23,20 +23,20 @@ namespace DarkDeeds.Services.Implementation
             _tasksRepository = tasksRepository;
         }
         
-        public async Task<IEnumerable<TaskDto>> LoadTasksAsync(CurrentUser user)
+        public async Task<IEnumerable<TaskDto>> LoadTasksAsync(string userId)
         {
             return (
                 await _tasksRepository
                     .GetAll()
-                    .Where(x => string.Equals(x.UserId, user.UserId))
+                    .Where(x => string.Equals(x.UserId, userId))
                     .ProjectTo<TaskDto>()
                     .ToListSafeAsync()
             ).ToUtcDate();
         }
 
-        public async Task<IEnumerable<TaskDto>> SaveTasksAsync(ICollection<TaskDto> tasks, CurrentUser user)
+        public async Task<IEnumerable<TaskDto>> SaveTasksAsync(ICollection<TaskDto> tasks, string userId)
         {
-            await CheckIfUserCanEditTasks(tasks, user);
+            await CheckIfUserCanEditTasks(tasks, userId);
             
             var savedTasks = Mapper.Map<ICollection<TaskEntity>>(tasks);
             foreach (var task in savedTasks)
@@ -49,7 +49,7 @@ namespace DarkDeeds.Services.Implementation
                 {
                     if (task.ClientId < 0)
                         task.Id = 0;
-                    task.UserId = user.UserId;
+                    task.UserId = userId;
                     await _tasksRepository.SaveAsync(task);
                 }
             }
@@ -57,12 +57,12 @@ namespace DarkDeeds.Services.Implementation
             return Mapper.Map<List<TaskDto>>(savedTasks);
         }
 
-        public async Task CheckIfUserCanEditTasks(ICollection<TaskDto> tasks, CurrentUser user)
+        public async Task CheckIfUserCanEditTasks(ICollection<TaskDto> tasks, string userId)
         {
             int[] taskIds = tasks.Select(x => x.Id).ToArray();
             
             bool notUserTasks = await _tasksRepository.GetAll().AnySafeAsync(x =>
-                !string.Equals(x.UserId, user.UserId) &&
+                !string.Equals(x.UserId, userId) &&
                 taskIds.Contains(x.Id)); 
             
             if (notUserTasks)
