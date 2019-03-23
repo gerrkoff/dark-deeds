@@ -1,8 +1,11 @@
+using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using DarkDeeds.BotIntegration.Dto;
 using DarkDeeds.BotIntegration.Interface;
 using DarkDeeds.BotIntegration.Interface.CommandProcessor;
 using DarkDeeds.BotIntegration.Objects.Commands;
+using DarkDeeds.Models;
 
 namespace DarkDeeds.BotIntegration.Implementation
 {
@@ -29,7 +32,7 @@ namespace DarkDeeds.BotIntegration.Implementation
             _startCommandProcessor = startCommandProcessor;
         }
 
-        public Task ProcessMessageAsync(UpdateDto update)
+        public Task ProcessMessageAsync(UpdateDto update, Action<IEnumerable<TaskDto>> sendUpdateTasks)
         {
             string text = update.Message.Text.Trim();
             int userChatId = update.Message.Chat.Id;
@@ -40,12 +43,15 @@ namespace DarkDeeds.BotIntegration.Implementation
 
             if (command is ShowTodoCommand showTodoCommand)
                 return _showTodoCommandProcessor.ProcessAsync(showTodoCommand);
-
-            if (command is CreateTaskCommand createTaskCommand)
-                return _createTaskCommandProcessor.ProcessAsync(createTaskCommand);
             
             if (command is StartCommand startCommand)
                 return _startCommandProcessor.ProcessAsync(startCommand);
+            
+            if (command is CreateTaskCommand createTaskCommand)
+            {
+                _createTaskCommandProcessor.BindSendUpdateTasks(sendUpdateTasks);
+                return _createTaskCommandProcessor.ProcessAsync(createTaskCommand);
+            }
 
             return _botSendMessageService.SendUnknownCommandAsync(userChatId);
         }

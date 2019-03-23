@@ -36,7 +36,7 @@ namespace DarkDeeds.Tests.BotIntegration
                 null, 
                 null);
 
-            await service.ProcessMessageAsync(UpdateEmpty);
+            await service.ProcessMessageAsync(UpdateEmpty, null);
             
             sendMsgMock.Verify(x => x.SendUnknownCommandAsync(It.IsAny<int>()));
             sendMsgMock.VerifyNoOtherCalls();
@@ -56,7 +56,7 @@ namespace DarkDeeds.Tests.BotIntegration
                 null,
                 null);
 
-            await service.ProcessMessageAsync(UpdateEmpty);
+            await service.ProcessMessageAsync(UpdateEmpty, null);
             
             commandMock.Verify(x => x.ProcessAsync(command));
             commandMock.VerifyNoOtherCalls();
@@ -76,9 +76,10 @@ namespace DarkDeeds.Tests.BotIntegration
                 commandMock.Object,
                 null);
 
-            await service.ProcessMessageAsync(UpdateEmpty);
+            await service.ProcessMessageAsync(UpdateEmpty, null);
             
             commandMock.Verify(x => x.ProcessAsync(command));
+            commandMock.Verify(x => x.BindSendUpdateTasks(null));
             commandMock.VerifyNoOtherCalls();
         }
         
@@ -96,7 +97,7 @@ namespace DarkDeeds.Tests.BotIntegration
                 null,
                 commandMock.Object);
 
-            await service.ProcessMessageAsync(UpdateEmpty);
+            await service.ProcessMessageAsync(UpdateEmpty, null);
             
             commandMock.Verify(x => x.ProcessAsync(command));
             commandMock.VerifyNoOtherCalls();
