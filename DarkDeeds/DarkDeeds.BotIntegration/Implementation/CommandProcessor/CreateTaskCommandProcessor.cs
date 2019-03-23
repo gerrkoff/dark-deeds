@@ -6,22 +6,26 @@ using DarkDeeds.Services.Interface;
 
 namespace DarkDeeds.BotIntegration.Implementation.CommandProcessor
 {
+    // TODO: unit-tests
     public class CreateTaskCommandProcessor : BaseCommandProcessor<CreateTaskCommand>, ICreateTaskCommandProcessor 
     {
         private readonly IBotSendMessageService _botSendMessageService;
         private readonly ITelegramService _telegramService;
+        private readonly ITaskService _taskService;
 
         public CreateTaskCommandProcessor(IBotSendMessageService botSendMessageService,
-            ITelegramService telegramService) : base(botSendMessageService)
+            ITelegramService telegramService, ITaskService taskService) : base(botSendMessageService)
         {
             _botSendMessageService = botSendMessageService;
             _telegramService = telegramService;
+            _taskService = taskService;
         }
 
         protected override async Task ProcessCoreAsync(CreateTaskCommand command)
         {
             string userId = await _telegramService.GetUserId(command.UserChatId);
-            await _botSendMessageService.SendTextAsync(command.UserChatId, $"Create task: {command.Task.Title}");
+            await _taskService.SaveTasksAsync(new[] {command.Task}, userId);
+            await _botSendMessageService.SendTextAsync(command.UserChatId, "Task created");
         }
     }
 }
