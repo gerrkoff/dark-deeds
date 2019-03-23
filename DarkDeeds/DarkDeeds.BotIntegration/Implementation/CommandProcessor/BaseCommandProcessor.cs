@@ -4,6 +4,7 @@ using DarkDeeds.BotIntegration.Objects.Commands;
 
 namespace DarkDeeds.BotIntegration.Implementation.CommandProcessor
 {
+    // TODO: unit-tests
     public abstract class BaseCommandProcessor<T> where T : BotCommand
     {
         private readonly IBotSendMessageService _botSendMessageService;

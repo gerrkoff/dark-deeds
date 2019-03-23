@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -31,23 +32,13 @@ namespace DarkDeeds.BotIntegration.Implementation
             Text = text
         });
 
-        public async Task SendFailedAsync(int userChatId)
+        public Task SendFailedAsync(int userChatId) => SendMessage(new SendMessageDto
         {
-            try
-            {
-                await SendMessage(new SendMessageDto
-                {
-                    ChatId = userChatId,
-                    Text = "Failed"
-                });
-            }
-            catch
-            {
-                // TODO: log it
-            }
-        }
+            ChatId = userChatId,
+            Text = "Failed"
+        });
 
-        private async Task SendMessage(SendMessageDto message)
+        protected virtual async Task SendMessage(SendMessageDto message)
         {
             var client = new HttpClient();
             string messageSerialized = JsonConvert.SerializeObject(message);
@@ -56,6 +47,25 @@ namespace DarkDeeds.BotIntegration.Implementation
             if (response.StatusCode != HttpStatusCode.OK)
                 throw new ServiceException("Bot integration failed. Response: " +
                                            await response.Content.ReadAsStringAsync());
+        }
+    }
+    
+    public class BotSendMessageDebugService : BotSendMessageService
+    {
+        public BotSendMessageDebugService(string botToken) : base(botToken)
+        {
+        }
+
+        protected override Task SendMessage(SendMessageDto message)
+        {
+            Debug.WriteLine("");
+            Debug.WriteLine("_________________");
+            Debug.WriteLine($"Chat Id: {message.ChatId}");
+            Debug.WriteLine("Text:");
+            Debug.WriteLine(message.Text);
+            Debug.WriteLine("_________________");
+            Debug.WriteLine("");
+            return Task.CompletedTask;
         }
     }
 }
