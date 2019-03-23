@@ -23,7 +23,7 @@ namespace DarkDeeds.Tests.Services
             await Assert.ThrowsAsync<ServiceException>(()
                 => service.CheckIfUserCanEditTasks(
                     new[] {new TaskDto {Id = 1}, new TaskDto {Id = 2}},
-                    new CurrentUser {UserId = "1"}));
+                    "1"));
         }
 
         [Fact]
@@ -38,7 +38,7 @@ namespace DarkDeeds.Tests.Services
 
             await service.CheckIfUserCanEditTasks(
                 new[] {new TaskDto {Id = 1}},
-                new CurrentUser {UserId = "1"});
+                "1");
         }
     }
 }

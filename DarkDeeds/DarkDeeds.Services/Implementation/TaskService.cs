@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -8,9 +9,7 @@ using DarkDeeds.Common.Extensions;
 using DarkDeeds.Data.Entity;
 using DarkDeeds.Data.Repository;
 using DarkDeeds.Models;
-using DarkDeeds.Models.Entity;
 using DarkDeeds.Services.Interface;
-using Microsoft.EntityFrameworkCore;
 
 namespace DarkDeeds.Services.Implementation
 {
@@ -23,15 +22,21 @@ namespace DarkDeeds.Services.Implementation
             _tasksRepository = tasksRepository;
         }
         
-        public async Task<IEnumerable<TaskDto>> LoadTasksAsync(string userId)
+        public async Task<IEnumerable<TaskDto>> LoadTasksAsync(string userId,
+            DateTime? from = null,
+            DateTime? to = null)
         {
-            return (
-                await _tasksRepository
-                    .GetAll()
-                    .Where(x => string.Equals(x.UserId, userId))
-                    .ProjectTo<TaskDto>()
-                    .ToListSafeAsync()
-            ).ToUtcDate();
+            IQueryable<TaskEntity> tasks = _tasksRepository
+                .GetAll()
+                .Where(x => string.Equals(x.UserId, userId));
+
+            if (from != null)
+                tasks = tasks.Where(x => x.DateTime >= from.Value);
+
+            if (to != null)
+                tasks = tasks.Where(x => x.DateTime < to.Value);
+
+            return (await tasks.ProjectTo<TaskDto>().ToListSafeAsync()).ToUtcDate();
         }
 
         public async Task<IEnumerable<TaskDto>> SaveTasksAsync(ICollection<TaskDto> tasks, string userId)

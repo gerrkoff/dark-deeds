@@ -20,7 +20,7 @@ namespace DarkDeeds.Tests.Services
             
             var service = new TaskService(repo);
 
-            var result = (await service.LoadTasksAsync(new CurrentUser {UserId = "1"})).ToList();
+            var result = (await service.LoadTasksAsync("1")).ToList();
             Assert.Single(result);
             Assert.Equal(1000, result[0].Id);
         }
@@ -34,7 +34,7 @@ namespace DarkDeeds.Tests.Services
             
             var service = new TaskService(repo);
 
-            var result = (await service.LoadTasksAsync(new CurrentUser {UserId = "1"})).ToList();
+            var result = (await service.LoadTasksAsync("1")).ToList();
             Assert.Equal(DateTimeKind.Utc, result[0].DateTime.Value.Kind);
         }
     }

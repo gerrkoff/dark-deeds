@@ -22,7 +22,7 @@ namespace DarkDeeds.Tests.Services
 
             var items = new[] {new TaskDto {Id = 1000}, new TaskDto {Id = 2000}};
             
-            var result = (await service.SaveTasksAsync(items, new CurrentUser {UserId = "1"})).ToList();
+            var result = (await service.SaveTasksAsync(items, "1")).ToList();
             
             Assert.Equal(2, result.Count);
             Assert.Equal(1000, result[0].Id);
@@ -37,7 +37,7 @@ namespace DarkDeeds.Tests.Services
             var service = new TaskService(repoMock.Object);
 
             var item = new TaskDto {Id = 1000, Deleted = true};
-            await service.SaveTasksAsync(new[] {item}, new CurrentUser {UserId = "1"});
+            await service.SaveTasksAsync(new[] {item}, "1");
             
             repoMock.Verify(x => x.GetAll());
             repoMock.Verify(x => x.DeleteAsync(It.Is<TaskEntity>(y => y.Id == 1000)));
@@ -52,7 +52,7 @@ namespace DarkDeeds.Tests.Services
             var service = new TaskService(repoMock.Object);
 
             var item = new TaskDto {Id = 1000};
-            await service.SaveTasksAsync(new[] {item}, new CurrentUser {UserId = "1"});
+            await service.SaveTasksAsync(new[] {item}, "1");
             
             repoMock.Verify(x => x.GetAll());
             repoMock.Verify(x => x.SaveAsync(It.Is<TaskEntity>(y => y.Id == 1000 && y.UserId == "1")));
@@ -67,7 +67,7 @@ namespace DarkDeeds.Tests.Services
             var service = new TaskService(repoMock.Object);
 
             var item = new TaskDto {Id = 1000, ClientId = -1000};
-            await service.SaveTasksAsync(new[] {item}, new CurrentUser {UserId = "1"});
+            await service.SaveTasksAsync(new[] {item}, "1");
             
             repoMock.Verify(x => x.GetAll());
             repoMock.Verify(x => x.SaveAsync(It.Is<TaskEntity>(y => y.Id == 0 && y.UserId == "1")));

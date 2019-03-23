@@ -21,6 +21,7 @@ namespace DarkDeeds.BotIntegration.Implementation.CommandProcessor
         protected override async Task ProcessCoreAsync(ShowTodoCommand command)
         {
             string userId = await _telegramService.GetUserId(command.UserChatId);
+            
             await _botSendMessageService.SendTextAsync(command.UserChatId, $"Show todo {command.Day}");
         }
     }
