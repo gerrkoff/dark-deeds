@@ -1,8 +1,8 @@
-using System;
 using System.Threading.Tasks;
 using DarkDeeds.BotIntegration.Dto;
 using DarkDeeds.BotIntegration.Implementation;
 using DarkDeeds.BotIntegration.Interface;
+using DarkDeeds.BotIntegration.Interface.CommandProcessor;
 using DarkDeeds.BotIntegration.Objects.Commands;
 using Moq;
 using Xunit;
@@ -48,7 +48,7 @@ namespace DarkDeeds.Tests.BotIntegration
             var command = new ShowTodoCommand("");
             var commandParserMock = new Mock<IBotCommandParserService>();
             commandParserMock.Setup(x => x.ParseCommand(It.IsAny<string>())).Returns(command);
-            var commandMock = new Mock<IBotProcessShowTodoService>();
+            var commandMock = new Mock<IShowTodoCommandProcessor>();
             var service = new BotProcessMessageService(
                 null, 
                 commandParserMock.Object,
@@ -68,7 +68,7 @@ namespace DarkDeeds.Tests.BotIntegration
             var command = new CreateTaskCommand(null);
             var commandParserMock = new Mock<IBotCommandParserService>();
             commandParserMock.Setup(x => x.ParseCommand(It.IsAny<string>())).Returns(command);
-            var commandMock = new Mock<IBotProcessCreateTaskService>();
+            var commandMock = new Mock<ICreateTaskCommandProcessor>();
             var service = new BotProcessMessageService(
                 null, 
                 commandParserMock.Object, 
@@ -88,7 +88,7 @@ namespace DarkDeeds.Tests.BotIntegration
             var command = new StartCommand(string.Empty);
             var commandParserMock = new Mock<IBotCommandParserService>();
             commandParserMock.Setup(x => x.ParseCommand(It.IsAny<string>())).Returns(command);
-            var commandMock = new Mock<IBotProcessStartService>();
+            var commandMock = new Mock<IStartCommandProcessor>();
             var service = new BotProcessMessageService(
                 null, 
                 commandParserMock.Object, 

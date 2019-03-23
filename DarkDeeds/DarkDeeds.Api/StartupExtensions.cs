@@ -6,7 +6,9 @@ using AutoMapper;
 using DarkDeeds.Api.Filters;
 using DarkDeeds.AutoMapper;
 using DarkDeeds.BotIntegration.Implementation;
+using DarkDeeds.BotIntegration.Implementation.CommandProcessor;
 using DarkDeeds.BotIntegration.Interface;
+using DarkDeeds.BotIntegration.Interface.CommandProcessor;
 using DarkDeeds.Common.Settings;
 using DarkDeeds.Data.Context;
 using DarkDeeds.Data.Entity;
@@ -61,9 +63,9 @@ namespace DarkDeeds.Api
             services.AddScoped<ITelegramService, TelegramService>();
             
             services.AddScoped<IBotCommandParserService, BotCommandParserService>();
-            services.AddScoped<IBotProcessShowTodoService, BotProcessShowTodoService>();
-            services.AddScoped<IBotProcessCreateTaskService, BotProcessCreateTaskService>();
-            services.AddScoped<IBotProcessStartService, BotProcessStartService>();
+            services.AddScoped<IShowTodoCommandProcessor, ShowTodoCommandProcessor>();
+            services.AddScoped<ICreateTaskCommandProcessor, CreateTaskCommandProcessor>();
+            services.AddScoped<IStartCommandProcessor, StartCommandProcessor>();
             services.AddScoped<IBotProcessMessageService, BotProcessMessageService>();
             services.AddScoped<IBotSendMessageService>(provider => new BotSendMessageService(configuration["Bot"]));
             return services;

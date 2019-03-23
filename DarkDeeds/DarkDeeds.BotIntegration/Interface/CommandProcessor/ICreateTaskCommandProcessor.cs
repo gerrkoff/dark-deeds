@@ -1,9 +1,9 @@
 using System.Threading.Tasks;
 using DarkDeeds.BotIntegration.Objects.Commands;
 
-namespace DarkDeeds.BotIntegration.Interface
+namespace DarkDeeds.BotIntegration.Interface.CommandProcessor
 {
-    public interface IBotProcessCreateTaskService
+    public interface ICreateTaskCommandProcessor
     {
         Task ProcessAsync(CreateTaskCommand command);
     }

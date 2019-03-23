@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using DarkDeeds.BotIntegration.Dto;
 using DarkDeeds.BotIntegration.Interface;
+using DarkDeeds.BotIntegration.Interface.CommandProcessor;
 using DarkDeeds.BotIntegration.Objects.Commands;
 
 namespace DarkDeeds.BotIntegration.Implementation
@@ -9,22 +10,23 @@ namespace DarkDeeds.BotIntegration.Implementation
     {
         private readonly IBotSendMessageService _botSendMessageService;
         private readonly IBotCommandParserService _botCommandParserService;
-        private readonly IBotProcessShowTodoService _botProcessShowTodoService;
-        private readonly IBotProcessCreateTaskService _botProcessCreateTaskService;
-        private readonly IBotProcessStartService _botProcessStartService;
+        
+        private readonly IShowTodoCommandProcessor _showTodoCommandProcessor;
+        private readonly ICreateTaskCommandProcessor _createTaskCommandProcessor;
+        private readonly IStartCommandProcessor _startCommandProcessor;
 
         public BotProcessMessageService(
             IBotSendMessageService botSendMessageService,
             IBotCommandParserService botCommandParserService,
-            IBotProcessShowTodoService botProcessShowTodoService, 
-            IBotProcessCreateTaskService botProcessCreateTaskService,
-            IBotProcessStartService botProcessStartService)
+            IShowTodoCommandProcessor showTodoCommandProcessor, 
+            ICreateTaskCommandProcessor createTaskCommandProcessor,
+            IStartCommandProcessor startCommandProcessor)
         {
             _botSendMessageService = botSendMessageService;
             _botCommandParserService = botCommandParserService;
-            _botProcessShowTodoService = botProcessShowTodoService;
-            _botProcessCreateTaskService = botProcessCreateTaskService;
-            _botProcessStartService = botProcessStartService;
+            _showTodoCommandProcessor = showTodoCommandProcessor;
+            _createTaskCommandProcessor = createTaskCommandProcessor;
+            _startCommandProcessor = startCommandProcessor;
         }
 
         public Task ProcessMessageAsync(UpdateDto update)
@@ -37,13 +39,13 @@ namespace DarkDeeds.BotIntegration.Implementation
                 command.UserChatId = userChatId;
 
             if (command is ShowTodoCommand showTodoCommand)
-                return _botProcessShowTodoService.ProcessAsync(showTodoCommand);
+                return _showTodoCommandProcessor.ProcessAsync(showTodoCommand);
 
             if (command is CreateTaskCommand createTaskCommand)
-                return _botProcessCreateTaskService.ProcessAsync(createTaskCommand);
+                return _createTaskCommandProcessor.ProcessAsync(createTaskCommand);
             
             if (command is StartCommand startCommand)
-                return _botProcessStartService.ProcessAsync(startCommand);
+                return _startCommandProcessor.ProcessAsync(startCommand);
 
             return _botSendMessageService.SendUnknownCommandAsync(userChatId);
         }
