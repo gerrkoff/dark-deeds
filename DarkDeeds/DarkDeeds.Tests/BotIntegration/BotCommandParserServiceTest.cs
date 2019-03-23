@@ -30,7 +30,8 @@ namespace DarkDeeds.Tests.BotIntegration
             var result = service.ParseCommand("/todo");
 
             Assert.IsType<ShowTodoCommand>(result);
-            Assert.Equal(DateTime.Today, ((ShowTodoCommand) result).Day);
+            Assert.Equal(DateTime.Today.AddHours(-5), ((ShowTodoCommand) result).From);
+            Assert.Equal(DateTime.Today.AddHours(29), ((ShowTodoCommand) result).To);
         }
         
         [Fact]
