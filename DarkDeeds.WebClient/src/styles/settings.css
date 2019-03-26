@@ -6,15 +6,3 @@
 .settings-label {
     font-size: 0.9rem !important;
 }
-
-.telegram-start-info {
-    padding-top: 1rem;
-}
-
-.telegram-start-info-help {
-    color: rgba(255,255,255,0.25);
-}
-
-.telegram-start-info td {
-    padding: 0.25rem 2rem 0.25rem 0rem;
-}

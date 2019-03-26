@@ -24,43 +24,10 @@ export class TelegramIntegration extends React.PureComponent<IProps> {
 
     private renderStartInfo = () => (
         <React.Fragment>
-            <table className='telegram-start-info'>
-                <tbody>
-                    <tr>
-                        <td>
-                            Start:
-                        </td>
-                        <td>
-                            <a href={this.props.startUrl}>{this.props.startUrl}</a>
-                        </td>
-                        <td className='telegram-start-info-help'>
-                            click to start using Dark Deeds Assistant
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            Bot:
-                        </td>
-                        <td>
-                            {this.props.botName}
-                        </td>
-                        <td className='telegram-start-info-help'>
-                            or find him by yourself
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            Command:
-                        </td>
-                        <td>
-                            /start {this.props.chatKey}
-                        </td>
-                        <td className='telegram-start-info-help'>
-                            and send it to him
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+            <br />
+            <a href={this.props.startUrl}>{this.props.startUrl}</a><br /><br />
+            <span>or run youself at {this.props.botName}</span><br />
+            <span>/start {this.props.chatKey}</span>
         </React.Fragment>
     )
 }
