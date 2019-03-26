@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using DarkDeeds.Common.Exceptions;
 using DarkDeeds.Data.Entity;
@@ -31,12 +32,19 @@ namespace DarkDeeds.Services.Implementation
 
         public async Task UpdateChatId(string userChatKey, int chatId)
         {
-            UserEntity user = await _userManager.Users.SingleAsync(x => x.TelegramChatKey == userChatKey);
-            user.TelegramChatId = chatId;
-            IdentityResult result = await _userManager.UpdateAsync(user);
+            var users = await _userManager.Users
+                .Where(x => x.TelegramChatKey == userChatKey || x.TelegramChatId == chatId)
+                .ToListAsync();
 
-            if (!result.Succeeded)
-                throw new ServiceException("Error while updating telegram chat id");
+            foreach (UserEntity user in users)
+            {
+                user.TelegramChatId = user.TelegramChatKey == userChatKey ? chatId : 0;
+                
+                IdentityResult result = await _userManager.UpdateAsync(user);
+
+                if (!result.Succeeded)
+                    throw new ServiceException("Error while updating telegram chat id");
+            }
         }
 
         public async Task<string> GetUserId(int chatId)
