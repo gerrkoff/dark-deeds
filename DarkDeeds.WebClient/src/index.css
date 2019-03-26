@@ -6,6 +6,10 @@ body {
     background-color: #282c34;
 }
 
+.ui.container {
+    padding-bottom: 3rem;
+}
+
 /* Force semantic-ui raised segment to bring shadow back */
 .ui.inverted.raised.segment {
     box-shadow: 0 2px 4px 0 #353A45,0 2px 10px 0 #353A45;
