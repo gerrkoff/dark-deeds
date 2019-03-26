@@ -7,14 +7,18 @@ import '../../styles/settings.css'
 interface IProps {
     username: string
     appVersion: string
+    telegramStartUrl: string
+    telegramBotName: string
+    telegramChatKey: string
     signout: () => void
+    generateTelegramChatKey: () => void
 }
 export class Settings extends React.PureComponent<IProps> {
     public render() {
         return (
             <Segment inverted>
                 <UserInfo username={this.props.username} signout={this.props.signout} />
-                <TelegramIntegration botName='darkdeedsbot' chatKey='key' startUrl='https://some.com' requestKey={() => console.log('hi')} />
+                <TelegramIntegration botName={this.props.telegramBotName} chatKey={this.props.telegramChatKey} startUrl={this.props.telegramStartUrl} generateKey={this.props.generateTelegramChatKey} />
                 <BuildInfo appVersion={this.props.appVersion} />
             </Segment>
         )

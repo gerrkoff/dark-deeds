@@ -1,18 +1,22 @@
 import { connect } from 'react-redux'
 import { Settings } from '../components/settings'
-import { signout } from '../redux/actions'
+import { signout, generateTelegramChatKey } from '../redux/actions'
 import { IAppState } from '../redux/types'
 
-function mapStateToProps({ login, general }: IAppState) {
+function mapStateToProps({ login, general, telegramIntegration }: IAppState) {
     return {
         username: login.userName,
-        appVersion: general.appVersion
+        appVersion: general.appVersion,
+        telegramStartUrl: telegramIntegration.startUrl,
+        telegramBotName: telegramIntegration.botName,
+        telegramChatKey: telegramIntegration.chatKey
     }
 }
 
 function mapDispatchToProps(dispatch: any) {
     return {
-        signout: () => dispatch(signout())
+        signout: () => dispatch(signout()),
+        generateTelegramChatKey: () => dispatch(generateTelegramChatKey())
     }
 }
 

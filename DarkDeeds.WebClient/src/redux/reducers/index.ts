@@ -4,13 +4,15 @@ import { login } from './login'
 import { modalConfirm } from './modalConfirm'
 import { tasks } from './tasks'
 import { general } from './general'
+import { telegramIntegration } from './telegramIntegration'
 
 const rootReducer = combineReducers({
     editTask,
     login,
     modalConfirm,
     tasks,
-    general
+    general,
+    telegramIntegration
 })
 
 export default rootReducer

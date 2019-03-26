@@ -17,6 +17,6 @@ export function loadGeneralInfo() {
     }
 }
 
-export function updateBuildInfo(buildInfo: BuildInfo): IUpdateBuildInfo {
+function updateBuildInfo(buildInfo: BuildInfo): IUpdateBuildInfo {
     return { type: constants.GENERAL_UPDATE_BUILD_INFO, appVersion: buildInfo.version }
 }

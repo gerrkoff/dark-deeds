@@ -14,3 +14,5 @@ export * from './login/signup-result'
 export * from './login/current-user-info'
 
 export * from './general/build-info'
+
+export * from './telegram-integration/telegram-start'
