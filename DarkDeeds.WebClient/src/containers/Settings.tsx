@@ -7,9 +7,7 @@ function mapStateToProps({ login, general, telegramIntegration }: IAppState) {
     return {
         username: login.userName,
         appVersion: general.appVersion,
-        telegramStartUrl: telegramIntegration.startUrl,
-        telegramBotName: telegramIntegration.botName,
-        telegramChatKey: telegramIntegration.chatKey
+        telegramStartUrl: telegramIntegration.startUrl
     }
 }
 

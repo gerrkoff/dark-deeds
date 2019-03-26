@@ -14,8 +14,6 @@ export interface IGenerateKeyFail {
 
 export interface IGenerateKeySuccess {
     type: constants.TELEGRAM_INTEGRATION_GENERATE_KEY_SUCCESS
-    chatKey: string
-    botName: string
     startUrl: string
 }
 
@@ -36,5 +34,5 @@ export function generateTelegramChatKey() {
 }
 
 function generateKeySuccess(telegramStart: TelegramStart): IGenerateKeySuccess {
-    return { type: constants.TELEGRAM_INTEGRATION_GENERATE_KEY_SUCCESS, botName: telegramStart.botName, chatKey: telegramStart.chatKey, startUrl: telegramStart.url }
+    return { type: constants.TELEGRAM_INTEGRATION_GENERATE_KEY_SUCCESS, startUrl: telegramStart.url }
 }

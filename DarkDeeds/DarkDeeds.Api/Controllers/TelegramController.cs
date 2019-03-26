@@ -24,9 +24,7 @@ namespace DarkDeeds.Api.Controllers
             string botName = "darkdeedsbot";
             return new TelegramStartDto
             {
-                Url = $"https://telegram.me/{botName}?start={chatKey}",
-                BotName = botName,
-                ChatKey = chatKey
+                Url = $"https://telegram.me/{botName}?start={chatKey}"
             };
         }
     }

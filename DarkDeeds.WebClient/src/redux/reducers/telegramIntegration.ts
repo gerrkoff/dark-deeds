@@ -3,8 +3,6 @@ import { TELEGRAM_INTEGRATION_GENERATE_KEY_PROCESSING, TELEGRAM_INTEGRATION_GENE
 import { ITelegramIntegration } from '../types'
 
 const inittialState: ITelegramIntegration = {
-    chatKey: '',
-    botName: '',
     startUrl: '',
     generateKeyProcessing: false
 }
@@ -18,15 +16,11 @@ export function telegramIntegration(state: ITelegramIntegration = inittialState,
         case TELEGRAM_INTEGRATION_GENERATE_KEY_FAIL:
             return { ...state,
                 generateKeyProcessing: false,
-                chatKey: '',
-                botName: '',
                 startUrl: ''
             }
         case TELEGRAM_INTEGRATION_GENERATE_KEY_SUCCESS:
             return { ...state,
                 generateKeyProcessing: false,
-                chatKey: action.chatKey,
-                botName: action.botName,
                 startUrl: action.startUrl
             }
     }
