@@ -1,6 +1,6 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using DarkDeeds.Api.Controllers.Base;
+using DarkDeeds.Models;
 using DarkDeeds.Services.Interface;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,9 +18,16 @@ namespace DarkDeeds.Api.Controllers
         }
 
         [HttpGet]
-        public Task<string> Key()
+        public async Task<TelegramStartDto> Start()
         {
-            return _telegramService.GenerateKey(GetUser().UserId);
+            string chatKey = await _telegramService.GenerateKey(GetUser().UserId);
+            string botName = "darkdeedsbot";
+            return new TelegramStartDto
+            {
+                Url = $"https://telegram.me/{botName}?start={chatKey}",
+                BotName = botName,
+                ChatKey = chatKey
+            };
         }
     }
 }

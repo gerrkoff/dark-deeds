@@ -8,7 +8,7 @@ namespace DarkDeeds.Data.Context
         public DarkDeedsContext CreateDbContext(string[] args)
         {
             var optionsBuilder = new DbContextOptionsBuilder<DarkDeedsContext>();
-            const string constring = "Server=localhost,1433;Database=darkdeeds;User=sa;Password=<YourStrong!Passw0rd>";
+            const string constring = "Server=localhost,1433;Database=darkdeeds;User=sa;Password=Password1";
             optionsBuilder.UseSqlServer(constring);
             
             return new DarkDeedsContext(optionsBuilder.Options);
