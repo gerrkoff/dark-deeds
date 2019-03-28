@@ -18,9 +18,9 @@ namespace DarkDeeds.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<TelegramStartDto> Start()
+        public async Task<TelegramStartDto> Start(int timezoneOffset)
         {
-            string chatKey = await _telegramService.GenerateKey(GetUser().UserId);
+            string chatKey = await _telegramService.GenerateKey(GetUser().UserId, timezoneOffset);
             string botName = "darkdeedsbot";
             return new TelegramStartDto
             {

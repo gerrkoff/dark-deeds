@@ -24,7 +24,8 @@ export function generateTelegramChatKey() {
         dispatch({ type: constants.TELEGRAM_INTEGRATION_GENERATE_KEY_PROCESSING })
 
         try {
-            const result = await TelegramIntegrationApi.start()
+            const timezoneOffset = new Date().getTimezoneOffset()
+            const result = await TelegramIntegrationApi.start(timezoneOffset)
             dispatch(generateKeySuccess(result))
         } catch (err) {
             dispatch({ type: constants.TELEGRAM_INTEGRATION_GENERATE_KEY_FAIL })

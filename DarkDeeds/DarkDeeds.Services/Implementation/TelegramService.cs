@@ -18,10 +18,11 @@ namespace DarkDeeds.Services.Implementation
             _userManager = userManager;
         }
 
-        public async Task<string> GenerateKey(string userId)
+        public async Task<string> GenerateKey(string userId, int timeAdjustment)
         {
             UserEntity user = await _userManager.FindByIdAsync(userId);
             user.TelegramChatKey = Guid.NewGuid().ToString();
+            user.TelegramTimeAdjustment = timeAdjustment;
             IdentityResult result = await _userManager.UpdateAsync(user);
 
             if (!result.Succeeded)
