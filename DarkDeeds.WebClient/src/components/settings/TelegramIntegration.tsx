@@ -4,6 +4,7 @@ import { SettingsDivider } from './'
 
 interface IProps {
     startUrl: string,
+    generateKeyProcessing: boolean,
     generateKey: () => void
 }
 export class TelegramIntegration extends React.PureComponent<IProps> {
@@ -11,7 +12,7 @@ export class TelegramIntegration extends React.PureComponent<IProps> {
         return (
             <React.Fragment>
                 <SettingsDivider label='Telegram Integration' icon='user outline' />
-                <Button onClick={this.props.generateKey} size='mini'>Generate key</Button><br/>
+                <Button onClick={this.props.generateKey} loading={this.props.generateKeyProcessing} size='mini'>Generate key</Button><br/>
                 {this.props.startUrl === ''
                     ? <React.Fragment />
                     : this.renderStartInfo()
