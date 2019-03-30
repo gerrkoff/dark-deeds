@@ -29,18 +29,18 @@ namespace DarkDeeds.Tests.Services
             Assert.Null(result.DateTime);
         }
         
-//        [Fact]
-//        public void ParseTask_ReturnTaskWithDateAndNoTime()
-//        {
-//            var service = new TaskParserService();
-//
-//            var result = service.ParseTask("1231 Test!");
-//
-//            var currentYear = DateTime.UtcNow.Year;
-//            Assert.Equal("Test!", result.Title);
-//            Assert.Equal(TaskTimeTypeEnum.NoTime, result.TimeType);
-//            Assert.Equal(new DateTime(currentYear,12, 31, 0, 0, 0),  result.DateTime);
-//        }
+        [Fact]
+        public void ParseTask_ReturnTaskWithDateAndNoTime()
+        {
+            var service = new TaskParserService();
+
+            var result = service.ParseTask("1231 Test!");
+
+            var currentYear = DateTime.UtcNow.Year;
+            Assert.Equal("Test!", result.Title);
+            Assert.Equal(TaskTimeTypeEnum.NoTime, result.TimeType);
+            Assert.Equal(new DateTime(currentYear,12, 31, 0, 0, 0),  result.DateTime);
+        }
         
         [Fact]
         public void ParseTask_ReturnTaskWithDateAndNoTime_NotWorkingWithoutSpace()

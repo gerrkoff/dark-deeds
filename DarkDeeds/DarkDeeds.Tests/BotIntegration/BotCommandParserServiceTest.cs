@@ -14,7 +14,7 @@ namespace DarkDeeds.Tests.BotIntegration
         public void ParseCommand_CreateTask()
         {
             var taskParserMock = new Mock<ITaskParserService>();
-            taskParserMock.Setup(x => x.ParseTask(It.IsAny<string>())).Returns(new TaskDto());
+            taskParserMock.Setup(x => x.ParseTask(It.IsAny<string>(), It.IsAny<int>())).Returns(new TaskDto());
             var service = new BotCommandParserService(taskParserMock.Object);
 
             var result = service.ParseCommand("Some task");
