@@ -32,28 +32,35 @@ namespace DarkDeeds.BotIntegration.Implementation
             _startCommandProcessor = startCommandProcessor;
         }
 
-        public Task ProcessMessageAsync(UpdateDto update, Action<IEnumerable<TaskDto>> sendUpdateTasks)
+        public async Task ProcessMessageAsync(UpdateDto update, Action<IEnumerable<TaskDto>> sendUpdateTasks)
         {
             string text = update.Message.Text.Trim();
             int userChatId = update.Message.Chat.Id;
 
-            BotCommand command = _botCommandParserService.ParseCommand(text);
+            BotCommand command = await _botCommandParserService.ParseCommand(text, userChatId);
             if (command != null)
                 command.UserChatId = userChatId;
 
             if (command is ShowTodoCommand showTodoCommand)
-                return _showTodoCommandProcessor.ProcessAsync(showTodoCommand);
-            
+            {
+                await _showTodoCommandProcessor.ProcessAsync(showTodoCommand);
+                return;
+            }
+
             if (command is StartCommand startCommand)
-                return _startCommandProcessor.ProcessAsync(startCommand);
-            
+            {
+                await _startCommandProcessor.ProcessAsync(startCommand);
+                return;
+            }
+
             if (command is CreateTaskCommand createTaskCommand)
             {
                 _createTaskCommandProcessor.BindSendUpdateTasks(sendUpdateTasks);
-                return _createTaskCommandProcessor.ProcessAsync(createTaskCommand);
+                await _createTaskCommandProcessor.ProcessAsync(createTaskCommand);
+                return;
             }
 
-            return _botSendMessageService.SendUnknownCommandAsync(userChatId);
+            await _botSendMessageService.SendUnknownCommandAsync(userChatId);
         }
     }
 }

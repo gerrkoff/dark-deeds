@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using DarkDeeds.BotIntegration.Interface;
 using DarkDeeds.BotIntegration.Objects.Commands;
 using DarkDeeds.Services.Interface;
@@ -10,15 +11,18 @@ namespace DarkDeeds.BotIntegration.Implementation
         const string StartCommand = "/start";
 
         private readonly ITaskParserService _taskParserService;
+        private readonly ITelegramService _telegramService;
 
-        public BotCommandParserService(ITaskParserService taskParserService)
+        public BotCommandParserService(ITaskParserService taskParserService, ITelegramService telegramService)
         {
             _taskParserService = taskParserService;
+            _telegramService = telegramService;
         }
 
-        public BotCommand ParseCommand(string command)
+        public async Task<BotCommand> ParseCommand(string command, int chatId)
         {
             string args;
+            // TODO: use user time adjustment
             if (CheckAndTrimCommand(TodoCommand, command, out args))
                 return new ShowTodoCommand(args);
             
@@ -26,7 +30,10 @@ namespace DarkDeeds.BotIntegration.Implementation
                 return new StartCommand(args);
 
             if (!command.StartsWith("/"))
-                return new CreateTaskCommand(_taskParserService.ParseTask(command));
+            {
+                int timeAdjustment = await _telegramService.GetUserTimeAdjustment(chatId);
+                return new CreateTaskCommand(_taskParserService.ParseTask(command, timeAdjustment));
+            }
 
             return null;
         }

@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using DarkDeeds.BotIntegration.Implementation;
 using DarkDeeds.BotIntegration.Objects.Commands;
 using DarkDeeds.Models;
@@ -11,23 +12,27 @@ namespace DarkDeeds.Tests.BotIntegration
     public class BotCommandParserServiceTest : BaseTest
     {
         [Fact]
-        public void ParseCommand_CreateTask()
+        public async Task ParseCommand_CreateTask()
         {
+            var task = new TaskDto();
+            var telegramMock = new Mock<ITelegramService>();
+            telegramMock.Setup(x => x.GetUserTimeAdjustment(100500)).Returns(Task.FromResult(100));
             var taskParserMock = new Mock<ITaskParserService>();
-            taskParserMock.Setup(x => x.ParseTask(It.IsAny<string>(), It.IsAny<int>())).Returns(new TaskDto());
-            var service = new BotCommandParserService(taskParserMock.Object);
+            taskParserMock.Setup(x => x.ParseTask("Some task", 100)).Returns(task);
+            var service = new BotCommandParserService(taskParserMock.Object, telegramMock.Object);
 
-            var result = service.ParseCommand("Some task");
+            var result = await service.ParseCommand("Some task", 100500);
 
             Assert.IsType<CreateTaskCommand>(result);
+            Assert.Same(task, ((CreateTaskCommand) result).Task);
         }
         
         [Fact]
-        public void ProcessMessage_ShowTodo()
+        public async Task ProcessMessage_ShowTodo()
         {
-            var service = new BotCommandParserService(null);
+            var service = new BotCommandParserService(null, null);
 
-            var result = service.ParseCommand("/todo");
+            var result = await service.ParseCommand("/todo", 0);
 
             Assert.IsType<ShowTodoCommand>(result);
             Assert.Equal(DateTime.Today.AddHours(-5), ((ShowTodoCommand) result).From);
@@ -35,11 +40,11 @@ namespace DarkDeeds.Tests.BotIntegration
         }
         
         [Fact]
-        public void ProcessMessage_Start()
+        public async Task ProcessMessage_Start()
         {
-            var service = new BotCommandParserService(null);
+            var service = new BotCommandParserService(null, null);
 
-            var result = service.ParseCommand("/start SomeChatKey");
+            var result = await service.ParseCommand("/start SomeChatKey", 0);
 
             Assert.IsType<StartCommand>(result);
             Assert.Equal("SomeChatKey", ((StartCommand) result).UserChatKey);

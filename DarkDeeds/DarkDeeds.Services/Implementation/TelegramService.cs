@@ -53,5 +53,11 @@ namespace DarkDeeds.Services.Implementation
             UserEntity user = await _userManager.Users.SingleAsync(x => x.TelegramChatId == chatId);
             return user.Id;
         }
+        
+        public async Task<int> GetUserTimeAdjustment(int chatId)
+        {
+            UserEntity user = await _userManager.Users.SingleAsync(x => x.TelegramChatId == chatId);
+            return user.TelegramTimeAdjustment;
+        }
     }
 }

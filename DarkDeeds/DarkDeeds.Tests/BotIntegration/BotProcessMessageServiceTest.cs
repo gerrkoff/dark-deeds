@@ -22,12 +22,19 @@ namespace DarkDeeds.Tests.BotIntegration
                 }
             }
         };
+
+        private Mock<IBotCommandParserService> createCommandParserMock(BotCommand command)
+        {
+            var commandParserMock = new Mock<IBotCommandParserService>();
+            commandParserMock.Setup(x => x.ParseCommand(It.IsAny<string>(), It.IsAny<int>()))
+                .Returns(() => Task.FromResult<BotCommand>(command));
+            return commandParserMock;
+        }
         
         [Fact]
         public async Task BotProcessMessageServiceTest_SendUnknownCommand()
         {
-            var commandParserMock = new Mock<IBotCommandParserService>();
-            commandParserMock.Setup(x => x.ParseCommand(It.IsAny<string>())).Returns<BotCommand>(null);
+            var commandParserMock = createCommandParserMock(null);
             var sendMsgMock = new Mock<IBotSendMessageService>();
             var service = new BotProcessMessageService(
                 sendMsgMock.Object, 
@@ -46,8 +53,7 @@ namespace DarkDeeds.Tests.BotIntegration
         public async Task BotProcessMessageServiceTest_RunShowTodoCommand()
         {
             var command = new ShowTodoCommand("");
-            var commandParserMock = new Mock<IBotCommandParserService>();
-            commandParserMock.Setup(x => x.ParseCommand(It.IsAny<string>())).Returns(command);
+            var commandParserMock = createCommandParserMock(command);
             var commandMock = new Mock<IShowTodoCommandProcessor>();
             var service = new BotProcessMessageService(
                 null, 
@@ -66,8 +72,7 @@ namespace DarkDeeds.Tests.BotIntegration
         public async Task BotProcessMessageServiceTest_RunCreateTaskCommand()
         {
             var command = new CreateTaskCommand(null);
-            var commandParserMock = new Mock<IBotCommandParserService>();
-            commandParserMock.Setup(x => x.ParseCommand(It.IsAny<string>())).Returns(command);
+            var commandParserMock = createCommandParserMock(command);
             var commandMock = new Mock<ICreateTaskCommandProcessor>();
             var service = new BotProcessMessageService(
                 null, 
@@ -87,8 +92,7 @@ namespace DarkDeeds.Tests.BotIntegration
         public async Task BotProcessMessageServiceTest_RunStartCommand()
         {
             var command = new StartCommand(string.Empty);
-            var commandParserMock = new Mock<IBotCommandParserService>();
-            commandParserMock.Setup(x => x.ParseCommand(It.IsAny<string>())).Returns(command);
+            var commandParserMock = createCommandParserMock(command);
             var commandMock = new Mock<IStartCommandProcessor>();
             var service = new BotProcessMessageService(
                 null, 
