@@ -6,3 +6,7 @@
 .settings-label {
     font-size: 0.9rem !important;
 }
+
+.ui.checkbox label {
+    color: white !important;
+}

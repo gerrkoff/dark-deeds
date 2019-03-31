@@ -16,7 +16,7 @@ export class UserSettings extends React.PureComponent<IProps> {
             <React.Fragment>
                 <SettingsDivider label='User Settings' icon='telegram plane' />
                 <Checkbox label='Show completed' checked={this.props.showCompleted}
-                    onChange={() => this.props.updateSettings({ ...this.settings(), showCompleted: !this.props.showCompleted })} />
+                    onChange={() => this.props.updateSettings({ ...this.settings(), showCompleted: !this.props.showCompleted })} /><br /><br />
                 <Button onClick={this.handleSaveClick} loading={this.props.saveProcessing} size='mini'>Save</Button>
             </React.Fragment>
         )

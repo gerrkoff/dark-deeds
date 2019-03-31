@@ -1,5 +1,5 @@
 import { SettingsAction } from '../actions'
-import { SETTINGS_LOAD_FAIL, SETTINGS_LOAD_PROCESSING, SETTINGS_LOAD_SUCCESS, SETTINGS_SAVE_FINISH, SETTINGS_SAVE_PROCESSING , SETTINGS_UPDATE } from '../constants'
+import { SETTINGS_LOAD_PROCESSING, SETTINGS_LOAD_FINISH, SETTINGS_SAVE_FINISH, SETTINGS_SAVE_PROCESSING , SETTINGS_UPDATE } from '../constants'
 import { ISettings } from '../types'
 
 const inittialState: ISettings = {
@@ -18,12 +18,7 @@ export function settings(state: ISettings = inittialState, action: SettingsActio
             return { ...state,
                 loadProcessing: true
             }
-        case SETTINGS_LOAD_SUCCESS:
-            return { ...state,
-                showCompleted: action.settings.showCompleted,
-                loadProcessing: false
-            }
-        case SETTINGS_LOAD_FAIL:
+        case SETTINGS_LOAD_FINISH:
             return { ...state,
                 loadProcessing: false
             }

@@ -16,13 +16,8 @@ export interface ISettingsLoadProcessing {
     type: constants.SETTINGS_LOAD_PROCESSING
 }
 
-export interface ISettingsLoadFail {
-    type: constants.SETTINGS_LOAD_FAIL
-}
-
-export interface ISettingsLoadSuccess {
-    type: constants.SETTINGS_LOAD_SUCCESS
-    settings: Settings
+export interface ISettingsLoadFinish {
+    type: constants.SETTINGS_LOAD_FINISH
 }
 
 export interface ISettingsUpdate {
@@ -30,7 +25,7 @@ export interface ISettingsUpdate {
     settings: Settings
 }
 
-export type SettingsAction = ISettingsSaveProcessing | ISettingsSaveFinish | ISettingsLoadProcessing | ISettingsLoadFail | ISettingsLoadSuccess | ISettingsUpdate
+export type SettingsAction = ISettingsSaveProcessing | ISettingsSaveFinish | ISettingsLoadProcessing | ISettingsLoadFinish | ISettingsUpdate
 
 export function saveSettings(settings: Settings) {
     return async(dispatch: Dispatch<SettingsAction>) => {
@@ -51,11 +46,11 @@ export function loadSettings() {
 
         try {
             const result = await SettingsApi.load()
-            dispatch({ type: constants.SETTINGS_LOAD_SUCCESS, settings: result })
+            updateSettings(result)
         } catch (err) {
-            ToastHelper.errorProcess('saving settings')
-            dispatch({ type: constants.SETTINGS_LOAD_FAIL })
+            ToastHelper.errorProcess('loading settings')
         }
+        dispatch({ type: constants.SETTINGS_SAVE_FINISH })
     }
 }
 
