@@ -9,6 +9,7 @@ interface IProps extends IAppProps {
     userAuthenticated: boolean
     initialLogin: () => void
     loadGeneralInfo: () => void
+    loadSettings: () => void
 }
 export class AppAuthWrapper extends React.PureComponent<IProps> {
     public componentDidMount() {
@@ -47,5 +48,6 @@ export class AppAuthWrapper extends React.PureComponent<IProps> {
     private initialAppLoad = () => {
         this.props.initialLogin()
         this.props.loadGeneralInfo()
+        this.props.loadSettings()
     }
 }

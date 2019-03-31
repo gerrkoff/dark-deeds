@@ -50,7 +50,7 @@ export function loadSettings() {
         } catch (err) {
             ToastHelper.errorProcess('loading settings')
         }
-        dispatch({ type: constants.SETTINGS_SAVE_FINISH })
+        dispatch({ type: constants.SETTINGS_LOAD_FINISH })
     }
 }
 
