@@ -10,5 +10,10 @@ namespace DarkDeeds.BotIntegration.Objects.Commands
         {
             Task = task;
         }
+
+        public override string ToString()
+        {
+            return $"{nameof(CreateTaskCommand)} {base.ToString()}";
+        }
     }
 }

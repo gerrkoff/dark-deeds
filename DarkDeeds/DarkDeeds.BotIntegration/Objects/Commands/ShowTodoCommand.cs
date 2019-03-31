@@ -7,8 +7,11 @@ namespace DarkDeeds.BotIntegration.Objects.Commands
         public DateTime From { get; }
         public DateTime To { get; }
 
+        private string _args;
+
         public ShowTodoCommand(string args, int timeAdjustment)
         {
+            _args = args;
             if (string.IsNullOrWhiteSpace(args))
             {
                 From = DateTime.Today;
@@ -29,6 +32,11 @@ namespace DarkDeeds.BotIntegration.Objects.Commands
 
             From = From.AddMinutes(timeAdjustment);
             To = From.AddDays(1);
+        }
+        
+        public override string ToString()
+        {
+            return $"{nameof(ShowTodoCommand)} args='{_args}' {base.ToString()}";
         }
     }
 }
