@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Button } from 'semantic-ui-react'
+import { Button, Checkbox } from 'semantic-ui-react'
 import { Settings } from '../../models'
 import { SettingsDivider } from './'
 
@@ -8,18 +8,25 @@ interface IProps {
     saveProcessing: boolean
     showCompleted: boolean
     saveSettings: (settings: Settings) => void
+    updateSettings: (settings: Settings) => void
 }
 export class UserSettings extends React.PureComponent<IProps> {
     public render() {
         return (
             <React.Fragment>
                 <SettingsDivider label='User Settings' icon='telegram plane' />
+                <Checkbox label='Show completed' checked={this.props.showCompleted}
+                    onChange={() => this.props.updateSettings({ ...this.settings(), showCompleted: !this.props.showCompleted })} />
                 <Button onClick={this.handleSaveClick} loading={this.props.saveProcessing} size='mini'>Save</Button>
             </React.Fragment>
         )
     }
 
-    private handleSaveClick = () => this.props.saveSettings({
-        showCompleted: this.props.showCompleted
-    })
+    private settings = () => {
+        return {
+            showCompleted: this.props.showCompleted
+        }
+    }
+
+    private handleSaveClick = () => this.props.saveSettings(this.settings())
 }

@@ -16,13 +16,14 @@ interface IProps {
     signout: () => void
     generateTelegramChatKey: () => void
     saveSettings: (settings: SettingsModel) => void
+    updateSettings: (settings: SettingsModel) => void
 }
 export class Settings extends React.PureComponent<IProps> {
     public render() {
         return (
             <Segment inverted>
                 <UserInfo username={this.props.username} signout={this.props.signout} />
-                <UserSettings loadProcessing={this.props.settingsLoadProcessing} saveProcessing={this.props.settingsSaveProcessing} showCompleted={this.props.settingsShowCompleted} saveSettings={this.props.saveSettings} />
+                <UserSettings loadProcessing={this.props.settingsLoadProcessing} saveProcessing={this.props.settingsSaveProcessing} showCompleted={this.props.settingsShowCompleted} saveSettings={this.props.saveSettings} updateSettings={this.props.updateSettings} />
                 <TelegramIntegration startUrl={this.props.telegramStartUrl} generateKeyProcessing={this.props.telegramGenerateKeyProcessing} generateKey={this.props.generateTelegramChatKey} />
                 <BuildInfo appVersion={this.props.appVersion} />
             </Segment>

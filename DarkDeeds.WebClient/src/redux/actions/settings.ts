@@ -25,7 +25,12 @@ export interface ISettingsLoadSuccess {
     settings: Settings
 }
 
-export type SettingsAction = ISettingsSaveProcessing | ISettingsSaveFinish | ISettingsLoadProcessing | ISettingsLoadFail | ISettingsLoadSuccess
+export interface ISettingsUpdate {
+    type: constants.SETTINGS_UPDATE
+    settings: Settings
+}
+
+export type SettingsAction = ISettingsSaveProcessing | ISettingsSaveFinish | ISettingsLoadProcessing | ISettingsLoadFail | ISettingsLoadSuccess | ISettingsUpdate
 
 export function saveSettings(settings: Settings) {
     return async(dispatch: Dispatch<SettingsAction>) => {
@@ -52,4 +57,8 @@ export function loadSettings() {
             dispatch({ type: constants.SETTINGS_LOAD_FAIL })
         }
     }
+}
+
+export function updateSettings(settings: Settings) {
+    return { type: constants.SETTINGS_UPDATE, settings }
 }

@@ -1,5 +1,5 @@
 import { SettingsAction } from '../actions'
-import { SETTINGS_LOAD_FAIL, SETTINGS_LOAD_PROCESSING, SETTINGS_LOAD_SUCCESS, SETTINGS_SAVE_FINISH, SETTINGS_SAVE_PROCESSING } from '../constants'
+import { SETTINGS_LOAD_FAIL, SETTINGS_LOAD_PROCESSING, SETTINGS_LOAD_SUCCESS, SETTINGS_SAVE_FINISH, SETTINGS_SAVE_PROCESSING , SETTINGS_UPDATE } from '../constants'
 import { ISettings } from '../types'
 
 const inittialState: ISettings = {
@@ -10,6 +10,10 @@ const inittialState: ISettings = {
 
 export function settings(state: ISettings = inittialState, action: SettingsAction): ISettings {
     switch (action.type) {
+        case SETTINGS_UPDATE:
+            return { ...state,
+                showCompleted: action.settings.showCompleted
+            }
         case SETTINGS_LOAD_PROCESSING:
             return { ...state,
                 loadProcessing: true
