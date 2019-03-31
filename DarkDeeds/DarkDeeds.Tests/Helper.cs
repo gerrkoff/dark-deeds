@@ -8,7 +8,7 @@ namespace DarkDeeds.Tests
     public static class Helper
     {
         public static Mock<IRepository<T>> CreateRepoMock<T>(params T[] values)
-            where T : BaseEntity
+            where T : DeletableEntity
         {
             var repoMock = new Mock<IRepository<T>>();
             repoMock.Setup(x => x.GetAll()).Returns(values.AsQueryable());

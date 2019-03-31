@@ -9,6 +9,13 @@ namespace DarkDeeds.Common.Extensions
 {
     public static class EfAsyncExtensions
     {
+        public static Task<T> FirstOrDefaultSafeAsync<T>(this IQueryable<T> source, Expression<Func<T, bool>> predicate)
+        {
+            return Run(source,
+                () => source.FirstOrDefaultAsync(predicate),
+                () => source.FirstOrDefault(predicate));
+        }
+        
         public static Task<List<T>> ToListSafeAsync<T>(this IQueryable<T> source)
         {
             return Run(source,
