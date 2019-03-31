@@ -103,5 +103,18 @@ namespace DarkDeeds.Tests.Services
             Assert.Equal(TaskTimeTypeEnum.AfterTime, result.TimeType);
             Assert.Equal(new DateTime(2017,10, 10, 2, 11, 0),  result.DateTime);
         }
+        
+        [Fact]
+        public void ParseTask_ReturnTaskWithDateAndNoTime_ConsiderTimeAdjustment()
+        {
+            var service = new TaskParserService();
+
+            var result = service.ParseTask("1231 Test!", -159);
+
+            var currentYear = DateTime.UtcNow.Year;
+            Assert.Equal("Test!", result.Title);
+            Assert.Equal(TaskTimeTypeEnum.NoTime, result.TimeType);
+            Assert.Equal(new DateTime(currentYear,12, 30, 21, 21, 0),  result.DateTime);
+        }
     }
 }
