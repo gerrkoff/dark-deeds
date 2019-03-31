@@ -97,6 +97,7 @@ namespace DarkDeeds.Services.Implementation
             return dateTime;
         }
 
+        // TODO: time adjustment
         public string PrintTasks(IEnumerable<TaskDto> tasks, int timeAdjustment = 0)
         {
             var sb = new StringBuilder();

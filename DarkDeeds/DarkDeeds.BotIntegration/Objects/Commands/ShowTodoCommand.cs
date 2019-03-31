@@ -7,7 +7,7 @@ namespace DarkDeeds.BotIntegration.Objects.Commands
         public DateTime From { get; }
         public DateTime To { get; }
 
-        private string _args;
+        private readonly string _args;
 
         public ShowTodoCommand(string args, int timeAdjustment)
         {
