@@ -42,6 +42,36 @@ namespace DarkDeeds.Tests.BotIntegration
         }
         
         [Fact]
+        public async Task ProcessMessage_ShowTodo_WithDate()
+        {
+            var telegramMock = new Mock<ITelegramService>();
+            telegramMock.Setup(x => x.GetUserTimeAdjustment(100500)).Returns(Task.FromResult(100));
+            var service = new BotCommandParserService(null, telegramMock.Object);
+
+            var result = await service.ParseCommand("/todo 1010", 100500);
+
+            var date = new DateTime(DateTime.UtcNow.Year, 10, 10);
+            Assert.IsType<ShowTodoCommand>(result);
+            Assert.Equal(date.AddMinutes(100), ((ShowTodoCommand) result).From);
+            Assert.Equal(date.AddDays(1).AddMinutes(100), ((ShowTodoCommand) result).To);
+        }
+        
+        [Fact]
+        public async Task ProcessMessage_ShowTodo_WithDateAndYear()
+        {
+            var telegramMock = new Mock<ITelegramService>();
+            telegramMock.Setup(x => x.GetUserTimeAdjustment(100500)).Returns(Task.FromResult(100));
+            var service = new BotCommandParserService(null, telegramMock.Object);
+
+            var result = await service.ParseCommand("/todo 20161010", 100500);
+
+            var date = new DateTime(2016, 10, 10);
+            Assert.IsType<ShowTodoCommand>(result);
+            Assert.Equal(date.AddMinutes(100), ((ShowTodoCommand) result).From);
+            Assert.Equal(date.AddDays(1).AddMinutes(100), ((ShowTodoCommand) result).To);
+        }
+        
+        [Fact]
         public async Task ProcessMessage_Start()
         {
             var service = new BotCommandParserService(null, null);
