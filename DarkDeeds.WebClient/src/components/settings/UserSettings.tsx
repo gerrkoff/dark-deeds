@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Button, Checkbox, Dimmer, Loader, Container } from 'semantic-ui-react'
+import { Button, Checkbox } from 'semantic-ui-react'
 import { Settings } from '../../models'
 import { SettingsDivider } from './'
 
@@ -14,16 +14,13 @@ export class UserSettings extends React.PureComponent<IProps> {
     public render() {
         return (
             <React.Fragment>
-                <SettingsDivider label='User Settings' icon='telegram plane' />
-                <Dimmer.Dimmable as={Container} dimmed={this.props.loadProcessing}>
-                    <Checkbox label='Show completed' checked={this.props.showCompleted}
+                <SettingsDivider label='User Settings' icon='options' />
+                <div>
+                    <Checkbox label='Show completed' checked={this.props.showCompleted} disabled={this.props.loadProcessing}
                         onChange={() => this.props.updateSettings({ ...this.settings(), showCompleted: !this.props.showCompleted })} />
-
-                    <Dimmer active={this.props.loadProcessing}>
-                        <Loader />
-                    </Dimmer>
-                </Dimmer.Dimmable>
-                <Button onClick={this.handleSaveClick} loading={this.props.saveProcessing} size='mini'>Save</Button>
+                </div>
+                <br />
+                <Button onClick={this.handleSaveClick} loading={this.props.saveProcessing} disabled={this.props.loadProcessing} size='mini'>Save</Button>
             </React.Fragment>
         )
     }

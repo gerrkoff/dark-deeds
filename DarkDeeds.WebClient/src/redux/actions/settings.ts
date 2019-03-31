@@ -46,7 +46,7 @@ export function loadSettings() {
 
         try {
             const result = await SettingsApi.load()
-            updateSettings(result)
+            dispatch(updateSettings(result))
         } catch (err) {
             ToastHelper.errorProcess('loading settings')
         }
@@ -54,6 +54,6 @@ export function loadSettings() {
     }
 }
 
-export function updateSettings(settings: Settings) {
+export function updateSettings(settings: Settings): ISettingsUpdate {
     return { type: constants.SETTINGS_UPDATE, settings }
 }
