@@ -4,6 +4,7 @@ import { IModalConfirmState } from './modalConfirm'
 import { ILoginState } from './login'
 import { IGeneralState } from './general'
 import { ITelegramIntegration } from './telegramIntegration'
+import { ISettings } from './settings'
 
 export interface IAppState {
     router: any
@@ -13,6 +14,7 @@ export interface IAppState {
     modalConfirm: IModalConfirmState
     general: IGeneralState
     telegramIntegration: ITelegramIntegration
+    settings: ISettings
 }
 
 export * from './tasks'
@@ -21,3 +23,4 @@ export * from './modalConfirm'
 export * from './login'
 export * from './general'
 export * from './telegramIntegration'
+export * from './settings'
