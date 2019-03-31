@@ -233,7 +233,7 @@ const service = {
             const yOrders = evalOrders(y)
             for (let i = 0; i < xOrders.length; i++) {
                 if (xOrders[i] !== yOrders[i]) {
-                    return xOrders[i] > yOrders[i] ? 1 : 0
+                    return xOrders[i] > yOrders[i] ? 1 : -1
                 }
             }
             return 0
