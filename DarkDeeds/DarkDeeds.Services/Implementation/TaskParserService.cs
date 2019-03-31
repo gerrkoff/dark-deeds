@@ -97,7 +97,6 @@ namespace DarkDeeds.Services.Implementation
             return dateTime;
         }
 
-        // TODO: time adjustment
         public string PrintTasks(IEnumerable<TaskDto> tasks, int timeAdjustment = 0)
         {
             var sb = new StringBuilder();
@@ -105,12 +104,29 @@ namespace DarkDeeds.Services.Implementation
             {
                 if (sb.Length > 0)
                     sb.AppendLine();
-                sb.Append(TaskToString(task));
+                sb.Append(TaskToString(task, timeAdjustment));
             }
 
             return sb.ToString();
         }
 
-        private string TaskToString(TaskDto task) => $"{task.Title}";
+        private string TaskToString(TaskDto task, int timeAdjustment)
+        {
+            string result = string.Empty;
+            if (task.DateTime.HasValue)
+            {
+                task.DateTime = task.DateTime.Value.AddMinutes(timeAdjustment);
+                if (task.TimeType == TaskTimeTypeEnum.ConcreteTime)
+                    result += $"{DateToTimeString(task.DateTime.Value)} ";
+                else if (task.TimeType == TaskTimeTypeEnum.AfterTime)
+                    result += $">{DateToTimeString(task.DateTime.Value)} ";
+            }
+
+            result += task.Title;
+
+            return result;
+        }
+
+        private string DateToTimeString(DateTime dateTime) => $"{dateTime.Hour:D2}:{dateTime.Minute:D2}";
     }
 }

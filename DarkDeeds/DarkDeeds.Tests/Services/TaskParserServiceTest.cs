@@ -1,5 +1,6 @@
 using System;
 using DarkDeeds.Enums;
+using DarkDeeds.Models;
 using DarkDeeds.Services.Implementation;
 using Xunit;
 
@@ -115,6 +116,64 @@ namespace DarkDeeds.Tests.Services
             Assert.Equal("Test!", result.Title);
             Assert.Equal(TaskTimeTypeEnum.NoTime, result.TimeType);
             Assert.Equal(new DateTime(currentYear,12, 30, 21, 21, 0),  result.DateTime);
+        }
+        
+        [Fact]
+        public void PrintTasks_ReturnTitle()
+        {
+            var service = new TaskParserService();
+
+            var result = service.PrintTasks(new[] {new TaskDto
+            {
+                Title = "Task text"
+            }}, 0);
+
+            Assert.Equal("Task text", result);
+        }
+        
+        [Fact]
+        public void PrintTasks_ReturnTime()
+        {
+            var service = new TaskParserService();
+
+            var result = service.PrintTasks(new[] {new TaskDto
+            {
+                Title = "Task",
+                DateTime = new DateTime(2000, 10, 10, 17, 40, 0),
+                TimeType = TaskTimeTypeEnum.ConcreteTime
+            }});
+
+            Assert.Equal("17:40 Task", result);
+        }
+        
+        [Fact]
+        public void PrintTasks_ReturnTimeWithAdjustment()
+        {
+            var service = new TaskParserService();
+
+            var result = service.PrintTasks(new[] {new TaskDto
+            {
+                Title = "Task",
+                DateTime = new DateTime(2000, 10, 10, 17, 40, 0),
+                TimeType = TaskTimeTypeEnum.ConcreteTime
+            }}, -80);
+
+            Assert.Equal("16:20 Task", result);
+        }
+        
+        [Fact]
+        public void PrintTasks_ReturnAfterTime()
+        {
+            var service = new TaskParserService();
+
+            var result = service.PrintTasks(new[] {new TaskDto
+            {
+                Title = "Task",
+                DateTime = new DateTime(2000, 10, 10, 17, 40, 0),
+                TimeType = TaskTimeTypeEnum.AfterTime
+            }});
+
+            Assert.Equal(">17:40 Task", result);
         }
     }
 }
