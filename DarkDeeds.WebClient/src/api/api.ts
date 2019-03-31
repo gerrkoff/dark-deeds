@@ -14,7 +14,7 @@ const service = {
     },
 
     post<T>(api: string, data: any): Promise<T> {
-        return sendRequest(`GET ${api}`, () =>
+        return sendRequest(`POST ${api}`, () =>
             fetch(baseUrl + api, {
                 body: JSON.stringify(data),
                 headers: {
@@ -39,8 +39,11 @@ async function sendRequest<T>(apiName: string, requestCreator: () => Promise<Res
 
     const contentType = result.headers.get('content-type')
     const isJson = contentType && contentType.indexOf('application/json') !== -1
+    const noContent = !contentType
 
-    if (result.ok && isJson) {
+    if (result.ok && noContent) {
+        return Object() as T
+    } else if (result.ok && isJson) {
         return await result.json() as T
     } else {
         if (result.ok) {
