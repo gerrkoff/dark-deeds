@@ -7,7 +7,6 @@ using Microsoft.Extensions.Logging;
 
 namespace DarkDeeds.BotIntegration.Implementation.CommandProcessor
 {
-    // TODO: unit-tests
     public class StartCommandProcessor : BaseCommandProcessor<StartCommand>, IStartCommandProcessor
     {
         private readonly IBotSendMessageService _botSendMessageService;
