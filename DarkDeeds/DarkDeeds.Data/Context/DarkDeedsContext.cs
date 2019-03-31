@@ -11,5 +11,6 @@ namespace DarkDeeds.Data.Context
         }
         
         public DbSet<TaskEntity> Tasks { get; set; }
+        public DbSet<SettingsEntity> Settings { get; set; }
     }
 }
