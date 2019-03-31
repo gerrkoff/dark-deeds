@@ -52,7 +52,7 @@ namespace DarkDeeds.Tests.BotIntegration
         [Fact]
         public async Task BotProcessMessageServiceTest_RunShowTodoCommand()
         {
-            var command = new ShowTodoCommand("");
+            var command = new ShowTodoCommand("", 0);
             var commandParserMock = createCommandParserMock(command);
             var commandMock = new Mock<IShowTodoCommandProcessor>();
             var service = new BotProcessMessageService(

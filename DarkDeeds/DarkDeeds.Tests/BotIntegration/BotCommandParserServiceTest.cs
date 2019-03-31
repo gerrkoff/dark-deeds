@@ -30,13 +30,15 @@ namespace DarkDeeds.Tests.BotIntegration
         [Fact]
         public async Task ProcessMessage_ShowTodo()
         {
-            var service = new BotCommandParserService(null, null);
+            var telegramMock = new Mock<ITelegramService>();
+            telegramMock.Setup(x => x.GetUserTimeAdjustment(100500)).Returns(Task.FromResult(100));
+            var service = new BotCommandParserService(null, telegramMock.Object);
 
-            var result = await service.ParseCommand("/todo", 0);
+            var result = await service.ParseCommand("/todo", 100500);
 
             Assert.IsType<ShowTodoCommand>(result);
-            Assert.Equal(DateTime.Today.AddHours(-5), ((ShowTodoCommand) result).From);
-            Assert.Equal(DateTime.Today.AddHours(29), ((ShowTodoCommand) result).To);
+            Assert.Equal(DateTime.Today.AddMinutes(100), ((ShowTodoCommand) result).From);
+            Assert.Equal(DateTime.Today.AddDays(1).AddMinutes(100), ((ShowTodoCommand) result).To);
         }
         
         [Fact]

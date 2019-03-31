@@ -21,13 +21,14 @@ namespace DarkDeeds.BotIntegration.Implementation
 
         public async Task<BotCommand> ParseCommand(string command, int chatId)
         {
-            string args;
-            // TODO: use user time adjustment
-            if (CheckAndTrimCommand(TodoCommand, command, out args))
-                return new ShowTodoCommand(args);
-            
-            if (CheckAndTrimCommand(StartCommand, command, out args))
+            if (CheckAndTrimCommand(StartCommand, command, out var args))
                 return new StartCommand(args);
+            
+            if (CheckAndTrimCommand(TodoCommand, command, out args))
+            {
+                int timeAdjustment = await _telegramService.GetUserTimeAdjustment(chatId);
+                return new ShowTodoCommand(args, timeAdjustment);
+            }
 
             if (!command.StartsWith("/"))
             {
