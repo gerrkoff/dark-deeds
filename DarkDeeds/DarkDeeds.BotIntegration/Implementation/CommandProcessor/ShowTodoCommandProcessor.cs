@@ -6,6 +6,7 @@ using DarkDeeds.BotIntegration.Interface.CommandProcessor;
 using DarkDeeds.BotIntegration.Objects.Commands;
 using DarkDeeds.Models;
 using DarkDeeds.Services.Interface;
+using Microsoft.Extensions.Logging;
 
 namespace DarkDeeds.BotIntegration.Implementation.CommandProcessor
 {
@@ -17,9 +18,12 @@ namespace DarkDeeds.BotIntegration.Implementation.CommandProcessor
         private readonly ITaskService _taskService;
         private readonly ITaskParserService _taskParserService;
 
-        public ShowTodoCommandProcessor(IBotSendMessageService botSendMessageService, ITelegramService telegramService,
-            ITaskService taskService, ITaskParserService taskParserService)
-            : base(botSendMessageService)
+        public ShowTodoCommandProcessor(
+            IBotSendMessageService botSendMessageService,
+            ITelegramService telegramService,
+            ITaskService taskService,
+            ITaskParserService taskParserService,
+            ILogger<BaseCommandProcessor<BotCommand>> logger) : base(botSendMessageService, logger)
         {
             _botSendMessageService = botSendMessageService;
             _telegramService = telegramService;

@@ -1,4 +1,3 @@
-using System;
 using System.Threading.Tasks;
 using DarkDeeds.BotIntegration.Interface;
 using DarkDeeds.BotIntegration.Objects.Commands;
@@ -6,15 +5,16 @@ using Microsoft.Extensions.Logging;
 
 namespace DarkDeeds.BotIntegration.Implementation.CommandProcessor
 {
-    // TODO: unit-tests
     public abstract class BaseCommandProcessor<T> where T : BotCommand
     {
         private readonly IBotSendMessageService _botSendMessageService;
         private readonly ILogger<BaseCommandProcessor<BotCommand>> _logger;
 
-        protected BaseCommandProcessor(IBotSendMessageService botSendMessageService)
+        protected BaseCommandProcessor(IBotSendMessageService botSendMessageService,
+            ILogger<BaseCommandProcessor<BotCommand>> logger)
         {
             _botSendMessageService = botSendMessageService;
+            _logger = logger;
         }
 
         public async Task ProcessAsync(T command)
