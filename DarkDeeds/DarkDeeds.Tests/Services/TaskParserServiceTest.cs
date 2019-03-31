@@ -143,7 +143,7 @@ namespace DarkDeeds.Tests.Services
                 TimeType = TaskTimeTypeEnum.ConcreteTime
             }});
 
-            Assert.Equal("*17:40 Task*", result);
+            Assert.Equal("17:40 Task", result);
         }
         
         [Fact]
@@ -158,7 +158,7 @@ namespace DarkDeeds.Tests.Services
                 TimeType = TaskTimeTypeEnum.ConcreteTime
             }}, -80);
 
-            Assert.Equal("*16:20 Task*", result);
+            Assert.Equal("16:20 Task", result);
         }
         
         [Fact]

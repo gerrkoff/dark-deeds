@@ -124,9 +124,6 @@ namespace DarkDeeds.Services.Implementation
 
             result += task.Title;
 
-            if (task.TimeType == TaskTimeTypeEnum.ConcreteTime)
-                result = $"*{result}*";
-
             return result;
         }
 
