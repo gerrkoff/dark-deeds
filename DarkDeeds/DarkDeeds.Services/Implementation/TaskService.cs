@@ -23,18 +23,37 @@ namespace DarkDeeds.Services.Implementation
         }
         
         public async Task<IEnumerable<TaskDto>> LoadTasksAsync(string userId,
-            DateTime? from = null,
-            DateTime? to = null)
+            DateTime? from,
+            DateTime? to,
+            bool includeNoDate)
         {
+            if (from == null)
+            {
+                TaskEntity firstUncompletedTask = await _tasksRepository
+                    .GetAll()
+                    .Where(x => string.Equals(x.UserId, userId))
+                    .Where(x => x.DateTime.HasValue)
+                    .OrderBy(x => x.DateTime.Value)
+                    .FirstOrDefaultSafeAsync(x => !x.IsCompleted);
+                
+                var currentPeriodStart = DateTime.UtcNow.AddDays(-1);
+
+                from = firstUncompletedTask != null && firstUncompletedTask.DateTime < currentPeriodStart
+                    ? firstUncompletedTask.DateTime
+                    : currentPeriodStart;
+            }
+
             IQueryable<TaskEntity> tasks = _tasksRepository
                 .GetAll()
-                .Where(x => string.Equals(x.UserId, userId));
-
-            if (from != null)
-                tasks = tasks.Where(x => x.DateTime >= from.Value);
+                .Where(x => string.Equals(x.UserId, userId))
+                .Where(x =>
+                    !x.DateTime.HasValue && includeNoDate ||
+                    x.DateTime.HasValue && x.DateTime >= from.Value);
 
             if (to != null)
-                tasks = tasks.Where(x => x.DateTime < to.Value);
+                tasks = tasks.Where(x => 
+                        !x.DateTime.HasValue && includeNoDate ||
+                        x.DateTime.HasValue && x.DateTime < to.Value);
 
             return (await tasks.ProjectTo<TaskDto>().ToListSafeAsync()).ToUtcDate();
         }

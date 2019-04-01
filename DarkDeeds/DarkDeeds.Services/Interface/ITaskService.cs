@@ -7,7 +7,7 @@ namespace DarkDeeds.Services.Interface
 {
     public interface ITaskService
     {
-        Task<IEnumerable<TaskDto>> LoadTasksAsync(string userId, DateTime? from = null, DateTime? to = null);
+        Task<IEnumerable<TaskDto>> LoadTasksAsync(string userId, DateTime? from, DateTime? to, bool includeNoDate);
         Task<IEnumerable<TaskDto>> SaveTasksAsync(ICollection<TaskDto> tasks, string userId);
     }
 }

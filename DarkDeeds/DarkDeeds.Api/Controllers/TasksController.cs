@@ -21,7 +21,7 @@ namespace DarkDeeds.Api.Controllers
         [HttpGet]
         public async Task<IEnumerable<TaskDto>> Get()
         {
-            return await _taskService.LoadTasksAsync(GetUser().UserId);
+            return await _taskService.LoadTasksAsync(GetUser().UserId, null, null, true);
         }
         
         [HttpPost]
