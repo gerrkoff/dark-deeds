@@ -153,6 +153,7 @@ const service = {
         let minute: number = 0
         let timeType: TaskTimeTypeEnum = TaskTimeTypeEnum.NoTime
         let noDate: boolean = true
+        let isProbable: boolean = false
 
         if (/^\d{8}\s/.test(text)) {
             year = Number(text.substr(0, 4))
@@ -179,35 +180,42 @@ const service = {
             text = text.slice(6)
         }
 
+        if (/ \?$/.test(text)) {
+            isProbable = true
+            text = text.slice(0, text.length - 2)
+        }
+
         return {
             dateTime: noDate ? null : new Date(year, month - 1, day, hour, minute),
             timeType,
-            title: text
+            title: text,
+            isProbable
         }
     },
 
     convertModelToString(model: TaskModel): string {
-        if (model.dateTime === null) {
-            return model.title
-        }
-
         let s: string = ''
 
-        if (new Date().getFullYear() !== model.dateTime.getFullYear()) {
-            s += `${model.dateTime.getFullYear()}`
+        if (model.dateTime !== null) {
+            if (new Date().getFullYear() !== model.dateTime.getFullYear()) {
+                s += model.dateTime.getFullYear().toString()
+            }
+            s += `${str2digits(model.dateTime.getMonth() + 1)}${str2digits(model.dateTime.getDate())} `
+
+            if (model.timeType !== TaskTimeTypeEnum.NoTime) {
+                if (model.timeType === TaskTimeTypeEnum.AfterTime) {
+                    s += '>'
+                }
+                s += `${str2digits(model.dateTime.getHours())}${str2digits(model.dateTime.getMinutes())} `
+            }
         }
 
-        s += `${str2digits(model.dateTime.getMonth() + 1)}${str2digits(model.dateTime.getDate())} `
-
-        if (model.timeType === TaskTimeTypeEnum.NoTime) {
-            return `${s}${model.title}`
+        let suffix: string = ''
+        if (model.isProbable) {
+            suffix = ' ?'
         }
 
-        if (model.timeType === TaskTimeTypeEnum.AfterTime) {
-            s += '>'
-        }
-
-        return `${s}${str2digits(model.dateTime.getHours())}${str2digits(model.dateTime.getMinutes())} ${model.title}`
+        return `${s}${model.title}${suffix}`
     },
 
     tasksEqual(taskA: Task, taskB: Task): boolean {
@@ -227,6 +235,7 @@ const service = {
             && taskA.completed === taskB.completed
             && taskA.deleted === taskB.deleted
             && taskA.timeType === taskB.timeType
+            && taskA.isProbable === taskB.isProbable
     },
 
     sortTasks(tasks: Task[]): Task[] {

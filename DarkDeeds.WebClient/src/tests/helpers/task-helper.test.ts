@@ -420,6 +420,13 @@ test('[convertStringToModel] date and after time with year', () => {
     expect(result.timeType).toBe(TaskTimeTypeEnum.AfterTime)
 })
 
+test('[convertStringToModel] is probable', () => {
+    const result = TaskHelper.convertStringToModel('Test! ?')
+
+    expect(result.title).toBe('Test!')
+    expect(result.isProbable).toBe(true)
+})
+
 test('[convertModelToString] no date', () => {
     const result = TaskHelper.convertModelToString(new TaskModel('Test!'))
     expect(result).toBe('Test!')
@@ -440,11 +447,17 @@ test('[convertModelToString] date & time less ten', () => {
     expect(result).toBe('0101 >0101 Test!')
 })
 
+test('[convertModelToString] is probable', () => {
+    const result = TaskHelper.convertModelToString(new TaskModel('Test!', null, TaskTimeTypeEnum.NoTime, true))
+    expect(result).toBe('Test! ?')
+})
+
 test('[tasksEqual] positive', () => {
     expect(TaskHelper.tasksEqual(new Task(1, '1', null, 1, false, 1), new Task(1, '1', null, 1, false, 1))).toBeTruthy()
     expect(TaskHelper.tasksEqual(new Task(1, '1', null, 1, false, 1), new Task(1, '1', new Date(), 1, false, 1))).not.toBeTruthy()
     expect(TaskHelper.tasksEqual(new Task(1, '1', new Date(2018), 1, false, 1), new Task(1, '1', new Date(2018), 1, false, 1))).toBeTruthy()
     expect(TaskHelper.tasksEqual(new Task(1, '1', new Date(2018), 1, false, 1), new Task(2, '2', new Date(2019), 2, false, 2))).not.toBeTruthy()
+    expect(TaskHelper.tasksEqual(new Task(1, '1', null, 1, false, 1, false, false, TaskTimeTypeEnum.NoTime, false), new Task(1, '1', null, 1, false, 1, false, false, TaskTimeTypeEnum.NoTime, true))).not.toBeTruthy()
 })
 
 test('[sortTasks] positive', () => {
