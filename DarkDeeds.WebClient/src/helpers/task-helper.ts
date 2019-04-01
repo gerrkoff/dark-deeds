@@ -2,8 +2,10 @@ import { DayCardModel, OverviewModel, Task, TaskModel, TaskTimeTypeEnum } from '
 import { DateHelper } from './'
 
 const service = {
-    evalModel(tasks: Task[], now: Date): OverviewModel {
-        tasks = tasks.filter(x => !x.deleted)
+    evalModel(tasks: Task[], now: Date, showCompleted: boolean): OverviewModel {
+        tasks = tasks.filter(x =>
+            (showCompleted || !x.completed) &&
+            !x.deleted)
 
         const model = new OverviewModel()
         const currentStart = DateHelper.monday(DateHelper.dayStart(now))

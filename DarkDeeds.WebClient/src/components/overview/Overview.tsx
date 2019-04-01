@@ -7,8 +7,9 @@ import { DayCardModel, Task, TaskModel } from '../../models'
 import { DaysBlock, NoDateCard } from './'
 
 interface IProps {
-    tasks: Task[],
-    updateTasks: (tasks: Task[]) => void,
+    tasks: Task[]
+    showCompleted: boolean
+    updateTasks: (tasks: Task[]) => void
     openTaskModal: (model: TaskModel, id?: number) => void
     setTaskStatuses?: (clientId: number, completed?: boolean, deleted?: boolean) => void
     confirmAction?: (content: React.ReactNode, action: () => void, header: string) => void
@@ -30,7 +31,7 @@ export class Overview extends React.PureComponent<IProps> {
 
     public render() {
         const today = DateHelper.dayStart(new Date())
-        const model = TaskHelper.evalModel(this.props.tasks, today)
+        const model = TaskHelper.evalModel(this.props.tasks, today, this.props.showCompleted)
 
         const panels = [{
             content: { content: (<NoDateCard tasks={model.noDate} setTaskStatuses={this.props.setTaskStatuses} confirmAction={this.props.confirmAction} openTaskModal={this.props.openTaskModal} />) },

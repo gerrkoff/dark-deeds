@@ -21,12 +21,25 @@ test('[evalModel] positive', () => {
         new Task(0, '')
     ]
 
-    const result = TaskHelper.evalModel(tasks, new Date(2018, 9, 17))
+    const result = TaskHelper.evalModel(tasks, new Date(2018, 9, 17), true)
 
     expect(result.noDate.length).toBe(2)
     expect(result.expired.length).toBe(2)
     expect(result.current.length).toBe(14)
     expect(result.future.length).toBe(2)
+})
+
+test('[evalModel] ignore completed if showCompleted=false', () => {
+    const tasks: Task[] = [
+        new Task(1, '', null, 0, false, 0, true),
+        new Task(2, '', null, 0, false, 0, false),
+        new Task(3, '', null, 0, false, 0, true)
+    ]
+
+    const result = TaskHelper.evalModel(tasks, new Date(2018, 9, 17), false)
+
+    expect(result.noDate.length).toBe(1)
+    expect(result.noDate[0].clientId).toBe(2)
 })
 
 test('[moveTask] positive', () => {

@@ -4,9 +4,10 @@ import { Task, TaskModel } from '../models'
 import { localUpdateTasks, openEditTaskWithModel, openModalConfirm, setTaskStatuses } from '../redux/actions'
 import { IAppState } from '../redux/types'
 
-function mapStateToProps({ tasks }: IAppState) {
+function mapStateToProps({ tasks, settings }: IAppState) {
     return {
-        tasks: tasks.tasks
+        tasks: tasks.tasks,
+        showCompleted: settings.showCompleted
     }
 }
 
