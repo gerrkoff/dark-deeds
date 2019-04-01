@@ -15,6 +15,7 @@ namespace DarkDeeds.Data.Entity
         public TaskTimeTypeEnum TimeType { get; set; }
         
         public bool IsCompleted { get; set; }
+        public bool IsProbable { get; set; }
         
         [NotMapped]
         public int ClientId { get; set; }
