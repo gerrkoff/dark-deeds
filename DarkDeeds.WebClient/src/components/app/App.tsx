@@ -19,6 +19,7 @@ export interface IAppProps {
     openEditTask: () => void
     startTaskHub: () => void
     stopTaskHub: () => void
+    loadSettings: () => void
 }
 export class App extends React.PureComponent<IAppProps> {
     private saveTaskInterval: NodeJS.Timeout
@@ -26,6 +27,7 @@ export class App extends React.PureComponent<IAppProps> {
     public componentDidMount() {
         this.props.loadTasks()
         this.props.startTaskHub()
+        this.props.loadSettings()
         this.saveTaskInterval = setInterval(this.saveTasksIfUpdated, 5 * 1000)
         window.onbeforeunload = this.confirmExit
     }
