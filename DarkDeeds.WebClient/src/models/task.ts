@@ -10,7 +10,8 @@ export class Task implements TaskModel {
         public id: number = 0,
         public completed: boolean = false,
         public deleted: boolean = false,
-        public timeType: TaskTimeTypeEnum = TaskTimeTypeEnum.NoTime
+        public timeType: TaskTimeTypeEnum = TaskTimeTypeEnum.NoTime,
+        public isProbable: boolean = false
     ) {}
 
     // Change model - change tasksEqual method in TaskHelper

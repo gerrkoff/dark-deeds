@@ -17,3 +17,7 @@
     text-decoration: line-through;
     color: #969696;
 }
+
+.task-item-probable {
+    font-style: italic;
+}

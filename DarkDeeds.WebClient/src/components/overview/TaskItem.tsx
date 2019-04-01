@@ -67,6 +67,7 @@ export class TaskItem extends React.PureComponent<IProps, IState> {
         const task = this.props.task
         const className = 'task-item'
             + (task.completed ? ' task-item-completed' : '')
+            + (task.isProbable ? ' task-item-probable' : '')
             + (this.state.menuPopupOpen ? ' task-item-selected' : '')
         let text = ''
         if (task.timeType !== TaskTimeTypeEnum.NoTime) {

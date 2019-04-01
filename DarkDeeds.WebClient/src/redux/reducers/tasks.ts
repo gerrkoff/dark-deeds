@@ -138,6 +138,7 @@ function localAddTask(model: TaskModel, localTasks: Task[]): Task[] {
         clientId: minId,
         completed: false,
         deleted: false,
+        isProbable: false,
         id: 0,
         order: maxOrder + 1,
         updated: true
