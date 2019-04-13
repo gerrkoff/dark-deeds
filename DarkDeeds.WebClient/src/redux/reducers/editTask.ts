@@ -1,4 +1,4 @@
-import { TaskHelper } from '../../helpers'
+import { TaskConverter } from '../../helpers'
 import { EditTaskAction } from '../actions'
 import { EDITTASK_MODALOPEN, EDITTASK_SET_MODEL, EDITTASK_TASKMODEL } from '../constants'
 import { IEditTaskState } from '../types'
@@ -22,7 +22,7 @@ export function editTask(state: IEditTaskState = inittialState, action: EditTask
             }
         case EDITTASK_SET_MODEL:
             return { ...state,
-                taskModel: TaskHelper.convertModelToString(action.model)
+                taskModel: TaskConverter.convertModelToString(action.model)
             }
     }
     return state

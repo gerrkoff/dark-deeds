@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { Button, Icon, Input, Label, Modal } from 'semantic-ui-react'
-import { KeyConstants, TaskHelper } from '../../helpers'
+import { KeyConstants, TaskConverter } from '../../helpers'
 import { TaskModel } from '../../models'
 
 interface IProps {
@@ -66,7 +66,7 @@ export class EditTaskModal extends React.PureComponent<IProps, IState> {
             return
         }
 
-        const taskModel = TaskHelper.convertStringToModel(this.props.model)
+        const taskModel = TaskConverter.convertStringToModel(this.props.model)
 
         if (taskModel.title.length === 0) {
             this.setState({ invalidTitle: true })
