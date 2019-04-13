@@ -1,3 +1,3 @@
 export enum TaskTimeTypeEnum {
-    NoTime, ConcreteTime, AfterTime
+    NoTime, ConcreteTime, AfterTime, AllDayLong
 }

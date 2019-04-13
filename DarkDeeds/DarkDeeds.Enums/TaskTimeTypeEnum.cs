@@ -4,6 +4,7 @@ namespace DarkDeeds.Enums
     {
         NoTime,
         ConcreteTime,
-        AfterTime
+        AfterTime,
+        AllDayLong
     }
 }

@@ -1,52 +1,108 @@
 import { TaskModel, TaskTimeTypeEnum } from '../models'
 
+class StringConvertingResult {
+    public year: number = new Date().getFullYear()
+    public month: number = 0
+    public day: number = 1
+    public hour: number = 0
+    public minute: number = 0
+    public timeType: TaskTimeTypeEnum = TaskTimeTypeEnum.NoTime
+    public noDate: boolean = true
+    public isProbable: boolean = false
+
+    public extractYear(text: string): string {
+        this.year = Number(text.substr(0, 4))
+        return text.slice(4)
+    }
+
+    public extractMonth(text: string): string {
+        this.month = Number(text.substr(0, 2))
+        this.noDate = false
+        return text.slice(2)
+    }
+
+    public extractDay(text: string): string {
+        this.day = Number(text.substr(0, 2))
+        return text.slice(2)
+    }
+
+    public extractAllDayLongType(text: string): string {
+        this.setTimeType(TaskTimeTypeEnum.AllDayLong)
+        return text.slice(2)
+    }
+
+    public extractHour(text: string): string {
+        this.hour = Number(text.substr(0, 2))
+        return text.slice(2)
+    }
+
+    public extractMinute(text: string): string {
+        this.minute = Number(text.substr(0, 2))
+        return text.slice(2)
+    }
+
+    public extractProbability(text: string): string {
+        this.isProbable = true
+        return text.slice(0, text.length - 2)
+    }
+
+    public setTimeType(timeType: TaskTimeTypeEnum) {
+        this.timeType = timeType
+    }
+
+    get timeIsApplicable(): boolean {
+        return this.timeType !== TaskTimeTypeEnum.AllDayLong
+    }
+
+    public getModel(text: string): TaskModel {
+        return {
+            dateTime: this.noDate ? null : new Date(this.year, this.month - 1, this.day, this.hour, this.minute),
+            timeType: this.timeType,
+            title: text,
+            isProbable: this.isProbable
+        }
+    }
+}
+
 const service = {
     convertStringToModel(text: string): TaskModel {
-        let year: number = new Date().getFullYear()
-        let month: number = 0
-        let day: number = 1
-        let hour: number = 0
-        let minute: number = 0
-        let timeType: TaskTimeTypeEnum = TaskTimeTypeEnum.NoTime
-        let noDate: boolean = true
-        let isProbable: boolean = false
+        const result = new StringConvertingResult()
 
-        if (/^\d{8}\s/.test(text)) {
-            year = Number(text.substr(0, 4))
-            month = Number(text.substr(4, 2))
-            day = Number(text.substr(6, 2))
-            noDate = false
-            text = text.slice(9)
-        } else if (/^\d{4}\s/.test(text)) {
-            month = Number(text.substr(0, 2))
-            day = Number(text.substr(2, 2))
-            noDate = false
-            text = text.slice(5)
+        if (/^\d{8}!?\s/.test(text)) {
+            text = result.extractYear(text)
+            text = result.extractMonth(text)
+            text = result.extractDay(text)
+        } else if (/^\d{4}!?\s/.test(text)) {
+            text = result.extractMonth(text)
+            text = result.extractDay(text)
         }
 
-        if (/^\d{4}\s/.test(text)) {
-            hour = Number(text.substr(0, 2))
-            minute = Number(text.substr(2, 2))
-            timeType = TaskTimeTypeEnum.ConcreteTime
-            text = text.slice(5)
-        } else if (/^>\d{4}\s/.test(text)) {
-            hour = Number(text.substr(1, 2))
-            minute = Number(text.substr(3, 2))
-            timeType = TaskTimeTypeEnum.AfterTime
-            text = text.slice(6)
+        if (/^!\s/.test(text) && !result.noDate) {
+            text = result.extractAllDayLongType(text)
         }
+
+        text = text.trimLeft()
+
+        if (result.timeIsApplicable) {
+            if (/^\d{4}\s/.test(text)) {
+                result.setTimeType(TaskTimeTypeEnum.ConcreteTime)
+                text = result.extractHour(text)
+                text = result.extractMinute(text)
+            } else if (/^>\d{4}\s/.test(text)) {
+                text = text.slice(1)
+                result.setTimeType(TaskTimeTypeEnum.AfterTime)
+                text = result.extractHour(text)
+                text = result.extractMinute(text)
+            }
+        }
+
+        text = text.trimLeft()
 
         if (/ \?$/.test(text)) {
-            isProbable = true
-            text = text.slice(0, text.length - 2)
+            text = result.extractProbability(text)
         }
 
-        return {
-            dateTime: noDate ? null : new Date(year, month - 1, day, hour, minute),
-            timeType,
-            title: text,
-            isProbable
-        }
+        return result.getModel(text)
     },
 
     convertModelToString(model: TaskModel): string {
@@ -56,13 +112,18 @@ const service = {
             if (new Date().getFullYear() !== model.dateTime.getFullYear()) {
                 s += model.dateTime.getFullYear().toString()
             }
-            s += `${str2digits(model.dateTime.getMonth() + 1)}${str2digits(model.dateTime.getDate())} `
+            s += `${str2digits(model.dateTime.getMonth() + 1)}${str2digits(model.dateTime.getDate())}`
 
-            if (model.timeType !== TaskTimeTypeEnum.NoTime) {
+            if (model.timeType === TaskTimeTypeEnum.AllDayLong) {
+                s += '! '
+            } else if (model.timeType !== TaskTimeTypeEnum.NoTime) {
+                s += ' '
                 if (model.timeType === TaskTimeTypeEnum.AfterTime) {
                     s += '>'
                 }
                 s += `${str2digits(model.dateTime.getHours())}${str2digits(model.dateTime.getMinutes())} `
+            } else {
+                s += ' '
             }
         }
 
