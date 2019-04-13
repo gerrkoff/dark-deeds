@@ -190,7 +190,7 @@ function taskDateToStart(date: Date | null): number {
 
 function evalOrders(task: Task): number[] {
     const orders: number[] = []
-    orders.push(task.timeType === TaskTimeTypeEnum.NoTime ? 0 : 1)
+    orders.push(task.timeType === TaskTimeTypeEnum.AllDayLong ? 0 : task.timeType === TaskTimeTypeEnum.NoTime ? 1 : 2)
     orders.push(task.dateTime === null ? 0 : task.dateTime.getTime())
     orders.push(task.timeType === TaskTimeTypeEnum.ConcreteTime ? 0 : 1)
     orders.push(task.order)
