@@ -20,7 +20,7 @@
 }
 
 @media screen and (min-width: 1200px) {
-    .day-card-tasks-view {
+    #day-card {
         min-width: 9rem;
     }
 }
