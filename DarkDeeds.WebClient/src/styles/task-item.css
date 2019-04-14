@@ -2,10 +2,13 @@
     cursor: pointer;
     width: 100%;
     display: inline-block;
-    margin-left: -0.5rem;
     padding-left: 0.5rem;
     padding-top: 0.1rem;
     padding-bottom: 0.1rem;
+}
+
+.bulleted .task-item {
+    margin-left: -0.5rem;
 }
 
 .task-item-selected {

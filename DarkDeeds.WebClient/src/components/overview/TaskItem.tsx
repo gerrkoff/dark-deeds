@@ -70,7 +70,7 @@ export class TaskItem extends React.PureComponent<IProps, IState> {
             + (task.isProbable ? ' task-item-probable' : '')
             + (this.state.menuPopupOpen ? ' task-item-selected' : '')
         let text = ''
-        if (task.timeType !== TaskTimeTypeEnum.NoTime) {
+        if (task.timeType === TaskTimeTypeEnum.AfterTime || task.timeType === TaskTimeTypeEnum.ConcreteTime) {
             if (task.timeType === TaskTimeTypeEnum.AfterTime) {
                 text += '> '
             }

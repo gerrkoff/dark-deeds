@@ -71,9 +71,11 @@ const service = {
                     taskBeforeOldData = {
                         dateTime: new Date(sourceTasksSorted[taskBeforeOldIndex].dateTime!),
                         order: sourceTasksSorted[taskBeforeOldIndex].order + 1,
-                        timeType: sourceTasksSorted[taskBeforeOldIndex].timeType === TaskTimeTypeEnum.NoTime
-                            ? TaskTimeTypeEnum.NoTime
-                            : TaskTimeTypeEnum.AfterTime
+                        timeType:
+                            sourceTasksSorted[taskBeforeOldIndex].timeType === TaskTimeTypeEnum.NoTime ||
+                            sourceTasksSorted[taskBeforeOldIndex].timeType === TaskTimeTypeEnum.AllDayLong
+                                ? TaskTimeTypeEnum.NoTime
+                                : TaskTimeTypeEnum.AfterTime
                     }
                 }
             }
@@ -91,7 +93,10 @@ const service = {
                 ? tasksInTheSameGroup(oldTask, targetTasksSorted[previosSiblingIndex]) && targetTasksSorted[previosSiblingIndex].order > task.order
                 : false
 
-            if (previosSiblingIndex === -1 || targetTasksSorted[previosSiblingIndex].timeType === TaskTimeTypeEnum.NoTime) {
+            if (previosSiblingIndex === -1 ||
+                targetTasksSorted[previosSiblingIndex].timeType === TaskTimeTypeEnum.NoTime ||
+                targetTasksSorted[previosSiblingIndex].timeType === TaskTimeTypeEnum.AllDayLong
+            ) {
                 task.timeType = TaskTimeTypeEnum.NoTime
                 task.dateTime = targetDate === 0 ? null : new Date(targetDate)
                 task.order = previosSiblingIndex !== -1

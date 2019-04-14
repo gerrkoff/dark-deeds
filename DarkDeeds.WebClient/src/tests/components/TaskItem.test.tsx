@@ -32,3 +32,9 @@ test('renders probable', () => {
     const component = enzyme.shallow(enzyme.shallow(<TaskItem task={model} />).prop('content'))
     expect(component.find('span.task-item-probable').length).toBe(1)
 })
+
+test('renders all day long', () => {
+    const model = new Task(1, 'Title', new Date(2018, 1, 1), 1, false, 1, false, false, TaskTimeTypeEnum.AllDayLong)
+    const component = enzyme.shallow(enzyme.shallow(<TaskItem task={model} />).prop('content'))
+    expect(component.find('span').text()).toBe('Title')
+})

@@ -1,7 +1,7 @@
 import * as enzyme from 'enzyme'
 import * as React from 'react'
 import { DayCard } from '../../components/overview/'
-import { DayCardModel, Task } from '../../models'
+import { DayCardModel, Task, TaskTimeTypeEnum } from '../../models'
 
 test('renders tasks', () => {
     const tasks = []
@@ -13,6 +13,7 @@ test('renders tasks', () => {
 
     expect(component.find('List').length).toBe(1)
     expect(component.find('ListItem').length).toBe(19)
+    expect(component.find('TaskItem').length).toBe(19)
 })
 
 test('renders expired days', () => {
@@ -39,4 +40,21 @@ test('renders ready for drag-n-drop', () => {
     const model = new DayCardModel(new Date())
     const component = enzyme.shallow(<DayCard day={model} />)
     expect(component.find('.dragula-container').length).toBe(1)
+})
+
+test('renders all day tasks as separate list with all-day-item classes', () => {
+    const tasks = []
+    for (let i = 1; i < 5; i++) {
+        tasks.push(new Task(i, '', new Date()))
+    }
+    for (let i = 1; i < 3; i++) {
+        tasks.push(new Task(i + 5, '', new Date(), 0, false, 0, false, false, TaskTimeTypeEnum.AllDayLong))
+    }
+    const model = new DayCardModel(new Date(), tasks)
+    const component = enzyme.shallow(<DayCard day={model} />)
+
+    expect(component.find('List').length).toBe(2)
+    expect(component.find('ListItem').length).toBe(6)
+    expect(component.find('TaskItem').length).toBe(6)
+    expect(component.find('ListItem.all-day-item').length).toBe(2)
 })
