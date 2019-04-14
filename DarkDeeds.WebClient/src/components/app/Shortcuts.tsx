@@ -18,7 +18,7 @@ export class Shortcuts extends React.PureComponent<IProps> {
     }
 
     private handleGlobalKeyUp = (e: KeyboardEvent) => {
-        if ((e.key === KeyConstants.ENTER || e.key === 'n') && e.ctrlKey) {
+        if ((e.code === KeyConstants.ENTER || e.code === KeyConstants.N) && e.ctrlKey) {
             this.props.openEditTask()
         }
     }

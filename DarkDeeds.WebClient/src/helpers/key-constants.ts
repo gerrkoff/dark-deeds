@@ -1,8 +1,7 @@
-export const ENTER: string = 'Enter'
-
 const service = {
     CMD: 'Meta',
-    ENTER: 'Enter'
+    ENTER: 'Enter',
+    N: 'KeyN'
 }
 
 export { service as KeyConstants }
