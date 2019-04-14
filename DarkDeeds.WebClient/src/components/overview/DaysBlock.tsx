@@ -16,7 +16,7 @@ export class DaysBlock extends React.PureComponent<IProps> {
     public render() {
         const blocks = []
 
-        this.props.days.sort((x, y) => x.date > y.date ? 1 : 0)
+        this.props.days.sort((x, y) => x.date > y.date ? 1 : -1)
 
         if (this.props.daysInRow && this.props.daysInRow > 0) {
             const rowCount = Math.ceil(this.props.days.length / this.props.daysInRow)
