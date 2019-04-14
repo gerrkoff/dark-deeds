@@ -19,6 +19,7 @@ namespace DarkDeeds.Services.Implementation
         private static readonly string DuplicateUserNameCode = ErrorDescriber.DuplicateUserName(string.Empty).Code;
         private static readonly string[] PasswordErrorCodes = {
             ErrorDescriber.PasswordRequiresDigit().Code,
+            ErrorDescriber.PasswordRequiresUpper().Code,
             ErrorDescriber.PasswordRequiresLower().Code,
             ErrorDescriber.PasswordRequiresNonAlphanumeric().Code,
             ErrorDescriber.PasswordTooShort(0).Code,

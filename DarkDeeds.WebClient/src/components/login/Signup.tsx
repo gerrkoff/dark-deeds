@@ -58,7 +58,14 @@ export class Signup extends React.PureComponent<IProps, IState> {
                 <Message negative
                     content={inputErrorText}
                     hidden={!showErrorCredMsg} />
-                <Form.Button onClick={this.handleSubmit} loading={this.props.processing} className='submit-btn' primary>Sign up</Form.Button>
+                <Form.Button
+                    onClick={this.handleSubmit}
+                    loading={this.props.processing}
+                    className='submit-btn'
+                    disabled={this.state.passwordConfirmIncorrect}
+                    primary>
+                    Sign up
+                </Form.Button>
                 <span>Already have an account?&nbsp;<a href='' onClick={this.handleSwitchForm}>Sign in here.</a></span>
             </React.Fragment>
         )
