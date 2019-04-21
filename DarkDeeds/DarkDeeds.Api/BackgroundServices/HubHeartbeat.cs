@@ -8,7 +8,7 @@ namespace DarkDeeds.Api.BackgroundServices
     public class HubHeartbeat<T> : BackgroundService
         where T: Hub
     {
-        private const int HeartbeatTimer = 5 * 1000;
+        private const int HeartbeatTimer = 60 * 1000;
         
         private readonly IHubContext<T> _hubContext;
 
