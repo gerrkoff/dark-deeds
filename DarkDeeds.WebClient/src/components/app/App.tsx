@@ -4,7 +4,7 @@ import EditTaskModal from '../../containers/EditTaskModal'
 import ModalConfirm from '../../containers/ModalConfirm'
 import { Task } from '../../models'
 import { AddTaskButton } from '../edit-task'
-import { HealthChecker } from '../../helpers'
+// import { HealthChecker } from '../../helpers'
 import { Shortcuts, Toolbar, NotSavedIndicator } from './'
 
 export interface IAppProps {
