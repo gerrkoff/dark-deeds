@@ -1,19 +1,6 @@
-﻿using System.Diagnostics;
-using AutoMapper;
-using DarkDeeds.Api.Filters;
-using DarkDeeds.Api.Hubs;
-using DarkDeeds.AutoMapper;
-using DarkDeeds.Common.Settings;
-using DarkDeeds.Data.Context;
-using DarkDeeds.Data.Entity;
-using DarkDeeds.Data.Repository;
-using DarkDeeds.Services.Implementation;
-using DarkDeeds.Services.Interface;
+﻿using DarkDeeds.Api.Hubs;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -41,6 +28,7 @@ namespace DarkDeeds.Api
                 .AddCompression() 
                 .ConfigureMvc();
 
+            services.AddHealthChecks();
             services.AddSignalR();
         }
         
@@ -60,7 +48,8 @@ namespace DarkDeeds.Api
             {
                 app.UseHsts();
             }
-            
+
+            app.UseHealthChecks("/healthcheck");
             app.UseResponseCompression();
             app.UseStaticFiles();
             app.UseAuthentication();
