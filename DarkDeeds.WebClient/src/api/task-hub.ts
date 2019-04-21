@@ -1,7 +1,7 @@
 import * as signalR from '@aspnet/signalr'
 import baseUrl from './base-url'
-import { Task } from 'src/models'
-import { DateHelper, StorageHelper } from 'src/helpers'
+import { Task } from '../models'
+import { DateHelper, StorageHelper } from '../helpers'
 
 const connection = new signalR.HubConnectionBuilder()
     .withUrl(baseUrl + 'ws/task', {
