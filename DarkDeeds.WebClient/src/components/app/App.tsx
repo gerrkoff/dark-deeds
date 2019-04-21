@@ -4,7 +4,6 @@ import EditTaskModal from '../../containers/EditTaskModal'
 import ModalConfirm from '../../containers/ModalConfirm'
 import { Task } from '../../models'
 import { AddTaskButton } from '../edit-task'
-import { HealthChecker } from '../../helpers'
 import { Shortcuts, Toolbar, NotSavedIndicator } from './'
 
 export interface IAppProps {
@@ -24,21 +23,18 @@ export interface IAppProps {
 }
 export class App extends React.PureComponent<IAppProps> {
     private saveTaskInterval: NodeJS.Timeout
-    private healCheckInterval: NodeJS.Timeout
 
     public componentDidMount() {
         this.props.loadTasks()
         this.props.startTaskHub()
         this.props.loadSettings()
         this.saveTaskInterval = setInterval(this.saveTasksIfUpdated, 5 * 1000)
-        this.healCheckInterval = setInterval(HealthChecker.ping, 60 * 1000)
         window.onbeforeunload = this.confirmExit
     }
 
     public componentWillUnmount() {
         this.props.stopTaskHub()
         clearInterval(this.saveTaskInterval)
-        clearInterval(this.healCheckInterval)
         window.onbeforeunload = null
     }
 
