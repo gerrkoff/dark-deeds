@@ -31,7 +31,7 @@ export class App extends React.PureComponent<IAppProps> {
         this.props.startTaskHub()
         this.props.loadSettings()
         this.saveTaskInterval = setInterval(this.saveTasksIfUpdated, 5 * 1000)
-        this.healCheckInterval = setInterval(HealthChecker.ping, 60 * 1000)
+        // this.healCheckInterval = setInterval(HealthChecker.ping, 60 * 1000)
         window.onbeforeunload = this.confirmExit
     }
 
