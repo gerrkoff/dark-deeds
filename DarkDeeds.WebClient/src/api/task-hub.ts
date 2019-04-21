@@ -20,9 +20,14 @@ const service = {
     },
 
     hubSubscribe(
-        update: (tasks: Task[], localUpdate: boolean) => void
+        update: (tasks: Task[], localUpdate: boolean) => void,
+        heartbeat?: () => void
     ) {
         connection.on('update', (tasks, localUpdate) => update(DateHelper.fixDates(tasks) as Task[], localUpdate))
+
+        if (heartbeat !== undefined) {
+            connection.on('heartbeat', heartbeat)
+        }
     },
 
     saveTasks(tasks: Task[]): Promise<void> {

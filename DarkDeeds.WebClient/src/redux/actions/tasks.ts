@@ -103,8 +103,9 @@ export function startTaskHub() {
     return async(dispatch: Dispatch<TasksAction>) => {
         taskHubIsReady = false
         await TaskHub.hubStart()
-        TaskHub.hubSubscribe((tasksFromServer, localUpdate) =>
-            dispatch({ type: constants.TASKS_PUSH_FROM_SERVER, tasks: tasksFromServer, localUpdate }))
+        TaskHub.hubSubscribe(
+            (tasksFromServer, localUpdate) => dispatch({ type: constants.TASKS_PUSH_FROM_SERVER, tasks: tasksFromServer, localUpdate }),
+            () => console.log('task-hub heartbeat'))
         taskHubIsReady = true
     }
 }

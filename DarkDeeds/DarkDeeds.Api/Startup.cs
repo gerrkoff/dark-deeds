@@ -1,4 +1,5 @@
-﻿using DarkDeeds.Api.Hubs;
+﻿using DarkDeeds.Api.BackgroundServices;
+using DarkDeeds.Api.Hubs;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -28,6 +29,7 @@ namespace DarkDeeds.Api
                 .AddCompression() 
                 .ConfigureMvc();
 
+            services.AddHostedService<HubHeartbeat<TaskHub>>();
             services.AddHealthChecks();
             services.AddSignalR()
                 .AddHubOptions<TaskHub>(options => options.EnableDetailedErrors = true);
