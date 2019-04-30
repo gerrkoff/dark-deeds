@@ -6,6 +6,8 @@ import { DateHelper, TaskHelper } from '../../helpers'
 import { DayCardModel, Task, TaskModel } from '../../models'
 import { DaysBlock, NoDateCard } from './'
 
+import '../../styles/overview.css'
+
 interface IProps {
     tasks: Task[]
     showCompleted: boolean

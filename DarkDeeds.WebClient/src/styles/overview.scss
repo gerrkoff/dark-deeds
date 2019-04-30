@@ -1,0 +1,13 @@
+// common list fixes
+.fixed-list.list .item {
+    padding: 0 !important;
+}
+
+.fixed-list.list .item::before {
+    margin-top: 0.175rem;
+}
+
+.fixed-list.list {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+}

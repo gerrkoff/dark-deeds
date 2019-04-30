@@ -22,7 +22,7 @@ export class DayCard extends React.PureComponent<IProps> {
             <Segment id='day-card' className={ className } inverted raised>
                 <DayCardHeader date={this.props.day.date} openTaskModal={this.props.openTaskModal}/>
                 {this.renderAllDayList(tasks.filter((x: Task) => x.timeType === TaskTimeTypeEnum.AllDayLong))}
-                <List bulleted className='day-card-tasks-view dragula-container' data-id={this.props.day.date.getTime()}>
+                <List bulleted className='day-card-tasks-view fixed-list dragula-container' data-id={this.props.day.date.getTime()}>
                     {tasks
                         .filter((x: Task) => x.timeType !== TaskTimeTypeEnum.AllDayLong)
                         .map((x: Task) =>
@@ -41,7 +41,7 @@ export class DayCard extends React.PureComponent<IProps> {
         }
 
         return (
-            <List>
+            <List className='fixed-list'>
                 {tasks.map((x: Task) =>
                     <List.Item key={x.clientId} className='all-day-item'>
                         {this.renderTask(x)}

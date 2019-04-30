@@ -9,10 +9,6 @@
     background-color: $color-day-default;
 }
 
-#day-card .list {
-    margin-top: 0;
-}
-
 .day-card-expired {
     background-color: $color-day-expired !important;
     box-shadow: none !important;
@@ -40,5 +36,4 @@
 
 .all-day-item:last-child {
     padding-bottom: 0.25rem !important;
-    border-bottom: 1px solid $color-secondary-text;
 }

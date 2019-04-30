@@ -16,7 +16,7 @@ export class NoDateCard extends React.PureComponent<IProps> {
         this.props.tasks.sort((x, y) => x.order > y.order ? 1 : 0)
         return (
             <Segment raised inverted id='no-date-card'>
-                <List bulleted className='no-date-card-tasks-view dragula-container' data-id={0}>
+                <List bulleted className='no-date-card-tasks-view fixed-list dragula-container' data-id={0}>
                     {this.props.tasks.map(x =>
                         <List.Item key={x.clientId} data-id={x.clientId}>
                             <TaskItem task={x} setTaskStatuses={this.props.setTaskStatuses} confirmAction={this.props.confirmAction} openTaskModal={this.props.openTaskModal} />
