@@ -1,5 +1,8 @@
+@import 'shared/colors.scss';
+
 #no-date-card {
     font-size: 0.8rem;
+    background-color: $color-day-default;
 }
 
 .no-date-card-tasks-view {

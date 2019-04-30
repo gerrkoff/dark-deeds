@@ -1,4 +1,6 @@
-$color-background: #555555;
+$color-base: #555555;
+
+$color-background: $color-base;
 
 $color-shadow-light: #0000004d;
 $color-shadow-solid: #353A45;
@@ -6,9 +8,9 @@ $color-shadow-solid: #353A45;
 $color-primary-text: #fdfdfd;
 $color-secondary-text: #646464;
 
-$color-day-expired: #323232;
-$color-day-default: #101010;
-$color-item-selected: #555555;
+$color-day-expired: darken($color-base, 13.75%); // #323232
+$color-day-default: darken($color-base, 27%); // #101010
+$color-item-selected: $color-base;
 
 $color-success: #058909;
 $color-error: #B43B2F;
@@ -18,3 +20,4 @@ $color-info: #2875A8;
 // palette not used
 $not-used1: #777777;
 $not-used1: #999999;
+$old-cool-bg: #282c34;
