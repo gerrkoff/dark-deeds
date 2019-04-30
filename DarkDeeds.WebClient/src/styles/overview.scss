@@ -1,10 +1,6 @@
-// common list fixes
-.fixed-list.list .item {
-    padding: 0 !important;
-}
-
+// common list adjustments
 .fixed-list.list .item::before {
-    margin-top: 0.175rem;
+    margin-top: 0.1rem;
 }
 
 .fixed-list.list {
