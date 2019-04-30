@@ -5,6 +5,8 @@
   "dependencies": {
     "@aspnet/signalr": "^1.1.2",
     "connected-react-router": "^4.5.0",
+    "node-sass-chokidar": "^1.3.4",
+    "npm-run-all": "^4.1.5",
     "react": "^16.6.0",
     "react-dom": "^16.6.0",
     "react-dragula": "^1.1.17",
@@ -19,10 +21,18 @@
     "semantic-ui-react": "^0.83.0"
   },
   "scripts": {
-    "start": "cross-env BROWSER=none react-scripts-ts start",
-    "build": "react-scripts-ts build && npx copyfiles \"build/**\" \"../DarkDeeds/DarkDeeds.Api/wwwroot\" -u 1 -e build && echo files copied",
+    "css-build": "node-sass-chokidar src/ -o src/",
+    "css-watch": "npm run css-build && node-sass-chokidar src/ -o src/ --watch --recursive",
+    
+    "js-build": "react-scripts-ts build && npx copyfiles \"build/**\" \"../DarkDeeds/DarkDeeds.Api/wwwroot\" -u 1 -e build && echo files copied",
+    "js-start": "cross-env BROWSER=none react-scripts-ts start",
+
+    "build": "npm run css-build && npm run js-build",
+    "start": "npm-run-all -p css-watch js-start",
+
     "test": "react-scripts-ts test --env=jsdom",
     "test_ci": "cross-env CI=true react-scripts-ts test --env=jsdom",
+
     "eject": "react-scripts-ts eject"
   },
   "devDependencies": {
