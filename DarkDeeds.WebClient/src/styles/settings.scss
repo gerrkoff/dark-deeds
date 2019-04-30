@@ -1,5 +1,8 @@
+
+@import 'shared/colors.scss';
+
 .settings-divider {
-    color: white !important;
+    color: $color-primary-text !important;
     font-size: 0.8rem !important;
 }
 
@@ -8,5 +11,5 @@
 }
 
 .ui.checkbox label {
-    color: white !important;
+    color: $color-primary-text !important;
 }

@@ -1,9 +1,11 @@
+@import 'shared/colors.scss';
+
 .toast-success {
     border-radius: 6px;
     box-shadow: 2px 2px 20px 2px rgba(0,0,0,0.3);
     min-height: 45px;
     text-align: center;
-    background-color: #058909; 
+    background-color: $color-success; 
 }
 
 .toast-error {
@@ -11,7 +13,7 @@
     box-shadow: 2px 2px 20px 2px rgba(0,0,0,0.3);
     min-height: 45px;
     text-align: center;
-    background-color: #B43B2F;
+    background-color: $color-error;
 }
 
 .toast-warn {
@@ -19,7 +21,7 @@
     box-shadow: 2px 2px 20px 2px rgba(0,0,0,0.3);
     min-height: 45px;
     text-align: center;
-    background-color: #BE9B0C;
+    background-color: $color-warn;
 }
 
 .toast-info {
@@ -27,7 +29,7 @@
     box-shadow: 2px 2px 20px 2px rgba(0,0,0,0.3);
     min-height: 45px;
     text-align: center;
-    background-color: #2875A8;
+    background-color: $color-info;
 }
 /*
 .toast-progress {

@@ -1,3 +1,5 @@
+@import 'shared/colors.scss';
+
 #day-card {
     padding: 0.25rem 0.25rem 0.5rem 0.25rem;
     font-size: 0.8rem;
@@ -11,7 +13,7 @@
 }
 
 .day-card-expired {
-    background-color: #1F2329 !important;
+    background-color: $color-item-expired !important;
     box-shadow: none !important;
 }
 
@@ -30,15 +32,11 @@
     cursor: pointer;
 }
 
-.day-card-header-hover {
-    background: rgba(191, 214, 229, 0.5) !important;
-}
-
 .all-day-item {
     text-align: center;
 }
 
 .all-day-item:last-child {
     padding-bottom: 0.25rem !important;
-    border-bottom: 1px solid white;
+    border-bottom: 1px solid $color-secondary-text;
 }

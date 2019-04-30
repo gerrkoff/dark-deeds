@@ -13,26 +13,14 @@ interface IProps {
     setTaskStatuses?: (clientId: number, completed?: boolean, deleted?: boolean) => void
     confirmAction?: (content: React.ReactNode, action: () => void, header: string) => void
 }
-interface IState {
-    headerHovered: boolean
-}
-export class DayCard extends React.PureComponent<IProps, IState> {
-    constructor(props: IProps) {
-        super(props)
-        this.state = {
-            headerHovered: false
-        }
-    }
+export class DayCard extends React.PureComponent<IProps> {
 
     public render() {
-        let className = this.props.expiredDate && this.props.day.date < this.props.expiredDate ? 'day-card-expired' : ''
-        if (this.state.headerHovered) {
-            className += ' day-card-header-hover'
-        }
+        const className = this.props.expiredDate && this.props.day.date < this.props.expiredDate ? 'day-card-expired' : ''
         const tasks = TaskHelper.sortTasks(this.props.day.tasks)
         return (
             <Segment id='day-card' className={ className } inverted raised>
-                <DayCardHeader date={this.props.day.date} openTaskModal={this.props.openTaskModal} mouseOver={this.handleMouseOverHeader}/>
+                <DayCardHeader date={this.props.day.date} openTaskModal={this.props.openTaskModal}/>
                 {this.renderAllDayList(tasks.filter((x: Task) => x.timeType === TaskTimeTypeEnum.AllDayLong))}
                 <List bulleted className='day-card-tasks-view dragula-container' data-id={this.props.day.date.getTime()}>
                     {tasks
@@ -67,9 +55,5 @@ export class DayCard extends React.PureComponent<IProps, IState> {
         return (
             <TaskItem task={task} setTaskStatuses={this.props.setTaskStatuses} confirmAction={this.props.confirmAction} openTaskModal={this.props.openTaskModal}/>
         )
-    }
-
-    private handleMouseOverHeader = (isOver: boolean) => {
-        this.setState({ headerHovered: isOver })
     }
 }
