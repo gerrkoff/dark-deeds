@@ -21,18 +21,17 @@
     "semantic-ui-react": "^0.83.0"
   },
   "scripts": {
-    "css-build": "node-sass-chokidar src/ -o src/",
-    "css-watch": "npm run css-build && node-sass-chokidar src/ -o src/ --watch --recursive",
-    
-    "js-build": "react-scripts-ts build && npx copyfiles \"build/**\" \"../DarkDeeds/DarkDeeds.Api/wwwroot\" -u 1 -e build && echo files copied",
-    "js-start": "cross-env BROWSER=none react-scripts-ts start",
+    "build-css": "node-sass-chokidar src/ -o src/",
+    "build-js": "react-scripts-ts build",
+    "build-copy": "npx copyfiles \"build/**\" \"../DarkDeeds/DarkDeeds.Api/wwwroot\" -u 1 -e build && echo files copied",
+    "build": "npm run build-css && npm run build-js && npm run build-copy",
+    "test-ci": "npm run build-css && cross-env CI=true react-scripts-ts test --env=jsdom",
 
-    "build": "npm run css-build && npm run js-build",
-    "start": "npm-run-all -p css-watch js-start",
+    "watch-css": "npm run build-css && node-sass-chokidar src/ -o src/ --watch --recursive",
+    "start-js": "cross-env BROWSER=none react-scripts-ts start",
+    "start": "npm-run-all -p watch-css start-js",
 
     "test": "react-scripts-ts test --env=jsdom",
-    "test_ci": "npm run css-build && cross-env CI=true react-scripts-ts test --env=jsdom",
-
     "eject": "react-scripts-ts eject"
   },
   "devDependencies": {
