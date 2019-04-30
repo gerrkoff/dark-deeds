@@ -1,14 +1,15 @@
 $color-background: #282c34;
 
-$color-shadow-light: rgba(0,0,0,0.3);
+$color-shadow-light: #0000004d;
 $color-shadow-solid: #353A45;
 
-$color-primary-text: #fff;
-$color-secondary-text: #fff;
+$color-primary-text: #ffffff;
+$color-secondary-text: #878787;
 
-$color-item-expired: #1F2329;
-$color-item-selected: rgba(191, 214, 229, 0.1);
-$color-item-completed: #969696;
+$color-day-expired: #1F2329;
+$color-day-default: #1b1c1d;
+$color-item-selected: #151515;
+$color-task-completed: #969696;
 
 $color-success: #058909;
 $color-error: #B43B2F;
