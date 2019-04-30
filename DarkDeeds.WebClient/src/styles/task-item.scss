@@ -16,11 +16,12 @@
 .task-item-selected {
     border-radius: 2px;
     background: $color-item-selected;
+    color: $color-primary-text !important;
 }
 
 .task-item-completed {
     text-decoration: line-through;
-    color: $color-task-completed;
+    color: $color-secondary-text;
 }
 
 .task-item-probable {
