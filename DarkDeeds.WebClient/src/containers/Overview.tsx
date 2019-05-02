@@ -7,6 +7,7 @@ import { IAppState } from '../redux/types'
 function mapStateToProps({ tasks, settings }: IAppState) {
     return {
         tasks: tasks.tasks,
+        tasksLoaded: tasks.loaded,
         showCompleted: settings.showCompleted
     }
 }

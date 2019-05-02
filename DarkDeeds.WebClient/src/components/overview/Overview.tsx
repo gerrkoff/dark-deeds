@@ -1,15 +1,16 @@
 import * as React from 'react'
 // @ts-ignore
 import dragula from 'react-dragula'
-import { Accordion } from 'semantic-ui-react'
-import { DateService, TaskService } from '../../services'
-import { DayCardModel, Task, TaskModel } from '../../models'
+import { Accordion, AccordionTitleProps } from 'semantic-ui-react'
+import { DateService, TaskService, LocalSettingsService } from '../../services'
+import { DayCardModel, Task, TaskModel, LocalSettings, OverviewTabEnum } from '../../models'
 import { DaysBlock, NoDateCard } from './'
 
 import '../../styles/overview.css'
 
 interface IProps {
     tasks: Task[]
+    tasksLoaded: boolean
     showCompleted: boolean
     updateTasks: (tasks: Task[]) => void
     openTaskModal: (model: TaskModel, id?: number) => void
@@ -18,6 +19,13 @@ interface IProps {
 }
 export class Overview extends React.PureComponent<IProps> {
     private dragula: DragulaWrapper
+    private settings: LocalSettings
+    private tabMap: OverviewTabEnum[]
+
+    constructor(props: IProps) {
+        super(props)
+        this.settings = LocalSettingsService.load()
+    }
 
     public componentDidMount() {
         this.dragula = new DragulaWrapper(this.dndHandler)
@@ -32,8 +40,13 @@ export class Overview extends React.PureComponent<IProps> {
     }
 
     public render() {
+        if (!this.props.tasksLoaded) {
+            return (<React.Fragment />)
+        }
+
         const today = DateService.dayStart(new Date())
         const model = TaskService.evalModel(this.props.tasks, today, this.props.showCompleted)
+        this.tabMap = [OverviewTabEnum.NoDate]
 
         const panels = [{
             content: { content: (<NoDateCard tasks={model.noDate} setTaskStatuses={this.props.setTaskStatuses} confirmAction={this.props.confirmAction} openTaskModal={this.props.openTaskModal} />) },
@@ -47,6 +60,7 @@ export class Overview extends React.PureComponent<IProps> {
                 key: 'expired',
                 title: 'Expired'
             })
+            this.tabMap.push(OverviewTabEnum.Expired)
         }
 
         panels.push({
@@ -54,6 +68,7 @@ export class Overview extends React.PureComponent<IProps> {
             key: 'current',
             title: 'Current'
         })
+        this.tabMap.push(OverviewTabEnum.Current)
 
         if (model.future.length > 0) {
             panels.push({
@@ -61,11 +76,34 @@ export class Overview extends React.PureComponent<IProps> {
                 key: 'future',
                 title: 'Future'
             })
+            this.tabMap.push(OverviewTabEnum.Future)
         }
 
         return (
-            <Accordion defaultActiveIndex={[0, 1, 2, 3]} panels={panels} exclusive={false} inverted />
+            <Accordion
+                defaultActiveIndex={this.evalOpenedTabs()}
+                panels={panels}
+                exclusive={false}
+                onTitleClick={this.panelClickHandler}
+                inverted />
         )
+    }
+
+    // TODO: test
+    private evalOpenedTabs = (): number[] => {
+        return this.tabMap
+            .filter(x => this.settings.openedOverviewTabs.some(y => x === y))
+            .map(x => this.tabMap.indexOf(x))
+    }
+
+    private panelClickHandler = (_event: React.MouseEvent<HTMLDivElement>, data: AccordionTitleProps) => {
+        const tab: OverviewTabEnum = this.tabMap[data.index as number]
+        if (data.active) {
+            this.settings.openedOverviewTabs = this.settings.openedOverviewTabs.filter(x => x !== tab)
+        } else {
+            this.settings.openedOverviewTabs.push(tab)
+        }
+        LocalSettingsService.save()
     }
 
     private renderDaysBlock = (model: DayCardModel[], daysInRow?: number) => {

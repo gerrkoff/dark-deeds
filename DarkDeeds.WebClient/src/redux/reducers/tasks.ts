@@ -6,6 +6,7 @@ import { ITasksState } from '../types'
 
 const inittialState: ITasksState = {
     loading: true,
+    loaded: false,
     saving: false,
     notSaved: false,
     tasks: []
@@ -21,6 +22,7 @@ export function tasks(state: ITasksState = inittialState, action: TasksAction): 
         case TASKS_LOADING_SUCCESS:
             return { ...state,
                 loading: false,
+                loaded: true,
                 tasks: [...action.tasks]
             }
         case TASKS_LOADING_FAILED:
