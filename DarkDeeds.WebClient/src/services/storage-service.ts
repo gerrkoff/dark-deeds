@@ -1,9 +1,9 @@
 const service = {
-    TokenKey: 'accessToken',
-
-    Clear: (key: string) => localStorage.removeItem(key),
-    Load: (key: string): string | null => localStorage.getItem(key),
-    Save: (key: string, value: string) => localStorage.setItem(key, value)
+    clearAccessToken: () => localStorage.removeItem(accessTokenKey),
+    loadAccessToken: (): string | null => localStorage.getItem(accessTokenKey),
+    saveAccessToken: (value: string) => localStorage.setItem(accessTokenKey, value)
 }
+
+const accessTokenKey = 'accessToken'
 
 export { service as StorageService }

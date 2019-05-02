@@ -5,7 +5,7 @@ import { DateService, StorageService } from '../services'
 
 const connection = new signalR.HubConnectionBuilder()
     .withUrl(baseUrl + 'ws/task', {
-        accessTokenFactory: () => StorageService.Load(StorageService.TokenKey) as string
+        accessTokenFactory: () => StorageService.loadAccessToken() as string
     })
     .build()
 

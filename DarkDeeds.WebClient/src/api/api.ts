@@ -7,7 +7,7 @@ const service = {
         return sendRequest(`GET ${api}`, () =>
             fetch(baseUrl + api, {
                 headers: {
-                    'Authorization': 'Bearer ' + StorageService.Load(StorageService.TokenKey)
+                    'Authorization': 'Bearer ' + StorageService.loadAccessToken()
                 }
             })
         )
@@ -18,7 +18,7 @@ const service = {
             fetch(baseUrl + api, {
                 body: JSON.stringify(data),
                 headers: {
-                    'Authorization': 'Bearer ' + StorageService.Load(StorageService.TokenKey),
+                    'Authorization': 'Bearer ' + StorageService.loadAccessToken(),
                     'Content-Type': 'application/json'
                 },
                 method: 'POST'

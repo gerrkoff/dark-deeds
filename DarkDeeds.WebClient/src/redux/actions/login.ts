@@ -39,7 +39,7 @@ export type LoginAction = ILoginProcessing | ILoginSigninFinish | ILoginSignupFi
 
 export function initialLogin() {
     return async(dispatch: Dispatch<LoginAction>) => {
-        const token = StorageService.Load(StorageService.TokenKey)
+        const token = StorageService.loadAccessToken()
         if (token === null || token === '') {
             return
         }
@@ -65,7 +65,7 @@ export function signin(username: string, password: string) {
             result = apiResult.result
 
             if (result === SigninResultEnum.Success) {
-                StorageService.Save(StorageService.TokenKey, apiResult.token)
+                StorageService.saveAccessToken(apiResult.token)
                 await loadCurrentUser(dispatch)
             }
         } catch (err) {
@@ -87,7 +87,7 @@ export function signup(username: string, password: string) {
             result = apiResult.result
 
             if (result === SignupResultEnum.Success) {
-                StorageService.Save(StorageService.TokenKey, apiResult.token)
+                StorageService.saveAccessToken(apiResult.token)
                 await loadCurrentUser(dispatch)
             }
         } catch (err) {
@@ -101,7 +101,7 @@ export function signup(username: string, password: string) {
 
 export function signout() {
     return async(dispatch: Dispatch<LoginAction | RouterAction>) => {
-        StorageService.Clear(StorageService.TokenKey)
+        StorageService.clearAccessToken()
         dispatch(navigateTo('/'))
         dispatch(currentUser(false))
     }
