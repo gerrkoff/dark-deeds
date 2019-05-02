@@ -39,4 +39,4 @@ const service = {
     }
 }
 
-export { service as ToastHelper }
+export { service as ToastService }

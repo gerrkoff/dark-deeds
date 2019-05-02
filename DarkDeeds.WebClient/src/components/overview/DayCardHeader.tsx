@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { Icon, MenuItemProps } from 'semantic-ui-react'
-import { DateHelper } from '../../helpers'
+import { DateService } from '../../services'
 import { TaskModel } from '../../models'
 import { MenuPopup } from './'
 
@@ -48,7 +48,7 @@ export class DayCardHeader extends React.PureComponent<IProps, IState> {
             + (this.state.menuPopupOpen ? ' day-card-header-selected' : '')
         return (
             <span className={className}>
-                {DateHelper.toLabel(this.props.date)}
+                {DateService.toLabel(this.props.date)}
             </span>
         )
     }

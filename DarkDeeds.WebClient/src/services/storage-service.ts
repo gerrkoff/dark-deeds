@@ -6,4 +6,4 @@ const service = {
     Save: (key: string, value: string) => localStorage.setItem(key, value)
 }
 
-export { service as StorageHelper }
+export { service as StorageService }

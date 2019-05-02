@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { DateHelper } from '../../helpers'
+import { DateService } from '../../services'
 
 interface IProps {
     match: {
@@ -10,7 +10,7 @@ interface IProps {
 }
 export class Day extends React.PureComponent<IProps> {
     public render() {
-        const dateParam = DateHelper.toDateFromSpecialFormat(this.props.match.params.date)
+        const dateParam = DateService.toDateFromSpecialFormat(this.props.match.params.date)
 
         return (
             <div>Day! {(dateParam || new Date()).toLocaleDateString()}</div>

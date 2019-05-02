@@ -1,6 +1,6 @@
 import { Dispatch } from 'redux'
 import { TaskApi, TaskHub } from '../../api'
-import { ToastHelper } from '../../helpers'
+import { ToastService } from '../../services'
 import { Task, TaskModel } from '../../models'
 import * as constants from '../constants'
 
@@ -64,7 +64,7 @@ export function loadTasks() {
             dispatch({ type: constants.TASKS_LOADING_SUCCESS, tasks })
         } catch (err) {
             dispatch({ type: constants.TASKS_LOADING_FAILED })
-            ToastHelper.errorProcess('loading tasks')
+            ToastService.errorProcess('loading tasks')
         }
     }
 }
@@ -85,10 +85,10 @@ export function saveTasks(tasks: Task[]) {
         try {
             const tasksFromServer = await TaskApi.saveTasks(tasks)
             dispatch({ type: constants.TASKS_SAVING_SUCCESS, tasks: tasksFromServer })
-            ToastHelper.info(`${tasks.length} tasks were updated`)
+            ToastService.info(`${tasks.length} tasks were updated`)
         } catch (err) {
             dispatch({ type: constants.TASKS_SAVING_FAILED })
-            ToastHelper.errorProcess('updating tasks')
+            ToastService.errorProcess('updating tasks')
         }
     }
 }
@@ -130,7 +130,7 @@ export function saveTasksHub(tasks: Task[]) {
             console.log(`${tasks.length} tasks were updated`)
         } catch (err) {
             dispatch({ type: constants.TASKS_SAVING_FAILED })
-            ToastHelper.errorProcess('updating tasks')
+            ToastService.errorProcess('updating tasks')
         }
     }
 }

@@ -1,4 +1,4 @@
-import { TaskConverter } from '../../helpers'
+import { TaskConverter } from '../../services'
 import { TaskModel, TaskTimeTypeEnum } from '../../models'
 
 const currentYear = new Date().getFullYear()

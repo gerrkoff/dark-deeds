@@ -1,4 +1,4 @@
-import { TaskHelper } from '../../helpers'
+import { TaskService } from '../../services'
 import { Task, TaskTimeTypeEnum } from '../../models'
 
 function task(year: number, month: number, date: number, id: number = 0, order: number = 0, timeType: TaskTimeTypeEnum = TaskTimeTypeEnum.NoTime, hours: number = 0, minutes: number = 0): Task {
@@ -14,7 +14,7 @@ test('positive', () => {
         task(2018, 9, 10, 5, 2)
     ]
 
-    const result = TaskHelper.moveTask(tasks, 4, new Date(2018, 9, 9).getTime(), new Date(2018, 9, 10).getTime(), 2)
+    const result = TaskService.moveTask(tasks, 4, new Date(2018, 9, 9).getTime(), new Date(2018, 9, 10).getTime(), 2)
 
     expect(result.find(x => x.clientId === 1)!.order).toBe(1)
     expect(result.find(x => x.clientId === 2)!.order).toBe(3)
@@ -32,7 +32,7 @@ test('move as last', () => {
         task(2018, 9, 10, 3, 1)
     ]
 
-    const result = TaskHelper.moveTask(tasks, 3, new Date(2018, 9, 9).getTime(), new Date(2018, 9, 10).getTime(), null)
+    const result = TaskService.moveTask(tasks, 3, new Date(2018, 9, 9).getTime(), new Date(2018, 9, 10).getTime(), null)
 
     expect(result.find(x => x.clientId === 1)!.order).toBe(10)
     expect(result.find(x => x.clientId === 2)!.order).toBe(2)
@@ -47,7 +47,7 @@ test('same list reorder', () => {
         task(2018, 9, 9, 4, 1)
     ]
 
-    const result = TaskHelper.moveTask(tasks, 2, new Date(2018, 9, 9).getTime(), new Date(2018, 9, 9).getTime(), 4)
+    const result = TaskService.moveTask(tasks, 2, new Date(2018, 9, 9).getTime(), new Date(2018, 9, 9).getTime(), 4)
 
     expect(result.find(x => x.clientId === 1)!.order).toBe(4)
     expect(result.find(x => x.clientId === 2)!.order).toBe(1)
@@ -63,7 +63,7 @@ test('same list as last', () => {
         task(2018, 9, 9, 4, 1)
     ]
 
-    const result = TaskHelper.moveTask(tasks, 4, new Date(2018, 9, 9).getTime(), new Date(2018, 9, 9).getTime(), null)
+    const result = TaskService.moveTask(tasks, 4, new Date(2018, 9, 9).getTime(), new Date(2018, 9, 9).getTime(), null)
 
     expect(result.find(x => x.clientId === 1)!.order).toBe(3)
     expect(result.find(x => x.clientId === 2)!.order).toBe(2)
@@ -80,7 +80,7 @@ test('move concrete time', () => {
         task(2018, 9, 10, 5, 1)
     ]
 
-    const result = TaskHelper.moveTask(tasks, 4, new Date(2018, 9, 9).getTime(), new Date(2018, 9, 10).getTime(), 1)
+    const result = TaskService.moveTask(tasks, 4, new Date(2018, 9, 9).getTime(), new Date(2018, 9, 10).getTime(), 1)
 
     expect(result.find(x => x.clientId === 1)!.order).toBe(1)
     expect(result.find(x => x.clientId === 2)!.order).toBe(0)
@@ -100,7 +100,7 @@ test('move after time - from after time to after time', () => {
         task(2018, 9, 10, 5, 1)
     ]
 
-    const result = TaskHelper.moveTask(tasks, 4, new Date(2018, 9, 9).getTime(), new Date(2018, 9, 10).getTime(), null)
+    const result = TaskService.moveTask(tasks, 4, new Date(2018, 9, 9).getTime(), new Date(2018, 9, 10).getTime(), null)
 
     expect(result.find(x => x.clientId === 1)!.order).toBe(1)
     expect(result.find(x => x.clientId === 2)!.order).toBe(0)
@@ -122,7 +122,7 @@ test('move after time - from no time to after time', () => {
         task(2018, 9, 10, 5, 2)
     ]
 
-    const result = TaskHelper.moveTask(tasks, 4, new Date(2018, 9, 9).getTime(), new Date(2018, 9, 10).getTime(), 3)
+    const result = TaskService.moveTask(tasks, 4, new Date(2018, 9, 9).getTime(), new Date(2018, 9, 10).getTime(), 3)
 
     expect(result.find(x => x.clientId === 1)!.order).toBe(1)
     expect(result.find(x => x.clientId === 2)!.order).toBe(0)
@@ -144,7 +144,7 @@ test('move after time - from after time to no time', () => {
         task(2018, 9, 10, 5, 1)
     ]
 
-    const result = TaskHelper.moveTask(tasks, 4, new Date(2018, 9, 9).getTime(), new Date(2018, 9, 10).getTime(), 2)
+    const result = TaskService.moveTask(tasks, 4, new Date(2018, 9, 9).getTime(), new Date(2018, 9, 10).getTime(), 2)
 
     expect(result.find(x => x.clientId === 1)!.order).toBe(1)
     expect(result.find(x => x.clientId === 2)!.order).toBe(0)
@@ -166,7 +166,7 @@ test('moving to no date (reset type)', () => {
         task(2018, 9, 10, 5, 2, TaskTimeTypeEnum.AfterTime, 13)
     ]
 
-    const result = TaskHelper.moveTask(tasks, 4, 0, new Date(2018, 9, 10).getTime(), null)
+    const result = TaskService.moveTask(tasks, 4, 0, new Date(2018, 9, 10).getTime(), null)
 
     expect(result.find(x => x.clientId === 1)!.order).toBe(1)
     expect(result.find(x => x.clientId === 2)!.order).toBe(0)
@@ -190,7 +190,7 @@ test('move concrete time and adjust source aftertime to be no time', () => {
         task(2018, 9, 10, 7, 2, TaskTimeTypeEnum.AfterTime, 12)
     ]
 
-    const result = TaskHelper.moveTask(tasks, 4, new Date(2018, 9, 9).getTime(), new Date(2018, 9, 10).getTime(), 1)
+    const result = TaskService.moveTask(tasks, 4, new Date(2018, 9, 9).getTime(), new Date(2018, 9, 10).getTime(), 1)
 
     expect(result.find(x => x.clientId === 1)!.order).toBe(1)
     expect(result.find(x => x.clientId === 2)!.order).toBe(0)
@@ -220,7 +220,7 @@ test('move concrete time and adjust source aftertime to be after time (concrete 
         task(2018, 9, 10, 7, 2, TaskTimeTypeEnum.AfterTime, 12)
     ]
 
-    const result = TaskHelper.moveTask(tasks, 4, new Date(2018, 9, 9).getTime(), new Date(2018, 9, 10).getTime(), 1)
+    const result = TaskService.moveTask(tasks, 4, new Date(2018, 9, 9).getTime(), new Date(2018, 9, 10).getTime(), 1)
 
     expect(result.find(x => x.clientId === 1)!.order).toBe(1)
     expect(result.find(x => x.clientId === 2)!.order).toBe(0)
@@ -251,7 +251,7 @@ test('move concrete time and adjust source aftertime to be after time (after tim
         task(2018, 9, 10, 8, 1, TaskTimeTypeEnum.AfterTime, 11)
     ]
 
-    const result = TaskHelper.moveTask(tasks, 4, new Date(2018, 9, 9).getTime(), new Date(2018, 9, 10).getTime(), 1)
+    const result = TaskService.moveTask(tasks, 4, new Date(2018, 9, 9).getTime(), new Date(2018, 9, 10).getTime(), 1)
 
     expect(result.find(x => x.clientId === 1)!.order).toBe(1)
     expect(result.find(x => x.clientId === 2)!.order).toBe(0)
@@ -277,7 +277,7 @@ test('move concrete time and no adjust if source and target are the same', () =>
         task(2018, 9, 10, 8, 1, TaskTimeTypeEnum.AfterTime, 12)
     ]
 
-    const result = TaskHelper.moveTask(tasks, 4, new Date(2018, 9, 10).getTime(), new Date(2018, 9, 10).getTime(), null)
+    const result = TaskService.moveTask(tasks, 4, new Date(2018, 9, 10).getTime(), new Date(2018, 9, 10).getTime(), null)
 
     expect(result.find(x => x.clientId === 4)!.order).toBe(0)
 
@@ -295,7 +295,7 @@ test('same list no date 1', () => {
         new Task(4, '', null, 3, false, 0, false, false, TaskTimeTypeEnum.NoTime)
     ]
 
-    const result = TaskHelper.moveTask(tasks, 4, 0, 0, 1)
+    const result = TaskService.moveTask(tasks, 4, 0, 0, 1)
 
     expect(result.find(x => x.clientId === 1)!.order).toBe(2)
     expect(result.find(x => x.clientId === 2)!.order).toBe(3)
@@ -311,7 +311,7 @@ test('same list no date 2', () => {
         new Task(4, '', null, 3, false, 0, false, false, TaskTimeTypeEnum.NoTime)
     ]
 
-    const result = TaskHelper.moveTask(tasks, 3, 0, 0, 4)
+    const result = TaskService.moveTask(tasks, 3, 0, 0, 4)
 
     expect(result.find(x => x.clientId === 1)!.order).toBe(1)
     expect(result.find(x => x.clientId === 2)!.order).toBe(2)
@@ -325,7 +325,7 @@ test('move to list with only all day long tasks equals moving to empty list - No
         task(2018, 9, 11, 2, 0, TaskTimeTypeEnum.NoTime)
     ]
 
-    const result = TaskHelper.moveTask(tasks, 2, new Date(2018, 9, 10).getTime(), new Date(2018, 9, 11).getTime(), null)
+    const result = TaskService.moveTask(tasks, 2, new Date(2018, 9, 10).getTime(), new Date(2018, 9, 11).getTime(), null)
 
     const taskRes = result.find(x => x.clientId === 2)!
     expect(taskRes.dateTime!.getTime()).toBe(new Date(2018, 9, 10).getTime())
@@ -338,7 +338,7 @@ test('move to list with only all day long tasks equals moving to empty list - Af
         task(2018, 9, 11, 2, 0, TaskTimeTypeEnum.AfterTime, 12)
     ]
 
-    const result = TaskHelper.moveTask(tasks, 2, new Date(2018, 9, 10).getTime(), new Date(2018, 9, 11).getTime(), null)
+    const result = TaskService.moveTask(tasks, 2, new Date(2018, 9, 10).getTime(), new Date(2018, 9, 11).getTime(), null)
 
     const taskRes = result.find(x => x.clientId === 2)!
     expect(taskRes.dateTime!.getTime()).toBe(new Date(2018, 9, 10).getTime())
@@ -352,7 +352,7 @@ test('move concrete time task from list with all day long task should reset rema
         task(2018, 9, 10, 3, 0, TaskTimeTypeEnum.AfterTime, 12)
     ]
 
-    const result = TaskHelper.moveTask(tasks, 2, new Date(2018, 9, 11).getTime(), new Date(2018, 9, 10).getTime(), null)
+    const result = TaskService.moveTask(tasks, 2, new Date(2018, 9, 11).getTime(), new Date(2018, 9, 10).getTime(), null)
 
     const taskRes = result.find(x => x.clientId === 3)!
     expect(taskRes.dateTime!.getTime()).toBe(new Date(2018, 9, 10).getTime())

@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { Button, Icon, Input, Label, Modal } from 'semantic-ui-react'
-import { KeyConstants, TaskConverter } from '../../helpers'
+import { KeyConstants, TaskConverter } from '../../services'
 import { TaskModel } from '../../models'
 
 interface IProps {

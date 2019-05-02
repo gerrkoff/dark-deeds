@@ -2,7 +2,7 @@ import { Dispatch } from 'redux'
 import { TelegramIntegrationApi } from '../../api'
 import * as constants from '../constants'
 import { TelegramStart } from '../../models'
-import { ToastHelper } from '../../helpers'
+import { ToastService } from '../../services'
 
 export interface IGenerateKeyProcessing {
     type: constants.TELEGRAM_INTEGRATION_GENERATE_KEY_PROCESSING
@@ -29,7 +29,7 @@ export function generateTelegramChatKey() {
             dispatch(generateKeySuccess(result))
         } catch (err) {
             dispatch({ type: constants.TELEGRAM_INTEGRATION_GENERATE_KEY_FAIL })
-            ToastHelper.errorProcess('generating telegram key')
+            ToastService.errorProcess('generating telegram key')
         }
     }
 }

@@ -1,4 +1,4 @@
-import { DateHelper, TaskHelper } from '../../helpers'
+import { DateService, TaskService } from '../../services'
 import { Task, TaskModel } from '../../models'
 import { TasksAction } from '../actions'
 import { TASKS_LOADING, TASKS_LOADING_FAILED, TASKS_LOADING_SUCCESS, TASKS_LOCAL_UPDATE, TASKS_LOCAL_UPDATE_TASK, TASKS_SAVING, TASKS_SAVING_FAILED, TASKS_SAVING_SUCCESS, TASKS_SET_TASK_STATUSES, TASKS_PUSH_FROM_SERVER } from '../constants'
@@ -87,7 +87,7 @@ function pushTasksFromServer(localTasks: Task[], updatedTasks: Task[], localUpda
                     clientId: updatedTask.id,
                     id: updatedTask.id
                 }
-                newTasks[taskIndex].updated = !TaskHelper.tasksEqual(newTasks[taskIndex], updatedTask)
+                newTasks[taskIndex].updated = !TaskService.tasksEqual(newTasks[taskIndex], updatedTask)
             } else {
                 newTasks[taskIndex] = {
                     ...updatedTask,
@@ -129,7 +129,7 @@ function localAddTask(model: TaskModel, localTasks: Task[]): Task[] {
     }
 
     const sameDayTaskOrders = localTasks
-        .filter(x => DateHelper.equalDatesByStart(x.dateTime, model.dateTime))
+        .filter(x => DateService.equalDatesByStart(x.dateTime, model.dateTime))
         .map(x => x.order)
     const maxOrder = sameDayTaskOrders.length === 0 ? 0 : Math.max(...sameDayTaskOrders)
 
@@ -167,7 +167,7 @@ function updateStatuses(localTasks: Task[], clientId: number, completed?: boolea
         newTasks[taskIndex].deleted = deleted
 
         if (deleted) {
-            const sameDayTasks = localTasks.filter(x => DateHelper.equalDatesByStart(x.dateTime, newTasks[taskIndex].dateTime))
+            const sameDayTasks = localTasks.filter(x => DateService.equalDatesByStart(x.dateTime, newTasks[taskIndex].dateTime))
             if (sameDayTasks) {
                 sameDayTasks.forEach(x => {
                     if (x.order > newTasks[taskIndex].order) {

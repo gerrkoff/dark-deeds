@@ -1,7 +1,7 @@
 import { Dispatch } from 'redux'
 import { push as navigateTo, RouterAction } from 'connected-react-router'
 import { LoginApi } from '../../api'
-import { StorageHelper, ToastHelper } from '../../helpers'
+import { StorageService, ToastService } from '../../services'
 import { SigninResultEnum, SignupResultEnum } from '../../models'
 import * as constants from '../constants'
 
@@ -39,7 +39,7 @@ export type LoginAction = ILoginProcessing | ILoginSigninFinish | ILoginSignupFi
 
 export function initialLogin() {
     return async(dispatch: Dispatch<LoginAction>) => {
-        const token = StorageHelper.Load(StorageHelper.TokenKey)
+        const token = StorageService.Load(StorageService.TokenKey)
         if (token === null || token === '') {
             return
         }
@@ -48,7 +48,7 @@ export function initialLogin() {
         try {
             await loadCurrentUser(dispatch)
         } catch {
-            ToastHelper.errorProcess('login')
+            ToastService.errorProcess('login')
         }
 
         dispatch(setInitialLogginIn(false))
@@ -65,12 +65,12 @@ export function signin(username: string, password: string) {
             result = apiResult.result
 
             if (result === SigninResultEnum.Success) {
-                StorageHelper.Save(StorageHelper.TokenKey, apiResult.token)
+                StorageService.Save(StorageService.TokenKey, apiResult.token)
                 await loadCurrentUser(dispatch)
             }
         } catch (err) {
             result = SigninResultEnum.Unknown
-            ToastHelper.errorProcess('signin')
+            ToastService.errorProcess('signin')
         }
 
         dispatch(signinResult(result))
@@ -87,12 +87,12 @@ export function signup(username: string, password: string) {
             result = apiResult.result
 
             if (result === SignupResultEnum.Success) {
-                StorageHelper.Save(StorageHelper.TokenKey, apiResult.token)
+                StorageService.Save(StorageService.TokenKey, apiResult.token)
                 await loadCurrentUser(dispatch)
             }
         } catch (err) {
             result = SignupResultEnum.Unknown
-            ToastHelper.errorProcess('signup')
+            ToastService.errorProcess('signup')
         }
 
         dispatch(signupResult(result))
@@ -101,7 +101,7 @@ export function signup(username: string, password: string) {
 
 export function signout() {
     return async(dispatch: Dispatch<LoginAction | RouterAction>) => {
-        StorageHelper.Clear(StorageHelper.TokenKey)
+        StorageService.Clear(StorageService.TokenKey)
         dispatch(navigateTo('/'))
         dispatch(currentUser(false))
     }

@@ -55,4 +55,4 @@ const service = {
 
 const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
 
-export { service as DateHelper }
+export { service as DateService }

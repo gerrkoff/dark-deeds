@@ -2,7 +2,7 @@ import * as React from 'react'
 // @ts-ignore
 import dragula from 'react-dragula'
 import { Accordion } from 'semantic-ui-react'
-import { DateHelper, TaskHelper } from '../../helpers'
+import { DateService, TaskService } from '../../services'
 import { DayCardModel, Task, TaskModel } from '../../models'
 import { DaysBlock, NoDateCard } from './'
 
@@ -32,8 +32,8 @@ export class Overview extends React.PureComponent<IProps> {
     }
 
     public render() {
-        const today = DateHelper.dayStart(new Date())
-        const model = TaskHelper.evalModel(this.props.tasks, today, this.props.showCompleted)
+        const today = DateService.dayStart(new Date())
+        const model = TaskService.evalModel(this.props.tasks, today, this.props.showCompleted)
 
         const panels = [{
             content: { content: (<NoDateCard tasks={model.noDate} setTaskStatuses={this.props.setTaskStatuses} confirmAction={this.props.confirmAction} openTaskModal={this.props.openTaskModal} />) },
@@ -69,7 +69,7 @@ export class Overview extends React.PureComponent<IProps> {
     }
 
     private renderDaysBlock = (model: DayCardModel[], daysInRow?: number) => {
-        const today = DateHelper.dayStart(new Date())
+        const today = DateService.dayStart(new Date())
         return (
             <DaysBlock
                 days={model}
@@ -88,7 +88,7 @@ export class Overview extends React.PureComponent<IProps> {
         }
 
         this.props.updateTasks(
-            TaskHelper.moveTask(
+            TaskService.moveTask(
                 this.props.tasks,
                 getId(el),
                 getId(target),

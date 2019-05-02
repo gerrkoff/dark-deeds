@@ -1,5 +1,5 @@
 import { DayCardModel, OverviewModel, Task, TaskTimeTypeEnum } from '../models'
-import { DateHelper } from './'
+import { DateService } from '.'
 
 const service = {
     evalModel(tasks: Task[], now: Date, showCompleted: boolean): OverviewModel {
@@ -8,7 +8,7 @@ const service = {
             !x.deleted)
 
         const model = new OverviewModel()
-        const currentStart = DateHelper.monday(DateHelper.dayStart(now))
+        const currentStart = DateService.monday(DateService.dayStart(now))
         const futureStart = new Date(currentStart)
         futureStart.setDate(currentStart.getDate() + 14)
 
@@ -29,7 +29,7 @@ const service = {
                     ? model.future
                     : model.current
 
-            const taskDate = DateHelper.dayStart(task.dateTime)
+            const taskDate = DateService.dayStart(task.dateTime)
             let day = days.find(x => x.date.getTime() === taskDate.getTime())
 
             if (day === undefined) {
@@ -187,7 +187,7 @@ const service = {
 
 function taskDateToStart(date: Date | null): number {
     if (date) {
-        return DateHelper.dayStart(date).getTime()
+        return DateService.dayStart(date).getTime()
     } else {
         return 0
     }
@@ -207,4 +207,4 @@ function tasksInTheSameGroup(taskA: Task, taskB: Task): boolean {
         || taskA.timeType === taskB.timeType && taskA.timeType === TaskTimeTypeEnum.AfterTime && taskA.dateTime!.getTime() === taskB.dateTime!.getTime()
 }
 
-export { service as TaskHelper }
+export { service as TaskService }

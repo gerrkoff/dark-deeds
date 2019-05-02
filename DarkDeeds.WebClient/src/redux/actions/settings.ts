@@ -2,7 +2,7 @@ import { Dispatch } from 'redux'
 import { SettingsApi } from '../../api'
 import * as constants from '../constants'
 import { Settings } from '../../models'
-import { ToastHelper } from '../../helpers'
+import { ToastService } from '../../services'
 
 export interface ISettingsSaveProcessing {
     type: constants.SETTINGS_SAVE_PROCESSING
@@ -34,7 +34,7 @@ export function saveSettings(settings: Settings) {
         try {
             await SettingsApi.save(settings)
         } catch (err) {
-            ToastHelper.errorProcess('saving settings')
+            ToastService.errorProcess('saving settings')
         }
         dispatch({ type: constants.SETTINGS_SAVE_FINISH })
     }
@@ -48,7 +48,7 @@ export function loadSettings() {
             const result = await SettingsApi.load()
             dispatch(updateSettings(result))
         } catch (err) {
-            ToastHelper.errorProcess('loading settings')
+            ToastService.errorProcess('loading settings')
         }
         dispatch({ type: constants.SETTINGS_LOAD_FINISH })
     }
