@@ -146,7 +146,9 @@ class DragulaWrapper {
     private scrollable: boolean = true
 
     constructor(dndHandler: (el: HTMLElement, target: HTMLElement, source: HTMLElement, sibling: HTMLElement) => void) {
-        this.drake = dragula()
+        this.drake = dragula([], {
+            ignoreInputTextSelection: false
+        })
             .on('drag', () => this.scrollable = false)
             .on('dragend', () => this.scrollable = true)
             .on('drop', (el: HTMLElement, target: HTMLElement, source: HTMLElement, sibling: HTMLElement) => {
