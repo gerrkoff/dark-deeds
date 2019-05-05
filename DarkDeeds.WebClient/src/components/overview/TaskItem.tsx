@@ -12,7 +12,7 @@ interface IProps {
     openTaskModal?: (model: TaskModel, id?: number) => void
 }
 interface IState {
-    menuPopupOpen: boolean
+    selected: boolean
 }
 export class TaskItem extends React.PureComponent<IProps, IState> {
     private elem: HTMLSpanElement
@@ -21,12 +21,12 @@ export class TaskItem extends React.PureComponent<IProps, IState> {
     constructor(props: IProps) {
         super(props)
         this.state = {
-            menuPopupOpen: false
+            selected: false
         }
     }
 
     public componentDidMount() {
-        this.touchMoveDelay = new TouchMoveDelay(this.elem, 500)
+        this.touchMoveDelay = new TouchMoveDelay(this.elem, 500, this.setItemSelected)
     }
 
     public componentWillUnmount() {
@@ -58,7 +58,7 @@ export class TaskItem extends React.PureComponent<IProps, IState> {
         return (
             <MenuPopup
                 content={this.renderContent()}
-                changeVisibility={this.handleMenuChangeVisibility}
+                changeVisibility={this.setItemSelected}
                 menuItemProps={menuItemProps} />
         )
     }
@@ -68,7 +68,7 @@ export class TaskItem extends React.PureComponent<IProps, IState> {
         const className = 'task-item'
             + (task.completed ? ' task-item-completed' : '')
             + (task.isProbable ? ' task-item-probable' : '')
-            + (this.state.menuPopupOpen ? ' task-item-selected' : '')
+            + (this.state.selected ? ' task-item-selected' : '')
         let text = ''
         if (task.timeType === TaskTimeTypeEnum.AfterTime || task.timeType === TaskTimeTypeEnum.ConcreteTime) {
             if (task.timeType === TaskTimeTypeEnum.AfterTime) {
@@ -108,8 +108,8 @@ export class TaskItem extends React.PureComponent<IProps, IState> {
         }
     }
 
-    private handleMenuChangeVisibility = (open: boolean) => {
-        this.setState({ menuPopupOpen: open })
+    private setItemSelected = (selected: boolean) => {
+        this.setState({ selected })
     }
 }
 
@@ -120,18 +120,21 @@ function str2digits(n: number): string {
 class TouchMoveDelay {
     private elem: HTMLElement | undefined
     private timeout: NodeJS.Timeout
-    private delay: number
     private draggable: boolean
 
-    constructor(elem: HTMLElement | undefined, delay: number) {
+    constructor(
+        elem: HTMLElement | undefined,
+        private delay: number,
+        private elemReadyCallback: (ready: boolean) => void) {
+
         this.elem = elem
         if (this.elem === undefined) {
             return
         }
-        this.delay = delay
         this.elem.addEventListener('touchstart', this.handleTouchStart)
         this.elem.addEventListener('touchmove', this.handleTouchMove, { passive: true })
         this.elem.addEventListener('touchend', this.handleTouchEnd)
+        // this.elem.addEventListener('touchcancel', this.handleTouchEnd)
     }
 
     public destroy = () => {
@@ -141,11 +144,13 @@ class TouchMoveDelay {
         this.elem.removeEventListener('touchstart', this.handleTouchStart)
         this.elem.removeEventListener('touchmove', this.handleTouchMove)
         this.elem.removeEventListener('touchend', this.handleTouchEnd)
+        // this.elem.removeEventListener('touchcancel', this.handleTouchEnd)
     }
 
     private handleTouchStart = (event: Event) => {
         this.timeout = setTimeout(() => {
             this.draggable = true
+            this.elemReadyCallback(true)
         }, this.delay)
     }
 
@@ -159,5 +164,6 @@ class TouchMoveDelay {
     private handleTouchEnd = (event: Event) => {
         clearTimeout(this.timeout)
         this.draggable = false
+        this.elemReadyCallback(false)
     }
 }
