@@ -7,10 +7,10 @@ export class DragulaWrapper {
 
     constructor(dndHandler: (el: HTMLElement, target: HTMLElement, source: HTMLElement, sibling: HTMLElement) => void) {
         this.drake = dragula()
-            .on('drag', () => this.scrollable = false)
-            .on('dragend', () => this.scrollable = true)
+            .on('drag', (el: HTMLElement) => this.handleDraggingChanged(true, el))
+            .on('dragend', (el: HTMLElement) => this.handleDraggingChanged(false, el))
             .on('drop', (el: HTMLElement, target: HTMLElement, source: HTMLElement, sibling: HTMLElement) => {
-                this.scrollable = true
+                this.handleDraggingChanged(false, el)
                 dndHandler(el, target, source, sibling)
             })
 
@@ -34,6 +34,21 @@ export class DragulaWrapper {
     private touchMoveHandler = (e: Event) => {
         if (!this.scrollable) {
             e.preventDefault()
+        }
+    }
+
+    private handleDraggingChanged = (draggingStarted: boolean, el: HTMLElement | null) => {
+        const taskSelectedClass = 'task-item-selected'
+        if (draggingStarted) {
+            this.scrollable = false
+            if (el !== null && !el.classList.contains(taskSelectedClass)) {
+                el.classList.add(taskSelectedClass)
+            }
+        } else {
+            this.scrollable = true
+            if (el !== null && el.classList.contains(taskSelectedClass)) {
+                el.classList.remove(taskSelectedClass)
+            }
         }
     }
 }
