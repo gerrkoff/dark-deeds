@@ -125,11 +125,12 @@ async function hubConnect() {
 
 function hubOnClose(dispatch: Dispatch<TasksAction>): (error: Error) => void {
     return async() => {
-        // TODO: toast that connection failed
+        const toastId = ToastService.info('Reconnecting to server...', { autoClose: false, closeButton: false, closeOnClick: false })
         taskHubIsReady = false
         await UtilsService.delay(5000)
         await hubConnect()
-        // TODO: toast that connection restored
+        ToastService.dismiss(toastId)
+        ToastService.success('Reconnected')
     }
 }
 

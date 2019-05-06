@@ -12,21 +12,21 @@ const service = {
             ...options
         })
     },
-    error(msg: string, options = {}): number {
+    error(msg: string, options: ToastOptions = {}): number {
         return toast.error(msg, {
             className: 'toast-error',
             ...defaultOptions,
             ...options
         })
     },
-    warn(msg: string, options = {}): number {
+    warn(msg: string, options: ToastOptions = {}): number {
         return toast.warn(msg, {
             className: 'toast-warn',
             ...defaultOptions,
             ...options
         })
     },
-    info(msg: string, options = {}): number {
+    info(msg: string, options: ToastOptions = {}): number {
         return toast.info(msg, {
             className: 'toast-info',
             ...defaultOptions,
@@ -36,6 +36,10 @@ const service = {
 
     errorProcess(process: string, options = {}): number {
         return this.error(`Error occured while ${process}`, options)
+    },
+
+    dismiss(toastId: number) {
+        toast.dismiss(toastId)
     }
 }
 
