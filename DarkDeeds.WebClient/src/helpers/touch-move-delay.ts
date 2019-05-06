@@ -15,7 +15,7 @@ export class TouchMoveDelay {
         this.elem.addEventListener('touchstart', this.handleTouchStart)
         this.elem.addEventListener('touchmove', this.handleTouchMove, { passive: true })
         this.elem.addEventListener('touchend', this.handleTouchEnd)
-        // this.elem.addEventListener('touchcancel', this.handleTouchEnd)
+        this.elem.addEventListener('touchcancel', this.handleTouchEnd)
     }
 
     public destroy = () => {
@@ -25,7 +25,7 @@ export class TouchMoveDelay {
         this.elem.removeEventListener('touchstart', this.handleTouchStart)
         this.elem.removeEventListener('touchmove', this.handleTouchMove)
         this.elem.removeEventListener('touchend', this.handleTouchEnd)
-        // this.elem.removeEventListener('touchcancel', this.handleTouchEnd)
+        this.elem.removeEventListener('touchcancel', this.handleTouchEnd)
     }
 
     private handleTouchStart = (event: Event) => {
