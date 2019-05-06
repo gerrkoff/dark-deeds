@@ -1,6 +1,6 @@
 import { Dispatch } from 'redux'
 import { TaskApi, TaskHub } from '../../api'
-import { ToastService } from '../../services'
+import { ToastService, UtilsService } from '../../services'
 import { Task, TaskModel } from '../../models'
 import * as constants from '../constants'
 
@@ -102,11 +102,46 @@ let taskHubIsReady = false
 export function startTaskHub() {
     return async(dispatch: Dispatch<TasksAction>) => {
         taskHubIsReady = false
-        await TaskHub.hubStart()
+        TaskHub.hubCreate()
         TaskHub.hubSubscribe(
-            (tasksFromServer, localUpdate) => dispatch({ type: constants.TASKS_PUSH_FROM_SERVER, tasks: tasksFromServer, localUpdate }),
-            () => console.log('task-hub heartbeat'))
-        taskHubIsReady = true
+            hubOnClose(dispatch),
+            hubOnUpdate(dispatch),
+            hubOnHeartbeat(dispatch))
+        await hubConnect()
+    }
+}
+
+async function hubConnect() {
+    while (true) {
+        try {
+            await TaskHub.hubStart()
+            taskHubIsReady = true
+            return
+        // tslint:disable-next-line:no-empty
+        } catch (error) {}
+        await UtilsService.delay(5000)
+    }
+}
+
+function hubOnClose(dispatch: Dispatch<TasksAction>): (error: Error) => void {
+    return async() => {
+        // TODO: toast that connection failed
+        taskHubIsReady = false
+        await UtilsService.delay(5000)
+        await hubConnect()
+        // TODO: toast that connection restored
+    }
+}
+
+function hubOnUpdate(dispatch: Dispatch<TasksAction>): (tasksFromServer: Task[], localUpdate: boolean) => void {
+    return (tasksFromServer, localUpdate) => {
+        dispatch({ type: constants.TASKS_PUSH_FROM_SERVER, tasks: tasksFromServer, localUpdate })
+    }
+}
+
+function hubOnHeartbeat(dispatch: Dispatch<TasksAction>): () => void {
+    return () => {
+        console.log('task-hub heartbeat')
     }
 }
 

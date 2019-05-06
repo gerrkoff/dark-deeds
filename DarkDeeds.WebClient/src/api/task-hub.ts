@@ -3,28 +3,57 @@ import baseUrl from './base-url'
 import { Task } from '../models'
 import { DateService, StorageService } from '../services'
 
-const connection = new signalR.HubConnectionBuilder()
-    .withUrl(baseUrl + 'ws/task', {
-        accessTokenFactory: () => StorageService.loadAccessToken() as string
-    })
-    .configureLogging(signalR.LogLevel.Information)
-    .build()
+let connection: signalR.HubConnection | null
+
+function createConnection(): signalR.HubConnection {
+    return new signalR.HubConnectionBuilder()
+        .withUrl(baseUrl + 'ws/task', {
+            accessTokenFactory: () => StorageService.loadAccessToken() as string
+        })
+        .configureLogging(signalR.LogLevel.Information)
+        .build()
+}
 
 const service = {
+    hubCreate() {
+        connection = createConnection()
+    },
+
     hubStart(): Promise<void> {
+        if (connection === null) {
+            throw new Error('Connection is not initialized')
+        }
+
         return connection.start()
-            .catch(error => console.error('!!!', error.toString()))
     },
 
     hubStop(): Promise<void> {
+        if (connection === null) {
+            throw new Error('Connection is not initialized')
+        }
+
         connection.off('update')
-        return connection.stop()
+        connection.off('heartbeat')
+        const result = connection.stop()
+        connection = null
+        return result
     },
 
     hubSubscribe(
+        close: (error: Error) => void,
         update: (tasks: Task[], localUpdate: boolean) => void,
         heartbeat?: () => void
     ) {
+        if (connection === null) {
+            throw new Error('Connection is not initialized')
+        }
+
+        connection.onclose((error?: Error) => {
+            if (error !== undefined) {
+                close(error)
+            }
+        })
+
         connection.on('update', (tasks, localUpdate) => update(DateService.fixDates(tasks) as Task[], localUpdate))
 
         if (heartbeat !== undefined) {
@@ -33,6 +62,10 @@ const service = {
     },
 
     saveTasks(tasks: Task[]): Promise<void> {
+        if (connection === null) {
+            throw new Error('Connection is not initialized')
+        }
+
         return connection.send('save', tasks)
     }
 }
