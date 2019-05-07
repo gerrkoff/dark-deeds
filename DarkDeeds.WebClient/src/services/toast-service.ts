@@ -1,7 +1,8 @@
 import { toast, ToastOptions } from 'react-toastify'
 
 const defaultOptions: ToastOptions = {
-    progressClassName: 'toast-progress'
+    progressClassName: 'toast-progress',
+    closeButton: false
 }
 
 const service = {

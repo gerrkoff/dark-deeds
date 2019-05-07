@@ -132,11 +132,13 @@ function hubOnClose(dispatch: Dispatch<TasksAction>) {
         const reconnected = await hubConnect(true)
 
         if (reconnected) {
+            console.log('first time reconnected')
             await loadTasksFromServerAfterReconnecting(dispatch)
             return
         }
+        console.log('non first time reconnected')
 
-        const toastId = ToastService.info('Reconnecting to server...', { autoClose: false, closeButton: false, closeOnClick: false })
+        const toastId = ToastService.info('Reconnecting to server...', { autoClose: false, closeOnClick: false })
         await UtilsService.delay(3000)
         await hubConnect()
         await loadTasksFromServerAfterReconnecting(dispatch)
@@ -154,9 +156,9 @@ function hubOnUpdate(dispatch: Dispatch<TasksAction>): (tasksFromServer: Task[],
     return (tasksFromServer, localUpdate) => {
         dispatch({ type: constants.TASKS_PUSH_FROM_SERVER, tasks: tasksFromServer, localUpdate })
         if (localUpdate) {
-            console.log(`${tasksFromServer.length} tasks were uploaded`)
+            console.log(`${tasksFromServer.length} tasks were saved`)
         } else {
-            console.log(`${tasksFromServer.length} tasks were downloaded`)
+            console.log(`${tasksFromServer.length} tasks were updated`)
         }
     }
 }
