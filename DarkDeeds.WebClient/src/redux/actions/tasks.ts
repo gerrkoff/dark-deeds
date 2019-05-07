@@ -139,7 +139,7 @@ async function hubOnClose() {
     await UtilsService.delay(3000)
     await hubConnect()
     ToastService.dismiss(toastId)
-    ToastService.success('Reconnected')
+    ToastService.success('Reconnected', { toastId: 'toast-reconnected' })
 }
 
 function hubOnUpdate(dispatch: Dispatch<TasksAction>): (tasksFromServer: Task[], localUpdate: boolean) => void {
