@@ -111,22 +111,32 @@ export function startTaskHub() {
     }
 }
 
-async function hubConnect() {
+async function hubConnect(oneTime?: boolean): Promise<boolean> {
     while (true) {
         try {
             await TaskHub.hubStart()
             taskHubIsReady = true
-            return
+            return true
         // tslint:disable-next-line:no-empty
         } catch (error) {}
-        await UtilsService.delay(5000)
+        if (oneTime !== undefined && oneTime) {
+            return false
+        }
+        await UtilsService.delay(7000)
     }
 }
 
 async function hubOnClose() {
-    const toastId = ToastService.info('Reconnecting to server...', { autoClose: false, closeButton: false, closeOnClick: false })
     taskHubIsReady = false
-    await UtilsService.delay(5000)
+    const reconnected = await hubConnect(true)
+
+    if (reconnected) {
+        ToastService.success('Reconnected') // TODO: remove it after testing
+        return
+    }
+
+    const toastId = ToastService.info('Reconnecting to server...', { autoClose: false, closeButton: false, closeOnClick: false })
+    await UtilsService.delay(3000)
     await hubConnect()
     ToastService.dismiss(toastId)
     ToastService.success('Reconnected')
