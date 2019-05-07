@@ -60,7 +60,8 @@ export function loadTasks() {
         dispatch({ type: constants.TASKS_LOADING })
 
         try {
-            await loadTasksFromServer(dispatch)
+            const tasks = await TaskApi.loadTasks()
+            dispatch({ type: constants.TASKS_LOADING_SUCCESS, tasks })
         } catch (err) {
             dispatch({ type: constants.TASKS_LOADING_FAILED })
             ToastService.errorProcess('loading tasks')
@@ -131,7 +132,7 @@ function hubOnClose(dispatch: Dispatch<TasksAction>) {
         const reconnected = await hubConnect(true)
 
         if (reconnected) {
-            await loadTasksFromServer(dispatch)
+            await loadTasksFromServerAfterReconnecting(dispatch)
             ToastService.success('Reconnected', { toastId: 'toast-reconnected' }) // TODO: remove it after testing
             return
         }
@@ -139,15 +140,15 @@ function hubOnClose(dispatch: Dispatch<TasksAction>) {
         const toastId = ToastService.info('Reconnecting to server...', { autoClose: false, closeButton: false, closeOnClick: false })
         await UtilsService.delay(3000)
         await hubConnect()
-        await loadTasksFromServer(dispatch)
+        await loadTasksFromServerAfterReconnecting(dispatch)
         ToastService.dismiss(toastId)
         ToastService.success('Reconnected', { toastId: 'toast-reconnected' })
     }
 }
 
-async function loadTasksFromServer(dispatch: Dispatch<TasksAction>) {
+async function loadTasksFromServerAfterReconnecting(dispatch: Dispatch<TasksAction>) {
     const tasks = await TaskApi.loadTasks()
-    dispatch({ type: constants.TASKS_LOADING_SUCCESS, tasks })
+    localUpdateTasks(tasks)
 }
 
 function hubOnUpdate(dispatch: Dispatch<TasksAction>): (tasksFromServer: Task[], localUpdate: boolean) => void {
@@ -173,6 +174,9 @@ export function saveTasksHub(tasks: Task[]) {
             return
         }
         if (!TaskHub.hubConnected()) {
+            dispatch({ type: constants.TASKS_SAVING_FAILED })
+            ToastService.errorProcess('updating tasks')
+            console.log('task was disconnected when trying to save')
             await hubOnClose(dispatch)()
             return
         }
