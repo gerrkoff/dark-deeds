@@ -1,5 +1,5 @@
 export * from './task-api'
-export * from './task-hub'
+export * from './task-hub-api'
 export * from './login-api'
 export * from './general-api'
 export * from './telegram-integration-api'

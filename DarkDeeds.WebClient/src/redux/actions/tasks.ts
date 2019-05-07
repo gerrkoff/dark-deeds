@@ -1,7 +1,8 @@
 import { Dispatch } from 'redux'
-import { TaskApi, TaskHub } from '../../api'
-import { ToastService, UtilsService } from '../../services'
+import { TaskApi } from '../../api'
+import { ToastService } from '../../services'
 import { Task, TaskModel } from '../../models'
+import { TaskHub } from '../../helpers'
 import * as constants from '../constants'
 
 export interface ITasksLoading {
@@ -81,62 +82,20 @@ export function setTaskStatuses(clientId: number, completed?: boolean, deleted?:
     return { type: constants.TASKS_SET_TASK_STATUSES, clientId, completed, deleted }
 }
 
-let taskHubIsReady = false
+let taskHub: TaskHub | null = null
 
 export function startTaskHub() {
     return async(dispatch: Dispatch<TasksAction>) => {
-        taskHubIsReady = false
-        TaskHub.hubCreate()
-        TaskHub.hubSubscribe(
-            hubOnClose(dispatch),
-            hubOnUpdate(dispatch),
-            hubOnHeartbeat)
-        await hubConnect()
-    }
-}
-
-async function hubConnect(oneTime?: boolean): Promise<boolean> {
-    while (true) {
-        try {
-            await TaskHub.hubStart()
-            taskHubIsReady = true
-            return true
-        // tslint:disable-next-line:no-empty
-        } catch (error) {}
-        if (oneTime !== undefined && oneTime) {
-            return false
+        if (taskHub === null) {
+            taskHub = new TaskHub(
+                hubCallbackReload(dispatch),
+                hubCallbackUpdate(dispatch))
         }
-        await UtilsService.delay(7000)
+        await taskHub.start()
     }
 }
 
-function hubOnClose(dispatch: Dispatch<TasksAction>) {
-    return async() => {
-        taskHubIsReady = false
-        const reconnected = await hubConnect(true)
-
-        if (reconnected) {
-            console.log('first time reconnected')
-            await loadTasksFromServerAfterReconnecting(dispatch)
-            return
-        }
-        console.log('non first time reconnected')
-
-        const toastId = ToastService.info('Reconnecting to server...', { autoClose: false, closeOnClick: false })
-        await UtilsService.delay(3000)
-        await hubConnect()
-        await loadTasksFromServerAfterReconnecting(dispatch)
-        ToastService.dismiss(toastId)
-    }
-}
-
-async function loadTasksFromServerAfterReconnecting(dispatch: Dispatch<TasksAction>) {
-    const tasks = await TaskApi.loadTasks()
-    dispatch(localUpdateTasks(tasks))
-    ToastService.success('Reconnected', { toastId: 'toast-reconnected' })
-}
-
-function hubOnUpdate(dispatch: Dispatch<TasksAction>): (tasksFromServer: Task[], localUpdate: boolean) => void {
+function hubCallbackUpdate(dispatch: Dispatch<TasksAction>): (tasksFromServer: Task[], localUpdate: boolean) => void {
     return (tasksFromServer, localUpdate) => {
         dispatch({ type: constants.TASKS_PUSH_FROM_SERVER, tasks: tasksFromServer, localUpdate })
         if (localUpdate) {
@@ -147,32 +106,34 @@ function hubOnUpdate(dispatch: Dispatch<TasksAction>): (tasksFromServer: Task[],
     }
 }
 
-function hubOnHeartbeat() {
-    console.log('task-hub heartbeat')
+function hubCallbackReload(dispatch: Dispatch<TasksAction>): () => Promise<void> {
+    return async() => {
+        const tasks = await TaskApi.loadTasks()
+        dispatch(localUpdateTasks(tasks))
+    }
 }
 
 export function stopTaskHub() {
     return async(dispatch: Dispatch<TasksAction>) => {
-        taskHubIsReady = false
-        await TaskHub.hubStop()
+        await taskHub!.stop()
     }
 }
 
 export function saveTasksHub(tasks: Task[]) {
     return async(dispatch: Dispatch<TasksAction>) => {
-        if (!taskHubIsReady) {
+        if (!taskHub!.ready) {
             return
         }
-        if (!TaskHub.hubConnected()) {
+        if (!taskHub!.connected) {
             console.log('task was disconnected when trying to save')
-            await hubOnClose(dispatch)()
+            await taskHub!.reconnect()
             return
         }
 
         dispatch({ type: constants.TASKS_SAVING })
 
         try {
-            await TaskHub.saveTasks(tasks)
+            await taskHub!.saveTasks(tasks)
             dispatch({ type: constants.TASKS_SAVING_SUCCESS })
         } catch (err) {
             dispatch({ type: constants.TASKS_SAVING_FAILED })
