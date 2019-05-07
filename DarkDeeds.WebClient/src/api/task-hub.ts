@@ -15,6 +15,10 @@ function createConnection(): signalR.HubConnection {
 }
 
 const service = {
+    hubConnected(): boolean {
+        return connection !== null && connection.state === signalR.HubConnectionState.Connected
+    },
+
     hubCreate() {
         connection = createConnection()
     },
@@ -40,7 +44,7 @@ const service = {
     },
 
     hubSubscribe(
-        close: (error: Error) => void,
+        close: () => void,
         update: (tasks: Task[], localUpdate: boolean) => void,
         heartbeat?: () => void
     ) {
@@ -50,7 +54,7 @@ const service = {
 
         connection.onclose((error?: Error) => {
             if (error !== undefined) {
-                close(error)
+                close()
             }
         })
 

@@ -104,9 +104,9 @@ export function startTaskHub() {
         taskHubIsReady = false
         TaskHub.hubCreate()
         TaskHub.hubSubscribe(
-            hubOnClose(dispatch),
+            hubOnClose,
             hubOnUpdate(dispatch),
-            hubOnHeartbeat(dispatch))
+            hubOnHeartbeat)
         await hubConnect()
     }
 }
@@ -123,15 +123,13 @@ async function hubConnect() {
     }
 }
 
-function hubOnClose(dispatch: Dispatch<TasksAction>): (error: Error) => void {
-    return async() => {
-        const toastId = ToastService.info('Reconnecting to server...', { autoClose: false, closeButton: false, closeOnClick: false })
-        taskHubIsReady = false
-        await UtilsService.delay(5000)
-        await hubConnect()
-        ToastService.dismiss(toastId)
-        ToastService.success('Reconnected')
-    }
+async function hubOnClose() {
+    const toastId = ToastService.info('Reconnecting to server...', { autoClose: false, closeButton: false, closeOnClick: false })
+    taskHubIsReady = false
+    await UtilsService.delay(5000)
+    await hubConnect()
+    ToastService.dismiss(toastId)
+    ToastService.success('Reconnected')
 }
 
 function hubOnUpdate(dispatch: Dispatch<TasksAction>): (tasksFromServer: Task[], localUpdate: boolean) => void {
@@ -140,10 +138,8 @@ function hubOnUpdate(dispatch: Dispatch<TasksAction>): (tasksFromServer: Task[],
     }
 }
 
-function hubOnHeartbeat(dispatch: Dispatch<TasksAction>): () => void {
-    return () => {
-        console.log('task-hub heartbeat')
-    }
+function hubOnHeartbeat() {
+    console.log('task-hub heartbeat')
 }
 
 export function stopTaskHub() {
@@ -158,6 +154,10 @@ export function saveTasksHub(tasks: Task[]) {
         if (!taskHubIsReady) {
             return
         }
+        if (!TaskHub.hubConnected()) {
+            await hubOnClose()
+        }
+
         dispatch({ type: constants.TASKS_SAVING })
 
         try {
