@@ -176,7 +176,7 @@ export function saveTasksHub(tasks: Task[]) {
             dispatch({ type: constants.TASKS_SAVING_SUCCESS })
         } catch (err) {
             dispatch({ type: constants.TASKS_SAVING_FAILED })
-            ToastService.errorProcess('updating tasks')
+            ToastService.errorProcess('saving tasks')
         }
     }
 }
