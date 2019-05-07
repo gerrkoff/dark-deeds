@@ -77,22 +77,6 @@ export function localUpdateTask(taskModel: TaskModel, clientId: number): ITasksL
     return { type: constants.TASKS_LOCAL_UPDATE_TASK, taskModel, clientId }
 }
 
-// TODO: remove, it's deprecated
-export function saveTasks(tasks: Task[]) {
-    return async(dispatch: Dispatch<TasksAction>) => {
-        dispatch({ type: constants.TASKS_SAVING })
-
-        try {
-            const tasksFromServer = await TaskApi.saveTasks(tasks)
-            dispatch({ type: constants.TASKS_SAVING_SUCCESS, tasks: tasksFromServer })
-            ToastService.info(`${tasks.length} tasks were updated`)
-        } catch (err) {
-            dispatch({ type: constants.TASKS_SAVING_FAILED })
-            ToastService.errorProcess('updating tasks')
-        }
-    }
-}
-
 export function setTaskStatuses(clientId: number, completed?: boolean, deleted?: boolean): ITasksSetTaskStatuses {
     return { type: constants.TASKS_SET_TASK_STATUSES, clientId, completed, deleted }
 }
