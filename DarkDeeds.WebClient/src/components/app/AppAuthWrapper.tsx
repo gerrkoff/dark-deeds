@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { ToastContainer } from 'react-toastify'
+import { ToastContainer, Flip } from 'react-toastify'
 import { Container, Dimmer, Loader } from 'semantic-ui-react'
 import Login from '../../containers/Login'
 import { App, IAppProps } from './'
@@ -23,7 +23,7 @@ export class AppAuthWrapper extends React.PureComponent<IProps> {
                 <Dimmer active={this.props.initialLogginIn}>
                     <Loader />
                 </Dimmer>
-                <ToastContainer />
+                <ToastContainer newestOnTop={true} transition={Flip} />
             </React.Fragment>
         )
     }

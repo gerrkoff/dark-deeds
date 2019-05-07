@@ -50,7 +50,7 @@ export class TaskHub {
         }
         console.log('non first time reconnected')
 
-        const toastId = ToastService.info('Reconnecting to server...', { autoClose: false, closeOnClick: false })
+        const toastId = ToastService.info('Reconnecting to server...', { autoClose: false, closeOnClick: false, draggable: false })
         await UtilsService.delay(3000)
         await this.connect()
         await this.reloadCallback()
