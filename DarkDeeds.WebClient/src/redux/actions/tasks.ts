@@ -133,7 +133,6 @@ function hubOnClose(dispatch: Dispatch<TasksAction>) {
 
         if (reconnected) {
             await loadTasksFromServerAfterReconnecting(dispatch)
-            ToastService.success('Reconnected', { toastId: 'toast-reconnected' }) // TODO: remove it after testing
             return
         }
 
@@ -142,18 +141,23 @@ function hubOnClose(dispatch: Dispatch<TasksAction>) {
         await hubConnect()
         await loadTasksFromServerAfterReconnecting(dispatch)
         ToastService.dismiss(toastId)
-        ToastService.success('Reconnected', { toastId: 'toast-reconnected' })
     }
 }
 
 async function loadTasksFromServerAfterReconnecting(dispatch: Dispatch<TasksAction>) {
     const tasks = await TaskApi.loadTasks()
-    localUpdateTasks(tasks)
+    dispatch(localUpdateTasks(tasks))
+    ToastService.success('Reconnected', { toastId: 'toast-reconnected' })
 }
 
 function hubOnUpdate(dispatch: Dispatch<TasksAction>): (tasksFromServer: Task[], localUpdate: boolean) => void {
     return (tasksFromServer, localUpdate) => {
         dispatch({ type: constants.TASKS_PUSH_FROM_SERVER, tasks: tasksFromServer, localUpdate })
+        if (localUpdate) {
+            console.log(`${tasksFromServer.length} tasks were uploaded`)
+        } else {
+            console.log(`${tasksFromServer.length} tasks were downloaded`)
+        }
     }
 }
 
@@ -174,8 +178,6 @@ export function saveTasksHub(tasks: Task[]) {
             return
         }
         if (!TaskHub.hubConnected()) {
-            dispatch({ type: constants.TASKS_SAVING_FAILED })
-            ToastService.errorProcess('updating tasks')
             console.log('task was disconnected when trying to save')
             await hubOnClose(dispatch)()
             return
@@ -186,7 +188,6 @@ export function saveTasksHub(tasks: Task[]) {
         try {
             await TaskHub.saveTasks(tasks)
             dispatch({ type: constants.TASKS_SAVING_SUCCESS })
-            console.log(`${tasks.length} tasks were updated`)
         } catch (err) {
             dispatch({ type: constants.TASKS_SAVING_FAILED })
             ToastService.errorProcess('updating tasks')
