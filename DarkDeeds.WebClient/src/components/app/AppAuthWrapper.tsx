@@ -23,7 +23,7 @@ export class AppAuthWrapper extends React.PureComponent<IProps> {
                 <Dimmer active={this.props.initialLogginIn}>
                     <Loader />
                 </Dimmer>
-                <ToastContainer newestOnTop={true} transition={Flip} />
+                <ToastContainer transition={Flip} />
             </React.Fragment>
         )
     }
