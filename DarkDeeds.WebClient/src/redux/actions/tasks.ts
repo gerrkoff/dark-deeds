@@ -60,8 +60,7 @@ export function loadTasks() {
         dispatch({ type: constants.TASKS_LOADING })
 
         try {
-            const tasks = await TaskApi.loadTasks()
-            dispatch({ type: constants.TASKS_LOADING_SUCCESS, tasks })
+            await loadTasksFromServer(dispatch)
         } catch (err) {
             dispatch({ type: constants.TASKS_LOADING_FAILED })
             ToastService.errorProcess('loading tasks')
@@ -104,7 +103,7 @@ export function startTaskHub() {
         taskHubIsReady = false
         TaskHub.hubCreate()
         TaskHub.hubSubscribe(
-            hubOnClose,
+            hubOnClose(dispatch),
             hubOnUpdate(dispatch),
             hubOnHeartbeat)
         await hubConnect()
@@ -126,20 +125,29 @@ async function hubConnect(oneTime?: boolean): Promise<boolean> {
     }
 }
 
-async function hubOnClose() {
-    taskHubIsReady = false
-    const reconnected = await hubConnect(true)
+function hubOnClose(dispatch: Dispatch<TasksAction>) {
+    return async() => {
+        taskHubIsReady = false
+        const reconnected = await hubConnect(true)
 
-    if (reconnected) {
-        ToastService.success('Reconnected') // TODO: remove it after testing
-        return
+        if (reconnected) {
+            await loadTasksFromServer(dispatch)
+            ToastService.success('Reconnected', { toastId: 'toast-reconnected' }) // TODO: remove it after testing
+            return
+        }
+
+        const toastId = ToastService.info('Reconnecting to server...', { autoClose: false, closeButton: false, closeOnClick: false })
+        await UtilsService.delay(3000)
+        await hubConnect()
+        await loadTasksFromServer(dispatch)
+        ToastService.dismiss(toastId)
+        ToastService.success('Reconnected', { toastId: 'toast-reconnected' })
     }
+}
 
-    const toastId = ToastService.info('Reconnecting to server...', { autoClose: false, closeButton: false, closeOnClick: false })
-    await UtilsService.delay(3000)
-    await hubConnect()
-    ToastService.dismiss(toastId)
-    ToastService.success('Reconnected', { toastId: 'toast-reconnected' })
+async function loadTasksFromServer(dispatch: Dispatch<TasksAction>) {
+    const tasks = await TaskApi.loadTasks()
+    dispatch({ type: constants.TASKS_LOADING_SUCCESS, tasks })
 }
 
 function hubOnUpdate(dispatch: Dispatch<TasksAction>): (tasksFromServer: Task[], localUpdate: boolean) => void {
@@ -165,7 +173,8 @@ export function saveTasksHub(tasks: Task[]) {
             return
         }
         if (!TaskHub.hubConnected()) {
-            await hubOnClose()
+            await hubOnClose(dispatch)()
+            return
         }
 
         dispatch({ type: constants.TASKS_SAVING })
