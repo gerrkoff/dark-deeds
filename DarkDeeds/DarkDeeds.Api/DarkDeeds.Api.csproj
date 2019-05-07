@@ -2,7 +2,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <LangVersion>7.2</LangVersion>
-    <VersionPrefix>0.15.4</VersionPrefix>
+    <VersionPrefix>0.15.5</VersionPrefix>
   </PropertyGroup>
   <ItemGroup>
     <Folder Include="wwwroot\" />
