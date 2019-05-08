@@ -58,7 +58,7 @@ export class TaskHub {
 
     private successReconnected = async(): Promise<void> => {
         await this.reloadCallback()
-        ToastService.update(this.reconnectingToastId, 'Reconnected', { autoClose: 3000 })
+        ToastService.update(this.reconnectingToastId, 'Reconnected', { autoClose: 1000 })
     }
 
     private connect = async(oneTime?: boolean): Promise<boolean> => {
