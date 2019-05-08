@@ -123,6 +123,7 @@ export function saveTasksHub(tasks: Task[]) {
     return async(dispatch: Dispatch<TasksAction>) => {
         console.log('--- saving 1')
         await UtilsService.delay(50)
+        console.log('--- saving 00')
         if (!taskHub!.ready) {
             console.log('--- saving 2')
             return

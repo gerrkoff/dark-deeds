@@ -40,6 +40,7 @@ export class TaskHub {
     }
 
     public reconnect = async(): Promise<void> => {
+        console.log('--- reconnect!')
         this._ready = false
         ToastService.info('reconnecting...', { autoClose: false, closeOnClick: false, draggable: false, toastId: this.reconnectingToastId })
         const reconnected = await this.connect(true)
