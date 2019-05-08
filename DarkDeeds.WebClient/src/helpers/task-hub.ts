@@ -40,22 +40,25 @@ export class TaskHub {
 
     public reconnect = async(): Promise<void> => {
         this._ready = false
+        const reconnectingToastId = ToastService.info('Reconnecting to server...', { autoClose: false, closeOnClick: false, draggable: false })
         const reconnected = await this.connect(true)
 
         if (reconnected) {
             console.log('[task-hub] first time reconnected')
-            await this.reloadCallback()
-            ToastService.success('Reconnected', { toastId: 'toast-reconnected' })
+            await this.successReconnected(reconnectingToastId)
             return
         }
-        console.log('[task-hub] non first time reconnected')
 
-        const toastId = ToastService.info('Reconnecting to server...', { autoClose: false, closeOnClick: false, draggable: false })
+        console.log('[task-hub] non first time reconnected')
         await UtilsService.delay(3000)
         await this.connect()
+        await this.successReconnected(reconnectingToastId)
+    }
+
+    private successReconnected = async(reconnectingToastId: number): Promise<void> => {
         await this.reloadCallback()
         ToastService.success('Reconnected', { toastId: 'toast-reconnected' })
-        ToastService.dismiss(toastId)
+        ToastService.dismiss(reconnectingToastId)
     }
 
     private connect = async(oneTime?: boolean): Promise<boolean> => {
