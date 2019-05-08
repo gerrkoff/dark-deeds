@@ -4,6 +4,7 @@ import { ToastService, UtilsService } from '../services'
 
 export class TaskHub {
 
+    private reconnectingToastId: string = 'toast-reconnection-id'
     private _ready: boolean = false
 
     constructor(
@@ -40,25 +41,24 @@ export class TaskHub {
 
     public reconnect = async(): Promise<void> => {
         this._ready = false
-        const reconnectingToastId = ToastService.info('Reconnecting to server...', { autoClose: false, closeOnClick: false, draggable: false })
+        ToastService.info('Reconnecting to server...', { autoClose: false, closeOnClick: false, draggable: false, toastId: this.reconnectingToastId })
         const reconnected = await this.connect(true)
 
         if (reconnected) {
             console.log('[task-hub] first time reconnected')
-            await this.successReconnected(reconnectingToastId)
+            await this.successReconnected()
             return
         }
 
         console.log('[task-hub] non first time reconnected')
         await UtilsService.delay(3000)
         await this.connect()
-        await this.successReconnected(reconnectingToastId)
+        await this.successReconnected()
     }
 
-    private successReconnected = async(reconnectingToastId: number): Promise<void> => {
+    private successReconnected = async(): Promise<void> => {
         await this.reloadCallback()
-        ToastService.success('Reconnected', { toastId: 'toast-reconnected' })
-        ToastService.dismiss(reconnectingToastId)
+        ToastService.update(this.reconnectingToastId, 'Reconnected', { autoClose: 3000 })
     }
 
     private connect = async(oneTime?: boolean): Promise<boolean> => {

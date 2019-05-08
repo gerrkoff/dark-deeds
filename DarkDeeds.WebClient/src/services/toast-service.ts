@@ -2,10 +2,15 @@ import { toast, ToastOptions } from 'react-toastify'
 
 const defaultOptions: ToastOptions = {
     progressClassName: 'toast-progress',
-    closeButton: false
+    closeButton: false,
+    autoClose: 5000,
+    closeOnClick: true,
+    draggable: true
 }
 
 const service = {
+    types: toast.TYPE,
+
     success(msg: string, options: ToastOptions = {}): number {
         return toast.success(msg, {
             className: 'toast-success',
@@ -39,8 +44,20 @@ const service = {
         return this.error(`Error occured while ${process}`, options)
     },
 
-    dismiss(toastId: number) {
-        toast.dismiss(toastId)
+    dismiss(toastId: number | string) {
+        toast.dismiss(toastId as any)
+    },
+
+    update(toastId: number | string, msg: string, options: ToastOptions = {}) {
+        toast.update(toastId as any, {
+            render: msg,
+            ...defaultOptions,
+            ...options
+        })
+    },
+
+    isActive(toastId: number | string): boolean {
+        return toast.isActive(toastId as any)
     }
 }
 
