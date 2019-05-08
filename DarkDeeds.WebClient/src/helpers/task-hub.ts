@@ -13,7 +13,7 @@ export class TaskHub {
         TaskHubApi.hubSubscribe(
             this.reconnect,
             updateCallback,
-            () => console.log('task-hub heartbeat'))
+            () => console.log('[task-hub] heartbeat'))
     }
 
     get ready(): boolean {
@@ -43,12 +43,12 @@ export class TaskHub {
         const reconnected = await this.connect(true)
 
         if (reconnected) {
-            console.log('first time reconnected')
+            console.log('[task-hub] first time reconnected')
             await this.reloadCallback()
             ToastService.success('Reconnected', { toastId: 'toast-reconnected' })
             return
         }
-        console.log('non first time reconnected')
+        console.log('[task-hub] non first time reconnected')
 
         const toastId = ToastService.info('Reconnecting to server...', { autoClose: false, closeOnClick: false, draggable: false })
         await UtilsService.delay(3000)

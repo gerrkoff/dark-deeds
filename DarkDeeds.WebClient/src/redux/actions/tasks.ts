@@ -125,7 +125,7 @@ export function saveTasksHub(tasks: Task[]) {
             return
         }
         if (!taskHub!.connected) {
-            console.log('task was disconnected when trying to save')
+            console.log('task-hub was disconnected when trying to save')
             await taskHub!.reconnect()
             return
         }
