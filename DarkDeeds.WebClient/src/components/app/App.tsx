@@ -28,7 +28,7 @@ export class App extends React.PureComponent<IAppProps> {
         this.props.loadTasks()
         this.props.startTaskHub()
         this.props.loadSettings()
-        this.saveTaskInterval = setInterval(this.saveTasksIfUpdated, 15 * 1000)
+        this.saveTaskInterval = setInterval(this.saveTasksIfUpdated, 5 * 1000)
         window.onbeforeunload = this.confirmExit
     }
 
