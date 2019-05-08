@@ -28,7 +28,7 @@ export class App extends React.PureComponent<IAppProps> {
         this.props.loadTasks()
         this.props.startTaskHub()
         this.props.loadSettings()
-        this.saveTaskInterval = setInterval(this.saveTasksIfUpdated, 5 * 1000)
+        this.saveTaskInterval = setInterval(this.saveTasksIfUpdated, 15 * 1000)
         window.onbeforeunload = this.confirmExit
     }
 
@@ -60,10 +60,13 @@ export class App extends React.PureComponent<IAppProps> {
     private saveTasksIfUpdated = () => {
         const updated = this.props.tasks.filter(x => x.updated)
 
+        console.log('--- check')
         if (updated.length === 0 || this.props.tasksSaving) {
+            console.log('--- nothing to save')
             return
         }
 
+        console.log('--- start saving')
         this.props.saveTasks(updated)
     }
 
