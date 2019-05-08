@@ -1,6 +1,6 @@
 import { Dispatch } from 'redux'
 import { TaskApi } from '../../api'
-import { ToastService } from '../../services'
+import { ToastService, UtilsService } from '../../services'
 import { Task, TaskModel } from '../../models'
 import { TaskHub } from '../../helpers'
 import * as constants from '../constants'
@@ -122,6 +122,7 @@ export function stopTaskHub() {
 export function saveTasksHub(tasks: Task[]) {
     return async(dispatch: Dispatch<TasksAction>) => {
         console.log('--- saving 1')
+        await UtilsService.delay(50)
         if (!taskHub!.ready) {
             console.log('--- saving 2')
             return
