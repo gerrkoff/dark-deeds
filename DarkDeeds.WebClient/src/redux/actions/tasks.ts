@@ -121,21 +121,29 @@ export function stopTaskHub() {
 
 export function saveTasksHub(tasks: Task[]) {
     return async(dispatch: Dispatch<TasksAction>) => {
+        console.log('--- saving 1')
         if (!taskHub!.ready) {
+            console.log('--- saving 2')
             return
         }
         if (!taskHub!.connected) {
+            console.log('--- saving 3')
             console.log('task-hub was disconnected when trying to save')
             await taskHub!.reconnect()
             return
         }
 
+        console.log('--- saving 4')
+
         dispatch({ type: constants.TASKS_SAVING })
 
         try {
+            console.log('--- saving 5')
             await taskHub!.saveTasks(tasks)
+            console.log('--- saving 6')
             dispatch({ type: constants.TASKS_SAVING_SUCCESS })
         } catch (err) {
+            console.log('--- saving 7')
             dispatch({ type: constants.TASKS_SAVING_FAILED })
             ToastService.errorProcess('saving tasks')
         }
