@@ -32,7 +32,6 @@ export function tasks(state: ITasksState = inittialState, action: TasksAction): 
         case TASKS_LOCAL_UPDATE:
             newTasks = [...action.tasks]
             const notSaved = evalNotSaved(newTasks)
-            console.log('--- mas update', newTasks.length, notSaved)
             return { ...state,
                 tasks: newTasks,
                 notSaved

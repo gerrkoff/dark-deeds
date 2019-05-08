@@ -4,7 +4,7 @@ import { ToastService, UtilsService } from '../services'
 
 export class TaskHub {
 
-    private reconnectingToastId: string = 'toast-reconnection-id'
+    private _reconnectingToastId: string = 'toast-reconnection-id'
     private _ready: boolean = false
 
     constructor(
@@ -21,10 +21,6 @@ export class TaskHub {
         return this._ready
     }
 
-    get connected(): boolean {
-        return TaskHubApi.hubConnected()
-    }
-
     public start = async(): Promise<void> => {
         this._ready = false
         await this.connect()
@@ -39,41 +35,34 @@ export class TaskHub {
         return TaskHubApi.saveTasks(tasks)
     }
 
-    public reconnect = async(): Promise<void> => {
-        console.log('--- reconnect!')
+    private reconnect = async(): Promise<void> => {
         this._ready = false
-        ToastService.info('reconnecting...', { autoClose: false, closeOnClick: false, draggable: false, toastId: this.reconnectingToastId })
-        const reconnected = await this.connect(true)
-
-        if (reconnected) {
-            console.log('[task-hub] first time reconnected')
-            await this.successReconnected()
-            return
-        }
-
-        console.log('[task-hub] non first time reconnected')
-        await UtilsService.delay(3000)
+        ToastService.info('reconnecting...', { autoClose: false, closeOnClick: false, draggable: false, toastId: this._reconnectingToastId })
         await this.connect()
-        await this.successReconnected()
-    }
-
-    private successReconnected = async(): Promise<void> => {
         await this.reloadCallback()
-        ToastService.update(this.reconnectingToastId, 'reconnecting... done', { autoClose: 1000, hideProgressBar: true })
+        ToastService.update(this._reconnectingToastId, 'reconnecting... done', { autoClose: 1000, hideProgressBar: true })
     }
 
-    private connect = async(oneTime?: boolean): Promise<boolean> => {
+    private connect = async(): Promise<void> => {
+        let attemptCount = 1
         while (true) {
             try {
                 await TaskHubApi.hubStart()
                 this._ready = true
-                return true
+                return
             // tslint:disable-next-line:no-empty
             } catch (error) {}
-            if (oneTime !== undefined && oneTime) {
-                return false
-            }
-            await UtilsService.delay(7000)
+            await UtilsService.delay(this.evalConnectRetryDelay(++attemptCount))
+        }
+    }
+
+    private evalConnectRetryDelay = (attemptCount: number): number => {
+        if (attemptCount === 1) {
+            return 0
+        } else if (attemptCount === 2) {
+            return 3000
+        } else {
+            return 7000
         }
     }
 }

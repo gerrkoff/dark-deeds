@@ -121,31 +121,24 @@ export function stopTaskHub() {
 
 export function saveTasksHub(tasks: Task[]) {
     return async(dispatch: Dispatch<TasksAction>) => {
-        console.log('--- saving 1')
-        await UtilsService.delay(50)
-        console.log('--- saving 00')
-        if (!taskHub!.ready) {
-            console.log('--- saving 2')
-            return
-        }
-        if (!taskHub!.connected) {
-            console.log('--- saving 3')
-            console.log('task-hub was disconnected when trying to save')
-            await taskHub!.reconnect()
-            return
-        }
 
-        console.log('--- saving 4')
+        /*
+            special hack to manage race conditions
+            [saving] & [reconnecting] in some circumstances start executing at the same time and unpredictable order
+            (i.e. when you leave Safari on iOS and then open it back)
+            so, if [saving] is the first it should pause a bit, to let [reconnecting] take the lead
+        */
+        await UtilsService.delay(50)
+        if (!taskHub!.ready) {
+            return
+        }
 
         dispatch({ type: constants.TASKS_SAVING })
 
         try {
-            console.log('--- saving 5')
             await taskHub!.saveTasks(tasks)
-            console.log('--- saving 6')
             dispatch({ type: constants.TASKS_SAVING_SUCCESS })
         } catch (err) {
-            console.log('--- saving 7')
             dispatch({ type: constants.TASKS_SAVING_FAILED })
             ToastService.errorProcess('saving tasks')
         }

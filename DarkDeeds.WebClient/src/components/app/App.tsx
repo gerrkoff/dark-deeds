@@ -59,14 +59,9 @@ export class App extends React.PureComponent<IAppProps> {
 
     private saveTasksIfUpdated = () => {
         const updated = this.props.tasks.filter(x => x.updated)
-
-        console.log('--- check')
         if (updated.length === 0 || this.props.tasksSaving) {
-            console.log('--- nothing to save')
             return
         }
-
-        console.log('--- start saving')
         this.props.saveTasks(updated)
     }
 
