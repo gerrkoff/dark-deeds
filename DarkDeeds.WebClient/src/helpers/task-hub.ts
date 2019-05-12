@@ -1,14 +1,15 @@
 import { Task } from '../models'
 import { TaskHubApi } from '../api'
-import { ToastService, UtilsService } from '../services'
+import { UtilsService } from '../services'
+import { EventEmitter } from 'events'
 
 export class TaskHub {
 
-    private _reconnectingToastId: string = 'toast-reconnection-id'
     private _ready: boolean = false
+    private _eventEmitter: EventEmitter = new EventEmitter()
+    private _reconnectEventName = 'reconnect'
 
     constructor(
-        private reloadCallback: () => Promise<void>,
         updateCallback: (tasks: Task[], localUpdate: boolean) => void
     ) {
         TaskHubApi.hubSubscribe(
@@ -35,12 +36,19 @@ export class TaskHub {
         return TaskHubApi.saveTasks(tasks)
     }
 
+    public addOnReconnect(handler: (reconnecting: boolean) => void) {
+        this._eventEmitter.on(this._reconnectEventName, handler)
+    }
+
+    public removeOnReconnect(handler: (reconnecting: boolean) => void) {
+        this._eventEmitter.off(this._reconnectEventName, handler)
+    }
+
     private reconnect = async(): Promise<void> => {
         this._ready = false
-        ToastService.info('reconnecting...', { autoClose: false, closeOnClick: false, draggable: false, toastId: this._reconnectingToastId })
+        this._eventEmitter.emit(this._reconnectEventName, true)
         await this.connect()
-        await this.reloadCallback()
-        ToastService.update(this._reconnectingToastId, 'reconnecting... done', { autoClose: 1000, hideProgressBar: true })
+        this._eventEmitter.emit(this._reconnectEventName, false)
     }
 
     private connect = async(): Promise<void> => {

@@ -87,9 +87,8 @@ let taskHub: TaskHub | null = null
 export function startTaskHub() {
     return async(dispatch: Dispatch<TasksAction>) => {
         if (taskHub === null) {
-            taskHub = new TaskHub(
-                hubCallbackReload(dispatch),
-                hubCallbackUpdate(dispatch))
+            taskHub = new TaskHub(hubCallbackUpdate(dispatch))
+            taskHub.addOnReconnect(hubReconnect(dispatch))
         }
         await taskHub.start()
     }
@@ -106,10 +105,17 @@ function hubCallbackUpdate(dispatch: Dispatch<TasksAction>): (tasksFromServer: T
     }
 }
 
-function hubCallbackReload(dispatch: Dispatch<TasksAction>): () => Promise<void> {
-    return async() => {
-        const tasks = await TaskApi.loadTasks()
-        dispatch(localUpdateTasks(tasks))
+const reconnectingToastId: string = 'toast-reconnection-id'
+function hubReconnect(dispatch: Dispatch<TasksAction>): (reconnecting: boolean) => Promise<void> {
+    return async(reconnecting: boolean) => {
+        if (reconnecting) {
+            ToastService.info('reconnecting...', { autoClose: false, closeOnClick: false, draggable: false, toastId: reconnectingToastId })
+            return
+        } else {
+            const tasks = await TaskApi.loadTasks()
+            dispatch(localUpdateTasks(tasks))
+            ToastService.update(reconnectingToastId, 'reconnecting... done', { autoClose: 1000, hideProgressBar: true })
+        }
     }
 }
 
