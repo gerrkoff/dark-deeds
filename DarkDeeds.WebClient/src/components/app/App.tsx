@@ -5,6 +5,7 @@ import ModalConfirm from '../../containers/ModalConfirm'
 import { Task } from '../../models'
 import { AddTaskButton } from '../edit-task'
 import { Shortcuts, Toolbar, NotSavedIndicator } from './'
+import { IndicatorPanel } from '../indicator-panel/IndicatorPanel'
 
 export interface IAppProps {
     appLoading: boolean
@@ -53,6 +54,7 @@ export class App extends React.PureComponent<IAppProps> {
                 <Shortcuts openEditTask={this.props.openEditTask} />
                 <ModalConfirm />
                 <NotSavedIndicator active={this.props.tasksNotSaved} />
+                <IndicatorPanel saving={true} connecting={true} />
             </React.Fragment>
         )
     }

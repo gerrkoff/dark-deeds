@@ -1,0 +1,28 @@
+@import 'shared/colors.scss';
+
+.indicator-panel {
+    position: fixed;
+    top: 0.5rem;
+    right: 0.5rem;
+    color: $color-primary-text;
+}
+
+$low-opacity: 0.25;
+$animation-time: 1.25s;
+
+@keyframes fade {
+    from { opacity: 1.0; }
+    50% { opacity: $low-opacity; }
+    to { opacity: 1.0; }
+}                                                                                                                                                                                                                                  
+
+@-webkit-keyframes fade {
+    from { opacity: 1.0; }
+    50% { opacity: $low-opacity; }
+    to { opacity: 1.0; }
+}
+
+.indicator-panel i {
+  animation: fade $animation-time linear infinite;
+  -webkit-animation: fade $animation-time linear infinite;
+}
