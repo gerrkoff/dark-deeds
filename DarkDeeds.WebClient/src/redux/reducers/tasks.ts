@@ -1,7 +1,7 @@
 import { DateService, TaskService } from '../../services'
 import { Task, TaskModel } from '../../models'
 import { TasksAction } from '../actions'
-import { TASKS_LOADING, TASKS_LOADING_FAILED, TASKS_LOADING_SUCCESS, TASKS_LOCAL_UPDATE, TASKS_LOCAL_UPDATE_TASK, TASKS_SAVING, TASKS_SAVING_FAILED, TASKS_SAVING_SUCCESS, TASKS_SET_TASK_STATUSES, TASKS_PUSH_FROM_SERVER } from '../constants'
+import { TASKS_LOADING, TASKS_LOADING_FAILED, TASKS_LOADING_SUCCESS, TASKS_LOCAL_UPDATE, TASKS_LOCAL_UPDATE_TASK, TASKS_SAVING, TASKS_SAVING_FAILED, TASKS_SAVING_SUCCESS, TASKS_SET_TASK_STATUSES, TASKS_PUSH_FROM_SERVER, TASKS_RECONNECTED, TASKS_RECONNECTING } from '../constants'
 import { ITasksState } from '../types'
 
 const inittialState: ITasksState = {
@@ -9,7 +9,8 @@ const inittialState: ITasksState = {
     loaded: false,
     saving: false,
     notSaved: false,
-    tasks: []
+    tasks: [],
+    reconnecting: false
 }
 
 export function tasks(state: ITasksState = inittialState, action: TasksAction): ITasksState {
@@ -65,6 +66,14 @@ export function tasks(state: ITasksState = inittialState, action: TasksAction): 
             return { ...state,
                 tasks: newTasks,
                 notSaved: evalNotSaved(newTasks)
+            }
+        case TASKS_RECONNECTING:
+            return { ...state,
+                reconnecting: true
+            }
+        case TASKS_RECONNECTED:
+            return { ...state,
+                reconnecting: false
             }
     }
     return state

@@ -9,9 +9,10 @@ function createState(
     loading: boolean = true,
     loaded: boolean = false,
     saving: boolean = false,
-    notSaved: boolean = false
+    notSaved: boolean = false,
+    reconnecting: boolean = false
     ): ITasksState {
-    return { loading, loaded, saving, tasks, notSaved }
+    return { loading, loaded, saving, tasks, notSaved, reconnecting }
 }
 
 function createTask(clientId: number = 1, id: number = 1, title: string = '', deleted: boolean = false): Task {

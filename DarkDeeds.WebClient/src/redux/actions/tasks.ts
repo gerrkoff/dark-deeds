@@ -54,7 +54,15 @@ export interface ITasksSetTaskStatuses {
     deleted?: boolean
 }
 
-export type TasksAction = ITasksLoading | ITasksLoadingSuccess | ITasksLoadingFailed | ITasksLocalUpdate | ITasksSaving | ITasksSavingSuccess | ITasksSavingFailed | ITasksLocalUpdateTask | ITasksSetTaskStatuses | ITasksPushFromServer
+export interface ITasksReconnecting {
+    type: constants.TASKS_RECONNECTING
+}
+
+export interface ITasksReconnected {
+    type: constants.TASKS_RECONNECTED
+}
+
+export type TasksAction = ITasksLoading | ITasksLoadingSuccess | ITasksLoadingFailed | ITasksLocalUpdate | ITasksSaving | ITasksSavingSuccess | ITasksSavingFailed | ITasksLocalUpdateTask | ITasksSetTaskStatuses | ITasksPushFromServer | ITasksReconnecting | ITasksReconnected
 
 export function loadTasks() {
     return async(dispatch: Dispatch<TasksAction>) => {
@@ -105,16 +113,15 @@ function hubCallbackUpdate(dispatch: Dispatch<TasksAction>): (tasksFromServer: T
     }
 }
 
-const reconnectingToastId: string = 'toast-reconnection-id'
 function hubReconnect(dispatch: Dispatch<TasksAction>): (reconnecting: boolean) => Promise<void> {
     return async(reconnecting: boolean) => {
         if (reconnecting) {
-            ToastService.info('reconnecting...', { autoClose: false, closeOnClick: false, draggable: false, toastId: reconnectingToastId })
+            dispatch({ type: constants.TASKS_RECONNECTING })
             return
         } else {
             const tasks = await TaskApi.loadTasks()
             dispatch(localUpdateTasks(tasks))
-            ToastService.update(reconnectingToastId, 'reconnecting... done', { autoClose: 1000, hideProgressBar: true })
+            dispatch({ type: constants.TASKS_RECONNECTED })
         }
     }
 }

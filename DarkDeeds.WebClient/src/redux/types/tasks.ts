@@ -6,4 +6,5 @@ export interface ITasksState {
     saving: boolean
     notSaved: boolean
     tasks: Task[]
+    reconnecting: boolean
 }
