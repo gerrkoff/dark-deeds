@@ -2,10 +2,10 @@ import * as React from 'react'
 import { Container, Dimmer, Loader } from 'semantic-ui-react'
 import EditTaskModal from '../../containers/EditTaskModal'
 import ModalConfirm from '../../containers/ModalConfirm'
+import IndicatorPanel from '../../containers/IndicatorPanel'
 import { Task } from '../../models'
 import { AddTaskButton } from '../edit-task'
-import { Shortcuts, Toolbar, NotSavedIndicator } from './'
-import { IndicatorPanel } from '../indicator-panel/IndicatorPanel'
+import { Shortcuts, Toolbar } from './'
 
 export interface IAppProps {
     appLoading: boolean
@@ -53,8 +53,7 @@ export class App extends React.PureComponent<IAppProps> {
                 </Dimmer>
                 <Shortcuts openEditTask={this.props.openEditTask} />
                 <ModalConfirm />
-                <NotSavedIndicator active={this.props.tasksNotSaved} />
-                <IndicatorPanel saving={true} connecting={true} />
+                <IndicatorPanel />
             </React.Fragment>
         )
     }

@@ -15,7 +15,7 @@ export class IndicatorPanel extends React.PureComponent<IProps> {
                     ? <Icon name='globe' />
                     : ''
                 }
-                {this.props.connecting
+                {this.props.saving
                     ? <Icon name='save' />
                     : ''
                 }
