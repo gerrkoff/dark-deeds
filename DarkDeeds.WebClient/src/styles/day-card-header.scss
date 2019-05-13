@@ -1,11 +1,12 @@
 @import 'shared/colors.scss';
+@import 'shared/fonts.scss';
 
 .day-card-header {
     width: 100%;
     display: inline-block;
     text-align: center;
+    font-size: $font-smaller;
     cursor: pointer;
-    font-size: 0.75rem;
     color: $color-primary-text;
 }
 

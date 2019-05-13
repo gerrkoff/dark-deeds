@@ -1,6 +1,8 @@
 @import 'shared/colors.scss';
+@import 'shared/fonts.scss';
 
 .task-item {
+    font-size: $font-small;
     cursor: pointer;
     width: 100%;
     display: inline-block;
@@ -26,6 +28,10 @@
     border-radius: 2px;
     background: $color-item-selected;
     color: $color-primary-text !important;
+
+    span {
+        color: $color-primary-text !important;
+    }
 }
 
 .task-item-completed {
