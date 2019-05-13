@@ -71,7 +71,8 @@ export function tasks(state: ITasksState = inittialState, action: actions.TasksA
             }
         case actions.TASKS_HUB_RECONNECTED:
             return { ...state,
-                hubReconnecting: false
+                hubReconnecting: false,
+                hubHeartbeatLastTime: new Date()
             }
         case actions.TASKS_HUB_HEARTBEAT:
             return { ...state,

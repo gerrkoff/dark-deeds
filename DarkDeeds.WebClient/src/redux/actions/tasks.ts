@@ -29,7 +29,6 @@ export function taskHubStop() {
 
 export function taskHubSave(tasks: Task[]) {
     return async(dispatch: Dispatch<actions.TasksAction>) => {
-
         /*
             special hack to manage race conditions
             [saving] & [reconnecting] in some circumstances start executing at the same time and unpredictable order
@@ -40,9 +39,7 @@ export function taskHubSave(tasks: Task[]) {
         if (!taskHub!.ready) {
             return
         }
-
         dispatch({ type: actions.TASKS_SAVING })
-
         try {
             await taskHub!.saveTasks(tasks)
         } catch (err) {
