@@ -6,7 +6,7 @@ function mapStateToProps({ tasks }: IAppState) {
     return {
         saving: tasks.changed,
         connecting: tasks.hubReconnecting,
-        disconnected: false
+        heartbeatLastTime: tasks.hubHeartbeatLastTime
     }
 }
 

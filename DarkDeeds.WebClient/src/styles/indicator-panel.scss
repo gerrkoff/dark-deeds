@@ -10,6 +10,7 @@
 
 .error {
     color: $color-error;
+    @include animation(fade-blink, 0.75s, linear, infinite)
 }
 
 .process {

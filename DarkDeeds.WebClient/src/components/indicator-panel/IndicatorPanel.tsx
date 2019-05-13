@@ -6,16 +6,39 @@ import '../../styles/indicator-panel.css'
 interface IProps {
     saving: boolean
     connecting: boolean
+    heartbeatLastTime: Date
+}
+interface IState {
     disconnected: boolean
 }
-export class IndicatorPanel extends React.PureComponent<IProps> {
+export class IndicatorPanel extends React.PureComponent<IProps, IState> {
+    private checkIfDisconnectedInterval: NodeJS.Timeout
+
+    constructor(props: IProps) {
+        super(props)
+        this.state = {
+            disconnected: false
+        }
+        this.checkIfDisconnectedInterval = setInterval(this.checkIfDisconnected, 5 * 1000)
+    }
+
+    public componentWillUnmount() {
+        clearInterval(this.checkIfDisconnectedInterval)
+    }
+
     public render() {
         return (
             <div className='indicator-panel'>
                 {this.props.connecting ? <Icon name='globe' className='process' /> : ''}
                 {this.props.saving ? <Icon name='save' className='process' /> : ''}
-                {this.props.disconnected ? <Icon name='globe' className='error' /> : ''}
+                {this.state.disconnected && !this.props.connecting ? <Icon name='globe' className='error' /> : ''}
             </div>
         )
+    }
+
+    private checkIfDisconnected = () => {
+        this.setState({
+            disconnected: new Date().valueOf() - this.props.heartbeatLastTime.valueOf() > 65 * 1000
+        })
     }
 }
