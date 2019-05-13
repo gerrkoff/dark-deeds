@@ -1,15 +1,17 @@
 
 @import 'shared/colors.scss';
+@import 'shared/fonts.scss';
 
 .settings-divider {
     color: $color-primary-text !important;
-    font-size: 0.8rem !important;
+    font-size: $font-small !important;
 }
 
 .settings-label {
-    font-size: 0.9rem !important;
+    font-size: $font-less-normal !important;
 }
 
 .ui.checkbox label {
+    font-size: $font-less-normal !important;
     color: $color-primary-text !important;
 }
