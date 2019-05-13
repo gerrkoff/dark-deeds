@@ -6,4 +6,5 @@ export interface ITasksState {
     changed: boolean
     tasks: Task[]
     hubReconnecting: boolean
+    hubHeartbeatLastTime: Date
 }

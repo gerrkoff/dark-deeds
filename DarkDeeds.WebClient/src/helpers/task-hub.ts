@@ -10,12 +10,17 @@ export class TaskHub {
     private _reconnectEventName = 'reconnect'
 
     constructor(
-        updateCallback: (tasks: Task[], localUpdate: boolean) => void
+        updateCallback: (tasks: Task[], localUpdate: boolean) => void,
+        heartbeatCallback: () => void
     ) {
         TaskHubApi.hubSubscribe(
             this.reconnect,
             updateCallback,
-            () => console.log('[task-hub] heartbeat'))
+            () => {
+                console.log('[task-hub] heartbeat')
+                heartbeatCallback()
+            }
+        )
     }
 
     get ready(): boolean {

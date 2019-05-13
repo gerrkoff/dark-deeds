@@ -8,7 +8,8 @@ const inittialState: ITasksState = {
     saving: false,
     changed: false,
     tasks: [],
-    hubReconnecting: false
+    hubReconnecting: false,
+    hubHeartbeatLastTime: new Date()
 }
 
 export function tasks(state: ITasksState = inittialState, action: actions.TasksAction): ITasksState {
@@ -71,6 +72,10 @@ export function tasks(state: ITasksState = inittialState, action: actions.TasksA
         case actions.TASKS_HUB_RECONNECTED:
             return { ...state,
                 hubReconnecting: false
+            }
+        case actions.TASKS_HUB_HEARTBEAT:
+            return { ...state,
+                hubHeartbeatLastTime: new Date()
             }
     }
     return state

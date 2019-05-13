@@ -10,7 +10,7 @@ function createState(
     changed: boolean = false,
     hubReconnecting: boolean = false
     ): ITasksState {
-    return { loadingState, saving, tasks, changed, hubReconnecting }
+    return { loadingState, saving, tasks, changed, hubReconnecting, hubHeartbeatLastTime: new Date() }
 }
 
 function createTask(clientId: number = 1, id: number = 1, title: string = '', deleted: boolean = false): Task {

@@ -14,7 +14,7 @@ let taskHub: TaskHub | null = null
 export function taskHubStart() {
     return async(dispatch: Dispatch<actions.TasksAction>) => {
         if (taskHub === null) {
-            taskHub = new TaskHub(taskHubUpdateHandler(dispatch))
+            taskHub = new TaskHub(taskHubUpdateHandler(dispatch), taskHubHeartbeatHandler(dispatch))
             taskHub.addOnReconnect(taskHubReconnectHandler(dispatch))
         }
         await taskHub.start()
@@ -60,6 +60,12 @@ function taskHubUpdateHandler(dispatch: Dispatch<actions.TasksAction>): (tasks: 
         } else {
             console.log(`${tasks.length} tasks were updated`)
         }
+    }
+}
+
+function taskHubHeartbeatHandler(dispatch: Dispatch<actions.TasksAction>): () => void {
+    return () => {
+        dispatch({ type: actions.TASKS_HUB_HEARTBEAT })
     }
 }
 

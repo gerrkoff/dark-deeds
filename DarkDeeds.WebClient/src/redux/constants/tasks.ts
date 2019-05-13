@@ -81,6 +81,12 @@ export interface ITasksHubReconnected {
     type: TASKS_HUB_RECONNECTED
 }
 
+export const TASKS_HUB_HEARTBEAT = 'TASKS_HUB_HEARTBEAT'
+export type TASKS_HUB_HEARTBEAT = typeof TASKS_HUB_HEARTBEAT
+export interface ITasksHubHeartbeat {
+    type: TASKS_HUB_HEARTBEAT
+}
+
 export type TasksAction =
     ITasksLoading |
     ITasksLoadingSuccess |
@@ -92,4 +98,5 @@ export type TasksAction =
     ITasksSavingFinish |
     ITasksUpdateTasks |
     ITasksHubReconnecting |
-    ITasksHubReconnected
+    ITasksHubReconnected |
+    ITasksHubHeartbeat
