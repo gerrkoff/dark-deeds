@@ -90,7 +90,7 @@ test('[TASKS_UPDATE_TASKS] (non local update) update task - should be updated & 
 
     expect(result.tasks.length).toBe(1)
     expect(result.tasks[0].title).toBe('www')
-    expect(result.tasks[0].updated).toBe(false)
+    expect(result.tasks[0].changed).toBe(false)
 })
 
 test('[TASKS_UPDATE_TASKS] (local update) update task - should not be updated', () => {
@@ -130,7 +130,7 @@ test('[TASKS_UPDATE_TASKS] (local update) update task - should set updated flag 
     const result = taskReducer(state, action)
 
     expect(result.tasks.length).toBe(1)
-    expect(result.tasks[0].updated).toBeTruthy()
+    expect(result.tasks[0].changed).toBeTruthy()
 })
 
 test('[TASKS_UPDATE_TASKS] (local update) update task - should set updated flag to false if equal to saved state', () => {
@@ -143,5 +143,5 @@ test('[TASKS_UPDATE_TASKS] (local update) update task - should set updated flag 
     const result = taskReducer(state, action)
 
     expect(result.tasks.length).toBe(1)
-    expect(result.tasks[0].updated).toBeFalsy()
+    expect(result.tasks[0].changed).toBeFalsy()
 })

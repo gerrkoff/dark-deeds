@@ -6,7 +6,7 @@ export class Task implements TaskModel {
         public title: string,
         public dateTime: Date | null = null,
         public order: number = 0,
-        public updated: boolean = false,
+        public changed: boolean = false,
         public id: number = 0,
         public completed: boolean = false,
         public deleted: boolean = false,

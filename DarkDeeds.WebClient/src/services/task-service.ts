@@ -53,7 +53,7 @@ const service = {
         const oldTask = tasks[taskIndex]
         tasks[taskIndex] = {
             ...tasks[taskIndex],
-            updated: true
+            changed: true
         }
         const task = tasks[taskIndex]
         let taskBeforeOldData = {
@@ -121,7 +121,7 @@ const service = {
                 tasks[i] = {
                     ...tasks[i],
                     order: tasks[i].order - 1,
-                    updated: true
+                    changed: true
                 }
             }
 
@@ -129,7 +129,7 @@ const service = {
                 tasks[i] = {
                     ...tasks[i],
                     order: tasks[i].order + 1,
-                    updated: true
+                    changed: true
                 }
             }
 
@@ -142,7 +142,7 @@ const service = {
                     dateTime: new Date(taskBeforeOldData.dateTime),
                     order: taskBeforeOldData.order++,
                     timeType: taskBeforeOldData.timeType,
-                    updated: true
+                    changed: true
                 }
             }
         }

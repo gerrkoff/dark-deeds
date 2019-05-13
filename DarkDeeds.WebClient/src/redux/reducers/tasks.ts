@@ -77,7 +77,7 @@ export function tasks(state: ITasksState = inittialState, action: actions.TasksA
 }
 
 function evalChanged(newTasks: Task[]) {
-    return newTasks.some(x => x.updated)
+    return newTasks.some(x => x.changed)
 }
 
 function updateTasks(localTasks: Task[], updatedTasks: Task[], localUpdate: boolean): Task[] {
@@ -96,11 +96,11 @@ function updateTasks(localTasks: Task[], updatedTasks: Task[], localUpdate: bool
                     clientId: updatedTask.id,
                     id: updatedTask.id
                 }
-                newTasks[taskIndex].updated = !TaskService.tasksEqual(newTasks[taskIndex], updatedTask)
+                newTasks[taskIndex].changed = !TaskService.tasksEqual(newTasks[taskIndex], updatedTask)
             } else {
                 newTasks[taskIndex] = {
                     ...updatedTask,
-                    updated: false
+                    changed: false
                 }
             }
         } else if (!updatedTask.deleted) {
@@ -121,7 +121,7 @@ function changeTask(model: TaskModel, clientId: number, localTasks: Task[]): Tas
         newTasks[taskIndex] = {
             ...newTasks[taskIndex],
             ...model,
-            updated: true
+            changed: true
         }
         return newTasks
     } else {
@@ -149,7 +149,7 @@ function addTask(model: TaskModel, localTasks: Task[]): Task[] {
         deleted: false,
         id: 0,
         order: maxOrder + 1,
-        updated: true
+        changed: true
     }
 
     return [...localTasks, task]
@@ -165,7 +165,7 @@ function changeTaskStatus(localTasks: Task[], clientId: number, completed?: bool
     const newTasks = [...localTasks]
     newTasks[taskIndex] = {
         ...newTasks[taskIndex],
-        updated: true
+        changed: true
     }
 
     if (completed !== undefined) {
