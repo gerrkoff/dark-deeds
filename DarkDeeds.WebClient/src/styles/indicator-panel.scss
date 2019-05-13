@@ -8,7 +8,11 @@
     color: $color-primary-text;
 }
 
-.indicator-panel i {
+.error {
+    color: $color-error;
+}
+
+.process {
     @include animation(fade-blink, 1.25s, linear, infinite)
 }
 

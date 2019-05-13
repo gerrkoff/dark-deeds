@@ -5,7 +5,8 @@ import { IndicatorPanel } from '../components/indicator-panel'
 function mapStateToProps({ tasks }: IAppState) {
     return {
         saving: tasks.changed,
-        connecting: tasks.hubReconnecting
+        connecting: tasks.hubReconnecting,
+        disconnected: false
     }
 }
 
