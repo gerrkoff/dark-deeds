@@ -1,4 +1,5 @@
 @import 'shared/colors.scss';
+@import 'shared/common-mixin.scss';
 
 .indicator-panel {
     position: fixed;
@@ -7,22 +8,23 @@
     color: $color-primary-text;
 }
 
+.indicator-panel i {
+    @include animation(fade-blink, 1.25s, linear, infinite)
+}
+
 $low-opacity: 0.25;
-$animation-time: 1.25s;
-
-@keyframes fade {
-    from { opacity: 1.0; }
-    50% { opacity: $low-opacity; }
-    to { opacity: 1.0; }
-}                                                                                                                                                                                                                                  
-
-@-webkit-keyframes fade {
+@-webkit-keyframes fade-blink {
     from { opacity: 1.0; }
     50% { opacity: $low-opacity; }
     to { opacity: 1.0; }
 }
-
-.indicator-panel i {
-  animation: fade $animation-time linear infinite;
-  -webkit-animation: fade $animation-time linear infinite;
+@-moz-keyframes fade-blink {
+    from { opacity: 1.0; }
+    50% { opacity: $low-opacity; }
+    to { opacity: 1.0; }
+}
+@keyframes fade-blink {
+    from { opacity: 1.0; }
+    50% { opacity: $low-opacity; }
+    to { opacity: 1.0; }
 }
