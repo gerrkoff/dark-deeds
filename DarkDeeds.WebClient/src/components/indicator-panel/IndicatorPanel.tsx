@@ -27,6 +27,7 @@ export class IndicatorPanel extends React.PureComponent<IProps, IState> {
     }
 
     public render() {
+        console.log(this.props.connecting, this.state.disconnected, new Date().valueOf() - this.props.heartbeatLastTime.valueOf(), this.props.heartbeatLastTime.toTimeString())
         return (
             <div className='indicator-panel'>
                 {this.props.connecting ? <Icon name='globe' className='process' /> : ''}
