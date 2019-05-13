@@ -1,13 +1,13 @@
-import { GeneralAction, GENERAL_UPDATE_BUILD_INFO } from '../constants'
 import { IGeneralState } from '../types'
+import * as actions from '../constants/general'
 
 const inittialState: IGeneralState = {
     appVersion: ''
 }
 
-export function general(state: IGeneralState = inittialState, action: GeneralAction): IGeneralState {
+export function general(state: IGeneralState = inittialState, action: actions.GeneralAction): IGeneralState {
     switch (action.type) {
-        case GENERAL_UPDATE_BUILD_INFO:
+        case actions.GENERAL_UPDATE_BUILD_INFO:
             return { ...state,
                 appVersion: action.appVersion
             }

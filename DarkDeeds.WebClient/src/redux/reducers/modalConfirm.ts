@@ -1,5 +1,5 @@
-import { ModalConfirmAction, MODALCONFIRM_CLOSE, MODALCONFIRM_OPEN } from '../constants'
 import { IModalConfirmState } from '../types'
+import * as actions from '../constants/modalConfirm'
 
 const inittialState: IModalConfirmState = {
     action: () => console.log(),
@@ -9,9 +9,9 @@ const inittialState: IModalConfirmState = {
     open: false
 }
 
-export function modalConfirm(state: IModalConfirmState = inittialState, action: ModalConfirmAction): IModalConfirmState {
+export function modalConfirm(state: IModalConfirmState = inittialState, action: actions.ModalConfirmAction): IModalConfirmState {
     switch (action.type) {
-        case MODALCONFIRM_OPEN:
+        case actions.MODALCONFIRM_OPEN:
             return { ...state,
                 action: action.action,
                 content: action.content,
@@ -19,7 +19,7 @@ export function modalConfirm(state: IModalConfirmState = inittialState, action: 
                 headerIcon: action.headerIcon === undefined ? 'question' : action.headerIcon,
                 open: true
             }
-        case MODALCONFIRM_CLOSE:
+        case actions.MODALCONFIRM_CLOSE:
             return { ...state,
                 action: () => console.log(),
                 content: '',

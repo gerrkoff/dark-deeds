@@ -1,23 +1,23 @@
-import { TelegramIntegrationAction, TELEGRAM_INTEGRATION_GENERATE_KEY_PROCESSING, TELEGRAM_INTEGRATION_GENERATE_KEY_FAIL, TELEGRAM_INTEGRATION_GENERATE_KEY_SUCCESS } from '../constants'
 import { ITelegramIntegration } from '../types'
+import * as actions from '../constants/telegramIntegration'
 
 const inittialState: ITelegramIntegration = {
     startUrl: '',
     generateKeyProcessing: false
 }
 
-export function telegramIntegration(state: ITelegramIntegration = inittialState, action: TelegramIntegrationAction): ITelegramIntegration {
+export function telegramIntegration(state: ITelegramIntegration = inittialState, action: actions.TelegramIntegrationAction): ITelegramIntegration {
     switch (action.type) {
-        case TELEGRAM_INTEGRATION_GENERATE_KEY_PROCESSING:
+        case actions.TELEGRAM_INTEGRATION_GENERATE_KEY_PROCESSING:
             return { ...state,
                 generateKeyProcessing: true
             }
-        case TELEGRAM_INTEGRATION_GENERATE_KEY_FAIL:
+        case actions.TELEGRAM_INTEGRATION_GENERATE_KEY_FAIL:
             return { ...state,
                 generateKeyProcessing: false,
                 startUrl: ''
             }
-        case TELEGRAM_INTEGRATION_GENERATE_KEY_SUCCESS:
+        case actions.TELEGRAM_INTEGRATION_GENERATE_KEY_SUCCESS:
             return { ...state,
                 generateKeyProcessing: false,
                 startUrl: action.startUrl

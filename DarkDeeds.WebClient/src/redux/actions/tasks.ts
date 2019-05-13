@@ -3,38 +3,38 @@ import { TaskApi } from '../../api'
 import { ToastService, UtilsService } from '../../services'
 import { Task, TaskModel } from '../../models'
 import { TaskHub } from '../../helpers'
-import * as c from '../constants'
+import * as actions from '../constants/tasks'
 
 export function loadTasks() {
-    return async(dispatch: Dispatch<c.TasksAction>) => {
-        dispatch({ type: c.TASKS_LOADING })
+    return async(dispatch: Dispatch<actions.TasksAction>) => {
+        dispatch({ type: actions.TASKS_LOADING })
 
         try {
             const tasks = await TaskApi.loadTasks()
-            dispatch({ type: c.TASKS_LOADING_SUCCESS, tasks })
+            dispatch({ type: actions.TASKS_LOADING_SUCCESS, tasks })
         } catch (err) {
-            dispatch({ type: c.TASKS_LOADING_FAILED })
+            dispatch({ type: actions.TASKS_LOADING_FAILED })
             ToastService.errorProcess('loading tasks')
         }
     }
 }
 
-export function localUpdateTasks(tasks: Task[]): c.ITasksLocalUpdate {
-    return { type: c.TASKS_LOCAL_UPDATE, tasks }
+export function localUpdateTasks(tasks: Task[]): actions.ITasksLocalUpdate {
+    return { type: actions.TASKS_LOCAL_UPDATE, tasks }
 }
 
-export function localUpdateTask(taskModel: TaskModel, clientId: number): c.ITasksLocalUpdateTask {
-    return { type: c.TASKS_LOCAL_UPDATE_TASK, taskModel, clientId }
+export function localUpdateTask(taskModel: TaskModel, clientId: number): actions.ITasksLocalUpdateTask {
+    return { type: actions.TASKS_LOCAL_UPDATE_TASK, taskModel, clientId }
 }
 
-export function setTaskStatuses(clientId: number, completed?: boolean, deleted?: boolean): c.ITasksSetTaskStatuses {
-    return { type: c.TASKS_SET_TASK_STATUSES, clientId, completed, deleted }
+export function setTaskStatuses(clientId: number, completed?: boolean, deleted?: boolean): actions.ITasksSetTaskStatuses {
+    return { type: actions.TASKS_SET_TASK_STATUSES, clientId, completed, deleted }
 }
 
 let taskHub: TaskHub | null = null
 
 export function startTaskHub() {
-    return async(dispatch: Dispatch<c.TasksAction>) => {
+    return async(dispatch: Dispatch<actions.TasksAction>) => {
         if (taskHub === null) {
             taskHub = new TaskHub(hubCallbackUpdate(dispatch))
             taskHub.addOnReconnect(hubReconnect(dispatch))
@@ -43,9 +43,9 @@ export function startTaskHub() {
     }
 }
 
-function hubCallbackUpdate(dispatch: Dispatch<c.TasksAction>): (tasksFromServer: Task[], localUpdate: boolean) => void {
+function hubCallbackUpdate(dispatch: Dispatch<actions.TasksAction>): (tasksFromServer: Task[], localUpdate: boolean) => void {
     return (tasksFromServer, localUpdate) => {
-        dispatch({ type: c.TASKS_PUSH_FROM_SERVER, tasks: tasksFromServer, localUpdate })
+        dispatch({ type: actions.TASKS_PUSH_FROM_SERVER, tasks: tasksFromServer, localUpdate })
         if (localUpdate) {
             console.log(`${tasksFromServer.length} tasks were saved`)
         } else {
@@ -54,27 +54,27 @@ function hubCallbackUpdate(dispatch: Dispatch<c.TasksAction>): (tasksFromServer:
     }
 }
 
-function hubReconnect(dispatch: Dispatch<c.TasksAction>): (reconnecting: boolean) => Promise<void> {
+function hubReconnect(dispatch: Dispatch<actions.TasksAction>): (reconnecting: boolean) => Promise<void> {
     return async(reconnecting: boolean) => {
         if (reconnecting) {
-            dispatch({ type: c.TASKS_RECONNECTING })
+            dispatch({ type: actions.TASKS_RECONNECTING })
             return
         } else {
             const tasks = await TaskApi.loadTasks()
             dispatch(localUpdateTasks(tasks))
-            dispatch({ type: c.TASKS_RECONNECTED })
+            dispatch({ type: actions.TASKS_RECONNECTED })
         }
     }
 }
 
 export function stopTaskHub() {
-    return async(dispatch: Dispatch<c.TasksAction>) => {
+    return async(dispatch: Dispatch<actions.TasksAction>) => {
         await taskHub!.stop()
     }
 }
 
 export function saveTasksHub(tasks: Task[]) {
-    return async(dispatch: Dispatch<c.TasksAction>) => {
+    return async(dispatch: Dispatch<actions.TasksAction>) => {
 
         /*
             special hack to manage race conditions
@@ -87,13 +87,13 @@ export function saveTasksHub(tasks: Task[]) {
             return
         }
 
-        dispatch({ type: c.TASKS_SAVING })
+        dispatch({ type: actions.TASKS_SAVING })
 
         try {
             await taskHub!.saveTasks(tasks)
-            dispatch({ type: c.TASKS_SAVING_SUCCESS })
+            dispatch({ type: actions.TASKS_SAVING_SUCCESS })
         } catch (err) {
-            dispatch({ type: c.TASKS_SAVING_FAILED })
+            dispatch({ type: actions.TASKS_SAVING_FAILED })
             ToastService.errorProcess('saving tasks')
         }
     }

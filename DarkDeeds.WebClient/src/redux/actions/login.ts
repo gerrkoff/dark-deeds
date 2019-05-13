@@ -3,10 +3,10 @@ import { push as navigateTo, RouterAction } from 'connected-react-router'
 import { LoginApi } from '../../api'
 import { StorageService, ToastService } from '../../services'
 import { SigninResultEnum, SignupResultEnum } from '../../models'
-import * as c from '../constants'
+import * as actions from '../constants/login'
 
 export function initialLogin() {
-    return async(dispatch: Dispatch<c.LoginAction>) => {
+    return async(dispatch: Dispatch<actions.LoginAction>) => {
         const token = StorageService.loadAccessToken()
         if (token === null || token === '') {
             return
@@ -24,7 +24,7 @@ export function initialLogin() {
 }
 
 export function signin(username: string, password: string) {
-    return async(dispatch: Dispatch<c.LoginAction>) => {
+    return async(dispatch: Dispatch<actions.LoginAction>) => {
         dispatch(processing())
 
         let result: SigninResultEnum
@@ -46,7 +46,7 @@ export function signin(username: string, password: string) {
 }
 
 export function signup(username: string, password: string) {
-    return async(dispatch: Dispatch<c.LoginAction>) => {
+    return async(dispatch: Dispatch<actions.LoginAction>) => {
         dispatch(processing())
 
         let result: SignupResultEnum
@@ -68,38 +68,38 @@ export function signup(username: string, password: string) {
 }
 
 export function signout() {
-    return async(dispatch: Dispatch<c.LoginAction | RouterAction>) => {
+    return async(dispatch: Dispatch<actions.LoginAction | RouterAction>) => {
         StorageService.clearAccessToken()
         dispatch(navigateTo('/'))
         dispatch(currentUser(false))
     }
 }
 
-export function switchForm(formSignin: boolean): c.ILoginSwitchForm {
-    return { type: c.LOGIN_SWITCH_FORM, formSignin }
+export function switchForm(formSignin: boolean): actions.ILoginSwitchForm {
+    return { type: actions.LOGIN_SWITCH_FORM, formSignin }
 }
 
-function processing(): c.ILoginProcessing {
-    return { type: c.LOGIN_PROCESSING }
+function processing(): actions.ILoginProcessing {
+    return { type: actions.LOGIN_PROCESSING }
 }
 
-function setInitialLogginIn(initialLogginIn: boolean): c.ILoginInitialLogginIn {
-    return { type: c.LOGIN_INITIAL_LOGGING_IN, initialLogginIn }
+function setInitialLogginIn(initialLogginIn: boolean): actions.ILoginInitialLogginIn {
+    return { type: actions.LOGIN_INITIAL_LOGGING_IN, initialLogginIn }
 }
 
-function signinResult(result: SigninResultEnum): c.ILoginSigninFinish {
-    return { type: c.LOGIN_SIGNIN_FINISH, result }
+function signinResult(result: SigninResultEnum): actions.ILoginSigninFinish {
+    return { type: actions.LOGIN_SIGNIN_FINISH, result }
 }
 
-function signupResult(result: SignupResultEnum): c.ILoginSignupFinish {
-    return { type: c.LOGIN_SIGNUP_FINISH, result }
+function signupResult(result: SignupResultEnum): actions.ILoginSignupFinish {
+    return { type: actions.LOGIN_SIGNUP_FINISH, result }
 }
 
-function currentUser(userAuthenticated: boolean, userName?: string): c.ILoginCurrentUser {
-    return { type: c.LOGIN_CURRENT_USER, userAuthenticated, userName }
+function currentUser(userAuthenticated: boolean, userName?: string): actions.ILoginCurrentUser {
+    return { type: actions.LOGIN_CURRENT_USER, userAuthenticated, userName }
 }
 
-async function loadCurrentUser(dispatch: Dispatch<c.LoginAction>) {
+async function loadCurrentUser(dispatch: Dispatch<actions.LoginAction>) {
     const currentUserResult = await LoginApi.current()
     dispatch(currentUser(currentUserResult.userAuthenticated, currentUserResult.username))
 }

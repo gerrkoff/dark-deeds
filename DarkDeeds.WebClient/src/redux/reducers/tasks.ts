@@ -1,7 +1,7 @@
 import { DateService, TaskService } from '../../services'
 import { Task, TaskModel } from '../../models'
-import { TasksAction, TASKS_LOADING, TASKS_LOADING_FAILED, TASKS_LOADING_SUCCESS, TASKS_LOCAL_UPDATE, TASKS_LOCAL_UPDATE_TASK, TASKS_SAVING, TASKS_SAVING_FAILED, TASKS_SAVING_SUCCESS, TASKS_SET_TASK_STATUSES, TASKS_PUSH_FROM_SERVER, TASKS_RECONNECTED, TASKS_RECONNECTING } from '../constants'
 import { ITasksState } from '../types'
+import * as actions from '../constants/tasks'
 
 const inittialState: ITasksState = {
     loading: true,
@@ -12,65 +12,65 @@ const inittialState: ITasksState = {
     reconnecting: false
 }
 
-export function tasks(state: ITasksState = inittialState, action: TasksAction): ITasksState {
+export function tasks(state: ITasksState = inittialState, action: actions.TasksAction): ITasksState {
     let newTasks: Task[]
     switch (action.type) {
-        case TASKS_LOADING:
+        case actions.TASKS_LOADING:
             return { ...state,
                 loading: true
             }
-        case TASKS_LOADING_SUCCESS:
+        case actions.TASKS_LOADING_SUCCESS:
             return { ...state,
                 loading: false,
                 loaded: true,
                 tasks: [...action.tasks]
             }
-        case TASKS_LOADING_FAILED:
+        case actions.TASKS_LOADING_FAILED:
             return { ...state,
                 loading: false
             }
-        case TASKS_LOCAL_UPDATE:
+        case actions.TASKS_LOCAL_UPDATE:
             newTasks = [...action.tasks]
             const notSaved = evalNotSaved(newTasks)
             return { ...state,
                 tasks: newTasks,
                 notSaved
             }
-        case TASKS_SAVING:
+        case actions.TASKS_SAVING:
             return { ...state,
                 saving: true
             }
-        case TASKS_SAVING_SUCCESS:
+        case actions.TASKS_SAVING_SUCCESS:
             return { ...state,
                 saving: false
             }
-        case TASKS_PUSH_FROM_SERVER:
+        case actions.TASKS_PUSH_FROM_SERVER:
             newTasks = pushTasksFromServer(state.tasks, action.tasks, action.localUpdate)
             return { ...state,
                 tasks: newTasks,
                 notSaved: evalNotSaved(newTasks)
             }
-        case TASKS_SAVING_FAILED:
+        case actions.TASKS_SAVING_FAILED:
             return { ...state,
                 saving: false
             }
-        case TASKS_LOCAL_UPDATE_TASK:
+        case actions.TASKS_LOCAL_UPDATE_TASK:
             newTasks = localUpdateTask(action.taskModel, action.clientId, state.tasks)
             return { ...state,
                 tasks: newTasks,
                 notSaved: evalNotSaved(newTasks)
             }
-        case TASKS_SET_TASK_STATUSES:
+        case actions.TASKS_SET_TASK_STATUSES:
             newTasks = updateStatuses(state.tasks, action.clientId, action.completed, action.deleted)
             return { ...state,
                 tasks: newTasks,
                 notSaved: evalNotSaved(newTasks)
             }
-        case TASKS_RECONNECTING:
+        case actions.TASKS_RECONNECTING:
             return { ...state,
                 reconnecting: true
             }
-        case TASKS_RECONNECTED:
+        case actions.TASKS_RECONNECTED:
             return { ...state,
                 reconnecting: false
             }

@@ -1,5 +1,5 @@
-import { SettingsAction, SETTINGS_LOAD_PROCESSING, SETTINGS_LOAD_FINISH, SETTINGS_SAVE_FINISH, SETTINGS_SAVE_PROCESSING , SETTINGS_UPDATE } from '../constants'
 import { ISettings } from '../types'
+import * as actions from '../constants/settings'
 
 const inittialState: ISettings = {
     saveProcessing: false,
@@ -7,25 +7,25 @@ const inittialState: ISettings = {
     showCompleted: false
 }
 
-export function settings(state: ISettings = inittialState, action: SettingsAction): ISettings {
+export function settings(state: ISettings = inittialState, action: actions.SettingsAction): ISettings {
     switch (action.type) {
-        case SETTINGS_UPDATE:
+        case actions.SETTINGS_UPDATE:
             return { ...state,
                 showCompleted: action.settings.showCompleted
             }
-        case SETTINGS_LOAD_PROCESSING:
+        case actions.SETTINGS_LOAD_PROCESSING:
             return { ...state,
                 loadProcessing: true
             }
-        case SETTINGS_LOAD_FINISH:
+        case actions.SETTINGS_LOAD_FINISH:
             return { ...state,
                 loadProcessing: false
             }
-        case SETTINGS_SAVE_FINISH:
+        case actions.SETTINGS_SAVE_FINISH:
             return { ...state,
                 saveProcessing: false
             }
-        case SETTINGS_SAVE_PROCESSING:
+        case actions.SETTINGS_SAVE_PROCESSING:
             return { ...state,
                 saveProcessing: true
             }
