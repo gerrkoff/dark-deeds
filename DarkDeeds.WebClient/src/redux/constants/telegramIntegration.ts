@@ -17,4 +17,7 @@ export interface IGenerateKeyFail {
     type: TELEGRAM_INTEGRATION_GENERATE_KEY_FAIL
 }
 
-export type TelegramIntegrationAction = IGenerateKeyProcessing | IGenerateKeyFail | IGenerateKeySuccess
+export type TelegramIntegrationAction =
+    IGenerateKeyProcessing |
+    IGenerateKeyFail |
+    IGenerateKeySuccess

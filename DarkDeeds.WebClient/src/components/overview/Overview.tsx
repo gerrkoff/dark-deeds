@@ -11,9 +11,9 @@ interface IProps {
     tasks: Task[]
     tasksLoaded: boolean
     showCompleted: boolean
-    updateTasks: (tasks: Task[]) => void
     openTaskModal: (model: TaskModel, id?: number) => void
-    setTaskStatuses?: (clientId: number, completed?: boolean, deleted?: boolean) => void
+    changeAllTasks: (tasks: Task[]) => void
+    changeTaskStatus?: (clientId: number, completed?: boolean, deleted?: boolean) => void
     confirmAction?: (content: React.ReactNode, action: () => void, header: string) => void
 }
 export class Overview extends React.PureComponent<IProps> {
@@ -48,7 +48,7 @@ export class Overview extends React.PureComponent<IProps> {
         this.tabMap = [OverviewTabEnum.NoDate]
 
         const panels = [{
-            content: { content: (<NoDateCard tasks={model.noDate} setTaskStatuses={this.props.setTaskStatuses} confirmAction={this.props.confirmAction} openTaskModal={this.props.openTaskModal} />) },
+            content: { content: (<NoDateCard tasks={model.noDate} changeTaskStatus={this.props.changeTaskStatus} confirmAction={this.props.confirmAction} openTaskModal={this.props.openTaskModal} />) },
             key: 'no-date',
             title: 'No date'
         }]
@@ -113,7 +113,7 @@ export class Overview extends React.PureComponent<IProps> {
                 daysInRow={daysInRow}
                 expiredDate={today}
                 openTaskModal={this.props.openTaskModal}
-                setTaskStatuses={this.props.setTaskStatuses}
+                changeTaskStatus={this.props.changeTaskStatus}
                 confirmAction={this.props.confirmAction} />
         )
     }
@@ -124,7 +124,7 @@ export class Overview extends React.PureComponent<IProps> {
             return
         }
 
-        this.props.updateTasks(
+        this.props.changeAllTasks(
             TaskService.moveTask(
                 this.props.tasks,
                 getId(el),

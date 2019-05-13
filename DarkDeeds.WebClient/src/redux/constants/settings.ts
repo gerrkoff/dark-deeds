@@ -24,11 +24,16 @@ export interface ISettingsSaveFinish {
     type: SETTINGS_SAVE_FINISH
 }
 
-export const SETTINGS_UPDATE = 'SETTINGS_UPDATE'
-export type SETTINGS_UPDATE = typeof SETTINGS_UPDATE
-export interface ISettingsUpdate {
-    type: SETTINGS_UPDATE
+export const SETTINGS_CHANGE = 'SETTINGS_CHANGE'
+export type SETTINGS_CHANGE = typeof SETTINGS_CHANGE
+export interface ISettingsChange {
+    type: SETTINGS_CHANGE
     settings: Settings
 }
 
-export type SettingsAction = ISettingsSaveProcessing | ISettingsSaveFinish | ISettingsLoadProcessing | ISettingsLoadFinish | ISettingsUpdate
+export type SettingsAction =
+    ISettingsSaveProcessing |
+    ISettingsSaveFinish |
+    ISettingsLoadProcessing |
+    ISettingsLoadFinish |
+    ISettingsChange

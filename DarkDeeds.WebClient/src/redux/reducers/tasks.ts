@@ -1,15 +1,14 @@
 import { DateService, TaskService } from '../../services'
-import { Task, TaskModel } from '../../models'
+import { Task, TaskModel, TaskLoadingStateEnum } from '../../models'
 import { ITasksState } from '../types'
 import * as actions from '../constants/tasks'
 
 const inittialState: ITasksState = {
-    loading: true,
-    loaded: false,
+    loadingState: TaskLoadingStateEnum.Loading,
     saving: false,
-    notSaved: false,
+    changed: false,
     tasks: [],
-    reconnecting: false
+    hubReconnecting: false
 }
 
 export function tasks(state: ITasksState = inittialState, action: actions.TasksAction): ITasksState {
@@ -17,72 +16,71 @@ export function tasks(state: ITasksState = inittialState, action: actions.TasksA
     switch (action.type) {
         case actions.TASKS_LOADING:
             return { ...state,
-                loading: true
+                loadingState: TaskLoadingStateEnum.Loading
             }
         case actions.TASKS_LOADING_SUCCESS:
             return { ...state,
-                loading: false,
-                loaded: true,
+                loadingState: TaskLoadingStateEnum.Loaded,
                 tasks: [...action.tasks]
             }
         case actions.TASKS_LOADING_FAILED:
             return { ...state,
-                loading: false
+                loadingState: TaskLoadingStateEnum.LoadingFailed
             }
-        case actions.TASKS_LOCAL_UPDATE:
+
+        case actions.TASKS_CHANGE_ALL_TASKS:
             newTasks = [...action.tasks]
-            const notSaved = evalNotSaved(newTasks)
+            const changed = evalChanged(newTasks)
             return { ...state,
                 tasks: newTasks,
-                notSaved
+                changed
             }
+        case actions.TASKS_CHANGE_TASK:
+            newTasks = changeTask(action.taskModel, action.clientId, state.tasks)
+            return { ...state,
+                tasks: newTasks,
+                changed: evalChanged(newTasks)
+            }
+        case actions.TASKS_CHANGE_TASK_STATUS:
+            newTasks = changeTaskStatus(state.tasks, action.clientId, action.completed, action.deleted)
+            return { ...state,
+                tasks: newTasks,
+                changed: evalChanged(newTasks)
+            }
+
         case actions.TASKS_SAVING:
             return { ...state,
                 saving: true
             }
-        case actions.TASKS_SAVING_SUCCESS:
+        case actions.TASKS_SAVING_FINISH:
             return { ...state,
                 saving: false
             }
-        case actions.TASKS_PUSH_FROM_SERVER:
-            newTasks = pushTasksFromServer(state.tasks, action.tasks, action.localUpdate)
+
+        case actions.TASKS_UPDATE_TASKS:
+            newTasks = updateTasks(state.tasks, action.tasks, action.localUpdate)
             return { ...state,
                 tasks: newTasks,
-                notSaved: evalNotSaved(newTasks)
+                changed: evalChanged(newTasks)
             }
-        case actions.TASKS_SAVING_FAILED:
+
+        case actions.TASKS_HUB_RECONNECTING:
             return { ...state,
-                saving: false
+                hubReconnecting: true
             }
-        case actions.TASKS_LOCAL_UPDATE_TASK:
-            newTasks = localUpdateTask(action.taskModel, action.clientId, state.tasks)
+        case actions.TASKS_HUB_RECONNECTED:
             return { ...state,
-                tasks: newTasks,
-                notSaved: evalNotSaved(newTasks)
-            }
-        case actions.TASKS_SET_TASK_STATUSES:
-            newTasks = updateStatuses(state.tasks, action.clientId, action.completed, action.deleted)
-            return { ...state,
-                tasks: newTasks,
-                notSaved: evalNotSaved(newTasks)
-            }
-        case actions.TASKS_RECONNECTING:
-            return { ...state,
-                reconnecting: true
-            }
-        case actions.TASKS_RECONNECTED:
-            return { ...state,
-                reconnecting: false
+                hubReconnecting: false
             }
     }
     return state
 }
 
-function evalNotSaved(newTasks: Task[]) {
+function evalChanged(newTasks: Task[]) {
     return newTasks.some(x => x.updated)
 }
 
-function pushTasksFromServer(localTasks: Task[], updatedTasks: Task[], localUpdate: boolean): Task[] {
+function updateTasks(localTasks: Task[], updatedTasks: Task[], localUpdate: boolean): Task[] {
     const newTasks = [...localTasks]
     updatedTasks.forEach(updatedTask => {
         const taskIndex = newTasks.findIndex(x =>
@@ -115,7 +113,7 @@ function pushTasksFromServer(localTasks: Task[], updatedTasks: Task[], localUpda
     return newTasks
 }
 
-function localUpdateTask(model: TaskModel, clientId: number, localTasks: Task[]): Task[] {
+function changeTask(model: TaskModel, clientId: number, localTasks: Task[]): Task[] {
     const taskIndex = localTasks.findIndex(x => x.clientId === clientId)
 
     if (taskIndex > -1) {
@@ -127,11 +125,11 @@ function localUpdateTask(model: TaskModel, clientId: number, localTasks: Task[])
         }
         return newTasks
     } else {
-        return localAddTask(model, localTasks)
+        return addTask(model, localTasks)
     }
 }
 
-function localAddTask(model: TaskModel, localTasks: Task[]): Task[] {
+function addTask(model: TaskModel, localTasks: Task[]): Task[] {
     let minId = Math.min(...localTasks.map(x => x.clientId))
     if (minId > -1) {
         minId = -1
@@ -157,7 +155,7 @@ function localAddTask(model: TaskModel, localTasks: Task[]): Task[] {
     return [...localTasks, task]
 }
 
-function updateStatuses(localTasks: Task[], clientId: number, completed?: boolean, deleted?: boolean) {
+function changeTaskStatus(localTasks: Task[], clientId: number, completed?: boolean, deleted?: boolean) {
     const taskIndex = localTasks.findIndex(x => x.clientId === clientId)
 
     if (taskIndex < 0 || completed !== undefined && deleted !== undefined) {

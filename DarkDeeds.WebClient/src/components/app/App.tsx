@@ -13,7 +13,7 @@ export interface IAppProps {
     path: string
     tasks: Task[]
     tasksSaving: boolean
-    tasksNotSaved: boolean
+    tasksChanged: boolean
     navigateTo: (path: string) => void
     loadTasks: () => void
     saveTasks: (tasks: Task[]) => void
@@ -67,7 +67,7 @@ export class App extends React.PureComponent<IAppProps> {
     }
 
     private confirmExit = (event: BeforeUnloadEvent): string | void => {
-        if (this.props.tasksNotSaved) {
+        if (this.props.tasksChanged) {
             this.saveTasksIfUpdated()
             return ''
         }

@@ -23,7 +23,7 @@ export function loadSettings() {
 
         try {
             const result = await SettingsApi.load()
-            dispatch(updateSettings(result))
+            dispatch(changeSettings(result))
         } catch (err) {
             ToastService.errorProcess('loading settings')
         }
@@ -31,6 +31,6 @@ export function loadSettings() {
     }
 }
 
-export function updateSettings(settings: Settings): actions.ISettingsUpdate {
-    return { type: actions.SETTINGS_UPDATE, settings }
+export function changeSettings(settings: Settings): actions.ISettingsChange {
+    return { type: actions.SETTINGS_CHANGE, settings }
 }

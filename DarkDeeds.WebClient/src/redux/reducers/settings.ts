@@ -9,7 +9,7 @@ const inittialState: ISettings = {
 
 export function settings(state: ISettings = inittialState, action: actions.SettingsAction): ISettings {
     switch (action.type) {
-        case actions.SETTINGS_UPDATE:
+        case actions.SETTINGS_CHANGE:
             return { ...state,
                 showCompleted: action.settings.showCompleted
             }

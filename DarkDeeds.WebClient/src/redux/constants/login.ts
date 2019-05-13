@@ -42,4 +42,10 @@ export interface ILoginSwitchForm {
     formSignin: boolean
 }
 
-export type LoginAction = ILoginProcessing | ILoginSigninFinish | ILoginSignupFinish | ILoginInitialLogginIn | ILoginCurrentUser | ILoginSwitchForm
+export type LoginAction =
+    ILoginProcessing |
+    ILoginSigninFinish |
+    ILoginSignupFinish |
+    ILoginInitialLogginIn |
+    ILoginCurrentUser |
+    ILoginSwitchForm

@@ -1,5 +1,11 @@
 import { Task, TaskModel } from '../../models'
 
+/*
+        CHANGE  means change tasks localy
+        SAVE    means send tasks to server
+        UPDATE  means receive tasks from server
+*/
+
 export const TASKS_LOADING = 'TASKS_LOADING'
 export type TASKS_LOADING = typeof TASKS_LOADING
 export interface ITasksLoading {
@@ -19,19 +25,28 @@ export interface ITasksLoadingFailed {
     type: TASKS_LOADING_FAILED
 }
 
-export const TASKS_LOCAL_UPDATE = 'TASKS_LOCAL_UPDATE'
-export type TASKS_LOCAL_UPDATE = typeof TASKS_LOCAL_UPDATE
-export interface ITasksLocalUpdate {
-    type: TASKS_LOCAL_UPDATE
+export const TASKS_CHANGE_ALL_TASKS = 'TASKS_CHANGE_ALL_TASKS'
+export type TASKS_CHANGE_ALL_TASKS = typeof TASKS_CHANGE_ALL_TASKS
+export interface ITasksChangeAllTasks {
+    type: TASKS_CHANGE_ALL_TASKS
     tasks: Task[]
 }
 
-export const TASKS_LOCAL_UPDATE_TASK = 'TASKS_LOCAL_UPDATE_TASK'
-export type TASKS_LOCAL_UPDATE_TASK = typeof TASKS_LOCAL_UPDATE_TASK
-export interface ITasksLocalUpdateTask {
-    type: TASKS_LOCAL_UPDATE_TASK
+export const TASKS_CHANGE_TASK = 'TASKS_CHANGE_TASK'
+export type TASKS_CHANGE_TASK = typeof TASKS_CHANGE_TASK
+export interface ITasksChangeTask {
+    type: TASKS_CHANGE_TASK
     taskModel: TaskModel
     clientId: number
+}
+
+export const TASKS_CHANGE_TASK_STATUS = 'TASKS_CHANGE_TASK_STATUS'
+export type TASKS_CHANGE_TASK_STATUS = typeof TASKS_CHANGE_TASK_STATUS
+export interface ITasksChangeTaskStatus {
+    type: TASKS_CHANGE_TASK_STATUS
+    clientId: number
+    completed?: boolean
+    deleted?: boolean
 }
 
 export const TASKS_SAVING = 'TASKS_SAVING'
@@ -40,45 +55,41 @@ export interface ITasksSaving {
     type: TASKS_SAVING
 }
 
-export const TASKS_SAVING_SUCCESS = 'TASKS_SAVING_SUCCESS'
-export type TASKS_SAVING_SUCCESS = typeof TASKS_SAVING_SUCCESS
-export interface ITasksSavingSuccess {
-    type: TASKS_SAVING_SUCCESS
+export const TASKS_SAVING_FINISH = 'TASKS_SAVING_FINISH'
+export type TASKS_SAVING_FINISH = typeof TASKS_SAVING_FINISH
+export interface ITasksSavingFinish {
+    type: TASKS_SAVING_FINISH
 }
 
-export const TASKS_SAVING_FAILED = 'TASKS_SAVING_FAILED'
-export type TASKS_SAVING_FAILED = typeof TASKS_SAVING_FAILED
-export interface ITasksSavingFailed {
-    type: TASKS_SAVING_FAILED
-}
-
-export const TASKS_SET_TASK_STATUSES = 'TASKS_SET_TASK_STATUSES'
-export type TASKS_SET_TASK_STATUSES = typeof TASKS_SET_TASK_STATUSES
-export interface ITasksSetTaskStatuses {
-    type: TASKS_SET_TASK_STATUSES
-    clientId: number
-    completed?: boolean
-    deleted?: boolean
-}
-
-export const TASKS_PUSH_FROM_SERVER = 'TASKS_PUSH_FROM_SERVER'
-export type TASKS_PUSH_FROM_SERVER = typeof TASKS_PUSH_FROM_SERVER
-export interface ITasksPushFromServer {
-    type: TASKS_PUSH_FROM_SERVER
+export const TASKS_UPDATE_TASKS = 'TASKS_UPDATE_TASKS'
+export type TASKS_UPDATE_TASKS = typeof TASKS_UPDATE_TASKS
+export interface ITasksUpdateTasks {
+    type: TASKS_UPDATE_TASKS
     tasks: Task[]
     localUpdate: boolean
 }
 
-export const TASKS_RECONNECTING = 'TASKS_RECONNECTING'
-export type TASKS_RECONNECTING = typeof TASKS_RECONNECTING
-export interface ITasksReconnecting {
-    type: TASKS_RECONNECTING
+export const TASKS_HUB_RECONNECTING = 'TASKS_HUB_RECONNECTING'
+export type TASKS_HUB_RECONNECTING = typeof TASKS_HUB_RECONNECTING
+export interface ITasksHubReconnecting {
+    type: TASKS_HUB_RECONNECTING
 }
 
-export const TASKS_RECONNECTED = 'TASKS_RECONNECTED'
-export type TASKS_RECONNECTED = typeof TASKS_RECONNECTED
-export interface ITasksReconnected {
-    type: TASKS_RECONNECTED
+export const TASKS_HUB_RECONNECTED = 'TASKS_HUB_RECONNECTED'
+export type TASKS_HUB_RECONNECTED = typeof TASKS_HUB_RECONNECTED
+export interface ITasksHubReconnected {
+    type: TASKS_HUB_RECONNECTED
 }
 
-export type TasksAction = ITasksLoading | ITasksLoadingSuccess | ITasksLoadingFailed | ITasksLocalUpdate | ITasksSaving | ITasksSavingSuccess | ITasksSavingFailed | ITasksLocalUpdateTask | ITasksSetTaskStatuses | ITasksPushFromServer | ITasksReconnecting | ITasksReconnected
+export type TasksAction =
+    ITasksLoading |
+    ITasksLoadingSuccess |
+    ITasksLoadingFailed |
+    ITasksChangeAllTasks |
+    ITasksChangeTask |
+    ITasksChangeTaskStatus |
+    ITasksSaving |
+    ITasksSavingFinish |
+    ITasksUpdateTasks |
+    ITasksHubReconnecting |
+    ITasksHubReconnected

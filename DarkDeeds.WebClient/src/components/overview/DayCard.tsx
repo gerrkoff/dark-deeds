@@ -10,7 +10,7 @@ interface IProps {
     day: DayCardModel,
     expiredDate?: Date,
     openTaskModal?: (model: TaskModel, id?: number) => void
-    setTaskStatuses?: (clientId: number, completed?: boolean, deleted?: boolean) => void
+    changeTaskStatus?: (clientId: number, completed?: boolean, deleted?: boolean) => void
     confirmAction?: (content: React.ReactNode, action: () => void, header: string) => void
 }
 export class DayCard extends React.PureComponent<IProps> {
@@ -53,7 +53,7 @@ export class DayCard extends React.PureComponent<IProps> {
 
     private renderTask(task: Task) {
         return (
-            <TaskItem task={task} setTaskStatuses={this.props.setTaskStatuses} confirmAction={this.props.confirmAction} openTaskModal={this.props.openTaskModal}/>
+            <TaskItem task={task} changeTaskStatus={this.props.changeTaskStatus} confirmAction={this.props.confirmAction} openTaskModal={this.props.openTaskModal}/>
         )
     }
 }

@@ -8,7 +8,7 @@ import '../../styles/task-item.css'
 
 interface IProps {
     task: Task
-    setTaskStatuses?: (clientId: number, completed?: boolean, deleted?: boolean) => void
+    changeTaskStatus?: (clientId: number, completed?: boolean, deleted?: boolean) => void
     confirmAction?: (content: React.ReactNode, action: () => void, header: string) => void
     openTaskModal?: (model: TaskModel, id?: number) => void
 }
@@ -38,7 +38,7 @@ export class TaskItem extends React.PureComponent<IProps, IState> {
         const menuItemProps = new Array<MenuItemProps>()
         menuItemProps.push({
             content: <span><Icon name='check' />{this.props.task.completed ? 'Undo complete' : 'Complete'}</span>,
-            disabled: !this.props.setTaskStatuses,
+            disabled: !this.props.changeTaskStatus,
             name: 'complete',
             onClick: this.handleComplete
         })
@@ -51,7 +51,7 @@ export class TaskItem extends React.PureComponent<IProps, IState> {
         menuItemProps.push({
             color: 'red',
             content: <span><Icon name='delete' />Delete</span>,
-            disabled: !this.props.setTaskStatuses,
+            disabled: !this.props.changeTaskStatus,
             name: 'delete',
             onClick: this.handleDeleteConfirm
         })
@@ -86,8 +86,8 @@ export class TaskItem extends React.PureComponent<IProps, IState> {
     }
 
     private handleComplete = () => {
-        if (this.props.setTaskStatuses) {
-            this.props.setTaskStatuses(this.props.task.clientId, !this.props.task.completed)
+        if (this.props.changeTaskStatus) {
+            this.props.changeTaskStatus(this.props.task.clientId, !this.props.task.completed)
         }
     }
 
@@ -98,8 +98,8 @@ export class TaskItem extends React.PureComponent<IProps, IState> {
     }
 
     private handleDelete = () => {
-        if (this.props.setTaskStatuses) {
-            this.props.setTaskStatuses(this.props.task.clientId, undefined, true)
+        if (this.props.changeTaskStatus) {
+            this.props.changeTaskStatus(this.props.task.clientId, undefined, true)
         }
     }
 

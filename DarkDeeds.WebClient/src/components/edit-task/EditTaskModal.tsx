@@ -7,7 +7,7 @@ interface IProps {
     open: boolean
     model: string
     clientId: number
-    saveTask: (taskModel: TaskModel, clientId: number) => void
+    changeTask: (taskModel: TaskModel, clientId: number) => void
     closeModal: () => void
     changeModel: (value: string) => void
 }
@@ -73,7 +73,7 @@ export class EditTaskModal extends React.PureComponent<IProps, IState> {
             return
         }
 
-        this.props.saveTask(taskModel, this.props.clientId)
+        this.props.changeTask(taskModel, this.props.clientId)
         this.props.changeModel('')
         this.props.closeModal()
     }

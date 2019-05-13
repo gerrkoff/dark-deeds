@@ -1,7 +1,7 @@
 import { connect } from 'react-redux'
 import { Settings } from '../components/settings'
 import { Settings as SettingsModel } from '../models'
-import { signout, generateTelegramChatKey, saveSettings, updateSettings } from '../redux/actions'
+import { signout, generateTelegramChatKey, saveSettings, changeSettings } from '../redux/actions'
 import { IAppState } from '../redux/types'
 
 function mapStateToProps({ login, general, telegramIntegration, settings }: IAppState) {
@@ -21,7 +21,7 @@ function mapDispatchToProps(dispatch: any) {
         signout: () => dispatch(signout()),
         generateTelegramChatKey: () => dispatch(generateTelegramChatKey()),
         saveSettings: (settings: SettingsModel) => dispatch(saveSettings(settings)),
-        updateSettings: (settings: SettingsModel) => dispatch(updateSettings(settings))
+        changeSettings: (settings: SettingsModel) => dispatch(changeSettings(settings))
     }
 }
 
