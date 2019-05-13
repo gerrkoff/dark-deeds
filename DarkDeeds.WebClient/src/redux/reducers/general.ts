@@ -1,5 +1,4 @@
-import { GeneralAction } from '../actions'
-import { GENERAL_UPDATE_BUILD_INFO } from '../constants'
+import { GeneralAction, GENERAL_UPDATE_BUILD_INFO } from '../constants'
 import { IGeneralState } from '../types'
 
 const inittialState: IGeneralState = {

@@ -1,5 +1,4 @@
-import { TelegramIntegrationAction } from '../actions'
-import { TELEGRAM_INTEGRATION_GENERATE_KEY_PROCESSING, TELEGRAM_INTEGRATION_GENERATE_KEY_FAIL, TELEGRAM_INTEGRATION_GENERATE_KEY_SUCCESS } from '../constants'
+import { TelegramIntegrationAction, TELEGRAM_INTEGRATION_GENERATE_KEY_PROCESSING, TELEGRAM_INTEGRATION_GENERATE_KEY_FAIL, TELEGRAM_INTEGRATION_GENERATE_KEY_SUCCESS } from '../constants'
 import { ITelegramIntegration } from '../types'
 
 const inittialState: ITelegramIntegration = {

@@ -1,5 +1,4 @@
-import { ModalConfirmAction } from '../actions'
-import { MODALCONFIRM_CLOSE, MODALCONFIRM_OPEN } from '../constants'
+import { ModalConfirmAction, MODALCONFIRM_CLOSE, MODALCONFIRM_OPEN } from '../constants'
 import { IModalConfirmState } from '../types'
 
 const inittialState: IModalConfirmState = {

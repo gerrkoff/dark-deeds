@@ -1,5 +1,4 @@
-import { SettingsAction } from '../actions'
-import { SETTINGS_LOAD_PROCESSING, SETTINGS_LOAD_FINISH, SETTINGS_SAVE_FINISH, SETTINGS_SAVE_PROCESSING , SETTINGS_UPDATE } from '../constants'
+import { SettingsAction, SETTINGS_LOAD_PROCESSING, SETTINGS_LOAD_FINISH, SETTINGS_SAVE_FINISH, SETTINGS_SAVE_PROCESSING , SETTINGS_UPDATE } from '../constants'
 import { ISettings } from '../types'
 
 const inittialState: ISettings = {

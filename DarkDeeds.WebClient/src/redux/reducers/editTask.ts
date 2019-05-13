@@ -1,6 +1,5 @@
 import { TaskConverter } from '../../services'
-import { EditTaskAction } from '../actions'
-import { EDITTASK_MODALOPEN, EDITTASK_SET_MODEL, EDITTASK_TASKMODEL } from '../constants'
+import { EditTaskAction, EDITTASK_MODALOPEN, EDITTASK_SET_MODEL, EDITTASK_TASKMODEL } from '../constants'
 import { IEditTaskState } from '../types'
 
 const inittialState: IEditTaskState = {

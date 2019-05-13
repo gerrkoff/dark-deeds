@@ -1,7 +1,6 @@
 import { tasks as taskReducer } from '../../redux/reducers/tasks'
 import { ITasksState } from '../../redux/types'
-import { ITasksPushFromServer } from '../../redux/actions'
-import * as constants from '../../redux/constants'
+import * as c from '../../redux/constants'
 import { Task } from '../../models'
 
 function createState(
@@ -24,8 +23,8 @@ function createTask(clientId: number = 1, id: number = 1, title: string = '', de
 
 test('[TASKS_PUSH_FROM_SERVER] (non local update) add new task - should be added to the list', () => {
     const state = createState()
-    const action: ITasksPushFromServer = {
-        type: constants.TASKS_PUSH_FROM_SERVER,
+    const action: c.ITasksPushFromServer = {
+        type: c.TASKS_PUSH_FROM_SERVER,
         tasks: [createTask(-10, 10, 'qwerty')],
         localUpdate: false
     }
@@ -39,8 +38,8 @@ test('[TASKS_PUSH_FROM_SERVER] (non local update) add new task - should be added
 
 test('[TASKS_PUSH_FROM_SERVER] (non local update) add new task with the same clientId - should be both in the list', () => {
     const state = createState([createTask(-10, 0, 'local')])
-    const action: ITasksPushFromServer = {
-        type: constants.TASKS_PUSH_FROM_SERVER,
+    const action: c.ITasksPushFromServer = {
+        type: c.TASKS_PUSH_FROM_SERVER,
         tasks: [createTask(-10, 10, 'pushed')],
         localUpdate: false
     }
@@ -59,8 +58,8 @@ test('[TASKS_PUSH_FROM_SERVER] (non local update) add new task with the same cli
 
 test('[TASKS_PUSH_FROM_SERVER] (non local update) delete task with existing clientId - should be removed from the list', () => {
     const state = createState([createTask(1)])
-    const action: ITasksPushFromServer = {
-        type: constants.TASKS_PUSH_FROM_SERVER,
+    const action: c.ITasksPushFromServer = {
+        type: c.TASKS_PUSH_FROM_SERVER,
         tasks: [createTask(1, 1, '', true)],
         localUpdate: false
     }
@@ -71,8 +70,8 @@ test('[TASKS_PUSH_FROM_SERVER] (non local update) delete task with existing clie
 
 test('[TASKS_PUSH_FROM_SERVER] (non local update) delete task with non-existing clientId - should be ignored', () => {
     const state = createState([createTask(2)])
-    const action: ITasksPushFromServer = {
-        type: constants.TASKS_PUSH_FROM_SERVER,
+    const action: c.ITasksPushFromServer = {
+        type: c.TASKS_PUSH_FROM_SERVER,
         tasks: [createTask(1, 1, '', true)],
         localUpdate: false
     }
@@ -83,8 +82,8 @@ test('[TASKS_PUSH_FROM_SERVER] (non local update) delete task with non-existing 
 
 test('[TASKS_PUSH_FROM_SERVER] (non local update) update task - should be updated & reset updated flag', () => {
     const state = createState([createTask(1, 1, 'qqq')])
-    const action: ITasksPushFromServer = {
-        type: constants.TASKS_PUSH_FROM_SERVER,
+    const action: c.ITasksPushFromServer = {
+        type: c.TASKS_PUSH_FROM_SERVER,
         tasks: [createTask(1, 1, 'www')],
         localUpdate: false
     }
@@ -97,8 +96,8 @@ test('[TASKS_PUSH_FROM_SERVER] (non local update) update task - should be update
 
 test('[TASKS_PUSH_FROM_SERVER] (local update) update task - should not be updated', () => {
     const state = createState([createTask(1, 1, 'qqq')])
-    const action: ITasksPushFromServer = {
-        type: constants.TASKS_PUSH_FROM_SERVER,
+    const action: c.ITasksPushFromServer = {
+        type: c.TASKS_PUSH_FROM_SERVER,
         tasks: [createTask(1, 1, 'www')],
         localUpdate: true
     }
@@ -110,8 +109,8 @@ test('[TASKS_PUSH_FROM_SERVER] (local update) update task - should not be update
 
 test('[TASKS_PUSH_FROM_SERVER] (local update) update task - should update clientId with id', () => {
     const state = createState([createTask(-100, 0)])
-    const action: ITasksPushFromServer = {
-        type: constants.TASKS_PUSH_FROM_SERVER,
+    const action: c.ITasksPushFromServer = {
+        type: c.TASKS_PUSH_FROM_SERVER,
         tasks: [createTask(-100, 20)],
         localUpdate: true
     }
@@ -124,8 +123,8 @@ test('[TASKS_PUSH_FROM_SERVER] (local update) update task - should update client
 
 test('[TASKS_PUSH_FROM_SERVER] (local update) update task - should set updated flag to true if not equal to saved state', () => {
     const state = createState([createTask(1, 1, 'qqq')])
-    const action: ITasksPushFromServer = {
-        type: constants.TASKS_PUSH_FROM_SERVER,
+    const action: c.ITasksPushFromServer = {
+        type: c.TASKS_PUSH_FROM_SERVER,
         tasks: [createTask(1, 1, 'www')],
         localUpdate: true
     }
@@ -137,8 +136,8 @@ test('[TASKS_PUSH_FROM_SERVER] (local update) update task - should set updated f
 
 test('[TASKS_PUSH_FROM_SERVER] (local update) update task - should set updated flag to false if equal to saved state', () => {
     const state = createState([createTask(1, 1, 'qqq')])
-    const action: ITasksPushFromServer = {
-        type: constants.TASKS_PUSH_FROM_SERVER,
+    const action: c.ITasksPushFromServer = {
+        type: c.TASKS_PUSH_FROM_SERVER,
         tasks: [createTask(1, 1, 'qqq')],
         localUpdate: true
     }

@@ -1,6 +1,5 @@
 import { SigninResultEnum, SignupResultEnum } from '../../models'
-import { LoginAction } from '../actions'
-import { LOGIN_CURRENT_USER, LOGIN_INITIAL_LOGGING_IN, LOGIN_PROCESSING, LOGIN_SIGNIN_FINISH, LOGIN_SIGNUP_FINISH, LOGIN_SWITCH_FORM } from '../constants'
+import { LoginAction, LOGIN_CURRENT_USER, LOGIN_INITIAL_LOGGING_IN, LOGIN_PROCESSING, LOGIN_SIGNIN_FINISH, LOGIN_SIGNUP_FINISH, LOGIN_SWITCH_FORM } from '../constants'
 import { ILoginState } from '../types'
 
 const initialState: ILoginState = {
