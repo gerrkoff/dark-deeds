@@ -64,7 +64,9 @@ const service = {
     },
 
     sort(taskA: Task, taskB: Task): number {
-        return taskA.order > taskB.order ? 1 : -1
+        return taskA.order === taskB.order
+            ? taskA.clientId > taskB.clientId ? 1 : -1
+            : taskA.order > taskB.order ? 1 : -1
     },
 
     sortTasks(tasks: Task[]): Task[] {
