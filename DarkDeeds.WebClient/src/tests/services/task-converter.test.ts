@@ -125,3 +125,8 @@ test('[convertModelToString] all day long', () => {
     const result = TaskConverter.convertModelToString(new TaskModel('Test!', new Date(new Date().getFullYear(), 0, 1, 10, 10), TaskTimeTypeEnum.AllDayLong))
     expect(result).toBe('0101! Test!')
 })
+
+test('[convertModelToString] date with year', () => {
+    const result = TaskConverter.convertModelToString(new TaskModel('Test!', new Date(2016, 11, 11)))
+    expect(result).toBe('20161211 Test!')
+})
