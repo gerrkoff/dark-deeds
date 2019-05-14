@@ -8,17 +8,12 @@ interface IProps {
     connecting: boolean
     heartbeatLastTime: Date
 }
-interface IState {
-    disconnected: boolean
-}
-export class IndicatorPanel extends React.PureComponent<IProps, IState> {
+export class IndicatorPanel extends React.PureComponent<IProps> {
     private checkIfDisconnectedInterval: NodeJS.Timeout
+    private disconnected: boolean = false
 
     constructor(props: IProps) {
         super(props)
-        this.state = {
-            disconnected: false
-        }
         this.checkIfDisconnectedInterval = setInterval(this.checkIfDisconnected, 5 * 1000)
     }
 
@@ -27,19 +22,23 @@ export class IndicatorPanel extends React.PureComponent<IProps, IState> {
     }
 
     public render() {
-        console.log(this.props.connecting, this.state.disconnected, new Date().valueOf() - this.props.heartbeatLastTime.valueOf(), this.props.heartbeatLastTime.toTimeString())
+        this.disconnected = this.evalDisconnected()
         return (
             <div className='indicator-panel'>
                 {this.props.connecting ? <Icon name='globe' className='process' /> : ''}
                 {this.props.saving ? <Icon name='save' className='process' /> : ''}
-                {this.state.disconnected && !this.props.connecting ? <Icon name='globe' className='error' /> : ''}
+                {!this.props.connecting && this.disconnected ? <Icon name='globe' className='error' /> : ''}
             </div>
         )
     }
 
     private checkIfDisconnected = () => {
-        this.setState({
-            disconnected: new Date().valueOf() - this.props.heartbeatLastTime.valueOf() > 65 * 1000
-        })
+        if (this.disconnected !== this.evalDisconnected()) {
+            this.forceUpdate()
+        }
+    }
+
+    private evalDisconnected = (): boolean => {
+        return new Date().valueOf() - this.props.heartbeatLastTime.valueOf() > 5 * 1000
     }
 }
