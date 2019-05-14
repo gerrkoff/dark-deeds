@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { Accordion, AccordionTitleProps } from 'semantic-ui-react'
-import { DateService, TaskService, LocalSettingsService } from '../../services'
+import { DateService, TaskMoveService, TaskService, LocalSettingsService } from '../../services'
 import { DayCardModel, Task, TaskModel, LocalSettings, OverviewTabEnum } from '../../models'
 import { DragulaWrapper } from '../../helpers'
 import { DaysBlock, NoDateCard } from './'
@@ -125,7 +125,7 @@ export class Overview extends React.PureComponent<IProps> {
         }
 
         this.props.changeAllTasks(
-            TaskService.moveTask(
+            TaskMoveService.moveTask(
                 this.props.tasks,
                 getId(el),
                 getId(target),
