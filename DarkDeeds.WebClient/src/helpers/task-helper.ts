@@ -43,7 +43,7 @@ const service = {
         return model
     },
 
-    moveTask(tasks: Task[], taskId: number, targetDate: number, sourceDate: number, siblingId: number | null): Task[] {
+    moveTask(tasks: Task[], taskId: number, targetDate: number, sourceDate: number, nextSiblingId: number | null): Task[] {
         const taskIndex = tasks.findIndex(x => x.clientId === taskId)
 
         if (taskIndex === -1) {
