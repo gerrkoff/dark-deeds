@@ -21,12 +21,6 @@ test('renders completed', () => {
     expect(component.find('span.task-item-completed').length).toBe(1)
 })
 
-test('renders after time', () => {
-    const model = new Task(1, 'Title', new Date(2018, 1, 1, 1, 1), 1, false, 1, false, false, TaskTimeTypeEnum.AfterTime)
-    const component = enzyme.shallow(enzyme.shallow(<TaskItem task={model} />).prop('content'))
-    expect(component.find('span').text()).toBe('> 01:01 Title')
-})
-
 test('renders probable', () => {
     const model = new Task(1, 'Title', null, 1, false, 1, false, false, TaskTimeTypeEnum.NoTime, true)
     const component = enzyme.shallow(enzyme.shallow(<TaskItem task={model} />).prop('content'))

@@ -71,11 +71,7 @@ const service = {
                     taskBeforeOldData = {
                         dateTime: new Date(sourceTasksSorted[taskBeforeOldIndex].dateTime!),
                         order: sourceTasksSorted[taskBeforeOldIndex].order + 1,
-                        timeType:
-                            sourceTasksSorted[taskBeforeOldIndex].timeType === TaskTimeTypeEnum.NoTime ||
-                            sourceTasksSorted[taskBeforeOldIndex].timeType === TaskTimeTypeEnum.AllDayLong
-                                ? TaskTimeTypeEnum.NoTime
-                                : TaskTimeTypeEnum.AfterTime
+                        timeType: TaskTimeTypeEnum.NoTime
                     }
                 }
             }
@@ -100,12 +96,6 @@ const service = {
                 task.timeType = TaskTimeTypeEnum.NoTime
                 task.dateTime = targetDate === 0 ? null : new Date(targetDate)
                 task.order = previosSiblingIndex !== -1
-                    ? targetTasksSorted[previosSiblingIndex].order + (sameGroupAsc ? 0 : 1)
-                    : 1
-            } else {
-                task.timeType = TaskTimeTypeEnum.AfterTime
-                task.dateTime = new Date(targetTasksSorted[previosSiblingIndex].dateTime!)
-                task.order = targetTasksSorted[previosSiblingIndex].timeType === TaskTimeTypeEnum.AfterTime
                     ? targetTasksSorted[previosSiblingIndex].order + (sameGroupAsc ? 0 : 1)
                     : 1
             }
@@ -204,7 +194,6 @@ function evalOrders(task: Task): number[] {
 
 function tasksInTheSameGroup(taskA: Task, taskB: Task): boolean {
     return taskA.timeType === taskB.timeType && taskA.timeType === TaskTimeTypeEnum.NoTime && taskDateToStart(taskA.dateTime) === taskDateToStart(taskB.dateTime)
-        || taskA.timeType === taskB.timeType && taskA.timeType === TaskTimeTypeEnum.AfterTime && taskA.dateTime!.getTime() === taskB.dateTime!.getTime()
 }
 
 export { service as TaskHelper }

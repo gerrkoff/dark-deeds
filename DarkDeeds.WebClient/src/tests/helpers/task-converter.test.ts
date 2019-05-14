@@ -55,15 +55,6 @@ test('[convertStringToModel] date and no time with year', () => {
     expect(result.timeType).toBe(TaskTimeTypeEnum.NoTime)
 })
 
-test('[convertStringToModel] date and after time with year', () => {
-    const result = TaskConverter.convertStringToModel('20171010 >0211 Test')
-
-    expect(result.title).toBe('Test')
-    expect(result.dateTime!.getTime())
-        .toBe(new Date(2017, 9, 10, 2, 11, 0).getTime())
-    expect(result.timeType).toBe(TaskTimeTypeEnum.AfterTime)
-})
-
 test('[convertStringToModel] is probable', () => {
     const result = TaskConverter.convertStringToModel('Test! ?')
 
@@ -118,11 +109,6 @@ test('[convertModelToString] date & no time', () => {
 test('[convertModelToString] date & time', () => {
     const result = TaskConverter.convertModelToString(new TaskModel('Test!', new Date(new Date().getFullYear(), 11, 11, 23, 59), TaskTimeTypeEnum.ConcreteTime))
     expect(result).toBe('1211 2359 Test!')
-})
-
-test('[convertModelToString] date & time less ten', () => {
-    const result = TaskConverter.convertModelToString(new TaskModel('Test!', new Date(new Date().getFullYear(), 0, 1, 1, 1), TaskTimeTypeEnum.AfterTime))
-    expect(result).toBe('0101 >0101 Test!')
 })
 
 test('[convertModelToString] is probable', () => {
