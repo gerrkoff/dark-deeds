@@ -111,6 +111,11 @@ test('[convertModelToString] date & time', () => {
     expect(result).toBe('1211 2359 Test!')
 })
 
+test('[convertModelToString] date & time less ten', () => {
+    const result = TaskConverter.convertModelToString(new TaskModel('Test!', new Date(new Date().getFullYear(), 0, 1, 1, 1), TaskTimeTypeEnum.ConcreteTime))
+    expect(result).toBe('0101 0101 Test!')
+})
+
 test('[convertModelToString] is probable', () => {
     const result = TaskConverter.convertModelToString(new TaskModel('Test!', null, TaskTimeTypeEnum.NoTime, true))
     expect(result).toBe('Test! ?')
