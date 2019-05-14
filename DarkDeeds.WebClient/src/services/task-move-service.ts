@@ -58,7 +58,7 @@ function changeTargetTasksOrder(tasks: Task[], targetDate: number, task: Task, n
 
     const movedTaskTargetIndex = nextSiblingId === null
         ? null
-        : targetTasks.findIndex(x => x.clientId === nextSiblingId) - 1
+        : targetTasks.findIndex(x => x.clientId === nextSiblingId)
 
     if (movedTaskTargetIndex === null) {
         targetTasks.push(task)
@@ -79,8 +79,8 @@ function changeSourceTasksOrder(tasks: Task[], sourceDate: number, taskId: numbe
 function adjustTasksOrder(tasks: Task[]): number[] {
     const changedIds: number[] = []
     tasks.forEach((x, order) => {
-        if (x.order !== order) {
-            x.order = order
+        if (x.order !== order + 1) {
+            x.order = order + 1
             changedIds.push(x.clientId)
         }
     })

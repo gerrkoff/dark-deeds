@@ -1,38 +1,60 @@
-// import { TaskHelper } from '../../helpers'
-// import { Task, TaskTimeTypeEnum } from '../../models'
+import { TaskMoveService } from '../../services'
+import { Task } from '../../models'
 
-// function task(year: number, month: number, date: number, id: number = 0, order: number = 0, timeType: TaskTimeTypeEnum = TaskTimeTypeEnum.NoTime, hours: number = 0, minutes: number = 0): Task {
-//     return new Task(id, '', new Date(year, month, date, hours, minutes), order, false, 0, false, false, timeType)
-// }
+function task(taskId: number, taskDate: Date, taskOrder: number): Task {
+    return new Task(taskId, '', taskDate, taskOrder)
+}
 
-// test('positive', () => {
-//     const tasks: Task[] = [
-//         task(2018, 9, 9, 1, 1),
-//         task(2018, 9, 9, 2, 2),
-//         task(2018, 9, 9, 3, 3),
-//         task(2018, 9, 10, 4, 1),
-//         task(2018, 9, 10, 5, 2)
-//     ]
+function d(year: number, month: number, date: number, hour: number = 0, minutes: number = 0): Date {
+    return new Date(year, month + 1, date, hour, minutes)
+}
 
-//     const result = TaskHelper.moveTask(tasks, 4, new Date(2018, 9, 9).getTime(), new Date(2018, 9, 10).getTime(), 2)
+function expectOrder(tasks: Task[], taskId: number, order: number) {
+    expect(tasks.find(x => x.clientId === taskId)!.order).toBe(order)
+}
 
-//     expect(result.find(x => x.clientId === 1)!.order).toBe(1)
-//     expect(result.find(x => x.clientId === 2)!.order).toBe(3)
-//     expect(result.find(x => x.clientId === 3)!.order).toBe(4)
-//     expect(result.find(x => x.clientId === 4)!.order).toBe(2)
-//     expect(result.find(x => x.clientId === 5)!.order).toBe(1)
+function expectDate(tasks: Task[], taskId: number, date: Date) {
+    expect(tasks.find(x => x.clientId === taskId)!.dateTime!.getTime()).toBe(date.getTime())
+}
 
-//     expect(result.find(x => x.clientId === 4)!.dateTime!.getTime()).toBe(new Date(2018, 9, 9).getTime())
-// })
+function expectChanged(tasks: Task[], taskId: number, changed: boolean) {
+    expect(tasks.find(x => x.clientId === taskId)!.changed).toBe(changed)
+}
+
+test('positive', () => {
+    const tasks: Task[] = [
+        task(1, d(2018, 9, 9), 1),
+        task(2, d(2018, 9, 9), 2),
+        task(3, d(2018, 9, 9), 3),
+        task(4, d(2018, 9, 10), 1),
+        task(5, d(2018, 9, 10), 2)
+    ]
+
+    const result = TaskMoveService.moveTask(tasks, 4, d(2018, 9, 9).getTime(), d(2018, 9, 10).getTime(), 2)
+
+    expectOrder(result, 1, 1)
+    expectOrder(result, 4, 2)
+    expectOrder(result, 2, 3)
+    expectOrder(result, 3, 4)
+    expectOrder(result, 5, 1)
+
+    expectDate(result, 4, d(2018, 9, 9))
+
+    expectChanged(result, 1, false)
+    expectChanged(result, 2, true)
+    expectChanged(result, 3, true)
+    expectChanged(result, 4, true)
+    expectChanged(result, 5, true)
+})
 
 // test('move as last', () => {
 //     const tasks: Task[] = [
-//         task(2018, 9, 9, 1, 10),
-//         task(2018, 9, 9, 2, 2),
-//         task(2018, 9, 10, 3, 1)
+//         task(date(2018, 9, 9), 1, 10),
+//         task(date(2018, 9, 9), 2, 2),
+//         task(date(2018, 9, 10), 3, 1)
 //     ]
 
-//     const result = TaskHelper.moveTask(tasks, 3, new Date(2018, 9, 9).getTime(), new Date(2018, 9, 10).getTime(), null)
+//     const result = TaskMoveService.moveTask(tasks, 3, new Date(2018, 9, 9).getTime(), new Date(2018, 9, 10).getTime(), null)
 
 //     expect(result.find(x => x.clientId === 1)!.order).toBe(10)
 //     expect(result.find(x => x.clientId === 2)!.order).toBe(2)
@@ -47,7 +69,7 @@
 //         task(2018, 9, 9, 4, 1)
 //     ]
 
-//     const result = TaskHelper.moveTask(tasks, 2, new Date(2018, 9, 9).getTime(), new Date(2018, 9, 9).getTime(), 4)
+//     const result = TaskMoveService.moveTask(tasks, 2, new Date(2018, 9, 9).getTime(), new Date(2018, 9, 9).getTime(), 4)
 
 //     expect(result.find(x => x.clientId === 1)!.order).toBe(4)
 //     expect(result.find(x => x.clientId === 2)!.order).toBe(1)
@@ -63,7 +85,7 @@
 //         task(2018, 9, 9, 4, 1)
 //     ]
 
-//     const result = TaskHelper.moveTask(tasks, 4, new Date(2018, 9, 9).getTime(), new Date(2018, 9, 9).getTime(), null)
+//     const result = TaskMoveService.moveTask(tasks, 4, new Date(2018, 9, 9).getTime(), new Date(2018, 9, 9).getTime(), null)
 
 //     expect(result.find(x => x.clientId === 1)!.order).toBe(3)
 //     expect(result.find(x => x.clientId === 2)!.order).toBe(2)
@@ -80,7 +102,7 @@
 //         task(2018, 9, 10, 5, 1)
 //     ]
 
-//     const result = TaskHelper.moveTask(tasks, 4, new Date(2018, 9, 9).getTime(), new Date(2018, 9, 10).getTime(), 1)
+//     const result = TaskMoveService.moveTask(tasks, 4, new Date(2018, 9, 9).getTime(), new Date(2018, 9, 10).getTime(), 1)
 
 //     expect(result.find(x => x.clientId === 1)!.order).toBe(1)
 //     expect(result.find(x => x.clientId === 2)!.order).toBe(0)
@@ -100,7 +122,7 @@
 //         task(2018, 9, 10, 5, 1)
 //     ]
 
-//     const result = TaskHelper.moveTask(tasks, 4, new Date(2018, 9, 9).getTime(), new Date(2018, 9, 10).getTime(), null)
+//     const result = TaskMoveService.moveTask(tasks, 4, new Date(2018, 9, 9).getTime(), new Date(2018, 9, 10).getTime(), null)
 
 //     expect(result.find(x => x.clientId === 1)!.order).toBe(1)
 //     expect(result.find(x => x.clientId === 2)!.order).toBe(0)
@@ -122,7 +144,7 @@
 //         task(2018, 9, 10, 5, 2)
 //     ]
 
-//     const result = TaskHelper.moveTask(tasks, 4, new Date(2018, 9, 9).getTime(), new Date(2018, 9, 10).getTime(), 3)
+//     const result = TaskMoveService.moveTask(tasks, 4, new Date(2018, 9, 9).getTime(), new Date(2018, 9, 10).getTime(), 3)
 
 //     expect(result.find(x => x.clientId === 1)!.order).toBe(1)
 //     expect(result.find(x => x.clientId === 2)!.order).toBe(0)
@@ -144,7 +166,7 @@
 //         task(2018, 9, 10, 5, 1)
 //     ]
 
-//     const result = TaskHelper.moveTask(tasks, 4, new Date(2018, 9, 9).getTime(), new Date(2018, 9, 10).getTime(), 2)
+//     const result = TaskMoveService.moveTask(tasks, 4, new Date(2018, 9, 9).getTime(), new Date(2018, 9, 10).getTime(), 2)
 
 //     expect(result.find(x => x.clientId === 1)!.order).toBe(1)
 //     expect(result.find(x => x.clientId === 2)!.order).toBe(0)
@@ -166,7 +188,7 @@
 //         task(2018, 9, 10, 5, 2, TaskTimeTypeEnum.AfterTime, 13)
 //     ]
 
-//     const result = TaskHelper.moveTask(tasks, 4, 0, new Date(2018, 9, 10).getTime(), null)
+//     const result = TaskMoveService.moveTask(tasks, 4, 0, new Date(2018, 9, 10).getTime(), null)
 
 //     expect(result.find(x => x.clientId === 1)!.order).toBe(1)
 //     expect(result.find(x => x.clientId === 2)!.order).toBe(0)
@@ -190,7 +212,7 @@
 //         task(2018, 9, 10, 7, 2, TaskTimeTypeEnum.AfterTime, 12)
 //     ]
 
-//     const result = TaskHelper.moveTask(tasks, 4, new Date(2018, 9, 9).getTime(), new Date(2018, 9, 10).getTime(), 1)
+//     const result = TaskMoveService.moveTask(tasks, 4, new Date(2018, 9, 9).getTime(), new Date(2018, 9, 10).getTime(), 1)
 
 //     expect(result.find(x => x.clientId === 1)!.order).toBe(1)
 //     expect(result.find(x => x.clientId === 2)!.order).toBe(0)
@@ -220,7 +242,7 @@
 //         task(2018, 9, 10, 7, 2, TaskTimeTypeEnum.AfterTime, 12)
 //     ]
 
-//     const result = TaskHelper.moveTask(tasks, 4, new Date(2018, 9, 9).getTime(), new Date(2018, 9, 10).getTime(), 1)
+//     const result = TaskMoveService.moveTask(tasks, 4, new Date(2018, 9, 9).getTime(), new Date(2018, 9, 10).getTime(), 1)
 
 //     expect(result.find(x => x.clientId === 1)!.order).toBe(1)
 //     expect(result.find(x => x.clientId === 2)!.order).toBe(0)
@@ -251,7 +273,7 @@
 //         task(2018, 9, 10, 8, 1, TaskTimeTypeEnum.AfterTime, 11)
 //     ]
 
-//     const result = TaskHelper.moveTask(tasks, 4, new Date(2018, 9, 9).getTime(), new Date(2018, 9, 10).getTime(), 1)
+//     const result = TaskMoveService.moveTask(tasks, 4, new Date(2018, 9, 9).getTime(), new Date(2018, 9, 10).getTime(), 1)
 
 //     expect(result.find(x => x.clientId === 1)!.order).toBe(1)
 //     expect(result.find(x => x.clientId === 2)!.order).toBe(0)
@@ -277,7 +299,7 @@
 //         task(2018, 9, 10, 8, 1, TaskTimeTypeEnum.AfterTime, 12)
 //     ]
 
-//     const result = TaskHelper.moveTask(tasks, 4, new Date(2018, 9, 10).getTime(), new Date(2018, 9, 10).getTime(), null)
+//     const result = TaskMoveService.moveTask(tasks, 4, new Date(2018, 9, 10).getTime(), new Date(2018, 9, 10).getTime(), null)
 
 //     expect(result.find(x => x.clientId === 4)!.order).toBe(0)
 
@@ -295,7 +317,7 @@
 //         new Task(4, '', null, 3, false, 0, false, false, TaskTimeTypeEnum.NoTime)
 //     ]
 
-//     const result = TaskHelper.moveTask(tasks, 4, 0, 0, 1)
+//     const result = TaskMoveService.moveTask(tasks, 4, 0, 0, 1)
 
 //     expect(result.find(x => x.clientId === 1)!.order).toBe(2)
 //     expect(result.find(x => x.clientId === 2)!.order).toBe(3)
@@ -311,7 +333,7 @@
 //         new Task(4, '', null, 3, false, 0, false, false, TaskTimeTypeEnum.NoTime)
 //     ]
 
-//     const result = TaskHelper.moveTask(tasks, 3, 0, 0, 4)
+//     const result = TaskMoveService.moveTask(tasks, 3, 0, 0, 4)
 
 //     expect(result.find(x => x.clientId === 1)!.order).toBe(1)
 //     expect(result.find(x => x.clientId === 2)!.order).toBe(2)
@@ -325,7 +347,7 @@
 //         task(2018, 9, 11, 2, 0, TaskTimeTypeEnum.NoTime)
 //     ]
 
-//     const result = TaskHelper.moveTask(tasks, 2, new Date(2018, 9, 10).getTime(), new Date(2018, 9, 11).getTime(), null)
+//     const result = TaskMoveService.moveTask(tasks, 2, new Date(2018, 9, 10).getTime(), new Date(2018, 9, 11).getTime(), null)
 
 //     const taskRes = result.find(x => x.clientId === 2)!
 //     expect(taskRes.dateTime!.getTime()).toBe(new Date(2018, 9, 10).getTime())
@@ -338,7 +360,7 @@
 //         task(2018, 9, 11, 2, 0, TaskTimeTypeEnum.AfterTime, 12)
 //     ]
 
-//     const result = TaskHelper.moveTask(tasks, 2, new Date(2018, 9, 10).getTime(), new Date(2018, 9, 11).getTime(), null)
+//     const result = TaskMoveService.moveTask(tasks, 2, new Date(2018, 9, 10).getTime(), new Date(2018, 9, 11).getTime(), null)
 
 //     const taskRes = result.find(x => x.clientId === 2)!
 //     expect(taskRes.dateTime!.getTime()).toBe(new Date(2018, 9, 10).getTime())
@@ -352,7 +374,7 @@
 //         task(2018, 9, 10, 3, 0, TaskTimeTypeEnum.AfterTime, 12)
 //     ]
 
-//     const result = TaskHelper.moveTask(tasks, 2, new Date(2018, 9, 11).getTime(), new Date(2018, 9, 10).getTime(), null)
+//     const result = TaskMoveService.moveTask(tasks, 2, new Date(2018, 9, 11).getTime(), new Date(2018, 9, 10).getTime(), null)
 
 //     const taskRes = result.find(x => x.clientId === 3)!
 //     expect(taskRes.dateTime!.getTime()).toBe(new Date(2018, 9, 10).getTime())
