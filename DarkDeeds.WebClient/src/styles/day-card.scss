@@ -19,12 +19,6 @@
     height: 100%;
 }
 
-@media screen and (min-width: 1200px) {
-    #day-card {
-        min-width: 13rem;
-    }
-}
-
 .day-card-add-task {
     padding-left: 0.75rem;
     cursor: pointer;
