@@ -63,14 +63,10 @@ const service = {
             && taskA.isProbable === taskB.isProbable
     },
 
-    sort(taskA: Task, taskB: Task): number {
+    sorting(taskA: Task, taskB: Task): number {
         return taskA.order === taskB.order
             ? taskA.clientId > taskB.clientId ? 1 : -1
             : taskA.order > taskB.order ? 1 : -1
-    },
-
-    sortTasks(tasks: Task[]): Task[] {
-        return tasks.sort(this.sort)
     }
 }
 

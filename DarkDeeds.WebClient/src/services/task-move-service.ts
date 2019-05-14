@@ -54,7 +54,7 @@ function changeTargetTasksOrder(tasks: Task[], targetDate: number, task: Task, n
             .filter(x =>
                 x.clientId !== task.clientId &&
                 taskDateToStart(x.dateTime) === targetDate)
-            .sort(TaskService.sort)
+            .sort(TaskService.sorting)
 
     const movedTaskTargetIndex = nextSiblingId === null
         ? null
@@ -72,7 +72,7 @@ function changeTargetTasksOrder(tasks: Task[], targetDate: number, task: Task, n
 }
 
 function changeSourceTasksOrder(tasks: Task[], sourceDate: number, taskId: number): number[] {
-    const sourceTasks = tasks.filter(x => taskDateToStart(x.dateTime) === sourceDate).sort(TaskService.sort)
+    const sourceTasks = tasks.filter(x => taskDateToStart(x.dateTime) === sourceDate).sort(TaskService.sorting)
     return adjustTasksOrder(sourceTasks)
 }
 

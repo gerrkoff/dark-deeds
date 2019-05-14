@@ -14,7 +14,7 @@ function expectOrder(tasks: Task[], taskId: number, order: number) {
 }
 
 function expectDate(tasks: Task[], taskId: number, date: Date | null) {
-    if (date == null) {
+    if (date === null) {
         expect(tasks.find(x => x.clientId === taskId)!.dateTime).toBeNull()
     } else {
         expect(tasks.find(x => x.clientId === taskId)!.dateTime!.getTime()).toBe(date.getTime())

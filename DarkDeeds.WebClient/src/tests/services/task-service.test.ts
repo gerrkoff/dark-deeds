@@ -65,7 +65,7 @@ test('[sort] positive', () => {
         new Task(11, '', new Date(2018, 1, 1, 8), 2, false, 0, false, false, TaskTimeTypeEnum.AllDayLong),
         new Task(12, '', new Date(2018, 1, 1, 8), 1, false, 0, false, false, TaskTimeTypeEnum.AllDayLong)
     ]
-    const result = tasks.sort(TaskService.sort)
+    const result = tasks.sort(TaskService.sorting)
 
     expect(result[0].clientId).toBe(2)
     expect(result[1].clientId).toBe(4)
