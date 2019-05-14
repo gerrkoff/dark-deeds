@@ -39,6 +39,6 @@ export class IndicatorPanel extends React.PureComponent<IProps> {
     }
 
     private evalDisconnected = (): boolean => {
-        return new Date().valueOf() - this.props.heartbeatLastTime.valueOf() > 5 * 1000
+        return new Date().valueOf() - this.props.heartbeatLastTime.valueOf() > 65 * 1000
     }
 }
