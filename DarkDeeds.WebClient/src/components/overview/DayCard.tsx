@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { List, Segment } from 'semantic-ui-react'
-import { TaskHelper } from '../../helpers'
+import { TaskService } from '../../services'
 import { DayCardModel, Task, TaskModel, TaskTimeTypeEnum } from '../../models'
 import { DayCardHeader, TaskItem } from './'
 
@@ -10,14 +10,14 @@ interface IProps {
     day: DayCardModel,
     expiredDate?: Date,
     openTaskModal?: (model: TaskModel, id?: number) => void
-    setTaskStatuses?: (clientId: number, completed?: boolean, deleted?: boolean) => void
+    changeTaskStatus?: (clientId: number, completed?: boolean, deleted?: boolean) => void
     confirmAction?: (content: React.ReactNode, action: () => void, header: string) => void
 }
 export class DayCard extends React.PureComponent<IProps> {
 
     public render() {
         const className = this.props.expiredDate && this.props.day.date < this.props.expiredDate ? 'day-card-expired' : ''
-        const tasks = TaskHelper.sortTasks(this.props.day.tasks)
+        const tasks = TaskService.sortTasks(this.props.day.tasks)
         return (
             <Segment id='day-card' className={ className } inverted raised>
                 <DayCardHeader date={this.props.day.date} openTaskModal={this.props.openTaskModal}/>
@@ -53,7 +53,7 @@ export class DayCard extends React.PureComponent<IProps> {
 
     private renderTask(task: Task) {
         return (
-            <TaskItem task={task} setTaskStatuses={this.props.setTaskStatuses} confirmAction={this.props.confirmAction} openTaskModal={this.props.openTaskModal}/>
+            <TaskItem task={task} changeTaskStatus={this.props.changeTaskStatus} confirmAction={this.props.confirmAction} openTaskModal={this.props.openTaskModal}/>
         )
     }
 }

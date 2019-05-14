@@ -9,7 +9,7 @@ interface IProps {
     daysInRow?: number,
     expiredDate?: Date,
     openTaskModal?: (model: TaskModel, id?: number) => void
-    setTaskStatuses?: (clientId: number, completed?: boolean, deleted?: boolean) => void
+    changeTaskStatus?: (clientId: number, completed?: boolean, deleted?: boolean) => void
     confirmAction?: (content: React.ReactNode, action: () => void, header: string) => void
 }
 export class DaysBlock extends React.PureComponent<IProps> {
@@ -39,7 +39,7 @@ export class DaysBlock extends React.PureComponent<IProps> {
                             <div className='days-block-item' key={y.date.getTime()}>
                                 <DayCard day={y} expiredDate={this.props.expiredDate}
                                     openTaskModal={this.props.openTaskModal}
-                                    setTaskStatuses={this.props.setTaskStatuses}
+                                    changeTaskStatus={this.props.changeTaskStatus}
                                     confirmAction={this.props.confirmAction} />
                             </div>
                         )}

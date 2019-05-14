@@ -1,7 +1,6 @@
 import { SigninResultEnum, SignupResultEnum } from '../../models'
-import { LoginAction } from '../actions'
-import { LOGIN_CURRENT_USER, LOGIN_INITIAL_LOGGING_IN, LOGIN_PROCESSING, LOGIN_SIGNIN_FINISH, LOGIN_SIGNUP_FINISH, LOGIN_SWITCH_FORM } from '../constants'
 import { ILoginState } from '../types'
+import * as actions from '../constants/login'
 
 const initialState: ILoginState = {
     formSignin: true,
@@ -13,32 +12,32 @@ const initialState: ILoginState = {
     userName: ''
 }
 
-export function login(state: ILoginState = initialState, action: LoginAction): ILoginState {
+export function login(state: ILoginState = initialState, action: actions.LoginAction): ILoginState {
     switch (action.type) {
-        case LOGIN_INITIAL_LOGGING_IN:
+        case actions.LOGIN_INITIAL_LOGGING_IN:
             return { ...state,
                 initialLogginIn: action.initialLogginIn
             }
-        case LOGIN_CURRENT_USER:
+        case actions.LOGIN_CURRENT_USER:
             return { ...state,
                 userAuthenticated: action.userAuthenticated,
                 userName: action.userName ? action.userName : ''
             }
-        case LOGIN_PROCESSING:
+        case actions.LOGIN_PROCESSING:
             return { ...state,
                 processing: true
             }
-        case LOGIN_SIGNIN_FINISH:
+        case actions.LOGIN_SIGNIN_FINISH:
             return { ...state,
                 processing: false,
                 signinResult: action.result
             }
-        case LOGIN_SIGNUP_FINISH:
+        case actions.LOGIN_SIGNUP_FINISH:
             return { ...state,
                 processing: false,
                 signupResult: action.result
             }
-        case LOGIN_SWITCH_FORM:
+        case actions.LOGIN_SWITCH_FORM:
             return { ...state,
                 formSignin: action.formSignin,
                 signinResult: SigninResultEnum.Unknown,

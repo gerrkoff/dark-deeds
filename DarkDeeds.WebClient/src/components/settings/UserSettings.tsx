@@ -8,7 +8,7 @@ interface IProps {
     saveProcessing: boolean
     showCompleted: boolean
     saveSettings: (settings: Settings) => void
-    updateSettings: (settings: Settings) => void
+    changeSettings: (settings: Settings) => void
 }
 export class UserSettings extends React.PureComponent<IProps> {
     public render() {
@@ -17,7 +17,7 @@ export class UserSettings extends React.PureComponent<IProps> {
                 <SettingsDivider label='User Settings' icon='options' />
                 <div>
                     <Checkbox label='Show completed' checked={this.props.showCompleted} disabled={this.props.loadProcessing}
-                        onChange={() => this.props.updateSettings({ ...this.settings(), showCompleted: !this.props.showCompleted })} />
+                        onChange={() => this.props.changeSettings({ ...this.settings(), showCompleted: !this.props.showCompleted })} />
                 </div>
                 <br />
                 <Button onClick={this.handleSaveClick} loading={this.props.saveProcessing} disabled={this.props.loadProcessing} size='mini'>Save</Button>

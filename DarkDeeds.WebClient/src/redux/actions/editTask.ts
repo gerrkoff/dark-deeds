@@ -1,39 +1,21 @@
 import { Dispatch } from 'redux'
 import { TaskModel } from '../../models'
-import * as constants from '../constants'
+import * as actions from '../constants/editTask'
 
-export interface IEditTaskModalOpen {
-    type: constants.EDITTASK_MODALOPEN
-    open: boolean
-    clientId: number
+export function openEditTaskModal(open: boolean, clientId: number = 0): actions.IEditTaskModalOpen {
+    return { type: actions.EDITTASK_MODALOPEN, open, clientId }
 }
 
-export interface IEditTaskModel {
-    type: constants.EDITTASK_TASKMODEL
-    model: string
+export function changeEditTaskModel(model: string): actions.IEditTaskModel {
+    return { type: actions.EDITTASK_TASKMODEL, model }
 }
 
-export interface IEditTaskSetModel {
-    type: constants.EDITTASK_SET_MODEL
-    model: TaskModel
-}
-
-export type EditTaskAction = IEditTaskModalOpen | IEditTaskModel | IEditTaskSetModel
-
-export function openEditTaskModal(open: boolean, clientId: number = 0): IEditTaskModalOpen {
-    return { type: constants.EDITTASK_MODALOPEN, open, clientId }
-}
-
-export function changeEditTaskModel(model: string): IEditTaskModel {
-    return { type: constants.EDITTASK_TASKMODEL, model }
-}
-
-export function setEditTaskModel(model: TaskModel): IEditTaskSetModel {
-    return { type: constants.EDITTASK_SET_MODEL, model }
+export function setEditTaskModel(model: TaskModel): actions.IEditTaskSetModel {
+    return { type: actions.EDITTASK_SET_MODEL, model }
 }
 
 export function openEditTaskWithModel(model: TaskModel, id: number = 0) {
-    return async(dispatch: Dispatch<EditTaskAction>) => {
+    return async(dispatch: Dispatch<actions.EditTaskAction>) => {
         dispatch(setEditTaskModel(model))
         dispatch(openEditTaskModal(true, id))
     }

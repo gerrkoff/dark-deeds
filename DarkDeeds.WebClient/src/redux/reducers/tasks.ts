@@ -1,77 +1,92 @@
-import { DateHelper, TaskHelper } from '../../helpers'
-import { Task, TaskModel } from '../../models'
-import { TasksAction } from '../actions'
-import { TASKS_LOADING, TASKS_LOADING_FAILED, TASKS_LOADING_SUCCESS, TASKS_LOCAL_UPDATE, TASKS_LOCAL_UPDATE_TASK, TASKS_SAVING, TASKS_SAVING_FAILED, TASKS_SAVING_SUCCESS, TASKS_SET_TASK_STATUSES, TASKS_PUSH_FROM_SERVER } from '../constants'
+import { DateService, TaskService } from '../../services'
+import { Task, TaskModel, TaskLoadingStateEnum } from '../../models'
 import { ITasksState } from '../types'
+import * as actions from '../constants/tasks'
 
 const inittialState: ITasksState = {
-    loading: true,
+    loadingState: TaskLoadingStateEnum.Loading,
     saving: false,
-    notSaved: false,
-    tasks: []
+    changed: false,
+    tasks: [],
+    hubReconnecting: false,
+    hubHeartbeatLastTime: new Date()
 }
 
-export function tasks(state: ITasksState = inittialState, action: TasksAction): ITasksState {
+export function tasks(state: ITasksState = inittialState, action: actions.TasksAction): ITasksState {
     let newTasks: Task[]
     switch (action.type) {
-        case TASKS_LOADING:
+        case actions.TASKS_LOADING:
             return { ...state,
-                loading: true
+                loadingState: TaskLoadingStateEnum.Loading
             }
-        case TASKS_LOADING_SUCCESS:
+        case actions.TASKS_LOADING_SUCCESS:
             return { ...state,
-                loading: false,
+                loadingState: TaskLoadingStateEnum.Loaded,
                 tasks: [...action.tasks]
             }
-        case TASKS_LOADING_FAILED:
+        case actions.TASKS_LOADING_FAILED:
             return { ...state,
-                loading: false
+                loadingState: TaskLoadingStateEnum.LoadingFailed
             }
-        case TASKS_LOCAL_UPDATE:
+
+        case actions.TASKS_CHANGE_ALL_TASKS:
             newTasks = [...action.tasks]
+            const changed = evalChanged(newTasks)
             return { ...state,
                 tasks: newTasks,
-                notSaved: evalNotSaved(newTasks)
+                changed
             }
-        case TASKS_SAVING:
+        case actions.TASKS_CHANGE_TASK:
+            newTasks = changeTask(action.taskModel, action.clientId, state.tasks)
+            return { ...state,
+                tasks: newTasks,
+                changed: evalChanged(newTasks)
+            }
+        case actions.TASKS_CHANGE_TASK_STATUS:
+            newTasks = changeTaskStatus(state.tasks, action.clientId, action.completed, action.deleted)
+            return { ...state,
+                tasks: newTasks,
+                changed: evalChanged(newTasks)
+            }
+
+        case actions.TASKS_SAVING:
             return { ...state,
                 saving: true
             }
-        case TASKS_SAVING_SUCCESS:
+        case actions.TASKS_SAVING_FINISH:
             return { ...state,
                 saving: false
             }
-        case TASKS_PUSH_FROM_SERVER:
-            newTasks = pushTasksFromServer(state.tasks, action.tasks, action.localUpdate)
+
+        case actions.TASKS_UPDATE_TASKS:
+            newTasks = updateTasks(state.tasks, action.tasks, action.localUpdate)
             return { ...state,
                 tasks: newTasks,
-                notSaved: evalNotSaved(newTasks)
+                changed: evalChanged(newTasks)
             }
-        case TASKS_SAVING_FAILED:
+
+        case actions.TASKS_HUB_RECONNECTING:
             return { ...state,
-                saving: false
+                hubReconnecting: true
             }
-        case TASKS_LOCAL_UPDATE_TASK:
-            newTasks = localUpdateTask(action.taskModel, action.clientId, state.tasks)
+        case actions.TASKS_HUB_RECONNECTED:
             return { ...state,
-                tasks: newTasks,
-                notSaved: evalNotSaved(newTasks)
+                hubReconnecting: false,
+                hubHeartbeatLastTime: new Date()
             }
-        case TASKS_SET_TASK_STATUSES:
-            newTasks = updateStatuses(state.tasks, action.clientId, action.completed, action.deleted)
+        case actions.TASKS_HUB_HEARTBEAT:
             return { ...state,
-                tasks: newTasks,
-                notSaved: evalNotSaved(newTasks)
+                hubHeartbeatLastTime: new Date()
             }
     }
     return state
 }
 
-function evalNotSaved(newTasks: Task[]) {
-    return newTasks.some(x => x.updated)
+function evalChanged(newTasks: Task[]) {
+    return newTasks.some(x => x.changed)
 }
 
-function pushTasksFromServer(localTasks: Task[], updatedTasks: Task[], localUpdate: boolean): Task[] {
+function updateTasks(localTasks: Task[], updatedTasks: Task[], localUpdate: boolean): Task[] {
     const newTasks = [...localTasks]
     updatedTasks.forEach(updatedTask => {
         const taskIndex = newTasks.findIndex(x =>
@@ -87,11 +102,11 @@ function pushTasksFromServer(localTasks: Task[], updatedTasks: Task[], localUpda
                     clientId: updatedTask.id,
                     id: updatedTask.id
                 }
-                newTasks[taskIndex].updated = !TaskHelper.tasksEqual(newTasks[taskIndex], updatedTask)
+                newTasks[taskIndex].changed = !TaskService.tasksEqual(newTasks[taskIndex], updatedTask)
             } else {
                 newTasks[taskIndex] = {
                     ...updatedTask,
-                    updated: false
+                    changed: false
                 }
             }
         } else if (!updatedTask.deleted) {
@@ -104,7 +119,7 @@ function pushTasksFromServer(localTasks: Task[], updatedTasks: Task[], localUpda
     return newTasks
 }
 
-function localUpdateTask(model: TaskModel, clientId: number, localTasks: Task[]): Task[] {
+function changeTask(model: TaskModel, clientId: number, localTasks: Task[]): Task[] {
     const taskIndex = localTasks.findIndex(x => x.clientId === clientId)
 
     if (taskIndex > -1) {
@@ -112,15 +127,15 @@ function localUpdateTask(model: TaskModel, clientId: number, localTasks: Task[])
         newTasks[taskIndex] = {
             ...newTasks[taskIndex],
             ...model,
-            updated: true
+            changed: true
         }
         return newTasks
     } else {
-        return localAddTask(model, localTasks)
+        return addTask(model, localTasks)
     }
 }
 
-function localAddTask(model: TaskModel, localTasks: Task[]): Task[] {
+function addTask(model: TaskModel, localTasks: Task[]): Task[] {
     let minId = Math.min(...localTasks.map(x => x.clientId))
     if (minId > -1) {
         minId = -1
@@ -129,7 +144,7 @@ function localAddTask(model: TaskModel, localTasks: Task[]): Task[] {
     }
 
     const sameDayTaskOrders = localTasks
-        .filter(x => DateHelper.equalDatesByStart(x.dateTime, model.dateTime))
+        .filter(x => DateService.equalDatesByStart(x.dateTime, model.dateTime))
         .map(x => x.order)
     const maxOrder = sameDayTaskOrders.length === 0 ? 0 : Math.max(...sameDayTaskOrders)
 
@@ -140,13 +155,13 @@ function localAddTask(model: TaskModel, localTasks: Task[]): Task[] {
         deleted: false,
         id: 0,
         order: maxOrder + 1,
-        updated: true
+        changed: true
     }
 
     return [...localTasks, task]
 }
 
-function updateStatuses(localTasks: Task[], clientId: number, completed?: boolean, deleted?: boolean) {
+function changeTaskStatus(localTasks: Task[], clientId: number, completed?: boolean, deleted?: boolean) {
     const taskIndex = localTasks.findIndex(x => x.clientId === clientId)
 
     if (taskIndex < 0 || completed !== undefined && deleted !== undefined) {
@@ -156,7 +171,7 @@ function updateStatuses(localTasks: Task[], clientId: number, completed?: boolea
     const newTasks = [...localTasks]
     newTasks[taskIndex] = {
         ...newTasks[taskIndex],
-        updated: true
+        changed: true
     }
 
     if (completed !== undefined) {
@@ -167,7 +182,7 @@ function updateStatuses(localTasks: Task[], clientId: number, completed?: boolea
         newTasks[taskIndex].deleted = deleted
 
         if (deleted) {
-            const sameDayTasks = localTasks.filter(x => DateHelper.equalDatesByStart(x.dateTime, newTasks[taskIndex].dateTime))
+            const sameDayTasks = localTasks.filter(x => DateService.equalDatesByStart(x.dateTime, newTasks[taskIndex].dateTime))
             if (sameDayTasks) {
                 sameDayTasks.forEach(x => {
                     if (x.order > newTasks[taskIndex].order) {

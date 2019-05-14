@@ -1,8 +1,10 @@
-import { Task } from '../../models'
+import { Task, TaskLoadingStateEnum } from '../../models'
 
 export interface ITasksState {
-    loading: boolean
+    loadingState: TaskLoadingStateEnum
     saving: boolean
-    notSaved: boolean
+    changed: boolean
     tasks: Task[]
+    hubReconnecting: boolean
+    hubHeartbeatLastTime: Date
 }

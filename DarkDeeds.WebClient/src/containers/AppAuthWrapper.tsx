@@ -1,17 +1,17 @@
 import { push } from 'connected-react-router'
 import { connect } from 'react-redux'
 import { AppAuthWrapper } from '../components/app'
-import { Task } from '../models'
-import { loadTasks, openEditTaskModal, initialLogin, loadGeneralInfo, startTaskHub, saveTasksHub, stopTaskHub, loadSettings } from '../redux/actions'
+import { Task, TaskLoadingStateEnum } from '../models'
+import { initialLoadTasks, openEditTaskModal, initialLogin, loadGeneralInfo, taskHubSave, taskHubStart, taskHubStop, loadSettings } from '../redux/actions'
 import { IAppState } from '../redux/types'
 
 function mapStateToProps({ router, tasks, login }: IAppState) {
     return {
-        appLoading: tasks.loading,
+        appLoading: tasks.loadingState === TaskLoadingStateEnum.Loading,
         path: router.location.pathname,
         tasks: tasks.tasks,
         tasksSaving: tasks.saving,
-        tasksNotSaved: tasks.notSaved,
+        tasksChanged: tasks.changed,
         initialLogginIn: login.initialLogginIn,
         userAuthenticated: login.userAuthenticated
     }
@@ -19,14 +19,14 @@ function mapStateToProps({ router, tasks, login }: IAppState) {
 
 function mapDispatchToProps(dispatch: any) {
     return {
-        loadTasks: () => dispatch(loadTasks()),
+        loadTasks: () => dispatch(initialLoadTasks()),
         navigateTo: (path: string) => dispatch(push(path)),
         openEditTask: () => dispatch(openEditTaskModal(true)),
-        saveTasks: (tasks: Task[]) => dispatch(saveTasksHub(tasks)),
+        saveTasks: (tasks: Task[]) => dispatch(taskHubSave(tasks)),
         initialLogin: () => dispatch(initialLogin()),
         loadGeneralInfo: () => dispatch(loadGeneralInfo()),
-        startTaskHub: () => dispatch(startTaskHub()),
-        stopTaskHub: () => dispatch(stopTaskHub()),
+        startTaskHub: () => dispatch(taskHubStart()),
+        stopTaskHub: () => dispatch(taskHubStop()),
         loadSettings: () => dispatch(loadSettings())
     }
 }

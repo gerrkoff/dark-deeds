@@ -14,7 +14,7 @@ import 'react-toastify/dist/ReactToastify.css'
 import 'semantic-ui-css/semantic.min.css'
 import './index.css'
 import './styles/toast.css'
-import './api/task-hub'
+import './api/task-hub-api'
 
 const history = createBrowserHistory()
 const store = createStore<any, any, any, any>(

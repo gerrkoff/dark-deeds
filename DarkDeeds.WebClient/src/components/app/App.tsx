@@ -2,9 +2,10 @@ import * as React from 'react'
 import { Container, Dimmer, Loader } from 'semantic-ui-react'
 import EditTaskModal from '../../containers/EditTaskModal'
 import ModalConfirm from '../../containers/ModalConfirm'
+import IndicatorPanel from '../../containers/IndicatorPanel'
 import { Task } from '../../models'
 import { AddTaskButton } from '../edit-task'
-import { Shortcuts, Toolbar, NotSavedIndicator } from './'
+import { Shortcuts, Toolbar } from './'
 
 export interface IAppProps {
     appLoading: boolean
@@ -12,7 +13,7 @@ export interface IAppProps {
     path: string
     tasks: Task[]
     tasksSaving: boolean
-    tasksNotSaved: boolean
+    tasksChanged: boolean
     navigateTo: (path: string) => void
     loadTasks: () => void
     saveTasks: (tasks: Task[]) => void
@@ -28,7 +29,7 @@ export class App extends React.PureComponent<IAppProps> {
         this.props.loadTasks()
         this.props.startTaskHub()
         this.props.loadSettings()
-        this.saveTaskInterval = setInterval(this.saveTasksIfUpdated, 5 * 1000)
+        this.saveTaskInterval = setInterval(this.saveTasksIfChanged, 2 * 1000)
         window.onbeforeunload = this.confirmExit
     }
 
@@ -52,24 +53,20 @@ export class App extends React.PureComponent<IAppProps> {
                 </Dimmer>
                 <Shortcuts openEditTask={this.props.openEditTask} />
                 <ModalConfirm />
-                <NotSavedIndicator active={this.props.tasksNotSaved} />
+                <IndicatorPanel />
             </React.Fragment>
         )
     }
 
-    private saveTasksIfUpdated = () => {
-        const updated = this.props.tasks.filter(x => x.updated)
-
-        if (updated.length === 0 || this.props.tasksSaving) {
-            return
+    private saveTasksIfChanged = () => {
+        if (this.props.tasksChanged && !this.props.tasksSaving) {
+            this.props.saveTasks(this.props.tasks.filter(x => x.changed))
         }
-
-        this.props.saveTasks(updated)
     }
 
     private confirmExit = (event: BeforeUnloadEvent): string | void => {
-        if (this.props.tasksNotSaved) {
-            this.saveTasksIfUpdated()
+        if (this.props.tasksChanged) {
+            this.saveTasksIfChanged()
             return ''
         }
     }

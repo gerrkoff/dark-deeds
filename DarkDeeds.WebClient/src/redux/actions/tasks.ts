@@ -1,136 +1,109 @@
 import { Dispatch } from 'redux'
-import { TaskApi, TaskHub } from '../../api'
-import { ToastHelper } from '../../helpers'
+import { TaskApi } from '../../api'
+import { ToastService, UtilsService } from '../../services'
 import { Task, TaskModel } from '../../models'
-import * as constants from '../constants'
+import { TaskHub } from '../../helpers'
+import * as actions from '../constants/tasks'
 
-export interface ITasksLoading {
-    type: constants.TASKS_LOADING
-}
+/*
+        TASK HUB
+*/
 
-export interface ITasksLoadingSuccess {
-    type: constants.TASKS_LOADING_SUCCESS
-    tasks: Task[]
-}
+let taskHub: TaskHub | null = null
 
-export interface ITasksLoadingFailed {
-    type: constants.TASKS_LOADING_FAILED
-}
-
-export interface ITasksLocalUpdate {
-    type: constants.TASKS_LOCAL_UPDATE
-    tasks: Task[]
-}
-
-export interface ITasksLocalUpdateTask {
-    type: constants.TASKS_LOCAL_UPDATE_TASK
-    taskModel: TaskModel
-    clientId: number
-}
-
-export interface ITasksSaving {
-    type: constants.TASKS_SAVING
-}
-
-export interface ITasksSavingSuccess {
-    type: constants.TASKS_SAVING_SUCCESS
-}
-
-export interface ITasksPushFromServer {
-    type: constants.TASKS_PUSH_FROM_SERVER
-    tasks: Task[]
-    localUpdate: boolean
-}
-
-export interface ITasksSavingFailed {
-    type: constants.TASKS_SAVING_FAILED
-}
-
-export interface ITasksSetTaskStatuses {
-    type: constants.TASKS_SET_TASK_STATUSES
-    clientId: number
-    completed?: boolean
-    deleted?: boolean
-}
-
-export type TasksAction = ITasksLoading | ITasksLoadingSuccess | ITasksLoadingFailed | ITasksLocalUpdate | ITasksSaving | ITasksSavingSuccess | ITasksSavingFailed | ITasksLocalUpdateTask | ITasksSetTaskStatuses | ITasksPushFromServer
-
-export function loadTasks() {
-    return async(dispatch: Dispatch<TasksAction>) => {
-        dispatch({ type: constants.TASKS_LOADING })
-
-        try {
-            const tasks = await TaskApi.loadTasks()
-            dispatch({ type: constants.TASKS_LOADING_SUCCESS, tasks })
-        } catch (err) {
-            dispatch({ type: constants.TASKS_LOADING_FAILED })
-            ToastHelper.errorProcess('loading tasks')
+export function taskHubStart() {
+    return async(dispatch: Dispatch<actions.TasksAction>) => {
+        if (taskHub === null) {
+            taskHub = new TaskHub(taskHubUpdateHandler(dispatch), taskHubHeartbeatHandler(dispatch))
+            taskHub.addOnReconnect(taskHubReconnectHandler(dispatch))
         }
+        await taskHub.start()
     }
 }
 
-export function localUpdateTasks(tasks: Task[]): ITasksLocalUpdate {
-    return { type: constants.TASKS_LOCAL_UPDATE, tasks }
-}
-
-export function localUpdateTask(taskModel: TaskModel, clientId: number): ITasksLocalUpdateTask {
-    return { type: constants.TASKS_LOCAL_UPDATE_TASK, taskModel, clientId }
-}
-
-// TODO: remove, it's deprecated
-export function saveTasks(tasks: Task[]) {
-    return async(dispatch: Dispatch<TasksAction>) => {
-        dispatch({ type: constants.TASKS_SAVING })
-
-        try {
-            const tasksFromServer = await TaskApi.saveTasks(tasks)
-            dispatch({ type: constants.TASKS_SAVING_SUCCESS, tasks: tasksFromServer })
-            ToastHelper.info(`${tasks.length} tasks were updated`)
-        } catch (err) {
-            dispatch({ type: constants.TASKS_SAVING_FAILED })
-            ToastHelper.errorProcess('updating tasks')
-        }
+export function taskHubStop() {
+    return async(dispatch: Dispatch<actions.TasksAction>) => {
+        await taskHub!.stop()
     }
 }
 
-export function setTaskStatuses(clientId: number, completed?: boolean, deleted?: boolean): ITasksSetTaskStatuses {
-    return { type: constants.TASKS_SET_TASK_STATUSES, clientId, completed, deleted }
-}
-
-let taskHubIsReady = false
-
-export function startTaskHub() {
-    return async(dispatch: Dispatch<TasksAction>) => {
-        taskHubIsReady = false
-        await TaskHub.hubStart()
-        TaskHub.hubSubscribe(
-            (tasksFromServer, localUpdate) => dispatch({ type: constants.TASKS_PUSH_FROM_SERVER, tasks: tasksFromServer, localUpdate }),
-            () => console.log('task-hub heartbeat'))
-        taskHubIsReady = true
-    }
-}
-
-export function stopTaskHub() {
-    return async(dispatch: Dispatch<TasksAction>) => {
-        taskHubIsReady = false
-        await TaskHub.hubStop()
-    }
-}
-
-export function saveTasksHub(tasks: Task[]) {
-    return async(dispatch: Dispatch<TasksAction>) => {
-        if (!taskHubIsReady) {
+export function taskHubSave(tasks: Task[]) {
+    return async(dispatch: Dispatch<actions.TasksAction>) => {
+        /*
+            special hack to manage race conditions
+            [saving] & [reconnecting] in some circumstances start executing at the same time and unpredictable order
+            (i.e. when you leave Safari on iOS and then open it back)
+            so, if [saving] is the first it should pause a bit, to let [reconnecting] take the lead
+        */
+        await UtilsService.delay(50)
+        if (!taskHub!.ready) {
             return
         }
-        dispatch({ type: constants.TASKS_SAVING })
-
+        dispatch({ type: actions.TASKS_SAVING })
         try {
-            await TaskHub.saveTasks(tasks)
-            dispatch({ type: constants.TASKS_SAVING_SUCCESS })
-            console.log(`${tasks.length} tasks were updated`)
+            await taskHub!.saveTasks(tasks)
         } catch (err) {
-            dispatch({ type: constants.TASKS_SAVING_FAILED })
-            ToastHelper.errorProcess('updating tasks')
+            ToastService.errorProcess('saving tasks')
+        }
+        dispatch({ type: actions.TASKS_SAVING_FINISH })
+    }
+}
+
+function taskHubUpdateHandler(dispatch: Dispatch<actions.TasksAction>): (tasks: Task[], localUpdate: boolean) => void {
+    return (tasks, localUpdate) => {
+        dispatch({ type: actions.TASKS_UPDATE_TASKS, tasks, localUpdate })
+        if (localUpdate) {
+            console.log(`${tasks.length} tasks were saved`)
+        } else {
+            console.log(`${tasks.length} tasks were updated`)
         }
     }
+}
+
+function taskHubHeartbeatHandler(dispatch: Dispatch<actions.TasksAction>): () => void {
+    return () => {
+        dispatch({ type: actions.TASKS_HUB_HEARTBEAT })
+    }
+}
+
+function taskHubReconnectHandler(dispatch: Dispatch<actions.TasksAction>): (reconnecting: boolean) => Promise<void> {
+    return async(reconnecting: boolean) => {
+        if (reconnecting) {
+            dispatch({ type: actions.TASKS_HUB_RECONNECTING })
+            return
+        } else {
+            const tasks = await TaskApi.loadTasks()
+            dispatch(changeAllTasks(tasks))
+            dispatch({ type: actions.TASKS_HUB_RECONNECTED })
+        }
+    }
+}
+
+/*
+        OTHER
+*/
+
+export function initialLoadTasks() {
+    return async(dispatch: Dispatch<actions.TasksAction>) => {
+        dispatch({ type: actions.TASKS_LOADING })
+        try {
+            const tasks = await TaskApi.loadTasks()
+            dispatch({ type: actions.TASKS_LOADING_SUCCESS, tasks })
+        } catch (err) {
+            dispatch({ type: actions.TASKS_LOADING_FAILED })
+            ToastService.errorProcess('loading tasks')
+        }
+    }
+}
+
+export function changeAllTasks(tasks: Task[]): actions.ITasksChangeAllTasks {
+    return { type: actions.TASKS_CHANGE_ALL_TASKS, tasks }
+}
+
+export function changeTask(taskModel: TaskModel, clientId: number): actions.ITasksChangeTask {
+    return { type: actions.TASKS_CHANGE_TASK, taskModel, clientId }
+}
+
+export function changeTaskStatus(clientId: number, completed?: boolean, deleted?: boolean): actions.ITasksChangeTaskStatus {
+    return { type: actions.TASKS_CHANGE_TASK_STATUS, clientId, completed, deleted }
 }

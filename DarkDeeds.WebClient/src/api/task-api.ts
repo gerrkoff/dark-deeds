@@ -1,4 +1,4 @@
-import { DateHelper } from '../helpers'
+import { DateService } from '../services'
 import { Task } from '../models'
 import { Api } from './api'
 
@@ -6,12 +6,12 @@ const service = {
     async loadTasks(): Promise<Task[]> {
         const result = await Api.get<Task[]>('api/tasks')
         result.forEach(x => x.clientId = x.id)
-        return DateHelper.fixDates(result) as Task[]
+        return DateService.fixDates(result) as Task[]
     },
 
     async saveTasks(tasks: Task[]): Promise<Task[]> {
         const result = await Api.post<Task[]>('api/tasks', tasks)
-        return DateHelper.fixDates(result) as Task[]
+        return DateService.fixDates(result) as Task[]
     }
 }
 

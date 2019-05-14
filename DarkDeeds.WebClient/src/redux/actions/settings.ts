@@ -1,59 +1,36 @@
 import { Dispatch } from 'redux'
 import { SettingsApi } from '../../api'
-import * as constants from '../constants'
 import { Settings } from '../../models'
-import { ToastHelper } from '../../helpers'
-
-export interface ISettingsSaveProcessing {
-    type: constants.SETTINGS_SAVE_PROCESSING
-}
-
-export interface ISettingsSaveFinish {
-    type: constants.SETTINGS_SAVE_FINISH
-}
-
-export interface ISettingsLoadProcessing {
-    type: constants.SETTINGS_LOAD_PROCESSING
-}
-
-export interface ISettingsLoadFinish {
-    type: constants.SETTINGS_LOAD_FINISH
-}
-
-export interface ISettingsUpdate {
-    type: constants.SETTINGS_UPDATE
-    settings: Settings
-}
-
-export type SettingsAction = ISettingsSaveProcessing | ISettingsSaveFinish | ISettingsLoadProcessing | ISettingsLoadFinish | ISettingsUpdate
+import { ToastService } from '../../services'
+import * as actions from '../constants/settings'
 
 export function saveSettings(settings: Settings) {
-    return async(dispatch: Dispatch<SettingsAction>) => {
-        dispatch({ type: constants.SETTINGS_SAVE_PROCESSING })
+    return async(dispatch: Dispatch<actions.SettingsAction>) => {
+        dispatch({ type: actions.SETTINGS_SAVE_PROCESSING })
 
         try {
             await SettingsApi.save(settings)
         } catch (err) {
-            ToastHelper.errorProcess('saving settings')
+            ToastService.errorProcess('saving settings')
         }
-        dispatch({ type: constants.SETTINGS_SAVE_FINISH })
+        dispatch({ type: actions.SETTINGS_SAVE_FINISH })
     }
 }
 
 export function loadSettings() {
-    return async(dispatch: Dispatch<SettingsAction>) => {
-        dispatch({ type: constants.SETTINGS_LOAD_PROCESSING })
+    return async(dispatch: Dispatch<actions.SettingsAction>) => {
+        dispatch({ type: actions.SETTINGS_LOAD_PROCESSING })
 
         try {
             const result = await SettingsApi.load()
-            dispatch(updateSettings(result))
+            dispatch(changeSettings(result))
         } catch (err) {
-            ToastHelper.errorProcess('loading settings')
+            ToastService.errorProcess('loading settings')
         }
-        dispatch({ type: constants.SETTINGS_LOAD_FINISH })
+        dispatch({ type: actions.SETTINGS_LOAD_FINISH })
     }
 }
 
-export function updateSettings(settings: Settings): ISettingsUpdate {
-    return { type: constants.SETTINGS_UPDATE, settings }
+export function changeSettings(settings: Settings): actions.ISettingsChange {
+    return { type: actions.SETTINGS_CHANGE, settings }
 }

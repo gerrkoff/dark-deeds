@@ -1,7 +1,6 @@
-import { TaskConverter } from '../../helpers'
-import { EditTaskAction } from '../actions'
-import { EDITTASK_MODALOPEN, EDITTASK_SET_MODEL, EDITTASK_TASKMODEL } from '../constants'
+import { TaskConverter } from '../../services'
 import { IEditTaskState } from '../types'
+import * as actions from '../constants/editTask'
 
 const inittialState: IEditTaskState = {
     clientId: 0,
@@ -9,18 +8,18 @@ const inittialState: IEditTaskState = {
     taskModel: ''
 }
 
-export function editTask(state: IEditTaskState = inittialState, action: EditTaskAction): IEditTaskState {
+export function editTask(state: IEditTaskState = inittialState, action: actions.EditTaskAction): IEditTaskState {
     switch (action.type) {
-        case EDITTASK_MODALOPEN:
+        case actions.EDITTASK_MODALOPEN:
             return { ...state,
                 clientId: action.clientId,
                 modalOpen: action.open
             }
-        case EDITTASK_TASKMODEL:
+        case actions.EDITTASK_TASKMODEL:
             return { ...state,
                 taskModel: action.model
             }
-        case EDITTASK_SET_MODEL:
+        case actions.EDITTASK_SET_MODEL:
             return { ...state,
                 taskModel: TaskConverter.convertModelToString(action.model)
             }

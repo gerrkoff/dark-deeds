@@ -1,45 +1,13 @@
 import { Dispatch } from 'redux'
 import { push as navigateTo, RouterAction } from 'connected-react-router'
 import { LoginApi } from '../../api'
-import { StorageHelper, ToastHelper } from '../../helpers'
+import { StorageService, ToastService } from '../../services'
 import { SigninResultEnum, SignupResultEnum } from '../../models'
-import * as constants from '../constants'
-
-export interface ILoginProcessing {
-    type: constants.LOGIN_PROCESSING
-}
-
-export interface ILoginSigninFinish {
-    type: constants.LOGIN_SIGNIN_FINISH
-    result: SigninResultEnum
-}
-
-export interface ILoginSignupFinish {
-    type: constants.LOGIN_SIGNUP_FINISH
-    result: SignupResultEnum
-}
-
-export interface ILoginInitialLogginIn {
-    type: constants.LOGIN_INITIAL_LOGGING_IN
-    initialLogginIn: boolean
-}
-
-export interface ILoginCurrentUser {
-    type: constants.LOGIN_CURRENT_USER
-    userAuthenticated: boolean
-    userName?: string
-}
-
-export interface ILoginSwitchForm {
-    type: constants.LOGIN_SWITCH_FORM
-    formSignin: boolean
-}
-
-export type LoginAction = ILoginProcessing | ILoginSigninFinish | ILoginSignupFinish | ILoginInitialLogginIn | ILoginCurrentUser | ILoginSwitchForm
+import * as actions from '../constants/login'
 
 export function initialLogin() {
-    return async(dispatch: Dispatch<LoginAction>) => {
-        const token = StorageHelper.Load(StorageHelper.TokenKey)
+    return async(dispatch: Dispatch<actions.LoginAction>) => {
+        const token = StorageService.loadAccessToken()
         if (token === null || token === '') {
             return
         }
@@ -48,7 +16,7 @@ export function initialLogin() {
         try {
             await loadCurrentUser(dispatch)
         } catch {
-            ToastHelper.errorProcess('login')
+            ToastService.errorProcess('login')
         }
 
         dispatch(setInitialLogginIn(false))
@@ -56,7 +24,7 @@ export function initialLogin() {
 }
 
 export function signin(username: string, password: string) {
-    return async(dispatch: Dispatch<LoginAction>) => {
+    return async(dispatch: Dispatch<actions.LoginAction>) => {
         dispatch(processing())
 
         let result: SigninResultEnum
@@ -65,12 +33,12 @@ export function signin(username: string, password: string) {
             result = apiResult.result
 
             if (result === SigninResultEnum.Success) {
-                StorageHelper.Save(StorageHelper.TokenKey, apiResult.token)
+                StorageService.saveAccessToken(apiResult.token)
                 await loadCurrentUser(dispatch)
             }
         } catch (err) {
             result = SigninResultEnum.Unknown
-            ToastHelper.errorProcess('signin')
+            ToastService.errorProcess('signin')
         }
 
         dispatch(signinResult(result))
@@ -78,7 +46,7 @@ export function signin(username: string, password: string) {
 }
 
 export function signup(username: string, password: string) {
-    return async(dispatch: Dispatch<LoginAction>) => {
+    return async(dispatch: Dispatch<actions.LoginAction>) => {
         dispatch(processing())
 
         let result: SignupResultEnum
@@ -87,12 +55,12 @@ export function signup(username: string, password: string) {
             result = apiResult.result
 
             if (result === SignupResultEnum.Success) {
-                StorageHelper.Save(StorageHelper.TokenKey, apiResult.token)
+                StorageService.saveAccessToken(apiResult.token)
                 await loadCurrentUser(dispatch)
             }
         } catch (err) {
             result = SignupResultEnum.Unknown
-            ToastHelper.errorProcess('signup')
+            ToastService.errorProcess('signup')
         }
 
         dispatch(signupResult(result))
@@ -100,38 +68,38 @@ export function signup(username: string, password: string) {
 }
 
 export function signout() {
-    return async(dispatch: Dispatch<LoginAction | RouterAction>) => {
-        StorageHelper.Clear(StorageHelper.TokenKey)
+    return async(dispatch: Dispatch<actions.LoginAction | RouterAction>) => {
+        StorageService.clearAccessToken()
         dispatch(navigateTo('/'))
         dispatch(currentUser(false))
     }
 }
 
-export function switchForm(formSignin: boolean): ILoginSwitchForm {
-    return { type: constants.LOGIN_SWITCH_FORM, formSignin }
+export function switchForm(formSignin: boolean): actions.ILoginSwitchForm {
+    return { type: actions.LOGIN_SWITCH_FORM, formSignin }
 }
 
-function processing(): ILoginProcessing {
-    return { type: constants.LOGIN_PROCESSING }
+function processing(): actions.ILoginProcessing {
+    return { type: actions.LOGIN_PROCESSING }
 }
 
-function setInitialLogginIn(initialLogginIn: boolean): ILoginInitialLogginIn {
-    return { type: constants.LOGIN_INITIAL_LOGGING_IN, initialLogginIn }
+function setInitialLogginIn(initialLogginIn: boolean): actions.ILoginInitialLogginIn {
+    return { type: actions.LOGIN_INITIAL_LOGGING_IN, initialLogginIn }
 }
 
-function signinResult(result: SigninResultEnum): ILoginSigninFinish {
-    return { type: constants.LOGIN_SIGNIN_FINISH, result }
+function signinResult(result: SigninResultEnum): actions.ILoginSigninFinish {
+    return { type: actions.LOGIN_SIGNIN_FINISH, result }
 }
 
-function signupResult(result: SignupResultEnum): ILoginSignupFinish {
-    return { type: constants.LOGIN_SIGNUP_FINISH, result }
+function signupResult(result: SignupResultEnum): actions.ILoginSignupFinish {
+    return { type: actions.LOGIN_SIGNUP_FINISH, result }
 }
 
-function currentUser(userAuthenticated: boolean, userName?: string): ILoginCurrentUser {
-    return { type: constants.LOGIN_CURRENT_USER, userAuthenticated, userName }
+function currentUser(userAuthenticated: boolean, userName?: string): actions.ILoginCurrentUser {
+    return { type: actions.LOGIN_CURRENT_USER, userAuthenticated, userName }
 }
 
-async function loadCurrentUser(dispatch: Dispatch<LoginAction>) {
+async function loadCurrentUser(dispatch: Dispatch<actions.LoginAction>) {
     const currentUserResult = await LoginApi.current()
     dispatch(currentUser(currentUserResult.userAuthenticated, currentUserResult.username))
 }

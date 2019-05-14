@@ -1,18 +1,19 @@
 import * as React from 'react'
 import { Icon, MenuItemProps } from 'semantic-ui-react'
 import { Task, TaskModel, TaskTimeTypeEnum } from '../../models'
+import { TouchMoveDelay } from '../../helpers'
 import { MenuPopup } from './'
 
 import '../../styles/task-item.css'
 
 interface IProps {
     task: Task
-    setTaskStatuses?: (clientId: number, completed?: boolean, deleted?: boolean) => void
+    changeTaskStatus?: (clientId: number, completed?: boolean, deleted?: boolean) => void
     confirmAction?: (content: React.ReactNode, action: () => void, header: string) => void
     openTaskModal?: (model: TaskModel, id?: number) => void
 }
 interface IState {
-    menuPopupOpen: boolean
+    selected: boolean
 }
 export class TaskItem extends React.PureComponent<IProps, IState> {
     private elem: HTMLSpanElement
@@ -21,12 +22,12 @@ export class TaskItem extends React.PureComponent<IProps, IState> {
     constructor(props: IProps) {
         super(props)
         this.state = {
-            menuPopupOpen: false
+            selected: false
         }
     }
 
     public componentDidMount() {
-        this.touchMoveDelay = new TouchMoveDelay(this.elem, 500)
+        this.touchMoveDelay = new TouchMoveDelay(this.elem, 500, this.setItemSelected)
     }
 
     public componentWillUnmount() {
@@ -37,7 +38,7 @@ export class TaskItem extends React.PureComponent<IProps, IState> {
         const menuItemProps = new Array<MenuItemProps>()
         menuItemProps.push({
             content: <span><Icon name='check' />{this.props.task.completed ? 'Undo complete' : 'Complete'}</span>,
-            disabled: !this.props.setTaskStatuses,
+            disabled: !this.props.changeTaskStatus,
             name: 'complete',
             onClick: this.handleComplete
         })
@@ -50,7 +51,7 @@ export class TaskItem extends React.PureComponent<IProps, IState> {
         menuItemProps.push({
             color: 'red',
             content: <span><Icon name='delete' />Delete</span>,
-            disabled: !this.props.setTaskStatuses,
+            disabled: !this.props.changeTaskStatus,
             name: 'delete',
             onClick: this.handleDeleteConfirm
         })
@@ -58,7 +59,7 @@ export class TaskItem extends React.PureComponent<IProps, IState> {
         return (
             <MenuPopup
                 content={this.renderContent()}
-                changeVisibility={this.handleMenuChangeVisibility}
+                changeVisibility={this.setItemSelected}
                 menuItemProps={menuItemProps} />
         )
     }
@@ -68,7 +69,7 @@ export class TaskItem extends React.PureComponent<IProps, IState> {
         const className = 'task-item'
             + (task.completed ? ' task-item-completed' : '')
             + (task.isProbable ? ' task-item-probable' : '')
-            + (this.state.menuPopupOpen ? ' task-item-selected' : '')
+            + (this.state.selected ? ' task-item-selected' : '')
         let text = ''
         if (task.timeType === TaskTimeTypeEnum.ConcreteTime) {
             text += `${str2digits(task.dateTime!.getHours())}:${str2digits(task.dateTime!.getMinutes())} `
@@ -81,8 +82,8 @@ export class TaskItem extends React.PureComponent<IProps, IState> {
     }
 
     private handleComplete = () => {
-        if (this.props.setTaskStatuses) {
-            this.props.setTaskStatuses(this.props.task.clientId, !this.props.task.completed)
+        if (this.props.changeTaskStatus) {
+            this.props.changeTaskStatus(this.props.task.clientId, !this.props.task.completed)
         }
     }
 
@@ -93,8 +94,8 @@ export class TaskItem extends React.PureComponent<IProps, IState> {
     }
 
     private handleDelete = () => {
-        if (this.props.setTaskStatuses) {
-            this.props.setTaskStatuses(this.props.task.clientId, undefined, true)
+        if (this.props.changeTaskStatus) {
+            this.props.changeTaskStatus(this.props.task.clientId, undefined, true)
         }
     }
 
@@ -104,56 +105,11 @@ export class TaskItem extends React.PureComponent<IProps, IState> {
         }
     }
 
-    private handleMenuChangeVisibility = (open: boolean) => {
-        this.setState({ menuPopupOpen: open })
+    private setItemSelected = (selected: boolean) => {
+        this.setState({ selected })
     }
 }
 
 function str2digits(n: number): string {
     return n < 10 ? '0' + n : n.toString()
-}
-
-class TouchMoveDelay {
-    private elem: HTMLElement | undefined
-    private timeout: NodeJS.Timeout
-    private delay: number
-    private draggable: boolean
-
-    constructor(elem: HTMLElement | undefined, delay: number) {
-        this.elem = elem
-        if (this.elem === undefined) {
-            return
-        }
-        this.delay = delay
-        this.elem.addEventListener('touchstart', this.handleTouchStart)
-        this.elem.addEventListener('touchmove', this.handleTouchMove, { passive: true })
-        this.elem.addEventListener('touchend', this.handleTouchEnd)
-    }
-
-    public destroy = () => {
-        if (this.elem === undefined) {
-            return
-        }
-        this.elem.removeEventListener('touchstart', this.handleTouchStart)
-        this.elem.removeEventListener('touchmove', this.handleTouchMove)
-        this.elem.removeEventListener('touchend', this.handleTouchEnd)
-    }
-
-    private handleTouchStart = (event: Event) => {
-        this.timeout = setTimeout(() => {
-            this.draggable = true
-        }, this.delay)
-    }
-
-    private handleTouchMove = (event: Event) => {
-        if (!this.draggable) {
-            event.stopPropagation()
-            clearTimeout(this.timeout)
-        }
-    }
-
-    private handleTouchEnd = (event: Event) => {
-        clearTimeout(this.timeout)
-        this.draggable = false
-    }
 }

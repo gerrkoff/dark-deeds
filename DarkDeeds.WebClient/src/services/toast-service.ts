@@ -1,10 +1,16 @@
 import { toast, ToastOptions } from 'react-toastify'
 
 const defaultOptions: ToastOptions = {
-    progressClassName: 'toast-progress'
+    progressClassName: 'toast-progress',
+    closeButton: false,
+    autoClose: 5000,
+    closeOnClick: true,
+    draggable: true
 }
 
 const service = {
+    types: toast.TYPE,
+
     success(msg: string, options: ToastOptions = {}): number {
         return toast.success(msg, {
             className: 'toast-success',
@@ -12,21 +18,21 @@ const service = {
             ...options
         })
     },
-    error(msg: string, options = {}): number {
+    error(msg: string, options: ToastOptions = {}): number {
         return toast.error(msg, {
             className: 'toast-error',
             ...defaultOptions,
             ...options
         })
     },
-    warn(msg: string, options = {}): number {
+    warn(msg: string, options: ToastOptions = {}): number {
         return toast.warn(msg, {
             className: 'toast-warn',
             ...defaultOptions,
             ...options
         })
     },
-    info(msg: string, options = {}): number {
+    info(msg: string, options: ToastOptions = {}): number {
         return toast.info(msg, {
             className: 'toast-info',
             ...defaultOptions,
@@ -36,7 +42,23 @@ const service = {
 
     errorProcess(process: string, options = {}): number {
         return this.error(`Error occured while ${process}`, options)
+    },
+
+    dismiss(toastId: number | string) {
+        toast.dismiss(toastId as any)
+    },
+
+    update(toastId: number | string, msg: string, options: ToastOptions = {}) {
+        toast.update(toastId as any, {
+            render: msg,
+            ...defaultOptions,
+            ...options
+        })
+    },
+
+    isActive(toastId: number | string): boolean {
+        return toast.isActive(toastId as any)
     }
 }
 
-export { service as ToastHelper }
+export { service as ToastService }

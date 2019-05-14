@@ -1,4 +1,4 @@
-import { TaskHelper } from '../../helpers'
+import { TaskService } from '../../services'
 import { Task, TaskTimeTypeEnum } from '../../models'
 
 function task(year: number, month: number, date: number, id: number = 0, order: number = 0, timeType: TaskTimeTypeEnum = TaskTimeTypeEnum.NoTime, hours: number = 0, minutes: number = 0): Task {
@@ -21,7 +21,7 @@ test('[evalModel] positive', () => {
         new Task(0, '')
     ]
 
-    const result = TaskHelper.evalModel(tasks, new Date(2018, 9, 17), true)
+    const result = TaskService.evalModel(tasks, new Date(2018, 9, 17), true)
 
     expect(result.noDate.length).toBe(2)
     expect(result.expired.length).toBe(2)
@@ -36,18 +36,18 @@ test('[evalModel] ignore completed if showCompleted=false', () => {
         new Task(3, '', null, 0, false, 0, true)
     ]
 
-    const result = TaskHelper.evalModel(tasks, new Date(2018, 9, 17), false)
+    const result = TaskService.evalModel(tasks, new Date(2018, 9, 17), false)
 
     expect(result.noDate.length).toBe(1)
     expect(result.noDate[0].clientId).toBe(2)
 })
 
 test('[tasksEqual] positive', () => {
-    expect(TaskHelper.tasksEqual(new Task(1, '1', null, 1, false, 1), new Task(1, '1', null, 1, false, 1))).toBeTruthy()
-    expect(TaskHelper.tasksEqual(new Task(1, '1', null, 1, false, 1), new Task(1, '1', new Date(), 1, false, 1))).not.toBeTruthy()
-    expect(TaskHelper.tasksEqual(new Task(1, '1', new Date(2018), 1, false, 1), new Task(1, '1', new Date(2018), 1, false, 1))).toBeTruthy()
-    expect(TaskHelper.tasksEqual(new Task(1, '1', new Date(2018), 1, false, 1), new Task(2, '2', new Date(2019), 2, false, 2))).not.toBeTruthy()
-    expect(TaskHelper.tasksEqual(new Task(1, '1', null, 1, false, 1, false, false, TaskTimeTypeEnum.NoTime, false), new Task(1, '1', null, 1, false, 1, false, false, TaskTimeTypeEnum.NoTime, true))).not.toBeTruthy()
+    expect(TaskService.tasksEqual(new Task(1, '1', null, 1, false, 1), new Task(1, '1', null, 1, false, 1))).toBeTruthy()
+    expect(TaskService.tasksEqual(new Task(1, '1', null, 1, false, 1), new Task(1, '1', new Date(), 1, false, 1))).not.toBeTruthy()
+    expect(TaskService.tasksEqual(new Task(1, '1', new Date(2018), 1, false, 1), new Task(1, '1', new Date(2018), 1, false, 1))).toBeTruthy()
+    expect(TaskService.tasksEqual(new Task(1, '1', new Date(2018), 1, false, 1), new Task(2, '2', new Date(2019), 2, false, 2))).not.toBeTruthy()
+    expect(TaskService.tasksEqual(new Task(1, '1', null, 1, false, 1, false, false, TaskTimeTypeEnum.NoTime, false), new Task(1, '1', null, 1, false, 1, false, false, TaskTimeTypeEnum.NoTime, true))).not.toBeTruthy()
 })
 
 // test('[sortTasks] positive', () => {
