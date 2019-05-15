@@ -8,6 +8,8 @@
     font-size: $font-smaller;
     cursor: pointer;
     color: $color-primary-text;
+    border-bottom: 1px solid $color-day-header-border;
+    margin-bottom: 0.2rem;
 }
 
 .day-card-header-selected {
