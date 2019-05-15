@@ -1,4 +1,5 @@
 import { Task } from '../models'
+import { SetExtended } from '../helpers'
 import { DateService, TaskService } from '.'
 
 const service = {
@@ -9,17 +10,12 @@ const service = {
             return tasks
         }
 
-        const changedTasks = new Set<number>()
+        const changedTasks = SetExtended.create<number>()
 
         changedTasks.add(changeTaskDate(task, targetDate))
-        changeTargetTasksOrder(tasks, targetDate, task, nextSiblingId).forEach(x => {
-            changedTasks.add(x)
-        })
-
+        changedTasks.addRange(changeTargetTasksOrder(tasks, targetDate, task, nextSiblingId))
         if (targetDate !== sourceDate) {
-            changeSourceTasksOrder(tasks, sourceDate, task.clientId).forEach(x => {
-                changedTasks.add(x)
-            })
+            changedTasks.addRange(changeSourceTasksOrder(tasks, sourceDate, task.clientId))
         }
 
         for (let i = 0; i < tasks.length; i++) {
