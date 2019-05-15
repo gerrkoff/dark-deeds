@@ -1,4 +1,4 @@
-import { Task } from '../models'
+import { Task, TaskTimeTypeEnum } from '../models'
 import { SetExtended } from '../helpers'
 import { DateService, TaskService } from '.'
 
@@ -10,12 +10,14 @@ const service = {
             return tasks
         }
 
+        const filteredTasks = tasks.filter(x => x.timeType !== TaskTimeTypeEnum.AllDayLong)
+
         const changedTasks = SetExtended.create<number>()
 
         changedTasks.add(changeTaskDate(task, targetDate))
-        changedTasks.addRange(changeTargetTasksOrder(tasks, targetDate, task, nextSiblingId))
+        changedTasks.addRange(changeTargetTasksOrder(filteredTasks, targetDate, task, nextSiblingId))
         if (targetDate !== sourceDate) {
-            changedTasks.addRange(changeSourceTasksOrder(tasks, sourceDate, task.clientId))
+            changedTasks.addRange(changeSourceTasksOrder(filteredTasks, sourceDate, task.clientId))
         }
 
         for (let i = 0; i < tasks.length; i++) {

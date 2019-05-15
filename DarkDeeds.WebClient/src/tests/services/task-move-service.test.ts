@@ -1,8 +1,10 @@
 import { TaskMoveService } from '../../services'
-import { Task } from '../../models'
+import { Task, TaskTimeTypeEnum } from '../../models'
 
-function task(taskId: number, taskDate: Date | null, taskOrder: number): Task {
-    return new Task(taskId, '', taskDate, taskOrder)
+function task(taskId: number, taskDate: Date | null, taskOrder: number, type: TaskTimeTypeEnum = TaskTimeTypeEnum.NoTime): Task {
+    const t = new Task(taskId, '', taskDate, taskOrder)
+    t.timeType = type
+    return t
 }
 
 function d(year: number, month: number, date: number, hour: number = 0, minutes: number = 0): Date {
@@ -117,7 +119,7 @@ test('move to no date', () => {
 
 test('move with time', () => {
     const tasks: Task[] = [
-        task(1, d(2018, 9, 10, 5, 6), 1)
+        task(1, d(2018, 9, 10, 5, 6), 1, TaskTimeTypeEnum.ConcreteTime)
     ]
 
     const result = TaskMoveService.moveTask(tasks, 1, d(2018, 9, 9).getTime(), d(2018, 9, 10).getTime(), null)
@@ -142,6 +144,26 @@ test('any strange order becomes normal', () => {
     expectOrder(result, 3, 3)
     expectOrder(result, 4, 4)
     expectChanged(result, 1, true)
+    expectChanged(result, 2, true)
+    expectChanged(result, 3, true)
+    expectChanged(result, 4, true)
+})
+
+test('ignore All Day Long tasks', () => {
+    const tasks: Task[] = [
+        task(1, d(2018, 9, 9), 1000, TaskTimeTypeEnum.AllDayLong),
+        task(2, d(2018, 9, 9), 1),
+        task(3, d(2018, 9, 9), 2),
+        task(4, d(2018, 9, 10), 1)
+    ]
+
+    const result = TaskMoveService.moveTask(tasks, 4, d(2018, 9, 9).getTime(), d(2018, 9, 10).getTime(), 2)
+
+    expectOrder(result, 1, 1000)
+    expectOrder(result, 2, 2)
+    expectOrder(result, 3, 3)
+    expectOrder(result, 4, 1)
+    expectChanged(result, 1, false)
     expectChanged(result, 2, true)
     expectChanged(result, 3, true)
     expectChanged(result, 4, true)
