@@ -25,10 +25,6 @@
 }
 
 .all-day-item {
-    text-align: center;
+    text-align: right;
     color: $color-secondary-text;
-}
-
-.all-day-item:last-child {
-    padding-bottom: 0.25rem !important;
 }
