@@ -17,7 +17,7 @@ export class DayCard extends React.PureComponent<IProps> {
 
     public render() {
         const className = this.props.expiredDate && this.props.day.date < this.props.expiredDate ? 'day-card-expired' : ''
-        const tasks = TaskService.sortTasks(this.props.day.tasks)
+        const tasks = this.props.day.tasks.sort(TaskService.sorting)
         return (
             <Segment id='day-card' className={ className } inverted raised>
                 <DayCardHeader date={this.props.day.date} openTaskModal={this.props.openTaskModal}/>

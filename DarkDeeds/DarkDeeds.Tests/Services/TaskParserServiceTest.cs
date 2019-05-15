@@ -94,18 +94,6 @@ namespace DarkDeeds.Tests.Services
         }
         
         [Fact]
-        public void ParseTask_ReturnTaskWithDateAndAfterTimeWithYear()
-        {
-            var service = new TaskParserService();
-
-            var result = service.ParseTask("20171010 >0211 Test");
-            
-            Assert.Equal("Test", result.Title);
-            Assert.Equal(TaskTimeTypeEnum.AfterTime, result.TimeType);
-            Assert.Equal(new DateTime(2017,10, 10, 2, 11, 0),  result.DateTime);
-        }
-        
-        [Fact]
         public void ParseTask_ReturnTaskWithDateAndNoTime_ConsiderTimeAdjustment()
         {
             var service = new TaskParserService();
@@ -159,21 +147,6 @@ namespace DarkDeeds.Tests.Services
             }}, -80);
 
             Assert.Equal("16:20 Task", result);
-        }
-        
-        [Fact]
-        public void PrintTasks_ReturnAfterTime()
-        {
-            var service = new TaskParserService();
-
-            var result = service.PrintTasks(new[] {new TaskDto
-            {
-                Title = "Task",
-                DateTime = new DateTime(2000, 10, 10, 17, 40, 0),
-                TimeType = TaskTimeTypeEnum.AfterTime
-            }});
-
-            Assert.Equal(">17:40 Task", result);
         }
     }
 }

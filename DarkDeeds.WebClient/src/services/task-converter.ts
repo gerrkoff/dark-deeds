@@ -88,11 +88,6 @@ const service = {
                 result.setTimeType(TaskTimeTypeEnum.ConcreteTime)
                 text = result.extractHour(text)
                 text = result.extractMinute(text)
-            } else if (/^>\d{4}\s/.test(text)) {
-                text = text.slice(1)
-                result.setTimeType(TaskTimeTypeEnum.AfterTime)
-                text = result.extractHour(text)
-                text = result.extractMinute(text)
             }
         }
 
@@ -116,12 +111,8 @@ const service = {
 
             if (model.timeType === TaskTimeTypeEnum.AllDayLong) {
                 s += '! '
-            } else if (model.timeType !== TaskTimeTypeEnum.NoTime) {
-                s += ' '
-                if (model.timeType === TaskTimeTypeEnum.AfterTime) {
-                    s += '>'
-                }
-                s += `${str2digits(model.dateTime.getHours())}${str2digits(model.dateTime.getMinutes())} `
+            } else if (model.timeType === TaskTimeTypeEnum.ConcreteTime) {
+                s += ` ${str2digits(model.dateTime.getHours())}${str2digits(model.dateTime.getMinutes())} `
             } else {
                 s += ' '
             }

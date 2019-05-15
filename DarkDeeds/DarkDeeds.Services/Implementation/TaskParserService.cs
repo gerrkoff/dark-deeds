@@ -26,20 +26,13 @@ namespace DarkDeeds.Services.Implementation
 
         private string ParseTime(string task, out int hour, out int minutes, out TaskTimeTypeEnum timeType)
         {
-            var timeAfterRx = new Regex(@"^>\d{4}\s");
             var timeRx = new Regex(@"^\d{4}\s");
             string time = string.Empty;
             hour = 0;
             minutes = 0;
             timeType = TaskTimeTypeEnum.NoTime;
-            
-            if (timeAfterRx.IsMatch(task))
-            {
-                time = task.Substring(1, 4);
-                task = task.Substring(6);
-                timeType = TaskTimeTypeEnum.AfterTime;
-            }
-            else if (timeRx.IsMatch(task))
+
+            if (timeRx.IsMatch(task))
             {
                 time = task.Substring(0, 4);
                 task = task.Substring(5);
@@ -118,8 +111,6 @@ namespace DarkDeeds.Services.Implementation
                 task.DateTime = task.DateTime.Value.AddMinutes(timeAdjustment);
                 if (task.TimeType == TaskTimeTypeEnum.ConcreteTime)
                     result += $"{DateToTimeString(task.DateTime.Value)} ";
-                else if (task.TimeType == TaskTimeTypeEnum.AfterTime)
-                    result += $">{DateToTimeString(task.DateTime.Value)} ";
             }
 
             result += task.Title;
