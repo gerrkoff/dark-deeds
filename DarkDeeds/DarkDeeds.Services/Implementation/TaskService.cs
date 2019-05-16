@@ -22,38 +22,24 @@ namespace DarkDeeds.Services.Implementation
             _tasksRepository = tasksRepository;
         }
         
-        public async Task<IEnumerable<TaskDto>> LoadTasksAsync(string userId,
-            DateTime? from,
-            DateTime? to,
-            bool includeNoDate)
+        public async Task<IEnumerable<TaskDto>> LoadActualTasksAsync(string userId, DateTime from)
         {
-            if (from == null)
-            {
-                TaskEntity firstUncompletedTask = await _tasksRepository
-                    .GetAll()
-                    .Where(x => string.Equals(x.UserId, userId))
-                    .Where(x => x.DateTime.HasValue)
-                    .OrderBy(x => x.DateTime.Value)
-                    .FirstOrDefaultSafeAsync(x => !x.IsCompleted);
-                
-                var currentPeriodStart = DateTime.UtcNow.AddDays(-1);
-
-                from = firstUncompletedTask != null && firstUncompletedTask.DateTime < currentPeriodStart
-                    ? firstUncompletedTask.DateTime
-                    : currentPeriodStart;
-            }
-
-            IQueryable<TaskEntity> tasks = _tasksRepository
-                .GetAll()
+            IQueryable<TaskEntity> tasks = _tasksRepository.GetAll()
                 .Where(x => string.Equals(x.UserId, userId))
                 .Where(x =>
-                    !x.DateTime.HasValue && includeNoDate ||
-                    x.DateTime.HasValue && x.DateTime >= from.Value);
+                    !x.IsCompleted ||
+                    !x.DateTime.HasValue ||
+                    x.DateTime >= from);
+            
+            return (await tasks.ProjectTo<TaskDto>().ToListSafeAsync()).ToUtcDate();
+        }
 
-            if (to != null)
-                tasks = tasks.Where(x => 
-                        !x.DateTime.HasValue && includeNoDate ||
-                        x.DateTime.HasValue && x.DateTime < to.Value);
+        public async Task<IEnumerable<TaskDto>> LoadTasksByDateAsync(string userId, DateTime from, DateTime to)
+        {
+            IQueryable<TaskEntity> tasks = _tasksRepository.GetAll()
+                .Where(x => string.Equals(x.UserId, userId))
+                .Where(x => x.DateTime.HasValue)
+                .Where(x => x.DateTime >= from && x.DateTime < to);
 
             return (await tasks.ProjectTo<TaskDto>().ToListSafeAsync()).ToUtcDate();
         }

@@ -33,7 +33,7 @@ namespace DarkDeeds.BotIntegration.Implementation.CommandProcessor
         protected override async Task ProcessCoreAsync(ShowTodoCommand command)
         {
             string userId = await _telegramService.GetUserId(command.UserChatId);
-            IEnumerable<TaskDto> tasks = await _taskService.LoadTasksAsync(userId, command.From, command.To, false);
+            IEnumerable<TaskDto> tasks = await _taskService.LoadTasksByDateAsync(userId, command.From, command.To);
             string tasksAsString = _taskParserService.PrintTasks(tasks);
             if (string.IsNullOrEmpty(tasksAsString))
                 tasksAsString = "No tasks";

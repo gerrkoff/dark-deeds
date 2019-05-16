@@ -65,7 +65,7 @@ namespace DarkDeeds.Tests.BotIntegration.CommandProcessor
                 .Returns(Task.FromResult("userid"));
             
             var taskServiceMock = new Mock<ITaskService>();
-            taskServiceMock.Setup(x => x.LoadTasksAsync("userid", It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<bool>()))
+            taskServiceMock.Setup(x => x.LoadTasksByDateAsync("userid", It.IsAny<DateTime>(), It.IsAny<DateTime>()))
                 .Returns(Task.FromResult((IEnumerable<TaskDto>) tasks));
             
             var taskParserMock = new Mock<ITaskParserService>();

@@ -3,7 +3,13 @@ import baseUrl from './base-url'
 
 const DEFAULT_ERROR_MESSAGE = 'An error has occured.'
 const service = {
-    get<T>(api: string): Promise<T> {
+    get<T>(api: string, params?: Map<string, any>): Promise<T> {
+        if (params !== undefined) {
+            let paramString = ''
+            params.forEach((value, key) => paramString += '&' + key + '=' + value.toString())
+            paramString = '?' + paramString.substring(1)
+            api = api + paramString
+        }
         return sendRequest(`GET ${api}`, () =>
             fetch(baseUrl + api, {
                 headers: {

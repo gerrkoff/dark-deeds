@@ -21,6 +21,10 @@ const service = {
         return days[date.getDay()]
     },
 
+    today(): Date {
+        return this.dayStart(new Date())
+    },
+
     dayStart(date: Date): Date {
         return new Date(date.getFullYear(), date.getMonth(), date.getDate())
     },
@@ -53,6 +57,6 @@ const service = {
     }
 }
 
-const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 
 export { service as DateService }
