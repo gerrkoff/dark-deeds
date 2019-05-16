@@ -100,7 +100,8 @@ function updateTasks(localTasks: Task[], updatedTasks: Task[], localUpdate: bool
                 newTasks[taskIndex] = {
                     ...newTasks[taskIndex],
                     clientId: updatedTask.id,
-                    id: updatedTask.id
+                    id: updatedTask.id,
+                    version: updatedTask.version
                 }
                 newTasks[taskIndex].changed = !TaskService.tasksEqual(newTasks[taskIndex], updatedTask)
             } else {
@@ -155,7 +156,8 @@ function addTask(model: TaskModel, localTasks: Task[]): Task[] {
         deleted: false,
         id: 0,
         order: maxOrder + 1,
-        changed: true
+        changed: true,
+        version: 0
     }
 
     return [...localTasks, task]
