@@ -16,14 +16,18 @@ namespace DarkDeeds.Data.Entity
         
         public bool IsCompleted { get; set; }
         public bool IsProbable { get; set; }
-        
-        [NotMapped]
-        public int ClientId { get; set; }
 
+        public int Version { get; set; }
+        
         [Required]
         public string UserId { get; set; }
         
         [Required]
         public UserEntity User { get; set; }
+
+        
+        [NotMapped]
+        public int ClientId { get; set; }
+
     }
 }
