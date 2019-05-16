@@ -1,5 +1,4 @@
 @import 'styles/shared/colors.scss';
-@import 'styles/shared/device-adjustments.scss';
 
 html {
     font-size: 16px;
@@ -17,3 +16,5 @@ body {
 .ui.inverted.raised.segment {
     box-shadow: 0 2px 4px 0 $color-shadow-solid, 0 2px 10px 0 $color-shadow-solid;
 }
+
+@import 'styles/shared/device-adjustments.scss';
