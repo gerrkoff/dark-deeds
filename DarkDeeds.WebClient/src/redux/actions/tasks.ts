@@ -45,7 +45,7 @@ export function taskHubSave(tasks: Task[]) {
         } catch (err) {
             ToastService.errorProcess('saving tasks')
         }
-        dispatch({ type: actions.TASKS_SAVING_FINISH })
+        dispatch({ type: actions.TASKS_SAVING_FINISH }) // TODO: move it to update
     }
 }
 

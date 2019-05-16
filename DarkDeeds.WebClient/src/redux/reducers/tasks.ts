@@ -89,32 +89,23 @@ function evalChanged(newTasks: Task[]) {
 function updateTasks(localTasks: Task[], updatedTasks: Task[], localUpdate: boolean): Task[] {
     const newTasks = [...localTasks]
     updatedTasks.forEach(updatedTask => {
-        const taskIndex = newTasks.findIndex(x =>
+        const i = newTasks.findIndex(x =>
             (x.clientId > 0 || x.clientId < 0 && localUpdate) &&
             x.clientId === updatedTask.clientId)
-        if (taskIndex > -1) {
 
-            if (updatedTask.deleted) {
-                newTasks.splice(taskIndex, 1)
-            } else if (localUpdate) {
-                newTasks[taskIndex] = {
-                    ...newTasks[taskIndex],
-                    clientId: updatedTask.id,
-                    id: updatedTask.id,
-                    version: updatedTask.version
-                }
-                newTasks[taskIndex].changed = !TaskService.tasksEqual(newTasks[taskIndex], updatedTask)
+        if (i === -1 && !updatedTask.deleted) {
+            newTasks.push({ ...updatedTask, clientId: updatedTask.id })
+        }
+
+        if (i > -1 && updatedTask.deleted) {
+            newTasks.splice(i, 1)
+        } else if (i > -1) {
+            if (localUpdate) {
+                newTasks[i] = { ...newTasks[i], clientId: updatedTask.id, id: updatedTask.id, version: updatedTask.version }
+                newTasks[i].changed = !TaskService.tasksEqual(newTasks[i], updatedTask)
             } else {
-                newTasks[taskIndex] = {
-                    ...updatedTask,
-                    changed: false
-                }
+                newTasks[i] = { ...updatedTask }
             }
-        } else if (!updatedTask.deleted) {
-            newTasks.push({
-                ...updatedTask,
-                clientId: updatedTask.id
-            })
         }
     })
     return newTasks
