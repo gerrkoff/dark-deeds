@@ -23,6 +23,13 @@ namespace DarkDeeds.Common.Extensions
                 () => source.ToList());
         }
         
+        public static Task<Dictionary<TKey, TElement>> ToDictionarySafeAsync<TSource, TKey, TElement>(this IQueryable<TSource> source, Func<TSource, TKey> keySelector, Func<TSource, TElement> elementSelector)
+        {
+            return Run(source,
+                () => source.ToDictionaryAsync(keySelector, elementSelector),
+                () => source.ToDictionary(keySelector, elementSelector));
+        }
+        
         public static Task<bool> AnySafeAsync<T>(this IQueryable<T> source)
         {
             return Run(source,
