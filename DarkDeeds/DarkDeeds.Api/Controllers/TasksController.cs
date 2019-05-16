@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using DarkDeeds.Api.Controllers.Base;
 using DarkDeeds.Models;
@@ -20,10 +21,9 @@ namespace DarkDeeds.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<TaskDto>> Get()
+        public async Task<IEnumerable<TaskDto>> Get([Required] DateTime? from)
         {
-            // TODO: pass from date from client
-            return await _taskService.LoadActualTasksAsync(GetUser().UserId, DateTime.UtcNow);
+            return await _taskService.LoadActualTasksAsync(GetUser().UserId, from.GetValueOrDefault());
         }
         
         [HttpPost]
