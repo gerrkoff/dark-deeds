@@ -4,7 +4,8 @@ import { Api } from './api'
 
 const service = {
     async loadTasks(): Promise<Task[]> {
-        const result = await Api.get<Task[]>('api/tasks')
+        const params = new Map<string, any>([['from', DateService.today().toISOString()]])
+        const result = await Api.get<Task[]>('api/tasks', params)
         result.forEach(x => x.clientId = x.id)
         return DateService.fixDates(result) as Task[]
     },

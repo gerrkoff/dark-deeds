@@ -21,6 +21,10 @@ const service = {
         return days[date.getDay()]
     },
 
+    today(): Date {
+        return this.dayStart(new Date())
+    },
+
     dayStart(date: Date): Date {
         return new Date(date.getFullYear(), date.getMonth(), date.getDate())
     },
