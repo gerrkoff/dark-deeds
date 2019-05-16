@@ -29,12 +29,12 @@ test('[toDateFromSpecialFormat] null if incorrect string', () => {
 
 test('[getWeekdayName] positive', () => {
     expect(DateService.getWeekdayName(new Date(2018, 9, 21)))
-        .toBe('Sunday')
+        .toBe('Sun')
 })
 
 test('[toLabel] positive', () => {
     expect(DateService.toLabel(new Date(2018, 9, 21)))
-        .toBe('10/21/2018 Sunday')
+        .toBe('10/21/2018 Sun')
 })
 
 test('[monday] positive', () => {

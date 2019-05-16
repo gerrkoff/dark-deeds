@@ -71,11 +71,7 @@ export class TaskItem extends React.PureComponent<IProps, IState> {
             + (task.isProbable ? ' task-item-probable' : '')
             + (this.state.selected ? ' task-item-selected' : '')
         let text = ''
-        if (task.timeType === TaskTimeTypeEnum.AfterTime || task.timeType === TaskTimeTypeEnum.ConcreteTime) {
-            if (task.timeType === TaskTimeTypeEnum.AfterTime) {
-                text += '> '
-            }
-
+        if (task.timeType === TaskTimeTypeEnum.ConcreteTime) {
             text += `${str2digits(task.dateTime!.getHours())}:${str2digits(task.dateTime!.getMinutes())} `
         }
         text += task.title

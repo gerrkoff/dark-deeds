@@ -1,5 +1,6 @@
 export * from './date-service'
 export * from './task-service'
+export * from './task-move-service'
 export * from './toast-service'
 export * from './key-constants'
 export * from './storage-service'

@@ -1,0 +1,19 @@
+@media (min-width: 1400px) {
+    .ui.container {
+        width: 1350px;
+    }
+
+    #day-card {
+        min-width: 180px;
+    }
+
+    html {
+        font-size: 15px;
+    }
+}
+
+@media (max-width: 1399px) {
+    .days-block:not(:last-child) {
+        margin-bottom: 1rem;
+    }
+}
