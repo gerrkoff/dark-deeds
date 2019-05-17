@@ -69,6 +69,7 @@ function taskHubHeartbeatHandler(dispatch: Dispatch<actions.TasksAction>): () =>
 function taskHubReconnectHandler(dispatch: Dispatch<actions.TasksAction>): (reconnecting: boolean) => Promise<void> {
     return async(reconnecting: boolean) => {
         if (reconnecting) {
+            dispatch({ type: actions.TASKS_SAVING_FINISH })
             dispatch({ type: actions.TASKS_HUB_RECONNECTING })
             return
         } else {

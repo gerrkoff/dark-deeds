@@ -67,12 +67,13 @@ namespace DarkDeeds.Services.Implementation
 
         private async Task<TaskDto> SaveTaskAsync(Dictionary<int, TaskEntity> existingTasks, TaskDto taskToSave, string userId)
         {   
+            TaskEntity entity;
             if (taskToSave.Deleted || taskToSave.ClientId >= 0)
             {
                 if (!existingTasks.ContainsKey(taskToSave.Id))
                 {
                     // TODO: log it
-                    return null;                    
+                    return null;
                 }
 
                 if (existingTasks[taskToSave.Id].Version != taskToSave.Version)
@@ -81,12 +82,11 @@ namespace DarkDeeds.Services.Implementation
 
             // delete
             if (taskToSave.Deleted)
-            {
-                await _tasksRepository.DeleteAsync(taskToSave.Id);
+            {   
+                entity = existingTasks[taskToSave.Id];
+                await _tasksRepository.DeleteAsync(entity);
                 return taskToSave;
             }
-
-            TaskEntity entity;
             // create
             if (taskToSave.ClientId < 0)
             {
