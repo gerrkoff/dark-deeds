@@ -45,7 +45,6 @@ export function taskHubSave(tasks: Task[]) {
         } catch (err) {
             ToastService.errorProcess('saving tasks')
         }
-        dispatch({ type: actions.TASKS_SAVING_FINISH }) // TODO: move it to update
     }
 }
 
@@ -53,6 +52,7 @@ function taskHubUpdateHandler(dispatch: Dispatch<actions.TasksAction>): (tasks: 
     return (tasks, localUpdate) => {
         dispatch({ type: actions.TASKS_UPDATE_TASKS, tasks, localUpdate })
         if (localUpdate) {
+            dispatch({ type: actions.TASKS_SAVING_FINISH })
             console.log(`${tasks.length} tasks were saved`)
         } else {
             console.log(`${tasks.length} tasks were updated`)
