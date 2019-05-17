@@ -13,10 +13,11 @@ function createState(
     return { loadingState, saving, tasks, changed, hubReconnecting, hubHeartbeatLastTime: new Date() }
 }
 
-function createTask(clientId: number = 1, id: number = 1, title: string = '', deleted: boolean = false): Task {
+function createTask(clientId: number = 1, id: number = 1, title: string = '', deleted: boolean = false, version: number = 0): Task {
     const task = new Task(clientId, title)
     task.id = id
     task.deleted = deleted
+    task.version = version
     return task
 }
 
@@ -106,11 +107,11 @@ test('[TASKS_UPDATE_TASKS] (local update) update task - should not be updated', 
     expect(result.tasks[0].title).toBe('qqq')
 })
 
-test('[TASKS_UPDATE_TASKS] (local update) update task - should update clientId with id', () => {
-    const state = createState([createTask(-100, 0)])
+test('[TASKS_UPDATE_TASKS] (local update) update task - should update clientId with id and version with new version', () => {
+    const state = createState([createTask(-100, 0, '', false, 11)])
     const action: actions.ITasksUpdateTasks = {
         type: actions.TASKS_UPDATE_TASKS,
-        tasks: [createTask(-100, 20)],
+        tasks: [createTask(-100, 20, '', false, 33)],
         localUpdate: true
     }
     const result = taskReducer(state, action)
@@ -118,6 +119,7 @@ test('[TASKS_UPDATE_TASKS] (local update) update task - should update clientId w
     expect(result.tasks.length).toBe(1)
     expect(result.tasks[0].id).toBe(20)
     expect(result.tasks[0].clientId).toBe(20)
+    expect(result.tasks[0].version).toBe(33)
 })
 
 test('[TASKS_UPDATE_TASKS] (local update) update task - should set updated flag to true if not equal to saved state', () => {

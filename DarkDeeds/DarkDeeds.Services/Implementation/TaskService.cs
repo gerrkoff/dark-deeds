@@ -47,24 +47,71 @@ namespace DarkDeeds.Services.Implementation
         public async Task<IEnumerable<TaskDto>> SaveTasksAsync(ICollection<TaskDto> tasks, string userId)
         {
             await CheckIfUserCanEditTasks(tasks, userId);
+
+            int[] taskIds = tasks.Select(x => x.Id).Where(x => x > 0).ToArray();
             
-            var savedTasks = Mapper.Map<ICollection<TaskEntity>>(tasks);
-            foreach (var task in savedTasks)
+            Dictionary<int, TaskEntity> existingTasks = await _tasksRepository.GetAll()
+                .Where(x => taskIds.Contains(x.Id))
+                .ToDictionarySafeAsync(x => x.Id, x => x);
+
+            var savedTasks = new List<TaskDto>();
+            foreach (var task in tasks)
             {
-                if (task.IsDeleted)
-                {
-                    await _tasksRepository.DeleteAsync(task);
-                }
-                else
-                {
-                    if (task.ClientId < 0)
-                        task.Id = 0;
-                    task.UserId = userId;
-                    await _tasksRepository.SaveAsync(task);
-                }
+                TaskDto savedTask = await SaveTaskAsync(existingTasks, task, userId);
+                if (savedTask != null)
+                    savedTasks.Add(savedTask);
             }
 
-            return Mapper.Map<List<TaskDto>>(savedTasks);
+            return savedTasks;
+        }
+
+        private async Task<TaskDto> SaveTaskAsync(Dictionary<int, TaskEntity> existingTasks, TaskDto taskToSave, string userId)
+        {   
+            if (taskToSave.Deleted || taskToSave.ClientId >= 0)
+            {
+                if (!existingTasks.ContainsKey(taskToSave.Id))
+                {
+                    // TODO: log it
+                    return null;                    
+                }
+
+                if (existingTasks[taskToSave.Id].Version != taskToSave.Version)
+                    return ConvertTaskToDto(existingTasks[taskToSave.Id], taskToSave.ClientId);
+            }
+
+            // delete
+            if (taskToSave.Deleted)
+            {
+                await _tasksRepository.DeleteAsync(taskToSave.Id);
+                return taskToSave;
+            }
+
+            TaskEntity entity;
+            // create
+            if (taskToSave.ClientId < 0)
+            {
+                entity = Mapper.Map<TaskEntity>(taskToSave);
+                entity.Id = 0;
+                entity.UserId = userId;
+                await _tasksRepository.SaveAsync(entity);
+            }
+            // update
+            else
+            {
+                entity = existingTasks[taskToSave.Id];
+                entity = Mapper.Map(taskToSave, entity);
+                entity.Version++;
+                await _tasksRepository.SaveAsync(entity);
+            }
+
+            return ConvertTaskToDto(entity, taskToSave.ClientId);
+        }
+
+        private TaskDto ConvertTaskToDto(TaskEntity entity, int clientId)
+        {
+            var dto = Mapper.Map<TaskDto>(entity);
+            dto.ClientId = clientId;
+            return dto;
         }
 
         public async Task CheckIfUserCanEditTasks(ICollection<TaskDto> tasks, string userId)

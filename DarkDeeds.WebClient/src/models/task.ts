@@ -11,7 +11,8 @@ export class Task implements TaskModel {
         public completed: boolean = false,
         public deleted: boolean = false,
         public timeType: TaskTimeTypeEnum = TaskTimeTypeEnum.NoTime,
-        public isProbable: boolean = false
+        public isProbable: boolean = false,
+        public version: number = 0
     ) {}
 
     // Change model - change tasksEqual method in TaskHelper

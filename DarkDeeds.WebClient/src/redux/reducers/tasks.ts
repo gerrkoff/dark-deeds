@@ -21,8 +21,7 @@ export function tasks(state: ITasksState = inittialState, action: actions.TasksA
             }
         case actions.TASKS_LOADING_SUCCESS:
             return { ...state,
-                loadingState: TaskLoadingStateEnum.Loaded,
-                tasks: [...action.tasks]
+                loadingState: TaskLoadingStateEnum.Loaded
             }
         case actions.TASKS_LOADING_FAILED:
             return { ...state,
@@ -31,23 +30,13 @@ export function tasks(state: ITasksState = inittialState, action: actions.TasksA
 
         case actions.TASKS_CHANGE_ALL_TASKS:
             newTasks = [...action.tasks]
-            const changed = evalChanged(newTasks)
-            return { ...state,
-                tasks: newTasks,
-                changed
-            }
+            return recreateStateWithNewTasks(state, newTasks)
         case actions.TASKS_CHANGE_TASK:
             newTasks = changeTask(action.taskModel, action.clientId, state.tasks)
-            return { ...state,
-                tasks: newTasks,
-                changed: evalChanged(newTasks)
-            }
+            return recreateStateWithNewTasks(state, newTasks)
         case actions.TASKS_CHANGE_TASK_STATUS:
             newTasks = changeTaskStatus(state.tasks, action.clientId, action.completed, action.deleted)
-            return { ...state,
-                tasks: newTasks,
-                changed: evalChanged(newTasks)
-            }
+            return recreateStateWithNewTasks(state, newTasks)
 
         case actions.TASKS_SAVING:
             return { ...state,
@@ -60,10 +49,10 @@ export function tasks(state: ITasksState = inittialState, action: actions.TasksA
 
         case actions.TASKS_UPDATE_TASKS:
             newTasks = updateTasks(state.tasks, action.tasks, action.localUpdate)
-            return { ...state,
-                tasks: newTasks,
-                changed: evalChanged(newTasks)
-            }
+            return recreateStateWithNewTasks(state, newTasks)
+        case actions.TASKS_UPDATE_TASKS_SYNC:
+            newTasks = updateTasksSync(state.tasks, action.tasks)
+            return recreateStateWithNewTasks(state, newTasks)
 
         case actions.TASKS_HUB_RECONNECTING:
             return { ...state,
@@ -82,40 +71,68 @@ export function tasks(state: ITasksState = inittialState, action: actions.TasksA
     return state
 }
 
-function evalChanged(newTasks: Task[]) {
-    return newTasks.some(x => x.changed)
+function recreateStateWithNewTasks(state: ITasksState, newTasks: Task[]): ITasksState {
+    return { ...state,
+        tasks: newTasks,
+        changed: newTasks.some(x => x.changed)
+    }
+}
+
+function updateTasksSync(localTasks: Task[], updatedTasks: Task[]): Task[] {
+    if (localTasks.length === 0) {
+        return updatedTasks
+    }
+
+    const newTasks = []
+    for (const localTask of localTasks) {
+        if (localTask.clientId < 0) {
+            newTasks.push(localTask)
+            continue
+        }
+
+        const updatedTask = updatedTasks.find(x => x.id === localTask.id)
+
+        if (updatedTask === undefined) {
+            continue
+        }
+
+        if (updatedTask.version === localTask.version) {
+            newTasks.push(localTask)
+            continue
+        }
+
+        newTasks.push({ ...updatedTask })
+    }
+    return newTasks
 }
 
 function updateTasks(localTasks: Task[], updatedTasks: Task[], localUpdate: boolean): Task[] {
     const newTasks = [...localTasks]
-    updatedTasks.forEach(updatedTask => {
-        const taskIndex = newTasks.findIndex(x =>
+
+    for (const updatedTask of updatedTasks) {
+        const i = newTasks.findIndex(x =>
             (x.clientId > 0 || x.clientId < 0 && localUpdate) &&
             x.clientId === updatedTask.clientId)
-        if (taskIndex > -1) {
 
-            if (updatedTask.deleted) {
-                newTasks.splice(taskIndex, 1)
-            } else if (localUpdate) {
-                newTasks[taskIndex] = {
-                    ...newTasks[taskIndex],
-                    clientId: updatedTask.id,
-                    id: updatedTask.id
-                }
-                newTasks[taskIndex].changed = !TaskService.tasksEqual(newTasks[taskIndex], updatedTask)
-            } else {
-                newTasks[taskIndex] = {
-                    ...updatedTask,
-                    changed: false
-                }
-            }
-        } else if (!updatedTask.deleted) {
-            newTasks.push({
-                ...updatedTask,
-                clientId: updatedTask.id
-            })
+        if (i === -1 && !updatedTask.deleted) {
+            newTasks.push({ ...updatedTask, clientId: updatedTask.id })
+            continue
         }
-    })
+
+        if (i > -1 && updatedTask.deleted) {
+            newTasks.splice(i, 1)
+            continue
+        }
+
+        if (i > -1) {
+            if (localUpdate) {
+                newTasks[i] = { ...newTasks[i], clientId: updatedTask.id, id: updatedTask.id, version: updatedTask.version }
+                newTasks[i].changed = !TaskService.tasksEqual(newTasks[i], updatedTask)
+            } else {
+                newTasks[i] = { ...updatedTask }
+            }
+        }
+    }
     return newTasks
 }
 
@@ -155,7 +172,8 @@ function addTask(model: TaskModel, localTasks: Task[]): Task[] {
         deleted: false,
         id: 0,
         order: maxOrder + 1,
-        changed: true
+        changed: true,
+        version: 0
     }
 
     return [...localTasks, task]
