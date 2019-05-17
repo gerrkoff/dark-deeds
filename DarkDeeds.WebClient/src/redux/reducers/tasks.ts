@@ -123,7 +123,7 @@ function updateTasks(localTasks: Task[], updatedTasks: Task[], localUpdate: bool
             newTasks.splice(i, 1)
             continue
         }
-        
+
         if (i > -1) {
             if (localUpdate) {
                 newTasks[i] = { ...newTasks[i], clientId: updatedTask.id, id: updatedTask.id, version: updatedTask.version }

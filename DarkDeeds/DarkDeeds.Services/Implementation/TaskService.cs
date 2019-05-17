@@ -99,13 +99,7 @@ namespace DarkDeeds.Services.Implementation
             else
             {
                 entity = existingTasks[taskToSave.Id];
-                // TODO: refactor
-                entity.DateTime = taskToSave.DateTime;
-                entity.Title = taskToSave.Title;
-                entity.Order = taskToSave.Order;
-                entity.IsCompleted = taskToSave.Completed;
-                entity.IsProbable = taskToSave.IsProbable;
-                entity.TimeType = taskToSave.TimeType;
+                entity = Mapper.Map(taskToSave, entity);
                 entity.Version++;
                 await _tasksRepository.SaveAsync(entity);
             }
