@@ -73,7 +73,7 @@ function taskHubReconnectHandler(dispatch: Dispatch<actions.TasksAction>): (reco
             return
         } else {
             const tasks = await TaskApi.loadTasks()
-            dispatch(changeAllTasks(tasks))
+            dispatch({ type: actions.TASKS_UPDATE_TASKS_SYNC, tasks })
             dispatch({ type: actions.TASKS_HUB_RECONNECTED })
         }
     }
@@ -88,7 +88,8 @@ export function initialLoadTasks() {
         dispatch({ type: actions.TASKS_LOADING })
         try {
             const tasks = await TaskApi.loadTasks()
-            dispatch({ type: actions.TASKS_LOADING_SUCCESS, tasks })
+            dispatch({ type: actions.TASKS_UPDATE_TASKS_SYNC, tasks })
+            dispatch({ type: actions.TASKS_LOADING_SUCCESS })
         } catch (err) {
             dispatch({ type: actions.TASKS_LOADING_FAILED })
             ToastService.errorProcess('loading tasks')

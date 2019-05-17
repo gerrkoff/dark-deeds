@@ -16,7 +16,6 @@ export const TASKS_LOADING_SUCCESS = 'TASKS_LOADING_SUCCESS'
 export type TASKS_LOADING_SUCCESS = typeof TASKS_LOADING_SUCCESS
 export interface ITasksLoadingSuccess {
     type: TASKS_LOADING_SUCCESS
-    tasks: Task[]
 }
 
 export const TASKS_LOADING_FAILED = 'TASKS_LOADING_FAILED'
@@ -69,6 +68,13 @@ export interface ITasksUpdateTasks {
     localUpdate: boolean
 }
 
+export const TASKS_UPDATE_TASKS_SYNC = 'TASKS_UPDATE_TASKS_SYNC'
+export type TASKS_UPDATE_TASKS_SYNC = typeof TASKS_UPDATE_TASKS_SYNC
+export interface ITasksUpdateTasksSync {
+    type: TASKS_UPDATE_TASKS_SYNC
+    tasks: Task[]
+}
+
 export const TASKS_HUB_RECONNECTING = 'TASKS_HUB_RECONNECTING'
 export type TASKS_HUB_RECONNECTING = typeof TASKS_HUB_RECONNECTING
 export interface ITasksHubReconnecting {
@@ -99,4 +105,5 @@ export type TasksAction =
     ITasksUpdateTasks |
     ITasksHubReconnecting |
     ITasksHubReconnected |
-    ITasksHubHeartbeat
+    ITasksHubHeartbeat |
+    ITasksUpdateTasksSync

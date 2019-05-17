@@ -21,8 +21,7 @@ export function tasks(state: ITasksState = inittialState, action: actions.TasksA
             }
         case actions.TASKS_LOADING_SUCCESS:
             return { ...state,
-                loadingState: TaskLoadingStateEnum.Loaded,
-                tasks: [...action.tasks]
+                loadingState: TaskLoadingStateEnum.Loaded
             }
         case actions.TASKS_LOADING_FAILED:
             return { ...state,
@@ -31,22 +30,13 @@ export function tasks(state: ITasksState = inittialState, action: actions.TasksA
 
         case actions.TASKS_CHANGE_ALL_TASKS:
             newTasks = [...action.tasks]
-            return { ...state,
-                tasks: newTasks,
-                changed: evalChanged(newTasks)
-            }
+            return recreateStateWithNewTasks(state, newTasks)
         case actions.TASKS_CHANGE_TASK:
             newTasks = changeTask(action.taskModel, action.clientId, state.tasks)
-            return { ...state,
-                tasks: newTasks,
-                changed: evalChanged(newTasks)
-            }
+            return recreateStateWithNewTasks(state, newTasks)
         case actions.TASKS_CHANGE_TASK_STATUS:
             newTasks = changeTaskStatus(state.tasks, action.clientId, action.completed, action.deleted)
-            return { ...state,
-                tasks: newTasks,
-                changed: evalChanged(newTasks)
-            }
+            return recreateStateWithNewTasks(state, newTasks)
 
         case actions.TASKS_SAVING:
             return { ...state,
@@ -59,10 +49,10 @@ export function tasks(state: ITasksState = inittialState, action: actions.TasksA
 
         case actions.TASKS_UPDATE_TASKS:
             newTasks = updateTasks(state.tasks, action.tasks, action.localUpdate)
-            return { ...state,
-                tasks: newTasks,
-                changed: evalChanged(newTasks)
-            }
+            return recreateStateWithNewTasks(state, newTasks)
+        case actions.TASKS_UPDATE_TASKS_SYNC:
+            newTasks = updateTasksSync(state.tasks, action.tasks)
+            return recreateStateWithNewTasks(state, newTasks)
 
         case actions.TASKS_HUB_RECONNECTING:
             return { ...state,
@@ -81,8 +71,16 @@ export function tasks(state: ITasksState = inittialState, action: actions.TasksA
     return state
 }
 
-function evalChanged(newTasks: Task[]) {
-    return newTasks.some(x => x.changed)
+function recreateStateWithNewTasks(state: ITasksState, newTasks: Task[]): ITasksState {
+    return { ...state,
+        tasks: newTasks,
+        changed: newTasks.some(x => x.changed)
+    }
+}
+
+function updateTasksSync(localTasks: Task[], updatedTasks: Task[]): Task[] {
+    // TODO: implement
+    return [...updatedTasks]
 }
 
 function updateTasks(localTasks: Task[], updatedTasks: Task[], localUpdate: boolean): Task[] {
