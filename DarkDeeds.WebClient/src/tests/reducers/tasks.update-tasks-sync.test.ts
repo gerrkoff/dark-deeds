@@ -76,7 +76,7 @@ test('[TASKS_UPDATE_TASKS_SYNC] keep local task if version matches, changed shou
     expect(result.changed).toBe(true)
 })
 
-test('[TASKS_UPDATE_TASKS_SYNC] update local task if version does not matches, change should be reset', () => {
+test('[TASKS_UPDATE_TASKS_SYNC] update local task if version does not matches, change should be false', () => {
     const state = createState([createTask(1, 1, 'qqq', 10, true)])
     const action: actions.ITasksUpdateTasksSync = {
         type: actions.TASKS_UPDATE_TASKS_SYNC,
