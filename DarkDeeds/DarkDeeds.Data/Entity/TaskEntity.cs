@@ -24,10 +24,5 @@ namespace DarkDeeds.Data.Entity
         
         [Required]
         public UserEntity User { get; set; }
-
-        
-        [NotMapped]
-        public int ClientId { get; set; }
-
     }
 }
