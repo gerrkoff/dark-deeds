@@ -79,8 +79,31 @@ function recreateStateWithNewTasks(state: ITasksState, newTasks: Task[]): ITasks
 }
 
 function updateTasksSync(localTasks: Task[], updatedTasks: Task[]): Task[] {
-    // TODO: implement
-    return [...updatedTasks]
+    if (localTasks.length === 0) {
+        return updatedTasks
+    }
+
+    const newTasks = []
+    for (const localTask of localTasks) {
+        if (localTask.clientId < 0) {
+            newTasks.push(localTask)
+            continue
+        }
+
+        const updatedTask = updatedTasks.find(x => x.id === localTask.id)
+
+        if (updatedTask === undefined) {
+            continue
+        }
+
+        if (updatedTask.version === localTask.version) {
+            newTasks.push(localTask)
+            continue
+        }
+
+        newTasks.push({ ...updatedTask })
+    }
+    return newTasks
 }
 
 function updateTasks(localTasks: Task[], updatedTasks: Task[], localUpdate: boolean): Task[] {
