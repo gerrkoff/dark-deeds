@@ -79,11 +79,9 @@ function recreateStateWithNewTasks(state: ITasksState, newTasks: Task[]): ITasks
 }
 
 function updateTasksSync(localTasks: Task[], updatedTasks: Task[]): Task[] {
-    if (localTasks.length === 0) {
-        return updatedTasks
-    }
+    const newTasks = updatedTasks
+        .filter(x => !localTasks.some(y => y.id === x.id))
 
-    const newTasks = []
     for (const localTask of localTasks) {
         if (localTask.clientId < 0) {
             newTasks.push(localTask)

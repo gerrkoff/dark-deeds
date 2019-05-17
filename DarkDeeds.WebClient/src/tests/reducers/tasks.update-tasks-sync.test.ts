@@ -21,7 +21,7 @@ function createTask(clientId: number = 1, id: number = 1, title: string = '', ve
     return task
 }
 
-test('[TASKS_UPDATE_TASKS_SYNC] just return new tasks if no local', () => {
+test('[TASKS_UPDATE_TASKS_SYNC] add new tasks if there are not local', () => {
     const state = createState()
     const action: actions.ITasksUpdateTasksSync = {
         type: actions.TASKS_UPDATE_TASKS_SYNC,
