@@ -66,8 +66,7 @@ namespace DarkDeeds.Tests.Services
             await service.SaveTasksAsync(items, "1");
             
             repoMock.Verify(x => x.GetAll());
-            repoMock.Verify(x => x.DeleteAsync(
-                It.Is<int>(y => y == 1000)));
+            repoMock.Verify(x => x.DeleteAsync(It.Is<TaskEntity>(y => y.Id == 1000)));
             repoMock.VerifyNoOtherCalls();
         }
         
