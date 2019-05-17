@@ -31,10 +31,9 @@ export function tasks(state: ITasksState = inittialState, action: actions.TasksA
 
         case actions.TASKS_CHANGE_ALL_TASKS:
             newTasks = [...action.tasks]
-            const changed = evalChanged(newTasks)
             return { ...state,
                 tasks: newTasks,
-                changed
+                changed: evalChanged(newTasks)
             }
         case actions.TASKS_CHANGE_TASK:
             newTasks = changeTask(action.taskModel, action.clientId, state.tasks)
