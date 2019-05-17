@@ -108,18 +108,23 @@ function updateTasksSync(localTasks: Task[], updatedTasks: Task[]): Task[] {
 
 function updateTasks(localTasks: Task[], updatedTasks: Task[], localUpdate: boolean): Task[] {
     const newTasks = [...localTasks]
-    updatedTasks.forEach(updatedTask => {
+
+    for (const updatedTask of updatedTasks) {
         const i = newTasks.findIndex(x =>
             (x.clientId > 0 || x.clientId < 0 && localUpdate) &&
             x.clientId === updatedTask.clientId)
 
         if (i === -1 && !updatedTask.deleted) {
             newTasks.push({ ...updatedTask, clientId: updatedTask.id })
+            continue
         }
 
         if (i > -1 && updatedTask.deleted) {
             newTasks.splice(i, 1)
-        } else if (i > -1) {
+            continue
+        }
+        
+        if (i > -1) {
             if (localUpdate) {
                 newTasks[i] = { ...newTasks[i], clientId: updatedTask.id, id: updatedTask.id, version: updatedTask.version }
                 newTasks[i].changed = !TaskService.tasksEqual(newTasks[i], updatedTask)
@@ -127,7 +132,7 @@ function updateTasks(localTasks: Task[], updatedTasks: Task[], localUpdate: bool
                 newTasks[i] = { ...updatedTask }
             }
         }
-    })
+    }
     return newTasks
 }
 
