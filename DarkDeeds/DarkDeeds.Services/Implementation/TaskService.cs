@@ -8,6 +8,7 @@ using DarkDeeds.Common.Exceptions;
 using DarkDeeds.Common.Extensions;
 using DarkDeeds.Data.Entity;
 using DarkDeeds.Data.Repository;
+using DarkDeeds.Enums;
 using DarkDeeds.Models;
 using DarkDeeds.Services.Interface;
 
@@ -27,7 +28,7 @@ namespace DarkDeeds.Services.Implementation
             IQueryable<TaskEntity> tasks = _tasksRepository.GetAll()
                 .Where(x => string.Equals(x.UserId, userId))
                 .Where(x =>
-                    !x.IsCompleted ||
+                    !x.IsCompleted && x.TimeType != TaskTimeTypeEnum.AllDayLong ||
                     !x.DateTime.HasValue ||
                     x.DateTime >= from);
             

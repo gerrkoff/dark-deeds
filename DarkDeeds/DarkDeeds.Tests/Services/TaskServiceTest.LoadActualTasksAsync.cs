@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using DarkDeeds.Data.Entity;
 using DarkDeeds.Data.Repository;
+using DarkDeeds.Enums;
 using DarkDeeds.Services.Implementation;
 using Xunit;
 
@@ -14,6 +15,7 @@ namespace DarkDeeds.Tests.Services
             new TaskEntity {UserId = "1", Id = 1, DateTime = new DateTime(2018, 10, 10), IsCompleted = true},
             new TaskEntity {UserId = "1", Id = 2, DateTime = new DateTime(2018, 10, 11)},
             new TaskEntity {UserId = "2", Id = 10},
+            new TaskEntity {UserId = "1", Id = 11, DateTime = new DateTime(2018, 10, 19), TimeType = TaskTimeTypeEnum.AllDayLong},
             new TaskEntity {UserId = "1", Id = 3, DateTime = new DateTime(2018, 10, 20)},
             new TaskEntity {UserId = "1", Id = 4}
         ).Object;
@@ -67,6 +69,16 @@ namespace DarkDeeds.Tests.Services
             var result = (await service.LoadActualTasksAsync("1", new DateTime(2018, 10, 20))).ToList();
 
             Assert.DoesNotContain(result, x => x.Id == 1);
+        }
+        
+        [Fact]
+        public async Task LoadActualTasksAsync_ExcludeExpiredAllDayLong()
+        {
+            var service = new TaskService(DefaultRepo_LoadActualTasksAsync());
+
+            var result = (await service.LoadActualTasksAsync("1", new DateTime(2018, 10, 20))).ToList();
+
+            Assert.DoesNotContain(result, x => x.Id == 11);
         }
     }
 }
