@@ -23,6 +23,7 @@ namespace DarkDeeds.Api.Controllers
         [HttpGet]
         public async Task<IEnumerable<TaskDto>> Get([Required] DateTime? from)
         {
+            from = from.GetValueOrDefault().ToUniversalTime();
             return await _taskService.LoadActualTasksAsync(GetUser().UserId, from.GetValueOrDefault());
         }
         
