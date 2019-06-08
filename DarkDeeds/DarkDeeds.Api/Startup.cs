@@ -53,6 +53,7 @@ namespace DarkDeeds.Api
             }
 
             app.UseHealthChecks("/healthcheck");
+            app.UseHttpsRedirection();
             app.UseResponseCompression();
             app.UseStaticFiles();
             app.UseAuthentication();
