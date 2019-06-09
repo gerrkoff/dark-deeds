@@ -53,14 +53,9 @@ export class TouchMoveDelay {
     }
 
     private handleTouchEnd = (event: Event) => {
-        if (this.draggable) {
-            this.elemReadyCallback(false)
-            event.stopPropagation()
-            this.draggable = false
-            console.log('TOUCH END FINISH DRAG')
-        } else {
-            clearTimeout(this.timeout)
-            console.log('TOUCH END FINISH NON DRAG')
-        }
+        clearTimeout(this.timeout)
+        this.draggable = false
+        this.elemReadyCallback(false)
+        console.log('TOUCH END FINISH')
     }
 }
