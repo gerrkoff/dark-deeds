@@ -25,30 +25,30 @@ export class TouchMoveDelay {
         this.elem.removeEventListener('touchstart', this.handleTouchStart)
         this.elem.removeEventListener('touchmove', this.handleTouchMove)
         this.elem.removeEventListener('touchend', (event) => {
-            console.log('TOUCH END')
+            console.log((new Date()).toLocaleTimeString(), 'TOUCH END')
             this.handleTouchEnd(event)
         })
         this.elem.removeEventListener('touchcancel', (event) => {
-            console.log('TOUCH CANCEL')
+            console.log((new Date()).toLocaleTimeString(), 'TOUCH CANCEL')
             this.handleTouchEnd(event)
         })
     }
 
     private handleTouchStart = (event: Event) => {
-        console.log('TOUCH START')
+        console.log((new Date()).toLocaleTimeString(), 'TOUCH START')
         this.timeout = setTimeout(() => {
             this.draggable = true
             this.elemReadyCallback(true)
-            console.log('TOUCH START READY DRAG')
+            console.log((new Date()).toLocaleTimeString(), 'TOUCH START READY DRAG')
         }, this.delay)
     }
 
     private handleTouchMove = (event: Event) => {
-        console.log('TOUCH MOVE')
+        console.log((new Date()).toLocaleTimeString(), 'TOUCH MOVE')
         if (!this.draggable) {
             event.stopPropagation()
             clearTimeout(this.timeout)
-            console.log('TOUCH MOVE STOP PROPAGATION')
+            console.log((new Date()).toLocaleTimeString(), 'TOUCH MOVE STOP PROPAGATION')
         }
     }
 
@@ -56,6 +56,6 @@ export class TouchMoveDelay {
         clearTimeout(this.timeout)
         this.draggable = false
         this.elemReadyCallback(false)
-        console.log('TOUCH END FINISH')
+        console.log((new Date()).toLocaleTimeString(), 'TOUCH END FINISH')
     }
 }
