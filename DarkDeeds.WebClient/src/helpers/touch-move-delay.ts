@@ -44,11 +44,12 @@ export class TouchMoveDelay {
     }
 
     private handleTouchMove = (event: Event) => {
-        console.log((new Date()).toLocaleTimeString(), 'TOUCH MOVE')
         if (!this.draggable) {
             event.stopPropagation()
             clearTimeout(this.timeout)
             console.log((new Date()).toLocaleTimeString(), 'TOUCH MOVE STOP PROPAGATION')
+        } else {
+            console.log((new Date()).toLocaleTimeString(), 'TOUCH MOVE PROPAGATION')
         }
     }
 
