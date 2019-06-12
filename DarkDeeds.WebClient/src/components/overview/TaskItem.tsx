@@ -27,10 +27,12 @@ export class TaskItem extends React.PureComponent<IProps, IState> {
     }
 
     public componentDidMount() {
+        console.log((new Date()).toLocaleTimeString(), 'MOUNT', this.props.task.title)
         this.touchMoveDelay = new TouchMoveDelay(this.elem, 500, this.setItemSelected)
     }
 
     public componentWillUnmount() {
+        console.log((new Date()).toLocaleTimeString(), 'DESTROY', this.props.task.title)
         this.touchMoveDelay.destroy()
     }
 
