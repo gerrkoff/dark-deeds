@@ -6,7 +6,7 @@ RUN npm install -g npm
 
 COPY DarkDeeds /app/DarkDeeds
 COPY DarkDeeds.WebClient /app/DarkDeeds.WebClient
-COPY Deploy/build /app/Deploy/build
+COPY Deploy /app/Deploy
 COPY appsettings.Production.json /app/
 WORKDIR /app
 

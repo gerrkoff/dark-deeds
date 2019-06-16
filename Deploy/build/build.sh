@@ -6,8 +6,7 @@ print () {
 
 # cleanup
 print 'CLEAN'
-rm -rf ../run/src
-rm -rf ../run/test-results
+rm -rf ../artifacts
 echo cleaned
 
 # test & build FE
@@ -25,7 +24,7 @@ npm run build || exit $?
 # test & build BE
 print 'BE: TEST'
 cd ../DarkDeeds/DarkDeeds.Tests/
-dotnet test "--logger:trx;LogFileName=results.trx" --results-directory ../../Deploy/run/test-results || exit $?
+dotnet test "--logger:trx;LogFileName=results.trx" --results-directory ../../Deploy/artifacts/test-results || exit $?
 
 print 'BE: SET BUILD VERSION'
 cd ../DarkDeeds.Api/
@@ -37,12 +36,13 @@ if [ -z "$1" ]
 fi
 
 print 'BE: BUILD'
-dotnet publish -c Release -o ../../Deploy/run/src || exit $?
+dotnet publish -c Release -o ../../Deploy/artifacts/src || exit $?
 
 # misc
-print 'COPY PROD CONFIG'
-cd ../../Deploy
-cp appsettings.Production.json run/src/
+print 'COPY ADDITIONAL FILES'
+cd ../../
+cp appsettings.Production.json Deploy/artifacts/src || exit $?
+cp Deploy/dockerfile Deploy/artifacts/ || exit $?
 echo copied
 
 print 'SUCCESS'
