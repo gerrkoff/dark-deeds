@@ -16,7 +16,7 @@ interface IState {
     selected: boolean
 }
 export class TaskItem extends React.PureComponent<IProps, IState> {
-    private elem: HTMLSpanElement
+    private elem: HTMLSpanElement | undefined
     private touchMoveDelay: TouchMoveDelay
 
     constructor(props: IProps) {
@@ -28,7 +28,7 @@ export class TaskItem extends React.PureComponent<IProps, IState> {
 
     public componentDidMount() {
         console.log((new Date()).toLocaleTimeString(), 'MOUNT', this.props.task.title)
-        if (this.elem.parentElement !== null) {
+        if (this.elem !== undefined && this.elem.parentElement !== null) {
             this.touchMoveDelay = new TouchMoveDelay(this.elem.parentElement, 500, this.setItemSelected)
         }
     }
