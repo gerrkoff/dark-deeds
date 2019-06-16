@@ -14,6 +14,7 @@ echo cleaned
 print 'FE: GET DEPS'
 cd ../../DarkDeeds.WebClient/
 npm install || exit $?
+npm rebuild node-sass || exit $?
 
 print 'FE: TEST'
 npm run test-ci || exit $?

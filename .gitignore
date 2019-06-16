@@ -25,3 +25,5 @@ Deploy/run/test-results
 DarkDeeds/DarkDeeds.sln.DotSettings.user
 DarkDeeds/DarkDeeds.BotIntegration/obj
 DarkDeeds/DarkDeeds.BotIntegration/bin
+commands
+appsettings.Production.json
