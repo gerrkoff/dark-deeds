@@ -19,8 +19,8 @@ DarkDeeds/DarkDeeds.Enums/bin
 appsettings.Development.json
 DarkDeeds/DarkDeeds.Tests/obj
 DarkDeeds/DarkDeeds.Tests/bin
-Deploy/src
-Deploy/test-results
+Deploy/run/src
+Deploy/run/test-results
 .DS_Store
 DarkDeeds/DarkDeeds.sln.DotSettings.user
 DarkDeeds/DarkDeeds.BotIntegration/obj
