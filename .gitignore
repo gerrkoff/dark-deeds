@@ -20,6 +20,7 @@ appsettings.Development.json
 DarkDeeds/DarkDeeds.Tests/obj
 DarkDeeds/DarkDeeds.Tests/bin
 Deploy/src
+Deploy/test-results
 .DS_Store
 DarkDeeds/DarkDeeds.sln.DotSettings.user
 DarkDeeds/DarkDeeds.BotIntegration/obj
