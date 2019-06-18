@@ -31,7 +31,7 @@ namespace DarkDeeds.Api
 
             services.AddHostedService<HubHeartbeat<TaskHub>>();
             services.AddHealthChecks();
-            services.AddHttpsRedirection(options => options.HttpsPort = 443);
+//            services.AddHttpsRedirection(options => options.HttpsPort = 443);
             services.AddSignalR()
                 .AddHubOptions<TaskHub>(options => options.EnableDetailedErrors = true);
         }
@@ -54,7 +54,7 @@ namespace DarkDeeds.Api
             }
 
             app.UseHealthChecks("/healthcheck");
-            app.UseHttpsRedirection();
+//            app.UseHttpsRedirection();
             app.UseResponseCompression();
             app.UseStaticFiles();
             app.UseAuthentication();
