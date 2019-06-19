@@ -6,13 +6,17 @@
 
     <ItemGroup>
       <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="2.2.0" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.2.0" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="2.2.0" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.2.0" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.2.4" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="2.2.4" />
+      <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="2.2.4" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\DarkDeeds.Enums\DarkDeeds.Enums.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Migrations" />
     </ItemGroup>
 
 </Project>

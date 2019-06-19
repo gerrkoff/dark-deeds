@@ -91,7 +91,7 @@ namespace DarkDeeds.Api
         public static IServiceCollection ConfigureDatabase(this IServiceCollection services, IConfiguration configuration)
         {            
             string connectionString = configuration.GetConnectionString("appDb");
-            services.AddDbContext<DarkDeedsContext>(options => options.UseSqlServer(connectionString));
+            services.AddDbContext<DarkDeedsContext>(options => options.UseNpgsql(connectionString));
             services.AddScoped<DbContext, DarkDeedsContext>();
             return services;
         }
