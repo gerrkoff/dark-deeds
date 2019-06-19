@@ -25,9 +25,9 @@ export class IndicatorPanel extends React.PureComponent<IProps> {
         this.disconnected = this.evalDisconnected()
         return (
             <div className='indicator-panel'>
-                {this.props.connecting ? <Icon name='globe' className='process' /> : ''}
-                {this.props.saving ? <Icon name='save' className='process' /> : ''}
-                {!this.props.connecting && this.disconnected ? <Icon name='globe' className='error' /> : ''}
+                {this.props.connecting ? <Icon name='globe' className='indicator-panel-process' /> : ''}
+                {this.props.saving ? <Icon name='save' className='indicator-panel-process' /> : ''}
+                {!this.props.connecting && this.disconnected ? <Icon name='globe' className='indicator-panel-error' /> : ''}
             </div>
         )
     }
