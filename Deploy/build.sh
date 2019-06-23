@@ -6,12 +6,12 @@ print () {
 
 # cleanup
 print 'CLEAN'
-rm -rf ../artifacts
+rm -rf artifacts
 echo cleaned
 
 # test & build FE
 print 'FE: GET DEPS'
-cd ../../DarkDeeds.WebClient/
+cd ../DarkDeeds.WebClient/
 npm install || exit $?
 npm rebuild node-sass || exit $?
 
@@ -42,7 +42,7 @@ dotnet publish -c Release -o ../../Deploy/artifacts/src || exit $?
 print 'COPY ADDITIONAL FILES'
 cd ../../
 cp appsettings.Production.json Deploy/artifacts/src || exit $?
-cp Deploy/dockerfile Deploy/artifacts/ || exit $?
+cp Deploy/dockerfile-run Deploy/artifacts/ || exit $?
 echo copied
 
 print 'SUCCESS'
