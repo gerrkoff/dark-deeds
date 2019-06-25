@@ -35,7 +35,7 @@ if [ -z "$1" ]
     then
         echo "No BUILD_VERSION provided, skip"
     else
-        dotnet "$DIR"/Deploy/build/dotnet-setversion/dotnet-setversion.dll vs $1
+        dotnet "$DIR"/Deploy/dotnet-setversion/dotnet-setversion.dll vs $1
 fi
 
 print 'BE: BUILD'
