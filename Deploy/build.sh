@@ -4,14 +4,17 @@ print () {
    printf "\n\e[46m\e[1m    $1    \e[0m\e[0m\n\n"
 }
 
+cd ..
+DIR="$PWD"
+
 # cleanup
 print 'CLEAN'
-rm -rf artifacts
+rm -rf "$DIR"/Deploy/artifacts
 echo cleaned
 
 # test & build FE
 print 'FE: GET DEPS'
-cd ../DarkDeeds.WebClient/
+cd "$DIR"/DarkDeeds.WebClient/ || exit $?
 npm install || exit $?
 npm rebuild node-sass || exit $?
 
@@ -23,24 +26,24 @@ npm run build || exit $?
 
 # test & build BE
 print 'BE: TEST'
-cd ../DarkDeeds/DarkDeeds.Tests/
-dotnet test "--logger:trx;LogFileName=results.trx" --results-directory ../../Deploy/artifacts/test-results || exit $?
+cd "$DIR"/DarkDeeds/DarkDeeds.Tests/ || exit $?
+dotnet test "--logger:trx;LogFileName=results.trx" --results-directory "$DIR"/Deploy/artifacts/test-results || exit $?
 
 print 'BE: SET BUILD VERSION'
-cd ../DarkDeeds.Api/
+cd "$DIR"/DarkDeeds/DarkDeeds.Api/ || exit $?
 if [ -z "$1" ]
     then
         echo "No BUILD_VERSION provided, skip"
     else
-        dotnet ../../Deploy/build/dotnet-setversion/dotnet-setversion.dll vs $1
+        dotnet "$DIR"/Deploy/build/dotnet-setversion/dotnet-setversion.dll vs $1
 fi
 
 print 'BE: BUILD'
-dotnet publish -c Release -o ../../Deploy/artifacts/src || exit $?
+dotnet publish -c Release -o "$DIR"/Deploy/artifacts/src || exit $?
 
 # misc
 print 'COPY ADDITIONAL FILES'
-cd ../../
+cd "$DIR" || exit $?
 cp appsettings.Production.json Deploy/artifacts/src || exit $?
 cp Deploy/dockerfile-run Deploy/artifacts/ || exit $?
 echo copied
