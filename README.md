@@ -7,7 +7,7 @@
 
 ## Sandbox
 
-https://dark-deeds.grkf.ru/
+https://dark-deeds.com/
 ```
 Username: sandbox
 Password: S@ndb0x
