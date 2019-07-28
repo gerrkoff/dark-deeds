@@ -1,7 +1,7 @@
 import { TaskModel, TaskTimeTypeEnum } from '../models'
 
 class StringConvertingResult {
-    public year: number = new Date().getFullYear()
+    public year: number
     public month: number = 0
     public day: number = 1
     public hour: number = 0
@@ -9,6 +9,14 @@ class StringConvertingResult {
     public timeType: TaskTimeTypeEnum = TaskTimeTypeEnum.NoTime
     public noDate: boolean = true
     public isProbable: boolean = false
+    private now: Date
+
+    constructor(nowParam: Date | null) {
+        this.now = nowParam === null
+            ? new Date()
+            : nowParam
+        this.year = this.now.getFullYear()
+    }
 
     public extractYear(text: string): string {
         this.year = Number(text.substr(0, 4))
@@ -23,6 +31,22 @@ class StringConvertingResult {
 
     public extractDay(text: string): string {
         this.day = Number(text.substr(0, 2))
+        return text.slice(2)
+    }
+
+    public extractTodayShift(text: string): string {
+        const markCount = /!+/.exec(text)![0].length
+        this.month = this.now.getMonth() + 1
+        this.day = this.now.getDate() + markCount - 1
+        this.noDate = false
+        return text.slice(markCount)
+    }
+
+    public extractWeekShift(text: string): string {
+        const shift = parseInt(text[1], undefined)
+        this.day = this.now.getDate() + (1 + 7 - this.now.getDay()) % 7 + shift - 1
+        this.month = this.now.getMonth() + 1
+        this.noDate = false
         return text.slice(2)
     }
 
@@ -65,8 +89,11 @@ class StringConvertingResult {
 }
 
 const service = {
-    convertStringToModel(text: string): TaskModel {
-        const result = new StringConvertingResult()
+
+    // NOW param is used only for tests
+    // yes, I know, I should refactor all services to use DI
+    convertStringToModel(text: string, now?: Date | null): TaskModel {
+        const result = new StringConvertingResult(now === undefined ? null : now)
 
         if (/^\d{8}!?\s/.test(text)) {
             text = result.extractYear(text)
@@ -75,6 +102,10 @@ const service = {
         } else if (/^\d{4}!?\s/.test(text)) {
             text = result.extractMonth(text)
             text = result.extractDay(text)
+        } else if (/^!+\s/.test(text)) {
+            text = result.extractTodayShift(text)
+        } else if (/^[!{1-7}+]+\s/.test(text)) {
+            text = result.extractWeekShift(text)
         }
 
         if (/^!\s/.test(text) && !result.noDate) {
