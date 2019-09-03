@@ -11,6 +11,7 @@ namespace DarkDeeds.Services.Implementation
 {
     public class TaskParserService : ITaskParserService
     {
+        // TODO: add logic from FE parser
         public TaskDto ParseTask(string task, int timeAdjustment = 0)
         {
             var taskDto = new TaskDto();
