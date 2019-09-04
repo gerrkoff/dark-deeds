@@ -11,10 +11,25 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: 12.x
-    - name: npm install, test, build
+    - name: Build FE
       run: |
         cd DarkDeeds.WebClient
         npm install
         npm rebuild node-sass
         npm run test-ci
         npm run build
+
+  build-be:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 2.2.108
+    - name: Build BE
+      run: |
+        cd DarkDeeds/DarkDeeds.Tests/
+        dotnet test
+        cd ../DarkDeeds/DarkDeeds.Api/
+        dotnet publish
