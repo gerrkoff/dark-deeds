@@ -31,5 +31,5 @@ jobs:
       run: |
         cd DarkDeeds/DarkDeeds.Tests/
         dotnet test
-        cd ../DarkDeeds/DarkDeeds.Api/
+        cd ../DarkDeeds.Api/
         dotnet publish
