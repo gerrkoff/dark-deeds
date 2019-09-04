@@ -1,0 +1,20 @@
+name: CI
+
+on: [push]
+
+jobs:
+  build-fe:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Use Node.js 12.x
+      uses: actions/setup-node@v1
+      with:
+        node-version: 12.x
+    - name: npm install, test, build
+      run: |
+        cd DarkDeeds.WebClient
+        npm install
+        npm rebuild node-sass
+        npm run test-ci
+        npm run build
