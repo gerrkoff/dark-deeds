@@ -32,4 +32,4 @@ jobs:
         cd DarkDeeds/DarkDeeds.Tests/
         dotnet test
         cd ../DarkDeeds.Api/
-        dotnet publish
+        dotnet publish -c Release
