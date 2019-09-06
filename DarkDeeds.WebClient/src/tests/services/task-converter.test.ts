@@ -3,7 +3,7 @@ import { TaskModel, TaskTimeTypeEnum } from '../../models'
 
 const def: Date = new Date(2019, 0, 1, 0, 0)
 
-// [convertStringToModel] tests should be synced with BE TaskParserService.ParseTask tests
+// [convertStringToModel] tests should be synced with BE TaskParserService.ParseTask tests 
 // #1
 test('[convertStringToModel] no date and time', () => {
     const result = TaskConverter.convertStringToModel('Test!', def)
