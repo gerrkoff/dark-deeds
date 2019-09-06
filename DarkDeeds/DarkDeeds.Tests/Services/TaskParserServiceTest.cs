@@ -10,6 +10,8 @@ namespace DarkDeeds.Tests.Services
     {
         #region Parse tasks - mirrored FE tests
         
+        // These tests should be synced with FE TaskConverter.convertStringToModel tests 
+        
         // #1
         [Fact]
         public void ParseTask_ReturnTaskWithNoDateAndNoTime()
