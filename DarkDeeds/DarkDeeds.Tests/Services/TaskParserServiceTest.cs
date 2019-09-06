@@ -8,16 +8,9 @@ namespace DarkDeeds.Tests.Services
 {
     public class TaskParserServiceTest : BaseTest
     {
-        [Fact]
-        public void ParseTask_ReturnTask()
-        {
-            var service = new TaskParserService();
-
-            var result = service.ParseTask("");
-            
-            Assert.NotNull(result);
-        }
+        #region Parse tasks - mirrored FE tests
         
+        // #1
         [Fact]
         public void ParseTask_ReturnTaskWithNoDateAndNoTime()
         {
@@ -30,6 +23,7 @@ namespace DarkDeeds.Tests.Services
             Assert.Null(result.DateTime);
         }
         
+        // #2
         [Fact]
         public void ParseTask_ReturnTaskWithDateAndNoTime()
         {
@@ -43,6 +37,7 @@ namespace DarkDeeds.Tests.Services
             Assert.Equal(new DateTime(currentYear,12, 31, 0, 0, 0),  result.DateTime);
         }
         
+        // #3
         [Fact]
         public void ParseTask_ReturnTaskWithDateAndNoTime_NotWorkingWithoutSpace()
         {
@@ -55,6 +50,7 @@ namespace DarkDeeds.Tests.Services
             Assert.Null(result.DateTime);
         }
         
+        // #4
         [Fact]
         public void ParseTask_ReturnTaskWithDateAndTime()
         {
@@ -68,6 +64,7 @@ namespace DarkDeeds.Tests.Services
             Assert.Equal(new DateTime(currentYear,12, 31, 23, 59, 0),  result.DateTime);
         }
         
+        // #5
         [Fact]
         public void ParseTask_ReturnTaskWithDateAndTime_NotWorkingWithoutSpace()
         {
@@ -81,6 +78,7 @@ namespace DarkDeeds.Tests.Services
             Assert.Equal(new DateTime(currentYear,1, 1, 0, 0, 0),  result.DateTime);
         }
         
+        // #6
         [Fact]
         public void ParseTask_ReturnTaskWithDateAndNoTimeWithYear()
         {
@@ -91,6 +89,20 @@ namespace DarkDeeds.Tests.Services
             Assert.Equal("Test", result.Title);
             Assert.Equal(TaskTimeTypeEnum.NoTime, result.TimeType);
             Assert.Equal(new DateTime(2017,1, 1, 0, 0, 0),  result.DateTime);
+        }
+        
+        #endregion
+
+        #region Parse tasks - unique BE tests
+        
+        [Fact]
+        public void ParseTask_ReturnTask()
+        {
+            var service = new TaskParserService();
+
+            var result = service.ParseTask("");
+            
+            Assert.NotNull(result);
         }
         
         [Fact]
@@ -105,6 +117,10 @@ namespace DarkDeeds.Tests.Services
             Assert.Equal(TaskTimeTypeEnum.NoTime, result.TimeType);
             Assert.Equal(new DateTime(currentYear,12, 30, 21, 21, 0),  result.DateTime);
         }
+        
+        #endregion
+
+        #region Other TaskParserService tests
         
         [Fact]
         public void PrintTasks_ReturnTitle()
@@ -148,5 +164,7 @@ namespace DarkDeeds.Tests.Services
 
             Assert.Equal("16:20 Task", result);
         }
+        
+        #endregion
     }
 }
