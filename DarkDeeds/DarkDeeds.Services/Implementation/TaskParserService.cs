@@ -93,7 +93,7 @@ namespace DarkDeeds.Services.Implementation
             else if (dateRx.IsMatch(task))
             {
                 date = task.Substring(0, 4);
-                year = DateTime.UtcNow.Year;
+                year = _dateService.Today.Year;
                 task = task.Substring(4);
                 task = ParseAllDayLong(task, ref timeType);
                 task = task.Substring(1);

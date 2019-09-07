@@ -5,6 +5,6 @@ namespace DarkDeeds.Services.Implementation
 {
     public class DateService : IDateService
     {
-        public DateTime Today { get; set; }
+        public DateTime Today => DateTime.UtcNow.Date;
     }
 }
