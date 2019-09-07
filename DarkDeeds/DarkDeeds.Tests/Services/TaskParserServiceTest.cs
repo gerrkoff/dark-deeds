@@ -139,105 +139,105 @@ namespace DarkDeeds.Tests.Services
 
             var result = service.ParseTask("20150606! 2359 Test");
             
-            Assert.Equal("Test", result.Title);
+            Assert.Equal("2359 Test", result.Title);
             Assert.Equal(TaskTimeTypeEnum.AllDayLong, result.TimeType);
             Assert.Equal(new DateTime(2015,6, 6, 0, 0, 0),  result.DateTime);
         }
-        
-        // #11
-        [Fact]
-        public void ParseTask_ReturnTodayTaskThroughExclamationMark()
-        {
-            var service = new TaskParserService();
-
-            var result = service.ParseTask("! Test");
-            
-            Assert.Equal("Test", result.Title);
-            Assert.Equal(TaskTimeTypeEnum.NoTime, result.TimeType);
-            Assert.Equal(new DateTime(2019,1, 1, 0, 0, 0),  result.DateTime);
-        }
-        
-        // #12
-        [Fact]
-        public void ParseTask_ReturnTomorrowTaskThroughExclamationMark()
-        {
-            var service = new TaskParserService();
-
-            var result = service.ParseTask("!! Test");
-            
-            Assert.Equal("Test", result.Title);
-            Assert.Equal(TaskTimeTypeEnum.NoTime, result.TimeType);
-            Assert.Equal(new DateTime(2019,1, 2, 0, 0, 0),  result.DateTime);
-        }
-        
-        // #13
-        [Fact]
-        public void ParseTask_ReturnDayAfterAfterTomorrowTaskThroughExclamationMark()
-        {
-            var service = new TaskParserService();
-
-            var result = service.ParseTask("!!!! Test");
-            
-            Assert.Equal("Test", result.Title);
-            Assert.Equal(TaskTimeTypeEnum.NoTime, result.TimeType);
-            Assert.Equal(new DateTime(2019,1, 4, 0, 0, 0),  result.DateTime);
-        }
-        
-        // #14
-        [Fact]
-        public void ParseTask_ReturnDayAfterTomorrowNextMonthTaskThroughExclamationMark()
-        {
-            // now: 2019, 1, 31
-            var service = new TaskParserService();
-
-            var result = service.ParseTask("!!! Test");
-            
-            Assert.Equal("Test", result.Title);
-            Assert.Equal(TaskTimeTypeEnum.NoTime, result.TimeType);
-            Assert.Equal(new DateTime(2019,2, 2, 0, 0, 0),  result.DateTime);
-        }
-        
-        // #15
-        [Fact]
-        public void ParseTask_ReturnNextMondayTaskThroughExclamationMark()
-        {
-            // now: 2019, 7, 28
-            var service = new TaskParserService();
-
-            var result = service.ParseTask("!1 Test");
-            
-            Assert.Equal("Test", result.Title);
-            Assert.Equal(TaskTimeTypeEnum.NoTime, result.TimeType);
-            Assert.Equal(new DateTime(2019,7, 29, 0, 0, 0),  result.DateTime);
-        }
-        
-        // #16
-        [Fact]
-        public void ParseTask_ReturnNextWednesdayTaskThroughExclamationMark()
-        {
-            // now: 2019, 7, 28
-            var service = new TaskParserService();
-
-            var result = service.ParseTask("!3 Test");
-            
-            Assert.Equal("Test", result.Title);
-            Assert.Equal(TaskTimeTypeEnum.NoTime, result.TimeType);
-            Assert.Equal(new DateTime(2019,7, 31, 0, 0, 0),  result.DateTime);
-        }
-        
-        // #17
-        [Fact]
-        public void ParseTask_ReturnNextFridayTaskThroughExclamationMark()
-        {
-            // now: 2019, 7, 28
-            var service = new TaskParserService();
-
-            var result = service.ParseTask("!5 Test");
-            
-            Assert.Equal("Test", result.Title);
-            Assert.Equal(TaskTimeTypeEnum.NoTime, result.TimeType);
-            Assert.Equal(new DateTime(2019,8, 2, 0, 0, 0),  result.DateTime);
-        }
+//        
+//        // #11
+//        [Fact]
+//        public void ParseTask_ReturnTodayTaskThroughExclamationMark()
+//        {
+//            var service = new TaskParserService();
+//
+//            var result = service.ParseTask("! Test");
+//            
+//            Assert.Equal("Test", result.Title);
+//            Assert.Equal(TaskTimeTypeEnum.NoTime, result.TimeType);
+//            Assert.Equal(new DateTime(2019,1, 1, 0, 0, 0),  result.DateTime);
+//        }
+//        
+//        // #12
+//        [Fact]
+//        public void ParseTask_ReturnTomorrowTaskThroughExclamationMark()
+//        {
+//            var service = new TaskParserService();
+//
+//            var result = service.ParseTask("!! Test");
+//            
+//            Assert.Equal("Test", result.Title);
+//            Assert.Equal(TaskTimeTypeEnum.NoTime, result.TimeType);
+//            Assert.Equal(new DateTime(2019,1, 2, 0, 0, 0),  result.DateTime);
+//        }
+//        
+//        // #13
+//        [Fact]
+//        public void ParseTask_ReturnDayAfterAfterTomorrowTaskThroughExclamationMark()
+//        {
+//            var service = new TaskParserService();
+//
+//            var result = service.ParseTask("!!!! Test");
+//            
+//            Assert.Equal("Test", result.Title);
+//            Assert.Equal(TaskTimeTypeEnum.NoTime, result.TimeType);
+//            Assert.Equal(new DateTime(2019,1, 4, 0, 0, 0),  result.DateTime);
+//        }
+//        
+//        // #14
+//        [Fact]
+//        public void ParseTask_ReturnDayAfterTomorrowNextMonthTaskThroughExclamationMark()
+//        {
+//            // now: 2019, 1, 31
+//            var service = new TaskParserService();
+//
+//            var result = service.ParseTask("!!! Test");
+//            
+//            Assert.Equal("Test", result.Title);
+//            Assert.Equal(TaskTimeTypeEnum.NoTime, result.TimeType);
+//            Assert.Equal(new DateTime(2019,2, 2, 0, 0, 0),  result.DateTime);
+//        }
+//        
+//        // #15
+//        [Fact]
+//        public void ParseTask_ReturnNextMondayTaskThroughExclamationMark()
+//        {
+//            // now: 2019, 7, 28
+//            var service = new TaskParserService();
+//
+//            var result = service.ParseTask("!1 Test");
+//            
+//            Assert.Equal("Test", result.Title);
+//            Assert.Equal(TaskTimeTypeEnum.NoTime, result.TimeType);
+//            Assert.Equal(new DateTime(2019,7, 29, 0, 0, 0),  result.DateTime);
+//        }
+//        
+//        // #16
+//        [Fact]
+//        public void ParseTask_ReturnNextWednesdayTaskThroughExclamationMark()
+//        {
+//            // now: 2019, 7, 28
+//            var service = new TaskParserService();
+//
+//            var result = service.ParseTask("!3 Test");
+//            
+//            Assert.Equal("Test", result.Title);
+//            Assert.Equal(TaskTimeTypeEnum.NoTime, result.TimeType);
+//            Assert.Equal(new DateTime(2019,7, 31, 0, 0, 0),  result.DateTime);
+//        }
+//        
+//        // #17
+//        [Fact]
+//        public void ParseTask_ReturnNextFridayTaskThroughExclamationMark()
+//        {
+//            // now: 2019, 7, 28
+//            var service = new TaskParserService();
+//
+//            var result = service.ParseTask("!5 Test");
+//            
+//            Assert.Equal("Test", result.Title);
+//            Assert.Equal(TaskTimeTypeEnum.NoTime, result.TimeType);
+//            Assert.Equal(new DateTime(2019,8, 2, 0, 0, 0),  result.DateTime);
+//        }
         
         #endregion
 
