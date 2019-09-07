@@ -11,6 +11,13 @@ namespace DarkDeeds.Services.Implementation
 {
     public class TaskParserService : ITaskParserService
     {
+        private readonly IDateService _dateService;
+
+        public TaskParserService(IDateService dateService)
+        {
+            _dateService = dateService;
+        }
+
         public TaskDto ParseTask(string task, int timeAdjustment = 0)
         {
             var taskDto = new TaskDto();

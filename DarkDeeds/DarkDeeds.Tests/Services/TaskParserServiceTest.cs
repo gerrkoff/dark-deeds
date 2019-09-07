@@ -2,6 +2,8 @@ using System;
 using DarkDeeds.Enums;
 using DarkDeeds.Models;
 using DarkDeeds.Services.Implementation;
+using DarkDeeds.Services.Interface;
+using Moq;
 using Xunit;
 
 namespace DarkDeeds.Tests.Services
@@ -16,7 +18,7 @@ namespace DarkDeeds.Tests.Services
         [Fact]
         public void ParseTask_ReturnTaskWithNoDateAndNoTime()
         {
-            var service = new TaskParserService();
+            var service = new TaskParserService(dateServiceMock());
 
             var result = service.ParseTask("Test!");
             
@@ -29,7 +31,7 @@ namespace DarkDeeds.Tests.Services
         [Fact]
         public void ParseTask_ReturnTaskWithDateAndNoTime()
         {
-            var service = new TaskParserService();
+            var service = new TaskParserService(dateServiceMock());
 
             var result = service.ParseTask("1231 Test!");
 
@@ -43,7 +45,7 @@ namespace DarkDeeds.Tests.Services
         [Fact]
         public void ParseTask_ReturnTaskWithDateAndNoTime_NotWorkingWithoutSpace()
         {
-            var service = new TaskParserService();
+            var service = new TaskParserService(dateServiceMock());
 
             var result = service.ParseTask("0101Test!!!");
             
@@ -56,7 +58,7 @@ namespace DarkDeeds.Tests.Services
         [Fact]
         public void ParseTask_ReturnTaskWithDateAndTime()
         {
-            var service = new TaskParserService();
+            var service = new TaskParserService(dateServiceMock());
 
             var result = service.ParseTask("1231 2359 Test!");
             
@@ -70,7 +72,7 @@ namespace DarkDeeds.Tests.Services
         [Fact]
         public void ParseTask_ReturnTaskWithDateAndTime_NotWorkingWithoutSpace()
         {
-            var service = new TaskParserService();
+            var service = new TaskParserService(dateServiceMock());
 
             var result = service.ParseTask("0101 0101Test!!!");
             
@@ -84,7 +86,7 @@ namespace DarkDeeds.Tests.Services
         [Fact]
         public void ParseTask_ReturnTaskWithDateAndNoTimeWithYear()
         {
-            var service = new TaskParserService();
+            var service = new TaskParserService(dateServiceMock());
 
             var result = service.ParseTask("20170101 Test");
             
@@ -97,7 +99,7 @@ namespace DarkDeeds.Tests.Services
         [Fact]
         public void ParseTask_ReturnProbableTask()
         {
-            var service = new TaskParserService();
+            var service = new TaskParserService(dateServiceMock());
 
             var result = service.ParseTask("Test! ?");
             
@@ -109,7 +111,7 @@ namespace DarkDeeds.Tests.Services
         [Fact]
         public void ParseTask_ReturnAllDayLongTaskWithShortDate()
         {
-            var service = new TaskParserService();
+            var service = new TaskParserService(dateServiceMock());
 
             var result = service.ParseTask("0220! Test");
             
@@ -122,7 +124,7 @@ namespace DarkDeeds.Tests.Services
         [Fact]
         public void ParseTask_ReturnAllDayLongTaskWithLongDate()
         {
-            var service = new TaskParserService();
+            var service = new TaskParserService(dateServiceMock());
 
             var result = service.ParseTask("20150220! Test");
             
@@ -135,7 +137,7 @@ namespace DarkDeeds.Tests.Services
         [Fact]
         public void ParseTask_IgnoreTimeIfAllDayLong()
         {
-            var service = new TaskParserService();
+            var service = new TaskParserService(dateServiceMock());
 
             var result = service.ParseTask("20150606! 2359 Test");
             
@@ -148,7 +150,7 @@ namespace DarkDeeds.Tests.Services
 //        [Fact]
 //        public void ParseTask_ReturnTodayTaskThroughExclamationMark()
 //        {
-//            var service = new TaskParserService();
+//            var service = new TaskParserService(dateServiceMock());
 //
 //            var result = service.ParseTask("! Test");
 //            
@@ -161,7 +163,7 @@ namespace DarkDeeds.Tests.Services
 //        [Fact]
 //        public void ParseTask_ReturnTomorrowTaskThroughExclamationMark()
 //        {
-//            var service = new TaskParserService();
+//            var service = new TaskParserService(dateServiceMock());
 //
 //            var result = service.ParseTask("!! Test");
 //            
@@ -174,7 +176,7 @@ namespace DarkDeeds.Tests.Services
 //        [Fact]
 //        public void ParseTask_ReturnDayAfterAfterTomorrowTaskThroughExclamationMark()
 //        {
-//            var service = new TaskParserService();
+//            var service = new TaskParserService(dateServiceMock());
 //
 //            var result = service.ParseTask("!!!! Test");
 //            
@@ -188,7 +190,7 @@ namespace DarkDeeds.Tests.Services
 //        public void ParseTask_ReturnDayAfterTomorrowNextMonthTaskThroughExclamationMark()
 //        {
 //            // now: 2019, 1, 31
-//            var service = new TaskParserService();
+//            var service = new TaskParserService(dateServiceMock());
 //
 //            var result = service.ParseTask("!!! Test");
 //            
@@ -202,7 +204,7 @@ namespace DarkDeeds.Tests.Services
 //        public void ParseTask_ReturnNextMondayTaskThroughExclamationMark()
 //        {
 //            // now: 2019, 7, 28
-//            var service = new TaskParserService();
+//            var service = new TaskParserService(dateServiceMock());
 //
 //            var result = service.ParseTask("!1 Test");
 //            
@@ -216,7 +218,7 @@ namespace DarkDeeds.Tests.Services
 //        public void ParseTask_ReturnNextWednesdayTaskThroughExclamationMark()
 //        {
 //            // now: 2019, 7, 28
-//            var service = new TaskParserService();
+//            var service = new TaskParserService(dateServiceMock());
 //
 //            var result = service.ParseTask("!3 Test");
 //            
@@ -230,7 +232,7 @@ namespace DarkDeeds.Tests.Services
 //        public void ParseTask_ReturnNextFridayTaskThroughExclamationMark()
 //        {
 //            // now: 2019, 7, 28
-//            var service = new TaskParserService();
+//            var service = new TaskParserService(dateServiceMock());
 //
 //            var result = service.ParseTask("!5 Test");
 //            
@@ -246,7 +248,7 @@ namespace DarkDeeds.Tests.Services
         [Fact]
         public void ParseTask_ReturnTask()
         {
-            var service = new TaskParserService();
+            var service = new TaskParserService(dateServiceMock());
 
             var result = service.ParseTask("");
             
@@ -256,7 +258,7 @@ namespace DarkDeeds.Tests.Services
         [Fact]
         public void ParseTask_ReturnTaskWithDateAndNoTime_ConsiderTimeAdjustment()
         {
-            var service = new TaskParserService();
+            var service = new TaskParserService(dateServiceMock());
 
             var result = service.ParseTask("1231 Test!", -159);
 
@@ -273,7 +275,7 @@ namespace DarkDeeds.Tests.Services
         [Fact]
         public void PrintTasks_ReturnTitle()
         {
-            var service = new TaskParserService();
+            var service = new TaskParserService(dateServiceMock());
 
             var result = service.PrintTasks(new[] {new TaskDto
             {
@@ -286,7 +288,7 @@ namespace DarkDeeds.Tests.Services
         [Fact]
         public void PrintTasks_ReturnTime()
         {
-            var service = new TaskParserService();
+            var service = new TaskParserService(dateServiceMock());
 
             var result = service.PrintTasks(new[] {new TaskDto
             {
@@ -301,7 +303,7 @@ namespace DarkDeeds.Tests.Services
         [Fact]
         public void PrintTasks_ReturnTimeWithAdjustment()
         {
-            var service = new TaskParserService();
+            var service = new TaskParserService(dateServiceMock());
 
             var result = service.PrintTasks(new[] {new TaskDto
             {
@@ -311,6 +313,17 @@ namespace DarkDeeds.Tests.Services
             }}, -80);
 
             Assert.Equal("16:20 Task", result);
+        }
+        
+        #endregion
+        
+        #region Helpers
+
+        private IDateService dateServiceMock(int year = 2000, int month = 1, int date = 1)
+        {
+            var mock = new Mock<IDateService>();
+            mock.SetupGet(x => x.Today).Returns(new DateTime(year, month, date));
+            return mock.Object;
         }
         
         #endregion
