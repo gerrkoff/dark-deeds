@@ -77,6 +77,7 @@ namespace DarkDeeds.Services.Implementation
             var dateWithYearRx = new Regex(@"^\d{8}!?\s");
             var dateRx = new Regex(@"^\d{4}!?\s");
             var todayShiftRx = new Regex(@"^!+\s");
+            var weekShiftRx = new Regex(@"^![1-7]\s");
             string date = string.Empty;
             year = 0;
             month = 0;
@@ -108,6 +109,14 @@ namespace DarkDeeds.Services.Implementation
                 day = _dateService.Today.Day;
                 withDate = true;
             }
+            else if (weekShiftRx.IsMatch(task))
+            {
+                task = ParseWeekShift(task, out dayAdjustment);
+                year = _dateService.Today.Year;
+                month = _dateService.Today.Month;
+                day = _dateService.Today.Day;
+                withDate = true;
+            }
             
             if (!string.IsNullOrEmpty(date))
             {
@@ -117,6 +126,14 @@ namespace DarkDeeds.Services.Implementation
             }
             
             return task;
+        }
+
+        private string ParseWeekShift(string task, out int dayAdjustment)
+        {
+            int dayShift = int.Parse(task[1].ToString());
+            int nextSundayShift = (7 - (int) _dateService.Today.DayOfWeek) % 7;
+            dayAdjustment = nextSundayShift + dayShift;
+            return task.Substring(3);
         }
 
         private string ParseTodayShift(string task, out int dayAdjustment)
