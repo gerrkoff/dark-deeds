@@ -8,6 +8,7 @@ using Xunit;
 
 namespace DarkDeeds.Tests.Services
 {
+    // TODO: sync tests
     public class TaskParserServiceTest : BaseTest
     {
         #region Parse tasks - mirrored FE tests
@@ -142,60 +143,59 @@ namespace DarkDeeds.Tests.Services
             Assert.Equal(TaskTimeTypeEnum.AllDayLong, result.TimeType);
             Assert.Equal(new DateTime(2015,6, 6, 0, 0, 0),  result.DateTime);
         }
-//        
-//        // #11
-//        [Fact]
-//        public void ParseTask_ReturnTodayTaskThroughExclamationMark()
-//        {
-//            var service = new TaskParserService(dateServiceMock());
-//
-//            var result = service.ParseTask("! Test");
-//            
-//            Assert.Equal("Test", result.Title);
-//            Assert.Equal(TaskTimeTypeEnum.NoTime, result.TimeType);
-//            Assert.Equal(new DateTime(2019,1, 1, 0, 0, 0),  result.DateTime);
-//        }
-//        
-//        // #12
-//        [Fact]
-//        public void ParseTask_ReturnTomorrowTaskThroughExclamationMark()
-//        {
-//            var service = new TaskParserService(dateServiceMock());
-//
-//            var result = service.ParseTask("!! Test");
-//            
-//            Assert.Equal("Test", result.Title);
-//            Assert.Equal(TaskTimeTypeEnum.NoTime, result.TimeType);
-//            Assert.Equal(new DateTime(2019,1, 2, 0, 0, 0),  result.DateTime);
-//        }
-//        
-//        // #13
-//        [Fact]
-//        public void ParseTask_ReturnDayAfterAfterTomorrowTaskThroughExclamationMark()
-//        {
-//            var service = new TaskParserService(dateServiceMock());
-//
-//            var result = service.ParseTask("!!!! Test");
-//            
-//            Assert.Equal("Test", result.Title);
-//            Assert.Equal(TaskTimeTypeEnum.NoTime, result.TimeType);
-//            Assert.Equal(new DateTime(2019,1, 4, 0, 0, 0),  result.DateTime);
-//        }
-//        
-//        // #14
-//        [Fact]
-//        public void ParseTask_ReturnDayAfterTomorrowNextMonthTaskThroughExclamationMark()
-//        {
-//            // now: 2019, 1, 31
-//            var service = new TaskParserService(dateServiceMock());
-//
-//            var result = service.ParseTask("!!! Test");
-//            
-//            Assert.Equal("Test", result.Title);
-//            Assert.Equal(TaskTimeTypeEnum.NoTime, result.TimeType);
-//            Assert.Equal(new DateTime(2019,2, 2, 0, 0, 0),  result.DateTime);
-//        }
-//        
+        
+        // #11
+        [Fact]
+        public void ParseTask_ReturnTodayTaskThroughExclamationMark()
+        {
+            var service = new TaskParserService(dateServiceMock(2015, 3, 20));
+
+            var result = service.ParseTask("! Test");
+            
+            Assert.Equal("Test", result.Title);
+            Assert.Equal(TaskTimeTypeEnum.NoTime, result.TimeType);
+            Assert.Equal(new DateTime(2015,3, 20, 0, 0, 0),  result.DateTime);
+        }
+        
+        // #12
+        [Fact]
+        public void ParseTask_ReturnTomorrowTaskThroughExclamationMark()
+        {
+            var service = new TaskParserService(dateServiceMock(2015, 3, 20));
+
+            var result = service.ParseTask("!! Test");
+            
+            Assert.Equal("Test", result.Title);
+            Assert.Equal(TaskTimeTypeEnum.NoTime, result.TimeType);
+            Assert.Equal(new DateTime(2015,3, 21, 0, 0, 0),  result.DateTime);
+        }
+        
+        // #13
+        [Fact]
+        public void ParseTask_ReturnDayAfterAfterTomorrowTaskThroughExclamationMark()
+        {
+            var service = new TaskParserService(dateServiceMock(2015, 3, 20));
+
+            var result = service.ParseTask("!!!! Test");
+            
+            Assert.Equal("Test", result.Title);
+            Assert.Equal(TaskTimeTypeEnum.NoTime, result.TimeType);
+            Assert.Equal(new DateTime(2015,3, 23, 0, 0, 0),  result.DateTime);
+        }
+        
+        // #14
+        [Fact]
+        public void ParseTask_ReturnDayAfterTomorrowNextMonthTaskThroughExclamationMark()
+        {
+            var service = new TaskParserService(dateServiceMock(2019, 1, 31));
+
+            var result = service.ParseTask("!!! Test");
+            
+            Assert.Equal("Test", result.Title);
+            Assert.Equal(TaskTimeTypeEnum.NoTime, result.TimeType);
+            Assert.Equal(new DateTime(2019,2, 2, 0, 0, 0),  result.DateTime);
+        }
+        
 //        // #15
 //        [Fact]
 //        public void ParseTask_ReturnNextMondayTaskThroughExclamationMark()
