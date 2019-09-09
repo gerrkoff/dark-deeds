@@ -8,7 +8,6 @@ using Xunit;
 
 namespace DarkDeeds.Tests.Services
 {
-    // TODO: sync tests
     // TODO: "!11 qqq" -- test
     public class TaskParserServiceTest : BaseTest
     {
@@ -33,13 +32,13 @@ namespace DarkDeeds.Tests.Services
         [Fact]
         public void ParseTask_ReturnTaskWithDateAndNoTime()
         {
-            var service = new TaskParserService(dateServiceMock(2010));
+            var service = new TaskParserService(dateServiceMock());
 
             var result = service.ParseTask("1231 Test!");
 
             Assert.Equal("Test!", result.Title);
             Assert.Equal(TaskTimeTypeEnum.NoTime, result.TimeType);
-            Assert.Equal(new DateTime(2010,12, 31, 0, 0, 0),  result.DateTime);
+            Assert.Equal(new DateTime(2019, 12, 31, 0, 0, 0),  result.DateTime);
         }
         
         // #3
@@ -59,26 +58,26 @@ namespace DarkDeeds.Tests.Services
         [Fact]
         public void ParseTask_ReturnTaskWithDateAndTime()
         {
-            var service = new TaskParserService(dateServiceMock(2010));
+            var service = new TaskParserService(dateServiceMock());
 
             var result = service.ParseTask("1231 2359 Test!");
             
             Assert.Equal("Test!", result.Title);
             Assert.Equal(TaskTimeTypeEnum.ConcreteTime, result.TimeType);
-            Assert.Equal(new DateTime(2010,12, 31, 23, 59, 0),  result.DateTime);
+            Assert.Equal(new DateTime(2019, 12, 31, 23, 59, 0),  result.DateTime);
         }
         
         // #5
         [Fact]
         public void ParseTask_ReturnTaskWithDateAndTime_NotWorkingWithoutSpace()
         {
-            var service = new TaskParserService(dateServiceMock(2010));
+            var service = new TaskParserService(dateServiceMock());
 
             var result = service.ParseTask("0101 0101Test!!!");
             
             Assert.Equal("0101Test!!!", result.Title);
             Assert.Equal(TaskTimeTypeEnum.NoTime, result.TimeType);
-            Assert.Equal(new DateTime(2010,1, 1, 0, 0, 0),  result.DateTime);
+            Assert.Equal(new DateTime(2019, 1, 1, 0, 0, 0),  result.DateTime);
         }
         
         // #6
@@ -91,7 +90,7 @@ namespace DarkDeeds.Tests.Services
             
             Assert.Equal("Test", result.Title);
             Assert.Equal(TaskTimeTypeEnum.NoTime, result.TimeType);
-            Assert.Equal(new DateTime(2017,1, 1, 0, 0, 0),  result.DateTime);
+            Assert.Equal(new DateTime(2017, 1, 1, 0, 0, 0),  result.DateTime);
         }
         
         // #7
@@ -110,13 +109,13 @@ namespace DarkDeeds.Tests.Services
         [Fact]
         public void ParseTask_ReturnAllDayLongTaskWithShortDate()
         {
-            var service = new TaskParserService(dateServiceMock(2010));
+            var service = new TaskParserService(dateServiceMock());
 
             var result = service.ParseTask("0220! Test");
             
             Assert.Equal("Test", result.Title);
             Assert.Equal(TaskTimeTypeEnum.AllDayLong, result.TimeType);
-            Assert.Equal(new DateTime(2010,2, 20, 0, 0, 0),  result.DateTime);
+            Assert.Equal(new DateTime(2019, 2, 20, 0, 0, 0),  result.DateTime);
         }
         
         // #9
@@ -129,7 +128,7 @@ namespace DarkDeeds.Tests.Services
             
             Assert.Equal("Test", result.Title);
             Assert.Equal(TaskTimeTypeEnum.AllDayLong, result.TimeType);
-            Assert.Equal(new DateTime(2015,2, 20, 0, 0, 0),  result.DateTime);
+            Assert.Equal(new DateTime(2015, 2, 20, 0, 0, 0),  result.DateTime);
         }
         
         // #10
@@ -142,46 +141,46 @@ namespace DarkDeeds.Tests.Services
             
             Assert.Equal("2359 Test", result.Title);
             Assert.Equal(TaskTimeTypeEnum.AllDayLong, result.TimeType);
-            Assert.Equal(new DateTime(2015,6, 6, 0, 0, 0),  result.DateTime);
+            Assert.Equal(new DateTime(2015, 6, 6, 0, 0, 0),  result.DateTime);
         }
         
         // #11
         [Fact]
         public void ParseTask_ReturnTodayTaskThroughExclamationMark()
         {
-            var service = new TaskParserService(dateServiceMock(2015, 3, 20));
+            var service = new TaskParserService(dateServiceMock());
 
             var result = service.ParseTask("! Test");
             
             Assert.Equal("Test", result.Title);
             Assert.Equal(TaskTimeTypeEnum.NoTime, result.TimeType);
-            Assert.Equal(new DateTime(2015,3, 20, 0, 0, 0),  result.DateTime);
+            Assert.Equal(new DateTime(2019, 1, 1, 0, 0, 0),  result.DateTime);
         }
         
         // #12
         [Fact]
         public void ParseTask_ReturnTomorrowTaskThroughExclamationMark()
         {
-            var service = new TaskParserService(dateServiceMock(2015, 3, 20));
+            var service = new TaskParserService(dateServiceMock());
 
             var result = service.ParseTask("!! Test");
             
             Assert.Equal("Test", result.Title);
             Assert.Equal(TaskTimeTypeEnum.NoTime, result.TimeType);
-            Assert.Equal(new DateTime(2015,3, 21, 0, 0, 0),  result.DateTime);
+            Assert.Equal(new DateTime(2019, 1, 2, 0, 0, 0),  result.DateTime);
         }
         
         // #13
         [Fact]
         public void ParseTask_ReturnDayAfterAfterTomorrowTaskThroughExclamationMark()
         {
-            var service = new TaskParserService(dateServiceMock(2015, 3, 20));
+            var service = new TaskParserService(dateServiceMock());
 
             var result = service.ParseTask("!!!! Test");
             
             Assert.Equal("Test", result.Title);
             Assert.Equal(TaskTimeTypeEnum.NoTime, result.TimeType);
-            Assert.Equal(new DateTime(2015,3, 23, 0, 0, 0),  result.DateTime);
+            Assert.Equal(new DateTime(2019, 1, 4, 0, 0, 0),  result.DateTime);
         }
         
         // #14
@@ -194,7 +193,7 @@ namespace DarkDeeds.Tests.Services
             
             Assert.Equal("Test", result.Title);
             Assert.Equal(TaskTimeTypeEnum.NoTime, result.TimeType);
-            Assert.Equal(new DateTime(2019,2, 2, 0, 0, 0),  result.DateTime);
+            Assert.Equal(new DateTime(2019, 2, 2, 0, 0, 0),  result.DateTime);
         }
         
         // #15
@@ -207,7 +206,7 @@ namespace DarkDeeds.Tests.Services
             
             Assert.Equal("Test", result.Title);
             Assert.Equal(TaskTimeTypeEnum.NoTime, result.TimeType);
-            Assert.Equal(new DateTime(2019,7, 29, 0, 0, 0),  result.DateTime);
+            Assert.Equal(new DateTime(2019, 7, 29, 0, 0, 0),  result.DateTime);
         }
         
         // #16
@@ -220,7 +219,7 @@ namespace DarkDeeds.Tests.Services
             
             Assert.Equal("Test", result.Title);
             Assert.Equal(TaskTimeTypeEnum.NoTime, result.TimeType);
-            Assert.Equal(new DateTime(2019,7, 31, 0, 0, 0),  result.DateTime);
+            Assert.Equal(new DateTime(2019, 7, 31, 0, 0, 0),  result.DateTime);
         }
         
         // #17
@@ -233,7 +232,7 @@ namespace DarkDeeds.Tests.Services
             
             Assert.Equal("Test", result.Title);
             Assert.Equal(TaskTimeTypeEnum.NoTime, result.TimeType);
-            Assert.Equal(new DateTime(2019,8, 2, 0, 0, 0),  result.DateTime);
+            Assert.Equal(new DateTime(2019, 8, 2, 0, 0, 0),  result.DateTime);
         }
         
         #endregion
@@ -313,7 +312,7 @@ namespace DarkDeeds.Tests.Services
         
         #region Helpers
 
-        private IDateService dateServiceMock(int year = 2000, int month = 1, int date = 1)
+        private IDateService dateServiceMock(int year = 2019, int month = 1, int date = 1)
         {
             var mock = new Mock<IDateService>();
             mock.SetupGet(x => x.Today).Returns(new DateTime(year, month, date));
