@@ -18,6 +18,7 @@ namespace DarkDeeds.Services.Implementation
             _dateService = dateService;
         }
 
+        // TODO: refactor
         public TaskDto ParseTask(string task, int timeAdjustment = 0)
         {
             var taskDto = new TaskDto();
