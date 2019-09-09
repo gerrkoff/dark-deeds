@@ -104,7 +104,7 @@ const service = {
             text = result.extractDay(text)
         } else if (/^!+\s/.test(text)) {
             text = result.extractTodayShift(text)
-        } else if (/^[!{1-7}+]+\s/.test(text)) {
+        } else if (/^![1-7]\s/.test(text)) {
             text = result.extractWeekShift(text)
         }
 
