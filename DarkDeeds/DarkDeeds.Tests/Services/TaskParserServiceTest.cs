@@ -8,7 +8,6 @@ using Xunit;
 
 namespace DarkDeeds.Tests.Services
 {
-    // TODO: "!11 qqq" -- test
     public class TaskParserServiceTest : BaseTest
     {
         #region Parse tasks - mirrored FE tests
@@ -233,6 +232,17 @@ namespace DarkDeeds.Tests.Services
             Assert.Equal("Test", result.Title);
             Assert.Equal(TaskTimeTypeEnum.NoTime, result.TimeType);
             Assert.Equal(new DateTime(2019, 8, 2, 0, 0, 0),  result.DateTime);
+        }
+        
+        // #18
+        [Fact]
+        public void ParseTask_ExclamationMark11IsNotWeekShiftPattern()
+        {
+            var service = new TaskParserService(dateServiceMock());
+
+            var result = service.ParseTask("!11 Test");
+            
+            Assert.Equal("!11 Test", result.Title);
         }
         
         #endregion

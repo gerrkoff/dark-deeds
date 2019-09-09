@@ -170,6 +170,13 @@ test('[convertStringToModel] next friday next month task through exclamation mar
     expect(result.timeType).toBe(TaskTimeTypeEnum.NoTime)
 })
 
+// #18
+test('[convertStringToModel] !11 is not week shift pattern', () => {
+    const result = TaskConverter.convertStringToModel('!11 Test', def)
+
+    expect(result.title).toBe('!11 Test')
+})
+
 test('[convertModelToString] no date', () => {
     const result = TaskConverter.convertModelToString(new TaskModel('Test!'))
     expect(result).toBe('Test!')
