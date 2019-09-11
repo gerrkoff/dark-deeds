@@ -80,7 +80,7 @@ class StringConvertingResult {
 
     public getModel(text: string): TaskModel {
         return {
-            dateTime: this.noDate ? null : new Date(this.year, this.month - 1, this.day, this.hour, this.minute),
+            dateTime: this.noDate ? null : new Date(Date.UTC(this.year, this.month - 1, this.day, this.hour, this.minute)),
             timeType: this.timeType,
             title: text,
             isProbable: this.isProbable
