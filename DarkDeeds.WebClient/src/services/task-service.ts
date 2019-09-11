@@ -61,6 +61,7 @@ const service = {
             && taskA.deleted === taskB.deleted
             && taskA.timeType === taskB.timeType
             && taskA.isProbable === taskB.isProbable
+            && taskA.time === taskB.time
     },
 
     sorting(taskA: Task, taskB: Task): number {

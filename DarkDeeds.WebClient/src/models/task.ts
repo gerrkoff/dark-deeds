@@ -12,8 +12,12 @@ export class Task implements TaskModel {
         public deleted: boolean = false,
         public timeType: TaskTimeTypeEnum = TaskTimeTypeEnum.NoTime,
         public isProbable: boolean = false,
-        public version: number = 0
+        public version: number = 0,
+        public time: number | null = null
     ) {}
 
-    // Change model - change tasksEqual method in TaskHelper
+    // Change model - change tasksEqual method in TaskService
+
+    // TODO: remove time type
+    // TODO: rename dateTime
 }
