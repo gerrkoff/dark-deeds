@@ -176,6 +176,7 @@ namespace DarkDeeds.Services.Implementation
             return sb.ToString();
         }
 
+        // TODO: sync with FE
         private string TaskToString(TaskDto task, int timeAdjustment)
         {
             string result = string.Empty;

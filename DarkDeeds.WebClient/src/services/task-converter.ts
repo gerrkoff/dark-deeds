@@ -1,4 +1,4 @@
-import { TaskModel, TaskTimeTypeEnum } from '../models'
+import { TaskModel, TaskTimeTypeEnum, Time } from '../models'
 
 class StringConvertingResult {
     public hasDate: boolean = false
@@ -151,8 +151,9 @@ const service = {
 
             if (model.timeType === TaskTimeTypeEnum.AllDayLong) {
                 s += '! '
-            } else if (model.timeType === TaskTimeTypeEnum.ConcreteTime) {
-                s += ` ${str2digits(model.dateTime.getHours())}${str2digits(model.dateTime.getMinutes())} `
+            } else if (model.time !== null) {
+                const time = new Time(model.time)
+                s += ` ${time.hourString}${time.minuteString} `
             } else {
                 s += ' '
             }

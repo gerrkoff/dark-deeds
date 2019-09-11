@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { Icon, MenuItemProps } from 'semantic-ui-react'
-import { Task, TaskModel, TaskTimeTypeEnum } from '../../models'
+import { Task, TaskModel, Time } from '../../models'
 import { TouchMoveDelay } from '../../helpers'
 import { MenuPopup } from './'
 
@@ -73,8 +73,9 @@ export class TaskItem extends React.PureComponent<IProps, IState> {
             + (task.isProbable ? ' task-item-probable' : '')
             + (this.state.selected ? ' task-item-selected' : '')
         let text = ''
-        if (task.timeType === TaskTimeTypeEnum.ConcreteTime) {
-            text += `${str2digits(task.dateTime!.getHours())}:${str2digits(task.dateTime!.getMinutes())} `
+        if (task.time !== null) {
+            const time = new Time(task.time)
+            text += `${time.hourString}:${time.minuteString} `
         }
         text += task.title
 
@@ -110,8 +111,4 @@ export class TaskItem extends React.PureComponent<IProps, IState> {
     private setItemSelected = (selected: boolean) => {
         this.setState({ selected })
     }
-}
-
-function str2digits(n: number): string {
-    return n < 10 ? '0' + n : n.toString()
 }
