@@ -42,11 +42,6 @@ test('[monday] positive', () => {
         .toBe(new Date(2018, 9, 15).getTime())
 })
 
-test('[dayStart] positive', () => {
-    expect(DateService.dayStart(new Date(2018, 9, 17, 10, 10, 10)).getTime())
-        .toBe(new Date(2018, 9, 17).getTime())
-})
-
 test('[fixDates] positive', () => {
     const arr: any = [new Task(1, ''), { clientId: 2, date: '2018-11-14T18:00:00Z' }]
     const result = DateService.fixDates(arr) as Task[]
@@ -57,6 +52,6 @@ test('[fixDates] positive', () => {
         .toBe(new Date(Date.UTC(2018, 10, 14, 18)).getTime())
 })
 
-test('[equalDatesByStart] positive', () => {
-    expect(DateService.equalDatesByStart(new Date(2018, 9, 17, 10, 10, 10), new Date(2018, 9, 17, 12, 12, 12))).toBeTruthy()
+test('[equal] positive', () => {
+    expect(DateService.equal(new Date(2018, 9, 17, 12, 12, 12), new Date(2018, 9, 17, 12, 12, 12))).toBeTruthy()
 })

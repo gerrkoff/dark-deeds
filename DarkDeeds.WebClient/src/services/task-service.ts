@@ -8,7 +8,7 @@ const service = {
             !x.deleted)
 
         const model = new OverviewModel()
-        const currentStart = DateService.monday(DateService.dayStart(now))
+        const currentStart = DateService.monday(now)
         const futureStart = new Date(currentStart)
         futureStart.setDate(currentStart.getDate() + 14)
 
@@ -29,11 +29,10 @@ const service = {
                     ? model.future
                     : model.current
 
-            const taskDate = DateService.dayStart(task.date)
-            let day = days.find(x => x.date.getTime() === taskDate.getTime())
+            let day = days.find(x => x.date.getTime() === task.date!.getTime())
 
             if (day === undefined) {
-                day = new DayCardModel(taskDate)
+                day = new DayCardModel(task.date)
                 days.push(day)
             }
 

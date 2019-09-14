@@ -2,7 +2,6 @@ import { Task, TaskTimeTypeEnum } from '../models'
 import { SetExtended } from '../helpers'
 import { DateService, TaskService } from '.'
 
-// TODO: check it
 const service = {
     moveTask(tasks: Task[], taskId: number, targetDate: number, sourceDate: number, nextSiblingId: number | null): Task[] {
         const task = tasks.find(x => x.clientId === taskId)
@@ -35,16 +34,7 @@ const service = {
 }
 
 function changeTaskDate(task: Task, targetDate: number): number {
-    const oldDateTime = task.date
-    if (targetDate === 0) {
-        task.date = null
-    } else {
-        task.date = new Date(targetDate)
-        if (oldDateTime !== null) {
-            task.date.setHours(oldDateTime.getHours())
-            task.date.setMinutes(oldDateTime.getMinutes())
-        }
-    }
+    task.date = targetDate === 0 ? null : new Date(targetDate)
     return task.clientId
 }
 
@@ -52,7 +42,7 @@ function changeTargetTasksOrder(tasks: Task[], targetDate: number, task: Task, n
     const targetTasks = tasks
             .filter(x =>
                 x.clientId !== task.clientId &&
-                taskDateToStart(x.date) === targetDate)
+                DateService.toNumber(x.date) === targetDate)
             .sort(TaskService.sorting)
 
     const movedTaskTargetIndex = nextSiblingId === null
@@ -71,7 +61,7 @@ function changeTargetTasksOrder(tasks: Task[], targetDate: number, task: Task, n
 }
 
 function changeSourceTasksOrder(tasks: Task[], sourceDate: number, taskId: number): number[] {
-    const sourceTasks = tasks.filter(x => taskDateToStart(x.date) === sourceDate).sort(TaskService.sorting)
+    const sourceTasks = tasks.filter(x => DateService.toNumber(x.date) === sourceDate).sort(TaskService.sorting)
     return adjustTasksOrder(sourceTasks)
 }
 
@@ -84,14 +74,6 @@ function adjustTasksOrder(tasks: Task[]): number[] {
         }
     })
     return changedIds
-}
-
-function taskDateToStart(date: Date | null): number {
-    if (date) {
-        return DateService.dayStart(date).getTime()
-    } else {
-        return 0
-    }
 }
 
 export { service as TaskMoveService }

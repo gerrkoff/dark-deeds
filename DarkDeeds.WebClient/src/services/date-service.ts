@@ -17,16 +17,17 @@ const service = {
         return `${date.toLocaleDateString('en-US')} ${this.getWeekdayName(date)}`
     },
 
+    toNumber(date: Date | null): number {
+        return date ? date.getTime() : 0
+    },
+
     getWeekdayName(date: Date): string {
         return days[date.getDay()]
     },
 
     today(): Date {
-        return this.dayStart(new Date())
-    },
-
-    dayStart(date: Date): Date {
-        return new Date(date.getFullYear(), date.getMonth(), date.getDate())
+        const now = new Date()
+        return new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()))
     },
 
     monday(date: Date): Date {
@@ -46,14 +47,14 @@ const service = {
         return fixed
     },
 
-    equalDatesByStart(dateX: Date | null, dateY: Date | null): boolean {
+    equal(dateX: Date | null, dateY: Date | null): boolean {
         if (dateX === null && dateY === null) {
             return true
         }
         if (dateX === null || dateY === null) {
             return false
         }
-        return this.dayStart(dateX).getTime() === this.dayStart(dateY).getTime()
+        return dateX.getTime() === dateY.getTime()
     }
 }
 
