@@ -1,18 +1,23 @@
 import { TaskMoveService } from '../../services'
 import { Task, TaskTimeTypeEnum } from '../../models'
 
-function task(taskId: number, taskDate: Date | null, taskOrder: number, type: TaskTimeTypeEnum = TaskTimeTypeEnum.NoTime): Task {
+function task(taskId: number, taskDate: Date | null, taskOrder: number, type: TaskTimeTypeEnum = TaskTimeTypeEnum.NoTime, time: number | null = null): Task {
     const t = new Task(taskId, '', taskDate, taskOrder)
     t.timeType = type
+    t.time = time
     return t
 }
 
-function d(year: number, month: number, date: number, hour: number = 0, minutes: number = 0): Date {
-    return new Date(year, month + 1, date, hour, minutes)
+function d(year: number, month: number, date: number): Date {
+    return new Date(year, month + 1, date)
 }
 
 function expectOrder(tasks: Task[], taskId: number, order: number) {
     expect(tasks.find(x => x.clientId === taskId)!.order).toBe(order)
+}
+
+function expectTime(tasks: Task[], taskId: number, time: number | null) {
+    expect(tasks.find(x => x.clientId === taskId)!.time).toBe(time)
 }
 
 function expectDate(tasks: Task[], taskId: number, date: Date | null) {
@@ -119,14 +124,15 @@ test('move to no date', () => {
 
 test('move with time', () => {
     const tasks: Task[] = [
-        task(1, d(2018, 9, 10, 5, 6), 1, TaskTimeTypeEnum.ConcreteTime)
+        task(1, d(2018, 9, 10), 1, TaskTimeTypeEnum.NoTime, 306)
     ]
 
     const result = TaskMoveService.moveTask(tasks, 1, d(2018, 9, 9).getTime(), d(2018, 9, 10).getTime(), null)
 
     expectOrder(result, 1, 1)
-    expectDate(result, 1, d(2018, 9, 9, 5, 6))
+    expectDate(result, 1, d(2018, 9, 9))
     expectChanged(result, 1, true)
+    expectTime(result, 1, 306)
 })
 
 test('any strange order becomes normal', () => {
