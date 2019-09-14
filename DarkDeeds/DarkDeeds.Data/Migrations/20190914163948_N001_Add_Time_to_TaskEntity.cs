@@ -17,6 +17,8 @@ namespace DarkDeeds.Data.Migrations
                 nullable: true);
 
             migrationBuilder.Sql(@"
+UPDATE ""Tasks"" SET ""Date"" = ""Date"" - interval '3 hour'; -- just because I know all my tasks was created in UTC+3h timezone
+
 UPDATE ""Tasks""
 SET ""Time"" = CASE WHEN
                     date_part('hour', ""Date"") <> 0 OR

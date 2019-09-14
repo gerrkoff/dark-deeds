@@ -19,5 +19,4 @@ export class Task implements TaskModel {
     // Change model - change tasksEqual method in TaskService
 
     // TODO: remove time type
-    // TODO: rename dateTime
 }
