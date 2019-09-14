@@ -3,15 +3,17 @@ using System;
 using DarkDeeds.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace DarkDeeds.Data.Migrations
 {
     [DbContext(typeof(DarkDeedsContext))]
-    partial class DarkDeedsContextModelSnapshot : ModelSnapshot
+    [Migration("20190914163948_N001_Add_Time_to_TaskEntity")]
+    partial class N001_Add_Time_to_TaskEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
