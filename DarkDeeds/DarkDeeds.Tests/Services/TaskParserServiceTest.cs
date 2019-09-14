@@ -275,7 +275,7 @@ namespace DarkDeeds.Tests.Services
             var result = service.PrintTasks(new[] {new TaskDto
             {
                 Title = "Task text"
-            }}, 0);
+            }});
 
             Assert.Equal("Task text", result);
         }
@@ -293,21 +293,6 @@ namespace DarkDeeds.Tests.Services
             }});
 
             Assert.Equal("17:40 Task", result);
-        }
-        
-        [Fact]
-        public void PrintTasks_ReturnTimeWithAdjustment()
-        {
-            var service = new TaskParserService(dateServiceMock());
-
-            var result = service.PrintTasks(new[] {new TaskDto
-            {
-                Title = "Task",
-                Date = new DateTime(2000, 10, 10, 17, 40, 0),
-                TimeType = TaskTimeTypeEnum.ConcreteTime
-            }}, -80);
-
-            Assert.Equal("16:20 Task", result);
         }
         
         #endregion

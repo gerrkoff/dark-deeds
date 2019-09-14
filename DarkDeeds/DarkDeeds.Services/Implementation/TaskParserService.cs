@@ -167,26 +167,25 @@ namespace DarkDeeds.Services.Implementation
             return dateTime;
         }
 
-        public string PrintTasks(IEnumerable<TaskDto> tasks, int timeAdjustment = 0)
+        public string PrintTasks(IEnumerable<TaskDto> tasks)
         {
             var sb = new StringBuilder();
             foreach (var task in tasks)
             {
                 if (sb.Length > 0)
                     sb.AppendLine();
-                sb.Append(TaskToString(task, timeAdjustment));
+                sb.Append(TaskToString(task));
             }
 
             return sb.ToString();
         }
 
         // TODO: sync with FE
-        private string TaskToString(TaskDto task, int timeAdjustment)
+        private string TaskToString(TaskDto task)
         {
             string result = string.Empty;
             if (task.Date.HasValue)
             {
-                task.Date = task.Date.Value.AddMinutes(timeAdjustment);
                 if (task.TimeType == TaskTimeTypeEnum.ConcreteTime)
                     result += $"{DateToTimeString(task.Date.Value)} ";
             }
