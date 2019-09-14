@@ -31,7 +31,7 @@ namespace DarkDeeds.Services.Implementation
             taskDto.TimeType = timeType;
             taskDto.IsProbable = isProbable;
             if (withDate)
-                taskDto.DateTime = CreateDateTime(year, month, day, hour, minutes, timeAdjustment, dayAdjustment);
+                taskDto.Date = CreateDateTime(year, month, day, hour, minutes, timeAdjustment, dayAdjustment);
             return taskDto;
         }
 
@@ -180,11 +180,11 @@ namespace DarkDeeds.Services.Implementation
         private string TaskToString(TaskDto task, int timeAdjustment)
         {
             string result = string.Empty;
-            if (task.DateTime.HasValue)
+            if (task.Date.HasValue)
             {
-                task.DateTime = task.DateTime.Value.AddMinutes(timeAdjustment);
+                task.Date = task.Date.Value.AddMinutes(timeAdjustment);
                 if (task.TimeType == TaskTimeTypeEnum.ConcreteTime)
-                    result += $"{DateToTimeString(task.DateTime.Value)} ";
+                    result += $"{DateToTimeString(task.Date.Value)} ";
             }
 
             result += task.Title;

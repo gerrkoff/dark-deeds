@@ -10,8 +10,8 @@ namespace DarkDeeds.Common.Extensions
         {
             foreach (var task in tasks)
             {
-                if (task.DateTime != null)
-                    task.DateTime = DateTime.SpecifyKind(task.DateTime.Value, DateTimeKind.Utc);
+                if (task.Date != null)
+                    task.Date = DateTime.SpecifyKind(task.Date.Value, DateTimeKind.Utc);
             }
 
             return tasks;

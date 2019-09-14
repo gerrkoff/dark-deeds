@@ -29,8 +29,8 @@ namespace DarkDeeds.Services.Implementation
                 .Where(x => string.Equals(x.UserId, userId))
                 .Where(x =>
                     !x.IsCompleted && x.TimeType != TaskTimeTypeEnum.AllDayLong ||
-                    !x.DateTime.HasValue ||
-                    x.DateTime >= from);
+                    !x.Date.HasValue ||
+                    x.Date >= from);
             
             return (await tasks.ProjectTo<TaskDto>().ToListSafeAsync()).ToUtcDate();
         }
@@ -39,8 +39,8 @@ namespace DarkDeeds.Services.Implementation
         {
             IQueryable<TaskEntity> tasks = _tasksRepository.GetAll()
                 .Where(x => string.Equals(x.UserId, userId))
-                .Where(x => x.DateTime.HasValue)
-                .Where(x => x.DateTime >= from && x.DateTime < to);
+                .Where(x => x.Date.HasValue)
+                .Where(x => x.Date >= from && x.Date < to);
 
             return (await tasks.ProjectTo<TaskDto>().ToListSafeAsync()).ToUtcDate();
         }

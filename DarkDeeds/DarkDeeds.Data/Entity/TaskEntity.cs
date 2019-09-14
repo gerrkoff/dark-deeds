@@ -11,8 +11,9 @@ namespace DarkDeeds.Data.Entity
         public string Title { get; set; }
         public int Order { get; set; }
         
-        public DateTime? DateTime { get; set; }
+        public DateTime? Date { get; set; }
         public TaskTimeTypeEnum TimeType { get; set; }
+        public int? Time { get; set; }
         
         public bool IsCompleted { get; set; }
         public bool IsProbable { get; set; }
