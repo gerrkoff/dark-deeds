@@ -39,8 +39,8 @@ const service = {
     fixDates(dateables: IDateable[]): IDateable[] {
         const fixed = [...dateables]
         fixed.forEach(x => {
-            if (x.dateTime) {
-                x.dateTime = new Date(x.dateTime)
+            if (x.date) {
+                x.date = new Date(x.date)
             }
         })
         return fixed

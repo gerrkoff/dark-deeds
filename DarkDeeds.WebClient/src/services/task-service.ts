@@ -18,18 +18,18 @@ const service = {
         }
 
         tasks.forEach(task => {
-            if (task.dateTime === null) {
+            if (task.date === null) {
                 model.noDate.push(task)
                 return
             }
 
-            const days: DayCardModel[] = task.dateTime < currentStart
+            const days: DayCardModel[] = task.date < currentStart
                 ? model.expired
-                : task.dateTime >= futureStart
+                : task.date >= futureStart
                     ? model.future
                     : model.current
 
-            const taskDate = DateService.dayStart(task.dateTime)
+            const taskDate = DateService.dayStart(task.date)
             let day = days.find(x => x.date.getTime() === taskDate.getTime())
 
             if (day === undefined) {
@@ -45,10 +45,10 @@ const service = {
 
     tasksEqual(taskA: Task, taskB: Task): boolean {
         let dateEquals = false
-        if (taskA.dateTime === null && taskB.dateTime === null) {
+        if (taskA.date === null && taskB.date === null) {
             dateEquals = true
-        } else if (taskA.dateTime !== null && taskB.dateTime !== null) {
-            dateEquals = taskA.dateTime.getTime() === taskB.dateTime.getTime()
+        } else if (taskA.date !== null && taskB.date !== null) {
+            dateEquals = taskA.date.getTime() === taskB.date.getTime()
         } else {
             dateEquals = false
         }

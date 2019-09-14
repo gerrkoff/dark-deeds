@@ -4,7 +4,7 @@ export class Task implements TaskModel {
     constructor(
         public clientId: number,
         public title: string,
-        public dateTime: Date | null = null,
+        public date: Date | null = null,
         public order: number = 0,
         public changed: boolean = false,
         public id: number = 0,

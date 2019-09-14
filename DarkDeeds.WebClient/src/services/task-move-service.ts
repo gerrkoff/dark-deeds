@@ -2,6 +2,7 @@ import { Task, TaskTimeTypeEnum } from '../models'
 import { SetExtended } from '../helpers'
 import { DateService, TaskService } from '.'
 
+// TODO: check it
 const service = {
     moveTask(tasks: Task[], taskId: number, targetDate: number, sourceDate: number, nextSiblingId: number | null): Task[] {
         const task = tasks.find(x => x.clientId === taskId)
@@ -34,14 +35,14 @@ const service = {
 }
 
 function changeTaskDate(task: Task, targetDate: number): number {
-    const oldDateTime = task.dateTime
+    const oldDateTime = task.date
     if (targetDate === 0) {
-        task.dateTime = null
+        task.date = null
     } else {
-        task.dateTime = new Date(targetDate)
+        task.date = new Date(targetDate)
         if (oldDateTime !== null) {
-            task.dateTime.setHours(oldDateTime.getHours())
-            task.dateTime.setMinutes(oldDateTime.getMinutes())
+            task.date.setHours(oldDateTime.getHours())
+            task.date.setMinutes(oldDateTime.getMinutes())
         }
     }
     return task.clientId
@@ -51,7 +52,7 @@ function changeTargetTasksOrder(tasks: Task[], targetDate: number, task: Task, n
     const targetTasks = tasks
             .filter(x =>
                 x.clientId !== task.clientId &&
-                taskDateToStart(x.dateTime) === targetDate)
+                taskDateToStart(x.date) === targetDate)
             .sort(TaskService.sorting)
 
     const movedTaskTargetIndex = nextSiblingId === null
@@ -70,7 +71,7 @@ function changeTargetTasksOrder(tasks: Task[], targetDate: number, task: Task, n
 }
 
 function changeSourceTasksOrder(tasks: Task[], sourceDate: number, taskId: number): number[] {
-    const sourceTasks = tasks.filter(x => taskDateToStart(x.dateTime) === sourceDate).sort(TaskService.sorting)
+    const sourceTasks = tasks.filter(x => taskDateToStart(x.date) === sourceDate).sort(TaskService.sorting)
     return adjustTasksOrder(sourceTasks)
 }
 

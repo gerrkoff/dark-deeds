@@ -84,7 +84,7 @@ class StringConvertingResult {
 
     public getModel(text: string): TaskModel {
         return {
-            dateTime: this.hasDate ? new Date(Date.UTC(this.year, this.month - 1, this.day)) : null,
+            date: this.hasDate ? new Date(Date.UTC(this.year, this.month - 1, this.day)) : null,
             timeType: this.timeType,
             title: text,
             isProbable: this.isProbable,
@@ -143,11 +143,11 @@ const service = {
     convertModelToString(model: TaskModel): string {
         let s: string = ''
 
-        if (model.dateTime !== null) {
-            if (new Date().getFullYear() !== model.dateTime.getFullYear()) {
-                s += model.dateTime.getFullYear().toString()
+        if (model.date !== null) {
+            if (new Date().getFullYear() !== model.date.getFullYear()) {
+                s += model.date.getFullYear().toString()
             }
-            s += `${str2digits(model.dateTime.getMonth() + 1)}${str2digits(model.dateTime.getDate())}`
+            s += `${str2digits(model.date.getMonth() + 1)}${str2digits(model.date.getDate())}`
 
             if (model.timeType === TaskTimeTypeEnum.AllDayLong) {
                 s += '! '

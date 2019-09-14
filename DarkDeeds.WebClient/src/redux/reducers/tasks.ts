@@ -159,7 +159,7 @@ function addTask(model: TaskModel, localTasks: Task[]): Task[] {
     }
 
     const sameDayTaskOrders = localTasks
-        .filter(x => DateService.equalDatesByStart(x.dateTime, model.dateTime))
+        .filter(x => DateService.equalDatesByStart(x.date, model.date))
         .map(x => x.order)
     const maxOrder = sameDayTaskOrders.length === 0 ? 0 : Math.max(...sameDayTaskOrders)
 
@@ -198,7 +198,7 @@ function changeTaskStatus(localTasks: Task[], clientId: number, completed?: bool
         newTasks[taskIndex].deleted = deleted
 
         if (deleted) {
-            const sameDayTasks = localTasks.filter(x => DateService.equalDatesByStart(x.dateTime, newTasks[taskIndex].dateTime))
+            const sameDayTasks = localTasks.filter(x => DateService.equalDatesByStart(x.date, newTasks[taskIndex].date))
             if (sameDayTasks) {
                 sameDayTasks.forEach(x => {
                     if (x.order > newTasks[taskIndex].order) {

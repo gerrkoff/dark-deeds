@@ -22,9 +22,9 @@ function expectTime(tasks: Task[], taskId: number, time: number | null) {
 
 function expectDate(tasks: Task[], taskId: number, date: Date | null) {
     if (date === null) {
-        expect(tasks.find(x => x.clientId === taskId)!.dateTime).toBeNull()
+        expect(tasks.find(x => x.clientId === taskId)!.date).toBeNull()
     } else {
-        expect(tasks.find(x => x.clientId === taskId)!.dateTime!.getTime()).toBe(date.getTime())
+        expect(tasks.find(x => x.clientId === taskId)!.date!.getTime()).toBe(date.getTime())
     }
 }
 
