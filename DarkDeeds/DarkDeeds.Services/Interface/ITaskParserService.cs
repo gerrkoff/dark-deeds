@@ -5,7 +5,8 @@ namespace DarkDeeds.Services.Interface
 {
     public interface ITaskParserService
     {
-        TaskDto ParseTask(string task, int timeAdjustment = 0);
+        TaskDto ParseTask(string task);
+        // TODO: remove time adjustment
         string PrintTasks(IEnumerable<TaskDto> tasks, int timeAdjustment = 0);
     }
 }

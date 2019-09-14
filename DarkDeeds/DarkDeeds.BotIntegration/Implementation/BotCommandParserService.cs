@@ -33,7 +33,7 @@ namespace DarkDeeds.BotIntegration.Implementation
             if (!command.StartsWith("/"))
             {
                 int timeAdjustment = await _telegramService.GetUserTimeAdjustment(chatId);
-                return new CreateTaskCommand(_taskParserService.ParseTask(command, timeAdjustment));
+                return new CreateTaskCommand(_taskParserService.ParseTask(command));
             }
 
             return null;
