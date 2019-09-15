@@ -4,7 +4,7 @@ export class Task implements TaskModel {
     constructor(
         public clientId: number,
         public title: string,
-        public dateTime: Date | null = null,
+        public date: Date | null = null,
         public order: number = 0,
         public changed: boolean = false,
         public id: number = 0,
@@ -12,8 +12,11 @@ export class Task implements TaskModel {
         public deleted: boolean = false,
         public timeType: TaskTimeTypeEnum = TaskTimeTypeEnum.NoTime,
         public isProbable: boolean = false,
-        public version: number = 0
+        public version: number = 0,
+        public time: number | null = null
     ) {}
 
-    // Change model - change tasksEqual method in TaskHelper
+    // Change model - change tasksEqual method in TaskService
+
+    // TODO: remove time type
 }

@@ -69,7 +69,7 @@ namespace DarkDeeds.Tests.BotIntegration.CommandProcessor
                 .Returns(Task.FromResult((IEnumerable<TaskDto>) tasks));
             
             var taskParserMock = new Mock<ITaskParserService>();
-            taskParserMock.Setup(x => x.PrintTasks(tasks, 0))
+            taskParserMock.Setup(x => x.PrintTasks(tasks))
                 .Returns(tasksAsString);
             
             var sendMessageMock = new Mock<IBotSendMessageService>();

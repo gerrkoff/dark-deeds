@@ -19,19 +19,22 @@ namespace DarkDeeds.Services.Implementation
         }
 
         // TODO: refactor
-        public TaskDto ParseTask(string task, int timeAdjustment = 0)
+        public TaskDto ParseTask(string task)
         {
             var taskDto = new TaskDto();
             var timeType = TaskTimeTypeEnum.NoTime;
             task = ParseDate(task, out int year, out int month, out int day, out bool withDate, ref timeType, out int dayAdjustment);
-            task = ParseTime(task, out int hour, out int minutes, ref timeType);
+            task = ParseTime(task, out int hour, out int minutes, out bool withTime, timeType);
             task = ParseProbability(task, out bool isProbable);
             
             taskDto.Title = task;
             taskDto.TimeType = timeType;
             taskDto.IsProbable = isProbable;
             if (withDate)
-                taskDto.DateTime = CreateDateTime(year, month, day, hour, minutes, timeAdjustment, dayAdjustment);
+                taskDto.Date = CreateDateTime(year, month, day, dayAdjustment);
+            if (withTime)
+                taskDto.Time = hour * 60 + minutes;
+                
             return taskDto;
         }
 
@@ -47,12 +50,13 @@ namespace DarkDeeds.Services.Implementation
             return task;
         }
 
-        private string ParseTime(string task, out int hour, out int minutes, ref TaskTimeTypeEnum timeType)
+        private string ParseTime(string task, out int hour, out int minutes, out bool withTime, TaskTimeTypeEnum timeType)
         {
             var timeRx = new Regex(@"^\d{4}\s");
             string time = string.Empty;
             hour = 0;
             minutes = 0;
+            withTime = false;
 
             if (timeType == TaskTimeTypeEnum.AllDayLong)
                 return task;
@@ -61,7 +65,7 @@ namespace DarkDeeds.Services.Implementation
             {
                 time = task.Substring(0, 4);
                 task = task.Substring(5);
-                timeType = TaskTimeTypeEnum.ConcreteTime;
+                withTime = true;
             }
 
             if (!string.IsNullOrEmpty(time))
@@ -155,35 +159,35 @@ namespace DarkDeeds.Services.Implementation
             return task;
         }
 
-        private DateTime CreateDateTime(int year, int month, int day, int hour, int minutes, int timeAdjustment, int dayAdjustment)
+        private DateTime CreateDateTime(int year, int month, int day, int dayAdjustment)
         {
-            var dateTime = new DateTime(year, month, day, hour, minutes, 0);
+            var dateTime = new DateTime(year, month, day, 0, 0, 0);
             dateTime = DateTime.SpecifyKind(dateTime, DateTimeKind.Utc);
-            dateTime = dateTime.AddMinutes(timeAdjustment).AddDays(dayAdjustment);
+            dateTime = dateTime.AddDays(dayAdjustment);
             return dateTime;
         }
 
-        public string PrintTasks(IEnumerable<TaskDto> tasks, int timeAdjustment = 0)
+        public string PrintTasks(IEnumerable<TaskDto> tasks)
         {
             var sb = new StringBuilder();
             foreach (var task in tasks)
             {
                 if (sb.Length > 0)
                     sb.AppendLine();
-                sb.Append(TaskToString(task, timeAdjustment));
+                sb.Append(TaskToString(task));
             }
 
             return sb.ToString();
         }
 
-        private string TaskToString(TaskDto task, int timeAdjustment)
+        // TODO: sync with FE
+        private string TaskToString(TaskDto task)
         {
             string result = string.Empty;
-            if (task.DateTime.HasValue)
+            if (task.Date.HasValue)
             {
-                task.DateTime = task.DateTime.Value.AddMinutes(timeAdjustment);
                 if (task.TimeType == TaskTimeTypeEnum.ConcreteTime)
-                    result += $"{DateToTimeString(task.DateTime.Value)} ";
+                    result += $"{DateToTimeString(task.Date.Value)} ";
             }
 
             result += task.Title;

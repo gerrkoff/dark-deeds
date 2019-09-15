@@ -16,9 +16,8 @@ namespace DarkDeeds.Tests.BotIntegration
         {
             var task = new TaskDto();
             var telegramMock = new Mock<ITelegramService>();
-            telegramMock.Setup(x => x.GetUserTimeAdjustment(100500)).Returns(Task.FromResult(100));
             var taskParserMock = new Mock<ITaskParserService>();
-            taskParserMock.Setup(x => x.ParseTask("Some task", 100)).Returns(task);
+            taskParserMock.Setup(x => x.ParseTask("Some task")).Returns(task);
             var service = new BotCommandParserService(taskParserMock.Object, telegramMock.Object);
 
             var result = await service.ParseCommand("Some task", 100500);
@@ -37,8 +36,8 @@ namespace DarkDeeds.Tests.BotIntegration
             var result = await service.ParseCommand("/todo", 100500);
 
             Assert.IsType<ShowTodoCommand>(result);
-            Assert.Equal(DateTime.Today.AddMinutes(100), ((ShowTodoCommand) result).From);
-            Assert.Equal(DateTime.Today.AddDays(1).AddMinutes(100), ((ShowTodoCommand) result).To);
+            Assert.Equal(DateTime.UtcNow.AddMinutes(100).Date, ((ShowTodoCommand) result).From);
+            Assert.Equal(DateTime.UtcNow.AddMinutes(100).AddDays(1).Date, ((ShowTodoCommand) result).To);
         }
         
         [Fact]
@@ -50,10 +49,10 @@ namespace DarkDeeds.Tests.BotIntegration
 
             var result = await service.ParseCommand("/todo 1010", 100500);
 
-            var date = new DateTime(DateTime.UtcNow.Year, 10, 10);
+            var date = new DateTime(DateTime.UtcNow.AddMinutes(100).Year, 10, 10);
             Assert.IsType<ShowTodoCommand>(result);
-            Assert.Equal(date.AddMinutes(100), ((ShowTodoCommand) result).From);
-            Assert.Equal(date.AddDays(1).AddMinutes(100), ((ShowTodoCommand) result).To);
+            Assert.Equal(date, ((ShowTodoCommand) result).From);
+            Assert.Equal(date.AddDays(1), ((ShowTodoCommand) result).To);
         }
         
         [Fact]
@@ -67,8 +66,8 @@ namespace DarkDeeds.Tests.BotIntegration
 
             var date = new DateTime(2016, 10, 10);
             Assert.IsType<ShowTodoCommand>(result);
-            Assert.Equal(date.AddMinutes(100), ((ShowTodoCommand) result).From);
-            Assert.Equal(date.AddDays(1).AddMinutes(100), ((ShowTodoCommand) result).To);
+            Assert.Equal(date, ((ShowTodoCommand) result).From);
+            Assert.Equal(date.AddDays(1), ((ShowTodoCommand) result).To);
         }
         
         [Fact]

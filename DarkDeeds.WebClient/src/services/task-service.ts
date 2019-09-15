@@ -8,7 +8,7 @@ const service = {
             !x.deleted)
 
         const model = new OverviewModel()
-        const currentStart = DateService.monday(DateService.dayStart(now))
+        const currentStart = DateService.monday(now)
         const futureStart = new Date(currentStart)
         futureStart.setDate(currentStart.getDate() + 14)
 
@@ -18,22 +18,21 @@ const service = {
         }
 
         tasks.forEach(task => {
-            if (task.dateTime === null) {
+            if (task.date === null) {
                 model.noDate.push(task)
                 return
             }
 
-            const days: DayCardModel[] = task.dateTime < currentStart
+            const days: DayCardModel[] = task.date < currentStart
                 ? model.expired
-                : task.dateTime >= futureStart
+                : task.date >= futureStart
                     ? model.future
                     : model.current
 
-            const taskDate = DateService.dayStart(task.dateTime)
-            let day = days.find(x => x.date.getTime() === taskDate.getTime())
+            let day = days.find(x => x.date.getTime() === task.date!.getTime())
 
             if (day === undefined) {
-                day = new DayCardModel(taskDate)
+                day = new DayCardModel(task.date)
                 days.push(day)
             }
 
@@ -44,16 +43,7 @@ const service = {
     },
 
     tasksEqual(taskA: Task, taskB: Task): boolean {
-        let dateEquals = false
-        if (taskA.dateTime === null && taskB.dateTime === null) {
-            dateEquals = true
-        } else if (taskA.dateTime !== null && taskB.dateTime !== null) {
-            dateEquals = taskA.dateTime.getTime() === taskB.dateTime.getTime()
-        } else {
-            dateEquals = false
-        }
-
-        return dateEquals
+        return DateService.toNumber(taskA.date) === DateService.toNumber(taskB.date)
             && taskA.title === taskB.title
             && taskA.order === taskB.order
             && taskA.id === taskB.id
@@ -61,6 +51,7 @@ const service = {
             && taskA.deleted === taskB.deleted
             && taskA.timeType === taskB.timeType
             && taskA.isProbable === taskB.isProbable
+            && taskA.time === taskB.time
     },
 
     sorting(taskA: Task, taskB: Task): number {

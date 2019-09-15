@@ -14,13 +14,14 @@ namespace DarkDeeds.BotIntegration.Objects.Commands
             _args = args;
             if (string.IsNullOrWhiteSpace(args))
             {
-                From = DateTime.Today;
+                From = DateTime.UtcNow.AddMinutes(timeAdjustment).Date;
             }
             else if (args.Length == 4)
             {
+                int year = DateTime.UtcNow.AddMinutes(timeAdjustment).Year;
                 int month = int.Parse(args.Substring(0, 2));
                 int day = int.Parse(args.Substring(2, 2));
-                From = new DateTime(DateTime.UtcNow.Year, month, day); 
+                From = new DateTime(year, month, day); 
             }
             else if (args.Length == 8)
             {
@@ -30,7 +31,6 @@ namespace DarkDeeds.BotIntegration.Objects.Commands
                 From = new DateTime(year, month, day);
             }
 
-            From = From.AddMinutes(timeAdjustment);
             To = From.AddDays(1);
         }
         

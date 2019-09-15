@@ -10,13 +10,13 @@ test('renders no time', () => {
 })
 
 test('renders concrete time', () => {
-    const model = new Task(1, 'Title', new Date(2018, 1, 1, 1, 1), 1, false, 1, false, false, TaskTimeTypeEnum.ConcreteTime)
+    const model = new Task(1, 'Title', new Date(2018, 1, 1), 1, false, 1, false, false, TaskTimeTypeEnum.NoTime, false, 0, 61)
     const component = enzyme.shallow(enzyme.shallow(<TaskItem task={model} />).prop('content'))
     expect(component.find('span').text()).toBe('01:01 Title')
 })
 
 test('renders completed', () => {
-    const model = new Task(1, 'Title', new Date(2018, 1, 1, 1, 1), 1, false, 1, true, false, TaskTimeTypeEnum.ConcreteTime)
+    const model = new Task(1, 'Title', new Date(2018, 1, 1), 1, false, 1, true, false, TaskTimeTypeEnum.NoTime, false, 0, 61)
     const component = enzyme.shallow(enzyme.shallow(<TaskItem task={model} />).prop('content'))
     expect(component.find('span.task-item-completed').length).toBe(1)
 })

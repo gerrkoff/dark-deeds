@@ -12,11 +12,11 @@ namespace DarkDeeds.Tests.Services
     public partial class TaskServiceTest
     {
         private IRepository<TaskEntity> DefaultRepo_LoadActualTasksAsync() => Helper.CreateRepoMock(
-            new TaskEntity {UserId = "1", Id = 1, DateTime = new DateTime(2018, 10, 10), IsCompleted = true},
-            new TaskEntity {UserId = "1", Id = 2, DateTime = new DateTime(2018, 10, 11)},
+            new TaskEntity {UserId = "1", Id = 1, Date = new DateTime(2018, 10, 10), IsCompleted = true},
+            new TaskEntity {UserId = "1", Id = 2, Date = new DateTime(2018, 10, 11)},
             new TaskEntity {UserId = "2", Id = 10},
-            new TaskEntity {UserId = "1", Id = 11, DateTime = new DateTime(2018, 10, 19), TimeType = TaskTimeTypeEnum.AllDayLong},
-            new TaskEntity {UserId = "1", Id = 3, DateTime = new DateTime(2018, 10, 20)},
+            new TaskEntity {UserId = "1", Id = 11, Date = new DateTime(2018, 10, 19), TimeType = TaskTimeTypeEnum.AllDayLong},
+            new TaskEntity {UserId = "1", Id = 3, Date = new DateTime(2018, 10, 20)},
             new TaskEntity {UserId = "1", Id = 4}
         ).Object;
         
@@ -38,7 +38,7 @@ namespace DarkDeeds.Tests.Services
 
             var result = (await service.LoadActualTasksAsync("1", new DateTime(2000, 1, 1))).ToList();
             
-            Assert.Equal(DateTimeKind.Utc, result.First(x => x.DateTime.HasValue).DateTime.Value.Kind);
+            Assert.Equal(DateTimeKind.Utc, result.First(x => x.Date.HasValue).Date.Value.Kind);
         }
         
         [Fact]

@@ -53,17 +53,17 @@ test('[tasksEqual] positive', () => {
 test('[sort] positive', () => {
     const tasks = [
         new Task(1, '', new Date(2018, 1, 1), 1, false, 0, false, false, TaskTimeTypeEnum.NoTime),
-        new Task(2, '', new Date(2018, 1, 1, 10), 0, false, 0, false, false, TaskTimeTypeEnum.ConcreteTime),
+        new Task(2, '', new Date(2018, 1, 1), 0, false, 0, false, false, TaskTimeTypeEnum.NoTime, false, 0, 600),
         new Task(3, '', new Date(2018, 1, 1), 4, false, 0, false, false, TaskTimeTypeEnum.NoTime),
-        new Task(4, '', new Date(2018, 1, 1, 10), 0, false, 0, false, false, TaskTimeTypeEnum.ConcreteTime),
+        new Task(4, '', new Date(2018, 1, 1), 0, false, 0, false, false, TaskTimeTypeEnum.NoTime, false, 0, 600),
         new Task(5, '', new Date(2018, 1, 1), 3, false, 0, false, false, TaskTimeTypeEnum.NoTime),
-        new Task(6, '', new Date(2018, 1, 1, 8), 0, false, 0, false, false, TaskTimeTypeEnum.ConcreteTime),
+        new Task(6, '', new Date(2018, 1, 1), 0, false, 0, false, false, TaskTimeTypeEnum.NoTime, false, 0, 480),
         new Task(7, '', new Date(2018, 1, 1), 2, false, 0, false, false, TaskTimeTypeEnum.NoTime),
-        new Task(8, '', new Date(2018, 1, 1, 15), 0, false, 0, false, false, TaskTimeTypeEnum.ConcreteTime),
-        new Task(9, '', new Date(2018, 1, 1, 8), 2, false, 0, false, false, TaskTimeTypeEnum.ConcreteTime),
-        new Task(10, '', new Date(2018, 1, 1, 8), 1, false, 0, false, false, TaskTimeTypeEnum.ConcreteTime),
-        new Task(11, '', new Date(2018, 1, 1, 8), 2, false, 0, false, false, TaskTimeTypeEnum.AllDayLong),
-        new Task(12, '', new Date(2018, 1, 1, 8), 1, false, 0, false, false, TaskTimeTypeEnum.AllDayLong)
+        new Task(8, '', new Date(2018, 1, 1), 0, false, 0, false, false, TaskTimeTypeEnum.NoTime, false, 0, 900),
+        new Task(9, '', new Date(2018, 1, 1), 2, false, 0, false, false, TaskTimeTypeEnum.NoTime, false, 0, 480),
+        new Task(10, '', new Date(2018, 1, 1), 1, false, 0, false, false, TaskTimeTypeEnum.NoTime, false, 0, 480),
+        new Task(11, '', new Date(2018, 1, 1), 2, false, 0, false, false, TaskTimeTypeEnum.AllDayLong),
+        new Task(12, '', new Date(2018, 1, 1), 1, false, 0, false, false, TaskTimeTypeEnum.AllDayLong)
     ]
     const result = tasks.sort(TaskService.sorting)
 
