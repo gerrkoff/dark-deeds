@@ -180,21 +180,23 @@ namespace DarkDeeds.Services.Implementation
             return sb.ToString();
         }
 
-        // TODO: sync with FE
         private string TaskToString(TaskDto task)
         {
             string result = string.Empty;
-            if (task.Date.HasValue)
-            {
-                if (task.TimeType == TaskTimeTypeEnum.ConcreteTime)
-                    result += $"{DateToTimeString(task.Date.Value)} ";
-            }
+
+            if (task.Time.HasValue)
+                result += $"{TimeToString(task.Time.Value)} ";
 
             result += task.Title;
 
             return result;
         }
 
-        private string DateToTimeString(DateTime dateTime) => $"{dateTime.Hour:D2}:{dateTime.Minute:D2}";
+        private string TimeToString(int time)
+        {
+            int hour = time / 60;
+            int minute = time % 60;
+            return $"{hour:D2}:{minute:D2}";  
+        } 
     }
 }

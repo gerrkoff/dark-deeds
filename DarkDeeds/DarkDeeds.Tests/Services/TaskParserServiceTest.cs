@@ -288,8 +288,8 @@ namespace DarkDeeds.Tests.Services
             var result = service.PrintTasks(new[] {new TaskDto
             {
                 Title = "Task",
-                Date = new DateTime(2000, 10, 10, 17, 40, 0),
-                TimeType = TaskTimeTypeEnum.ConcreteTime
+                Date = new DateTime(2000, 10, 10, 0, 0, 0),
+                Time = 1060
             }});
 
             Assert.Equal("17:40 Task", result);
