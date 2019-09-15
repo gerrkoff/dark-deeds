@@ -17,15 +17,13 @@ namespace DarkDeeds.Data.Migrations
                 nullable: true);
 
             migrationBuilder.Sql(@"
-UPDATE ""Tasks"" SET ""Date"" = ""Date"" - interval '3 hour'; -- just because I know all my tasks was created in UTC+3h timezone
+UPDATE ""Tasks"" SET ""Date"" = ""Date"" + interval '3 hour'; -- just because I know all my tasks was created in UTC+3h timezone
 
 UPDATE ""Tasks""
-SET ""Time"" = CASE WHEN
-                    date_part('hour', ""Date"") <> 0 OR
-                    date_part('minute', ""Date"") <> 0
-                THEN date_part('hour', ""Date"") * 60 + date_part('minute', ""Date"")
-                ELSE NULL END,
-""Date"" = date_trunc('day', ""Date"");
+SET ""Time"" = date_part('hour', ""Date"") * 60 + date_part('minute', ""Date""),
+    ""Date"" = date_trunc('day', ""Date""),
+    ""TimeType"" = 0
+WHERE ""TimeType"" = 1;
             ");
         }
 
