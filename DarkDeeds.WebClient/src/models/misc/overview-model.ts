@@ -1,4 +1,4 @@
-import { DayCardModel, Task } from './'
+import { DayCardModel, Task } from '..'
 
 export class OverviewModel {
     constructor(

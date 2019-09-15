@@ -1,4 +1,4 @@
-import { SignupResultEnum } from '../'
+import { SignupResultEnum } from '../..'
 
 export class SignupResult {
     constructor(

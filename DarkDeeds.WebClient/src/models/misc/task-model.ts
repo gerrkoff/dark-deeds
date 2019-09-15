@@ -1,4 +1,4 @@
-import { IDateable, TaskTypeEnum } from './'
+import { IDateable, TaskTypeEnum } from '..'
 
 export class TaskModel implements IDateable {
     constructor(
