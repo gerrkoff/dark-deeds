@@ -18,7 +18,7 @@ namespace DarkDeeds.Tests.Services
                 new TaskEntity {UserId = "2", Id = 2}
             ).Object;
 
-            var service = new TaskService(repo);
+            var service = new TaskService(repo, null);
 
             await Assert.ThrowsAsync<ServiceException>(()
                 => service.CheckIfUserCanEditTasks(
@@ -34,7 +34,7 @@ namespace DarkDeeds.Tests.Services
                 new TaskEntity {UserId = "2", Id = 2}
             ).Object;
 
-            var service = new TaskService(repo);
+            var service = new TaskService(repo, null);
 
             await service.CheckIfUserCanEditTasks(
                 new[] {new TaskDto {Id = 1}},

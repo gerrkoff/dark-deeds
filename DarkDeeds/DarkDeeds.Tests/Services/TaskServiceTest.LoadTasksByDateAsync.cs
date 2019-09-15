@@ -23,7 +23,7 @@ namespace DarkDeeds.Tests.Services
         [Fact]
         public async Task LoadTasksByDateAsync_ReturnOnlyUserTask()
         {   
-            var service = new TaskService(DefaultRepo_LoadTasksByDateAsync());
+            var service = new TaskService(DefaultRepo_LoadTasksByDateAsync(), null);
 
             var result = (await service.LoadTasksByDateAsync("2",
                 new DateTime(2000, 1, 1),
@@ -36,7 +36,7 @@ namespace DarkDeeds.Tests.Services
         [Fact]
         public async Task LoadTasksByDateAsync_AdjustDateToUtc()
         {   
-            var service = new TaskService(DefaultRepo_LoadTasksByDateAsync());
+            var service = new TaskService(DefaultRepo_LoadTasksByDateAsync(), null);
 
             var result = (await service.LoadTasksByDateAsync("1",
                 new DateTime(2000, 1, 1),
@@ -48,7 +48,7 @@ namespace DarkDeeds.Tests.Services
         [Fact]
         public async Task LoadActualTasksAsync_ExcludeNoDate()
         {
-            var service = new TaskService(DefaultRepo_LoadTasksByDateAsync());
+            var service = new TaskService(DefaultRepo_LoadTasksByDateAsync(), null);
 
             var result = (await service.LoadTasksByDateAsync("1",
                 new DateTime(2018, 10, 20),
@@ -60,7 +60,7 @@ namespace DarkDeeds.Tests.Services
         [Fact]
         public async Task LoadActualTasksAsync_IncludeOnlyTasksFromPeriod()
         {
-            var service = new TaskService(DefaultRepo_LoadTasksByDateAsync());
+            var service = new TaskService(DefaultRepo_LoadTasksByDateAsync(), null);
 
             var result = (await service.LoadTasksByDateAsync("1",
                 new DateTime(2018, 10, 20),

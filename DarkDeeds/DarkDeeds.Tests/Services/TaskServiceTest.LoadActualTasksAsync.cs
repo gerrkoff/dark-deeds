@@ -23,7 +23,7 @@ namespace DarkDeeds.Tests.Services
         [Fact]
         public async Task LoadActualTasksAsync_ReturnOnlyUserTask()
         {   
-            var service = new TaskService(DefaultRepo_LoadActualTasksAsync());
+            var service = new TaskService(DefaultRepo_LoadActualTasksAsync(), null);
 
             var result = (await service.LoadActualTasksAsync("2", new DateTime(2000, 1, 1))).ToList();
             
@@ -34,7 +34,7 @@ namespace DarkDeeds.Tests.Services
         [Fact]
         public async Task LoadActualTasksAsync_AdjustDateToUtc()
         {   
-            var service = new TaskService(DefaultRepo_LoadActualTasksAsync());
+            var service = new TaskService(DefaultRepo_LoadActualTasksAsync(), null);
 
             var result = (await service.LoadActualTasksAsync("1", new DateTime(2000, 1, 1))).ToList();
             
@@ -44,7 +44,7 @@ namespace DarkDeeds.Tests.Services
         [Fact]
         public async Task LoadActualTasksAsync_IncludeNoDate()
         {
-            var service = new TaskService(DefaultRepo_LoadActualTasksAsync());
+            var service = new TaskService(DefaultRepo_LoadActualTasksAsync(), null);
 
             var result = (await service.LoadActualTasksAsync("1", new DateTime(2018, 10, 20))).ToList();
 
@@ -54,7 +54,7 @@ namespace DarkDeeds.Tests.Services
         [Fact]
         public async Task LoadActualTasksAsync_IncludeExpiredButCompleted()
         {
-            var service = new TaskService(DefaultRepo_LoadActualTasksAsync());
+            var service = new TaskService(DefaultRepo_LoadActualTasksAsync(), null);
 
             var result = (await service.LoadActualTasksAsync("1", new DateTime(2018, 10, 20))).ToList();
 
@@ -64,7 +64,7 @@ namespace DarkDeeds.Tests.Services
         [Fact]
         public async Task LoadActualTasksAsync_ExcludeExpiredAndCompleted()
         {
-            var service = new TaskService(DefaultRepo_LoadActualTasksAsync());
+            var service = new TaskService(DefaultRepo_LoadActualTasksAsync(), null);
 
             var result = (await service.LoadActualTasksAsync("1", new DateTime(2018, 10, 20))).ToList();
 
@@ -74,7 +74,7 @@ namespace DarkDeeds.Tests.Services
         [Fact]
         public async Task LoadActualTasksAsync_ExcludeExpiredAdditional()
         {
-            var service = new TaskService(DefaultRepo_LoadActualTasksAsync());
+            var service = new TaskService(DefaultRepo_LoadActualTasksAsync(), null);
 
             var result = (await service.LoadActualTasksAsync("1", new DateTime(2018, 10, 20))).ToList();
 
