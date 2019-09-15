@@ -1,9 +1,11 @@
-import { UtilsService } from '../../services'
+import { UtilsService } from '../../di'
 
 test('[delay] positive', async() => {
     const actions = ['act1']
 
-    const promise = UtilsService.delay(1).then(() => actions.push('act2'))
+    const service = new UtilsService()
+
+    const promise = service.delay(1).then(() => actions.push('act2'))
 
     actions.push('act3')
 

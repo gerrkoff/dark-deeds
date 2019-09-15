@@ -1,4 +1,4 @@
-import { TaskService } from '../../services'
+import { di, TaskService } from '../../di'
 import { Task, TaskTypeEnum } from '../../models'
 
 function task(year: number, month: number, date: number, id: number = 0, order: number = 0, timeType: TaskTypeEnum = TaskTypeEnum.Simple, hours: number = 0, minutes: number = 0): Task {
@@ -21,7 +21,8 @@ test('[evalModel] positive', () => {
         new Task(0, '')
     ]
 
-    const result = TaskService.evalModel(tasks, new Date(2018, 9, 17), true)
+    const service = di.get<TaskService>(TaskService)
+    const result = service.evalModel(tasks, new Date(2018, 9, 17), true)
 
     expect(result.noDate.length).toBe(2)
     expect(result.expired.length).toBe(2)
@@ -36,18 +37,20 @@ test('[evalModel] ignore completed if showCompleted=false', () => {
         new Task(3, '', null, 0, false, 0, true)
     ]
 
-    const result = TaskService.evalModel(tasks, new Date(2018, 9, 17), false)
+    const service = di.get<TaskService>(TaskService)
+    const result = service.evalModel(tasks, new Date(2018, 9, 17), false)
 
     expect(result.noDate.length).toBe(1)
     expect(result.noDate[0].clientId).toBe(2)
 })
 
 test('[tasksEqual] positive', () => {
-    expect(TaskService.tasksEqual(new Task(1, '1', null, 1, false, 1), new Task(1, '1', null, 1, false, 1))).toBeTruthy()
-    expect(TaskService.tasksEqual(new Task(1, '1', null, 1, false, 1), new Task(1, '1', new Date(), 1, false, 1))).not.toBeTruthy()
-    expect(TaskService.tasksEqual(new Task(1, '1', new Date(2018), 1, false, 1), new Task(1, '1', new Date(2018), 1, false, 1))).toBeTruthy()
-    expect(TaskService.tasksEqual(new Task(1, '1', new Date(2018), 1, false, 1), new Task(2, '2', new Date(2019), 2, false, 2))).not.toBeTruthy()
-    expect(TaskService.tasksEqual(new Task(1, '1', null, 1, false, 1, false, false, TaskTypeEnum.Simple, false), new Task(1, '1', null, 1, false, 1, false, false, TaskTypeEnum.Simple, true))).not.toBeTruthy()
+    const service = di.get<TaskService>(TaskService)
+    expect(service.tasksEqual(new Task(1, '1', null, 1, false, 1), new Task(1, '1', null, 1, false, 1))).toBeTruthy()
+    expect(service.tasksEqual(new Task(1, '1', null, 1, false, 1), new Task(1, '1', new Date(), 1, false, 1))).not.toBeTruthy()
+    expect(service.tasksEqual(new Task(1, '1', new Date(2018), 1, false, 1), new Task(1, '1', new Date(2018), 1, false, 1))).toBeTruthy()
+    expect(service.tasksEqual(new Task(1, '1', new Date(2018), 1, false, 1), new Task(2, '2', new Date(2019), 2, false, 2))).not.toBeTruthy()
+    expect(service.tasksEqual(new Task(1, '1', null, 1, false, 1, false, false, TaskTypeEnum.Simple, false), new Task(1, '1', null, 1, false, 1, false, false, TaskTypeEnum.Simple, true))).not.toBeTruthy()
 })
 
 test('[sort] positive', () => {
@@ -65,7 +68,9 @@ test('[sort] positive', () => {
         new Task(11, '', new Date(2018, 1, 1), 2, false, 0, false, false, TaskTypeEnum.Additional),
         new Task(12, '', new Date(2018, 1, 1), 1, false, 0, false, false, TaskTypeEnum.Additional)
     ]
-    const result = tasks.sort(TaskService.sorting)
+
+    const service = di.get<TaskService>(TaskService)
+    const result = tasks.sort(service.sorting)
 
     expect(result[0].clientId).toBe(2)
     expect(result[1].clientId).toBe(4)

@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { Button, Icon, Input, Label, Modal } from 'semantic-ui-react'
-import { KeyConstants, TaskConverter } from '../../services'
+import { di, KeyConstants, TaskConverter } from '../../di'
 import { TaskModel } from '../../models'
 
 interface IProps {
@@ -15,6 +15,9 @@ interface IState {
     invalidTitle: boolean
 }
 export class EditTaskModal extends React.PureComponent<IProps, IState> {
+    private keyConstants = di.get<KeyConstants>(KeyConstants)
+    private taskConverter = di.get<TaskConverter>(TaskConverter)
+
     constructor(props: IProps) {
         super(props)
         this.state = { invalidTitle: false }
@@ -66,7 +69,7 @@ export class EditTaskModal extends React.PureComponent<IProps, IState> {
             return
         }
 
-        const taskModel = TaskConverter.convertStringToModel(this.props.model)
+        const taskModel = this.taskConverter.convertStringToModel(this.props.model)
 
         if (taskModel.title.length === 0) {
             this.setState({ invalidTitle: true })
@@ -79,7 +82,7 @@ export class EditTaskModal extends React.PureComponent<IProps, IState> {
     }
 
     private handleInputKeyUp = (e: KeyboardEvent) => {
-        if (e.key === KeyConstants.ENTER) {
+        if (e.key === this.keyConstants.ENTER) {
             this.handleSave()
         }
     }

@@ -1,10 +1,12 @@
 import * as React from 'react'
-import { KeyConstants } from '../../services'
+import { di, KeyConstants } from '../../di'
 
 interface IProps {
     openEditTask: () => void
 }
 export class Shortcuts extends React.PureComponent<IProps> {
+    private keyConstants = di.get<KeyConstants>(KeyConstants)
+
     private isCmdDownL: boolean = false
     private isCmdDownR: boolean = false
 
@@ -23,25 +25,25 @@ export class Shortcuts extends React.PureComponent<IProps> {
     }
 
     private handleGlobalKeyDown = (e: KeyboardEvent) => {
-        if (this.check(e.code, [KeyConstants.ENTER]) && (this.isCmdDownL || this.isCmdDownR)) {
+        if (this.check(e.code, [this.keyConstants.ENTER]) && (this.isCmdDownL || this.isCmdDownR)) {
             this.props.openEditTask()
         }
-        if (this.check(e.code, [KeyConstants.CMD_LEFT, KeyConstants.CMD_LEFT_FIREFOX])) {
+        if (this.check(e.code, [this.keyConstants.CMD_LEFT, this.keyConstants.CMD_LEFT_FIREFOX])) {
             this.isCmdDownL = true
         }
-        if (this.check(e.code, [KeyConstants.CMD_RIGHT, KeyConstants.CMD_RIGHT_FIREFOX])) {
+        if (this.check(e.code, [this.keyConstants.CMD_RIGHT, this.keyConstants.CMD_RIGHT_FIREFOX])) {
             this.isCmdDownR = true
         }
     }
 
     private handleGlobalKeyUp = (e: KeyboardEvent) => {
-        if (this.check(e.code, [KeyConstants.ENTER, KeyConstants.N]) && e.ctrlKey) {
+        if (this.check(e.code, [this.keyConstants.ENTER, this.keyConstants.N]) && e.ctrlKey) {
             this.props.openEditTask()
         }
-        if (this.check(e.code, [KeyConstants.CMD_LEFT, KeyConstants.CMD_LEFT_FIREFOX])) {
+        if (this.check(e.code, [this.keyConstants.CMD_LEFT, this.keyConstants.CMD_LEFT_FIREFOX])) {
             this.isCmdDownL = false
         }
-        if (this.check(e.code, [KeyConstants.CMD_RIGHT, KeyConstants.CMD_RIGHT_FIREFOX])) {
+        if (this.check(e.code, [this.keyConstants.CMD_RIGHT, this.keyConstants.CMD_RIGHT_FIREFOX])) {
             this.isCmdDownR = false
         }
     }

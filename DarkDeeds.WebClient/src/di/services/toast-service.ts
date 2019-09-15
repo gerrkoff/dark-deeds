@@ -1,3 +1,4 @@
+import { injectable } from 'inversify'
 import { toast, ToastOptions } from 'react-toastify'
 
 const defaultOptions: ToastOptions = {
@@ -8,57 +9,59 @@ const defaultOptions: ToastOptions = {
     draggable: true
 }
 
-const service = {
-    types: toast.TYPE,
+@injectable()
+export class ToastService {
+    public readonly types = toast.TYPE
 
-    success(msg: string, options: ToastOptions = {}): number {
+    public success(msg: string, options: ToastOptions = {}): number {
         return toast.success(msg, {
             className: 'toast-success',
             ...defaultOptions,
             ...options
         })
-    },
-    error(msg: string, options: ToastOptions = {}): number {
+    }
+
+    public error(msg: string, options: ToastOptions = {}): number {
         return toast.error(msg, {
             className: 'toast-error',
             ...defaultOptions,
             ...options
         })
-    },
-    warn(msg: string, options: ToastOptions = {}): number {
+    }
+
+    public warn(msg: string, options: ToastOptions = {}): number {
         return toast.warn(msg, {
             className: 'toast-warn',
             ...defaultOptions,
             ...options
         })
-    },
-    info(msg: string, options: ToastOptions = {}): number {
+    }
+
+    public info(msg: string, options: ToastOptions = {}): number {
         return toast.info(msg, {
             className: 'toast-info',
             ...defaultOptions,
             ...options
         })
-    },
+    }
 
-    errorProcess(process: string, options = {}): number {
+    public errorProcess(process: string, options = {}): number {
         return this.error(`Error occured while ${process}`, options)
-    },
+    }
 
-    dismiss(toastId: number | string) {
+    public dismiss(toastId: number | string) {
         toast.dismiss(toastId as any)
-    },
+    }
 
-    update(toastId: number | string, msg: string, options: ToastOptions = {}) {
+    public update(toastId: number | string, msg: string, options: ToastOptions = {}) {
         toast.update(toastId as any, {
             render: msg,
             ...defaultOptions,
             ...options
         })
-    },
+    }
 
-    isActive(toastId: number | string): boolean {
+    public isActive(toastId: number | string): boolean {
         return toast.isActive(toastId as any)
     }
 }
-
-export { service as ToastService }

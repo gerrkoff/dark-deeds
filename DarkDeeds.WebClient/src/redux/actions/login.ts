@@ -1,13 +1,16 @@
 import { Dispatch } from 'redux'
 import { push as navigateTo, RouterAction } from 'connected-react-router'
-import { LoginApi } from '../../api'
-import { StorageService, ToastService } from '../../services'
+import { di, LoginApi, StorageService, ToastService } from '../../di'
 import { SigninResultEnum, SignupResultEnum } from '../../models'
 import * as actions from '../constants/login'
 
+const loginApi = di.get<LoginApi>(LoginApi)
+const storageService = di.get<StorageService>(StorageService)
+const toastService = di.get<ToastService>(ToastService)
+
 export function initialLogin() {
     return async(dispatch: Dispatch<actions.LoginAction>) => {
-        const token = StorageService.loadAccessToken()
+        const token = storageService.loadAccessToken()
         if (token === null || token === '') {
             return
         }
@@ -16,7 +19,7 @@ export function initialLogin() {
         try {
             await loadCurrentUser(dispatch)
         } catch {
-            ToastService.errorProcess('login')
+            toastService.errorProcess('login')
         }
 
         dispatch(setInitialLogginIn(false))
@@ -29,16 +32,16 @@ export function signin(username: string, password: string) {
 
         let result: SigninResultEnum
         try {
-            const apiResult = await LoginApi.signin(username, password)
+            const apiResult = await loginApi.signin(username, password)
             result = apiResult.result
 
             if (result === SigninResultEnum.Success) {
-                StorageService.saveAccessToken(apiResult.token)
+                storageService.saveAccessToken(apiResult.token)
                 await loadCurrentUser(dispatch)
             }
         } catch (err) {
             result = SigninResultEnum.Unknown
-            ToastService.errorProcess('signin')
+            toastService.errorProcess('signin')
         }
 
         dispatch(signinResult(result))
@@ -51,16 +54,16 @@ export function signup(username: string, password: string) {
 
         let result: SignupResultEnum
         try {
-            const apiResult = await LoginApi.signup(username, password)
+            const apiResult = await loginApi.signup(username, password)
             result = apiResult.result
 
             if (result === SignupResultEnum.Success) {
-                StorageService.saveAccessToken(apiResult.token)
+                storageService.saveAccessToken(apiResult.token)
                 await loadCurrentUser(dispatch)
             }
         } catch (err) {
             result = SignupResultEnum.Unknown
-            ToastService.errorProcess('signup')
+            toastService.errorProcess('signup')
         }
 
         dispatch(signupResult(result))
@@ -69,7 +72,7 @@ export function signup(username: string, password: string) {
 
 export function signout() {
     return async(dispatch: Dispatch<actions.LoginAction | RouterAction>) => {
-        StorageService.clearAccessToken()
+        storageService.clearAccessToken()
         dispatch(navigateTo('/'))
         dispatch(currentUser(false))
     }
@@ -100,6 +103,6 @@ function currentUser(userAuthenticated: boolean, userName?: string): actions.ILo
 }
 
 async function loadCurrentUser(dispatch: Dispatch<actions.LoginAction>) {
-    const currentUserResult = await LoginApi.current()
+    const currentUserResult = await loginApi.current()
     dispatch(currentUser(currentUserResult.userAuthenticated, currentUserResult.username))
 }
