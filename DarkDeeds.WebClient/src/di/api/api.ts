@@ -1,5 +1,6 @@
-import { injectable } from 'inversify'
+import { injectable, inject } from 'inversify'
 import { StorageService } from '..'
+import service from '../service'
 import baseUrl from './base-url'
 
 @injectable()
@@ -7,7 +8,7 @@ export class Api {
     private readonly DEFAULT_ERROR_MESSAGE = 'An error has occured.'
 
     public constructor(
-        private storageService: StorageService
+        @inject(service.StorageService) private storageService: StorageService
     ) {}
 
     public get<T>(api: string, params?: Map<string, any>): Promise<T> {

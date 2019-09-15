@@ -1,6 +1,7 @@
-import { injectable } from 'inversify'
+import { injectable, inject } from 'inversify'
 import * as signalR from '@aspnet/signalr'
 import { DateService, StorageService } from '..'
+import service from '../service'
 import baseUrl from './base-url'
 import { Task } from '../../models'
 
@@ -10,8 +11,8 @@ export class TaskHubApi {
     private connection: signalR.HubConnection
 
     public constructor(
-        private storageService: StorageService,
-        private dateService: DateService
+        @inject(service.StorageService) private storageService: StorageService,
+        @inject(service.DateService) private dateService: DateService
     ) {
         this.connection = new signalR.HubConnectionBuilder()
             .withUrl(baseUrl + 'ws/task', {

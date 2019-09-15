@@ -1,9 +1,9 @@
 import { Dispatch } from 'redux'
-import { di, GeneralApi } from '../../di'
+import { di, service, GeneralApi } from '../../di'
 import { BuildInfo } from '../../models'
 import * as actions from '../constants/general'
 
-const generalApi = di.get<GeneralApi>(GeneralApi)
+const generalApi = di.get<GeneralApi>(service.GeneralApi)
 
 export function loadGeneralInfo() {
     return async(dispatch: Dispatch<actions.GeneralAction>) => {

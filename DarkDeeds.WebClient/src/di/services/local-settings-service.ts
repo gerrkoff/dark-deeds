@@ -1,6 +1,7 @@
-import { injectable } from 'inversify'
+import { injectable, inject } from 'inversify'
 import { LocalSettings } from '../../models'
 import { StorageService } from '..'
+import service from '../service'
 
 @injectable()
 export class LocalSettingsService {
@@ -8,7 +9,7 @@ export class LocalSettingsService {
     private settings: LocalSettings
 
     public constructor(
-        private storageService: StorageService
+        @inject(service.StorageService) private storageService: StorageService
     ) {}
 
     public load(): LocalSettings {

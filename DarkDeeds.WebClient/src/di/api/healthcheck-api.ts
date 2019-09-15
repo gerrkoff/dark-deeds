@@ -1,11 +1,12 @@
-import { injectable } from 'inversify'
+import { injectable, inject } from 'inversify'
 import { Api } from '..'
+import service from '../service'
 
 @injectable()
 export class HealthCheckApi {
 
     public constructor(
-        private api: Api
+        @inject(service.Api) private api: Api
     ) {}
 
     public check(): Promise<string> {

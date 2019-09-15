@@ -1,10 +1,10 @@
 import { Dispatch } from 'redux'
-import { di, TelegramIntegrationApi, ToastService } from '../../di'
+import { di, service, TelegramIntegrationApi, ToastService } from '../../di'
 import { TelegramStart } from '../../models'
 import * as actions from '../constants/telegramIntegration'
 
-const telegramIntegrationApi = di.get<TelegramIntegrationApi>(TelegramIntegrationApi)
-const toastService = di.get<ToastService>(ToastService)
+const telegramIntegrationApi = di.get<TelegramIntegrationApi>(service.TelegramIntegrationApi)
+const toastService = di.get<ToastService>(service.ToastService)
 
 export function generateTelegramChatKey() {
     return async(dispatch: Dispatch<actions.TelegramIntegrationAction>) => {

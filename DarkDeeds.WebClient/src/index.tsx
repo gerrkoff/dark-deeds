@@ -5,6 +5,7 @@ import * as ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
 import { applyMiddleware, compose, createStore } from 'redux'
 import thunk from 'redux-thunk'
+
 import { AppRouting } from './components/app'
 import rootReducer from './redux/reducers'
 // import registerServiceWorker from './registerServiceWorker'
@@ -14,7 +15,7 @@ import 'react-toastify/dist/ReactToastify.css'
 import 'semantic-ui-css/semantic.min.css'
 import './index.css'
 import './styles/toast.css'
-import './di/api/task-hub-api'
+import './di/api/task-hub-api' // TODO:
 
 const history = createBrowserHistory()
 const store = createStore<any, any, any, any>(

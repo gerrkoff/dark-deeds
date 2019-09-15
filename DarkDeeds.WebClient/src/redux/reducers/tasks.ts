@@ -1,10 +1,10 @@
-import { di, DateService, TaskService } from '../../di'
+import { di, service, DateService, TaskService } from '../../di'
 import { Task, TaskModel, TaskLoadingStateEnum } from '../../models'
 import { ITasksState } from '../types'
 import * as actions from '../constants/tasks'
 
-const dateService = di.get<DateService>(DateService)
-const taskService = di.get<TaskService>(TaskService)
+const dateService = di.get<DateService>(service.DateService)
+const taskService = di.get<TaskService>(service.TaskService)
 
 const inittialState: ITasksState = {
     loadingState: TaskLoadingStateEnum.Loading,

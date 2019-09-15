@@ -1,12 +1,13 @@
-import { injectable } from 'inversify'
-import { Api } from './api'
+import { injectable, inject } from 'inversify'
+import { Api } from '..'
+import service from '../service'
 import { CurrentUserInfo, SigninResult, SignupResult } from '../../models'
 
 @injectable()
 export class LoginApi {
 
     public constructor(
-        private api: Api
+        @inject(service.Api) private api: Api
     ) {}
 
     public current(): Promise<CurrentUserInfo> {

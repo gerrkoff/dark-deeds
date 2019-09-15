@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { List, Segment } from 'semantic-ui-react'
-import { di, TaskService } from '../../di'
+import { di, service, TaskService } from '../../di'
 import { DayCardModel, Task, TaskModel, TaskTypeEnum } from '../../models'
 import { DayCardHeader, TaskItem } from './'
 
@@ -14,7 +14,7 @@ interface IProps {
     confirmAction?: (content: React.ReactNode, action: () => void, header: string) => void
 }
 export class DayCard extends React.PureComponent<IProps> {
-    private taskService = di.get<TaskService>(TaskService)
+    private taskService = di.get<TaskService>(service.TaskService)
 
     public render() {
         const className = this.props.expiredDate && this.props.day.date < this.props.expiredDate ? 'day-card-expired' : ''

@@ -1,12 +1,12 @@
 import { Dispatch } from 'redux'
-import { di, ToastService, UtilsService, TaskApi } from '../../di'
+import { di, service, ToastService, UtilsService, TaskApi } from '../../di'
 import { Task, TaskModel } from '../../models'
 import { TaskHub } from '../../helpers'
 import * as actions from '../constants/tasks'
 
-const utilsService = di.get<UtilsService>(UtilsService)
-const toastService = di.get<ToastService>(ToastService)
-const taskApi = di.get<TaskApi>(TaskApi)
+const utilsService = di.get<UtilsService>(service.UtilsService)
+const toastService = di.get<ToastService>(service.ToastService)
+const taskApi = di.get<TaskApi>(service.TaskApi)
 
 /*
         TASK HUB

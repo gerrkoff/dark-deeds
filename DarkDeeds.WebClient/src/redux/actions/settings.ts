@@ -1,10 +1,10 @@
 import { Dispatch } from 'redux'
-import { di, SettingsApi, ToastService } from '../../di'
+import { di, service, SettingsApi, ToastService } from '../../di'
 import { Settings } from '../../models'
 import * as actions from '../constants/settings'
 
-const settingsApi = di.get<SettingsApi>(SettingsApi)
-const toastService = di.get<ToastService>(ToastService)
+const settingsApi = di.get<SettingsApi>(service.SettingsApi)
+const toastService = di.get<ToastService>(service.ToastService)
 
 export function saveSettings(settings: Settings) {
     return async(dispatch: Dispatch<actions.SettingsAction>) => {
