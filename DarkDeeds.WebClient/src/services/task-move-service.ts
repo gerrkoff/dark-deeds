@@ -10,7 +10,7 @@ const service = {
             return tasks
         }
 
-        const filteredTasks = tasks.filter(x => x.type !== TaskTypeEnum.AllDayLong)
+        const filteredTasks = tasks.filter(x => x.type !== TaskTypeEnum.Additional)
 
         const changedTasks = SetExtended.create<number>()
 

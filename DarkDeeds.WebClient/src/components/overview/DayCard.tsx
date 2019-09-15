@@ -21,13 +21,13 @@ export class DayCard extends React.PureComponent<IProps> {
         return (
             <Segment id='day-card' className={ className } inverted raised>
                 <DayCardHeader date={this.props.day.date} openTaskModal={this.props.openTaskModal}/>
-                {this.renderAllDayTaskList(tasks.filter((x: Task) => x.type === TaskTypeEnum.AllDayLong))}
-                {this.renderTaskList(tasks.filter((x: Task) => x.type !== TaskTypeEnum.AllDayLong))}
+                {this.renderAdditionalTaskList(tasks.filter((x: Task) => x.type === TaskTypeEnum.Additional))}
+                {this.renderTaskList(tasks.filter((x: Task) => x.type !== TaskTypeEnum.Additional))}
             </Segment>
         )
     }
 
-    private renderAllDayTaskList(tasks: Task[]) {
+    private renderAdditionalTaskList(tasks: Task[]) {
         if (tasks.length === 0) {
             return (<React.Fragment />)
         }

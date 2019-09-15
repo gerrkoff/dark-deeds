@@ -11,7 +11,7 @@ class StringConvertingResult {
     private day: number = 1
     private hour: number = 0
     private minute: number = 0
-    private type: TaskTypeEnum = TaskTypeEnum.NoTime
+    private type: TaskTypeEnum = TaskTypeEnum.Simple
     private isProbable: boolean = false
 
     constructor(nowParam: Date | null) {
@@ -50,8 +50,8 @@ class StringConvertingResult {
         return text.slice(2)
     }
 
-    public extractAllDayLongType(text: string): string {
-        this.type = TaskTypeEnum.AllDayLong
+    public extractAdditionalType(text: string): string {
+        this.type = TaskTypeEnum.Additional
         return text.slice(2)
     }
 
@@ -79,7 +79,7 @@ class StringConvertingResult {
     }
 
     get timeIsApplicable(): boolean {
-        return this.type !== TaskTypeEnum.AllDayLong
+        return this.type !== TaskTypeEnum.Additional
     }
 
     public getModel(text: string): TaskModel {
@@ -118,7 +118,7 @@ const service = {
         }
 
         if (/^!\s/.test(text) && result.hasDate) {
-            text = result.extractAllDayLongType(text)
+            text = result.extractAdditionalType(text)
         }
 
         text = text.trimLeft()
@@ -149,7 +149,7 @@ const service = {
             }
             s += `${str2digits(model.date.getMonth() + 1)}${str2digits(model.date.getDate())}`
 
-            if (model.type === TaskTypeEnum.AllDayLong) {
+            if (model.type === TaskTypeEnum.Additional) {
                 s += '! '
             } else if (model.time !== null) {
                 const time = new Time(model.time)

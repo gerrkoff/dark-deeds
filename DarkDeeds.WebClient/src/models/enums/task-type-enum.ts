@@ -1,3 +1,3 @@
 export enum TaskTypeEnum {
-    NoTime, AllDayLong
+    Simple, Additional
 }
