@@ -22,7 +22,7 @@ namespace DarkDeeds.Services.Implementation
         public TaskDto ParseTask(string task)
         {
             var taskDto = new TaskDto();
-            var type = TaskTypeEnum.NoTime;
+            var type = TaskTypeEnum.Simple;
             task = ParseDate(task, out int year, out int month, out int day, out bool withDate, ref type, out int dayAdjustment);
             task = ParseTime(task, out int hour, out int minutes, out bool withTime, type);
             task = ParseProbability(task, out bool isProbable);
@@ -58,7 +58,7 @@ namespace DarkDeeds.Services.Implementation
             minutes = 0;
             withTime = false;
 
-            if (type == TaskTypeEnum.AllDayLong)
+            if (type == TaskTypeEnum.Additional)
                 return task;
 
             if (timeRx.IsMatch(task))
@@ -95,7 +95,7 @@ namespace DarkDeeds.Services.Implementation
                 date = task.Substring(4, 4);
                 year = int.Parse(task.Substring(0, 4));
                 task = task.Substring(8);
-                task = ParseAllDayLong(task, ref type);
+                task = ParseAdditional(task, ref type);
                 task = task.Substring(1);
             }
             else if (dateRx.IsMatch(task))
@@ -103,7 +103,7 @@ namespace DarkDeeds.Services.Implementation
                 date = task.Substring(0, 4);
                 year = _dateService.Today.Year;
                 task = task.Substring(4);
-                task = ParseAllDayLong(task, ref type);
+                task = ParseAdditional(task, ref type);
                 task = task.Substring(1);
             }
             else if (todayShiftRx.IsMatch(task))
@@ -148,12 +148,12 @@ namespace DarkDeeds.Services.Implementation
             return task.Substring(dayAdjustment + 2);
         }
 
-        private string ParseAllDayLong(string task, ref TaskTypeEnum type)
+        private string ParseAdditional(string task, ref TaskTypeEnum type)
         {
             if (task.StartsWith("!"))
             {
                 task = task.Substring(1);
-                type = TaskTypeEnum.AllDayLong;
+                type = TaskTypeEnum.Additional;
             }
 
             return task;

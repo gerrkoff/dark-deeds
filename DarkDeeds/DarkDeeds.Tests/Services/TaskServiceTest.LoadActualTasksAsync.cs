@@ -15,7 +15,7 @@ namespace DarkDeeds.Tests.Services
             new TaskEntity {UserId = "1", Id = 1, Date = new DateTime(2018, 10, 10), IsCompleted = true},
             new TaskEntity {UserId = "1", Id = 2, Date = new DateTime(2018, 10, 11)},
             new TaskEntity {UserId = "2", Id = 10},
-            new TaskEntity {UserId = "1", Id = 11, Date = new DateTime(2018, 10, 19), Type = TaskTypeEnum.AllDayLong},
+            new TaskEntity {UserId = "1", Id = 11, Date = new DateTime(2018, 10, 19), Type = TaskTypeEnum.Additional},
             new TaskEntity {UserId = "1", Id = 3, Date = new DateTime(2018, 10, 20)},
             new TaskEntity {UserId = "1", Id = 4}
         ).Object;
@@ -72,7 +72,7 @@ namespace DarkDeeds.Tests.Services
         }
         
         [Fact]
-        public async Task LoadActualTasksAsync_ExcludeExpiredAllDayLong()
+        public async Task LoadActualTasksAsync_ExcludeExpiredAdditional()
         {
             var service = new TaskService(DefaultRepo_LoadActualTasksAsync());
 
