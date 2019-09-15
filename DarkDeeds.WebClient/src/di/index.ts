@@ -42,7 +42,6 @@ container.bind<TaskApi>(service.TaskApi).to(TaskApi)
 container.bind<TaskHubApi>(service.TaskHubApi).to(TaskHubApi)
 container.bind<TelegramIntegrationApi>(service.TelegramIntegrationApi).to(TelegramIntegrationApi)
 
-console.log(service)
 export {
     container as di,
     service,
