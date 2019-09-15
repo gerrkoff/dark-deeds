@@ -1,6 +1,6 @@
 namespace DarkDeeds.Enums
 {
-    public enum TaskTimeTypeEnum
+    public enum TaskTypeEnum
     {
         NoTime,
         AllDayLong

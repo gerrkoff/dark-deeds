@@ -28,7 +28,7 @@ namespace DarkDeeds.Services.Implementation
             IQueryable<TaskEntity> tasks = _tasksRepository.GetAll()
                 .Where(x => string.Equals(x.UserId, userId))
                 .Where(x =>
-                    !x.IsCompleted && x.TimeType != TaskTimeTypeEnum.AllDayLong ||
+                    !x.IsCompleted && x.Type != TaskTypeEnum.AllDayLong ||
                     !x.Date.HasValue ||
                     x.Date >= from);
             

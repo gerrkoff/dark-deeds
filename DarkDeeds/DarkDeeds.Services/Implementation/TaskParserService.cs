@@ -22,13 +22,13 @@ namespace DarkDeeds.Services.Implementation
         public TaskDto ParseTask(string task)
         {
             var taskDto = new TaskDto();
-            var timeType = TaskTimeTypeEnum.NoTime;
-            task = ParseDate(task, out int year, out int month, out int day, out bool withDate, ref timeType, out int dayAdjustment);
-            task = ParseTime(task, out int hour, out int minutes, out bool withTime, timeType);
+            var type = TaskTypeEnum.NoTime;
+            task = ParseDate(task, out int year, out int month, out int day, out bool withDate, ref type, out int dayAdjustment);
+            task = ParseTime(task, out int hour, out int minutes, out bool withTime, type);
             task = ParseProbability(task, out bool isProbable);
             
             taskDto.Title = task;
-            taskDto.TimeType = timeType;
+            taskDto.Type = type;
             taskDto.IsProbable = isProbable;
             if (withDate)
                 taskDto.Date = CreateDateTime(year, month, day, dayAdjustment);
@@ -50,7 +50,7 @@ namespace DarkDeeds.Services.Implementation
             return task;
         }
 
-        private string ParseTime(string task, out int hour, out int minutes, out bool withTime, TaskTimeTypeEnum timeType)
+        private string ParseTime(string task, out int hour, out int minutes, out bool withTime, TaskTypeEnum type)
         {
             var timeRx = new Regex(@"^\d{4}\s");
             string time = string.Empty;
@@ -58,7 +58,7 @@ namespace DarkDeeds.Services.Implementation
             minutes = 0;
             withTime = false;
 
-            if (timeType == TaskTimeTypeEnum.AllDayLong)
+            if (type == TaskTypeEnum.AllDayLong)
                 return task;
 
             if (timeRx.IsMatch(task))
@@ -77,7 +77,7 @@ namespace DarkDeeds.Services.Implementation
             return task;
         }
 
-        private string ParseDate(string task, out int year, out int month, out int day, out bool withDate, ref TaskTimeTypeEnum timeType, out int dayAdjustment)
+        private string ParseDate(string task, out int year, out int month, out int day, out bool withDate, ref TaskTypeEnum type, out int dayAdjustment)
         {
             var dateWithYearRx = new Regex(@"^\d{8}!?\s");
             var dateRx = new Regex(@"^\d{4}!?\s");
@@ -95,7 +95,7 @@ namespace DarkDeeds.Services.Implementation
                 date = task.Substring(4, 4);
                 year = int.Parse(task.Substring(0, 4));
                 task = task.Substring(8);
-                task = ParseAllDayLong(task, ref timeType);
+                task = ParseAllDayLong(task, ref type);
                 task = task.Substring(1);
             }
             else if (dateRx.IsMatch(task))
@@ -103,7 +103,7 @@ namespace DarkDeeds.Services.Implementation
                 date = task.Substring(0, 4);
                 year = _dateService.Today.Year;
                 task = task.Substring(4);
-                task = ParseAllDayLong(task, ref timeType);
+                task = ParseAllDayLong(task, ref type);
                 task = task.Substring(1);
             }
             else if (todayShiftRx.IsMatch(task))
@@ -148,12 +148,12 @@ namespace DarkDeeds.Services.Implementation
             return task.Substring(dayAdjustment + 2);
         }
 
-        private string ParseAllDayLong(string task, ref TaskTimeTypeEnum timeType)
+        private string ParseAllDayLong(string task, ref TaskTypeEnum type)
         {
             if (task.StartsWith("!"))
             {
                 task = task.Substring(1);
-                timeType = TaskTimeTypeEnum.AllDayLong;
+                type = TaskTypeEnum.AllDayLong;
             }
 
             return task;

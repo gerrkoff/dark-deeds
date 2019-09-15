@@ -12,7 +12,7 @@ namespace DarkDeeds.Data.Entity
         public int Order { get; set; }
         
         public DateTime? Date { get; set; }
-        public TaskTimeTypeEnum TimeType { get; set; }
+        public TaskTypeEnum Type { get; set; }
         public int? Time { get; set; }
         
         public bool IsCompleted { get; set; }
