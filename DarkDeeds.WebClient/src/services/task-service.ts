@@ -43,16 +43,7 @@ const service = {
     },
 
     tasksEqual(taskA: Task, taskB: Task): boolean {
-        let dateEquals = false
-        if (taskA.date === null && taskB.date === null) {
-            dateEquals = true
-        } else if (taskA.date !== null && taskB.date !== null) {
-            dateEquals = taskA.date.getTime() === taskB.date.getTime()
-        } else {
-            dateEquals = false
-        }
-
-        return dateEquals
+        return DateService.toNumber(taskA.date) === DateService.toNumber(taskB.date)
             && taskA.title === taskB.title
             && taskA.order === taskB.order
             && taskA.id === taskB.id
