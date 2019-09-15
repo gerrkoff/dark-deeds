@@ -1,4 +1,4 @@
-import { Task, TaskTimeTypeEnum } from '../models'
+import { Task, TaskTypeEnum } from '../models'
 import { SetExtended } from '../helpers'
 import { DateService, TaskService } from '.'
 
@@ -10,7 +10,7 @@ const service = {
             return tasks
         }
 
-        const filteredTasks = tasks.filter(x => x.timeType !== TaskTimeTypeEnum.AllDayLong)
+        const filteredTasks = tasks.filter(x => x.type !== TaskTypeEnum.AllDayLong)
 
         const changedTasks = SetExtended.create<number>()
 

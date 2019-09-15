@@ -5,7 +5,7 @@ export * from './task-model'
 
 export * from './interfaces/idateable'
 
-export * from './enums/task-time-type-enum'
+export * from './enums/task-type-enum'
 export * from './enums/signin-result-enum'
 export * from './enums/signup-result-enum'
 export * from './enums/overview-tab-enum'

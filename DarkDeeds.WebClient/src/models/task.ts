@@ -1,4 +1,4 @@
-import { TaskModel, TaskTimeTypeEnum } from './'
+import { TaskModel, TaskTypeEnum } from './'
 
 export class Task implements TaskModel {
     constructor(
@@ -10,7 +10,7 @@ export class Task implements TaskModel {
         public id: number = 0,
         public completed: boolean = false,
         public deleted: boolean = false,
-        public timeType: TaskTimeTypeEnum = TaskTimeTypeEnum.NoTime,
+        public type: TaskTypeEnum = TaskTypeEnum.NoTime,
         public isProbable: boolean = false,
         public version: number = 0,
         public time: number | null = null

@@ -1,4 +1,4 @@
-import { TaskModel, TaskTimeTypeEnum, Time } from '../models'
+import { TaskModel, TaskTypeEnum, Time } from '../models'
 
 class StringConvertingResult {
     public hasDate: boolean = false
@@ -11,7 +11,7 @@ class StringConvertingResult {
     private day: number = 1
     private hour: number = 0
     private minute: number = 0
-    private timeType: TaskTimeTypeEnum = TaskTimeTypeEnum.NoTime
+    private type: TaskTypeEnum = TaskTypeEnum.NoTime
     private isProbable: boolean = false
 
     constructor(nowParam: Date | null) {
@@ -51,7 +51,7 @@ class StringConvertingResult {
     }
 
     public extractAllDayLongType(text: string): string {
-        this.timeType = TaskTimeTypeEnum.AllDayLong
+        this.type = TaskTypeEnum.AllDayLong
         return text.slice(2)
     }
 
@@ -79,13 +79,13 @@ class StringConvertingResult {
     }
 
     get timeIsApplicable(): boolean {
-        return this.timeType !== TaskTimeTypeEnum.AllDayLong
+        return this.type !== TaskTypeEnum.AllDayLong
     }
 
     public getModel(text: string): TaskModel {
         return {
             date: this.hasDate ? new Date(Date.UTC(this.year, this.month - 1, this.day)) : null,
-            timeType: this.timeType,
+            type: this.type,
             title: text,
             isProbable: this.isProbable,
             time: this.hasTime ? this.hour * 60 + this.minute : null
@@ -149,7 +149,7 @@ const service = {
             }
             s += `${str2digits(model.date.getMonth() + 1)}${str2digits(model.date.getDate())}`
 
-            if (model.timeType === TaskTimeTypeEnum.AllDayLong) {
+            if (model.type === TaskTypeEnum.AllDayLong) {
                 s += '! '
             } else if (model.time !== null) {
                 const time = new Time(model.time)
