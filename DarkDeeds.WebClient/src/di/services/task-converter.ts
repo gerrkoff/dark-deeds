@@ -1,14 +1,17 @@
-import { injectable } from 'inversify'
+import { injectable, inject } from 'inversify'
 import { TaskModel, TaskTypeEnum, Time } from '../../models'
+import { DateService } from '..'
+import diToken from '../token'
 
 @injectable()
 export class TaskConverter {
 
-    // NOW param is used only for tests
-    // yes, I know, I should refactor all services to use DI
-    // TODO:
-    public convertStringToModel(text: string, now?: Date | null): TaskModel {
-        const result = new StringConvertingResult(now === undefined ? null : now)
+    public constructor(
+        @inject(diToken.DateService) private dateService: DateService
+    ) {}
+
+    public convertStringToModel(text: string): TaskModel {
+        const result = new StringConvertingResult(this.dateService.today())
 
         if (/^\d{8}!?\s/.test(text)) {
             result.setHasDate()
@@ -87,8 +90,6 @@ class StringConvertingResult {
     public hasDate: boolean = false
     private hasTime: boolean = false
 
-    private now: Date
-
     private year: number
     private month: number = 0
     private day: number = 1
@@ -97,10 +98,7 @@ class StringConvertingResult {
     private type: TaskTypeEnum = TaskTypeEnum.Simple
     private isProbable: boolean = false
 
-    constructor(nowParam: Date | null) {
-        this.now = nowParam === null
-            ? new Date()
-            : nowParam
+    constructor(private now: Date) {
         this.year = this.now.getFullYear()
     }
 
