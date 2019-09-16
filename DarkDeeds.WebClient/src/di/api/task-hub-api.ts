@@ -1,7 +1,7 @@
 import { injectable, inject } from 'inversify'
 import * as signalR from '@aspnet/signalr'
 import { DateService, StorageService } from '..'
-import service from '../service'
+import diToken from '../token'
 import baseUrl from './base-url'
 import { Task } from '../../models'
 
@@ -11,9 +11,11 @@ export class TaskHubApi {
     private connection: signalR.HubConnection
 
     public constructor(
-        @inject(service.StorageService) private storageService: StorageService,
-        @inject(service.DateService) private dateService: DateService
-    ) {
+        @inject(diToken.StorageService) private storageService: StorageService,
+        @inject(diToken.DateService) private dateService: DateService
+    ) {}
+
+    public init() {
         this.connection = new signalR.HubConnectionBuilder()
             .withUrl(baseUrl + 'ws/task', {
                 accessTokenFactory: () => this.storageService.loadAccessToken() as string

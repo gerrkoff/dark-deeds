@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { Accordion, AccordionTitleProps } from 'semantic-ui-react'
-import { di, service, DateService, TaskMoveService, TaskService, LocalSettingsService } from '../../di'
+import { di, diToken, DateService, TaskMoveService, TaskService, LocalSettingsService } from '../../di'
 import { DayCardModel, Task, TaskModel, LocalSettings, OverviewTabEnum } from '../../models'
 import { DragulaWrapper } from '../../helpers'
 import { DaysBlock, NoDateCard } from './'
@@ -17,10 +17,10 @@ interface IProps {
     confirmAction?: (content: React.ReactNode, action: () => void, header: string) => void
 }
 export class Overview extends React.PureComponent<IProps> {
-    private dateService = di.get<DateService>(service.DateService)
-    private taskMoveService = di.get<TaskMoveService>(service.TaskMoveService)
-    private taskService = di.get<TaskService>(service.TaskService)
-    private localSettingsService = di.get<LocalSettingsService>(service.LocalSettingsService)
+    private dateService = di.get<DateService>(diToken.DateService)
+    private taskMoveService = di.get<TaskMoveService>(diToken.TaskMoveService)
+    private taskService = di.get<TaskService>(diToken.TaskService)
+    private localSettingsService = di.get<LocalSettingsService>(diToken.LocalSettingsService)
 
     private dragula: DragulaWrapper
     private settings: LocalSettings

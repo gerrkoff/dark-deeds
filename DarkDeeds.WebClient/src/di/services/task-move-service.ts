@@ -2,14 +2,14 @@ import { injectable, inject } from 'inversify'
 import { Task, TaskTypeEnum } from '../../models'
 import { SetExtended } from '../../helpers'
 import { DateService, TaskService } from '..'
-import service from '../service'
+import diToken from '../token'
 
 @injectable()
 export class TaskMoveService {
 
     public constructor(
-        @inject(service.DateService) private dateService: DateService,
-        @inject(service.TaskService) private taskService: TaskService
+        @inject(diToken.DateService) private dateService: DateService,
+        @inject(diToken.TaskService) private taskService: TaskService
     ) {}
 
     public moveTask(tasks: Task[], taskId: number, targetDate: number, sourceDate: number, nextSiblingId: number | null): Task[] {

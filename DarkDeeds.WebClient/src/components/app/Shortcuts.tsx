@@ -1,11 +1,11 @@
 import * as React from 'react'
-import { di, service, KeyConstants } from '../../di'
+import { di, diToken, KeyConstants } from '../../di'
 
 interface IProps {
     openEditTask: () => void
 }
 export class Shortcuts extends React.PureComponent<IProps> {
-    private keyConstants = di.get<KeyConstants>(service.KeyConstants)
+    private keyConstants = di.get<KeyConstants>(diToken.KeyConstants)
 
     private isCmdDownL: boolean = false
     private isCmdDownR: boolean = false

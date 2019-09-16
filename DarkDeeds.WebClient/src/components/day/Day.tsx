@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { di, service, DateService } from '../../di'
+import { di, diToken, DateService } from '../../di'
 
 interface IProps {
     match: {
@@ -9,7 +9,7 @@ interface IProps {
     }
 }
 export class Day extends React.PureComponent<IProps> {
-    private dateService = di.get<DateService>(service.DateService)
+    private dateService = di.get<DateService>(diToken.DateService)
 
     public render() {
         const dateParam = this.dateService.toDateFromSpecialFormat(this.props.match.params.date)

@@ -1,12 +1,12 @@
 import { Dispatch } from 'redux'
 import { push as navigateTo, RouterAction } from 'connected-react-router'
-import { di, service, LoginApi, StorageService, ToastService } from '../../di'
+import { di, diToken, LoginApi, StorageService, ToastService } from '../../di'
 import { SigninResultEnum, SignupResultEnum } from '../../models'
 import * as actions from '../constants/login'
 
-const loginApi = di.get<LoginApi>(service.LoginApi)
-const storageService = di.get<StorageService>(service.StorageService)
-const toastService = di.get<ToastService>(service.ToastService)
+const loginApi = di.get<LoginApi>(diToken.LoginApi)
+const storageService = di.get<StorageService>(diToken.StorageService)
+const toastService = di.get<ToastService>(diToken.ToastService)
 
 export function initialLogin() {
     return async(dispatch: Dispatch<actions.LoginAction>) => {

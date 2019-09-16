@@ -1,5 +1,5 @@
 import { Task } from '../models'
-import { di, service, UtilsService, TaskHubApi } from '../di'
+import { di, diToken, UtilsService, TaskHubApi } from '../di'
 import { EventEmitter } from 'events'
 
 export class TaskHub {
@@ -8,8 +8,8 @@ export class TaskHub {
     private _eventEmitter: EventEmitter = new EventEmitter()
     private _reconnectEventName = 'reconnect'
 
-    private taskHubApi = di.get<TaskHubApi>(service.TaskHubApi)
-    private utilsService = di.get<UtilsService>(service.UtilsService)
+    private taskHubApi = di.get<TaskHubApi>(diToken.TaskHubApi)
+    private utilsService = di.get<UtilsService>(diToken.UtilsService)
 
     constructor(
         updateCallback: (tasks: Task[], localUpdate: boolean) => void,

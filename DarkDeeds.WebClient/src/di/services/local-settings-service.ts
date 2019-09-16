@@ -1,7 +1,7 @@
 import { injectable, inject } from 'inversify'
 import { LocalSettings } from '../../models'
 import { StorageService } from '..'
-import service from '../service'
+import diToken from '../token'
 
 @injectable()
 export class LocalSettingsService {
@@ -9,7 +9,7 @@ export class LocalSettingsService {
     private settings: LocalSettings
 
     public constructor(
-        @inject(service.StorageService) private storageService: StorageService
+        @inject(diToken.StorageService) private storageService: StorageService
     ) {}
 
     public load(): LocalSettings {

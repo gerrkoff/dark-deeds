@@ -1,13 +1,13 @@
 import { injectable, inject } from 'inversify'
 import { Api } from '..'
-import service from '../service'
+import diToken from '../token'
 import { TelegramStart } from '../../models'
 
 @injectable()
 export class TelegramIntegrationApi {
 
     public constructor(
-        @inject(service.Api) private api: Api
+        @inject(diToken.Api) private api: Api
     ) {}
 
     public start(timezoneOffset: number): Promise<TelegramStart> {

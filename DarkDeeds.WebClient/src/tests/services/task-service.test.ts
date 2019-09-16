@@ -1,4 +1,4 @@
-import { di, service as diService, TaskService } from '../../di'
+import { di, diToken, DateService, TaskService } from '../../di'
 import { Task, TaskTypeEnum } from '../../models'
 
 function task(year: number, month: number, date: number, id: number = 0, order: number = 0, timeType: TaskTypeEnum = TaskTypeEnum.Simple, hours: number = 0, minutes: number = 0): Task {
@@ -21,7 +21,7 @@ test('[evalModel] positive', () => {
         new Task(0, '')
     ]
 
-    const service = di.get<TaskService>(diService.TaskService)
+    const service = di.get<TaskService>(diToken.TaskService)
     const result = service.evalModel(tasks, new Date(2018, 9, 17), true)
 
     expect(result.noDate.length).toBe(2)
@@ -37,7 +37,7 @@ test('[evalModel] ignore completed if showCompleted=false', () => {
         new Task(3, '', null, 0, false, 0, true)
     ]
 
-    const service = di.get<TaskService>(diService.TaskService)
+    const service = di.get<TaskService>(diToken.TaskService)
     const result = service.evalModel(tasks, new Date(2018, 9, 17), false)
 
     expect(result.noDate.length).toBe(1)
@@ -45,7 +45,7 @@ test('[evalModel] ignore completed if showCompleted=false', () => {
 })
 
 test('[tasksEqual] positive', () => {
-    const service = di.get<TaskService>(diService.TaskService)
+    const service = di.get<TaskService>(diToken.TaskService)
     expect(service.tasksEqual(new Task(1, '1', null, 1, false, 1), new Task(1, '1', null, 1, false, 1))).toBeTruthy()
     expect(service.tasksEqual(new Task(1, '1', null, 1, false, 1), new Task(1, '1', new Date(), 1, false, 1))).not.toBeTruthy()
     expect(service.tasksEqual(new Task(1, '1', new Date(2018), 1, false, 1), new Task(1, '1', new Date(2018), 1, false, 1))).toBeTruthy()
@@ -69,7 +69,7 @@ test('[sort] positive', () => {
         new Task(12, '', new Date(2018, 1, 1), 1, false, 0, false, false, TaskTypeEnum.Additional)
     ]
 
-    const service = di.get<TaskService>(diService.TaskService)
+    const service = new TaskService(jest.fn<DateService>() as unknown as DateService)
     const result = tasks.sort(service.sorting)
 
     expect(result[0].clientId).toBe(2)

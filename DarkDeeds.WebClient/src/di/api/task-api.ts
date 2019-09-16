@@ -1,14 +1,14 @@
 import { injectable, inject } from 'inversify'
 import { Api, DateService } from '..'
-import service from '../service'
+import diToken from '../token'
 import { Task } from '../../models'
 
 @injectable()
 export class TaskApi {
 
     public constructor(
-        @inject(service.Api) private api: Api,
-        @inject(service.DateService) private dateService: DateService
+        @inject(diToken.Api) private api: Api,
+        @inject(diToken.DateService) private dateService: DateService
     ) {}
 
     public async loadTasks(): Promise<Task[]> {

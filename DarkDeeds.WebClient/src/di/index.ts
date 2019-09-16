@@ -1,6 +1,6 @@
 import 'reflect-metadata'
 import { Container } from 'inversify'
-import service from './service'
+import token from './token'
 
 import { UtilsService } from './services/utils-service'
 import { DateService } from './services/date-service'
@@ -23,28 +23,28 @@ import { TelegramIntegrationApi } from './api/telegram-integration-api'
 
 const container = new Container({ defaultScope: 'Singleton' })
 
-container.bind<DateService>(service.DateService).to(DateService)
-container.bind<KeyConstants>(service.KeyConstants).to(KeyConstants)
-container.bind<LocalSettingsService>(service.LocalSettingsService).to(LocalSettingsService)
-container.bind<StorageService>(service.StorageService).to(StorageService)
-container.bind<TaskConverter>(service.TaskConverter).to(TaskConverter)
-container.bind<TaskMoveService>(service.TaskMoveService).to(TaskMoveService)
-container.bind<TaskService>(service.TaskService).to(TaskService)
-container.bind<ToastService>(service.ToastService).to(ToastService)
-container.bind<UtilsService>(service.UtilsService).to(UtilsService)
+container.bind<DateService>(token.DateService).to(DateService)
+container.bind<KeyConstants>(token.KeyConstants).to(KeyConstants)
+container.bind<LocalSettingsService>(token.LocalSettingsService).to(LocalSettingsService)
+container.bind<StorageService>(token.StorageService).to(StorageService)
+container.bind<TaskConverter>(token.TaskConverter).to(TaskConverter)
+container.bind<TaskMoveService>(token.TaskMoveService).to(TaskMoveService)
+container.bind<TaskService>(token.TaskService).to(TaskService)
+container.bind<ToastService>(token.ToastService).to(ToastService)
+container.bind<UtilsService>(token.UtilsService).to(UtilsService)
 
-container.bind<Api>(service.Api).to(Api)
-container.bind<GeneralApi>(service.GeneralApi).to(GeneralApi)
-container.bind<HealthCheckApi>(service.HealthCheckApi).to(HealthCheckApi)
-container.bind<LoginApi>(service.LoginApi).to(LoginApi)
-container.bind<SettingsApi>(service.SettingsApi).to(SettingsApi)
-container.bind<TaskApi>(service.TaskApi).to(TaskApi)
-container.bind<TaskHubApi>(service.TaskHubApi).to(TaskHubApi)
-container.bind<TelegramIntegrationApi>(service.TelegramIntegrationApi).to(TelegramIntegrationApi)
+container.bind<Api>(token.Api).to(Api)
+container.bind<GeneralApi>(token.GeneralApi).to(GeneralApi)
+container.bind<HealthCheckApi>(token.HealthCheckApi).to(HealthCheckApi)
+container.bind<LoginApi>(token.LoginApi).to(LoginApi)
+container.bind<SettingsApi>(token.SettingsApi).to(SettingsApi)
+container.bind<TaskApi>(token.TaskApi).to(TaskApi)
+container.bind<TaskHubApi>(token.TaskHubApi).to(TaskHubApi)
+container.bind<TelegramIntegrationApi>(token.TelegramIntegrationApi).to(TelegramIntegrationApi)
 
 export {
     container as di,
-    service,
+    token as diToken,
 
     UtilsService,
     DateService,

@@ -1,13 +1,13 @@
 import { injectable, inject } from 'inversify'
 import { DayCardModel, OverviewModel, Task } from '../../models'
 import { DateService } from '..'
-import service from '../service'
+import diToken from '../token'
 
 @injectable()
 export class TaskService {
 
     public constructor(
-        @inject(service.DateService) private dateService: DateService
+        @inject(diToken.DateService) private dateService: DateService
     ) {}
 
     public evalModel(tasks: Task[], now: Date, showCompleted: boolean): OverviewModel {
