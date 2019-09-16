@@ -10,13 +10,13 @@ export class TaskService {
         @inject(diToken.DateService) private dateService: DateService
     ) {}
 
-    public evalModel(tasks: Task[], now: Date, showCompleted: boolean): OverviewModel {
+    public evalModel(tasks: Task[], showCompleted: boolean): OverviewModel {
         tasks = tasks.filter(x =>
             (showCompleted || !x.completed) &&
             !x.deleted)
 
         const model = new OverviewModel()
-        const currentStart = this.dateService.monday(now)
+        const currentStart = this.dateService.monday(this.dateService.today())
         const futureStart = new Date(currentStart)
         futureStart.setDate(currentStart.getDate() + 14)
 

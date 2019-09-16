@@ -48,8 +48,7 @@ export class Overview extends React.PureComponent<IProps> {
             return (<React.Fragment />)
         }
 
-        const today = this.dateService.today()
-        const model = this.taskService.evalModel(this.props.tasks, today, this.props.showCompleted)
+        const model = this.taskService.evalModel(this.props.tasks, this.props.showCompleted)
         this.tabMap = [OverviewTabEnum.NoDate]
 
         const panels = [{
