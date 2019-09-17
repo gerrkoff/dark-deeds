@@ -1,7 +1,7 @@
 import { TaskService } from '../../services'
-import { Task, TaskTimeTypeEnum } from '../../models'
+import { Task, TaskTypeEnum } from '../../models'
 
-function task(year: number, month: number, date: number, id: number = 0, order: number = 0, timeType: TaskTimeTypeEnum = TaskTimeTypeEnum.NoTime, hours: number = 0, minutes: number = 0): Task {
+function task(year: number, month: number, date: number, id: number = 0, order: number = 0, timeType: TaskTypeEnum = TaskTypeEnum.Simple, hours: number = 0, minutes: number = 0): Task {
     return new Task(id, '', new Date(year, month, date, hours, minutes), order, false, 0, false, false, timeType)
 }
 
@@ -47,23 +47,23 @@ test('[tasksEqual] positive', () => {
     expect(TaskService.tasksEqual(new Task(1, '1', null, 1, false, 1), new Task(1, '1', new Date(), 1, false, 1))).not.toBeTruthy()
     expect(TaskService.tasksEqual(new Task(1, '1', new Date(2018), 1, false, 1), new Task(1, '1', new Date(2018), 1, false, 1))).toBeTruthy()
     expect(TaskService.tasksEqual(new Task(1, '1', new Date(2018), 1, false, 1), new Task(2, '2', new Date(2019), 2, false, 2))).not.toBeTruthy()
-    expect(TaskService.tasksEqual(new Task(1, '1', null, 1, false, 1, false, false, TaskTimeTypeEnum.NoTime, false), new Task(1, '1', null, 1, false, 1, false, false, TaskTimeTypeEnum.NoTime, true))).not.toBeTruthy()
+    expect(TaskService.tasksEqual(new Task(1, '1', null, 1, false, 1, false, false, TaskTypeEnum.Simple, false), new Task(1, '1', null, 1, false, 1, false, false, TaskTypeEnum.Simple, true))).not.toBeTruthy()
 })
 
 test('[sort] positive', () => {
     const tasks = [
-        new Task(1, '', new Date(2018, 1, 1), 1, false, 0, false, false, TaskTimeTypeEnum.NoTime),
-        new Task(2, '', new Date(2018, 1, 1), 0, false, 0, false, false, TaskTimeTypeEnum.NoTime, false, 0, 600),
-        new Task(3, '', new Date(2018, 1, 1), 4, false, 0, false, false, TaskTimeTypeEnum.NoTime),
-        new Task(4, '', new Date(2018, 1, 1), 0, false, 0, false, false, TaskTimeTypeEnum.NoTime, false, 0, 600),
-        new Task(5, '', new Date(2018, 1, 1), 3, false, 0, false, false, TaskTimeTypeEnum.NoTime),
-        new Task(6, '', new Date(2018, 1, 1), 0, false, 0, false, false, TaskTimeTypeEnum.NoTime, false, 0, 480),
-        new Task(7, '', new Date(2018, 1, 1), 2, false, 0, false, false, TaskTimeTypeEnum.NoTime),
-        new Task(8, '', new Date(2018, 1, 1), 0, false, 0, false, false, TaskTimeTypeEnum.NoTime, false, 0, 900),
-        new Task(9, '', new Date(2018, 1, 1), 2, false, 0, false, false, TaskTimeTypeEnum.NoTime, false, 0, 480),
-        new Task(10, '', new Date(2018, 1, 1), 1, false, 0, false, false, TaskTimeTypeEnum.NoTime, false, 0, 480),
-        new Task(11, '', new Date(2018, 1, 1), 2, false, 0, false, false, TaskTimeTypeEnum.AllDayLong),
-        new Task(12, '', new Date(2018, 1, 1), 1, false, 0, false, false, TaskTimeTypeEnum.AllDayLong)
+        new Task(1, '', new Date(2018, 1, 1), 1, false, 0, false, false, TaskTypeEnum.Simple),
+        new Task(2, '', new Date(2018, 1, 1), 0, false, 0, false, false, TaskTypeEnum.Simple, false, 0, 600),
+        new Task(3, '', new Date(2018, 1, 1), 4, false, 0, false, false, TaskTypeEnum.Simple),
+        new Task(4, '', new Date(2018, 1, 1), 0, false, 0, false, false, TaskTypeEnum.Simple, false, 0, 600),
+        new Task(5, '', new Date(2018, 1, 1), 3, false, 0, false, false, TaskTypeEnum.Simple),
+        new Task(6, '', new Date(2018, 1, 1), 0, false, 0, false, false, TaskTypeEnum.Simple, false, 0, 480),
+        new Task(7, '', new Date(2018, 1, 1), 2, false, 0, false, false, TaskTypeEnum.Simple),
+        new Task(8, '', new Date(2018, 1, 1), 0, false, 0, false, false, TaskTypeEnum.Simple, false, 0, 900),
+        new Task(9, '', new Date(2018, 1, 1), 2, false, 0, false, false, TaskTypeEnum.Simple, false, 0, 480),
+        new Task(10, '', new Date(2018, 1, 1), 1, false, 0, false, false, TaskTypeEnum.Simple, false, 0, 480),
+        new Task(11, '', new Date(2018, 1, 1), 2, false, 0, false, false, TaskTypeEnum.Additional),
+        new Task(12, '', new Date(2018, 1, 1), 1, false, 0, false, false, TaskTypeEnum.Additional)
     ]
     const result = tasks.sort(TaskService.sorting)
 

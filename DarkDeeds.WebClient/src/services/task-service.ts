@@ -49,7 +49,7 @@ const service = {
             && taskA.id === taskB.id
             && taskA.completed === taskB.completed
             && taskA.deleted === taskB.deleted
-            && taskA.timeType === taskB.timeType
+            && taskA.type === taskB.type
             && taskA.isProbable === taskB.isProbable
             && taskA.time === taskB.time
     },

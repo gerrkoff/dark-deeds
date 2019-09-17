@@ -1,7 +1,7 @@
 import * as enzyme from 'enzyme'
 import * as React from 'react'
 import { DayCard } from '../../components/overview/'
-import { DayCardModel, Task, TaskTimeTypeEnum } from '../../models'
+import { DayCardModel, Task, TaskTypeEnum } from '../../models'
 
 test('renders tasks', () => {
     const tasks = []
@@ -48,7 +48,7 @@ test('renders all day tasks as separate list with all-day-item classes', () => {
         tasks.push(new Task(i, '', new Date()))
     }
     for (let i = 1; i < 3; i++) {
-        tasks.push(new Task(i + 5, '', new Date(), 0, false, 0, false, false, TaskTimeTypeEnum.AllDayLong))
+        tasks.push(new Task(i + 5, '', new Date(), 0, false, 0, false, false, TaskTypeEnum.Additional))
     }
     const model = new DayCardModel(new Date(), tasks)
     const component = enzyme.shallow(<DayCard day={model} />)

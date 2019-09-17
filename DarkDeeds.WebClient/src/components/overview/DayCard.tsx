@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { List, Segment } from 'semantic-ui-react'
 import { TaskService } from '../../services'
-import { DayCardModel, Task, TaskModel, TaskTimeTypeEnum } from '../../models'
+import { DayCardModel, Task, TaskModel, TaskTypeEnum } from '../../models'
 import { DayCardHeader, TaskItem } from './'
 
 import '../../styles/day-card.css'
@@ -21,13 +21,13 @@ export class DayCard extends React.PureComponent<IProps> {
         return (
             <Segment id='day-card' className={ className } inverted raised>
                 <DayCardHeader date={this.props.day.date} openTaskModal={this.props.openTaskModal}/>
-                {this.renderAllDayTaskList(tasks.filter((x: Task) => x.timeType === TaskTimeTypeEnum.AllDayLong))}
-                {this.renderTaskList(tasks.filter((x: Task) => x.timeType !== TaskTimeTypeEnum.AllDayLong))}
+                {this.renderAdditionalTaskList(tasks.filter((x: Task) => x.type === TaskTypeEnum.Additional))}
+                {this.renderTaskList(tasks.filter((x: Task) => x.type !== TaskTypeEnum.Additional))}
             </Segment>
         )
     }
 
-    private renderAllDayTaskList(tasks: Task[]) {
+    private renderAdditionalTaskList(tasks: Task[]) {
         if (tasks.length === 0) {
             return (<React.Fragment />)
         }

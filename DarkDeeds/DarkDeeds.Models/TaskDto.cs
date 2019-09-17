@@ -14,7 +14,7 @@ namespace DarkDeeds.Models
         public bool Completed { get; set; }
         public bool IsProbable { get; set; }
         public bool Deleted { get; set; }
-        public TaskTimeTypeEnum TimeType { get; set; }
+        public TaskTypeEnum Type { get; set; }
         public int Version { get; set; }
     }
 }

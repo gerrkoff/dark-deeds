@@ -1,5 +1,5 @@
 import { TaskConverter } from '../../services'
-import { TaskModel, TaskTimeTypeEnum } from '../../models'
+import { TaskModel, TaskTypeEnum } from '../../models'
 
 const def: Date = new Date(2019, 0, 1, 0, 0)
 function dt(year: number, month: number, date: number): number {
@@ -12,7 +12,7 @@ test('[convertStringToModel] no date and time', () => {
     const result = TaskConverter.convertStringToModel('Test!', def)
 
     expect(result.title).toBe('Test!')
-    expect(result.timeType).toBe(TaskTimeTypeEnum.NoTime)
+    expect(result.type).toBe(TaskTypeEnum.Simple)
     expect(result.date).toBeNull()
     expect(result.time).toBeNull()
 })
@@ -22,7 +22,7 @@ test('[convertStringToModel] date and no time', () => {
     const result = TaskConverter.convertStringToModel('1231 Test!', def)
 
     expect(result.title).toBe('Test!')
-    expect(result.timeType).toBe(TaskTimeTypeEnum.NoTime)
+    expect(result.type).toBe(TaskTypeEnum.Simple)
     expect(result.date!.getTime()).toBe(dt(2019, 11, 31))
     expect(result.time).toBeNull()
 })
@@ -32,7 +32,7 @@ test('[convertStringToModel] date and no time 2 - not working w/o space', () => 
     const result = TaskConverter.convertStringToModel('0101Test!!!', def)
 
     expect(result.title).toBe('0101Test!!!')
-    expect(result.timeType).toBe(TaskTimeTypeEnum.NoTime)
+    expect(result.type).toBe(TaskTypeEnum.Simple)
     expect(result.date).toBeNull()
     expect(result.time).toBeNull()
 })
@@ -42,7 +42,7 @@ test('[convertStringToModel] date and time', () => {
     const result = TaskConverter.convertStringToModel('1231 2359 Test!', def)
 
     expect(result.title).toBe('Test!')
-    expect(result.timeType).toBe(TaskTimeTypeEnum.NoTime)
+    expect(result.type).toBe(TaskTypeEnum.Simple)
     expect(result.date!.getTime()).toBe(dt(2019, 11, 31))
     expect(result.time).toBe(1439)
 })
@@ -52,7 +52,7 @@ test('[convertStringToModel] date and time 2 - not working w/o space', () => {
     const result = TaskConverter.convertStringToModel('0101 0101Test!!!', def)
 
     expect(result.title).toBe('0101Test!!!')
-    expect(result.timeType).toBe(TaskTimeTypeEnum.NoTime)
+    expect(result.type).toBe(TaskTypeEnum.Simple)
     expect(result.date!.getTime()).toBe(dt(2019, 0, 1))
     expect(result.time).toBeNull()
 })
@@ -62,7 +62,7 @@ test('[convertStringToModel] date and no time with year', () => {
     const result = TaskConverter.convertStringToModel('20170101 Test', def)
 
     expect(result.title).toBe('Test')
-    expect(result.timeType).toBe(TaskTimeTypeEnum.NoTime)
+    expect(result.type).toBe(TaskTypeEnum.Simple)
     expect(result.date!.getTime()).toBe(dt(2017, 0, 1))
     expect(result.time).toBeNull()
 })
@@ -78,31 +78,31 @@ test('[convertStringToModel] is probable', () => {
 })
 
 // #8
-test('[convertStringToModel] all day long with short date', () => {
+test('[convertStringToModel] additional with short date', () => {
     const result = TaskConverter.convertStringToModel('0220! Test', def)
 
     expect(result.title).toBe('Test')
-    expect(result.timeType).toBe(TaskTimeTypeEnum.AllDayLong)
+    expect(result.type).toBe(TaskTypeEnum.Additional)
     expect(result.date!.getTime()).toBe(dt(2019, 1, 20))
     expect(result.time).toBeNull()
 })
 
 // #9
-test('[convertStringToModel] all day long with long date', () => {
+test('[convertStringToModel] additional with long date', () => {
     const result = TaskConverter.convertStringToModel('20150220! Test', def)
 
     expect(result.title).toBe('Test')
-    expect(result.timeType).toBe(TaskTimeTypeEnum.AllDayLong)
+    expect(result.type).toBe(TaskTypeEnum.Additional)
     expect(result.date!.getTime()).toBe(dt(2015, 1, 20))
     expect(result.time).toBeNull()
 })
 
 // #10
-test('[convertStringToModel] ignore time if all day long', () => {
+test('[convertStringToModel] ignore time if additional', () => {
     const result = TaskConverter.convertStringToModel('20150606! 2359 Test', def)
 
     expect(result.title).toBe('2359 Test')
-    expect(result.timeType).toBe(TaskTimeTypeEnum.AllDayLong)
+    expect(result.type).toBe(TaskTypeEnum.Additional)
     expect(result.date!.getTime()).toBe(dt(2015, 5, 6))
     expect(result.time).toBeNull()
 })
@@ -112,7 +112,7 @@ test('[convertStringToModel] today task through exclamation mark', () => {
     const result = TaskConverter.convertStringToModel('! Test', def)
 
     expect(result.title).toBe('Test')
-    expect(result.timeType).toBe(TaskTimeTypeEnum.NoTime)
+    expect(result.type).toBe(TaskTypeEnum.Simple)
     expect(result.date!.getTime()).toBe(dt(2019, 0, 1))
     expect(result.time).toBeNull()
 })
@@ -122,7 +122,7 @@ test('[convertStringToModel] tomorrow task through exclamation mark', () => {
     const result = TaskConverter.convertStringToModel('!! Test', def)
 
     expect(result.title).toBe('Test')
-    expect(result.timeType).toBe(TaskTimeTypeEnum.NoTime)
+    expect(result.type).toBe(TaskTypeEnum.Simple)
     expect(result.date!.getTime()).toBe(dt(2019, 0, 2))
     expect(result.time).toBeNull()
 })
@@ -132,7 +132,7 @@ test('[convertStringToModel] day after after tomorrow task through exclamation m
     const result = TaskConverter.convertStringToModel('!!!! Test', def)
 
     expect(result.title).toBe('Test')
-    expect(result.timeType).toBe(TaskTimeTypeEnum.NoTime)
+    expect(result.type).toBe(TaskTypeEnum.Simple)
     expect(result.date!.getTime()).toBe(dt(2019, 0, 4))
     expect(result.time).toBeNull()
 })
@@ -142,7 +142,7 @@ test('[convertStringToModel] day after tomorrow next month task through exclamat
     const result = TaskConverter.convertStringToModel('!!! Test', new Date(2019, 0, 31))
 
     expect(result.title).toBe('Test')
-    expect(result.timeType).toBe(TaskTimeTypeEnum.NoTime)
+    expect(result.type).toBe(TaskTypeEnum.Simple)
     expect(result.date!.getTime()).toBe(dt(2019, 1, 2))
     expect(result.time).toBeNull()
 })
@@ -152,7 +152,7 @@ test('[convertStringToModel] next monday task through exclamation mark', () => {
     const result = TaskConverter.convertStringToModel('!1 Test', new Date(2019, 6, 28))
 
     expect(result.title).toBe('Test')
-    expect(result.timeType).toBe(TaskTimeTypeEnum.NoTime)
+    expect(result.type).toBe(TaskTypeEnum.Simple)
     expect(result.date!.getTime()).toBe(dt(2019, 6, 29))
     expect(result.time).toBeNull()
 })
@@ -162,7 +162,7 @@ test('[convertStringToModel] next wednesday task through exclamation mark', () =
     const result = TaskConverter.convertStringToModel('!3 Test', new Date(2019, 6, 28))
 
     expect(result.title).toBe('Test')
-    expect(result.timeType).toBe(TaskTimeTypeEnum.NoTime)
+    expect(result.type).toBe(TaskTypeEnum.Simple)
     expect(result.date!.getTime()).toBe(dt(2019, 6, 31))
     expect(result.time).toBeNull()
 })
@@ -172,7 +172,7 @@ test('[convertStringToModel] next friday next month task through exclamation mar
     const result = TaskConverter.convertStringToModel('!5 Test', new Date(2019, 6, 28))
 
     expect(result.title).toBe('Test')
-    expect(result.timeType).toBe(TaskTimeTypeEnum.NoTime)
+    expect(result.type).toBe(TaskTypeEnum.Simple)
     expect(result.date!.getTime()).toBe(dt(2019, 7, 2))
     expect(result.time).toBeNull()
 })
@@ -182,7 +182,7 @@ test('[convertStringToModel] !11 is not week shift pattern', () => {
     const result = TaskConverter.convertStringToModel('!11 Test', def)
 
     expect(result.title).toBe('!11 Test')
-    expect(result.timeType).toBe(TaskTimeTypeEnum.NoTime)
+    expect(result.type).toBe(TaskTypeEnum.Simple)
     expect(result.date).toBeNull()
     expect(result.time).toBeNull()
 })
@@ -202,7 +202,7 @@ test('[convertModelToString] date & no time', () => {
 test('[convertModelToString] date & time', () => {
     const result = TaskConverter.convertModelToString(new TaskModel('Test!',
         new Date(new Date().getFullYear(), 11, 11),
-        TaskTimeTypeEnum.NoTime,
+        TaskTypeEnum.Simple,
         false,
         1439
     ))
@@ -212,7 +212,7 @@ test('[convertModelToString] date & time', () => {
 test('[convertModelToString] date & time less ten', () => {
     const result = TaskConverter.convertModelToString(new TaskModel('Test!',
         new Date(new Date().getFullYear(), 0, 1),
-        TaskTimeTypeEnum.NoTime,
+        TaskTypeEnum.Simple,
         false,
         61
     ))
@@ -222,16 +222,16 @@ test('[convertModelToString] date & time less ten', () => {
 test('[convertModelToString] is probable', () => {
     const result = TaskConverter.convertModelToString(new TaskModel('Test!',
         null,
-        TaskTimeTypeEnum.NoTime,
+        TaskTypeEnum.Simple,
         true
     ))
     expect(result).toBe('Test! ?')
 })
 
-test('[convertModelToString] all day long', () => {
+test('[convertModelToString] additional', () => {
     const result = TaskConverter.convertModelToString(new TaskModel('Test!',
         new Date(new Date().getFullYear(), 0, 1),
-        TaskTimeTypeEnum.AllDayLong
+        TaskTypeEnum.Additional
     ))
     expect(result).toBe('0101! Test!')
 })

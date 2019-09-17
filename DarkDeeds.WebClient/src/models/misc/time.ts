@@ -19,5 +19,3 @@ export class Time {
         return n < 10 ? '0' + n : n.toString()
     }
 }
-
-// TODO: reorganize models - domain and additional

@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using DarkDeeds.Data.Entity;
 using DarkDeeds.Models;
 using DarkDeeds.Services.Implementation;
+using Microsoft.Extensions.Logging;
 using Moq;
 using Xunit;
 
@@ -14,7 +15,8 @@ namespace DarkDeeds.Tests.Services
         public async Task SaveTasksAsync_ReturnTasksBack()
         {
             var repoMock = Helper.CreateRepoMock<TaskEntity>();
-            var service = new TaskService(repoMock.Object);
+            var loggerMock = new Mock<ILogger<TaskService>>();
+            var service = new TaskService(repoMock.Object, loggerMock.Object);
 
             var items = new[] {new TaskDto {Id = 1000, ClientId = -1}, new TaskDto {Id = 2000, ClientId = -2}};
             var result = (await service.SaveTasksAsync(items, string.Empty)).ToList();
@@ -27,7 +29,8 @@ namespace DarkDeeds.Tests.Services
         {
             var repoMock = Helper.CreateRepoMock(
                 new TaskEntity {Id = 1000, UserId = "1", Version = 10, Title = "Old"});
-            var service = new TaskService(repoMock.Object);
+            var loggerMock = new Mock<ILogger<TaskService>>();
+            var service = new TaskService(repoMock.Object, loggerMock.Object);
 
             var items = new[] {new TaskDto {Id = 1000, ClientId = 20, Version = 5, Title = "New"}};
             var result = (await service.SaveTasksAsync(items, "1")).ToList();
@@ -44,7 +47,8 @@ namespace DarkDeeds.Tests.Services
         public async Task SaveTasksAsync_StopSavingAndReturnActualTaskIfVersionMismatch()
         {
             var repoMock = Helper.CreateRepoMock<TaskEntity>();
-            var service = new TaskService(repoMock.Object);
+            var loggerMock = new Mock<ILogger<TaskService>>();
+            var service = new TaskService(repoMock.Object, loggerMock.Object);
 
             var items = new[] {new TaskDto {Id = 1000, ClientId = 0}, new TaskDto {Id = 2000, Deleted = true}};
             var result = (await service.SaveTasksAsync(items, string.Empty)).ToList();
@@ -60,7 +64,8 @@ namespace DarkDeeds.Tests.Services
         {
             var repoMock = Helper.CreateRepoMock(
                 new TaskEntity {Id = 1000, UserId = "1"});
-            var service = new TaskService(repoMock.Object);
+            var loggerMock = new Mock<ILogger<TaskService>>();
+            var service = new TaskService(repoMock.Object, loggerMock.Object);
 
             var items = new[] {new TaskDto {Id = 1000, Deleted = true}};
             await service.SaveTasksAsync(items, "1");
@@ -74,7 +79,8 @@ namespace DarkDeeds.Tests.Services
         public async Task SaveTasksAsync_WhenCreatingResetIdAndSetUserIdAndCallSave()
         {
             var repoMock = Helper.CreateRepoMock<TaskEntity>();
-            var service = new TaskService(repoMock.Object);
+            var loggerMock = new Mock<ILogger<TaskService>>();
+            var service = new TaskService(repoMock.Object, loggerMock.Object);
 
             var items = new[] {new TaskDto {Id = 1000, ClientId = -1, Title = "Task"}};
             await service.SaveTasksAsync(items, "1");
@@ -94,7 +100,8 @@ namespace DarkDeeds.Tests.Services
         {
             var repoMock = Helper.CreateRepoMock(
                 new TaskEntity {Id = 1000, UserId = "1", Title = "Task Old", Version = 100500});
-            var service = new TaskService(repoMock.Object);
+            var loggerMock = new Mock<ILogger<TaskService>>();
+            var service = new TaskService(repoMock.Object, loggerMock.Object);
 
             var items = new[] {new TaskDto {Id = 1000, ClientId = 1, Title = "Task New", Version = 100500}};
             await service.SaveTasksAsync(items, "1");
@@ -115,7 +122,8 @@ namespace DarkDeeds.Tests.Services
             var repoMock = Helper.CreateRepoMock(
                 new TaskEntity {Id = 1000, UserId = "1"},
                 new TaskEntity {Id = 2000, UserId = "1"});
-            var service = new TaskService(repoMock.Object);
+            var loggerMock = new Mock<ILogger<TaskService>>();
+            var service = new TaskService(repoMock.Object, loggerMock.Object);
 
             var items = new[] {new TaskDto {Id = 1000, ClientId = -1}, new TaskDto {Id = 2000, ClientId = 1}};
             var result = (await service.SaveTasksAsync(items, "1")).ToList();

@@ -1,4 +1,4 @@
-import { SigninResultEnum } from '../'
+import { SigninResultEnum } from '../..'
 
 export class SigninResult {
     constructor(

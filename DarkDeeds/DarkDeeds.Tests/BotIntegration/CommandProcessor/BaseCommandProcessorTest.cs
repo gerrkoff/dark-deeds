@@ -55,9 +55,7 @@ namespace DarkDeeds.Tests.BotIntegration.CommandProcessor
             {
                 UserChatId = 100
             });
-            
-            // TODO: uncomment
-//            loggerMock.Verify(x => x.LogWarning(It.IsAny<string>()));
+
             sendMessageMock.Verify(x => x.SendFailedAsync(100));
         }
     }
