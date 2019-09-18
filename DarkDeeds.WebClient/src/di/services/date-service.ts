@@ -1,7 +1,11 @@
-import { IDateable } from '../models/interfaces/idateable'
+import { injectable } from 'inversify'
+import { IDateable } from '../../models'
 
-const service = {
-    toDateFromSpecialFormat(s: string): Date | null {
+@injectable()
+export class DateService {
+    private readonly days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+
+    public toDateFromSpecialFormat(s: string): Date | null {
         if (!/^\d{8}$/.test(s)) {
             return null
         }
@@ -11,33 +15,33 @@ const service = {
         const day = Number(s.substr(6, 2))
 
         return new Date(year, month - 1, day)
-    },
+    }
 
-    toLabel(date: Date): string {
+    public toLabel(date: Date): string {
         return `${date.toLocaleDateString('en-US')} ${this.getWeekdayName(date)}`
-    },
+    }
 
-    toNumber(date: Date | null): number {
+    public toNumber(date: Date | null): number {
         return date ? date.getTime() : 0
-    },
+    }
 
-    getWeekdayName(date: Date): string {
-        return days[date.getDay()]
-    },
+    public getWeekdayName(date: Date): string {
+        return this.days[date.getDay()]
+    }
 
-    today(): Date {
+    public today(): Date {
         const now = new Date()
         return new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()))
-    },
+    }
 
-    monday(date: Date): Date {
+    public monday(date: Date): Date {
         date = new Date(date)
         const day = date.getDay()
         const diff = date.getDate() - day + (day === 0 ? -6 : 1)
         return new Date(date.setDate(diff))
-    },
+    }
 
-    fixDates(dateables: IDateable[]): IDateable[] {
+    public fixDates(dateables: IDateable[]): IDateable[] {
         const fixed = [...dateables]
         fixed.forEach(x => {
             if (x.date) {
@@ -45,9 +49,9 @@ const service = {
             }
         })
         return fixed
-    },
+    }
 
-    equal(dateX: Date | null, dateY: Date | null): boolean {
+    public equal(dateX: Date | null, dateY: Date | null): boolean {
         if (dateX === null && dateY === null) {
             return true
         }
@@ -57,7 +61,3 @@ const service = {
         return dateX.getTime() === dateY.getTime()
     }
 }
-
-const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
-
-export { service as DateService }

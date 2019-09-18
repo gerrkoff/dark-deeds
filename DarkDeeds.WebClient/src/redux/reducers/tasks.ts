@@ -1,7 +1,10 @@
-import { DateService, TaskService } from '../../services'
+import { di, diToken, DateService, TaskService } from '../../di'
 import { Task, TaskModel, TaskLoadingStateEnum } from '../../models'
 import { ITasksState } from '../types'
 import * as actions from '../constants/tasks'
+
+const dateService = di.get<DateService>(diToken.DateService)
+const taskService = di.get<TaskService>(diToken.TaskService)
 
 const inittialState: ITasksState = {
     loadingState: TaskLoadingStateEnum.Loading,
@@ -125,7 +128,7 @@ function updateTasks(localTasks: Task[], updatedTasks: Task[], localUpdate: bool
         if (i > -1) {
             if (localUpdate) {
                 newTasks[i] = { ...newTasks[i], clientId: updatedTask.id, id: updatedTask.id, version: updatedTask.version }
-                newTasks[i].changed = !TaskService.tasksEqual(newTasks[i], updatedTask)
+                newTasks[i].changed = !taskService.tasksEqual(newTasks[i], updatedTask)
             } else {
                 newTasks[i] = { ...updatedTask }
             }
@@ -159,7 +162,7 @@ function addTask(model: TaskModel, localTasks: Task[]): Task[] {
     }
 
     const sameDayTaskOrders = localTasks
-        .filter(x => DateService.equal(x.date, model.date))
+        .filter(x => dateService.equal(x.date, model.date))
         .map(x => x.order)
     const maxOrder = sameDayTaskOrders.length === 0 ? 0 : Math.max(...sameDayTaskOrders)
 
@@ -198,7 +201,7 @@ function changeTaskStatus(localTasks: Task[], clientId: number, completed?: bool
         newTasks[taskIndex].deleted = deleted
 
         if (deleted) {
-            const sameDayTasks = localTasks.filter(x => DateService.equal(x.date, newTasks[taskIndex].date))
+            const sameDayTasks = localTasks.filter(x => dateService.equal(x.date, newTasks[taskIndex].date))
             if (sameDayTasks) {
                 sameDayTasks.forEach(x => {
                     if (x.order > newTasks[taskIndex].order) {

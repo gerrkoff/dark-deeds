@@ -1,9 +1,12 @@
 import { Dispatch } from 'redux'
-import { TaskApi } from '../../api'
-import { ToastService, UtilsService } from '../../services'
+import { di, diToken, ToastService, UtilsService, TaskApi } from '../../di'
 import { Task, TaskModel } from '../../models'
 import { TaskHub } from '../../helpers'
 import * as actions from '../constants/tasks'
+
+const utilsService = di.get<UtilsService>(diToken.UtilsService)
+const toastService = di.get<ToastService>(diToken.ToastService)
+const taskApi = di.get<TaskApi>(diToken.TaskApi)
 
 /*
         TASK HUB
@@ -35,7 +38,7 @@ export function taskHubSave(tasks: Task[]) {
             (i.e. when you leave Safari on iOS and then open it back)
             so, if [saving] is the first it should pause a bit, to let [reconnecting] take the lead
         */
-        await UtilsService.delay(50)
+        await utilsService.delay(50)
         if (!taskHub!.ready) {
             return
         }
@@ -43,7 +46,7 @@ export function taskHubSave(tasks: Task[]) {
         try {
             await taskHub!.saveTasks(tasks)
         } catch (err) {
-            ToastService.errorProcess('saving tasks')
+            toastService.errorProcess('saving tasks')
         }
     }
 }
@@ -73,7 +76,7 @@ function taskHubReconnectHandler(dispatch: Dispatch<actions.TasksAction>): (reco
             dispatch({ type: actions.TASKS_HUB_RECONNECTING })
             return
         } else {
-            const tasks = await TaskApi.loadTasks()
+            const tasks = await taskApi.loadTasks()
             dispatch({ type: actions.TASKS_UPDATE_TASKS_SYNC, tasks })
             dispatch({ type: actions.TASKS_HUB_RECONNECTED })
         }
@@ -88,12 +91,12 @@ export function initialLoadTasks() {
     return async(dispatch: Dispatch<actions.TasksAction>) => {
         dispatch({ type: actions.TASKS_LOADING })
         try {
-            const tasks = await TaskApi.loadTasks()
+            const tasks = await taskApi.loadTasks()
             dispatch({ type: actions.TASKS_UPDATE_TASKS_SYNC, tasks })
             dispatch({ type: actions.TASKS_LOADING_SUCCESS })
         } catch (err) {
             dispatch({ type: actions.TASKS_LOADING_FAILED })
-            ToastService.errorProcess('loading tasks')
+            toastService.errorProcess('loading tasks')
         }
     }
 }

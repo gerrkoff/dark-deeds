@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { Accordion, AccordionTitleProps } from 'semantic-ui-react'
-import { DateService, TaskMoveService, TaskService, LocalSettingsService } from '../../services'
+import { di, diToken, DateService, TaskMoveService, TaskService, LocalSettingsService } from '../../di'
 import { DayCardModel, Task, TaskModel, LocalSettings, OverviewTabEnum } from '../../models'
 import { DragulaWrapper } from '../../helpers'
 import { DaysBlock, NoDateCard } from './'
@@ -17,13 +17,18 @@ interface IProps {
     confirmAction?: (content: React.ReactNode, action: () => void, header: string) => void
 }
 export class Overview extends React.PureComponent<IProps> {
+    private dateService = di.get<DateService>(diToken.DateService)
+    private taskMoveService = di.get<TaskMoveService>(diToken.TaskMoveService)
+    private taskService = di.get<TaskService>(diToken.TaskService)
+    private localSettingsService = di.get<LocalSettingsService>(diToken.LocalSettingsService)
+
     private dragula: DragulaWrapper
     private settings: LocalSettings
     private tabMap: OverviewTabEnum[]
 
     constructor(props: IProps) {
         super(props)
-        this.settings = LocalSettingsService.load()
+        this.settings = this.localSettingsService.load()
     }
 
     public componentDidMount() {
@@ -43,8 +48,7 @@ export class Overview extends React.PureComponent<IProps> {
             return (<React.Fragment />)
         }
 
-        const today = DateService.today()
-        const model = TaskService.evalModel(this.props.tasks, today, this.props.showCompleted)
+        const model = this.taskService.evalModel(this.props.tasks, this.props.showCompleted)
         this.tabMap = [OverviewTabEnum.NoDate]
 
         const panels = [{
@@ -102,11 +106,11 @@ export class Overview extends React.PureComponent<IProps> {
         } else {
             this.settings.openedOverviewTabs.push(tab)
         }
-        LocalSettingsService.save()
+        this.localSettingsService.save()
     }
 
     private renderDaysBlock = (model: DayCardModel[], daysInRow?: number) => {
-        const today = DateService.today()
+        const today = this.dateService.today()
         return (
             <DaysBlock
                 days={model}
@@ -125,7 +129,7 @@ export class Overview extends React.PureComponent<IProps> {
         }
 
         this.props.changeAllTasks(
-            TaskMoveService.moveTask(
+            this.taskMoveService.moveTask(
                 this.props.tasks,
                 getId(el),
                 getId(target),
