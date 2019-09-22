@@ -44,7 +44,6 @@ dotnet publish -c Release -o "$DIR"/Deploy/artifacts/src || exit $?
 # misc
 print 'COPY ADDITIONAL FILES'
 cd "$DIR" || exit $?
-cp appsettings.Production.json Deploy/artifacts/src || exit $?
 cp Deploy/dockerfile-run Deploy/artifacts/ || exit $?
 echo copied
 
