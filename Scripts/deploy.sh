@@ -13,13 +13,16 @@ git checkout staging
 git pull
 git merge master
 
-sh bump-version.sh
+sh version-bump.sh
 git commit -m 'bump version' ../DarkDeeds/DarkDeeds.Api/DarkDeeds.Api.csproj
 
 git push
 git checkout master
 git merge staging
-git push
+
+NEW_VERSION=$(sh version-get.sh)
+git tag $NEW_VERSION
+git push --tags
 
 echo
 echo "()___)____________)   Successfully merged to staging"
