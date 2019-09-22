@@ -1,7 +1,6 @@
 FROM mcr.microsoft.com/dotnet/core/aspnet:2.2
 
 COPY /src /app
-COPY appsettings.Production.json app/
 WORKDIR /app
 
 ENV ASPNETCORE_ENVIRONMENT Production
