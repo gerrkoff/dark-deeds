@@ -21,7 +21,7 @@ git checkout master
 git merge staging
 
 NEW_VERSION=$(sh version-get.sh)
-git tag $NEW_VERSION
+git tag v$NEW_VERSION
 git push --tags
 
 echo
