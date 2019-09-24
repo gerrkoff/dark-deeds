@@ -1,8 +1,5 @@
 using System;
-using System.IO;
-using System.Reflection;
 using OpenQA.Selenium;
-using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Remote;
 using OpenQA.Selenium.Support.UI;
 
@@ -11,15 +8,8 @@ using OpenQA.Selenium.Support.UI;
 
 namespace DarkDeeds.E2eTests.Helpers
 {
-    public static class Common
+    public static class DriverExtensions
     {
-        public static RemoteWebDriver CreateDriver(string url)
-        {
-            var driver = new ChromeDriver(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
-            driver.Navigate().GoToUrl(url);
-            return driver;
-        } 
-
         private static WebDriverWait Wait(this RemoteWebDriver driver, int timeoutInSeconds = 15)
             => new WebDriverWait(driver, TimeSpan.FromSeconds(timeoutInSeconds));
 

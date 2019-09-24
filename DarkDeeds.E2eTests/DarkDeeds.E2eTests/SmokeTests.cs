@@ -8,7 +8,7 @@ namespace DarkDeeds.E2eTests
         [Fact]
         public void SignInTest()
         {
-            using (var driver = Common.CreateDriver(Url))
+            using (var driver = CreateDriver())
             {
                 driver.SignIn(Username, Password);
             }

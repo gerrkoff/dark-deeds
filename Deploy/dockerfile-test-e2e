@@ -1,4 +1,4 @@
-FROM devpassis/seleniumdotnetcore
+ FROM masteroleary/selenium-dotnetcore2.2-linux:v2
 
 COPY DarkDeeds.E2eTests/DarkDeeds.E2eTests /app
 COPY Deploy/test-e2e.sh /app
