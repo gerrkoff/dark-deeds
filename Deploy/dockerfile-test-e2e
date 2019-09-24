@@ -1,0 +1,7 @@
+FROM devpassis/seleniumdotnetcore
+
+COPY DarkDeeds.E2eTests/DarkDeeds.E2eTests /app
+COPY Deploy/test-e2e.sh /app
+WORKDIR /app
+
+ENTRYPOINT ["/bin/sh", "-c", "./test-e2e.sh"]
