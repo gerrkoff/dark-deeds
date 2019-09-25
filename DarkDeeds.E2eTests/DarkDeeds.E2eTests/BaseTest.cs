@@ -33,7 +33,7 @@ namespace DarkDeeds.E2eTests
             }
             string driverPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             ChromeDriverService service= ChromeDriverService.CreateDefaultService(driverPath);
-            service.Port = 3000;
+//            service.Port = 3000;
             var driver = new ChromeDriver(service, options);
             driver.Navigate().GoToUrl(Url);
             return driver;

@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Remote;
 using OpenQA.Selenium.Support.UI;
@@ -13,16 +14,26 @@ namespace DarkDeeds.E2eTests.Helpers
         private static WebDriverWait Wait(this RemoteWebDriver driver, int timeoutInSeconds = 15)
             => new WebDriverWait(driver, TimeSpan.FromSeconds(timeoutInSeconds));
 
+        private static IWebElement GetElement(this RemoteWebDriver driver, string xpath)
+        {
+            driver.Wait().Until(ExpectedConditions.ElementExists(By.XPath(xpath)));
+            return driver.FindElementByXPath(xpath);
+        }
+        
+        private static void WaitUntilDisappeared(this RemoteWebDriver driver, string xpath)
+        {
+            driver.Wait().Until(ExpectedConditions.InvisibilityOfElementLocated(By.XPath(xpath)));
+        }
+
         public static void SignIn(this RemoteWebDriver driver, string username, string password)
         {
-            var inpUsername = driver.FindElementByXPath("//*[@data-id='inpUsername']/input");
+            var inpUsername = driver.GetElement("//*[@data-id='inpUsername']/input");
             inpUsername.SendKeys(username);
-            var inpPassword = driver.FindElementByXPath("//*[@data-id='inpPassword']/input");
+            var inpPassword = driver.GetElement("//*[@data-id='inpPassword']/input");
             inpPassword.SendKeys(password);
-            var buttonLogin = driver.FindElementByXPath("//*[@data-id='btnSignin']");
+            var buttonLogin = driver.GetElement("//*[@data-id='btnSignin']");
             buttonLogin.Click();
-            driver.Wait().Until(ExpectedConditions.InvisibilityOfElementLocated(
-                By.XPath("//*[@data-id='blockLogin']")));
+            driver.WaitUntilDisappeared("//*[@data-id='blockLogin']");
         }
     }
 }
