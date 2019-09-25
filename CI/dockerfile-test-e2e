@@ -23,7 +23,7 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 COPY DarkDeeds.E2eTests/DarkDeeds.E2eTests /app
-COPY Deploy/test-e2e.sh /app
+COPY CI/test-e2e.sh /app
 WORKDIR /app
 
 ENTRYPOINT ["/bin/sh", "-c", "./test-e2e.sh"]

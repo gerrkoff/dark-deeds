@@ -6,7 +6,7 @@ RUN npm install -g npm
 
 COPY DarkDeeds /app/DarkDeeds
 COPY DarkDeeds.WebClient /app/DarkDeeds.WebClient
-COPY Deploy /app/Deploy
+COPY CI /app/CI
 WORKDIR /app
 
-ENTRYPOINT ["/bin/sh", "-c", "cd Deploy && ./build.sh"]
+ENTRYPOINT ["/bin/sh", "-c", "cd CI && ./build.sh"]
