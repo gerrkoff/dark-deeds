@@ -1,7 +1,6 @@
 using System;
 using System.IO;
 using System.Reflection;
-using Newtonsoft.Json;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Remote;
 
