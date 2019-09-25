@@ -29,12 +29,10 @@ namespace DarkDeeds.E2eTests
             ChromeOptions options = new ChromeOptions();
             if (RunInContainer)
             {
-                options.AddArguments("headless", "no-sandbox", "disable-gpu", "verbose");
+                options.AddArguments("headless", "no-sandbox", "disable-gpu");
             }
             string driverPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            ChromeDriverService service= ChromeDriverService.CreateDefaultService(driverPath);
-//            service.Port = 3000;
-            var driver = new ChromeDriver(service, options);
+            var driver = new ChromeDriver(driverPath, options);
             driver.Navigate().GoToUrl(Url);
             return driver;
         }
