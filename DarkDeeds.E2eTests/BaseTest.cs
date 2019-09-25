@@ -15,7 +15,6 @@ namespace DarkDeeds.E2eTests
 
         protected RemoteWebDriver CreateDriver()
         {
-            Console.WriteLine(Url);
             ChromeOptions options = new ChromeOptions();
             if (RunContainer)
             {
