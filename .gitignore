@@ -1,6 +1,7 @@
-DarkDeeds/DarkDeeds/obj
-DarkDeeds/.idea
-DarkDeeds/DarkDeeds/bin
+.DS_Store
+.idea
+DarkDeeds/DarkDeeds.sln.DotSettings.user
+
 DarkDeeds/DarkDeeds.Api/obj
 DarkDeeds/DarkDeeds.Api/bin
 DarkDeeds/DarkDeeds.Models/obj
@@ -16,11 +17,12 @@ DarkDeeds/DarkDeeds.AutoMapper/bin
 DarkDeeds/DarkDeeds.AutoMapper/obj
 DarkDeeds/DarkDeeds.Enums/obj
 DarkDeeds/DarkDeeds.Enums/bin
-appsettings.Development.json
 DarkDeeds/DarkDeeds.Tests/obj
 DarkDeeds/DarkDeeds.Tests/bin
-Deploy/artifacts/
-.DS_Store
-DarkDeeds/DarkDeeds.sln.DotSettings.user
 DarkDeeds/DarkDeeds.BotIntegration/obj
 DarkDeeds/DarkDeeds.BotIntegration/bin
+DarkDeeds.E2eTests/obj
+DarkDeeds.E2eTests/bin
+
+appsettings.Development.json
+CI/artifacts/

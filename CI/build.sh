@@ -9,7 +9,7 @@ DIR="$PWD"
 
 # cleanup
 print 'CLEAN'
-rm -rf "$DIR"/Deploy/artifacts
+rm -rf "$DIR"/CI/artifacts
 echo cleaned
 
 # test & build FE
@@ -27,7 +27,7 @@ npm run build || exit $?
 # test & build BE
 print 'BE: TEST'
 cd "$DIR"/DarkDeeds/DarkDeeds.Tests/ || exit $?
-dotnet test "--logger:trx;LogFileName=results.trx" --results-directory "$DIR"/Deploy/artifacts/test-results || exit $?
+dotnet test "--logger:trx;LogFileName=results.trx" --results-directory "$DIR"/CI/artifacts/test-results || exit $?
 
 print 'BE: SET BUILD VERSION'
 cd "$DIR"/DarkDeeds/DarkDeeds.Api/ || exit $?
@@ -35,16 +35,16 @@ if [ -z "$1" ]
     then
         echo "No BUILD_VERSION provided, skip"
     else
-        dotnet "$DIR"/Deploy/dotnet-setversion/dotnet-setversion.dll vs $1
+        dotnet "$DIR"/CI/dotnet-setversion/dotnet-setversion.dll vs $1
 fi
 
 print 'BE: BUILD'
-dotnet publish -c Release -o "$DIR"/Deploy/artifacts/src || exit $?
+dotnet publish -c Release -o "$DIR"/CI/artifacts/src || exit $?
 
 # misc
 print 'COPY ADDITIONAL FILES'
 cd "$DIR" || exit $?
-cp Deploy/dockerfile-run Deploy/artifacts/ || exit $?
+cp CI/dockerfile-run CI/artifacts/ || exit $?
 echo copied
 
 print 'SUCCESS'
