@@ -22,7 +22,7 @@ RUN apt-get update && apt-get install -y \
     && apt-get purge --auto-remove -y curl \
     && rm -rf /var/lib/apt/lists/*
 
-COPY DarkDeeds.E2eTests/DarkDeeds.E2eTests /app
+COPY DarkDeeds.E2eTests/ /app
 COPY CI/test-e2e.sh /app
 WORKDIR /app
 
