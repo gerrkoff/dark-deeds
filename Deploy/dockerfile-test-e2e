@@ -1,4 +1,4 @@
- FROM masteroleary/selenium-dotnetcore2.2-linux:v2
+FROM mcr.microsoft.com/dotnet/core/sdk:2.2
 
 COPY DarkDeeds.E2eTests/DarkDeeds.E2eTests /app
 COPY Deploy/test-e2e.sh /app

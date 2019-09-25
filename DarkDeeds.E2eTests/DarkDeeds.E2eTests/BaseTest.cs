@@ -9,10 +9,10 @@ namespace DarkDeeds.E2eTests
 {
     public class BaseTest
     {
-        protected static readonly string Url;
+        private static readonly string Url;
+        private static readonly bool RunInContainer;
         protected static readonly string Username;
         protected static readonly string Password;
-        protected static readonly bool RunInContainer;
         
         static BaseTest()
         {
@@ -29,10 +29,12 @@ namespace DarkDeeds.E2eTests
             ChromeOptions options = new ChromeOptions();
             if (RunInContainer)
             {
-                options.AddArguments("headless");
-                options.AddArguments("no-sandbox");    
+                options.AddArguments("headless", "no-sandbox", "disable-gpu", "verbose");
             }
-            var driver = new ChromeDriver(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), options);
+            string driverPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            ChromeDriverService service= ChromeDriverService.CreateDefaultService(driverPath);
+            service.Port = 3000;
+            var driver = new ChromeDriver(service, options);
             driver.Navigate().GoToUrl(Url);
             return driver;
         }
