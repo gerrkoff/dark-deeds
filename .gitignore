@@ -21,8 +21,8 @@ DarkDeeds/DarkDeeds.Tests/obj
 DarkDeeds/DarkDeeds.Tests/bin
 DarkDeeds/DarkDeeds.BotIntegration/obj
 DarkDeeds/DarkDeeds.BotIntegration/bin
-DarkDeeds.E2eTests/DarkDeeds.E2eTests/obj
-DarkDeeds.E2eTests/DarkDeeds.E2eTests/bin
+DarkDeeds.E2eTests/obj
+DarkDeeds.E2eTests/bin
 
 appsettings.Development.json
 CI/artifacts/
