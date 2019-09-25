@@ -16,9 +16,6 @@
 
     <ItemGroup>
       <None Remove="settings.json" />
-      <Content Include="settings.json">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </Content>
     </ItemGroup>
 
 </Project>

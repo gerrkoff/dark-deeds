@@ -1,5 +1,4 @@
 using System;
-using System.Threading;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Remote;
 using OpenQA.Selenium.Support.UI;
@@ -7,7 +6,7 @@ using OpenQA.Selenium.Support.UI;
 #pragma warning disable 618
 // ExpectedConditions obsolete warning is suppressed as deprecated version works better than new one
 
-namespace DarkDeeds.E2eTests.Helpers
+namespace DarkDeeds.E2eTests
 {
     public static class DriverExtensions
     {

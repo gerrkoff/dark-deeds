@@ -1,5 +1,4 @@
-﻿using DarkDeeds.E2eTests.Helpers;
-using Xunit;
+﻿using Xunit;
 
 namespace DarkDeeds.E2eTests
 {
