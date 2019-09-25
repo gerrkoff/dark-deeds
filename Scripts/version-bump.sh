@@ -8,4 +8,4 @@ echo
 echo "Enter version (PATCH): " 
 read version
 
-dotnet dotnet-bumpversion/BumpVersion.dll ../DarkDeeds/DarkDeeds.Api/DarkDeeds.Api.csproj $version
+dotnet ../Tools/dotnet-bumpversion/BumpVersion.dll ../DarkDeeds/DarkDeeds.Api/DarkDeeds.Api.csproj $version
