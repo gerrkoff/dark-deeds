@@ -8,7 +8,7 @@ interface IProps {
 export class AddTaskButton extends React.PureComponent<IProps> {
     public render() {
         return (
-            <Button circular icon='plus' id='add-task-button' onClick={this.props.openModal}/>
+            <Button data-id='addTaskButton' circular icon='plus' id='add-task-button' onClick={this.props.openModal}/>
         )
     }
 }

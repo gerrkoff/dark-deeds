@@ -84,6 +84,7 @@ export class Overview extends React.PureComponent<IProps> {
 
         return (
             <Accordion
+                data-id='overviewComponent'
                 defaultActiveIndex={this.evalOpenedTabs()}
                 panels={panels}
                 exclusive={false}
