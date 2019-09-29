@@ -5,6 +5,7 @@ docker build -t dark-deeds-test-e2e -f CI/dockerfile-test-e2e .
 docker rm -f dark-deeds-test-e2e
 docker run \
     -e RUN_CONTAINER='true' \
+    -e ARTIFACTS_PATH='/app/artifacts' \
     -e URL='http://localhost:3000' \
     -e USERNAME='qqq' \
     -e PASSWORD='qqq' \
