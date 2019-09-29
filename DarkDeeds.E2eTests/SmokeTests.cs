@@ -7,10 +7,10 @@ namespace DarkDeeds.E2eTests
         [Fact]
         public void SignInTest()
         {
-            using (var driver = CreateDriver())
+            Test(driver =>
             {
                 driver.SignIn(Username, Password);
-            }
+            });
         }
     }
 }
