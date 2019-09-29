@@ -1,5 +1,4 @@
-﻿using System.Net.Http;
-using DarkDeeds.E2eTests.Extensions;
+﻿using DarkDeeds.E2eTests.Extensions;
 using Newtonsoft.Json.Linq;
 using Xunit;
 using Xunit.Abstractions;
@@ -18,11 +17,13 @@ namespace DarkDeeds.E2eTests
         [Fact]
         public async void GetBuildVersionTest()
         {
-            var httpClient = new HttpClient();
-            var url = $"{Url}/api/build-info";
-            var result = await httpClient.GetStringAsync(url);
-            var version = (string) JObject.Parse(result)["version"];
-            _output.WriteLine(version);
+            using (var httpClient = CreateHttpClient())
+            {
+                var url = $"{Url}/api/build-info";
+                var result = await httpClient.GetStringAsync(url);
+                var version = (string) JObject.Parse(result)["version"];
+                _output.WriteLine($"App Version: {version}");
+            }
         }
 
         [Fact]

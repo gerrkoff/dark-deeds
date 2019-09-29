@@ -1,11 +1,10 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Net.Http;
 using System.Reflection;
-using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Remote;
-using Xunit;
 
 namespace DarkDeeds.E2eTests
 {
@@ -53,6 +52,17 @@ namespace DarkDeeds.E2eTests
         protected string RandomizeText(string text)
         {
             return $"{text} {Random.Next()}";
+        }
+
+        protected HttpClient CreateHttpClient()
+        {
+            var handler = new HttpClientHandler
+            {
+                ClientCertificateOptions = ClientCertificateOption.Manual,
+                ServerCertificateCustomValidationCallback = (httpRequestMessage, cert, cetChain, policyErrors) => true
+            };
+
+            return new HttpClient(handler);
         }
     }
 }
