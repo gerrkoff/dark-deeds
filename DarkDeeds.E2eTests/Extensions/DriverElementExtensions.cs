@@ -11,22 +11,22 @@ namespace DarkDeeds.E2eTests.Extensions
 
 
         public static IWebElement GetUsernameInput(this RemoteWebDriver driver) =>
-            driver.GetElement("//*[@data-id='usernameInput']/input");
+            driver.GetElement("//*[@data-test-id='usernameInput']/input");
         
         public static IWebElement GetPasswordInput(this RemoteWebDriver driver) =>
-            driver.GetElement("//*[@data-id='passwordInput']/input");
+            driver.GetElement("//*[@data-test-id='passwordInput']/input");
         
         public static IWebElement GetSignInButton(this RemoteWebDriver driver) =>
-            driver.GetElement("//*[@data-id='signinButton']");
+            driver.GetElement("//*[@data-test-id='signinButton']");
         
         public static IWebElement GetAddTaskButton(this RemoteWebDriver driver) =>
-            driver.GetElement("//*[@data-id='addTaskButton']");
+            driver.GetElement("//*[@data-test-id='addTaskButton']");
         
         public static IWebElement GetEditTaskInput(this RemoteWebDriver driver) =>
-            driver.GetElement("//*[@data-id='editTaskInput']/input");
+            driver.GetElement("//*[@data-test-id='editTaskInput']/input");
         
         public static IWebElement GetSaveTaskButton(this RemoteWebDriver driver) =>
-            driver.GetElement("//*[@data-id='saveTaskButton']");
+            driver.GetElement("//*[@data-test-id='saveTaskButton']");
 
 
         public static IWebElement GetTaskByTextInNoDateSection(this RemoteWebDriver driver, string text) =>

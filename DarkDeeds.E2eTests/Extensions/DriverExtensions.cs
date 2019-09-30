@@ -9,17 +9,17 @@ namespace DarkDeeds.E2eTests.Extensions
             driver.GetUsernameInput().SendKeys(username);
             driver.GetPasswordInput().SendKeys(password);
             driver.GetSignInButton().Click();
-            driver.WaitUntilDisappeared("//*[@data-id='loginComponent']");
+            driver.WaitUntilDisappeared("//*[@data-test-id='loginComponent']");
         }
 
         public static void WaitUntillUserLoaded(this RemoteWebDriver driver)
         {
-            driver.WaitUntilAppeared("//*[@data-id='overviewComponent']");
+            driver.WaitUntilAppeared("//*[@data-test-id='overviewComponent']");
         }
         
         public static void WaitUntillSavingFinished(this RemoteWebDriver driver)
         {
-            string xpath = "//*[@data-id='savingIndicator']";
+            string xpath = "//*[@data-test-id='savingIndicator']";
             driver.WaitUntilAppeared(xpath);
             driver.WaitUntilDisappeared(xpath);
         }
