@@ -59,7 +59,7 @@ export class Overview extends React.PureComponent<IProps> {
 
         if (model.expired.length > 0) {
             panels.push({
-                content: { content: this.renderDaysBlock(model.expired) },
+                content: { content: this.renderDaysBlock(model.expired, 'expiredDaysBlockComponent') },
                 key: 'expired',
                 title: 'Expired'
             })
@@ -67,7 +67,7 @@ export class Overview extends React.PureComponent<IProps> {
         }
 
         panels.push({
-            content: { content: this.renderDaysBlock(model.current, 7) },
+            content: { content: this.renderDaysBlock(model.current, 'currentDaysBlockComponent', 7) },
             key: 'current',
             title: 'Current'
         })
@@ -75,7 +75,7 @@ export class Overview extends React.PureComponent<IProps> {
 
         if (model.future.length > 0) {
             panels.push({
-                content: { content: this.renderDaysBlock(model.future) },
+                content: { content: this.renderDaysBlock(model.future, 'futureDaysBlockComponent') },
                 key: 'future',
                 title: 'Future'
             })
@@ -110,10 +110,12 @@ export class Overview extends React.PureComponent<IProps> {
         this.localSettingsService.save()
     }
 
-    private renderDaysBlock = (model: DayCardModel[], daysInRow?: number) => {
+    private renderDaysBlock = (model: DayCardModel[], testId: string, daysInRow?: number) => {
         const today = this.dateService.today()
+        console.log('!', testId)
         return (
             <DaysBlock
+                testId={testId}
                 days={model}
                 daysInRow={daysInRow}
                 expiredDate={today}
