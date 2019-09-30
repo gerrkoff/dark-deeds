@@ -12,7 +12,8 @@ namespace DarkDeeds.E2eTests
     {
         private static readonly bool RunContainer = bool.Parse(Environment.GetEnvironmentVariable("RUN_CONTAINER") ?? "false");
         private static readonly string ArtifactsPath = Environment.GetEnvironmentVariable("ARTIFACTS_PATH") ?? string.Empty;
-        protected static readonly string Url = Environment.GetEnvironmentVariable("URL") ?? "http://localhost:3000";
+        private static readonly string Url = Environment.GetEnvironmentVariable("URL") ?? "http://localhost:3000";
+        protected static readonly string ApiUrl = Environment.GetEnvironmentVariable("API_URL") ?? "http://localhost:5000";
         protected static readonly string Username = Environment.GetEnvironmentVariable("USERNAME") ?? "qqq";
         protected static readonly string Password = Environment.GetEnvironmentVariable("PASSWORD") ?? "qqq";
         

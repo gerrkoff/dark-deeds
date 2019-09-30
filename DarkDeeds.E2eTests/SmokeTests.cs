@@ -19,7 +19,7 @@ namespace DarkDeeds.E2eTests
         {
             using (var httpClient = CreateHttpClient())
             {
-                var url = $"{Url}/api/build-info";
+                var url = $"{ApiUrl}/api/build-info";
                 var result = await httpClient.GetStringAsync(url);
                 var version = (string) JObject.Parse(result)["version"];
                 _output.WriteLine($"App Version: {version}");
@@ -39,6 +39,25 @@ namespace DarkDeeds.E2eTests
         public void CreateNoDateTest()
         {
             string taskText = RandomizeText("some long & strange name for task");
+            Test(driver =>
+            {
+                driver.SignIn(Username, Password);
+                driver.WaitUntillUserLoaded();
+
+                driver.GetAddTaskButton().Click();
+                driver.GetEditTaskInput().SendKeys(taskText);
+                driver.GetSaveTaskButton().Click();
+                driver.GetTaskByTextInNoDateSection(taskText);
+                driver.WaitUntillSavingFinished();
+            });
+        }
+        
+        [Fact]
+        public void DragAndDropTaskTest()
+        {
+            string task1Text = RandomizeText("dnd task 1");
+            string task2Text = RandomizeText("dnd task 2");
+            string task3Text = RandomizeText("dnd task 3");
             Test(driver =>
             {
                 driver.SignIn(Username, Password);
