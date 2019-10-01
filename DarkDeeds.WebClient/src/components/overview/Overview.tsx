@@ -112,7 +112,6 @@ export class Overview extends React.PureComponent<IProps> {
 
     private renderDaysBlock = (model: DayCardModel[], testId: string, daysInRow?: number) => {
         const today = this.dateService.today()
-        console.log('!', testId)
         return (
             <DaysBlock
                 testId={testId}
