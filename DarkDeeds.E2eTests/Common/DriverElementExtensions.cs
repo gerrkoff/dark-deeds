@@ -36,9 +36,6 @@ namespace DarkDeeds.E2eTests.Common
         public static IWebElement GetTaskByTextInNoDateSection(this RemoteWebDriver driver, string text) =>
             driver.GetElement($"//div[@id='no-date-card']//{Xpath.TaskWithText(text)}");
         
-        public static IWebElement GetTaskByTextInCurrentSection(this RemoteWebDriver driver, string text) =>
-            driver.GetElement($"//*[@data-test-id='currentDaysBlockComponent']//{Xpath.TaskWithText(text)}");
-        
         public static IWebElement GetCurrentSection(this RemoteWebDriver driver) =>
             driver.GetElement("//*[@data-test-id='currentDaysBlockComponent']");
 

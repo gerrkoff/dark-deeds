@@ -30,6 +30,12 @@ namespace DarkDeeds.E2eTests.Common
             _query.Append($"//span{Xpath.ClassContains("day-card-header")}");
             return this;
         }
+        
+        public OverviewSectionParser FindTask(string text)
+        {
+            _query.Append($"//{Xpath.TaskWithText(text)}");
+            return this;
+        }
 
         public IWebElement GetElement()
         {

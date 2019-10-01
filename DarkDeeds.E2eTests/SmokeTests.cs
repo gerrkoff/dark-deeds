@@ -80,35 +80,40 @@ namespace DarkDeeds.E2eTests
                 
                 driver.WaitUntillSavingFinished();
 
-                var task1 = driver.GetTaskByTextInCurrentSection(task1Text);
-                var task2 = driver.GetTaskByTextInCurrentSection(task2Text);
-                var task3 = driver.GetTaskByTextInCurrentSection(task3Text);
+                var task1Original = overviewSectionParser.FindBlock(1).FindDay(2).FindTask(task1Text).GetElement();
+                var task2Original = overviewSectionParser.FindBlock(1).FindDay(4).FindTask(task2Text).GetElement();
 
                 var actions = new Actions(driver);
 
                 actions
-                    .ClickAndHold(task1)
-                    .MoveToElement(task2)
+                    .ClickAndHold(task1Original)
+                    .MoveToElement(task2Original)
                     .Build()
                     .Perform();
                 actions
-                    .MoveByOffset(task2.Size.Width / 2, task2.Size.Height / 2)
+                    .MoveByOffset(task2Original.Size.Width / 2, task2Original.Size.Height / 2)
                     .Release()
                     .Build()
                     .Perform();
                 
                 driver.WaitUntillSavingFinished();
                 
-                task1 = driver.GetTaskByTextInCurrentSection(task1Text);
+                driver.Navigate().Refresh();
+                driver.WaitUntillUserLoaded();
                 
-                Assert.True(task1.Location.X == task2.Location.X);
-                Assert.True(task1.Location.X == task3.Location.X);
-                Assert.True(task1.Location.Y < task3.Location.Y);
-                Assert.True(task1.Location.Y > task2.Location.Y);
+                overviewSectionParser = new OverviewSectionParser(driver.GetCurrentSection());
+                var task1Saved = overviewSectionParser.FindBlock(1).FindDay(4).FindTask(task1Text).GetElement();
+                var task2Saved = overviewSectionParser.FindBlock(1).FindDay(4).FindTask(task2Text).GetElement();
+                var task3Saved = overviewSectionParser.FindBlock(1).FindDay(4).FindTask(task3Text).GetElement();
+                
+                Assert.True(task1Saved.Location.X == task2Saved.Location.X);
+                Assert.True(task1Saved.Location.X == task3Saved.Location.X);
+                Assert.True(task1Saved.Location.Y > task2Saved.Location.Y);
+                Assert.True(task1Saved.Location.Y < task3Saved.Location.Y);
 
-                driver.DeleteTask(task1);
-                driver.DeleteTask(task2);
-                driver.DeleteTask(task3);
+                driver.DeleteTask(task1Saved);
+                driver.DeleteTask(task2Saved);
+                driver.DeleteTask(task3Saved);
                 
                 driver.WaitUntillSavingFinished();
             });
