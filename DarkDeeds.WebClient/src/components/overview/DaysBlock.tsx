@@ -6,6 +6,7 @@ import '../../styles/days-block.css'
 
 interface IProps {
     days: DayCardModel[],
+    testId?: string,
     daysInRow?: number,
     expiredDate?: Date,
     openTaskModal?: (model: TaskModel, id?: number) => void
@@ -32,7 +33,7 @@ export class DaysBlock extends React.PureComponent<IProps> {
         }
 
         return (
-            <div>
+            <div data-test-id={this.props.testId}>
                 {blocks.map(x =>
                     <div className='days-block' key={x[0].date.getTime()}>
                         {x.map(y =>

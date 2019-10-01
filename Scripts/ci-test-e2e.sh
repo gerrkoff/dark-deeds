@@ -6,6 +6,7 @@ docker rm -f dark-deeds-test-e2e
 docker run \
     -e RUN_CONTAINER='true' \
     -e ARTIFACTS_PATH='/app/artifacts' \
+    -e API_URL='http://localhost:5000' \
     -e URL='http://localhost:3000' \
     -e USERNAME='qqq' \
     -e PASSWORD='qqq' \

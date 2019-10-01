@@ -52,7 +52,7 @@ export class TaskItem extends React.PureComponent<IProps, IState> {
         })
         menuItemProps.push({
             color: 'red',
-            content: <span><Icon name='delete' />Delete</span>,
+            content: <span><Icon data-test-id='deleteTaskButton' name='delete' />Delete</span>,
             disabled: !this.props.changeTaskStatus,
             name: 'delete',
             onClick: this.handleDeleteConfirm
