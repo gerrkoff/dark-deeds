@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Threading;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Remote;
@@ -35,6 +36,15 @@ namespace DarkDeeds.E2eTests.Common
         {
             driver.ExecuteJavaScript("arguments[0].scrollIntoView(true);", element);
             Thread.Sleep(50); 
+        }
+        
+        public static void TaskScreenshot(this RemoteWebDriver driver, string path, string name)
+        {
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+            driver.GetScreenshot().SaveAsFile(Path.Combine(path, $"{name}.png"));
         }
     }
 }
