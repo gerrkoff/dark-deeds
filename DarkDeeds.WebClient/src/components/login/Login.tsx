@@ -16,7 +16,6 @@ interface IProps {
 }
 export class Login extends React.PureComponent<IProps> {
     public render() {
-        const q = new Date()
         return (
             <Segment data-test-id='loginComponent' id='login-container' inverted>
                 <Form inverted>
@@ -25,9 +24,6 @@ export class Login extends React.PureComponent<IProps> {
                         : <Signup processing={this.props.processing} signupResult={this.props.signupResult} signup={this.props.signup} switchForm={this.props.switchForm} />
                     }
                 </Form>
-                <div>
-                    {q.toString()}
-                </div>
             </Segment>
         )
     }
