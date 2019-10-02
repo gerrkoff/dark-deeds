@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Net.Http;
 using System.Reflection;
+using DarkDeeds.E2eTests.Common;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Remote;
 
@@ -11,7 +12,7 @@ namespace DarkDeeds.E2eTests
     public class BaseTest
     {
         private static readonly bool RunContainer = bool.Parse(Environment.GetEnvironmentVariable("RUN_CONTAINER") ?? "false");
-        private static readonly string ArtifactsPath = Environment.GetEnvironmentVariable("ARTIFACTS_PATH") ?? string.Empty;
+        private static readonly string ArtifactsPath = Environment.GetEnvironmentVariable("ARTIFACTS_PATH") ?? "artifacts";
         protected static readonly string Url = Environment.GetEnvironmentVariable("URL") ?? "http://localhost:3000";
         protected static readonly string ApiUrl = Environment.GetEnvironmentVariable("API_URL") ?? "http://localhost:5000";
         protected static readonly string Username = Environment.GetEnvironmentVariable("USERNAME") ?? "qqq";
@@ -44,7 +45,7 @@ namespace DarkDeeds.E2eTests
                 {
                     var testName = new StackTrace().GetFrame(1).GetMethod().Name;
                     var screenshotName = $"{GetType().Name}__{testName}";
-                    driver.GetScreenshot().SaveAsFile(Path.Combine(ArtifactsPath, $"{screenshotName}.png"));
+                    driver.TaskScreenshot(ArtifactsPath, screenshotName);
                     throw;
                 }
             }
