@@ -37,6 +37,12 @@ namespace DarkDeeds.E2eTests.Common
             return this;
         }
 
+        public int CountExpiredDays()
+        {
+            string expiredDayXpath = $"//div{Xpath.ClassContains("day-card-expired")}";
+            return _section.FindElements(By.XPath(expiredDayXpath)).Count;
+        }
+
         public IWebElement GetElement()
         {
             var element = _section.FindElement(By.XPath(_query.ToString()));

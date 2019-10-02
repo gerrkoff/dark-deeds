@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using DarkDeeds.E2eTests.Common;
 using Newtonsoft.Json.Linq;
 using OpenQA.Selenium.Interactions;
@@ -147,6 +148,26 @@ namespace DarkDeeds.E2eTests
                 
                 driver.SwitchTo().Window(tabs[0]);
                 driver.WaitUntilDisappeared(Xpath.TaskWithText(taskText));
+            });
+        }
+
+        [Fact]
+        public void TimezoneTest()
+        {
+            DateTime now = DateTime.Now;
+            string originalTaskText = RandomizeText("timezone task");
+            string taskTextWithDate = $"{now.Month:D2}{now.Day:D2} " + originalTaskText;
+            Test(driver =>
+            {
+                driver.SignIn(Username, Password);
+                int expiredDaysCount = ((int) now.DayOfWeek + 6) % 7;
+                var overviewSectionParser = new OverviewSectionParser(driver.GetCurrentSection());
+                int currentExpiredDaysCount = overviewSectionParser.CountExpiredDays();
+                Assert.Equal(expiredDaysCount, currentExpiredDaysCount);
+                
+                driver.CreateTaskViaAddButton(taskTextWithDate);
+                var task = overviewSectionParser.FindBlock(1).FindDay(expiredDaysCount + 1).FindTask(originalTaskText).GetElement();
+                driver.DeleteTask(task);
             });
         }
     }
