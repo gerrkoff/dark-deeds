@@ -56,7 +56,7 @@ test('[adjustDatesAfterLoading] positive', () => {
     expect(result).not.toBe(arr)
     expect(result.find(x => x.clientId === 1)!.date).toBeNull()
     expect(result.find(x => x.clientId === 2)!.date!.getTime())
-        .toBe(new Date(2018, 10, 14, 19).getTime())
+        .toBe(new Date(2018, 10, 14, 18).getTime())
 })
 
 test('[equal] positive', () => {
