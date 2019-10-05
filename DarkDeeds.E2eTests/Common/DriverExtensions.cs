@@ -27,6 +27,7 @@ namespace DarkDeeds.E2eTests.Common
 
         public static void DeleteTask(this RemoteWebDriver driver, IWebElement taskElement)
         {
+            driver.ScrollToElement(taskElement);
             taskElement.Click();
             driver.GetDeleteTaskButton().Click();
             driver.GetModalConfirmButton().Click();
@@ -34,6 +35,7 @@ namespace DarkDeeds.E2eTests.Common
         
         public static void CreateTaskViaDayHeader(this RemoteWebDriver driver, IWebElement dayHeaderElement, string task)
         {
+            driver.ScrollToElement(dayHeaderElement);
             dayHeaderElement.Click();
             driver.GetAddTaskToDayButton().Click();
             driver.GetEditTaskInput().SendKeys(task);

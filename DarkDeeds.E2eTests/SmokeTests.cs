@@ -1,5 +1,6 @@
 ﻿using System;
-using System.Threading;
+using System.Drawing;
+using System.Linq;
 using DarkDeeds.E2eTests.Common;
 using Newtonsoft.Json.Linq;
 using OpenQA.Selenium.Interactions;
@@ -71,11 +72,9 @@ namespace DarkDeeds.E2eTests
                 var overviewSectionParser = new OverviewSectionParser(driver.GetCurrentSection());
                 
                 var header1 = overviewSectionParser.FindBlock(1).FindDay(2).FindHeader().GetElement();
-                driver.ScrollToElement(header1);
                 driver.CreateTaskViaDayHeader(header1, task1Text);
                 
                 var header2 = overviewSectionParser.FindBlock(1).FindDay(4).FindHeader().GetElement();
-                driver.ScrollToElement(header2);
                 driver.CreateTaskViaDayHeader(header2, task2Text);
                 driver.CreateTaskViaDayHeader(header2, task3Text);
                 
@@ -168,6 +167,39 @@ namespace DarkDeeds.E2eTests
                 driver.CreateTaskViaAddButton(taskTextWithDate);
                 var task = overviewSectionParser.FindBlock(1).FindDay(expiredDaysCount + 1).FindTask(originalTaskText).GetElement();
                 driver.DeleteTask(task);
+            });
+        }
+        
+        [Fact]
+        public void ScreenSizesTest()
+        {
+            Test(driver =>
+            {
+                driver.SignIn(Username, Password);
+                var overviewSectionParser = new OverviewSectionParser(driver.GetCurrentSection());
+                var days = Enumerable.Range(1, 7)
+                    .Select(x => overviewSectionParser.FindBlock(1).FindDay(x).GetElement())
+                    .ToList();
+                
+                driver.Manage().Window.Size = new Size(1400, 1080);
+
+                foreach (var day in days)
+                {
+                    if (ReferenceEquals(day, days[0]))
+                        continue;
+                    Assert.Equal(days[0].Location.Y, day.Location.Y);
+                    Assert.NotEqual(days[0].Location.X, day.Location.X);
+                }
+                
+                driver.Manage().Window.Size = new Size(523, 700);
+                
+                foreach (var day in days)
+                {
+                    if (ReferenceEquals(day, days[0]))
+                        continue;
+                    Assert.Equal(days[0].Location.X, day.Location.X);
+                    Assert.NotEqual(days[0].Location.Y, day.Location.Y);
+                }
             });
         }
     }
