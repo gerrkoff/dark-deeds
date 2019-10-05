@@ -46,11 +46,12 @@ export class TaskHubApi {
                 close()
             }
         })
-        this.connection.on('update', (tasks, localUpdate) => update(this.dateService.fixDates(tasks) as Task[], localUpdate))
+        this.connection.on('update', (tasks, localUpdate) => update(this.dateService.adjustDatesAfterLoading(tasks) as Task[], localUpdate))
         this.connection.on('heartbeat', heartbeat)
     }
 
     public saveTasks(tasks: Task[]): Promise<void> {
-        return this.connection.send('save', tasks)
+        const fixedTasks = this.dateService.adjustDatesBeforeSaving(tasks)
+        return this.connection.send('save', fixedTasks)
     }
 }

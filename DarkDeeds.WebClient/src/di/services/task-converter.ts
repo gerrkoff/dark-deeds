@@ -165,7 +165,7 @@ class StringConvertingResult {
 
     public getModel(text: string): TaskModel {
         return {
-            date: this.hasDate ? new Date(Date.UTC(this.year, this.month - 1, this.day)) : null,
+            date: this.hasDate ? new Date(this.year, this.month - 1, this.day) : null,
             type: this.type,
             title: text,
             isProbable: this.isProbable,

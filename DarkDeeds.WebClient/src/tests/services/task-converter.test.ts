@@ -2,12 +2,12 @@ import { TaskConverter, DateService } from '../../di'
 import { TaskModel, TaskTypeEnum } from '../../models'
 
 function dt(year: number, month: number, date: number): number {
-    return new Date(Date.UTC(year, month, date)).getTime()
+    return new Date(year, month, date).getTime()
 }
 
 function serviceWithToday(date?: Date): TaskConverter {
     if (date === undefined) {
-        date = new Date(Date.UTC(2019, 0, 1))
+        date = new Date(2019, 0, 1)
     }
     const dateServiceMock = {
         today: jest.fn().mockImplementation(() => date)
@@ -161,7 +161,7 @@ test('[convertStringToModel] day after after tomorrow task through exclamation m
 
 // #14
 test('[convertStringToModel] day after tomorrow next month task through exclamation mark', () => {
-    const service = serviceWithToday(new Date(Date.UTC(2019, 0, 31)))
+    const service = serviceWithToday(new Date(2019, 0, 31))
     const result = service.convertStringToModel('!!! Test')
 
     expect(result.title).toBe('Test')
@@ -172,7 +172,7 @@ test('[convertStringToModel] day after tomorrow next month task through exclamat
 
 // #15
 test('[convertStringToModel] next monday task through exclamation mark', () => {
-    const service = serviceWithToday(new Date(Date.UTC(2019, 6, 28)))
+    const service = serviceWithToday(new Date(2019, 6, 28))
     const result = service.convertStringToModel('!1 Test')
 
     expect(result.title).toBe('Test')
@@ -183,7 +183,7 @@ test('[convertStringToModel] next monday task through exclamation mark', () => {
 
 // #16
 test('[convertStringToModel] next wednesday task through exclamation mark', () => {
-    const service = serviceWithToday(new Date(Date.UTC(2019, 6, 28)))
+    const service = serviceWithToday(new Date(2019, 6, 28))
     const result = service.convertStringToModel('!3 Test')
 
     expect(result.title).toBe('Test')
@@ -194,7 +194,7 @@ test('[convertStringToModel] next wednesday task through exclamation mark', () =
 
 // #17
 test('[convertStringToModel] next friday next month task through exclamation mark', () => {
-    const service = serviceWithToday(new Date(Date.UTC(2019, 6, 28)))
+    const service = serviceWithToday(new Date(2019, 6, 28))
     const result = service.convertStringToModel('!5 Test')
 
     expect(result.title).toBe('Test')

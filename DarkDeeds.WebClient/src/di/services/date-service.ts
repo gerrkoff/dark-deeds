@@ -31,7 +31,7 @@ export class DateService {
 
     public today(): Date {
         const now = new Date()
-        return new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()))
+        return new Date(now.getFullYear(), now.getMonth(), now.getDate())
     }
 
     public monday(date: Date): Date {
@@ -41,11 +41,23 @@ export class DateService {
         return new Date(date.setDate(diff))
     }
 
-    public fixDates(dateables: IDateable[]): IDateable[] {
-        const fixed = [...dateables]
+    public adjustDatesAfterLoading(dateables: IDateable[]): IDateable[] {
+        const fixed = dateables.map(x => ({ ...x }))
         fixed.forEach(x => {
             if (x.date) {
                 x.date = new Date(x.date)
+                x.date.setMinutes(x.date.getMinutes() + x.date.getTimezoneOffset())
+            }
+        })
+        return fixed
+    }
+
+    public adjustDatesBeforeSaving(dateables: IDateable[]): IDateable[] {
+        const fixed = dateables.map(x => ({ ...x }))
+        fixed.forEach(x => {
+            if (x.date) {
+                x.date = new Date(x.date)
+                x.date.setMinutes(x.date.getMinutes() - x.date.getTimezoneOffset())
             }
         })
         return fixed

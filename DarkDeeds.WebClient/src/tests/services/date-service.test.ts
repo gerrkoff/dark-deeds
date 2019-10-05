@@ -47,16 +47,16 @@ test('[monday] positive', () => {
         .toBe(new Date(2018, 9, 15).getTime())
 })
 
-test('[fixDates] positive', () => {
+test('[adjustDatesAfterLoading] positive', () => {
     const arr: any = [new Task(1, ''), { clientId: 2, date: '2018-11-14T18:00:00Z' }]
 
     const service = new DateService()
-    const result = service.fixDates(arr) as Task[]
+    const result = service.adjustDatesAfterLoading(arr) as Task[]
 
     expect(result).not.toBe(arr)
     expect(result.find(x => x.clientId === 1)!.date).toBeNull()
     expect(result.find(x => x.clientId === 2)!.date!.getTime())
-        .toBe(new Date(Date.UTC(2018, 10, 14, 18)).getTime())
+        .toBe(new Date(2018, 10, 14, 18).getTime())
 })
 
 test('[equal] positive', () => {

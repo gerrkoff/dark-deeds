@@ -16,5 +16,6 @@ export class Task implements TaskModel {
         public time: number | null = null
     ) {}
 
-    // Change model - change tasksEqual method in TaskService
+    // Change model - change tasksEqual & copy method in TaskService
+    // TODO: create DTO objects
 }
