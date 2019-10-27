@@ -35,7 +35,6 @@ namespace DarkDeeds.Services.Implementation
             _logger = logger;
         }
 
-        // TODO: userId param
         public async Task CreateAsync(string userId)
         {
             List<PlannedRecurrenceEntity> plannedRecurrences = await _plannedRecurrenceRepository
