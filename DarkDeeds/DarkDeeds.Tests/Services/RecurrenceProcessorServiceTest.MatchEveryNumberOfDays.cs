@@ -12,7 +12,7 @@ namespace DarkDeeds.Tests.Services
         {
             var service = new RecurrenceProcessorService(null, null, null, null);
 
-            var result = service.MatchEveryNumberOfDays(new RecurrenceEntity
+            var result = service.MatchEveryNumberOfDays(new PlannedRecurrenceEntity
             {
                 StartDate = new DateTime(2019, 9, 4)
             }, new DateTime(2019, 9, 3));
@@ -25,10 +25,10 @@ namespace DarkDeeds.Tests.Services
         {
             var service = new RecurrenceProcessorService(null, null, null, null);
 
-            var result = service.MatchEveryNumberOfDays(new RecurrenceEntity
+            var result = service.MatchEveryNumberOfDays(new PlannedRecurrenceEntity
             {
                 StartDate = new DateTime(2019, 9, 4, 10, 0, 0),
-                EveryNumberOfDays = 1,
+                EveryNthDay = 1,
             }, new DateTime(2019, 9, 4, 9, 0, 0));
 
             Assert.True(result);
@@ -39,10 +39,10 @@ namespace DarkDeeds.Tests.Services
         {
             var service = new RecurrenceProcessorService(null, null, null, null);
 
-            var result = service.MatchEveryNumberOfDays(new RecurrenceEntity
+            var result = service.MatchEveryNumberOfDays(new PlannedRecurrenceEntity
             {
                 StartDate = new DateTime(2019, 9, 4),
-                EveryNumberOfDays = 1000,
+                EveryNthDay = 1000,
             }, new DateTime(2019, 9, 4));
 
             Assert.True(result);
@@ -53,10 +53,10 @@ namespace DarkDeeds.Tests.Services
         {
             var service = new RecurrenceProcessorService(null, null, null, null);
 
-            var result = service.MatchEveryNumberOfDays(new RecurrenceEntity
+            var result = service.MatchEveryNumberOfDays(new PlannedRecurrenceEntity
             {
                 StartDate = new DateTime(2019, 9, 4),
-                EveryNumberOfDays = 1,
+                EveryNthDay = 1,
             }, new DateTime(2019, 9, 5));
 
             Assert.True(result);
@@ -67,10 +67,10 @@ namespace DarkDeeds.Tests.Services
         {
             var service = new RecurrenceProcessorService(null, null, null, null);
 
-            var result = service.MatchEveryNumberOfDays(new RecurrenceEntity
+            var result = service.MatchEveryNumberOfDays(new PlannedRecurrenceEntity
             {
                 StartDate = new DateTime(2019, 9, 4),
-                EveryNumberOfDays = 2,
+                EveryNthDay = 2,
             }, new DateTime(2019, 9, 5));
 
             Assert.False(result);
@@ -81,10 +81,10 @@ namespace DarkDeeds.Tests.Services
         {
             var service = new RecurrenceProcessorService(null, null, null, null);
 
-            var result = service.MatchEveryNumberOfDays(new RecurrenceEntity
+            var result = service.MatchEveryNumberOfDays(new PlannedRecurrenceEntity
             {
                 StartDate = new DateTime(2019, 9, 4),
-                EveryNumberOfDays = 2,
+                EveryNthDay = 2,
             }, new DateTime(2019, 9, 6));
 
             Assert.True(result);
@@ -95,10 +95,10 @@ namespace DarkDeeds.Tests.Services
         {
             var service = new RecurrenceProcessorService(null, null, null, null);
 
-            var result = service.MatchEveryNumberOfDays(new RecurrenceEntity
+            var result = service.MatchEveryNumberOfDays(new PlannedRecurrenceEntity
             {
                 StartDate = new DateTime(2019, 9, 4),
-                EveryNumberOfDays = 5,
+                EveryNthDay = 5,
             }, new DateTime(2019, 9, 9));
 
             Assert.True(result);
@@ -109,10 +109,10 @@ namespace DarkDeeds.Tests.Services
         {
             var service = new RecurrenceProcessorService(null, null, null, null);
 
-            var result = service.MatchEveryNumberOfDays(new RecurrenceEntity
+            var result = service.MatchEveryNumberOfDays(new PlannedRecurrenceEntity
             {
                 StartDate = new DateTime(2019, 9, 4),
-                EveryNumberOfDays = 4,
+                EveryNthDay = 4,
             }, new DateTime(2019, 9, 9));
 
             Assert.False(result);
@@ -123,10 +123,10 @@ namespace DarkDeeds.Tests.Services
         {
             var service = new RecurrenceProcessorService(null, null, null, null);
 
-            var result = service.MatchEveryNumberOfDays(new RecurrenceEntity
+            var result = service.MatchEveryNumberOfDays(new PlannedRecurrenceEntity
             {
                 StartDate = new DateTime(2019, 9, 27),
-                EveryNumberOfDays = 4,
+                EveryNthDay = 4,
             }, new DateTime(2019, 10, 1));
 
             Assert.True(result);

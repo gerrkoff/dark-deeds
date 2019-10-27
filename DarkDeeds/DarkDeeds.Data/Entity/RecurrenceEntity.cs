@@ -1,26 +1,23 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using DarkDeeds.Data.Entity.Base;
-using DarkDeeds.Enums;
 
 namespace DarkDeeds.Data.Entity
 {
-    public class RecurrenceEntity : DeletableEntity
+    public class RecurrenceEntity : BaseEntity
     {
-        public DateTime StartDate { get; set; }
-        
-        public string Task { get; set; }
-        
-        public string MonthDays { get; set; }
-
-        public RecurrenceWeekdayEnum? Weekdays { get; set; }
-
-        public int EveryNumberOfDays { get; set; }
-
-        [Required]
-        public string UserId { get; set; }
+        public DateTime DateTime { get; set; }
         
         [Required]
-        public UserEntity User { get; set; }
+        public int PlannedRecurrenceId { get; set; }
+        
+        [Required]
+        public int TaskId { get; set; }
+        
+        [Required]
+        public PlannedRecurrenceEntity PlannedRecurrence { get; set; }
+        
+        [Required]
+        public TaskEntity Task { get; set; }
     }
 }

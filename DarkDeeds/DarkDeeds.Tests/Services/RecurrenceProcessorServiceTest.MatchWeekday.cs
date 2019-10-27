@@ -13,9 +13,9 @@ namespace DarkDeeds.Tests.Services
         {
             var service = new RecurrenceProcessorService(null, null, null, null);
 
-            var result = service.MatchWeekday(new RecurrenceEntity
+            var result = service.MatchWeekday(new PlannedRecurrenceEntity
             {
-                Weekdays = RecurrenceWeekdayEnum.Monday
+                EveryWeekday = RecurrenceWeekdayEnum.Monday
             }, new DateTime(2019, 9, 2));
 
             Assert.True(result);
@@ -26,9 +26,9 @@ namespace DarkDeeds.Tests.Services
         {
             var service = new RecurrenceProcessorService(null, null, null, null);
 
-            var result = service.MatchWeekday(new RecurrenceEntity
+            var result = service.MatchWeekday(new PlannedRecurrenceEntity
             {
-                Weekdays = RecurrenceWeekdayEnum.Monday | RecurrenceWeekdayEnum.Friday
+                EveryWeekday = RecurrenceWeekdayEnum.Monday | RecurrenceWeekdayEnum.Friday
             }, new DateTime(2019, 9, 6));
 
             Assert.True(result);
@@ -39,9 +39,9 @@ namespace DarkDeeds.Tests.Services
         {
             var service = new RecurrenceProcessorService(null, null, null, null);
 
-            var result = service.MatchWeekday(new RecurrenceEntity
+            var result = service.MatchWeekday(new PlannedRecurrenceEntity
             {
-                Weekdays = RecurrenceWeekdayEnum.Monday | RecurrenceWeekdayEnum.Friday
+                EveryWeekday = RecurrenceWeekdayEnum.Monday | RecurrenceWeekdayEnum.Friday
             }, new DateTime(2019, 9, 5));
 
             Assert.False(result);
@@ -52,9 +52,9 @@ namespace DarkDeeds.Tests.Services
         {
             var service = new RecurrenceProcessorService(null, null, null, null);
 
-            var result = service.MatchWeekday(new RecurrenceEntity
+            var result = service.MatchWeekday(new PlannedRecurrenceEntity
             {
-                Weekdays = null
+                EveryWeekday = null
             }, new DateTime());
 
             Assert.True(result);

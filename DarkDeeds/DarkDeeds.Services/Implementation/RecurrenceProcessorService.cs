@@ -15,14 +15,14 @@ namespace DarkDeeds.Services.Implementation
         private const int RecurrencePeriodInDays = 14;
         
         private readonly IRepository<TaskEntity> _taskRepository;
-        private readonly IRepository<RecurrenceEntity> _recurrenceRepository;
-        private readonly IRepositoryNonDeletable<RecurrenceTaskEntity> _recurrenceTaskRepository;
+        private readonly IRepository<PlannedRecurrenceEntity> _recurrenceRepository;
+        private readonly IRepositoryNonDeletable<RecurrenceEntity> _recurrenceTaskRepository;
         private readonly IDateService _dateService;
 
         public RecurrenceProcessorService(
             IRepository<TaskEntity> taskRepository,
-            IRepository<RecurrenceEntity> recurrenceRepository,
-            IRepositoryNonDeletable<RecurrenceTaskEntity> recurrenceTaskRepository,
+            IRepository<PlannedRecurrenceEntity> recurrenceRepository,
+            IRepositoryNonDeletable<RecurrenceEntity> recurrenceTaskRepository,
             IDateService dateService)
         {
             _taskRepository = taskRepository;
@@ -33,8 +33,8 @@ namespace DarkDeeds.Services.Implementation
 
         public async Task CreateRecurrenceTasksAsync()
         {
-            List<RecurrenceEntity> recurrences = await _recurrenceRepository.GetAll().ToListSafeAsync();
-            foreach (RecurrenceEntity recurrence in recurrences)
+            List<PlannedRecurrenceEntity> recurrences = await _recurrenceRepository.GetAll().ToListSafeAsync();
+            foreach (PlannedRecurrenceEntity recurrence in recurrences)
             {
                 ICollection<DateTime> expandedDates = ExpandRecurrenceWithinPeriod(recurrence);
                 foreach (var date in expandedDates)
@@ -47,33 +47,33 @@ namespace DarkDeeds.Services.Implementation
             }
         }
 
-        private TaskEntity CreateTaskFromRecurrence(RecurrenceEntity recurrence) => new TaskEntity
+        private TaskEntity CreateTaskFromRecurrence(PlannedRecurrenceEntity plannedRecurrence) => new TaskEntity
         {
-            Title = recurrence.Task,
-            UserId = recurrence.UserId,
+            Title = plannedRecurrence.Task,
+            UserId = plannedRecurrence.UserId,
         };
 
-        private RecurrenceTaskEntity CreateRecurrentTaskCreatedEntity(RecurrenceEntity recurrence,
-            TaskEntity task, DateTime date) => new RecurrenceTaskEntity
+        private RecurrenceEntity CreateRecurrentTaskCreatedEntity(PlannedRecurrenceEntity plannedRecurrence,
+            TaskEntity task, DateTime date) => new RecurrenceEntity
         {
             DateTime = date,
-            RecurrenceId = recurrence.Id,
+            PlannedRecurrenceId = plannedRecurrence.Id,
             TaskId = task.Id,
         };
 
-        private ICollection<DateTime> ExpandRecurrenceWithinPeriod(RecurrenceEntity recurrence)
+        private ICollection<DateTime> ExpandRecurrenceWithinPeriod(PlannedRecurrenceEntity plannedRecurrence)
         {
             DateTime periodEnd = EvaluateRecurrencePeriodEndDate();
             var dates = new List<DateTime>();
             for (DateTime i = _dateService.Now; i.Date != periodEnd.Date; i = i.AddDays(1))
             {
-                if (!MatchWeekday(recurrence, i))
+                if (!MatchWeekday(plannedRecurrence, i))
                     continue;
                 
-                if (!MatchEveryNumberOfDays(recurrence, i))
+                if (!MatchEveryNumberOfDays(plannedRecurrence, i))
                     continue;
                 
-                if (!MatchMonthDays(recurrence, i))
+                if (!MatchMonthDays(plannedRecurrence, i))
                     continue;
                 
                 dates.Add(i);
@@ -88,21 +88,21 @@ namespace DarkDeeds.Services.Implementation
             return _dateService.Now.AddDays(RecurrencePeriodInDays - currentDayOfWeek + 1);
         }
 
-        public bool MatchEveryNumberOfDays(RecurrenceEntity recurrence, DateTime date)
+        public bool MatchEveryNumberOfDays(PlannedRecurrenceEntity plannedRecurrence, DateTime date)
         {
-            if (recurrence.StartDate.Date != date.Date && recurrence.StartDate > date)
+            if (plannedRecurrence.StartDate.Date != date.Date && plannedRecurrence.StartDate > date)
                 return false;
 
-            if (recurrence.EveryNumberOfDays == 0)
+            if (plannedRecurrence.EveryNthDay == 0)
                 return true;
 
-            TimeSpan dayCount = recurrence.StartDate.Date - date.Date;
-            return dayCount.Days % recurrence.EveryNumberOfDays == 0;
+            TimeSpan dayCount = plannedRecurrence.StartDate.Date - date.Date;
+            return dayCount.Days % plannedRecurrence.EveryNthDay == 0;
         }
         
-        public bool MatchWeekday(RecurrenceEntity recurrence, DateTime date)
+        public bool MatchWeekday(PlannedRecurrenceEntity plannedRecurrence, DateTime date)
         {
-            if (recurrence.Weekdays == null)
+            if (plannedRecurrence.EveryWeekday == null)
                 return true;
             
             var weekday = RecurrenceWeekdayEnum.None;
@@ -119,16 +119,16 @@ namespace DarkDeeds.Services.Implementation
                     throw new ArgumentOutOfRangeException();
             }
             
-            return recurrence.Weekdays.Value.HasFlag(weekday);
+            return plannedRecurrence.EveryWeekday.Value.HasFlag(weekday);
         }
         
-        public bool MatchMonthDays(RecurrenceEntity recurrence, DateTime date)
+        public bool MatchMonthDays(PlannedRecurrenceEntity plannedRecurrence, DateTime date)
         {
-            if (string.IsNullOrEmpty(recurrence.MonthDays))
+            if (string.IsNullOrEmpty(plannedRecurrence.EveryMonthDay))
                 return true;
 
             int lastDay = DateTime.DaysInMonth(date.Year, date.Month);
-            List<int> dayList = recurrence.MonthDays.Split(',').Select(int.Parse).ToList();
+            List<int> dayList = plannedRecurrence.EveryMonthDay.Split(',').Select(int.Parse).ToList();
 
             if (dayList.Any(x => x > lastDay))
                 dayList.Add(lastDay);
