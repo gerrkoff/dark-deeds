@@ -18,7 +18,7 @@ namespace DarkDeeds.Tests.Services.RecurrenceCreatorServiceTests
             var recurrenceRepo = Helper.CreateRepoMock<PlannedRecurrenceEntity>();
             var recurrenceTaskRepo = Helper.CreateRepoNonDeletableMock<RecurrenceEntity>();
             
-            var service = new RecurrenceCreatorService(taskRepo.Object, recurrenceRepo.Object, recurrenceTaskRepo.Object, null);
+            var service = new RecurrenceCreatorService(taskRepo.Object, recurrenceRepo.Object, recurrenceTaskRepo.Object, null, null);
             
             await service.CreateAsync();
             
@@ -40,7 +40,7 @@ namespace DarkDeeds.Tests.Services.RecurrenceCreatorServiceTests
             var dateServiceMock = new Mock<IDateService>();
             dateServiceMock.SetupGet(x => x.Now).Returns(DateTime.Now);
             
-            var service = new RecurrenceCreatorService(taskRepo.Object, recurrenceRepo.Object, recurrenceTaskRepo.Object, dateServiceMock.Object);
+            var service = new RecurrenceCreatorService(taskRepo.Object, recurrenceRepo.Object, recurrenceTaskRepo.Object, dateServiceMock.Object, null);
             
             await service.CreateAsync();
             
@@ -66,7 +66,7 @@ namespace DarkDeeds.Tests.Services.RecurrenceCreatorServiceTests
             var dateServiceMock = new Mock<IDateService>();
             dateServiceMock.SetupGet(x => x.Now).Returns(now);
             
-            var service = new RecurrenceCreatorService(taskRepo.Object, recurrenceRepo.Object, recurrenceTaskRepo.Object, dateServiceMock.Object);
+            var service = new RecurrenceCreatorService(taskRepo.Object, recurrenceRepo.Object, recurrenceTaskRepo.Object, dateServiceMock.Object, null);
             
             await service.CreateAsync();
             
@@ -87,7 +87,7 @@ namespace DarkDeeds.Tests.Services.RecurrenceCreatorServiceTests
             var dateServiceMock = new Mock<IDateService>();
             dateServiceMock.SetupGet(x => x.Now).Returns(new DateTime(2019, 9, 3));
             
-            var service = new RecurrenceCreatorService(taskRepo.Object, recurrenceRepo.Object, recurrenceTaskRepo.Object, dateServiceMock.Object);
+            var service = new RecurrenceCreatorService(taskRepo.Object, recurrenceRepo.Object, recurrenceTaskRepo.Object, dateServiceMock.Object, null);
             
             await service.CreateAsync();
             
@@ -107,7 +107,7 @@ namespace DarkDeeds.Tests.Services.RecurrenceCreatorServiceTests
             var dateServiceMock = new Mock<IDateService>();
             dateServiceMock.SetupGet(x => x.Now).Returns(new DateTime(2019, 9, 6));
             
-            var service = new RecurrenceCreatorService(taskRepo.Object, recurrenceRepo.Object, recurrenceTaskRepo.Object, dateServiceMock.Object);
+            var service = new RecurrenceCreatorService(taskRepo.Object, recurrenceRepo.Object, recurrenceTaskRepo.Object, dateServiceMock.Object, null);
             
             await service.CreateAsync();
             
@@ -132,7 +132,7 @@ namespace DarkDeeds.Tests.Services.RecurrenceCreatorServiceTests
             var dateServiceMock = new Mock<IDateService>();
             dateServiceMock.SetupGet(x => x.Now).Returns(new DateTime(2019, 9, 6));
             
-            var service = new RecurrenceCreatorService(taskRepo.Object, recurrenceRepo.Object, recurrenceTaskRepo.Object, dateServiceMock.Object);
+            var service = new RecurrenceCreatorService(taskRepo.Object, recurrenceRepo.Object, recurrenceTaskRepo.Object, dateServiceMock.Object, null);
             
             await service.CreateAsync();
             
@@ -157,7 +157,7 @@ namespace DarkDeeds.Tests.Services.RecurrenceCreatorServiceTests
             var dateServiceMock = new Mock<IDateService>();
             dateServiceMock.SetupGet(x => x.Now).Returns(new DateTime(2019, 9, 6));
             
-            var service = new RecurrenceCreatorService(taskRepo.Object, recurrenceRepo.Object, recurrenceTaskRepo.Object, dateServiceMock.Object);
+            var service = new RecurrenceCreatorService(taskRepo.Object, recurrenceRepo.Object, recurrenceTaskRepo.Object, dateServiceMock.Object, null);
             
             await service.CreateAsync();
             
@@ -183,7 +183,7 @@ namespace DarkDeeds.Tests.Services.RecurrenceCreatorServiceTests
             var dateServiceMock = new Mock<IDateService>();
             dateServiceMock.SetupGet(x => x.Now).Returns(new DateTime(2019, 9, 6));
             
-            var service = new RecurrenceCreatorService(taskRepo.Object, recurrenceRepo.Object, recurrenceTaskRepo.Object, dateServiceMock.Object);
+            var service = new RecurrenceCreatorService(taskRepo.Object, recurrenceRepo.Object, recurrenceTaskRepo.Object, dateServiceMock.Object, null);
             
             await service.CreateAsync();
             

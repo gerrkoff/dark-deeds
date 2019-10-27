@@ -7,6 +7,7 @@ using DarkDeeds.Data.Entity;
 using DarkDeeds.Data.Repository;
 using DarkDeeds.Enums;
 using DarkDeeds.Services.Interface;
+using Microsoft.Extensions.Logging;
 
 namespace DarkDeeds.Services.Implementation
 {
@@ -18,17 +19,20 @@ namespace DarkDeeds.Services.Implementation
         private readonly IRepository<PlannedRecurrenceEntity> _recurrenceRepository;
         private readonly IRepositoryNonDeletable<RecurrenceEntity> _recurrenceTaskRepository;
         private readonly IDateService _dateService;
+        private readonly ILogger<RecurrenceCreatorService> _logger;
 
         public RecurrenceCreatorService(
             IRepository<TaskEntity> taskRepository,
             IRepository<PlannedRecurrenceEntity> recurrenceRepository,
             IRepositoryNonDeletable<RecurrenceEntity> recurrenceTaskRepository,
-            IDateService dateService)
+            IDateService dateService,
+            ILogger<RecurrenceCreatorService> logger)
         {
             _taskRepository = taskRepository;
             _recurrenceRepository = recurrenceRepository;
             _recurrenceTaskRepository = recurrenceTaskRepository;
             _dateService = dateService;
+            _logger = logger;
         }
 
         public async Task CreateAsync()
@@ -130,8 +134,20 @@ namespace DarkDeeds.Services.Implementation
             if (string.IsNullOrEmpty(plannedRecurrence.EveryMonthDay))
                 return true;
 
+            List<int> dayList;
+            try
+            {
+                dayList = plannedRecurrence.EveryMonthDay.Split(',').Select(int.Parse).ToList();
+            }
+            catch (ArrayTypeMismatchException e)
+            {
+                _logger.LogWarning(
+                    $"Can't parse EveryMonthDay for PlannedRecurrenceId = {plannedRecurrence.Id}, Value = '{plannedRecurrence.EveryMonthDay}'");
+                return true;
+            }
+
             int lastDay = DateTime.DaysInMonth(date.Year, date.Month);
-            List<int> dayList = plannedRecurrence.EveryMonthDay.Split(',').Select(int.Parse).ToList();
+            
 
             if (dayList.Any(x => x > lastDay))
                 dayList.Add(lastDay);

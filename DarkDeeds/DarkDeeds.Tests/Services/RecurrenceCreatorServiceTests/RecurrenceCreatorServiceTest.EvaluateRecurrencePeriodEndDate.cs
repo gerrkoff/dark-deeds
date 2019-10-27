@@ -13,7 +13,7 @@ namespace DarkDeeds.Tests.Services.RecurrenceCreatorServiceTests
         {
             var dateMock = new Mock<IDateService>();
             dateMock.SetupGet(x => x.Now).Returns(new DateTime(2019, 9, 2, 10, 0, 0));
-            var service = new RecurrenceCreatorService(null, null, null, dateMock.Object);
+            var service = new RecurrenceCreatorService(null, null, null, dateMock.Object, null);
 
             var result = service.EvaluateRecurrencePeriodEndDate();
 
@@ -25,7 +25,7 @@ namespace DarkDeeds.Tests.Services.RecurrenceCreatorServiceTests
         {
             var dateMock = new Mock<IDateService>();
             dateMock.SetupGet(x => x.Now).Returns(new DateTime(2019, 9, 1, 10, 0, 0));
-            var service = new RecurrenceCreatorService(null, null, null, dateMock.Object);
+            var service = new RecurrenceCreatorService(null, null, null, dateMock.Object, null);
 
             var result = service.EvaluateRecurrencePeriodEndDate();
 
