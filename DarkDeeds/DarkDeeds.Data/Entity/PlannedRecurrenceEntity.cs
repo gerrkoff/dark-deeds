@@ -13,7 +13,7 @@ namespace DarkDeeds.Data.Entity
         
         public DateTime? EndDate { get; set; }
         
-        public int EveryNthDay { get; set; }
+        public int? EveryNthDay { get; set; }
         
         public string EveryMonthDay { get; set; }
 

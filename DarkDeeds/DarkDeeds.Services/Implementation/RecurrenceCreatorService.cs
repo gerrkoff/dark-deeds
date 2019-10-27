@@ -96,10 +96,7 @@ namespace DarkDeeds.Services.Implementation
 
         public bool MatchNthDay(PlannedRecurrenceEntity plannedRecurrence, DateTime date)
         {
-            if (plannedRecurrence.StartDate.Date != date.Date && plannedRecurrence.StartDate > date)
-                return false;
-
-            if (plannedRecurrence.EveryNthDay == 0)
+            if (!plannedRecurrence.EveryNthDay.HasValue)
                 return true;
 
             TimeSpan dayCount = plannedRecurrence.StartDate.Date - date.Date;
