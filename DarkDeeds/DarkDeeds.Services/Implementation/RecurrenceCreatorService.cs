@@ -88,12 +88,13 @@ namespace DarkDeeds.Services.Implementation
         /// <remarks>End date is not included</remarks>
         public (DateTime, DateTime) EvaluatePeriod()
         {
-            int currentDayOfWeek = (int) _dateService.Now.DayOfWeek;
-            int currentDayOfWeekFixed = (6 + currentDayOfWeek) % 7 + 1;
-            return (
-                _dateService.Now,
-                _dateService.Now.AddDays(RecurrencePeriodInDays - currentDayOfWeekFixed + 1)
-            );
+            var startDate = _dateService.Now.AddHours(-12).Date; 
+            
+            var currentDayOfWeek = (int) _dateService.Now.DayOfWeek;
+            var currentDayOfWeekFixed = (6 + currentDayOfWeek) % 7 + 1;
+            var endDate = _dateService.Now.AddDays(RecurrencePeriodInDays - currentDayOfWeekFixed + 1); 
+            
+            return (startDate, endDate);
         }
 
         public bool MatchPeriod(PlannedRecurrenceEntity plannedRecurrence, DateTime date)

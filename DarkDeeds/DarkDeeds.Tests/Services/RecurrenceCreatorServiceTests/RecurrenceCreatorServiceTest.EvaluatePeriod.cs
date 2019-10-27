@@ -32,5 +32,17 @@ namespace DarkDeeds.Tests.Services.RecurrenceCreatorServiceTests
 
             Assert.Equal(new DateTime(2019, 9, 9), result);
         }
+        
+        [Fact]
+        public void EvaluatePeriod_ShouldCorrectlyEvaluateStartDate()
+        {
+            var dateMock = new Mock<IDateService>();
+            dateMock.SetupGet(x => x.Now).Returns(new DateTime(2019, 9, 3, 11, 59, 59));
+            var service = new RecurrenceCreatorService(null, null, null, dateMock.Object, null);
+
+            var (result, _) = service.EvaluatePeriod();
+
+            Assert.Equal(new DateTime(2019, 9, 2), result);
+        }
     }
 }
