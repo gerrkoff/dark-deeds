@@ -52,7 +52,7 @@ namespace DarkDeeds.Services.Implementation
                     if (alreadyExists)
                         continue;;
                     
-                    TaskEntity task = CreateTaskFromRecurrence(plannedRecurrence);
+                    TaskEntity task = CreateTaskFromRecurrence(plannedRecurrence, date);
                     await _taskRepository.SaveAsync(task);
                     await _recurrenceRepository.SaveAsync(
                         CreateRecurrenceEntity(plannedRecurrence.Id, task.Id, date));
@@ -61,11 +61,12 @@ namespace DarkDeeds.Services.Implementation
         }
 
         // TODO: parse task text
-        private TaskEntity CreateTaskFromRecurrence(PlannedRecurrenceEntity plannedRecurrence)
+        private TaskEntity CreateTaskFromRecurrence(PlannedRecurrenceEntity plannedRecurrence, DateTime date)
             => new TaskEntity
             {
                 Title = plannedRecurrence.Task,
                 UserId = plannedRecurrence.UserId,
+                Date = date,
             };
 
         private RecurrenceEntity CreateRecurrenceEntity(int plannedRecurrenceId, int taskId, DateTime date)

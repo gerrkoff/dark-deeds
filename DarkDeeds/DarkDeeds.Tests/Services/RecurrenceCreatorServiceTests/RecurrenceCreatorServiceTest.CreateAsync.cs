@@ -31,21 +31,22 @@ namespace DarkDeeds.Tests.Services.RecurrenceCreatorServiceTests
         [Fact]
         public async Task CreateAsync_CreateTaskForRecurrence()
         {
+            var someDate = DateTime.Now.Date;
             var taskRepo = Helper.CreateRepoMock<TaskEntity>();
             var plannedRecurrenceRepo = Helper.CreateRepoMock(new PlannedRecurrenceEntity
             {
-                Id = 1, Task = "Task", EveryNthDay = 1, StartDate = DateTime.Now, UserId = "userId"
+                Id = 1, Task = "Task", EveryNthDay = 1, StartDate = someDate, UserId = "userId"
             });
             var recurrenceRepo = Helper.CreateRepoNonDeletableMock<RecurrenceEntity>();
             var dateServiceMock = new Mock<IDateService>();
-            dateServiceMock.SetupGet(x => x.Now).Returns(DateTime.Now);
+            dateServiceMock.SetupGet(x => x.Now).Returns(someDate);
             
             var service = new RecurrenceCreatorService(taskRepo.Object, plannedRecurrenceRepo.Object, recurrenceRepo.Object, dateServiceMock.Object, null);
             
             await service.CreateAsync();
             
             taskRepo.Verify(x => x.SaveAsync(It.Is<TaskEntity>(
-                y => y.Title == "Task" && y.UserId == "userId"
+                y => y.Title == "Task" && y.UserId == "userId" && y.Date == someDate
                 )));
         }
         

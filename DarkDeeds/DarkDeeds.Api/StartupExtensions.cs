@@ -63,6 +63,8 @@ namespace DarkDeeds.Api
             services.AddScoped<ITaskParserService, TaskParserService>();
             services.AddScoped<ITelegramService, TelegramService>();
             services.AddScoped<ISettingsService, SettingsService>();
+            services.AddScoped<IRecurrenceCreatorService, RecurrenceCreatorService>();
+            services.AddScoped<IDateService, DateService>();
             
             services.AddScoped<IBotCommandParserService, BotCommandParserService>();
             services.AddScoped<IShowTodoCommandProcessor, ShowTodoCommandProcessor>();
