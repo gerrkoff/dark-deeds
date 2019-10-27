@@ -12,7 +12,7 @@ namespace DarkDeeds.Tests.Services
         {
             var service = new RecurrenceCreatorService(null, null, null, null);
 
-            var result = service.MatchEveryNumberOfDays(new PlannedRecurrenceEntity
+            var result = service.MatchNthDay(new PlannedRecurrenceEntity
             {
                 StartDate = new DateTime(2019, 9, 4)
             }, new DateTime(2019, 9, 3));
@@ -25,7 +25,7 @@ namespace DarkDeeds.Tests.Services
         {
             var service = new RecurrenceCreatorService(null, null, null, null);
 
-            var result = service.MatchEveryNumberOfDays(new PlannedRecurrenceEntity
+            var result = service.MatchNthDay(new PlannedRecurrenceEntity
             {
                 StartDate = new DateTime(2019, 9, 4, 10, 0, 0),
                 EveryNthDay = 1,
@@ -39,7 +39,7 @@ namespace DarkDeeds.Tests.Services
         {
             var service = new RecurrenceCreatorService(null, null, null, null);
 
-            var result = service.MatchEveryNumberOfDays(new PlannedRecurrenceEntity
+            var result = service.MatchNthDay(new PlannedRecurrenceEntity
             {
                 StartDate = new DateTime(2019, 9, 4),
                 EveryNthDay = 1000,
@@ -53,7 +53,7 @@ namespace DarkDeeds.Tests.Services
         {
             var service = new RecurrenceCreatorService(null, null, null, null);
 
-            var result = service.MatchEveryNumberOfDays(new PlannedRecurrenceEntity
+            var result = service.MatchNthDay(new PlannedRecurrenceEntity
             {
                 StartDate = new DateTime(2019, 9, 4),
                 EveryNthDay = 1,
@@ -67,7 +67,7 @@ namespace DarkDeeds.Tests.Services
         {
             var service = new RecurrenceCreatorService(null, null, null, null);
 
-            var result = service.MatchEveryNumberOfDays(new PlannedRecurrenceEntity
+            var result = service.MatchNthDay(new PlannedRecurrenceEntity
             {
                 StartDate = new DateTime(2019, 9, 4),
                 EveryNthDay = 2,
@@ -81,7 +81,7 @@ namespace DarkDeeds.Tests.Services
         {
             var service = new RecurrenceCreatorService(null, null, null, null);
 
-            var result = service.MatchEveryNumberOfDays(new PlannedRecurrenceEntity
+            var result = service.MatchNthDay(new PlannedRecurrenceEntity
             {
                 StartDate = new DateTime(2019, 9, 4),
                 EveryNthDay = 2,
@@ -95,7 +95,7 @@ namespace DarkDeeds.Tests.Services
         {
             var service = new RecurrenceCreatorService(null, null, null, null);
 
-            var result = service.MatchEveryNumberOfDays(new PlannedRecurrenceEntity
+            var result = service.MatchNthDay(new PlannedRecurrenceEntity
             {
                 StartDate = new DateTime(2019, 9, 4),
                 EveryNthDay = 5,
@@ -109,7 +109,7 @@ namespace DarkDeeds.Tests.Services
         {
             var service = new RecurrenceCreatorService(null, null, null, null);
 
-            var result = service.MatchEveryNumberOfDays(new PlannedRecurrenceEntity
+            var result = service.MatchNthDay(new PlannedRecurrenceEntity
             {
                 StartDate = new DateTime(2019, 9, 4),
                 EveryNthDay = 4,
@@ -123,7 +123,7 @@ namespace DarkDeeds.Tests.Services
         {
             var service = new RecurrenceCreatorService(null, null, null, null);
 
-            var result = service.MatchEveryNumberOfDays(new PlannedRecurrenceEntity
+            var result = service.MatchNthDay(new PlannedRecurrenceEntity
             {
                 StartDate = new DateTime(2019, 9, 27),
                 EveryNthDay = 4,

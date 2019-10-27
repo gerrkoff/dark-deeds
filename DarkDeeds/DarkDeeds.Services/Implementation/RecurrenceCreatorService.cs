@@ -70,10 +70,10 @@ namespace DarkDeeds.Services.Implementation
                 if (!MatchWeekday(plannedRecurrence, i))
                     continue;
                 
-                if (!MatchEveryNumberOfDays(plannedRecurrence, i))
+                if (!MatchNthDay(plannedRecurrence, i))
                     continue;
                 
-                if (!MatchMonthDays(plannedRecurrence, i))
+                if (!MatchMonthDay(plannedRecurrence, i))
                     continue;
                 
                 dates.Add(i);
@@ -88,7 +88,7 @@ namespace DarkDeeds.Services.Implementation
             return _dateService.Now.AddDays(RecurrencePeriodInDays - currentDayOfWeek + 1);
         }
 
-        public bool MatchEveryNumberOfDays(PlannedRecurrenceEntity plannedRecurrence, DateTime date)
+        public bool MatchNthDay(PlannedRecurrenceEntity plannedRecurrence, DateTime date)
         {
             if (plannedRecurrence.StartDate.Date != date.Date && plannedRecurrence.StartDate > date)
                 return false;
@@ -122,7 +122,7 @@ namespace DarkDeeds.Services.Implementation
             return plannedRecurrence.EveryWeekday.Value.HasFlag(weekday);
         }
         
-        public bool MatchMonthDays(PlannedRecurrenceEntity plannedRecurrence, DateTime date)
+        public bool MatchMonthDay(PlannedRecurrenceEntity plannedRecurrence, DateTime date)
         {
             if (string.IsNullOrEmpty(plannedRecurrence.EveryMonthDay))
                 return true;

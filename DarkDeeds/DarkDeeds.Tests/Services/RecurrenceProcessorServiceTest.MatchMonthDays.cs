@@ -12,7 +12,7 @@ namespace DarkDeeds.Tests.Services
         {
             var service = new RecurrenceCreatorService(null, null, null, null);
 
-            var result = service.MatchMonthDays(new PlannedRecurrenceEntity(), new DateTime());
+            var result = service.MatchMonthDay(new PlannedRecurrenceEntity(), new DateTime());
 
             Assert.True(result);
         }
@@ -22,7 +22,7 @@ namespace DarkDeeds.Tests.Services
         {
             var service = new RecurrenceCreatorService(null, null, null, null);
 
-            var result = service.MatchMonthDays(new PlannedRecurrenceEntity
+            var result = service.MatchMonthDay(new PlannedRecurrenceEntity
             {
                 EveryMonthDay = "13"
             }, new DateTime(2019, 9, 13));
@@ -35,7 +35,7 @@ namespace DarkDeeds.Tests.Services
         {
             var service = new RecurrenceCreatorService(null, null, null, null);
 
-            var result = service.MatchMonthDays(new PlannedRecurrenceEntity
+            var result = service.MatchMonthDay(new PlannedRecurrenceEntity
             {
                 EveryMonthDay = "13,15,22"
             }, new DateTime(2019, 9, 13));
@@ -48,7 +48,7 @@ namespace DarkDeeds.Tests.Services
         {
             var service = new RecurrenceCreatorService(null, null, null, null);
 
-            var result = service.MatchMonthDays(new PlannedRecurrenceEntity
+            var result = service.MatchMonthDay(new PlannedRecurrenceEntity
             {
                 EveryMonthDay = "13,15,22,40"
             }, new DateTime(2020, 2, 29));
@@ -61,7 +61,7 @@ namespace DarkDeeds.Tests.Services
         {
             var service = new RecurrenceCreatorService(null, null, null, null);
 
-            var result = service.MatchMonthDays(new PlannedRecurrenceEntity
+            var result = service.MatchMonthDay(new PlannedRecurrenceEntity
             {
                 EveryMonthDay = "13,15,22,40"
             }, new DateTime(2020, 2, 16));
