@@ -8,7 +8,7 @@ namespace DarkDeeds.Tests.Services
     public partial class RecurrenceServiceTest
     { 
         [Fact]
-        public void MatchEveryNumberOfDays_DoNotMatchIfDateIsBeforeStartDate()
+        public void MatchNthDay_DoNotMatchIfDateIsBeforeStartDate()
         {
             var service = new RecurrenceCreatorService(null, null, null, null);
 
@@ -21,7 +21,7 @@ namespace DarkDeeds.Tests.Services
         }
         
         [Fact]
-        public void MatchEveryNumberOfDays_MatchIfDateTimeIsBeforeStartDateButSameDay()
+        public void MatchNthDay_MatchIfDateTimeIsBeforeStartDateButSameDay()
         {
             var service = new RecurrenceCreatorService(null, null, null, null);
 
@@ -35,7 +35,7 @@ namespace DarkDeeds.Tests.Services
         }
         
         [Fact]
-        public void MatchEveryNumberOfDays_FirstDayAlwaysCounts()
+        public void MatchNthDay_FirstDayAlwaysCounts()
         {
             var service = new RecurrenceCreatorService(null, null, null, null);
 
@@ -49,7 +49,7 @@ namespace DarkDeeds.Tests.Services
         }
         
         [Fact]
-        public void MatchEveryNumberOfDays_MatchNextDayAfterStartDateWith1Number()
+        public void MatchNthDay_MatchNextDayAfterStartDateWith1Number()
         {
             var service = new RecurrenceCreatorService(null, null, null, null);
 
@@ -63,7 +63,7 @@ namespace DarkDeeds.Tests.Services
         }
         
         [Fact]
-        public void MatchEveryNumberOfDays_DoNotMatchNextDayAfterStartDateWith2Number()
+        public void MatchNthDay_DoNotMatchNextDayAfterStartDateWith2Number()
         {
             var service = new RecurrenceCreatorService(null, null, null, null);
 
@@ -77,7 +77,7 @@ namespace DarkDeeds.Tests.Services
         }
         
         [Fact]
-        public void MatchEveryNumberOfDays_Match2NextDaysAfterStarDatetWith2Number()
+        public void MatchNthDay_Match2NextDaysAfterStarDatetWith2Number()
         {
             var service = new RecurrenceCreatorService(null, null, null, null);
 
@@ -91,7 +91,7 @@ namespace DarkDeeds.Tests.Services
         }
         
         [Fact]
-        public void MatchEveryNumberOfDays_Match5NextDaysAfterStartDateWith5Number()
+        public void MatchNthDay_Match5NextDaysAfterStartDateWith5Number()
         {
             var service = new RecurrenceCreatorService(null, null, null, null);
 
@@ -105,7 +105,7 @@ namespace DarkDeeds.Tests.Services
         }
         
         [Fact]
-        public void MatchEveryNumberOfDays_DoNotMatch4NextDayAfterStartDateWith5Number()
+        public void MatchNthDay_DoNotMatch4NextDayAfterStartDateWith5Number()
         {
             var service = new RecurrenceCreatorService(null, null, null, null);
 
@@ -119,7 +119,7 @@ namespace DarkDeeds.Tests.Services
         }
         
         [Fact]
-        public void MatchEveryNumberOfDays_Match5NextDayAfterStartDateWith5NumberWithMonthChange()
+        public void MatchNthDay_Match5NextDayAfterStartDateWith5NumberWithMonthChange()
         {
             var service = new RecurrenceCreatorService(null, null, null, null);
 

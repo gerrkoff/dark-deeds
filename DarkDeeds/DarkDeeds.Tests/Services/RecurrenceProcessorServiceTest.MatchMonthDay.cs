@@ -8,7 +8,7 @@ namespace DarkDeeds.Tests.Services
     public partial class RecurrenceServiceTest
     { 
         [Fact]
-        public void MatchMonthDays_MatchIfEmpty()
+        public void MatchMonthDay_MatchIfEmpty()
         {
             var service = new RecurrenceCreatorService(null, null, null, null);
 
@@ -18,7 +18,7 @@ namespace DarkDeeds.Tests.Services
         }
         
         [Fact]
-        public void MatchMonthDays_MatchOneDate()
+        public void MatchMonthDay_MatchOneDate()
         {
             var service = new RecurrenceCreatorService(null, null, null, null);
 
@@ -31,7 +31,7 @@ namespace DarkDeeds.Tests.Services
         }
         
         [Fact]
-        public void MatchMonthDays_MatchOneOfSeveralDates()
+        public void MatchMonthDay_MatchOneOfSeveralDates()
         {
             var service = new RecurrenceCreatorService(null, null, null, null);
 
@@ -44,7 +44,7 @@ namespace DarkDeeds.Tests.Services
         }
         
         [Fact]
-        public void MatchMonthDays_CountBigDateAsLastDayOfMonth()
+        public void MatchMonthDay_CountBigDateAsLastDayOfMonth()
         {
             var service = new RecurrenceCreatorService(null, null, null, null);
 
@@ -57,7 +57,7 @@ namespace DarkDeeds.Tests.Services
         }
         
         [Fact]
-        public void MatchMonthDays_DoNotMatchAnyDateInList()
+        public void MatchMonthDay_DoNotMatchAnyDateInList()
         {
             var service = new RecurrenceCreatorService(null, null, null, null);
 
