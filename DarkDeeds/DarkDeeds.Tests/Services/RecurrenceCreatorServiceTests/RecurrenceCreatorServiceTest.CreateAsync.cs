@@ -15,32 +15,32 @@ namespace DarkDeeds.Tests.Services.RecurrenceCreatorServiceTests
         public async Task CreateAsync_DoNothingIfNoNonDeletedRecurrences()
         {
             var taskRepo = Helper.CreateRepoMock<TaskEntity>();
-            var recurrenceRepo = Helper.CreateRepoMock<PlannedRecurrenceEntity>();
-            var recurrenceTaskRepo = Helper.CreateRepoNonDeletableMock<RecurrenceEntity>();
+            var plannedRecurrenceRepo = Helper.CreateRepoMock<PlannedRecurrenceEntity>();
+            var recurrenceRepo = Helper.CreateRepoNonDeletableMock<RecurrenceEntity>();
             
-            var service = new RecurrenceCreatorService(taskRepo.Object, recurrenceRepo.Object, recurrenceTaskRepo.Object, null, null);
+            var service = new RecurrenceCreatorService(taskRepo.Object, plannedRecurrenceRepo.Object, recurrenceRepo.Object, null, null);
             
             await service.CreateAsync();
             
-            recurrenceRepo.Verify(x => x.GetAll());
+            plannedRecurrenceRepo.Verify(x => x.GetAll());
             taskRepo.VerifyNoOtherCalls();
+            plannedRecurrenceRepo.VerifyNoOtherCalls();
             recurrenceRepo.VerifyNoOtherCalls();
-            recurrenceTaskRepo.VerifyNoOtherCalls();
         }
         
         [Fact]
         public async Task CreateAsync_CreateTaskForRecurrence()
         {
             var taskRepo = Helper.CreateRepoMock<TaskEntity>();
-            var recurrenceRepo = Helper.CreateRepoMock(new PlannedRecurrenceEntity
+            var plannedRecurrenceRepo = Helper.CreateRepoMock(new PlannedRecurrenceEntity
             {
                 Id = 1, Task = "Task", EveryNthDay = 1, StartDate = DateTime.Now, UserId = "userId"
             });
-            var recurrenceTaskRepo = Helper.CreateRepoNonDeletableMock<RecurrenceEntity>();
+            var recurrenceRepo = Helper.CreateRepoNonDeletableMock<RecurrenceEntity>();
             var dateServiceMock = new Mock<IDateService>();
             dateServiceMock.SetupGet(x => x.Now).Returns(DateTime.Now);
             
-            var service = new RecurrenceCreatorService(taskRepo.Object, recurrenceRepo.Object, recurrenceTaskRepo.Object, dateServiceMock.Object, null);
+            var service = new RecurrenceCreatorService(taskRepo.Object, plannedRecurrenceRepo.Object, recurrenceRepo.Object, dateServiceMock.Object, null);
             
             await service.CreateAsync();
             
@@ -58,19 +58,19 @@ namespace DarkDeeds.Tests.Services.RecurrenceCreatorServiceTests
                 .Setup(x => x.SaveAsync(It.IsAny<TaskEntity>()))
                 .Returns(Task.CompletedTask)
                 .Callback<TaskEntity>(x => x.Id = 23);
-            var recurrenceRepo = Helper.CreateRepoMock(new PlannedRecurrenceEntity
+            var plannedRecurrenceRepo = Helper.CreateRepoMock(new PlannedRecurrenceEntity
             {
                 Id = 42, Task = "Task", EveryNthDay = 1, StartDate = now
             });
-            var recurrenceTaskRepo = Helper.CreateRepoNonDeletableMock<RecurrenceEntity>();
+            var recurrenceRepo = Helper.CreateRepoNonDeletableMock<RecurrenceEntity>();
             var dateServiceMock = new Mock<IDateService>();
             dateServiceMock.SetupGet(x => x.Now).Returns(now);
             
-            var service = new RecurrenceCreatorService(taskRepo.Object, recurrenceRepo.Object, recurrenceTaskRepo.Object, dateServiceMock.Object, null);
+            var service = new RecurrenceCreatorService(taskRepo.Object, plannedRecurrenceRepo.Object, recurrenceRepo.Object, dateServiceMock.Object, null);
             
             await service.CreateAsync();
             
-            recurrenceTaskRepo.Verify(x => x.SaveAsync(It.Is<RecurrenceEntity>(
+            recurrenceRepo.Verify(x => x.SaveAsync(It.Is<RecurrenceEntity>(
                 y => y.PlannedRecurrenceId == 42 && y.TaskId == 23 && y.DateTime == now
             )));
         }
@@ -79,118 +79,145 @@ namespace DarkDeeds.Tests.Services.RecurrenceCreatorServiceTests
         public async Task CreateAsync_CreateEntitiesExpectedNumberOfTimes()
         {
             var taskRepo = Helper.CreateRepoMock<TaskEntity>();
-            var recurrenceRepo = Helper.CreateRepoMock(new PlannedRecurrenceEntity
+            var plannedRecurrenceRepo = Helper.CreateRepoMock(new PlannedRecurrenceEntity
             {
                 EveryNthDay = 1, StartDate = new DateTime(2019, 9, 3)
             });
-            var recurrenceTaskRepo = Helper.CreateRepoNonDeletableMock<RecurrenceEntity>();
+            var recurrenceRepo = Helper.CreateRepoNonDeletableMock<RecurrenceEntity>();
             var dateServiceMock = new Mock<IDateService>();
             dateServiceMock.SetupGet(x => x.Now).Returns(new DateTime(2019, 9, 3));
             
-            var service = new RecurrenceCreatorService(taskRepo.Object, recurrenceRepo.Object, recurrenceTaskRepo.Object, dateServiceMock.Object, null);
+            var service = new RecurrenceCreatorService(taskRepo.Object, plannedRecurrenceRepo.Object, recurrenceRepo.Object, dateServiceMock.Object, null);
             
             await service.CreateAsync();
             
             taskRepo.Verify(x => x.SaveAsync(It.IsAny<TaskEntity>()), Times.Exactly(13));
-            recurrenceTaskRepo.Verify(x => x.SaveAsync(It.IsAny<RecurrenceEntity>()), Times.Exactly(13));
+            recurrenceRepo.Verify(x => x.SaveAsync(It.IsAny<RecurrenceEntity>()), Times.Exactly(13));
         }
         
         [Fact]
         public async Task CreateAsync_SimpleTestWeekday()
         {
             var taskRepo = Helper.CreateRepoMock<TaskEntity>();
-            var recurrenceRepo = Helper.CreateRepoMock(new PlannedRecurrenceEntity
+            var plannedRecurrenceRepo = Helper.CreateRepoMock(new PlannedRecurrenceEntity
             {
                 StartDate = new DateTime(2019, 9, 6), EveryWeekday = RecurrenceWeekdayEnum.Monday | RecurrenceWeekdayEnum.Wednesday
             });
-            var recurrenceTaskRepo = Helper.CreateRepoNonDeletableMock<RecurrenceEntity>();
+            var recurrenceRepo = Helper.CreateRepoNonDeletableMock<RecurrenceEntity>();
             var dateServiceMock = new Mock<IDateService>();
             dateServiceMock.SetupGet(x => x.Now).Returns(new DateTime(2019, 9, 6));
             
-            var service = new RecurrenceCreatorService(taskRepo.Object, recurrenceRepo.Object, recurrenceTaskRepo.Object, dateServiceMock.Object, null);
+            var service = new RecurrenceCreatorService(taskRepo.Object, plannedRecurrenceRepo.Object, recurrenceRepo.Object, dateServiceMock.Object, null);
             
             await service.CreateAsync();
             
-            recurrenceTaskRepo.Verify(x => x.SaveAsync(It.Is<RecurrenceEntity>(
+            recurrenceRepo.Verify(x => x.GetAll());
+            recurrenceRepo.Verify(x => x.SaveAsync(It.Is<RecurrenceEntity>(
                 y => y.DateTime == new DateTime(2019, 9, 9)
             )));
-            recurrenceTaskRepo.Verify(x => x.SaveAsync(It.Is<RecurrenceEntity>(
+            recurrenceRepo.Verify(x => x.SaveAsync(It.Is<RecurrenceEntity>(
                 y => y.DateTime == new DateTime(2019, 9, 11)
             )));
-            recurrenceTaskRepo.VerifyNoOtherCalls();
+            recurrenceRepo.VerifyNoOtherCalls();
         }
         
         [Fact]
         public async Task CreateAsync_SimpleTestMonthDay()
         {
             var taskRepo = Helper.CreateRepoMock<TaskEntity>();
-            var recurrenceRepo = Helper.CreateRepoMock(new PlannedRecurrenceEntity
+            var plannedRecurrenceRepo = Helper.CreateRepoMock(new PlannedRecurrenceEntity
             {
                 StartDate = new DateTime(2019, 9, 6), EveryMonthDay = "9,11"
             });
-            var recurrenceTaskRepo = Helper.CreateRepoNonDeletableMock<RecurrenceEntity>();
+            var recurrenceRepo = Helper.CreateRepoNonDeletableMock<RecurrenceEntity>();
             var dateServiceMock = new Mock<IDateService>();
             dateServiceMock.SetupGet(x => x.Now).Returns(new DateTime(2019, 9, 6));
             
-            var service = new RecurrenceCreatorService(taskRepo.Object, recurrenceRepo.Object, recurrenceTaskRepo.Object, dateServiceMock.Object, null);
+            var service = new RecurrenceCreatorService(taskRepo.Object, plannedRecurrenceRepo.Object, recurrenceRepo.Object, dateServiceMock.Object, null);
             
             await service.CreateAsync();
             
-            recurrenceTaskRepo.Verify(x => x.SaveAsync(It.Is<RecurrenceEntity>(
+            recurrenceRepo.Verify(x => x.GetAll());
+            recurrenceRepo.Verify(x => x.SaveAsync(It.Is<RecurrenceEntity>(
                 y => y.DateTime == new DateTime(2019, 9, 9)
             )));
-            recurrenceTaskRepo.Verify(x => x.SaveAsync(It.Is<RecurrenceEntity>(
+            recurrenceRepo.Verify(x => x.SaveAsync(It.Is<RecurrenceEntity>(
                 y => y.DateTime == new DateTime(2019, 9, 11)
             )));
-            recurrenceTaskRepo.VerifyNoOtherCalls();
+            recurrenceRepo.VerifyNoOtherCalls();
         }
         
         [Fact]
         public async Task CreateAsync_SimpleTestNthDay()
         {
             var taskRepo = Helper.CreateRepoMock<TaskEntity>();
-            var recurrenceRepo = Helper.CreateRepoMock(new PlannedRecurrenceEntity
+            var plannedRecurrenceRepo = Helper.CreateRepoMock(new PlannedRecurrenceEntity
             {
                 StartDate = new DateTime(2019, 9, 6), EveryNthDay = 6
             });
-            var recurrenceTaskRepo = Helper.CreateRepoNonDeletableMock<RecurrenceEntity>();
+            var recurrenceRepo = Helper.CreateRepoNonDeletableMock<RecurrenceEntity>();
             var dateServiceMock = new Mock<IDateService>();
             dateServiceMock.SetupGet(x => x.Now).Returns(new DateTime(2019, 9, 6));
             
-            var service = new RecurrenceCreatorService(taskRepo.Object, recurrenceRepo.Object, recurrenceTaskRepo.Object, dateServiceMock.Object, null);
+            var service = new RecurrenceCreatorService(taskRepo.Object, plannedRecurrenceRepo.Object, recurrenceRepo.Object, dateServiceMock.Object, null);
             
             await service.CreateAsync();
             
-            recurrenceTaskRepo.Verify(x => x.SaveAsync(It.Is<RecurrenceEntity>(
+            recurrenceRepo.Verify(x => x.GetAll());
+            recurrenceRepo.Verify(x => x.SaveAsync(It.Is<RecurrenceEntity>(
                 y => y.DateTime == new DateTime(2019, 9, 6)
             )));
-            recurrenceTaskRepo.Verify(x => x.SaveAsync(It.Is<RecurrenceEntity>(
+            recurrenceRepo.Verify(x => x.SaveAsync(It.Is<RecurrenceEntity>(
                 y => y.DateTime == new DateTime(2019, 9, 12)
             )));
-            recurrenceTaskRepo.VerifyNoOtherCalls();
+            recurrenceRepo.VerifyNoOtherCalls();
         }
         
         [Fact]
         public async Task CreateAsync_WeekdayAndMonthDayAndNthDayAtTheSameTime()
         {
             var taskRepo = Helper.CreateRepoMock<TaskEntity>();
-            var recurrenceRepo = Helper.CreateRepoMock(new PlannedRecurrenceEntity
+            var plannedRecurrenceRepo = Helper.CreateRepoMock(new PlannedRecurrenceEntity
             {
                 StartDate = new DateTime(2019, 9, 6), EveryNthDay = 6, EveryMonthDay = "6,12,13",
                 EveryWeekday = RecurrenceWeekdayEnum.Thursday | RecurrenceWeekdayEnum.Wednesday
             });
-            var recurrenceTaskRepo = Helper.CreateRepoNonDeletableMock<RecurrenceEntity>();
+            var recurrenceRepo = Helper.CreateRepoNonDeletableMock<RecurrenceEntity>();
             var dateServiceMock = new Mock<IDateService>();
             dateServiceMock.SetupGet(x => x.Now).Returns(new DateTime(2019, 9, 6));
             
-            var service = new RecurrenceCreatorService(taskRepo.Object, recurrenceRepo.Object, recurrenceTaskRepo.Object, dateServiceMock.Object, null);
+            var service = new RecurrenceCreatorService(taskRepo.Object, plannedRecurrenceRepo.Object, recurrenceRepo.Object, dateServiceMock.Object, null);
             
             await service.CreateAsync();
             
-            recurrenceTaskRepo.Verify(x => x.SaveAsync(It.Is<RecurrenceEntity>(
+            recurrenceRepo.Verify(x => x.GetAll());
+            recurrenceRepo.Verify(x => x.SaveAsync(It.Is<RecurrenceEntity>(
                 y => y.DateTime == new DateTime(2019, 9, 12)
             )));
-            recurrenceTaskRepo.VerifyNoOtherCalls();
+            recurrenceRepo.VerifyNoOtherCalls();
+        }
+        
+        [Fact]
+        public async Task CreateAsync_IgnoreAlreadyExistingRecurrences()
+        {
+            var taskRepo = Helper.CreateRepoMock<TaskEntity>();
+            var plannedRecurrenceRepo = Helper.CreateRepoMock(new PlannedRecurrenceEntity
+            {
+                EveryNthDay = 1, StartDate = new DateTime(2019, 9, 3), Id = 42
+            });
+            var recurrenceRepo = Helper.CreateRepoNonDeletableMock<RecurrenceEntity>(new RecurrenceEntity
+            {
+                PlannedRecurrenceId = 42, DateTime = new DateTime(2019, 9, 3)
+            });
+            var dateServiceMock = new Mock<IDateService>();
+            dateServiceMock.SetupGet(x => x.Now).Returns(new DateTime(2019, 9, 3));
+            
+            var service = new RecurrenceCreatorService(taskRepo.Object, plannedRecurrenceRepo.Object, recurrenceRepo.Object, dateServiceMock.Object, null);
+            
+            await service.CreateAsync();
+            
+            taskRepo.Verify(x => x.SaveAsync(It.IsAny<TaskEntity>()), Times.Exactly(12));
+            recurrenceRepo.Verify(x => x.SaveAsync(It.IsAny<RecurrenceEntity>()), Times.Exactly(12));
         }
     }
 }
