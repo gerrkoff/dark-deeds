@@ -88,6 +88,12 @@ namespace DarkDeeds.Services.Implementation
             return _dateService.Now.AddDays(RecurrencePeriodInDays - currentDayOfWeek + 1);
         }
 
+        public bool MatchPeriod(PlannedRecurrenceEntity plannedRecurrence, DateTime date)
+        {
+            return date >= plannedRecurrence.StartDate &&
+                   (!plannedRecurrence.EndDate.HasValue || date <= plannedRecurrence.EndDate);
+        }
+
         public bool MatchNthDay(PlannedRecurrenceEntity plannedRecurrence, DateTime date)
         {
             if (plannedRecurrence.StartDate.Date != date.Date && plannedRecurrence.StartDate > date)
