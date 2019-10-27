@@ -1,6 +1,8 @@
 using System;
 using DarkDeeds.Data.Entity;
 using DarkDeeds.Services.Implementation;
+using Microsoft.Extensions.Logging;
+using Moq;
 using Xunit;
 
 namespace DarkDeeds.Tests.Services.RecurrenceCreatorServiceTests
@@ -8,7 +10,7 @@ namespace DarkDeeds.Tests.Services.RecurrenceCreatorServiceTests
     public partial class RecurrenceCreatorServiceTest
     { 
         [Fact]
-        public void MatchMonthDay_MatchIfEmpty()
+        public void MatchMonthDay_ShouldMatchIfEmpty()
         {
             var service = new RecurrenceCreatorService(null, null, null, null, null);
 
@@ -18,7 +20,7 @@ namespace DarkDeeds.Tests.Services.RecurrenceCreatorServiceTests
         }
         
         [Fact]
-        public void MatchMonthDay_MatchOneDate()
+        public void MatchMonthDay_ShouldMatchOneDate()
         {
             var service = new RecurrenceCreatorService(null, null, null, null, null);
 
@@ -31,7 +33,7 @@ namespace DarkDeeds.Tests.Services.RecurrenceCreatorServiceTests
         }
         
         [Fact]
-        public void MatchMonthDay_MatchOneOfSeveralDates()
+        public void MatchMonthDay_ShouldMatchOneOfSeveralDates()
         {
             var service = new RecurrenceCreatorService(null, null, null, null, null);
 
@@ -57,7 +59,7 @@ namespace DarkDeeds.Tests.Services.RecurrenceCreatorServiceTests
         }
         
         [Fact]
-        public void MatchMonthDay_DoNotMatchAnyDateInList()
+        public void MatchMonthDay_ShouldNotMatchAnyDateInList()
         {
             var service = new RecurrenceCreatorService(null, null, null, null, null);
 
@@ -67,6 +69,34 @@ namespace DarkDeeds.Tests.Services.RecurrenceCreatorServiceTests
             }, new DateTime(2020, 2, 16));
 
             Assert.False(result);
+        }
+        
+        [Fact]
+        public void MatchMonthDay_ShouldMatchIfCanNotParseMonthDays_FormatException()
+        {
+            var logger = new Mock<ILogger<RecurrenceCreatorService>>().Object;
+            var service = new RecurrenceCreatorService(null, null, null, null, logger);
+
+            var result = service.MatchMonthDay(new PlannedRecurrenceEntity
+            {
+                EveryMonthDay = "1q3"
+            }, new DateTime(2019, 9, 13));
+
+            Assert.True(result);
+        }
+        
+        [Fact]
+        public void MatchMonthDay_ShouldMatchIfCanNotParseMonthDays_OverflowException()
+        {
+            var logger = new Mock<ILogger<RecurrenceCreatorService>>().Object;
+            var service = new RecurrenceCreatorService(null, null, null, null, logger);
+
+            var result = service.MatchMonthDay(new PlannedRecurrenceEntity
+            {
+                EveryMonthDay = "999999999999999999"
+            }, new DateTime(2019, 9, 13));
+
+            Assert.True(result);
         }
     }
 }

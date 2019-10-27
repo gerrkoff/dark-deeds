@@ -139,11 +139,16 @@ namespace DarkDeeds.Services.Implementation
             {
                 dayList = plannedRecurrence.EveryMonthDay.Split(',').Select(int.Parse).ToList();
             }
-            catch (ArrayTypeMismatchException e)
+            catch (Exception e)
             {
-                _logger.LogWarning(
-                    $"Can't parse EveryMonthDay for PlannedRecurrenceId = {plannedRecurrence.Id}, Value = '{plannedRecurrence.EveryMonthDay}'");
-                return true;
+                if (e is OverflowException || e is FormatException)
+                {
+                    _logger.LogWarning(
+                        $"Can't parse EveryMonthDay for PlannedRecurrenceId = {plannedRecurrence.Id}, Value = '{plannedRecurrence.EveryMonthDay}'");
+                    return true;
+                }
+
+                throw;
             }
 
             int lastDay = DateTime.DaysInMonth(date.Year, date.Month);
