@@ -36,10 +36,12 @@ namespace DarkDeeds.Services.Implementation
         }
 
         // TODO: userId param
-        public async Task CreateAsync()
+        public async Task CreateAsync(string userId)
         {
             List<PlannedRecurrenceEntity> plannedRecurrences = await _plannedRecurrenceRepository
-                .GetAll().ToListSafeAsync();
+                .GetAll()
+                .Where(x => string.Equals(x.UserId, userId))
+                .ToListSafeAsync();
 
             foreach (PlannedRecurrenceEntity plannedRecurrence in plannedRecurrences)
             {
@@ -54,6 +56,7 @@ namespace DarkDeeds.Services.Implementation
                     
                     TaskEntity task = CreateTaskFromRecurrence(plannedRecurrence, date);
                     await _taskRepository.SaveAsync(task);
+                    // TODO: notify about task created
                     await _recurrenceRepository.SaveAsync(
                         CreateRecurrenceEntity(plannedRecurrence.Id, task.Id, date));
                 }

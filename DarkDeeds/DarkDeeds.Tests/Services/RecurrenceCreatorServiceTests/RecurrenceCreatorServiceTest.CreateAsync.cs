@@ -20,7 +20,7 @@ namespace DarkDeeds.Tests.Services.RecurrenceCreatorServiceTests
             
             var service = new RecurrenceCreatorService(taskRepo.Object, plannedRecurrenceRepo.Object, recurrenceRepo.Object, null, null);
             
-            await service.CreateAsync();
+            await service.CreateAsync("");
             
             plannedRecurrenceRepo.Verify(x => x.GetAll());
             taskRepo.VerifyNoOtherCalls();
@@ -43,7 +43,7 @@ namespace DarkDeeds.Tests.Services.RecurrenceCreatorServiceTests
             
             var service = new RecurrenceCreatorService(taskRepo.Object, plannedRecurrenceRepo.Object, recurrenceRepo.Object, dateServiceMock.Object, null);
             
-            await service.CreateAsync();
+            await service.CreateAsync("userId");
             
             taskRepo.Verify(x => x.SaveAsync(It.Is<TaskEntity>(
                 y => y.Title == "Task" && y.UserId == "userId" && y.Date == someDate
@@ -61,7 +61,7 @@ namespace DarkDeeds.Tests.Services.RecurrenceCreatorServiceTests
                 .Callback<TaskEntity>(x => x.Id = 23);
             var plannedRecurrenceRepo = Helper.CreateRepoMock(new PlannedRecurrenceEntity
             {
-                Id = 42, Task = "Task", EveryNthDay = 1, StartDate = now
+                Id = 42, Task = "Task", EveryNthDay = 1, StartDate = now, UserId = "userId"
             });
             var recurrenceRepo = Helper.CreateRepoNonDeletableMock<RecurrenceEntity>();
             var dateServiceMock = new Mock<IDateService>();
@@ -69,7 +69,7 @@ namespace DarkDeeds.Tests.Services.RecurrenceCreatorServiceTests
             
             var service = new RecurrenceCreatorService(taskRepo.Object, plannedRecurrenceRepo.Object, recurrenceRepo.Object, dateServiceMock.Object, null);
             
-            await service.CreateAsync();
+            await service.CreateAsync("userId");
             
             recurrenceRepo.Verify(x => x.SaveAsync(It.Is<RecurrenceEntity>(
                 y => y.PlannedRecurrenceId == 42 && y.TaskId == 23 && y.DateTime == now
@@ -82,7 +82,7 @@ namespace DarkDeeds.Tests.Services.RecurrenceCreatorServiceTests
             var taskRepo = Helper.CreateRepoMock<TaskEntity>();
             var plannedRecurrenceRepo = Helper.CreateRepoMock(new PlannedRecurrenceEntity
             {
-                EveryNthDay = 1, StartDate = new DateTime(2019, 9, 3)
+                EveryNthDay = 1, StartDate = new DateTime(2019, 9, 3), UserId = "userId"
             });
             var recurrenceRepo = Helper.CreateRepoNonDeletableMock<RecurrenceEntity>();
             var dateServiceMock = new Mock<IDateService>();
@@ -90,7 +90,7 @@ namespace DarkDeeds.Tests.Services.RecurrenceCreatorServiceTests
             
             var service = new RecurrenceCreatorService(taskRepo.Object, plannedRecurrenceRepo.Object, recurrenceRepo.Object, dateServiceMock.Object, null);
             
-            await service.CreateAsync();
+            await service.CreateAsync("userId");
             
             taskRepo.Verify(x => x.SaveAsync(It.IsAny<TaskEntity>()), Times.Exactly(13));
             recurrenceRepo.Verify(x => x.SaveAsync(It.IsAny<RecurrenceEntity>()), Times.Exactly(13));
@@ -102,7 +102,7 @@ namespace DarkDeeds.Tests.Services.RecurrenceCreatorServiceTests
             var taskRepo = Helper.CreateRepoMock<TaskEntity>();
             var plannedRecurrenceRepo = Helper.CreateRepoMock(new PlannedRecurrenceEntity
             {
-                StartDate = new DateTime(2019, 9, 6), EveryWeekday = RecurrenceWeekdayEnum.Monday | RecurrenceWeekdayEnum.Wednesday
+                StartDate = new DateTime(2019, 9, 6), EveryWeekday = RecurrenceWeekdayEnum.Monday | RecurrenceWeekdayEnum.Wednesday, UserId = "userId"
             });
             var recurrenceRepo = Helper.CreateRepoNonDeletableMock<RecurrenceEntity>();
             var dateServiceMock = new Mock<IDateService>();
@@ -110,7 +110,7 @@ namespace DarkDeeds.Tests.Services.RecurrenceCreatorServiceTests
             
             var service = new RecurrenceCreatorService(taskRepo.Object, plannedRecurrenceRepo.Object, recurrenceRepo.Object, dateServiceMock.Object, null);
             
-            await service.CreateAsync();
+            await service.CreateAsync("userId");
             
             recurrenceRepo.Verify(x => x.GetAll());
             recurrenceRepo.Verify(x => x.SaveAsync(It.Is<RecurrenceEntity>(
@@ -128,7 +128,7 @@ namespace DarkDeeds.Tests.Services.RecurrenceCreatorServiceTests
             var taskRepo = Helper.CreateRepoMock<TaskEntity>();
             var plannedRecurrenceRepo = Helper.CreateRepoMock(new PlannedRecurrenceEntity
             {
-                StartDate = new DateTime(2019, 9, 6), EveryMonthDay = "9,11"
+                StartDate = new DateTime(2019, 9, 6), EveryMonthDay = "9,11", UserId = "userId"
             });
             var recurrenceRepo = Helper.CreateRepoNonDeletableMock<RecurrenceEntity>();
             var dateServiceMock = new Mock<IDateService>();
@@ -136,7 +136,7 @@ namespace DarkDeeds.Tests.Services.RecurrenceCreatorServiceTests
             
             var service = new RecurrenceCreatorService(taskRepo.Object, plannedRecurrenceRepo.Object, recurrenceRepo.Object, dateServiceMock.Object, null);
             
-            await service.CreateAsync();
+            await service.CreateAsync("userId");
             
             recurrenceRepo.Verify(x => x.GetAll());
             recurrenceRepo.Verify(x => x.SaveAsync(It.Is<RecurrenceEntity>(
@@ -154,7 +154,7 @@ namespace DarkDeeds.Tests.Services.RecurrenceCreatorServiceTests
             var taskRepo = Helper.CreateRepoMock<TaskEntity>();
             var plannedRecurrenceRepo = Helper.CreateRepoMock(new PlannedRecurrenceEntity
             {
-                StartDate = new DateTime(2019, 9, 6), EveryNthDay = 6
+                StartDate = new DateTime(2019, 9, 6), EveryNthDay = 6, UserId = "userId"
             });
             var recurrenceRepo = Helper.CreateRepoNonDeletableMock<RecurrenceEntity>();
             var dateServiceMock = new Mock<IDateService>();
@@ -162,7 +162,7 @@ namespace DarkDeeds.Tests.Services.RecurrenceCreatorServiceTests
             
             var service = new RecurrenceCreatorService(taskRepo.Object, plannedRecurrenceRepo.Object, recurrenceRepo.Object, dateServiceMock.Object, null);
             
-            await service.CreateAsync();
+            await service.CreateAsync("userId");
             
             recurrenceRepo.Verify(x => x.GetAll());
             recurrenceRepo.Verify(x => x.SaveAsync(It.Is<RecurrenceEntity>(
@@ -181,7 +181,7 @@ namespace DarkDeeds.Tests.Services.RecurrenceCreatorServiceTests
             var plannedRecurrenceRepo = Helper.CreateRepoMock(new PlannedRecurrenceEntity
             {
                 StartDate = new DateTime(2019, 9, 6), EveryNthDay = 6, EveryMonthDay = "6,12,13",
-                EveryWeekday = RecurrenceWeekdayEnum.Thursday | RecurrenceWeekdayEnum.Wednesday
+                EveryWeekday = RecurrenceWeekdayEnum.Thursday | RecurrenceWeekdayEnum.Wednesday, UserId = "userId"
             });
             var recurrenceRepo = Helper.CreateRepoNonDeletableMock<RecurrenceEntity>();
             var dateServiceMock = new Mock<IDateService>();
@@ -189,7 +189,7 @@ namespace DarkDeeds.Tests.Services.RecurrenceCreatorServiceTests
             
             var service = new RecurrenceCreatorService(taskRepo.Object, plannedRecurrenceRepo.Object, recurrenceRepo.Object, dateServiceMock.Object, null);
             
-            await service.CreateAsync();
+            await service.CreateAsync("userId");
             
             recurrenceRepo.Verify(x => x.GetAll());
             recurrenceRepo.Verify(x => x.SaveAsync(It.Is<RecurrenceEntity>(
@@ -204,9 +204,9 @@ namespace DarkDeeds.Tests.Services.RecurrenceCreatorServiceTests
             var taskRepo = Helper.CreateRepoMock<TaskEntity>();
             var plannedRecurrenceRepo = Helper.CreateRepoMock(new PlannedRecurrenceEntity
             {
-                EveryNthDay = 1, StartDate = new DateTime(2019, 9, 3), Id = 42
+                EveryNthDay = 1, StartDate = new DateTime(2019, 9, 3), Id = 42, UserId = "userId"
             });
-            var recurrenceRepo = Helper.CreateRepoNonDeletableMock<RecurrenceEntity>(new RecurrenceEntity
+            var recurrenceRepo = Helper.CreateRepoNonDeletableMock(new RecurrenceEntity
             {
                 PlannedRecurrenceId = 42, DateTime = new DateTime(2019, 9, 3)
             });
@@ -215,10 +215,30 @@ namespace DarkDeeds.Tests.Services.RecurrenceCreatorServiceTests
             
             var service = new RecurrenceCreatorService(taskRepo.Object, plannedRecurrenceRepo.Object, recurrenceRepo.Object, dateServiceMock.Object, null);
             
-            await service.CreateAsync();
+            await service.CreateAsync("userId");
             
             taskRepo.Verify(x => x.SaveAsync(It.IsAny<TaskEntity>()), Times.Exactly(12));
             recurrenceRepo.Verify(x => x.SaveAsync(It.IsAny<RecurrenceEntity>()), Times.Exactly(12));
+        }
+        
+        [Fact]
+        public async Task CreateAsync_IgnorePlannedRecurrencesFromOtherUsers()
+        {
+            var taskRepo = Helper.CreateRepoMock<TaskEntity>();
+            var plannedRecurrenceRepo = Helper.CreateRepoMock(new PlannedRecurrenceEntity
+            {
+                EveryNthDay = 1, StartDate = new DateTime(2019, 9, 3), Id = 42, UserId = "userId"
+            });
+            var recurrenceRepo = Helper.CreateRepoNonDeletableMock<RecurrenceEntity>();
+            var dateServiceMock = new Mock<IDateService>();
+            dateServiceMock.SetupGet(x => x.Now).Returns(new DateTime(2019, 9, 3));
+            
+            var service = new RecurrenceCreatorService(taskRepo.Object, plannedRecurrenceRepo.Object, recurrenceRepo.Object, dateServiceMock.Object, null);
+            
+            await service.CreateAsync("userId100500");
+            
+            taskRepo.Verify(x => x.SaveAsync(It.IsAny<TaskEntity>()), Times.Never);
+            recurrenceRepo.Verify(x => x.SaveAsync(It.IsAny<RecurrenceEntity>()), Times.Never);
         }
     }
 }

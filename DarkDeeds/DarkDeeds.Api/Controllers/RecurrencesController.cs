@@ -20,7 +20,7 @@ namespace DarkDeeds.Api.Controllers
         [HttpPost]
         public Task Create()
         {
-            return _recurrenceCreatorService.CreateAsync();
+            return _recurrenceCreatorService.CreateAsync(GetUser().UserId);
         }
     }
 }

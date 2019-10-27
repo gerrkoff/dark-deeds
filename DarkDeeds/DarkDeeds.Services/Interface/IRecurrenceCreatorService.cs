@@ -4,6 +4,6 @@ namespace DarkDeeds.Services.Interface
 {
     public interface IRecurrenceCreatorService
     {
-        Task CreateAsync();
+        Task CreateAsync(string userId);
     }
 }
