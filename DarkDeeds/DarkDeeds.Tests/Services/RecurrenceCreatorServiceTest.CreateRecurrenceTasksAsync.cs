@@ -9,7 +9,7 @@ using Xunit;
 
 namespace DarkDeeds.Tests.Services
 {
-    public partial class RecurrenceServiceTest : BaseTest
+    public partial class RecurrenceCreatorServiceTest : BaseTest
     {
         [Fact]
         public async Task CreateRecurrenceTasks_DoNothingIfNoNonDeletedRecurrences()

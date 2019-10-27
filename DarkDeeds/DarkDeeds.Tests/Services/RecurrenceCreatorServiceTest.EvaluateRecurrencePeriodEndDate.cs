@@ -1,5 +1,4 @@
 using System;
-using DarkDeeds.Data.Entity;
 using DarkDeeds.Services.Implementation;
 using DarkDeeds.Services.Interface;
 using Moq;
@@ -7,7 +6,7 @@ using Xunit;
 
 namespace DarkDeeds.Tests.Services
 {
-    public partial class RecurrenceServiceTest : BaseTest
+    public partial class RecurrenceCreatorServiceTest
     {
         [Fact]
         public void EvaluateRecurrencePeriodEndDate_CorrectlyEvaluate()

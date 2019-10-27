@@ -5,7 +5,7 @@ using Xunit;
 
 namespace DarkDeeds.Tests.Services
 {
-    public partial class RecurrenceServiceTest
+    public partial class RecurrenceCreatorServiceTest
     { 
         [Fact]
         public void MatchMonthDay_MatchIfEmpty()
