@@ -6,7 +6,7 @@ using DarkDeeds.Data.Repository;
 using DarkDeeds.Services.Implementation;
 using Xunit;
 
-namespace DarkDeeds.Tests.Services
+namespace DarkDeeds.Tests.Services.TaskServiceTests
 {
     public partial class TaskServiceTest
     {

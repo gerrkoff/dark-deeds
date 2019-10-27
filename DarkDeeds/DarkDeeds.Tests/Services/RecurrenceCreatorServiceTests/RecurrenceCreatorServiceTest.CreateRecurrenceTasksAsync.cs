@@ -7,7 +7,7 @@ using DarkDeeds.Services.Interface;
 using Moq;
 using Xunit;
 
-namespace DarkDeeds.Tests.Services
+namespace DarkDeeds.Tests.Services.RecurrenceCreatorServiceTests
 {
     public partial class RecurrenceCreatorServiceTest : BaseTest
     {
