@@ -105,10 +105,10 @@ namespace DarkDeeds.Services.Implementation
         
         public bool MatchWeekday(PlannedRecurrenceEntity plannedRecurrence, DateTime date)
         {
-            if (plannedRecurrence.EveryWeekday == null)
+            if (!plannedRecurrence.EveryWeekday.HasValue)
                 return true;
             
-            var weekday = RecurrenceWeekdayEnum.None;
+            RecurrenceWeekdayEnum weekday;
             switch (date.DayOfWeek)
             {
                 case DayOfWeek.Sunday: weekday = RecurrenceWeekdayEnum.Sunday; break;
