@@ -35,42 +35,49 @@ namespace DarkDeeds.Services.Implementation
             _logger = logger;
         }
 
+        // TODO: userId param
         public async Task CreateAsync()
         {
-            List<PlannedRecurrenceEntity> recurrences = await _recurrenceRepository.GetAll().ToListSafeAsync();
-            foreach (PlannedRecurrenceEntity recurrence in recurrences)
+            List<PlannedRecurrenceEntity> plannedRecurrences = await _recurrenceRepository.GetAll().ToListSafeAsync();
+            foreach (PlannedRecurrenceEntity plannedRecurrence in plannedRecurrences)
             {
-                ICollection<DateTime> expandedDates = ExpandRecurrenceWithinPeriod(recurrence);
-                foreach (var date in expandedDates)
+                ICollection<DateTime> dates = EvaluateRecurrenceDatesWithinPeriod(plannedRecurrence);
+                foreach (var date in dates)
                 {
-                    TaskEntity task = CreateTaskFromRecurrence(recurrence);
+                    // TODO: check if already created
+                    TaskEntity task = CreateTaskFromRecurrence(plannedRecurrence);
                     await _taskRepository.SaveAsync(task);
                     await _recurrenceTaskRepository.SaveAsync(
-                        CreateRecurrentTaskCreatedEntity(recurrence, task, date));
+                        CreateRecurrenceEntity(plannedRecurrence.Id, task.Id, date));
                 }
             }
         }
 
-        private TaskEntity CreateTaskFromRecurrence(PlannedRecurrenceEntity plannedRecurrence) => new TaskEntity
-        {
-            Title = plannedRecurrence.Task,
-            UserId = plannedRecurrence.UserId,
-        };
+        // TODO: parse task text
+        private TaskEntity CreateTaskFromRecurrence(PlannedRecurrenceEntity plannedRecurrence)
+            => new TaskEntity
+            {
+                Title = plannedRecurrence.Task,
+                UserId = plannedRecurrence.UserId,
+            };
 
-        private RecurrenceEntity CreateRecurrentTaskCreatedEntity(PlannedRecurrenceEntity plannedRecurrence,
-            TaskEntity task, DateTime date) => new RecurrenceEntity
-        {
-            DateTime = date,
-            PlannedRecurrenceId = plannedRecurrence.Id,
-            TaskId = task.Id,
-        };
+        private RecurrenceEntity CreateRecurrenceEntity(int plannedRecurrenceId, int taskId, DateTime date)
+            => new RecurrenceEntity
+            {
+                DateTime = date,
+                PlannedRecurrenceId = plannedRecurrenceId,
+                TaskId = taskId,
+            };
 
-        private ICollection<DateTime> ExpandRecurrenceWithinPeriod(PlannedRecurrenceEntity plannedRecurrence)
+        private ICollection<DateTime> EvaluateRecurrenceDatesWithinPeriod(PlannedRecurrenceEntity plannedRecurrence)
         {
             var (periodStart, periodEnd) = EvaluatePeriod();
             var dates = new List<DateTime>();
             for (DateTime i = periodStart; i != periodEnd; i = i.AddDays(1))
             {
+                if (!MatchPeriod(plannedRecurrence, i))
+                    continue;
+
                 if (!MatchWeekday(plannedRecurrence, i))
                     continue;
                 
@@ -88,11 +95,14 @@ namespace DarkDeeds.Services.Implementation
         /// <remarks>End date is not included</remarks>
         public (DateTime, DateTime) EvaluatePeriod()
         {
-            var startDate = _dateService.Now.AddHours(-12).Date; 
-            
-            var currentDayOfWeek = (int) _dateService.Now.DayOfWeek;
+            var startDate = _dateService.Now.AddHours(-12).Date;
+
+            var startDateForEndDate = _dateService.Now.AddHours(12);
+            var currentDayOfWeek = (int) startDateForEndDate.DayOfWeek;
             var currentDayOfWeekFixed = (6 + currentDayOfWeek) % 7 + 1;
-            var endDate = _dateService.Now.AddDays(RecurrencePeriodInDays - currentDayOfWeekFixed + 1); 
+            var endDate = startDateForEndDate
+                .AddDays(RecurrencePeriodInDays - currentDayOfWeekFixed + 1)
+                .Date;
             
             return (startDate, endDate);
         }

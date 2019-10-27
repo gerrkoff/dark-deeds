@@ -12,7 +12,7 @@ namespace DarkDeeds.Tests.Services.RecurrenceCreatorServiceTests
     public partial class RecurrenceCreatorServiceTest : BaseTest
     {
         [Fact]
-        public async Task CreateRecurrenceTasks_DoNothingIfNoNonDeletedRecurrences()
+        public async Task CreateAsync_DoNothingIfNoNonDeletedRecurrences()
         {
             var taskRepo = Helper.CreateRepoMock<TaskEntity>();
             var recurrenceRepo = Helper.CreateRepoMock<PlannedRecurrenceEntity>();
@@ -29,7 +29,7 @@ namespace DarkDeeds.Tests.Services.RecurrenceCreatorServiceTests
         }
         
         [Fact]
-        public async Task CreateRecurrenceTasks_CreateTaskForRecurrence()
+        public async Task CreateAsync_CreateTaskForRecurrence()
         {
             var taskRepo = Helper.CreateRepoMock<TaskEntity>();
             var recurrenceRepo = Helper.CreateRepoMock(new PlannedRecurrenceEntity
@@ -50,7 +50,7 @@ namespace DarkDeeds.Tests.Services.RecurrenceCreatorServiceTests
         }
         
         [Fact]
-        public async Task CreateRecurrenceTasks_CreateRecurrenceTaskForRecurrence()
+        public async Task CreateAsync_CreateRecurrenceTaskForRecurrence()
         {
             var now = new DateTime(2019, 10, 10);
             var taskRepo = Helper.CreateRepoMock<TaskEntity>();
@@ -76,7 +76,7 @@ namespace DarkDeeds.Tests.Services.RecurrenceCreatorServiceTests
         }
         
         [Fact]
-        public async Task CreateRecurrenceTasks_CreateEntitiesExpectedNumberOfTimes()
+        public async Task CreateAsync_CreateEntitiesExpectedNumberOfTimes()
         {
             var taskRepo = Helper.CreateRepoMock<TaskEntity>();
             var recurrenceRepo = Helper.CreateRepoMock(new PlannedRecurrenceEntity
@@ -96,7 +96,7 @@ namespace DarkDeeds.Tests.Services.RecurrenceCreatorServiceTests
         }
         
         [Fact]
-        public async Task CreateRecurrenceTasks_SimpleTestWeekdays()
+        public async Task CreateAsync_SimpleTestWeekdays()
         {
             var taskRepo = Helper.CreateRepoMock<TaskEntity>();
             var recurrenceRepo = Helper.CreateRepoMock(new PlannedRecurrenceEntity
@@ -121,7 +121,7 @@ namespace DarkDeeds.Tests.Services.RecurrenceCreatorServiceTests
         }
         
         [Fact]
-        public async Task CreateRecurrenceTasks_SimpleTestMonthDays()
+        public async Task CreateAsync_SimpleTestMonthDays()
         {
             var taskRepo = Helper.CreateRepoMock<TaskEntity>();
             var recurrenceRepo = Helper.CreateRepoMock(new PlannedRecurrenceEntity
@@ -146,7 +146,7 @@ namespace DarkDeeds.Tests.Services.RecurrenceCreatorServiceTests
         }
         
         [Fact]
-        public async Task CreateRecurrenceTasks_SimpleTestEveryNumberOfDays()
+        public async Task CreateAsync_SimpleTestEveryNumberOfDays()
         {
             var taskRepo = Helper.CreateRepoMock<TaskEntity>();
             var recurrenceRepo = Helper.CreateRepoMock(new PlannedRecurrenceEntity
@@ -171,7 +171,7 @@ namespace DarkDeeds.Tests.Services.RecurrenceCreatorServiceTests
         }
         
         [Fact]
-        public async Task CreateRecurrenceTasks_WeekdayAndMonthDayAndEveryNumberOfDaysAtTheSameTime()
+        public async Task CreateAsync_WeekdayAndMonthDayAndEveryNumberOfDaysAtTheSameTime()
         {
             var taskRepo = Helper.CreateRepoMock<TaskEntity>();
             var recurrenceRepo = Helper.CreateRepoMock(new PlannedRecurrenceEntity
