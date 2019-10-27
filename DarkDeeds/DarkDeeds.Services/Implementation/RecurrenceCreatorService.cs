@@ -67,9 +67,9 @@ namespace DarkDeeds.Services.Implementation
 
         private ICollection<DateTime> ExpandRecurrenceWithinPeriod(PlannedRecurrenceEntity plannedRecurrence)
         {
-            DateTime periodEnd = EvaluatePeriodEndDate();
+            var (periodStart, periodEnd) = EvaluatePeriod();
             var dates = new List<DateTime>();
-            for (DateTime i = _dateService.Now; i.Date != periodEnd.Date; i = i.AddDays(1))
+            for (DateTime i = periodStart; i != periodEnd; i = i.AddDays(1))
             {
                 if (!MatchWeekday(plannedRecurrence, i))
                     continue;
@@ -86,11 +86,14 @@ namespace DarkDeeds.Services.Implementation
         }
 
         /// <remarks>End date is not included</remarks>
-        public DateTime EvaluatePeriodEndDate()
+        public (DateTime, DateTime) EvaluatePeriod()
         {
             int currentDayOfWeek = (int) _dateService.Now.DayOfWeek;
-            int currentDayOfWeekFixed = (6 + currentDayOfWeek) % 7 + 1; 
-            return _dateService.Now.AddDays(RecurrencePeriodInDays - currentDayOfWeekFixed + 1);
+            int currentDayOfWeekFixed = (6 + currentDayOfWeek) % 7 + 1;
+            return (
+                _dateService.Now,
+                _dateService.Now.AddDays(RecurrencePeriodInDays - currentDayOfWeekFixed + 1)
+            );
         }
 
         public bool MatchPeriod(PlannedRecurrenceEntity plannedRecurrence, DateTime date)
