@@ -1,25 +1,35 @@
-import { TaskMoveService } from '../../services'
-import { Task, TaskTimeTypeEnum } from '../../models'
+import { di, diToken, TaskMoveService } from '../../di'
+import { Task, TaskTypeEnum } from '../../models'
 
-function task(taskId: number, taskDate: Date | null, taskOrder: number, type: TaskTimeTypeEnum = TaskTimeTypeEnum.NoTime): Task {
+function createService(): TaskMoveService {
+    // integration tests
+    return di.get<TaskMoveService>(diToken.TaskMoveService)
+}
+
+function task(taskId: number, taskDate: Date | null, taskOrder: number, type: TaskTypeEnum = TaskTypeEnum.Simple, time: number | null = null): Task {
     const t = new Task(taskId, '', taskDate, taskOrder)
-    t.timeType = type
+    t.type = type
+    t.time = time
     return t
 }
 
-function d(year: number, month: number, date: number, hour: number = 0, minutes: number = 0): Date {
-    return new Date(year, month + 1, date, hour, minutes)
+function d(year: number, month: number, date: number): Date {
+    return new Date(year, month + 1, date)
 }
 
 function expectOrder(tasks: Task[], taskId: number, order: number) {
     expect(tasks.find(x => x.clientId === taskId)!.order).toBe(order)
 }
 
+function expectTime(tasks: Task[], taskId: number, time: number | null) {
+    expect(tasks.find(x => x.clientId === taskId)!.time).toBe(time)
+}
+
 function expectDate(tasks: Task[], taskId: number, date: Date | null) {
     if (date === null) {
-        expect(tasks.find(x => x.clientId === taskId)!.dateTime).toBeNull()
+        expect(tasks.find(x => x.clientId === taskId)!.date).toBeNull()
     } else {
-        expect(tasks.find(x => x.clientId === taskId)!.dateTime!.getTime()).toBe(date.getTime())
+        expect(tasks.find(x => x.clientId === taskId)!.date!.getTime()).toBe(date.getTime())
     }
 }
 
@@ -36,7 +46,8 @@ test('positive', () => {
         task(5, d(2018, 9, 10), 2)
     ]
 
-    const result = TaskMoveService.moveTask(tasks, 4, d(2018, 9, 9).getTime(), d(2018, 9, 10).getTime(), 2)
+    const service = createService()
+    const result = service.moveTask(tasks, 4, d(2018, 9, 9).getTime(), d(2018, 9, 10).getTime(), 2)
 
     expectOrder(result, 1, 1)
     expectOrder(result, 4, 2)
@@ -57,7 +68,8 @@ test('move as last', () => {
         task(2, d(2018, 9, 10), 1)
     ]
 
-    const result = TaskMoveService.moveTask(tasks, 2, d(2018, 9, 9).getTime(), d(2018, 9, 10).getTime(), null)
+    const service = createService()
+    const result = service.moveTask(tasks, 2, d(2018, 9, 9).getTime(), d(2018, 9, 10).getTime(), null)
 
     expectOrder(result, 1, 1)
     expectOrder(result, 2, 2)
@@ -72,7 +84,8 @@ test('move as first', () => {
         task(2, d(2018, 9, 10), 1)
     ]
 
-    const result = TaskMoveService.moveTask(tasks, 2, d(2018, 9, 9).getTime(), d(2018, 9, 10).getTime(), 1)
+    const service = createService()
+    const result = service.moveTask(tasks, 2, d(2018, 9, 9).getTime(), d(2018, 9, 10).getTime(), 1)
 
     expectOrder(result, 1, 2)
     expectOrder(result, 2, 1)
@@ -88,7 +101,8 @@ test('move inside the same list', () => {
         task(3, d(2018, 9, 9), 3)
     ]
 
-    const result = TaskMoveService.moveTask(tasks, 3, d(2018, 9, 9).getTime(), d(2018, 9, 9).getTime(), 2)
+    const service = createService()
+    const result = service.moveTask(tasks, 3, d(2018, 9, 9).getTime(), d(2018, 9, 9).getTime(), 2)
 
     expectOrder(result, 1, 1)
     expectOrder(result, 2, 3)
@@ -106,7 +120,8 @@ test('move to no date', () => {
         task(3, d(2018, 9, 9), 1)
     ]
 
-    const result = TaskMoveService.moveTask(tasks, 3, 0, d(2018, 9, 9).getTime(), 2)
+    const service = createService()
+    const result = service.moveTask(tasks, 3, 0, d(2018, 9, 9).getTime(), 2)
 
     expectOrder(result, 1, 1)
     expectOrder(result, 2, 3)
@@ -119,14 +134,16 @@ test('move to no date', () => {
 
 test('move with time', () => {
     const tasks: Task[] = [
-        task(1, d(2018, 9, 10, 5, 6), 1, TaskTimeTypeEnum.ConcreteTime)
+        task(1, d(2018, 9, 10), 1, TaskTypeEnum.Simple, 306)
     ]
 
-    const result = TaskMoveService.moveTask(tasks, 1, d(2018, 9, 9).getTime(), d(2018, 9, 10).getTime(), null)
+    const service = createService()
+    const result = service.moveTask(tasks, 1, d(2018, 9, 9).getTime(), d(2018, 9, 10).getTime(), null)
 
     expectOrder(result, 1, 1)
-    expectDate(result, 1, d(2018, 9, 9, 5, 6))
+    expectDate(result, 1, d(2018, 9, 9))
     expectChanged(result, 1, true)
+    expectTime(result, 1, 306)
 })
 
 test('any strange order becomes normal', () => {
@@ -137,7 +154,8 @@ test('any strange order becomes normal', () => {
         task(4, d(2018, 9, 10), 1000)
     ]
 
-    const result = TaskMoveService.moveTask(tasks, 4, d(2018, 9, 9).getTime(), d(2018, 9, 10).getTime(), null)
+    const service = createService()
+    const result = service.moveTask(tasks, 4, d(2018, 9, 9).getTime(), d(2018, 9, 10).getTime(), null)
 
     expectOrder(result, 1, 1)
     expectOrder(result, 2, 2)
@@ -149,15 +167,16 @@ test('any strange order becomes normal', () => {
     expectChanged(result, 4, true)
 })
 
-test('ignore All Day Long tasks', () => {
+test('ignore additional tasks', () => {
     const tasks: Task[] = [
-        task(1, d(2018, 9, 9), 1000, TaskTimeTypeEnum.AllDayLong),
+        task(1, d(2018, 9, 9), 1000, TaskTypeEnum.Additional),
         task(2, d(2018, 9, 9), 1),
         task(3, d(2018, 9, 9), 2),
         task(4, d(2018, 9, 10), 1)
     ]
 
-    const result = TaskMoveService.moveTask(tasks, 4, d(2018, 9, 9).getTime(), d(2018, 9, 10).getTime(), 2)
+    const service = createService()
+    const result = service.moveTask(tasks, 4, d(2018, 9, 9).getTime(), d(2018, 9, 10).getTime(), 2)
 
     expectOrder(result, 1, 1000)
     expectOrder(result, 2, 2)

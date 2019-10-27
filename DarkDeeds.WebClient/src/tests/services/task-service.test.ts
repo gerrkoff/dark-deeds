@@ -1,7 +1,7 @@
-import { TaskService } from '../../services'
-import { Task, TaskTimeTypeEnum } from '../../models'
+import { DateService, TaskService } from '../../di'
+import { Task, TaskTypeEnum } from '../../models'
 
-function task(year: number, month: number, date: number, id: number = 0, order: number = 0, timeType: TaskTimeTypeEnum = TaskTimeTypeEnum.NoTime, hours: number = 0, minutes: number = 0): Task {
+function task(year: number, month: number, date: number, id: number = 0, order: number = 0, timeType: TaskTypeEnum = TaskTypeEnum.Simple, hours: number = 0, minutes: number = 0): Task {
     return new Task(id, '', new Date(year, month, date, hours, minutes), order, false, 0, false, false, timeType)
 }
 
@@ -21,7 +21,12 @@ test('[evalModel] positive', () => {
         new Task(0, '')
     ]
 
-    const result = TaskService.evalModel(tasks, new Date(2018, 9, 17), true)
+    const dateServiceMock = {
+        monday: jest.fn().mockImplementation(() => new Date(2018, 9, 15)),
+        today: jest.fn()
+    }
+    const service = new TaskService(dateServiceMock as unknown as DateService)
+    const result = service.evalModel(tasks, true)
 
     expect(result.noDate.length).toBe(2)
     expect(result.expired.length).toBe(2)
@@ -36,36 +41,44 @@ test('[evalModel] ignore completed if showCompleted=false', () => {
         new Task(3, '', null, 0, false, 0, true)
     ]
 
-    const result = TaskService.evalModel(tasks, new Date(2018, 9, 17), false)
+    const dateServiceMock = {
+        monday: jest.fn().mockImplementation(() => new Date(2018, 9, 15)),
+        today: jest.fn()
+    }
+    const service = new TaskService(dateServiceMock as unknown as DateService)
+    const result = service.evalModel(tasks, false)
 
     expect(result.noDate.length).toBe(1)
     expect(result.noDate[0].clientId).toBe(2)
 })
 
 test('[tasksEqual] positive', () => {
-    expect(TaskService.tasksEqual(new Task(1, '1', null, 1, false, 1), new Task(1, '1', null, 1, false, 1))).toBeTruthy()
-    expect(TaskService.tasksEqual(new Task(1, '1', null, 1, false, 1), new Task(1, '1', new Date(), 1, false, 1))).not.toBeTruthy()
-    expect(TaskService.tasksEqual(new Task(1, '1', new Date(2018), 1, false, 1), new Task(1, '1', new Date(2018), 1, false, 1))).toBeTruthy()
-    expect(TaskService.tasksEqual(new Task(1, '1', new Date(2018), 1, false, 1), new Task(2, '2', new Date(2019), 2, false, 2))).not.toBeTruthy()
-    expect(TaskService.tasksEqual(new Task(1, '1', null, 1, false, 1, false, false, TaskTimeTypeEnum.NoTime, false), new Task(1, '1', null, 1, false, 1, false, false, TaskTimeTypeEnum.NoTime, true))).not.toBeTruthy()
+    const service = new TaskService(new DateService())
+    expect(service.tasksEqual(new Task(1, '1', null, 1, false, 1), new Task(1, '1', null, 1, false, 1))).toBeTruthy()
+    expect(service.tasksEqual(new Task(1, '1', null, 1, false, 1), new Task(1, '1', new Date(), 1, false, 1))).not.toBeTruthy()
+    expect(service.tasksEqual(new Task(1, '1', new Date(2018), 1, false, 1), new Task(1, '1', new Date(2018), 1, false, 1))).toBeTruthy()
+    expect(service.tasksEqual(new Task(1, '1', new Date(2018), 1, false, 1), new Task(2, '2', new Date(2019), 2, false, 2))).not.toBeTruthy()
+    expect(service.tasksEqual(new Task(1, '1', null, 1, false, 1, false, false, TaskTypeEnum.Simple, false), new Task(1, '1', null, 1, false, 1, false, false, TaskTypeEnum.Simple, true))).not.toBeTruthy()
 })
 
 test('[sort] positive', () => {
     const tasks = [
-        new Task(1, '', new Date(2018, 1, 1), 1, false, 0, false, false, TaskTimeTypeEnum.NoTime),
-        new Task(2, '', new Date(2018, 1, 1, 10), 0, false, 0, false, false, TaskTimeTypeEnum.ConcreteTime),
-        new Task(3, '', new Date(2018, 1, 1), 4, false, 0, false, false, TaskTimeTypeEnum.NoTime),
-        new Task(4, '', new Date(2018, 1, 1, 10), 0, false, 0, false, false, TaskTimeTypeEnum.ConcreteTime),
-        new Task(5, '', new Date(2018, 1, 1), 3, false, 0, false, false, TaskTimeTypeEnum.NoTime),
-        new Task(6, '', new Date(2018, 1, 1, 8), 0, false, 0, false, false, TaskTimeTypeEnum.ConcreteTime),
-        new Task(7, '', new Date(2018, 1, 1), 2, false, 0, false, false, TaskTimeTypeEnum.NoTime),
-        new Task(8, '', new Date(2018, 1, 1, 15), 0, false, 0, false, false, TaskTimeTypeEnum.ConcreteTime),
-        new Task(9, '', new Date(2018, 1, 1, 8), 2, false, 0, false, false, TaskTimeTypeEnum.ConcreteTime),
-        new Task(10, '', new Date(2018, 1, 1, 8), 1, false, 0, false, false, TaskTimeTypeEnum.ConcreteTime),
-        new Task(11, '', new Date(2018, 1, 1, 8), 2, false, 0, false, false, TaskTimeTypeEnum.AllDayLong),
-        new Task(12, '', new Date(2018, 1, 1, 8), 1, false, 0, false, false, TaskTimeTypeEnum.AllDayLong)
+        new Task(1, '', new Date(2018, 1, 1), 1, false, 0, false, false, TaskTypeEnum.Simple),
+        new Task(2, '', new Date(2018, 1, 1), 0, false, 0, false, false, TaskTypeEnum.Simple, false, 0, 600),
+        new Task(3, '', new Date(2018, 1, 1), 4, false, 0, false, false, TaskTypeEnum.Simple),
+        new Task(4, '', new Date(2018, 1, 1), 0, false, 0, false, false, TaskTypeEnum.Simple, false, 0, 600),
+        new Task(5, '', new Date(2018, 1, 1), 3, false, 0, false, false, TaskTypeEnum.Simple),
+        new Task(6, '', new Date(2018, 1, 1), 0, false, 0, false, false, TaskTypeEnum.Simple, false, 0, 480),
+        new Task(7, '', new Date(2018, 1, 1), 2, false, 0, false, false, TaskTypeEnum.Simple),
+        new Task(8, '', new Date(2018, 1, 1), 0, false, 0, false, false, TaskTypeEnum.Simple, false, 0, 900),
+        new Task(9, '', new Date(2018, 1, 1), 2, false, 0, false, false, TaskTypeEnum.Simple, false, 0, 480),
+        new Task(10, '', new Date(2018, 1, 1), 1, false, 0, false, false, TaskTypeEnum.Simple, false, 0, 480),
+        new Task(11, '', new Date(2018, 1, 1), 2, false, 0, false, false, TaskTypeEnum.Additional),
+        new Task(12, '', new Date(2018, 1, 1), 1, false, 0, false, false, TaskTypeEnum.Additional)
     ]
-    const result = tasks.sort(TaskService.sorting)
+
+    const service = new TaskService(null as unknown as DateService)
+    const result = tasks.sort(service.sorting)
 
     expect(result[0].clientId).toBe(2)
     expect(result[1].clientId).toBe(4)

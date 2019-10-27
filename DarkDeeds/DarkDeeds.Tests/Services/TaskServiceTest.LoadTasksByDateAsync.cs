@@ -11,19 +11,19 @@ namespace DarkDeeds.Tests.Services
     public partial class TaskServiceTest
     {
         private IRepository<TaskEntity> DefaultRepo_LoadTasksByDateAsync() => Helper.CreateRepoMock(
-            new TaskEntity {UserId = "1", Id = 1, DateTime = new DateTime(2018, 10, 10), IsCompleted = true},
-            new TaskEntity {UserId = "1", Id = 2, DateTime = new DateTime(2018, 10, 11)},
-            new TaskEntity {UserId = "2", Id = 10, DateTime = new DateTime(2018, 10, 22)},
-            new TaskEntity {UserId = "1", Id = 3, DateTime = new DateTime(2018, 10, 20)},
+            new TaskEntity {UserId = "1", Id = 1, Date = new DateTime(2018, 10, 10), IsCompleted = true},
+            new TaskEntity {UserId = "1", Id = 2, Date = new DateTime(2018, 10, 11)},
+            new TaskEntity {UserId = "2", Id = 10, Date = new DateTime(2018, 10, 22)},
+            new TaskEntity {UserId = "1", Id = 3, Date = new DateTime(2018, 10, 20)},
             new TaskEntity {UserId = "1", Id = 4},
-            new TaskEntity {UserId = "1", Id = 5, DateTime = new DateTime(2018, 10, 25)},
-            new TaskEntity {UserId = "1", Id = 6, DateTime = new DateTime(2018, 10, 26)}
+            new TaskEntity {UserId = "1", Id = 5, Date = new DateTime(2018, 10, 25)},
+            new TaskEntity {UserId = "1", Id = 6, Date = new DateTime(2018, 10, 26)}
         ).Object;
         
         [Fact]
         public async Task LoadTasksByDateAsync_ReturnOnlyUserTask()
         {   
-            var service = new TaskService(DefaultRepo_LoadTasksByDateAsync());
+            var service = new TaskService(DefaultRepo_LoadTasksByDateAsync(), null);
 
             var result = (await service.LoadTasksByDateAsync("2",
                 new DateTime(2000, 1, 1),
@@ -36,19 +36,19 @@ namespace DarkDeeds.Tests.Services
         [Fact]
         public async Task LoadTasksByDateAsync_AdjustDateToUtc()
         {   
-            var service = new TaskService(DefaultRepo_LoadTasksByDateAsync());
+            var service = new TaskService(DefaultRepo_LoadTasksByDateAsync(), null);
 
             var result = (await service.LoadTasksByDateAsync("1",
                 new DateTime(2000, 1, 1),
                 new DateTime(2020, 1, 1))).ToList();
             
-            Assert.Equal(DateTimeKind.Utc, result.First(x => x.DateTime.HasValue).DateTime.Value.Kind);
+            Assert.Equal(DateTimeKind.Utc, result.First(x => x.Date.HasValue).Date.Value.Kind);
         }
         
         [Fact]
         public async Task LoadActualTasksAsync_ExcludeNoDate()
         {
-            var service = new TaskService(DefaultRepo_LoadTasksByDateAsync());
+            var service = new TaskService(DefaultRepo_LoadTasksByDateAsync(), null);
 
             var result = (await service.LoadTasksByDateAsync("1",
                 new DateTime(2018, 10, 20),
@@ -60,7 +60,7 @@ namespace DarkDeeds.Tests.Services
         [Fact]
         public async Task LoadActualTasksAsync_IncludeOnlyTasksFromPeriod()
         {
-            var service = new TaskService(DefaultRepo_LoadTasksByDateAsync());
+            var service = new TaskService(DefaultRepo_LoadTasksByDateAsync(), null);
 
             var result = (await service.LoadTasksByDateAsync("1",
                 new DateTime(2018, 10, 20),

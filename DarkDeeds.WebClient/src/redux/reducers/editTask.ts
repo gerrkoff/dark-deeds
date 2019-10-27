@@ -1,6 +1,8 @@
-import { TaskConverter } from '../../services'
+import { di, diToken, TaskConverter } from '../../di'
 import { IEditTaskState } from '../types'
 import * as actions from '../constants/editTask'
+
+const taskConverter = di.get<TaskConverter>(diToken.TaskConverter)
 
 const inittialState: IEditTaskState = {
     clientId: 0,
@@ -21,7 +23,7 @@ export function editTask(state: IEditTaskState = inittialState, action: actions.
             }
         case actions.EDITTASK_SET_MODEL:
             return { ...state,
-                taskModel: TaskConverter.convertModelToString(action.model)
+                taskModel: taskConverter.convertModelToString(action.model)
             }
     }
     return state

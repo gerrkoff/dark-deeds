@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { Button, Icon, Input, Label, Modal } from 'semantic-ui-react'
-import { KeyConstants, TaskConverter } from '../../services'
+import { di, diToken, KeyConstants, TaskConverter } from '../../di'
 import { TaskModel } from '../../models'
 
 interface IProps {
@@ -15,6 +15,9 @@ interface IState {
     invalidTitle: boolean
 }
 export class EditTaskModal extends React.PureComponent<IProps, IState> {
+    private keyConstants = di.get<KeyConstants>(diToken.KeyConstants)
+    private taskConverter = di.get<TaskConverter>(diToken.TaskConverter)
+
     constructor(props: IProps) {
         super(props)
         this.state = { invalidTitle: false }
@@ -32,6 +35,7 @@ export class EditTaskModal extends React.PureComponent<IProps, IState> {
                 <Modal.Header><Icon name='sticky note outline' />{this.props.clientId === 0 ? 'New task' : 'Edit task'}</Modal.Header>
                 <Modal.Content>
                     <Input focus fluid inverted
+                        data-test-id='editTaskInput'
                         placeholder='1231 2359 December 31, 23:59 ...'
                         value={this.props.model}
                         onChange={(_event, data) => this.handleTaskModelChange(data.value)}
@@ -47,7 +51,7 @@ export class EditTaskModal extends React.PureComponent<IProps, IState> {
                     <Button basic color='red' inverted onClick={this.props.closeModal}>
                         <Icon name='remove' /> Cancel
                     </Button>
-                    <Button color='green' inverted onClick={this.handleSave}>
+                    <Button color='green' data-test-id='saveTaskButton' inverted onClick={this.handleSave}>
                         <Icon name='checkmark' /> Save
                     </Button>
                 </Modal.Actions>
@@ -66,7 +70,7 @@ export class EditTaskModal extends React.PureComponent<IProps, IState> {
             return
         }
 
-        const taskModel = TaskConverter.convertStringToModel(this.props.model)
+        const taskModel = this.taskConverter.convertStringToModel(this.props.model)
 
         if (taskModel.title.length === 0) {
             this.setState({ invalidTitle: true })
@@ -79,7 +83,7 @@ export class EditTaskModal extends React.PureComponent<IProps, IState> {
     }
 
     private handleInputKeyUp = (e: KeyboardEvent) => {
-        if (e.key === KeyConstants.ENTER) {
+        if (e.key === this.keyConstants.ENTER) {
             this.handleSave()
         }
     }

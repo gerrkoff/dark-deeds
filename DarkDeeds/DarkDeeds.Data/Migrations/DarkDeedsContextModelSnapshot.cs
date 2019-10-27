@@ -41,7 +41,7 @@ namespace DarkDeeds.Data.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<DateTime?>("DateTime");
+                    b.Property<DateTime?>("Date");
 
                     b.Property<bool>("IsCompleted");
 
@@ -51,9 +51,11 @@ namespace DarkDeeds.Data.Migrations
 
                     b.Property<int>("Order");
 
-                    b.Property<int>("TimeType");
+                    b.Property<int?>("Time");
 
                     b.Property<string>("Title");
+
+                    b.Property<int>("Type");
 
                     b.Property<string>("UserId")
                         .IsRequired();

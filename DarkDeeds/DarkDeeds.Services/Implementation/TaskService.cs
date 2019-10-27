@@ -11,16 +11,19 @@ using DarkDeeds.Data.Repository;
 using DarkDeeds.Enums;
 using DarkDeeds.Models;
 using DarkDeeds.Services.Interface;
+using Microsoft.Extensions.Logging;
 
 namespace DarkDeeds.Services.Implementation
 {
     public class TaskService : ITaskService
     {
         private readonly IRepository<TaskEntity> _tasksRepository;
+        private readonly ILogger<TaskService> _logger;
         
-        public TaskService(IRepository<TaskEntity> tasksRepository)
+        public TaskService(IRepository<TaskEntity> tasksRepository, ILogger<TaskService> logger)
         {
             _tasksRepository = tasksRepository;
+            _logger = logger;
         }
         
         public async Task<IEnumerable<TaskDto>> LoadActualTasksAsync(string userId, DateTime from)
@@ -28,9 +31,9 @@ namespace DarkDeeds.Services.Implementation
             IQueryable<TaskEntity> tasks = _tasksRepository.GetAll()
                 .Where(x => string.Equals(x.UserId, userId))
                 .Where(x =>
-                    !x.IsCompleted && x.TimeType != TaskTimeTypeEnum.AllDayLong ||
-                    !x.DateTime.HasValue ||
-                    x.DateTime >= from);
+                    !x.IsCompleted && x.Type != TaskTypeEnum.Additional ||
+                    !x.Date.HasValue ||
+                    x.Date >= from);
             
             return (await tasks.ProjectTo<TaskDto>().ToListSafeAsync()).ToUtcDate();
         }
@@ -39,8 +42,8 @@ namespace DarkDeeds.Services.Implementation
         {
             IQueryable<TaskEntity> tasks = _tasksRepository.GetAll()
                 .Where(x => string.Equals(x.UserId, userId))
-                .Where(x => x.DateTime.HasValue)
-                .Where(x => x.DateTime >= from && x.DateTime < to);
+                .Where(x => x.Date.HasValue)
+                .Where(x => x.Date >= from && x.Date < to);
 
             return (await tasks.ProjectTo<TaskDto>().ToListSafeAsync()).ToUtcDate();
         }
@@ -73,7 +76,7 @@ namespace DarkDeeds.Services.Implementation
             {
                 if (!existingTasks.ContainsKey(taskToSave.Id))
                 {
-                    // TODO: log it
+                    _logger.LogWarning($"Tried to update non existing task. TaskId: {taskToSave.Id}");
                     return null;
                 }
 

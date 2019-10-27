@@ -19,7 +19,6 @@ export class AppAuthWrapper extends React.PureComponent<IProps> {
         return (
             <React.Fragment>
                 {this.renderContent()}
-                {/* TODO: maybe some other loader */}
                 <Dimmer active={this.props.initialLogginIn}>
                     <Loader />
                 </Dimmer>

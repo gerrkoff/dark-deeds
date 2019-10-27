@@ -11,33 +11,61 @@ namespace DarkDeeds.Services.Implementation
 {
     public class TaskParserService : ITaskParserService
     {
-        // TODO: add logic from FE parser
-        public TaskDto ParseTask(string task, int timeAdjustment = 0)
+        private readonly IDateService _dateService;
+
+        public TaskParserService(IDateService dateService)
+        {
+            _dateService = dateService;
+        }
+
+        // TODO: refactor
+        public TaskDto ParseTask(string task)
         {
             var taskDto = new TaskDto();
-            task = ParseDate(task, out int year, out int month, out int day, out bool withDate);
-            task = ParseTime(task, out int hour, out int minutes, out TaskTimeTypeEnum timeType);
+            var type = TaskTypeEnum.Simple;
+            task = ParseDate(task, out int year, out int month, out int day, out bool withDate, ref type, out int dayAdjustment);
+            task = ParseTime(task, out int hour, out int minutes, out bool withTime, type);
+            task = ParseProbability(task, out bool isProbable);
             
             taskDto.Title = task;
-            taskDto.TimeType = timeType;
+            taskDto.Type = type;
+            taskDto.IsProbable = isProbable;
             if (withDate)
-                taskDto.DateTime = CreateDateTime(year, month, day, hour, minutes, timeAdjustment);
+                taskDto.Date = CreateDateTime(year, month, day, dayAdjustment);
+            if (withTime)
+                taskDto.Time = hour * 60 + minutes;
+                
             return taskDto;
         }
 
-        private string ParseTime(string task, out int hour, out int minutes, out TaskTimeTypeEnum timeType)
+        private string ParseProbability(string task, out bool isProbable)
+        {
+            isProbable = false;
+            if (task.EndsWith(" ?"))
+            {
+                task = task.Substring(0, task.Length - 2);
+                isProbable = true;
+            }
+
+            return task;
+        }
+
+        private string ParseTime(string task, out int hour, out int minutes, out bool withTime, TaskTypeEnum type)
         {
             var timeRx = new Regex(@"^\d{4}\s");
             string time = string.Empty;
             hour = 0;
             minutes = 0;
-            timeType = TaskTimeTypeEnum.NoTime;
+            withTime = false;
+
+            if (type == TaskTypeEnum.Additional)
+                return task;
 
             if (timeRx.IsMatch(task))
             {
                 time = task.Substring(0, 4);
                 task = task.Substring(5);
-                timeType = TaskTimeTypeEnum.ConcreteTime;
+                withTime = true;
             }
 
             if (!string.IsNullOrEmpty(time))
@@ -49,28 +77,50 @@ namespace DarkDeeds.Services.Implementation
             return task;
         }
 
-        private string ParseDate(string task, out int year, out int month, out int day, out bool withDate)
+        private string ParseDate(string task, out int year, out int month, out int day, out bool withDate, ref TaskTypeEnum type, out int dayAdjustment)
         {
-            var dateWithYearRx = new Regex(@"^\d{8}\s");
-            var dateRx = new Regex(@"^\d{4}\s");
+            var dateWithYearRx = new Regex(@"^\d{8}!?\s");
+            var dateRx = new Regex(@"^\d{4}!?\s");
+            var todayShiftRx = new Regex(@"^!+\s");
+            var weekShiftRx = new Regex(@"^![1-7]\s");
             string date = string.Empty;
             year = 0;
             month = 0;
             day = 0;
+            dayAdjustment = 0;
             withDate = false;
                         
             if (dateWithYearRx.IsMatch(task))
             {
                 date = task.Substring(4, 4);
                 year = int.Parse(task.Substring(0, 4));
-                task = task.Substring(9);
-
+                task = task.Substring(8);
+                task = ParseAdditional(task, ref type);
+                task = task.Substring(1);
             }
             else if (dateRx.IsMatch(task))
             {
                 date = task.Substring(0, 4);
-                task = task.Substring(5);
-                year = DateTime.UtcNow.Year;
+                year = _dateService.Today.Year;
+                task = task.Substring(4);
+                task = ParseAdditional(task, ref type);
+                task = task.Substring(1);
+            }
+            else if (todayShiftRx.IsMatch(task))
+            {
+                task = ParseTodayShift(task, out dayAdjustment);
+                year = _dateService.Today.Year;
+                month = _dateService.Today.Month;
+                day = _dateService.Today.Day;
+                withDate = true;
+            }
+            else if (weekShiftRx.IsMatch(task))
+            {
+                task = ParseWeekShift(task, out dayAdjustment);
+                year = _dateService.Today.Year;
+                month = _dateService.Today.Month;
+                day = _dateService.Today.Day;
+                withDate = true;
             }
             
             if (!string.IsNullOrEmpty(date))
@@ -83,42 +133,70 @@ namespace DarkDeeds.Services.Implementation
             return task;
         }
 
-        private DateTime CreateDateTime(int year, int month, int day, int hour, int minutes, int timeAdjustment)
+        private string ParseWeekShift(string task, out int dayAdjustment)
         {
-            var dateTime = new DateTime(year, month, day, hour, minutes, 0);
+            int dayShift = int.Parse(task[1].ToString());
+            int nextSundayShift = (7 - (int) _dateService.Today.DayOfWeek) % 7;
+            dayAdjustment = nextSundayShift + dayShift;
+            return task.Substring(3);
+        }
+
+        private string ParseTodayShift(string task, out int dayAdjustment)
+        {
+            dayAdjustment = new Regex("!+").Matches(task)[0].Length;
+            dayAdjustment--;
+            return task.Substring(dayAdjustment + 2);
+        }
+
+        private string ParseAdditional(string task, ref TaskTypeEnum type)
+        {
+            if (task.StartsWith("!"))
+            {
+                task = task.Substring(1);
+                type = TaskTypeEnum.Additional;
+            }
+
+            return task;
+        }
+
+        private DateTime CreateDateTime(int year, int month, int day, int dayAdjustment)
+        {
+            var dateTime = new DateTime(year, month, day, 0, 0, 0);
             dateTime = DateTime.SpecifyKind(dateTime, DateTimeKind.Utc);
-            dateTime = dateTime.AddMinutes(timeAdjustment);
+            dateTime = dateTime.AddDays(dayAdjustment);
             return dateTime;
         }
 
-        public string PrintTasks(IEnumerable<TaskDto> tasks, int timeAdjustment = 0)
+        public string PrintTasks(IEnumerable<TaskDto> tasks)
         {
             var sb = new StringBuilder();
             foreach (var task in tasks)
             {
                 if (sb.Length > 0)
                     sb.AppendLine();
-                sb.Append(TaskToString(task, timeAdjustment));
+                sb.Append(TaskToString(task));
             }
 
             return sb.ToString();
         }
 
-        private string TaskToString(TaskDto task, int timeAdjustment)
+        private string TaskToString(TaskDto task)
         {
             string result = string.Empty;
-            if (task.DateTime.HasValue)
-            {
-                task.DateTime = task.DateTime.Value.AddMinutes(timeAdjustment);
-                if (task.TimeType == TaskTimeTypeEnum.ConcreteTime)
-                    result += $"{DateToTimeString(task.DateTime.Value)} ";
-            }
+
+            if (task.Time.HasValue)
+                result += $"{TimeToString(task.Time.Value)} ";
 
             result += task.Title;
 
             return result;
         }
 
-        private string DateToTimeString(DateTime dateTime) => $"{dateTime.Hour:D2}:{dateTime.Minute:D2}";
+        private string TimeToString(int time)
+        {
+            int hour = time / 60;
+            int minute = time % 60;
+            return $"{hour:D2}:{minute:D2}";  
+        } 
     }
 }

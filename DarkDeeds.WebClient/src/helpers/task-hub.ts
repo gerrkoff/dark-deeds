@@ -1,6 +1,5 @@
 import { Task } from '../models'
-import { TaskHubApi } from '../api'
-import { UtilsService } from '../services'
+import { di, diToken, UtilsService, TaskHubApi } from '../di'
 import { EventEmitter } from 'events'
 
 export class TaskHub {
@@ -9,11 +8,14 @@ export class TaskHub {
     private _eventEmitter: EventEmitter = new EventEmitter()
     private _reconnectEventName = 'reconnect'
 
+    private taskHubApi = di.get<TaskHubApi>(diToken.TaskHubApi)
+    private utilsService = di.get<UtilsService>(diToken.UtilsService)
+
     constructor(
         updateCallback: (tasks: Task[], localUpdate: boolean) => void,
         heartbeatCallback: () => void
     ) {
-        TaskHubApi.hubSubscribe(
+        this.taskHubApi.hubSubscribe(
             this.reconnect,
             updateCallback,
             () => {
@@ -34,11 +36,11 @@ export class TaskHub {
 
     public stop = async(): Promise<void> => {
         this._ready = false
-        await TaskHubApi.hubStop()
+        await this.taskHubApi.hubStop()
     }
 
     public saveTasks = (tasks: Task[]): Promise<void> => {
-        return TaskHubApi.saveTasks(tasks)
+        return this.taskHubApi.saveTasks(tasks)
     }
 
     public addOnReconnect(handler: (reconnecting: boolean) => void) {
@@ -60,12 +62,12 @@ export class TaskHub {
         let attemptCount = 1
         while (true) {
             try {
-                await TaskHubApi.hubStart()
+                await this.taskHubApi.hubStart()
                 this._ready = true
                 return
             // tslint:disable-next-line:no-empty
             } catch (error) {}
-            await UtilsService.delay(this.evalConnectRetryDelay(++attemptCount))
+            await this.utilsService.delay(this.evalConnectRetryDelay(++attemptCount))
         }
     }
 

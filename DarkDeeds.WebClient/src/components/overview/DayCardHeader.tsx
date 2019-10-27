@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { Icon, MenuItemProps } from 'semantic-ui-react'
-import { DateService } from '../../services'
+import { di, diToken, DateService } from '../../di'
 import { TaskModel } from '../../models'
 import { MenuPopup } from './'
 
@@ -14,6 +14,8 @@ interface IState {
     menuPopupOpen: boolean
 }
 export class DayCardHeader extends React.PureComponent<IProps, IState> {
+    private dateService = di.get<DateService>(diToken.DateService)
+
     constructor(props: IProps) {
         super(props)
         this.state = {
@@ -24,7 +26,7 @@ export class DayCardHeader extends React.PureComponent<IProps, IState> {
     public render() {
         const menuItemProps = new Array<MenuItemProps>()
         menuItemProps.push({
-            content: <span><Icon name='plus' />Add</span>,
+            content: <span><Icon data-test-id='addTaskToDayButton' name='plus' />Add</span>,
             disabled: !this.props.openTaskModal,
             name: 'add',
             onClick: this.handleAdd
@@ -48,7 +50,7 @@ export class DayCardHeader extends React.PureComponent<IProps, IState> {
             + (this.state.menuPopupOpen ? ' day-card-header-selected' : '')
         return (
             <span className={className}>
-                {DateService.toLabel(this.props.date)}
+                {this.dateService.toLabel(this.props.date)}
             </span>
         )
     }
