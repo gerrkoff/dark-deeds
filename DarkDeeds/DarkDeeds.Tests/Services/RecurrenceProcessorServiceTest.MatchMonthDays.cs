@@ -10,7 +10,7 @@ namespace DarkDeeds.Tests.Services
         [Fact]
         public void MatchMonthDays_MatchIfEmpty()
         {
-            var service = new RecurrenceProcessorService(null, null, null, null);
+            var service = new RecurrenceCreatorService(null, null, null, null);
 
             var result = service.MatchMonthDays(new PlannedRecurrenceEntity(), new DateTime());
 
@@ -20,7 +20,7 @@ namespace DarkDeeds.Tests.Services
         [Fact]
         public void MatchMonthDays_MatchOneDate()
         {
-            var service = new RecurrenceProcessorService(null, null, null, null);
+            var service = new RecurrenceCreatorService(null, null, null, null);
 
             var result = service.MatchMonthDays(new PlannedRecurrenceEntity
             {
@@ -33,7 +33,7 @@ namespace DarkDeeds.Tests.Services
         [Fact]
         public void MatchMonthDays_MatchOneOfSeveralDates()
         {
-            var service = new RecurrenceProcessorService(null, null, null, null);
+            var service = new RecurrenceCreatorService(null, null, null, null);
 
             var result = service.MatchMonthDays(new PlannedRecurrenceEntity
             {
@@ -46,7 +46,7 @@ namespace DarkDeeds.Tests.Services
         [Fact]
         public void MatchMonthDays_CountBigDateAsLastDayOfMonth()
         {
-            var service = new RecurrenceProcessorService(null, null, null, null);
+            var service = new RecurrenceCreatorService(null, null, null, null);
 
             var result = service.MatchMonthDays(new PlannedRecurrenceEntity
             {
@@ -59,7 +59,7 @@ namespace DarkDeeds.Tests.Services
         [Fact]
         public void MatchMonthDays_DoNotMatchAnyDateInList()
         {
-            var service = new RecurrenceProcessorService(null, null, null, null);
+            var service = new RecurrenceCreatorService(null, null, null, null);
 
             var result = service.MatchMonthDays(new PlannedRecurrenceEntity
             {

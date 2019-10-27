@@ -10,7 +10,7 @@ using DarkDeeds.Services.Interface;
 
 namespace DarkDeeds.Services.Implementation
 {
-    public class RecurrenceProcessorService : IRecurrenceProcessorService
+    public class RecurrenceCreatorService : IRecurrenceCreatorService
     {
         private const int RecurrencePeriodInDays = 14;
         
@@ -19,7 +19,7 @@ namespace DarkDeeds.Services.Implementation
         private readonly IRepositoryNonDeletable<RecurrenceEntity> _recurrenceTaskRepository;
         private readonly IDateService _dateService;
 
-        public RecurrenceProcessorService(
+        public RecurrenceCreatorService(
             IRepository<TaskEntity> taskRepository,
             IRepository<PlannedRecurrenceEntity> recurrenceRepository,
             IRepositoryNonDeletable<RecurrenceEntity> recurrenceTaskRepository,
@@ -31,7 +31,7 @@ namespace DarkDeeds.Services.Implementation
             _dateService = dateService;
         }
 
-        public async Task CreateRecurrenceTasksAsync()
+        public async Task CreateAsync()
         {
             List<PlannedRecurrenceEntity> recurrences = await _recurrenceRepository.GetAll().ToListSafeAsync();
             foreach (PlannedRecurrenceEntity recurrence in recurrences)

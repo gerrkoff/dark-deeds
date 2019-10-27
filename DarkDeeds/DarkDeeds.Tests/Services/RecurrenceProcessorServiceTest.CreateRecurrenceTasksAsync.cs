@@ -18,9 +18,9 @@ namespace DarkDeeds.Tests.Services
             var recurrenceRepo = Helper.CreateRepoMock<PlannedRecurrenceEntity>();
             var recurrenceTaskRepo = Helper.CreateRepoNonDeletableMock<RecurrenceEntity>();
             
-            var service = new RecurrenceProcessorService(taskRepo.Object, recurrenceRepo.Object, recurrenceTaskRepo.Object, null);
+            var service = new RecurrenceCreatorService(taskRepo.Object, recurrenceRepo.Object, recurrenceTaskRepo.Object, null);
             
-            await service.CreateRecurrenceTasksAsync();
+            await service.CreateAsync();
             
             recurrenceRepo.Verify(x => x.GetAll());
             taskRepo.VerifyNoOtherCalls();
@@ -40,9 +40,9 @@ namespace DarkDeeds.Tests.Services
             var dateServiceMock = new Mock<IDateService>();
             dateServiceMock.SetupGet(x => x.Now).Returns(DateTime.Now);
             
-            var service = new RecurrenceProcessorService(taskRepo.Object, recurrenceRepo.Object, recurrenceTaskRepo.Object, dateServiceMock.Object);
+            var service = new RecurrenceCreatorService(taskRepo.Object, recurrenceRepo.Object, recurrenceTaskRepo.Object, dateServiceMock.Object);
             
-            await service.CreateRecurrenceTasksAsync();
+            await service.CreateAsync();
             
             taskRepo.Verify(x => x.SaveAsync(It.Is<TaskEntity>(
                 y => y.Title == "Task" && y.UserId == "userId"
@@ -66,9 +66,9 @@ namespace DarkDeeds.Tests.Services
             var dateServiceMock = new Mock<IDateService>();
             dateServiceMock.SetupGet(x => x.Now).Returns(now);
             
-            var service = new RecurrenceProcessorService(taskRepo.Object, recurrenceRepo.Object, recurrenceTaskRepo.Object, dateServiceMock.Object);
+            var service = new RecurrenceCreatorService(taskRepo.Object, recurrenceRepo.Object, recurrenceTaskRepo.Object, dateServiceMock.Object);
             
-            await service.CreateRecurrenceTasksAsync();
+            await service.CreateAsync();
             
             recurrenceTaskRepo.Verify(x => x.SaveAsync(It.Is<RecurrenceEntity>(
                 y => y.PlannedRecurrenceId == 42 && y.TaskId == 23 && y.DateTime == now
@@ -87,9 +87,9 @@ namespace DarkDeeds.Tests.Services
             var dateServiceMock = new Mock<IDateService>();
             dateServiceMock.SetupGet(x => x.Now).Returns(new DateTime(2019, 9, 3));
             
-            var service = new RecurrenceProcessorService(taskRepo.Object, recurrenceRepo.Object, recurrenceTaskRepo.Object, dateServiceMock.Object);
+            var service = new RecurrenceCreatorService(taskRepo.Object, recurrenceRepo.Object, recurrenceTaskRepo.Object, dateServiceMock.Object);
             
-            await service.CreateRecurrenceTasksAsync();
+            await service.CreateAsync();
             
             taskRepo.Verify(x => x.SaveAsync(It.IsAny<TaskEntity>()), Times.Exactly(13));
             recurrenceTaskRepo.Verify(x => x.SaveAsync(It.IsAny<RecurrenceEntity>()), Times.Exactly(13));
@@ -107,9 +107,9 @@ namespace DarkDeeds.Tests.Services
             var dateServiceMock = new Mock<IDateService>();
             dateServiceMock.SetupGet(x => x.Now).Returns(new DateTime(2019, 9, 6));
             
-            var service = new RecurrenceProcessorService(taskRepo.Object, recurrenceRepo.Object, recurrenceTaskRepo.Object, dateServiceMock.Object);
+            var service = new RecurrenceCreatorService(taskRepo.Object, recurrenceRepo.Object, recurrenceTaskRepo.Object, dateServiceMock.Object);
             
-            await service.CreateRecurrenceTasksAsync();
+            await service.CreateAsync();
             
             recurrenceTaskRepo.Verify(x => x.SaveAsync(It.Is<RecurrenceEntity>(
                 y => y.DateTime == new DateTime(2019, 9, 9)
@@ -132,9 +132,9 @@ namespace DarkDeeds.Tests.Services
             var dateServiceMock = new Mock<IDateService>();
             dateServiceMock.SetupGet(x => x.Now).Returns(new DateTime(2019, 9, 6));
             
-            var service = new RecurrenceProcessorService(taskRepo.Object, recurrenceRepo.Object, recurrenceTaskRepo.Object, dateServiceMock.Object);
+            var service = new RecurrenceCreatorService(taskRepo.Object, recurrenceRepo.Object, recurrenceTaskRepo.Object, dateServiceMock.Object);
             
-            await service.CreateRecurrenceTasksAsync();
+            await service.CreateAsync();
             
             recurrenceTaskRepo.Verify(x => x.SaveAsync(It.Is<RecurrenceEntity>(
                 y => y.DateTime == new DateTime(2019, 9, 9)
@@ -157,9 +157,9 @@ namespace DarkDeeds.Tests.Services
             var dateServiceMock = new Mock<IDateService>();
             dateServiceMock.SetupGet(x => x.Now).Returns(new DateTime(2019, 9, 6));
             
-            var service = new RecurrenceProcessorService(taskRepo.Object, recurrenceRepo.Object, recurrenceTaskRepo.Object, dateServiceMock.Object);
+            var service = new RecurrenceCreatorService(taskRepo.Object, recurrenceRepo.Object, recurrenceTaskRepo.Object, dateServiceMock.Object);
             
-            await service.CreateRecurrenceTasksAsync();
+            await service.CreateAsync();
             
             recurrenceTaskRepo.Verify(x => x.SaveAsync(It.Is<RecurrenceEntity>(
                 y => y.DateTime == new DateTime(2019, 9, 6)
@@ -183,9 +183,9 @@ namespace DarkDeeds.Tests.Services
             var dateServiceMock = new Mock<IDateService>();
             dateServiceMock.SetupGet(x => x.Now).Returns(new DateTime(2019, 9, 6));
             
-            var service = new RecurrenceProcessorService(taskRepo.Object, recurrenceRepo.Object, recurrenceTaskRepo.Object, dateServiceMock.Object);
+            var service = new RecurrenceCreatorService(taskRepo.Object, recurrenceRepo.Object, recurrenceTaskRepo.Object, dateServiceMock.Object);
             
-            await service.CreateRecurrenceTasksAsync();
+            await service.CreateAsync();
             
             recurrenceTaskRepo.Verify(x => x.SaveAsync(It.Is<RecurrenceEntity>(
                 y => y.DateTime == new DateTime(2019, 9, 12)
