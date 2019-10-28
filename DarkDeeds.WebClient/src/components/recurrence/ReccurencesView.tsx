@@ -1,9 +1,14 @@
 import * as React from 'react'
+import { Button } from 'semantic-ui-react'
 
-export class RecurrencesView extends React.PureComponent {
+interface IProps {
+    isCreatingRecurrences: boolean
+    createRecurrences: () => void
+}
+export class RecurrencesView extends React.PureComponent<IProps> {
     public render() {
         return (
-            <div>Hello World!</div>
+            <Button onClick={this.props.createRecurrences} size='mini' loading={this.props.isCreatingRecurrences}>Create Recurrences</Button>
         )
     }
 }

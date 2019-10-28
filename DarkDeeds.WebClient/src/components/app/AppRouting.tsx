@@ -3,8 +3,8 @@ import { Route, Switch } from 'react-router-dom'
 import AppAuthWrapper from '../../containers/AppAuthWrapper'
 import Overview from '../../containers/Overview'
 import Settings from '../../containers/Settings'
+import RecurrencesView from '../../containers/RecurrencesView'
 import { Day } from '../day'
-import { RecurrencesView } from '../recurrence'
 import { NotFound } from './'
 
 export class AppRouting extends React.PureComponent {
