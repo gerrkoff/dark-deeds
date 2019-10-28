@@ -18,7 +18,7 @@ namespace DarkDeeds.Api.Controllers
 
         [Route("create")]
         [HttpPost]
-        public Task Create()
+        public Task<int> Create()
         {
             return _recurrenceCreatorService.CreateAsync(GetUser().UserId);
         }

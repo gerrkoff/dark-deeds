@@ -10,8 +10,8 @@ export function createRecurrences() {
         dispatch({ type: actions.RECURRENCESVIEW_CREATING_RECURRENCES_PROCESSING })
 
         try {
-            await recurrencesViewApi.createRecurrences()
-            toastService.success('hurray')
+            const createdRecurrencesCount = await recurrencesViewApi.createRecurrences()
+            toastService.success(`${createdRecurrencesCount} recurrences were created`)
         } catch (err) {
             toastService.errorProcess('creating recurrences')
         }

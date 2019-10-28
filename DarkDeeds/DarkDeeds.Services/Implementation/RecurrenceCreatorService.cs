@@ -35,8 +35,9 @@ namespace DarkDeeds.Services.Implementation
             _logger = logger;
         }
 
-        public async Task CreateAsync(string userId)
+        public async Task<int> CreateAsync(string userId)
         {
+            var createdRecurrencesCount = 0;
             List<PlannedRecurrenceEntity> plannedRecurrences = await _plannedRecurrenceRepository
                 .GetAll()
                 .Where(x => string.Equals(x.UserId, userId))
@@ -51,15 +52,18 @@ namespace DarkDeeds.Services.Implementation
                         x => x.PlannedRecurrenceId == plannedRecurrence.Id && x.DateTime == date);
                     
                     if (alreadyExists)
-                        continue;;
+                        continue;
                     
                     TaskEntity task = CreateTaskFromRecurrence(plannedRecurrence, date);
                     await _taskRepository.SaveAsync(task);
                     // TODO: notify about task created
                     await _recurrenceRepository.SaveAsync(
                         CreateRecurrenceEntity(plannedRecurrence.Id, task.Id, date));
+                    createdRecurrencesCount++;
                 }
             }
+
+            return createdRecurrencesCount;
         }
 
         // TODO: parse task text
