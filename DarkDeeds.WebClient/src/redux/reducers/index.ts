@@ -6,6 +6,7 @@ import { tasks } from './tasks'
 import { general } from './general'
 import { telegramIntegration } from './telegramIntegration'
 import { settings } from './settings'
+import { recurrencesView } from './recurrencesView'
 
 const rootReducer = combineReducers({
     editTask,
@@ -14,7 +15,8 @@ const rootReducer = combineReducers({
     tasks,
     general,
     telegramIntegration,
-    settings
+    settings,
+    recurrencesView
 })
 
 export default rootReducer

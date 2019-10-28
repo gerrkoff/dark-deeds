@@ -1,18 +1,17 @@
 import { connect } from 'react-redux'
 import { RecurrencesView } from '../components/recurrence'
-// import { signin, signup, switchForm } from '../redux/actions'
+import { createRecurrences } from '../redux/actions'
 import { IAppState } from '../redux/types'
 
-function mapStateToProps({ }: IAppState) {
+function mapStateToProps({ recurrencesView }: IAppState) {
     return {
-        isCreatingRecurrences: true
+        isCreatingRecurrences: recurrencesView.isCreatingRecurrences
     }
 }
 
 function mapDispatchToProps(dispatch: any) {
     return {
-        createRecurrences: () => console.log('test')
-        // signup: (username: string, password: string) => dispatch(signup(username, password)),
+        createRecurrences: () => dispatch(createRecurrences())
     }
 }
 

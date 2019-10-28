@@ -5,6 +5,7 @@ import { ILoginState } from './login'
 import { IGeneralState } from './general'
 import { ITelegramIntegration } from './telegramIntegration'
 import { ISettings } from './settings'
+import { IRecurrencesViewState } from './recurrencesView'
 
 export interface IAppState {
     router: any
@@ -15,6 +16,7 @@ export interface IAppState {
     general: IGeneralState
     telegramIntegration: ITelegramIntegration
     settings: ISettings
+    recurrencesView: IRecurrencesViewState
 }
 
 export * from './tasks'
@@ -24,3 +26,4 @@ export * from './login'
 export * from './general'
 export * from './telegramIntegration'
 export * from './settings'
+export * from './recurrencesView'
