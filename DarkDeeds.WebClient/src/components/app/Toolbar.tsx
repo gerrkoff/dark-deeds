@@ -11,7 +11,7 @@ export class Toolbar extends React.PureComponent<IProps> {
         return (
             <Menu widths={3} fluid={true} inverted={true} borderless={true} size='mini' id='app-toolbar'>
                 {renderMenuItem(this.props.navigateTo, '/', 'calendar', this.props.path)}
-                {renderMenuItem(this.props.navigateTo, '/day/20181001', 'tasks', this.props.path)}
+                {renderMenuItem(this.props.navigateTo, '/recurrence', 'tasks', this.props.path)}
                 {renderMenuItem(this.props.navigateTo, '/settings', 'settings', this.props.path)}
             </Menu>
         )
