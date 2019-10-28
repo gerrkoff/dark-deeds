@@ -7,7 +7,7 @@ using DarkDeeds.Enums;
 using DarkDeeds.Services.Implementation;
 using Xunit;
 
-namespace DarkDeeds.Tests.Services
+namespace DarkDeeds.Tests.Services.TaskServiceTests
 {
     public partial class TaskServiceTest
     {

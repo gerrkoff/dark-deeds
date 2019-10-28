@@ -12,5 +12,7 @@ namespace DarkDeeds.Data.Context
         
         public DbSet<TaskEntity> Tasks { get; set; }
         public DbSet<SettingsEntity> Settings { get; set; }
+        public DbSet<PlannedRecurrenceEntity> PlannedRecurrences { get; set; }
+        public DbSet<RecurrenceEntity> Recurrences { get; set; }
     }
 }

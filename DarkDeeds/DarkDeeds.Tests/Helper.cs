@@ -14,5 +14,13 @@ namespace DarkDeeds.Tests
             repoMock.Setup(x => x.GetAll()).Returns(values.AsQueryable());
             return repoMock;
         }
+        
+        public static Mock<IRepositoryNonDeletable<T>> CreateRepoNonDeletableMock<T>(params T[] values)
+            where T : BaseEntity
+        {
+            var repoMock = new Mock<IRepositoryNonDeletable<T>>();
+            repoMock.Setup(x => x.GetAll()).Returns(values.AsQueryable());
+            return repoMock;
+        }
     }
 }

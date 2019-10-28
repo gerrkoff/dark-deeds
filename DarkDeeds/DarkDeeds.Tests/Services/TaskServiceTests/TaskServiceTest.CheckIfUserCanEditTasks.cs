@@ -2,11 +2,10 @@ using System.Threading.Tasks;
 using DarkDeeds.Common.Exceptions;
 using DarkDeeds.Data.Entity;
 using DarkDeeds.Models;
-using DarkDeeds.Models.Entity;
 using DarkDeeds.Services.Implementation;
 using Xunit;
 
-namespace DarkDeeds.Tests.Services
+namespace DarkDeeds.Tests.Services.TaskServiceTests
 {
     public partial class TaskServiceTest : BaseTest
     {
