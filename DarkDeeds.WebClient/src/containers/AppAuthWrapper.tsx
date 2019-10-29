@@ -2,7 +2,7 @@ import { push } from 'connected-react-router'
 import { connect } from 'react-redux'
 import { AppAuthWrapper } from '../components/app'
 import { Task, TaskLoadingStateEnum } from '../models'
-import { initialLoadTasks, openEditTaskModal, initialLogin, loadGeneralInfo, taskHubSave, taskHubStart, taskHubStop, loadSettings } from '../redux/actions'
+import { initialLoadTasks, openEditTaskModal, initialLogin, loadGeneralInfo, taskHubSave, taskHubStart, taskHubStop, loadSettings, createRecurrences } from '../redux/actions'
 import { IAppState } from '../redux/types'
 
 function mapStateToProps({ router, tasks, login }: IAppState) {
@@ -27,7 +27,8 @@ function mapDispatchToProps(dispatch: any) {
         loadGeneralInfo: () => dispatch(loadGeneralInfo()),
         startTaskHub: () => dispatch(taskHubStart()),
         stopTaskHub: () => dispatch(taskHubStop()),
-        loadSettings: () => dispatch(loadSettings())
+        loadSettings: () => dispatch(loadSettings()),
+        createRecurrences: () => dispatch(createRecurrences())
     }
 }
 

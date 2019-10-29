@@ -1,11 +1,13 @@
 import * as React from 'react'
-import { di, diToken, KeyConstants } from '../../di'
+import { di, diToken, KeyConstants, ToastService } from '../../di'
 
 interface IProps {
     openEditTask: () => void
+    createRecurrences: () => void
 }
 export class Shortcuts extends React.PureComponent<IProps> {
     private keyConstants = di.get<KeyConstants>(diToken.KeyConstants)
+    private toastService = di.get<ToastService>(diToken.ToastService)
 
     private isCmdDownL: boolean = false
     private isCmdDownR: boolean = false
@@ -28,6 +30,14 @@ export class Shortcuts extends React.PureComponent<IProps> {
         if (this.check(e.code, [this.keyConstants.ENTER]) && (this.isCmdDownL || this.isCmdDownR)) {
             this.props.openEditTask()
         }
+        if (this.check(e.code, [this.keyConstants.ENTER, this.keyConstants.N]) && e.ctrlKey) {
+            this.props.openEditTask()
+        }
+        if (this.check(e.code, [this.keyConstants.R]) && e.ctrlKey) {
+            this.toastService.info('Launch creating recurrences')
+            this.props.createRecurrences()
+        }
+
         if (this.check(e.code, [this.keyConstants.CMD_LEFT, this.keyConstants.CMD_LEFT_FIREFOX])) {
             this.isCmdDownL = true
         }
@@ -37,9 +47,6 @@ export class Shortcuts extends React.PureComponent<IProps> {
     }
 
     private handleGlobalKeyUp = (e: KeyboardEvent) => {
-        if (this.check(e.code, [this.keyConstants.ENTER, this.keyConstants.N]) && e.ctrlKey) {
-            this.props.openEditTask()
-        }
         if (this.check(e.code, [this.keyConstants.CMD_LEFT, this.keyConstants.CMD_LEFT_FIREFOX])) {
             this.isCmdDownL = false
         }

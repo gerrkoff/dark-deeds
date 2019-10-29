@@ -21,6 +21,7 @@ export interface IAppProps {
     startTaskHub: () => void
     stopTaskHub: () => void
     loadSettings: () => void
+    createRecurrences: () => void
 }
 export class App extends React.PureComponent<IAppProps> {
     private saveTaskInterval: NodeJS.Timeout
@@ -51,7 +52,7 @@ export class App extends React.PureComponent<IAppProps> {
                 <Dimmer active={this.props.appLoading}>
                     <Loader />
                 </Dimmer>
-                <Shortcuts openEditTask={this.props.openEditTask} />
+                <Shortcuts openEditTask={this.props.openEditTask} createRecurrences={this.props.createRecurrences} />
                 <ModalConfirm />
                 <IndicatorPanel />
             </React.Fragment>

@@ -8,4 +8,5 @@ export class KeyConstants {
     public readonly CMD_RIGHT_FIREFOX = 'OSRight'
     public readonly ENTER = 'Enter'
     public readonly N = 'KeyN'
+    public readonly R = 'KeyR'
 }
