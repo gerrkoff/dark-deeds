@@ -1,6 +1,9 @@
 import * as React from 'react'
+import { Grid } from 'semantic-ui-react'
 import { PlannedRecurrence } from '../../models'
 import { RecurrenceList, RecurrencesSidePanel } from '.'
+
+import '../../styles/recurrences-view.css'
 
 interface IProps {
     isCreatingRecurrences: boolean
@@ -8,6 +11,8 @@ interface IProps {
     plannedRecurrences: PlannedRecurrence[]
     createRecurrences: () => void
     loadRecurrences: () => void
+    addRecurrence: () => void
+    saveRecurrences: () => void
 }
 export class RecurrencesView extends React.PureComponent<IProps> {
 
@@ -17,10 +22,18 @@ export class RecurrencesView extends React.PureComponent<IProps> {
 
     public render() {
         return (
-            <React.Fragment>
-                <RecurrenceList isLoadingRecurrences={this.props.isLoadingRecurrences} plannedRecurrences={this.props.plannedRecurrences} />
-                <RecurrencesSidePanel isCreatingRecurrences={this.props.isCreatingRecurrences} createRecurrences={this.props.createRecurrences} />
-            </React.Fragment>
+            <Grid>
+                <Grid.Column width={12}>
+                    <RecurrenceList isLoadingRecurrences={this.props.isLoadingRecurrences} plannedRecurrences={this.props.plannedRecurrences} />
+                </Grid.Column>
+                <Grid.Column width={4} textAlign='center'>
+                    <RecurrencesSidePanel
+                        isCreatingRecurrences={this.props.isCreatingRecurrences}
+                        addRecurrence={this.props.addRecurrence}
+                        saveRecurrences={this.props.saveRecurrences}
+                        createRecurrences={this.props.createRecurrences} />
+                </Grid.Column>
+            </Grid>
         )
     }
 }

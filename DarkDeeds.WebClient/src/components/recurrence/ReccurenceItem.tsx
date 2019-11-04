@@ -13,7 +13,7 @@ export class RecurrenceItem extends React.PureComponent<IProps> {
         const text = this.recurrenceService.print(this.props.plannedRecurrence)
         return (
             <Segment inverted raised>
-                <span>{ text }</span>
+                <span className='recurrences-view-recurrence-item'>{ text }</span>
             </Segment>
         )
     }

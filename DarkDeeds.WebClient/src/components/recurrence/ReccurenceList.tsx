@@ -10,7 +10,7 @@ export class RecurrenceList extends React.PureComponent<IProps> {
 
     public render() {
         return (
-            <div>
+            <div className='recurrences-view-recurrence-list'>
                 {this.props.isLoadingRecurrences
                     ? this.renderLoader()
                     : this.renderList(this.props.plannedRecurrences)

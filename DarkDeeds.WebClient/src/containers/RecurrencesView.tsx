@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import { RecurrencesView } from '../components/recurrence'
-import { createRecurrences, loadRecurrences } from '../redux/actions'
+import { createRecurrences, loadRecurrences, addRecurrence, saveRecurrences } from '../redux/actions'
 import { IAppState } from '../redux/types'
 
 function mapStateToProps({ recurrencesView }: IAppState) {
@@ -14,7 +14,9 @@ function mapStateToProps({ recurrencesView }: IAppState) {
 function mapDispatchToProps(dispatch: any) {
     return {
         createRecurrences: () => dispatch(createRecurrences()),
-        loadRecurrences: () => dispatch(loadRecurrences())
+        loadRecurrences: () => dispatch(loadRecurrences()),
+        addRecurrence: () => dispatch(addRecurrence()),
+        saveRecurrences: () => dispatch(saveRecurrences())
     }
 }
 

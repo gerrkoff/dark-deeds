@@ -32,3 +32,15 @@ export function loadRecurrences() {
         }
     }
 }
+
+export function addRecurrence() {
+    return async(dispatch: Dispatch<actions.RecurrencesViewAction>) => {
+        toastService.info('add recurrence')
+    }
+}
+
+export function saveRecurrences() {
+    return async(dispatch: Dispatch<actions.RecurrencesViewAction>) => {
+        toastService.info('save recurrences')
+    }
+}
