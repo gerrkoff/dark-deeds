@@ -17,5 +17,5 @@ export default {
     TaskApi: Symbol.for('TaskApi'),
     TaskHubApi: Symbol.for('TaskHubApi'),
     TelegramIntegrationApi: Symbol.for('TelegramIntegrationApi'),
-    RecurrencesViewApi: Symbol.for('RecurrencesViewApi')
+    RecurrencesApi: Symbol.for('RecurrencesApi')
 }

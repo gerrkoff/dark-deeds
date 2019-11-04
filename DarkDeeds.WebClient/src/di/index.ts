@@ -20,7 +20,7 @@ import { SettingsApi } from './api/settings-api'
 import { TaskApi } from './api/task-api'
 import { TaskHubApi } from './api/task-hub-api'
 import { TelegramIntegrationApi } from './api/telegram-integration-api'
-import { RecurrencesViewApi } from './api/recurrences-view-api'
+import { RecurrencesApi } from './api/recurrences-api'
 
 const container = new Container({ defaultScope: 'Singleton' })
 
@@ -42,7 +42,7 @@ container.bind<SettingsApi>(token.SettingsApi).to(SettingsApi)
 container.bind<TaskApi>(token.TaskApi).to(TaskApi)
 container.bind<TaskHubApi>(token.TaskHubApi).to(TaskHubApi)
 container.bind<TelegramIntegrationApi>(token.TelegramIntegrationApi).to(TelegramIntegrationApi)
-container.bind<RecurrencesViewApi>(token.RecurrencesViewApi).to(RecurrencesViewApi)
+container.bind<RecurrencesApi>(token.RecurrencesApi).to(RecurrencesApi)
 
 export {
     container as di,
@@ -66,5 +66,5 @@ export {
     TaskApi,
     TaskHubApi,
     TelegramIntegrationApi,
-    RecurrencesViewApi
+    RecurrencesApi
 }

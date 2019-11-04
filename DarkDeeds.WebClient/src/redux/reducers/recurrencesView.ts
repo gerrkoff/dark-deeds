@@ -2,7 +2,9 @@ import { IRecurrencesViewState } from '../types'
 import * as actions from '../constants/recurrencesView'
 
 const inittialState: IRecurrencesViewState = {
-    isCreatingRecurrences: false
+    isCreatingRecurrences: false,
+    isLoadingRecurrences: false,
+    plannedRecurrences: []
 }
 
 export function recurrencesView(state: IRecurrencesViewState = inittialState, action: actions.RecurrencesViewAction): IRecurrencesViewState {
@@ -14,6 +16,19 @@ export function recurrencesView(state: IRecurrencesViewState = inittialState, ac
         case actions.RECURRENCESVIEW_CREATING_RECURRENCES_FINISH:
             return { ...state,
                 isCreatingRecurrences: false
+            }
+        case actions.RECURRENCESVIEW_LOADING_RECURRENCES_PROCESSING:
+            return { ...state,
+                isCreatingRecurrences: true
+            }
+        case actions.RECURRENCESVIEW_LOADING_RECURRENCES_FAIL:
+            return { ...state,
+                isCreatingRecurrences: false
+            }
+        case actions.RECURRENCESVIEW_LOADING_RECURRENCES_SUCCESS:
+            return { ...state,
+                isCreatingRecurrences: false,
+                plannedRecurrences: action.plannedRecurrences
             }
     }
     return state
