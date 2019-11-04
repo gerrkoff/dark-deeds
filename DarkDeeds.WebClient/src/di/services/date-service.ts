@@ -3,6 +3,7 @@ import { IDateable } from '../../models'
 
 @injectable()
 export class DateService {
+    public readonly daysLong = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
     private readonly days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 
     public toDateFromSpecialFormat(s: string): Date | null {
