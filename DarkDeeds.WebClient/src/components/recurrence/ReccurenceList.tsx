@@ -20,6 +20,7 @@ export class RecurrenceList extends React.PureComponent<IProps> {
     }
 
     private renderLoader() {
+        // TODO: implement
         return (
             <React.Fragment>
                 Loading...
