@@ -65,6 +65,7 @@ namespace DarkDeeds.Api
             services.AddScoped<ISettingsService, SettingsService>();
             services.AddScoped<IRecurrenceCreatorService, RecurrenceCreatorService>();
             services.AddScoped<IDateService, DateService>();
+            services.AddScoped<IRecurrenceService, RecurrenceService>();
             
             services.AddScoped<IBotCommandParserService, BotCommandParserService>();
             services.AddScoped<IShowTodoCommandProcessor, ShowTodoCommandProcessor>();
