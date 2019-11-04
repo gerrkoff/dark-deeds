@@ -46,8 +46,13 @@ export class DateService {
         const fixed = dateables.map(x => ({ ...x }))
         fixed.forEach(x => {
             if (x.date) {
-                x.date = new Date(x.date)
-                x.date.setMinutes(x.date.getMinutes() + x.date.getTimezoneOffset())
+                x.date = this.fixAfterServer(x.date)
+            }
+            if (x.startDate) {
+                x.startDate = this.fixAfterServer(x.startDate)
+            }
+            if (x.endDate) {
+                x.endDate = this.fixAfterServer(x.endDate)
             }
         })
         return fixed
@@ -57,8 +62,13 @@ export class DateService {
         const fixed = dateables.map(x => ({ ...x }))
         fixed.forEach(x => {
             if (x.date) {
-                x.date = new Date(x.date)
-                x.date.setMinutes(x.date.getMinutes() - x.date.getTimezoneOffset())
+                x.date = this.fixBeforeServer(x.date)
+            }
+            if (x.startDate) {
+                x.startDate = this.fixBeforeServer(x.startDate)
+            }
+            if (x.endDate) {
+                x.endDate = this.fixBeforeServer(x.endDate)
             }
         })
         return fixed
@@ -72,5 +82,17 @@ export class DateService {
             return false
         }
         return dateX.getTime() === dateY.getTime()
+    }
+
+    private fixAfterServer(date: Date): Date {
+        const fixed = new Date(date)
+        fixed.setMinutes(fixed.getMinutes() + fixed.getTimezoneOffset())
+        return fixed
+    }
+
+    private fixBeforeServer(date: Date): Date {
+        const fixed = new Date(date)
+        fixed.setMinutes(fixed.getMinutes() - fixed.getTimezoneOffset())
+        return fixed
     }
 }

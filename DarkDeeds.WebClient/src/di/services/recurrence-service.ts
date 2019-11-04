@@ -11,15 +11,29 @@ export class RecurrenceService {
     ) {}
 
     public print(recurrence: PlannedRecurrence): string {
-        let result = `${recurrence.task}, `
+        let result = recurrence.task
+        result += `, ${this.printRepeatativePart(recurrence)}`
+        result += `, ${this.printBordersPart(recurrence)}`
+        return result
+    }
 
+    private printBordersPart(recurrence: PlannedRecurrence): string {
+        let result = `from ${this.printDate(recurrence.startDate)}`
+
+        if (recurrence.endDate !== null) {
+            result += ` untill ${this.printDate(recurrence.endDate)}`
+        }
+
+        return result
+    }
+
+    private printRepeatativePart(recurrence: PlannedRecurrence): string {
         // Monthly
         if (recurrence.everyMonthDay !== null &&
             recurrence.everyNthDay === null &&
             recurrence.everyWeekday === null) {
 
-            result += `monthly on ${this.printMonthDays(recurrence.everyMonthDay)}`
-            return result
+            return `monthly on ${this.printMonthDays(recurrence.everyMonthDay)}`
         }
 
         // Weekly
@@ -36,29 +50,47 @@ export class RecurrenceService {
                 weekdayList.indexOf(4) >= -1 &&
                 weekdayList.indexOf(5) >= -1) {
 
-                result += 'every weekday (Monday to Friday)'
+                return 'every weekday (Monday to Friday)'
             } else {
-                result += `weekly on ${this.printWeekDays(weekdayList)}`
+                return `weekly on ${this.printWeekDays(weekdayList)}`
             }
-
-            return result
         }
 
         // Daily
-        if (recurrence.everyNthDay !== null &&
+        if (recurrence.everyNthDay === 1 &&
             recurrence.everyMonthDay === null &&
             recurrence.everyWeekday === null) {
 
-            result += `daily`
-
-            return result
+            return `daily`
         }
 
+        let result = ''
         if (recurrence.everyNthDay !== null) {
             result += this.printNthDays(recurrence.everyNthDay)
         }
 
-        return result
+        if (recurrence.everyMonthDay !== null || recurrence.everyWeekday !== null) {
+            result += ' on '
+
+            if (recurrence.everyWeekday !== null) {
+                const weekdayList = this.evalWeekdayList(recurrence.everyWeekday)
+                result += this.printWeekDays(weekdayList)
+
+                if (recurrence.everyMonthDay !== null) {
+                    result += ' and '
+                }
+            }
+
+            if (recurrence.everyMonthDay !== null) {
+                result += this.printMonthDays(recurrence.everyMonthDay)
+            }
+        }
+
+        return result === '' ? 'no repeats' : result
+    }
+
+    private printDate(date: Date): string {
+        return date.toLocaleDateString('en-US')
     }
 
     private printNthDays(nthDays: number): string {

@@ -1,5 +1,5 @@
 import { injectable, inject } from 'inversify'
-import { Api } from '..'
+import { Api, DateService } from '..'
 import diToken from '../token'
 import { PlannedRecurrence } from '../../models'
 
@@ -7,14 +7,16 @@ import { PlannedRecurrence } from '../../models'
 export class RecurrencesApi {
 
     public constructor(
-        @inject(diToken.Api) private api: Api
+        @inject(diToken.Api) private api: Api,
+        @inject(diToken.DateService) private dateService: DateService
     ) {}
 
     public createRecurrences(): Promise<number> {
-        return this.api.post('api/recurrences/create', null)
+        return this.api.post<number>('api/recurrences/create', null)
     }
 
-    public loadRecurrences(): Promise<PlannedRecurrence[]> {
-        return this.api.get('api/recurrences')
+    public async loadRecurrences(): Promise<PlannedRecurrence[]> {
+        const result = await this.api.get<PlannedRecurrence[]>('api/recurrences')
+        return this.dateService.adjustDatesAfterLoading(result) as PlannedRecurrence[]
     }
 }
