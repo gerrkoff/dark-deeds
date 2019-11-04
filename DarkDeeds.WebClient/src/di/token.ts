@@ -8,6 +8,7 @@ export default {
     TaskService: Symbol.for('TaskService'),
     ToastService: Symbol.for('ToastService'),
     UtilsService: Symbol.for('UtilsService'),
+    RecurrenceService: Symbol.for('RecurrenceService'),
 
     Api: Symbol.for('Api'),
     GeneralApi: Symbol.for('GeneralApi'),
@@ -17,5 +18,5 @@ export default {
     TaskApi: Symbol.for('TaskApi'),
     TaskHubApi: Symbol.for('TaskHubApi'),
     TelegramIntegrationApi: Symbol.for('TelegramIntegrationApi'),
-    RecurrencesViewApi: Symbol.for('RecurrencesViewApi')
+    RecurrencesApi: Symbol.for('RecurrencesApi')
 }

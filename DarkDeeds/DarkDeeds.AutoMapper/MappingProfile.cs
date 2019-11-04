@@ -23,6 +23,8 @@ namespace DarkDeeds.AutoMapper
                 .ForMember(x => x.UserAuthenticated, e => e.MapFrom(x => !string.IsNullOrEmpty(x.Username)));
 
             CreateMap<SettingsEntity, SettingsDto>().ReverseMap();
+            
+            CreateMap<PlannedRecurrenceEntity, PlannedRecurrenceDto>().ReverseMap();
         }
     }
 }

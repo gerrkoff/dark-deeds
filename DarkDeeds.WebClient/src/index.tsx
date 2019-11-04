@@ -40,5 +40,6 @@ ReactDOM.render(
     document.getElementById('root') as HTMLElement
 )
 
+// TODO: refactor components-containers
 // TODO: research
 // registerServiceWorker()

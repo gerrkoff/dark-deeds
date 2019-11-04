@@ -11,6 +11,7 @@ import { TaskConverter } from './services/task-converter'
 import { TaskMoveService } from './services/task-move-service'
 import { TaskService } from './services/task-service'
 import { ToastService } from './services/toast-service'
+import { RecurrenceService } from './services/recurrence-service'
 
 import { Api } from './api/api'
 import { GeneralApi } from './api/general-api'
@@ -20,7 +21,7 @@ import { SettingsApi } from './api/settings-api'
 import { TaskApi } from './api/task-api'
 import { TaskHubApi } from './api/task-hub-api'
 import { TelegramIntegrationApi } from './api/telegram-integration-api'
-import { RecurrencesViewApi } from './api/recurrences-view-api'
+import { RecurrencesApi } from './api/recurrences-api'
 
 const container = new Container({ defaultScope: 'Singleton' })
 
@@ -33,6 +34,7 @@ container.bind<TaskMoveService>(token.TaskMoveService).to(TaskMoveService)
 container.bind<TaskService>(token.TaskService).to(TaskService)
 container.bind<ToastService>(token.ToastService).to(ToastService)
 container.bind<UtilsService>(token.UtilsService).to(UtilsService)
+container.bind<RecurrenceService>(token.RecurrenceService).to(RecurrenceService)
 
 container.bind<Api>(token.Api).to(Api)
 container.bind<GeneralApi>(token.GeneralApi).to(GeneralApi)
@@ -42,7 +44,7 @@ container.bind<SettingsApi>(token.SettingsApi).to(SettingsApi)
 container.bind<TaskApi>(token.TaskApi).to(TaskApi)
 container.bind<TaskHubApi>(token.TaskHubApi).to(TaskHubApi)
 container.bind<TelegramIntegrationApi>(token.TelegramIntegrationApi).to(TelegramIntegrationApi)
-container.bind<RecurrencesViewApi>(token.RecurrencesViewApi).to(RecurrencesViewApi)
+container.bind<RecurrencesApi>(token.RecurrencesApi).to(RecurrencesApi)
 
 export {
     container as di,
@@ -57,6 +59,7 @@ export {
     TaskMoveService,
     TaskService,
     ToastService,
+    RecurrenceService,
 
     Api,
     GeneralApi,
@@ -66,5 +69,5 @@ export {
     TaskApi,
     TaskHubApi,
     TelegramIntegrationApi,
-    RecurrencesViewApi
+    RecurrencesApi
 }

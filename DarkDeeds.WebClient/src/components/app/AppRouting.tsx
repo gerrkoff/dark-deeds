@@ -15,7 +15,7 @@ export class AppRouting extends React.PureComponent {
                     <Route path='/' exact={true} component={Overview} />
                     <Route path='/day/:date' component={Day} />
                     <Route path='/settings' component={Settings} />
-                    <Route path='/recurrence' component={RecurrencesView} />
+                    <Route path='/recurrences' component={RecurrencesView} />
                     <Route path='*' component={NotFound} />
                 </Switch>
             </AppAuthWrapper>

@@ -1,3 +1,5 @@
 export interface IDateable {
-    date: Date | null
+    date?: Date | null
+    startDate?: Date | null
+    endDate?: Date | null
 }
