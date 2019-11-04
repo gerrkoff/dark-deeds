@@ -8,6 +8,7 @@ export default {
     TaskService: Symbol.for('TaskService'),
     ToastService: Symbol.for('ToastService'),
     UtilsService: Symbol.for('UtilsService'),
+    RecurrenceService: Symbol.for('RecurrenceService'),
 
     Api: Symbol.for('Api'),
     GeneralApi: Symbol.for('GeneralApi'),

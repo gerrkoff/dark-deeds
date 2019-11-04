@@ -5,6 +5,8 @@ namespace DarkDeeds.Models
 {
     public class PlannedRecurrenceDto
     {
+        public int Id { get; set; }
+        
         public string Task { get; set; }
         
         public DateTime StartDate { get; set; }

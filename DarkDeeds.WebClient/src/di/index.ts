@@ -11,6 +11,7 @@ import { TaskConverter } from './services/task-converter'
 import { TaskMoveService } from './services/task-move-service'
 import { TaskService } from './services/task-service'
 import { ToastService } from './services/toast-service'
+import { RecurrenceService } from './services/recurrence-service'
 
 import { Api } from './api/api'
 import { GeneralApi } from './api/general-api'
@@ -33,6 +34,7 @@ container.bind<TaskMoveService>(token.TaskMoveService).to(TaskMoveService)
 container.bind<TaskService>(token.TaskService).to(TaskService)
 container.bind<ToastService>(token.ToastService).to(ToastService)
 container.bind<UtilsService>(token.UtilsService).to(UtilsService)
+container.bind<RecurrenceService>(token.RecurrenceService).to(RecurrenceService)
 
 container.bind<Api>(token.Api).to(Api)
 container.bind<GeneralApi>(token.GeneralApi).to(GeneralApi)
@@ -57,6 +59,7 @@ export {
     TaskMoveService,
     TaskService,
     ToastService,
+    RecurrenceService,
 
     Api,
     GeneralApi,
