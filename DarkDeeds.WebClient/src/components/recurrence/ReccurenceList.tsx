@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Segment, Header, Icon, Button } from 'semantic-ui-react'
+import { Segment, Header, Icon, Button, Placeholder } from 'semantic-ui-react'
 import { PlannedRecurrence } from '../../models'
 import { RecurrenceItem } from '.'
 
@@ -22,11 +22,13 @@ export class RecurrenceList extends React.PureComponent<IProps> {
     }
 
     private renderLoader() {
-        // TODO: implement
         return (
-            <React.Fragment>
-                Loading...
-            </React.Fragment>
+            <Segment inverted raised className='recurrences-view-recurrence-list-loader'>
+                <Placeholder inverted>
+                    <Placeholder.Line length='medium' />
+                    <Placeholder.Line length='full' />
+                </Placeholder>
+            </Segment>
         )
     }
 
