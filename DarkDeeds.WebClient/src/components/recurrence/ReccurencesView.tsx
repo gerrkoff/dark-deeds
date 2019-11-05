@@ -38,6 +38,7 @@ export class RecurrencesView extends React.PureComponent<IProps> {
                         isCreatingRecurrences={this.props.isCreatingRecurrences}
                         addRecurrence={this.props.addRecurrence}
                         saveRecurrences={this.props.saveRecurrences}
+                        loadRecurrences={this.props.loadRecurrences}
                         createRecurrences={this.props.createRecurrences} />
                 </Grid.Column>
             </Grid>

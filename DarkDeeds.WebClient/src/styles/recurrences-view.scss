@@ -25,8 +25,12 @@
         margin-left: 0;
         margin-right: 0;
 
-        button {
-            min-width: 9.5rem;
+        .recurrences-view-side-panel-group-1 button {
+            min-width: 8rem;
+        }
+
+        .recurrences-view-side-panel-group-2 button {
+            min-width: 12rem;
         }
     }
 }
