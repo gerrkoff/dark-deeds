@@ -25,7 +25,10 @@ export class RecurrencesView extends React.PureComponent<IProps> {
         return (
             <Grid>
                 <Grid.Column width={12}>
-                    <RecurrenceList isLoadingRecurrences={this.props.isLoadingRecurrences} plannedRecurrences={this.props.plannedRecurrences} />
+                    <RecurrenceList
+                        isLoadingRecurrences={this.props.isLoadingRecurrences}
+                        plannedRecurrences={this.props.plannedRecurrences}
+                        addRecurrence={this.props.addRecurrence} />
                 </Grid.Column>
                 <Grid.Column width={4} textAlign='center'>
                     <RecurrencesSidePanel

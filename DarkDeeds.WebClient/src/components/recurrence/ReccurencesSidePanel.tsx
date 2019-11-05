@@ -20,7 +20,7 @@ export class RecurrencesSidePanel extends React.PureComponent<IProps> {
                             <Button onClick={this.props.addRecurrence} size='mini' loading={this.props.isCreatingRecurrences}>Add Recurrence</Button>
                         </Menu.Item>
                         <Menu.Item>
-                            <Button onClick={this.props.createRecurrences} size='mini' loading={this.props.isCreatingRecurrences}>Save Recurrences</Button>
+                            <Button onClick={this.props.saveRecurrences} size='mini' loading={this.props.isCreatingRecurrences}>Save Recurrences</Button>
                         </Menu.Item>
                     </Menu.Menu>
                 </Menu.Item>
