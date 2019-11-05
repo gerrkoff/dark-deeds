@@ -14,6 +14,12 @@
     font-size: $font-less-normal;
 }
 
-.recurrences-view-empty-state {
-    font-size: $font-less-normal !important;
+#recurrences-view-empty-state {
+    font-size: $font-less-normal;
+}
+
+#recurrences-view-side-panel {
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
 }
