@@ -13,7 +13,6 @@ interface IProps {
 export class RecurrencesSidePanel extends React.PureComponent<IProps> {
 
     public render() {
-        // TODO: icons
         // TODO: loadings
         return (
             <Menu vertical secondary className='recurrences-view-side-panel'>
