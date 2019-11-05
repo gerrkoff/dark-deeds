@@ -5,6 +5,7 @@ import { PlannedRecurrence } from '../../models'
 
 interface IProps {
     plannedRecurrence: PlannedRecurrence
+    editRecurrence: (id: number) => void
 }
 export class RecurrenceItem extends React.PureComponent<IProps> {
     private recurrenceService = di.get<RecurrenceService>(diToken.RecurrenceService)
@@ -12,7 +13,11 @@ export class RecurrenceItem extends React.PureComponent<IProps> {
     public render() {
         const print = this.recurrenceService.print(this.props.plannedRecurrence)
         return (
-            <Segment inverted raised className='recurrences-view-recurrence-item'>
+            <Segment
+                inverted raised
+                onClick={() => this.props.editRecurrence(this.props.plannedRecurrence.id)}
+                className='recurrences-view-recurrence-item'>
+
                 <Header as='h4'>{ print.task }</Header>
                 <span>{ print.repeatative }, {print.borders}</span>
             </Segment>

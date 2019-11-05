@@ -7,6 +7,7 @@ interface IProps {
     isLoadingRecurrences: boolean
     plannedRecurrences: PlannedRecurrence[]
     addRecurrence: () => void
+    editRecurrence: (id: number) => void
 }
 export class RecurrenceList extends React.PureComponent<IProps> {
 
@@ -44,7 +45,10 @@ export class RecurrenceList extends React.PureComponent<IProps> {
         return (
             <React.Fragment>
                 {plannedRecurrences.map(x =>
-                    <RecurrenceItem key={x.id} plannedRecurrence={x} />
+                    <RecurrenceItem
+                        key={x.id}
+                        plannedRecurrence={x}
+                        editRecurrence={this.props.editRecurrence} />
                 )}
             </React.Fragment>
         )

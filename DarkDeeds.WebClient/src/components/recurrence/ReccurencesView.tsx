@@ -13,6 +13,7 @@ interface IProps {
     loadRecurrences: () => void
     addRecurrence: () => void
     saveRecurrences: () => void
+    editRecurrence: (id: number) => void
 }
 export class RecurrencesView extends React.PureComponent<IProps> {
 
@@ -27,7 +28,8 @@ export class RecurrencesView extends React.PureComponent<IProps> {
                     <RecurrenceList
                         isLoadingRecurrences={this.props.isLoadingRecurrences}
                         plannedRecurrences={this.props.plannedRecurrences}
-                        addRecurrence={this.props.addRecurrence} />
+                        addRecurrence={this.props.addRecurrence}
+                        editRecurrence={this.props.editRecurrence} />
                 </Grid.Column>
                 <Grid.Column width={4} textAlign='center'>
                     <RecurrencesSidePanel
