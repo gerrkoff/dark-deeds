@@ -59,7 +59,7 @@ export class RecurrenceList extends React.PureComponent<IProps> {
             <React.Fragment>
                 <Segment placeholder raised inverted className='recurrences-view-empty-state'>
                     <Header icon>
-                        <Icon name='file outline' />
+                        <Icon name='sync alternate' />
                         No recurrences have been created yet.
                     </Header>
                     <Button primary size='mini' onClick={this.props.addRecurrence}>Add Recurrence</Button>
