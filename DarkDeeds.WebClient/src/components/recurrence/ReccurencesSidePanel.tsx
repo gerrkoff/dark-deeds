@@ -2,6 +2,8 @@ import * as React from 'react'
 import { Button, Menu } from 'semantic-ui-react'
 
 interface IProps {
+    noRecurrencesCreated: boolean
+    isLoadingRecurrences: boolean
     isCreatingRecurrences: boolean
     createRecurrences: () => void
     addRecurrence: () => void
@@ -17,15 +19,31 @@ export class RecurrencesSidePanel extends React.PureComponent<IProps> {
                 <Menu.Item>
                     <Menu.Menu>
                         <Menu.Item>
-                            <Button onClick={this.props.addRecurrence} size='mini' loading={this.props.isCreatingRecurrences}>Add Recurrence</Button>
+                            <Button
+                                size='mini'
+                                onClick={this.props.addRecurrence}
+                                disabled={this.props.isLoadingRecurrences}>
+                                Add Recurrence
+                            </Button>
                         </Menu.Item>
                         <Menu.Item>
-                            <Button onClick={this.props.saveRecurrences} size='mini' loading={this.props.isCreatingRecurrences}>Save Recurrences</Button>
+                            <Button
+                                size='mini'
+                                onClick={this.props.saveRecurrences}
+                                disabled={this.props.isLoadingRecurrences}>
+                                Save Recurrences
+                            </Button>
                         </Menu.Item>
                     </Menu.Menu>
                 </Menu.Item>
                 <Menu.Item>
-                    <Button onClick={this.props.createRecurrences} size='mini' loading={this.props.isCreatingRecurrences}>Create Recurrences</Button>
+                    <Button
+                        size='mini'
+                        onClick={this.props.createRecurrences}
+                        disabled={this.props.isLoadingRecurrences || this.props.noRecurrencesCreated}
+                        loading={this.props.isCreatingRecurrences}>
+                        Create Recurrences
+                    </Button>
                 </Menu.Item>
             </Menu>
         )

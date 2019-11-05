@@ -21,7 +21,7 @@ export class RecurrencesView extends React.PureComponent<IProps> {
     }
 
     public render() {
-        // TODO: responsiveness
+        // TODO: responsivenes
         return (
             <Grid stackable columns={2}>
                 <Grid.Column width={12}>
@@ -32,6 +32,8 @@ export class RecurrencesView extends React.PureComponent<IProps> {
                 </Grid.Column>
                 <Grid.Column width={4} textAlign='center'>
                     <RecurrencesSidePanel
+                        noRecurrencesCreated={this.props.plannedRecurrences.length === 0}
+                        isLoadingRecurrences={this.props.isLoadingRecurrences}
                         isCreatingRecurrences={this.props.isCreatingRecurrences}
                         addRecurrence={this.props.addRecurrence}
                         saveRecurrences={this.props.saveRecurrences}
