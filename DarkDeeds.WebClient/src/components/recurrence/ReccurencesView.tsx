@@ -23,7 +23,7 @@ export class RecurrencesView extends React.PureComponent<IProps> {
     public render() {
         // TODO: responsivenes
         return (
-            <Grid stackable columns={2}>
+            <Grid stackable columns={2} id='recurrences-view'>
                 <Grid.Column width={12}>
                     <RecurrenceList
                         isLoadingRecurrences={this.props.isLoadingRecurrences}

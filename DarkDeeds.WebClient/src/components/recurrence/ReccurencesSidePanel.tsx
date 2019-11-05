@@ -15,7 +15,7 @@ export class RecurrencesSidePanel extends React.PureComponent<IProps> {
         // TODO: icons
         // TODO: loadings
         return (
-            <Menu vertical secondary id='recurrences-view-side-panel'>
+            <Menu vertical secondary className='recurrences-view-side-panel'>
                 <Menu.Item>
                     <Menu.Menu>
                         <Menu.Item>
