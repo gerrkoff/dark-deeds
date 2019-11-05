@@ -2,14 +2,35 @@
 @import 'shared/colors.scss';
 @import 'shared/fonts.scss';
 
-.recurrences-view-recurrence-list {
-    margin-top: 1rem;
+#recurrences-view {
 
-    .segment {
-        cursor: pointer;
+    .recurrences-view-recurrence-list {
+        margin-top: 1rem;
+
+        .segment {
+            cursor: pointer;
+        }
     }
-}
 
-.recurrences-view-recurrence-item {
-    font-size: $font-less-normal;
+    .recurrences-view-recurrence-item {
+        font-size: $font-less-normal;
+    }
+
+    .recurrences-view-empty-state {
+        font-size: $font-less-normal;
+    }
+
+    .recurrences-view-side-panel {
+        width: 100%;
+        margin-left: 0;
+        margin-right: 0;
+
+        .recurrences-view-side-panel-group-1 button {
+            min-width: 8rem;
+        }
+
+        .recurrences-view-side-panel-group-2 button {
+            min-width: 12rem;
+        }
+    }
 }

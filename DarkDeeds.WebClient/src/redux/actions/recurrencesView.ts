@@ -44,3 +44,9 @@ export function saveRecurrences() {
         toastService.info('save recurrences')
     }
 }
+
+export function editRecurrence(id: number) {
+    return async(dispatch: Dispatch<actions.RecurrencesViewAction>) => {
+        toastService.info('edit recurrence ' + id)
+    }
+}

@@ -19,15 +19,15 @@ export function recurrencesView(state: IRecurrencesViewState = inittialState, ac
             }
         case actions.RECURRENCESVIEW_LOADING_RECURRENCES_PROCESSING:
             return { ...state,
-                isCreatingRecurrences: true
+                isLoadingRecurrences: true
             }
         case actions.RECURRENCESVIEW_LOADING_RECURRENCES_FAIL:
             return { ...state,
-                isCreatingRecurrences: false
+                isLoadingRecurrences: false
             }
         case actions.RECURRENCESVIEW_LOADING_RECURRENCES_SUCCESS:
             return { ...state,
-                isCreatingRecurrences: false,
+                isLoadingRecurrences: false,
                 plannedRecurrences: action.plannedRecurrences
             }
     }

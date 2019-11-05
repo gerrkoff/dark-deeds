@@ -19,5 +19,6 @@ export * from './misc/overview-model'
 export * from './misc/task-model'
 export * from './misc/local-settings'
 export * from './misc/time'
+export * from './misc/planned-recurrence-print'
 
 export * from './interfaces/idateable'
