@@ -14,19 +14,23 @@ export class RecurrenceList extends React.PureComponent<IProps> {
         return (
             <div className='recurrences-view-recurrence-list'>
                 {this.props.isLoadingRecurrences
-                    ? this.renderLoader()
+                    ? this.renderSkeleton()
                     : this.renderList(this.props.plannedRecurrences)
                 }
             </div>
         )
     }
 
-    private renderLoader() {
+    private renderSkeleton() {
         return (
-            <Segment inverted raised className='recurrences-view-recurrence-list-loader'>
+            <Segment inverted raised>
                 <Placeholder inverted>
-                    <Placeholder.Line length='medium' />
-                    <Placeholder.Line length='full' />
+                    <Placeholder.Header>
+                        <Placeholder.Line length='medium' />
+                    </Placeholder.Header>
+                    <Placeholder.Paragraph>
+                        <Placeholder.Line length='full' />
+                    </Placeholder.Paragraph>
                 </Placeholder>
             </Segment>
         )

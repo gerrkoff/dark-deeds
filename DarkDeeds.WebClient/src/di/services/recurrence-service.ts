@@ -1,5 +1,5 @@
 import { injectable, inject } from 'inversify'
-import { PlannedRecurrence, RecurrenceWeekdayEnum } from '../../models'
+import { PlannedRecurrence, RecurrenceWeekdayEnum, PlannedRecurrencePrint } from '../../models'
 import { DateService } from '..'
 import diToken from '../token'
 
@@ -10,11 +10,11 @@ export class RecurrenceService {
         @inject(diToken.DateService) private dateService: DateService
     ) {}
 
-    public print(recurrence: PlannedRecurrence): string {
-        let result = recurrence.task
-        result += `, ${this.printRepeatativePart(recurrence)}`
-        result += `, ${this.printBordersPart(recurrence)}`
-        return result
+    public print(recurrence: PlannedRecurrence): PlannedRecurrencePrint {
+        const task = recurrence.task
+        const repeatative = this.printRepeatativePart(recurrence)
+        const borders = this.printBordersPart(recurrence)
+        return new PlannedRecurrencePrint(task, repeatative, borders)
     }
 
     private printBordersPart(recurrence: PlannedRecurrence): string {
@@ -67,10 +67,14 @@ export class RecurrenceService {
         let result = ''
         if (recurrence.everyNthDay !== null) {
             result += this.printNthDays(recurrence.everyNthDay)
+
+            if (recurrence.everyMonthDay !== null || recurrence.everyWeekday !== null) {
+                result += ' '
+            }
         }
 
         if (recurrence.everyMonthDay !== null || recurrence.everyWeekday !== null) {
-            result += ' on '
+            result += 'on '
 
             if (recurrence.everyWeekday !== null) {
                 const weekdayList = this.evalWeekdayList(recurrence.everyWeekday)
