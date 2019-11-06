@@ -43,7 +43,7 @@ namespace DarkDeeds.Api
             {
                 app.UseDeveloperExceptionPage();
                 app.UseCors(builder => builder
-                    .SetIsOriginAllowed(origin => origin.EndsWith("localhost:3000"))
+                    .SetIsOriginAllowed(origin => origin.EndsWith(":3000"))
                     .AllowAnyHeader()
                     .AllowAnyMethod()
                     .AllowCredentials());

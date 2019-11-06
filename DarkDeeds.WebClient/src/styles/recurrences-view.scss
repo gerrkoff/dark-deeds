@@ -7,6 +7,10 @@
     .recurrences-view-recurrence-list {
         margin-top: 1rem;
 
+        @media (max-width: 767px) {
+            margin-top: -1rem;
+        }
+
         .segment {
             cursor: pointer;
         }
@@ -14,6 +18,11 @@
 
     .recurrences-view-recurrence-item {
         font-size: $font-less-normal;
+
+        .recurrences-view-recurrence-item-borders {
+            color: $color-secondary-text;
+            padding-left: 1rem;
+        }
     }
 
     .recurrences-view-empty-state {
@@ -25,12 +34,18 @@
         margin-left: 0;
         margin-right: 0;
 
-        .recurrences-view-side-panel-group-1 button {
-            min-width: 8rem;
+        button {
+            min-width: 100%;
         }
 
-        .recurrences-view-side-panel-group-2 button {
-            min-width: 12rem;
+        @media (max-width: 767px), (min-width: 992px) {
+            .recurrences-view-side-panel-group-1 button {
+                min-width: 8rem;
+            }
+
+            .recurrences-view-side-panel-group-2 button {
+                min-width: 12rem;
+            }
         }
     }
 }

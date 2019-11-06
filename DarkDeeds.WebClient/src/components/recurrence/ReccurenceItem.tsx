@@ -18,8 +18,9 @@ export class RecurrenceItem extends React.PureComponent<IProps> {
                 onClick={() => this.props.editRecurrence(this.props.plannedRecurrence.id)}
                 className='recurrences-view-recurrence-item'>
 
-                <Header as='h4'>{ print.task }</Header>
-                <span>{ print.repeatative }, {print.borders}</span>
+                <Header as='h5'>{ print.task }</Header>
+                <span>{ print.repeatative }</span>
+                <span className='recurrences-view-recurrence-item-borders'>{ print.borders }</span>
             </Segment>
         )
     }

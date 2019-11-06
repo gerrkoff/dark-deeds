@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { Accordion, AccordionTitleProps } from 'semantic-ui-react'
+import { AddTaskButton } from '../edit-task'
 import { di, diToken, DateService, TaskMoveService, TaskService, LocalSettingsService } from '../../di'
 import { DayCardModel, Task, TaskModel, LocalSettings, OverviewTabEnum } from '../../models'
 import { DragulaWrapper } from '../../helpers'
@@ -11,6 +12,7 @@ interface IProps {
     tasks: Task[]
     tasksLoaded: boolean
     showCompleted: boolean
+    openEditTask: () => void
     openTaskModal: (model: TaskModel, id?: number) => void
     changeAllTasks: (tasks: Task[]) => void
     changeTaskStatus?: (clientId: number, completed?: boolean, deleted?: boolean) => void
@@ -83,13 +85,16 @@ export class Overview extends React.PureComponent<IProps> {
         }
 
         return (
-            <Accordion
-                data-test-id='overviewComponent'
-                defaultActiveIndex={this.evalOpenedTabs()}
-                panels={panels}
-                exclusive={false}
-                onTitleClick={this.panelClickHandler}
-                inverted />
+            <React.Fragment>
+                <Accordion
+                    data-test-id='overviewComponent'
+                    defaultActiveIndex={this.evalOpenedTabs()}
+                    panels={panels}
+                    exclusive={false}
+                    onTitleClick={this.panelClickHandler}
+                    inverted />
+                <AddTaskButton openModal={this.props.openEditTask} />
+            </React.Fragment>
         )
     }
 

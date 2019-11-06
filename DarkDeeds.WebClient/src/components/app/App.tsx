@@ -4,7 +4,6 @@ import EditTaskModal from '../../containers/EditTaskModal'
 import ModalConfirm from '../../containers/ModalConfirm'
 import IndicatorPanel from '../../containers/IndicatorPanel'
 import { Task } from '../../models'
-import { AddTaskButton } from '../edit-task'
 import { Shortcuts, Toolbar } from './'
 
 export interface IAppProps {
@@ -47,7 +46,6 @@ export class App extends React.PureComponent<IAppProps> {
                 <Container>
                     {this.props.children}
                 </Container>
-                <AddTaskButton openModal={this.props.openEditTask} />
                 <EditTaskModal />
                 <Dimmer active={this.props.appLoading}>
                     <Loader />

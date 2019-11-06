@@ -18,10 +18,18 @@ export class RecurrenceService {
     }
 
     private printBordersPart(recurrence: PlannedRecurrence): string {
-        let result = `from ${this.printDate(recurrence.startDate)}`
+        let result = ''
+        const today = this.dateService.today()
+        if (today < recurrence.startDate) {
+            result += `from ${this.printDate(recurrence.startDate)}`
+
+            if (recurrence.endDate !== null) {
+                result += ' '
+            }
+        }
 
         if (recurrence.endDate !== null) {
-            result += ` untill ${this.printDate(recurrence.endDate)}`
+            result += `untill ${this.printDate(recurrence.endDate)}`
         }
 
         return result
