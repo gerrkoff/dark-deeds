@@ -7,6 +7,10 @@
     .recurrences-view-recurrence-list {
         margin-top: 1rem;
 
+        @media (max-width: 767px) {
+            margin-top: -1rem;
+        }
+
         .segment {
             cursor: pointer;
         }
