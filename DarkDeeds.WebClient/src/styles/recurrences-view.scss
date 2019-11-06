@@ -18,6 +18,11 @@
 
     .recurrences-view-recurrence-item {
         font-size: $font-less-normal;
+
+        .recurrences-view-recurrence-item-borders {
+            color: $color-secondary-text;
+            padding-left: 1rem;
+        }
     }
 
     .recurrences-view-empty-state {

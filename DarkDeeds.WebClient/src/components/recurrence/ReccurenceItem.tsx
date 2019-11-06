@@ -19,7 +19,8 @@ export class RecurrenceItem extends React.PureComponent<IProps> {
                 className='recurrences-view-recurrence-item'>
 
                 <Header as='h5'>{ print.task }</Header>
-                <span>{ print.repeatative }, {print.borders}</span>
+                <span>{ print.repeatative }</span>
+                <span className='recurrences-view-recurrence-item-borders'>{ print.borders }</span>
             </Segment>
         )
     }
