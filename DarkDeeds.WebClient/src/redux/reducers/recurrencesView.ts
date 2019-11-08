@@ -45,6 +45,8 @@ export function recurrencesView(state: IRecurrencesViewState = inittialState, ac
 }
 
 function changeRecurrence(recurrences: PlannedRecurrence[], recurrence: PlannedRecurrence): PlannedRecurrence[] {
-    console.log('recurrence :', recurrence)
-    return [...recurrences]
+    const newRecurrences = [...recurrences]
+    const recurrenceIndex = newRecurrences.findIndex(x => x.id === recurrence.id)
+    newRecurrences[recurrenceIndex] = { ...recurrence }
+    return newRecurrences
 }

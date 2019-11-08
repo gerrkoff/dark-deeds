@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Segment, Header } from 'semantic-ui-react'
+import { Segment, Header, Button } from 'semantic-ui-react'
 import { di, diToken, RecurrenceService } from '../../di'
 import { PlannedRecurrence } from '../../models'
 
@@ -36,6 +36,24 @@ export class RecurrenceItem extends React.PureComponent<IProps> {
     }
 
     private renderEdit() {
-        return (<div>Hello World!</div>)
+        return (
+            <Segment
+                inverted raised
+                onClick={() => this.props.changeEdittingRecurrence(this.props.plannedRecurrence.id)}
+                className='recurrences-view-recurrence-item'>
+
+                <Button
+                    size='mini'
+                    onClick={this.handleEdit}>
+
+                    Edit
+                </Button>
+            </Segment>
+        )
+    }
+
+    private handleEdit = () => {
+        this.props.plannedRecurrence.task += ' !'
+        this.props.changeRecurrence(this.props.plannedRecurrence)
     }
 }
