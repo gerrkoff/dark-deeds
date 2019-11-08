@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Segment, Header, Input, Dropdown } from 'semantic-ui-react'
+import { Segment, Header, Input, Dropdown, DropdownItemProps } from 'semantic-ui-react'
 import { di, diToken, RecurrenceService } from '../../di'
 import { PlannedRecurrence, RecurrenceWeekdayEnum, recurrenceWeekdayEnumValues } from '../../models'
 import { enumExpand, enumReduce } from '../../helpers'
@@ -57,6 +57,16 @@ export class RecurrenceItem extends React.PureComponent<IProps> {
                     options={weekdayOptions}
                     value={this.parseWeekday(this.props.plannedRecurrence.everyWeekday)}
                     onChange={(_, data) => this.handleWeekdayChange(data.value as RecurrenceWeekdayEnum[])} />
+
+                <br />
+                <br />
+
+                <Dropdown
+                    multiple selection
+                    placeholder='Days of month'
+                    options={monthdayOptions}
+                    value={this.parseMonthday(this.props.plannedRecurrence.everyMonthDay)}
+                    onChange={(_, data) => this.handleMonthdayChange(data.value as number[])} />
             </Segment>
         )
     }
@@ -68,18 +78,34 @@ export class RecurrenceItem extends React.PureComponent<IProps> {
         return enumExpand(weekday, recurrenceWeekdayEnumValues)
     }
 
+    private parseMonthday = (monthday: string | null): number[] => {
+        if (monthday === null) {
+            return []
+        }
+        return monthday.split(',').map(x => Number.parseInt(x, 10))
+    }
+
     private handleTaskChange = (value: string) => {
         this.props.plannedRecurrence.task = value
         this.props.changeRecurrence(this.props.plannedRecurrence)
     }
 
     private handleWeekdayChange = (values: RecurrenceWeekdayEnum[]) => {
-        this.props.plannedRecurrence.everyWeekday = enumReduce(values)
+        this.props.plannedRecurrence.everyWeekday = values.length === 0
+            ? null
+            : enumReduce(values)
+        this.props.changeRecurrence(this.props.plannedRecurrence)
+    }
+
+    private handleMonthdayChange = (values: number[]) => {
+        this.props.plannedRecurrence.everyMonthDay = values.length === 0
+            ? null
+            : values.join(',')
         this.props.changeRecurrence(this.props.plannedRecurrence)
     }
 }
 
-const weekdayOptions = [
+const weekdayOptions: DropdownItemProps[] = [
     { key: '1', text: 'Monday', value: RecurrenceWeekdayEnum.Monday },
     { key: '2', text: 'Tuesday', value: RecurrenceWeekdayEnum.Tuesday },
     { key: '3', text: 'Wednesday', value: RecurrenceWeekdayEnum.Wednesday },
@@ -88,3 +114,12 @@ const weekdayOptions = [
     { key: '6', text: 'Saturday', value: RecurrenceWeekdayEnum.Saturday },
     { key: '7', text: 'Sunday', value: RecurrenceWeekdayEnum.Sunday }
 ]
+
+const monthdayOptions: DropdownItemProps[] = []
+for (let i = 1; i <= 31; i++) {
+    monthdayOptions.push({
+        key: `${i}`,
+        text: `${i}`,
+        value: i
+    })
+}
