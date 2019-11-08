@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Segment, Header, Input, Dropdown, DropdownItemProps } from 'semantic-ui-react'
+import { Segment, Header, DropdownItemProps, Form } from 'semantic-ui-react'
 import { di, diToken, RecurrenceService } from '../../di'
 import { PlannedRecurrence, RecurrenceWeekdayEnum, recurrenceWeekdayEnumValues } from '../../models'
 import { enumExpand, enumReduce } from '../../helpers'
@@ -43,38 +43,38 @@ export class RecurrenceItem extends React.PureComponent<IProps> {
                 onClick={() => this.props.changeEdittingRecurrence(this.props.plannedRecurrence.id)}
                 className='recurrences-view-recurrence-item'>
 
-                <Input
-                    placeholder='Task'
-                    value={this.props.plannedRecurrence.task}
-                    onChange={(_, data) => this.handleTaskChange(data.value)} />
-
-                <br />
-                <br />
-
-                <Dropdown
-                    multiple selection
-                    placeholder='Every day of week'
-                    options={weekdayOptions}
-                    value={this.parseWeekday(this.props.plannedRecurrence.everyWeekday)}
-                    onChange={(_, data) => this.handleWeekdayChange(data.value as RecurrenceWeekdayEnum[])} />
-
-                <br />
-                <br />
-
-                <Dropdown
-                    multiple selection
-                    placeholder='Every date of month'
-                    options={monthdayOptions}
-                    value={this.parseMonthday(this.props.plannedRecurrence.everyMonthDay)}
-                    onChange={(_, data) => this.handleMonthdayChange(data.value as number[])} />
-
-                <br />
-                <br />
-
-                <Input
-                    placeholder='Every Nth day'
-                    value={this.props.plannedRecurrence.everyNthDay === null ? '' : this.props.plannedRecurrence.everyNthDay}
-                    onChange={(_, data) => this.handleNthDayChange(data.value)} />
+                <Form inverted>
+                    <Form.Group>
+                        <Form.Input
+                            placeholder='Task'
+                            value={this.props.plannedRecurrence.task}
+                            onChange={(_, data) => this.handleTaskChange(data.value)} />
+                    </Form.Group>
+                    <Form.Group>
+                        <Form.Dropdown
+                            multiple selection
+                            placeholder='Every day of week'
+                            options={weekdayOptions}
+                            value={this.parseWeekday(this.props.plannedRecurrence.everyWeekday)}
+                            onChange={(_, data) => this.handleWeekdayChange(data.value as RecurrenceWeekdayEnum[])} />
+                        <Form.Dropdown
+                            multiple selection
+                            placeholder='Every date of month'
+                            options={monthdayOptions}
+                            value={this.parseMonthday(this.props.plannedRecurrence.everyMonthDay)}
+                            onChange={(_, data) => this.handleMonthdayChange(data.value as number[])} />
+                        <Form.Input
+                            placeholder='Every Nth day'
+                            value={this.props.plannedRecurrence.everyNthDay === null ? '' : this.props.plannedRecurrence.everyNthDay}
+                            onChange={(_, data) => this.handleNthDayChange(data.value)} />
+                    </Form.Group>
+                    <Form.Group>
+                        <Form.Input
+                            placeholder='From' />
+                        <Form.Input
+                            placeholder='Until' />
+                    </Form.Group>
+                </Form>
             </Segment>
         )
     }
