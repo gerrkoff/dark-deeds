@@ -53,7 +53,7 @@ export class RecurrenceItem extends React.PureComponent<IProps> {
 
                 <Dropdown
                     multiple selection
-                    placeholder='Days of week'
+                    placeholder='Every day of week'
                     options={weekdayOptions}
                     value={this.parseWeekday(this.props.plannedRecurrence.everyWeekday)}
                     onChange={(_, data) => this.handleWeekdayChange(data.value as RecurrenceWeekdayEnum[])} />
@@ -63,10 +63,18 @@ export class RecurrenceItem extends React.PureComponent<IProps> {
 
                 <Dropdown
                     multiple selection
-                    placeholder='Days of month'
+                    placeholder='Every date of month'
                     options={monthdayOptions}
                     value={this.parseMonthday(this.props.plannedRecurrence.everyMonthDay)}
                     onChange={(_, data) => this.handleMonthdayChange(data.value as number[])} />
+
+                <br />
+                <br />
+
+                <Input
+                    placeholder='Every Nth day'
+                    value={this.props.plannedRecurrence.everyNthDay === null ? '' : this.props.plannedRecurrence.everyNthDay}
+                    onChange={(_, data) => this.handleNthDayChange(data.value)} />
             </Segment>
         )
     }
@@ -101,6 +109,14 @@ export class RecurrenceItem extends React.PureComponent<IProps> {
         this.props.plannedRecurrence.everyMonthDay = values.length === 0
             ? null
             : values.join(',')
+        this.props.changeRecurrence(this.props.plannedRecurrence)
+    }
+
+    private handleNthDayChange = (value: string) => {
+        const fixed = value.replace(/\D/g,'')
+        this.props.plannedRecurrence.everyNthDay = fixed.length === 0
+            ? null
+            : Number.parseInt(fixed, 10)
         this.props.changeRecurrence(this.props.plannedRecurrence)
     }
 }
