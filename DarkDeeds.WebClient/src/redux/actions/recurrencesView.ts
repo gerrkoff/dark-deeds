@@ -45,8 +45,8 @@ export function saveRecurrences() {
     }
 }
 
-export function editRecurrence(id: number) {
+export function editRecurrence(edittingRecurrenceId: number | null) {
     return async(dispatch: Dispatch<actions.RecurrencesViewAction>) => {
-        toastService.info('edit recurrence ' + id)
+        dispatch({ type: actions.RECURRENCESVIEW_CHANGE_EDITTING_RECURRENCE, edittingRecurrenceId })
     }
 }

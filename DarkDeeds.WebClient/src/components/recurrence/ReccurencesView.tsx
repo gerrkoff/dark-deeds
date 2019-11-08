@@ -9,6 +9,7 @@ interface IProps {
     isCreatingRecurrences: boolean
     isLoadingRecurrences: boolean
     plannedRecurrences: PlannedRecurrence[]
+    edittingRecurrenceId: number | null
     createRecurrences: () => void
     loadRecurrences: () => void
     addRecurrence: () => void
@@ -33,6 +34,7 @@ export class RecurrencesView extends React.PureComponent<IProps> {
                     <RecurrenceList
                         isLoadingRecurrences={this.props.isLoadingRecurrences}
                         plannedRecurrences={this.props.plannedRecurrences}
+                        edittingRecurrenceId={this.props.edittingRecurrenceId}
                         addRecurrence={this.props.addRecurrence}
                         editRecurrence={this.props.editRecurrence} />
                 </Grid.Column>

@@ -5,12 +5,17 @@ import { PlannedRecurrence } from '../../models'
 
 interface IProps {
     plannedRecurrence: PlannedRecurrence
+    isEditting: boolean
     editRecurrence: (id: number) => void
 }
 export class RecurrenceItem extends React.PureComponent<IProps> {
     private recurrenceService = di.get<RecurrenceService>(diToken.RecurrenceService)
 
     public render() {
+        if (this.props.isEditting) {
+            return (<div>Hello World!</div>)
+        }
+
         const print = this.recurrenceService.print(this.props.plannedRecurrence)
         return (
             <Segment

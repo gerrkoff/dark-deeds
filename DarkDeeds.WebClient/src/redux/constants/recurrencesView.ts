@@ -31,9 +31,17 @@ export interface ILoadRecurrencesSuccess {
     plannedRecurrences: PlannedRecurrence[]
 }
 
+export const RECURRENCESVIEW_CHANGE_EDITTING_RECURRENCE = 'RECURRENCESVIEW_CHANGE_EDITTING_RECURRENCE'
+export type RECURRENCESVIEW_CHANGE_EDITTING_RECURRENCE = typeof RECURRENCESVIEW_CHANGE_EDITTING_RECURRENCE
+export interface IChangeEdittingRecurrence {
+    type: RECURRENCESVIEW_CHANGE_EDITTING_RECURRENCE
+    edittingRecurrenceId: number | null
+}
+
 export type RecurrencesViewAction =
     ICreateRecurrencesProcessing |
     ICreateRecurrencesFinish |
     ILoadRecurrencesProcessing |
     ILoadRecurrencesFail |
-    ILoadRecurrencesSuccess
+    ILoadRecurrencesSuccess |
+    IChangeEdittingRecurrence

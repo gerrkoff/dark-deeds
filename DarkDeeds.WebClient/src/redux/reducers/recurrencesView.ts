@@ -4,7 +4,8 @@ import * as actions from '../constants/recurrencesView'
 const inittialState: IRecurrencesViewState = {
     isCreatingRecurrences: false,
     isLoadingRecurrences: false,
-    plannedRecurrences: []
+    plannedRecurrences: [],
+    edittingRecurrenceId: null
 }
 
 export function recurrencesView(state: IRecurrencesViewState = inittialState, action: actions.RecurrencesViewAction): IRecurrencesViewState {
@@ -29,6 +30,10 @@ export function recurrencesView(state: IRecurrencesViewState = inittialState, ac
             return { ...state,
                 isLoadingRecurrences: false,
                 plannedRecurrences: action.plannedRecurrences
+            }
+        case actions.RECURRENCESVIEW_CHANGE_EDITTING_RECURRENCE:
+            return { ...state,
+                edittingRecurrenceId: action.edittingRecurrenceId
             }
     }
     return state
