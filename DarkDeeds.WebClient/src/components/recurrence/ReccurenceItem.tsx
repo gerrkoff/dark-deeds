@@ -6,21 +6,26 @@ import { PlannedRecurrence } from '../../models'
 interface IProps {
     plannedRecurrence: PlannedRecurrence
     isEditting: boolean
-    editRecurrence: (id: number) => void
+    changeEdittingRecurrence: (id: number) => void
+    changeRecurrence: (recurrence: PlannedRecurrence) => void
 }
 export class RecurrenceItem extends React.PureComponent<IProps> {
     private recurrenceService = di.get<RecurrenceService>(diToken.RecurrenceService)
 
     public render() {
         if (this.props.isEditting) {
-            return (<div>Hello World!</div>)
+            return this.renderEdit()
         }
 
+        return this.renderPrint()
+    }
+
+    private renderPrint() {
         const print = this.recurrenceService.print(this.props.plannedRecurrence)
         return (
             <Segment
                 inverted raised
-                onClick={() => this.props.editRecurrence(this.props.plannedRecurrence.id)}
+                onClick={() => this.props.changeEdittingRecurrence(this.props.plannedRecurrence.id)}
                 className='recurrences-view-recurrence-item'>
 
                 <Header as='h5'>{ print.task }</Header>
@@ -28,5 +33,9 @@ export class RecurrenceItem extends React.PureComponent<IProps> {
                 <span className='recurrences-view-recurrence-item-borders'>{ print.borders }</span>
             </Segment>
         )
+    }
+
+    private renderEdit() {
+        return (<div>Hello World!</div>)
     }
 }

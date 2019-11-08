@@ -1,5 +1,6 @@
 import { IRecurrencesViewState } from '../types'
 import * as actions from '../constants/recurrencesView'
+import { PlannedRecurrence } from 'src/models'
 
 const inittialState: IRecurrencesViewState = {
     isCreatingRecurrences: false,
@@ -35,6 +36,15 @@ export function recurrencesView(state: IRecurrencesViewState = inittialState, ac
             return { ...state,
                 edittingRecurrenceId: action.edittingRecurrenceId
             }
+        case actions.RECURRENCESVIEW_CHANGE_RECURRENCE:
+            return { ...state,
+                plannedRecurrences: changeRecurrence(state.plannedRecurrences, action.plannedRecurrence)
+            }
     }
     return state
+}
+
+function changeRecurrence(recurrences: PlannedRecurrence[], recurrence: PlannedRecurrence): PlannedRecurrence[] {
+    console.log('recurrence :', recurrence)
+    return [...recurrences]
 }

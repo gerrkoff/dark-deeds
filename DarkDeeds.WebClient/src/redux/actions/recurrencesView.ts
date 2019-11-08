@@ -1,6 +1,7 @@
 import { Dispatch } from 'redux'
 import { di, diToken, RecurrencesApi, ToastService } from '../../di'
 import * as actions from '../constants/recurrencesView'
+import { PlannedRecurrence } from 'src/models'
 
 const recurrencesViewApi = di.get<RecurrencesApi>(diToken.RecurrencesApi)
 const toastService = di.get<ToastService>(diToken.ToastService)
@@ -45,8 +46,14 @@ export function saveRecurrences() {
     }
 }
 
-export function editRecurrence(edittingRecurrenceId: number | null) {
+export function changeEdittingRecurrence(edittingRecurrenceId: number | null) {
     return async(dispatch: Dispatch<actions.RecurrencesViewAction>) => {
         dispatch({ type: actions.RECURRENCESVIEW_CHANGE_EDITTING_RECURRENCE, edittingRecurrenceId })
+    }
+}
+
+export function changeRecurrence(plannedRecurrence: PlannedRecurrence) {
+    return async(dispatch: Dispatch<actions.RecurrencesViewAction>) => {
+        dispatch({ type: actions.RECURRENCESVIEW_CHANGE_RECURRENCE, plannedRecurrence })
     }
 }

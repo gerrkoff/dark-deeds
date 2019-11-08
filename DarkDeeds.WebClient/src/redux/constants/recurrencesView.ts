@@ -38,10 +38,18 @@ export interface IChangeEdittingRecurrence {
     edittingRecurrenceId: number | null
 }
 
+export const RECURRENCESVIEW_CHANGE_RECURRENCE = 'RECURRENCESVIEW_CHANGE_RECURRENCE'
+export type RECURRENCESVIEW_CHANGE_RECURRENCE = typeof RECURRENCESVIEW_CHANGE_RECURRENCE
+export interface IChangeRecurrence {
+    type: RECURRENCESVIEW_CHANGE_RECURRENCE
+    plannedRecurrence: PlannedRecurrence
+}
+
 export type RecurrencesViewAction =
     ICreateRecurrencesProcessing |
     ICreateRecurrencesFinish |
     ILoadRecurrencesProcessing |
     ILoadRecurrencesFail |
     ILoadRecurrencesSuccess |
-    IChangeEdittingRecurrence
+    IChangeEdittingRecurrence |
+    IChangeRecurrence
