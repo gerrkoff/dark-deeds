@@ -1,7 +1,8 @@
 import * as React from 'react'
 import { Segment, Header, Input, Dropdown } from 'semantic-ui-react'
 import { di, diToken, RecurrenceService } from '../../di'
-import { PlannedRecurrence, RecurrenceWeekdayEnum, recurrenceWeekdayEnumReduce, recurrenceWeekdayEnumExpand } from '../../models'
+import { PlannedRecurrence, RecurrenceWeekdayEnum, recurrenceWeekdayEnumValues } from '../../models'
+import { enumExpand, enumReduce } from '../../helpers'
 
 interface IProps {
     plannedRecurrence: PlannedRecurrence
@@ -64,7 +65,7 @@ export class RecurrenceItem extends React.PureComponent<IProps> {
         if (weekday === null) {
             return []
         }
-        return recurrenceWeekdayEnumExpand(weekday)
+        return enumExpand(weekday, recurrenceWeekdayEnumValues)
     }
 
     private handleTaskChange = (value: string) => {
@@ -73,7 +74,7 @@ export class RecurrenceItem extends React.PureComponent<IProps> {
     }
 
     private handleWeekdayChange = (values: RecurrenceWeekdayEnum[]) => {
-        this.props.plannedRecurrence.everyWeekday = recurrenceWeekdayEnumReduce(values)
+        this.props.plannedRecurrence.everyWeekday = enumReduce(values)
         this.props.changeRecurrence(this.props.plannedRecurrence)
     }
 }

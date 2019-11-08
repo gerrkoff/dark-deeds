@@ -9,21 +9,14 @@ export enum RecurrenceWeekdayEnum {
     Sunday = 64
 }
 
-export function recurrenceWeekdayEnumReduce(values: RecurrenceWeekdayEnum[]): RecurrenceWeekdayEnum {
-    let value = RecurrenceWeekdayEnum.None
-    values.forEach(x => value |= x)
-    return value
-}
+const recurrenceWeekdayEnumValues = [
+    RecurrenceWeekdayEnum.Monday,
+    RecurrenceWeekdayEnum.Tuesday,
+    RecurrenceWeekdayEnum.Wednesday,
+    RecurrenceWeekdayEnum.Thursday,
+    RecurrenceWeekdayEnum.Friday,
+    RecurrenceWeekdayEnum.Saturday,
+    RecurrenceWeekdayEnum.Sunday
+]
 
-export function recurrenceWeekdayEnumExpand(value: RecurrenceWeekdayEnum): RecurrenceWeekdayEnum[] {
-    const possibleValues = [
-        RecurrenceWeekdayEnum.Monday,
-        RecurrenceWeekdayEnum.Tuesday,
-        RecurrenceWeekdayEnum.Wednesday,
-        RecurrenceWeekdayEnum.Thursday,
-        RecurrenceWeekdayEnum.Friday,
-        RecurrenceWeekdayEnum.Saturday,
-        RecurrenceWeekdayEnum.Sunday
-    ]
-    return possibleValues.filter(x => value & x)
-}
+export { recurrenceWeekdayEnumValues }
