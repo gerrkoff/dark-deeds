@@ -137,7 +137,6 @@ export class RecurrenceService {
     private evalWeekdayList(weekdays: RecurrenceWeekdayEnum): number[] {
         const list: number[] = []
 
-        // tslint:no-bitwise
         if (weekdays & RecurrenceWeekdayEnum.Monday) {
             list.push(1)
         }
