@@ -36,7 +36,6 @@ namespace DarkDeeds.Services.Implementation
 
         public async Task<int> SaveAsync(ICollection<PlannedRecurrenceDto> recurrences, string userId)
         {
-            // TODO!
             await _permissionsService.CheckIfUserCanEditEntitiesAsync(
                 recurrences.Cast<IDtoWithId>().ToList(),
                 _plannedRecurrenceRepository,
