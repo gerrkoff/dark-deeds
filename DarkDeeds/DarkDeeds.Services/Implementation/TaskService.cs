@@ -118,6 +118,7 @@ namespace DarkDeeds.Services.Implementation
             return dto;
         }
 
+        // TODO: use permission service
         public async Task CheckIfUserCanEditTasks(ICollection<TaskDto> tasks, string userId)
         {
             int[] taskIds = tasks.Select(x => x.Id).ToArray();

@@ -2,10 +2,13 @@
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper.QueryableExtensions;
+using DarkDeeds.Common.Exceptions;
 using DarkDeeds.Common.Extensions;
 using DarkDeeds.Data.Entity;
+using DarkDeeds.Data.Entity.Base;
 using DarkDeeds.Data.Repository;
 using DarkDeeds.Models;
+using DarkDeeds.Models.Data;
 using DarkDeeds.Services.Interface;
 
 namespace DarkDeeds.Services.Implementation
@@ -13,10 +16,12 @@ namespace DarkDeeds.Services.Implementation
     public class RecurrenceService : IRecurrenceService
     {
         private readonly IRepository<PlannedRecurrenceEntity> _plannedRecurrenceRepository;
+        private readonly IPermissionsService _permissionsService;
 
-        public RecurrenceService(IRepository<PlannedRecurrenceEntity> plannedRecurrenceRepository)
+        public RecurrenceService(IRepository<PlannedRecurrenceEntity> plannedRecurrenceRepository, IPermissionsService permissionsService)
         {
             _plannedRecurrenceRepository = plannedRecurrenceRepository;
+            _permissionsService = permissionsService;
         }
 
         public async Task<IEnumerable<PlannedRecurrenceDto>> LoadAsync(string userId)
@@ -27,9 +32,16 @@ namespace DarkDeeds.Services.Implementation
                 .ToListSafeAsync();
         }
 
-        public Task<int> SaveAsync(ICollection<PlannedRecurrenceDto> recurrences, string userId)
+        public async Task<int> SaveAsync(ICollection<PlannedRecurrenceDto> recurrences, string userId)
         {
-            return Task.FromResult(100500);
+            // TEST!
+            await _permissionsService.CheckIfUserCanEditEntitiesAsync(
+                recurrences.Cast<IDtoWithId>().ToList(),
+                _plannedRecurrenceRepository,
+                userId,
+                "Recurrence");
+            
+            return 100500;
         }
     }
 }
