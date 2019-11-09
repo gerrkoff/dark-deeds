@@ -8,6 +8,7 @@ function mapStateToProps({ recurrencesView }: IAppState) {
     return {
         isCreatingRecurrences: recurrencesView.isCreatingRecurrences,
         isLoadingRecurrences: recurrencesView.isLoadingRecurrences,
+        isSavingRecurrences: recurrencesView.isSavingRecurrences,
         plannedRecurrences: recurrencesView.plannedRecurrences,
         edittingRecurrenceId: recurrencesView.edittingRecurrenceId
     }
