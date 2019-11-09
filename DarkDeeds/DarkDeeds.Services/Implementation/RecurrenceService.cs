@@ -42,30 +42,26 @@ namespace DarkDeeds.Services.Implementation
                 userId,
                 "Recurrence");
 
-            // TODO!
             int count = 0;
             foreach (var dto in recurrences)
             {
                 if (dto.IsDeleted)
                 {
-                    // TODO!
                     await _plannedRecurrenceRepository.DeleteAsync(dto.Id);
                     count++;
                 }
                 else if (dto.Id < 0)
                 {
                     PlannedRecurrenceEntity entity = Mapper.Map<PlannedRecurrenceEntity>(dto);
-                    // TODO!
+                    entity.Id = 0;
                     await _plannedRecurrenceRepository.SaveAsync(entity);
                     count++;
                 }
                 else
                 {
                     PlannedRecurrenceEntity entity = await _plannedRecurrenceRepository.GetByIdAsync(dto.Id);
-                    // TODO!
                     if (!RecurrenceIsChanged(entity, dto))
                         continue;
-                    // TODO!
                     entity.Task = dto.Task;
                     entity.StartDate = dto.StartDate;
                     entity.EndDate = dto.EndDate;
