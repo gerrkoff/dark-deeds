@@ -47,6 +47,8 @@ export function saveRecurrences(recurrences: PlannedRecurrence[]) {
         try {
             const updatedRecurrencesCount = await recurrencesViewApi.saveRecurrences(recurrences)
             toastService.success(`${updatedRecurrencesCount} recurrences were updated`)
+            dispatch({ type: actions.RECURRENCESVIEW_CHANGE_EDITTING_RECURRENCE, edittingRecurrenceId: null })
+            dispatch(loadRecurrences() as any)
         } catch (err) {
             toastService.errorProcess('saving recurrences')
         }
