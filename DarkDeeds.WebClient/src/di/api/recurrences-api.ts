@@ -19,4 +19,9 @@ export class RecurrencesApi {
         const result = await this.api.get<PlannedRecurrence[]>('api/recurrences')
         return this.dateService.adjustDatesAfterLoading(result) as PlannedRecurrence[]
     }
+
+    public saveRecurrences(recurrences: PlannedRecurrence[]): Promise<number> {
+        const fixedRecurrences = this.dateService.adjustDatesBeforeSaving(recurrences)
+        return this.api.post<number>('api/recurrences', fixedRecurrences)
+    }
 }

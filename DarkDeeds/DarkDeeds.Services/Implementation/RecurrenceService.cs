@@ -19,12 +19,17 @@ namespace DarkDeeds.Services.Implementation
             _plannedRecurrenceRepository = plannedRecurrenceRepository;
         }
 
-        public async Task<IEnumerable<PlannedRecurrenceDto>> GetRecurrences(string userId)
+        public async Task<IEnumerable<PlannedRecurrenceDto>> LoadAsync(string userId)
         {
             return await _plannedRecurrenceRepository.GetAll()
                 .Where(x => string.Equals(x.UserId, userId))
                 .ProjectTo<PlannedRecurrenceDto>()
                 .ToListSafeAsync();
+        }
+
+        public Task<int> SaveAsync(ICollection<PlannedRecurrenceDto> recurrences, string userId)
+        {
+            return Task.FromResult(100500);
         }
     }
 }

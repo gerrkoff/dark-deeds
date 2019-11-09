@@ -40,9 +40,17 @@ export function addRecurrence() {
     }
 }
 
-export function saveRecurrences() {
+export function saveRecurrences(recurrences: PlannedRecurrence[]) {
     return async(dispatch: Dispatch<actions.RecurrencesViewAction>) => {
-        toastService.info('save recurrences')
+        dispatch({ type: actions.RECURRENCESVIEW_SAVING_PROCESSING })
+
+        try {
+            const updatedRecurrencesCount = await recurrencesViewApi.saveRecurrences(recurrences)
+            toastService.success(`${updatedRecurrencesCount} recurrences were updated`)
+        } catch (err) {
+            toastService.errorProcess('saving recurrences')
+        }
+        dispatch({ type: actions.RECURRENCESVIEW_SAVING_FINISH })
     }
 }
 

@@ -6,6 +6,7 @@ namespace DarkDeeds.Services.Interface
 {
     public interface IRecurrenceService
     {
-        Task<IEnumerable<PlannedRecurrenceDto>> GetRecurrences(string userId);
+        Task<IEnumerable<PlannedRecurrenceDto>> LoadAsync(string userId);
+        Task<int> SaveAsync(ICollection<PlannedRecurrenceDto> recurrences, string userId);
     }
 }

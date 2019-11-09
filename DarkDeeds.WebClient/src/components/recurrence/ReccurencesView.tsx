@@ -13,7 +13,7 @@ interface IProps {
     createRecurrences: () => void
     loadRecurrences: () => void
     addRecurrence: () => void
-    saveRecurrences: () => void
+    saveRecurrences: (recurrences: PlannedRecurrence[]) => void
     changeEdittingRecurrence: (id: number) => void
     changeRecurrence: (recurrence: PlannedRecurrence) => void
 }
@@ -46,7 +46,7 @@ export class RecurrencesView extends React.PureComponent<IProps> {
                         isLoadingRecurrences={this.props.isLoadingRecurrences}
                         isCreatingRecurrences={this.props.isCreatingRecurrences}
                         addRecurrence={this.props.addRecurrence}
-                        saveRecurrences={this.props.saveRecurrences}
+                        saveRecurrences={() => this.props.saveRecurrences(this.props.plannedRecurrences)}
                         loadRecurrences={this.props.loadRecurrences}
                         createRecurrences={this.props.createRecurrences} />
                 </Grid.Column>

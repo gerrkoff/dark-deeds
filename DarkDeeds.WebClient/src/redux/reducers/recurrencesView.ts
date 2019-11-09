@@ -5,6 +5,7 @@ import { PlannedRecurrence } from 'src/models'
 const inittialState: IRecurrencesViewState = {
     isCreatingRecurrences: false,
     isLoadingRecurrences: false,
+    isSavingRecurrences: false,
     plannedRecurrences: [],
     edittingRecurrenceId: null
 }
@@ -39,6 +40,14 @@ export function recurrencesView(state: IRecurrencesViewState = inittialState, ac
         case actions.RECURRENCESVIEW_CHANGE_RECURRENCE:
             return { ...state,
                 plannedRecurrences: changeRecurrence(state.plannedRecurrences, action.plannedRecurrence)
+            }
+        case actions.RECURRENCESVIEW_SAVING_PROCESSING:
+            return { ...state,
+                isSavingRecurrences: true
+            }
+        case actions.RECURRENCESVIEW_SAVING_FINISH:
+            return { ...state,
+                isSavingRecurrences: false
             }
     }
     return state

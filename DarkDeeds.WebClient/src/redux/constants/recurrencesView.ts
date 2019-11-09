@@ -45,6 +45,18 @@ export interface IChangeRecurrence {
     plannedRecurrence: PlannedRecurrence
 }
 
+export const RECURRENCESVIEW_SAVING_PROCESSING = 'RECURRENCESVIEW_SAVING_PROCESSING'
+export type RECURRENCESVIEW_SAVING_PROCESSING = typeof RECURRENCESVIEW_SAVING_PROCESSING
+export interface ISaveRecurrencesProcessing {
+    type: RECURRENCESVIEW_SAVING_PROCESSING
+}
+
+export const RECURRENCESVIEW_SAVING_FINISH = 'RECURRENCESVIEW_SAVING_FINISH'
+export type RECURRENCESVIEW_SAVING_FINISH = typeof RECURRENCESVIEW_SAVING_FINISH
+export interface ISaveRecurrencesFinish {
+    type: RECURRENCESVIEW_SAVING_FINISH
+}
+
 export type RecurrencesViewAction =
     ICreateRecurrencesProcessing |
     ICreateRecurrencesFinish |
@@ -52,4 +64,6 @@ export type RecurrencesViewAction =
     ILoadRecurrencesFail |
     ILoadRecurrencesSuccess |
     IChangeEdittingRecurrence |
-    IChangeRecurrence
+    IChangeRecurrence |
+    ISaveRecurrencesProcessing |
+    ISaveRecurrencesFinish

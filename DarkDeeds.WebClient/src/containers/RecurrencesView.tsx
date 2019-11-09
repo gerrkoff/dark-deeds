@@ -18,7 +18,7 @@ function mapDispatchToProps(dispatch: any) {
         createRecurrences: () => dispatch(createRecurrences()),
         loadRecurrences: () => dispatch(loadRecurrences()),
         addRecurrence: () => dispatch(addRecurrence()),
-        saveRecurrences: () => dispatch(saveRecurrences()),
+        saveRecurrences: (recurrences: PlannedRecurrence[]) => dispatch(saveRecurrences(recurrences)),
         changeEdittingRecurrence: (id: number) => dispatch(changeEdittingRecurrence(id)),
         changeRecurrence: (recurrence: PlannedRecurrence) => dispatch(changeRecurrence(recurrence))
     }
