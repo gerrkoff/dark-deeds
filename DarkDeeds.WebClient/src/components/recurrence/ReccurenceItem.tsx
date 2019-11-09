@@ -43,7 +43,10 @@ export class RecurrenceItem extends React.PureComponent<IProps> {
                 onClick={() => this.props.changeEdittingRecurrence(this.props.plannedRecurrence.id)}
                 className='recurrences-view-recurrence-item'>
 
-                <Form inverted>
+                <Form
+                    inverted
+                    className='recurrences-view-recurrence-item-form'>
+
                     <Form.Group>
                         <Form.Input
                             placeholder='Task'
@@ -64,7 +67,8 @@ export class RecurrenceItem extends React.PureComponent<IProps> {
                             value={this.parseMonthday(this.props.plannedRecurrence.everyMonthDay)}
                             onChange={(_, data) => this.handleMonthdayChange(data.value as number[])} />
                         <Form.Input
-                            placeholder='Every Nth day'
+                            placeholder='Every nth day'
+                            type='number'
                             value={this.props.plannedRecurrence.everyNthDay === null ? '' : this.props.plannedRecurrence.everyNthDay}
                             onChange={(_, data) => this.handleNthDayChange(data.value)} />
                     </Form.Group>
@@ -113,10 +117,9 @@ export class RecurrenceItem extends React.PureComponent<IProps> {
     }
 
     private handleNthDayChange = (value: string) => {
-        const fixed = value.replace(/\D/g,'')
-        this.props.plannedRecurrence.everyNthDay = fixed.length === 0
+        this.props.plannedRecurrence.everyNthDay = value.length === 0
             ? null
-            : Number.parseInt(fixed, 10)
+            : Number.parseInt(value, 10)
         this.props.changeRecurrence(this.props.plannedRecurrence)
     }
 }
