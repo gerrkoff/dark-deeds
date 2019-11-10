@@ -40,7 +40,6 @@ export class RecurrenceItem extends React.PureComponent<IProps> {
         return (
             <Segment
                 inverted raised
-                onClick={() => this.props.changeEdittingRecurrence(this.props.plannedRecurrence.id)}
                 className='recurrences-view-recurrence-item'>
 
                 <Form

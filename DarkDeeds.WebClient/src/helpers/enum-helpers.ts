@@ -1,3 +1,4 @@
+// TODO: test
 export function enumReduce<T extends number>(values: T[]): T {
     let value = 0
     values.forEach(x => value |= x)
