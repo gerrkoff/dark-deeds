@@ -1,6 +1,6 @@
 import { IRecurrencesViewState } from '../types'
 import { di, diToken, DateService } from '../../di'
-import * as actions from '../constants/recurrencesView'
+import * as actions from '../constants'
 import { PlannedRecurrence } from '../../models'
 
 const dateService = di.get<DateService>(diToken.DateService)

@@ -1,5 +1,5 @@
 import { IModalConfirmState } from '../types'
-import * as actions from '../constants/modalConfirm'
+import * as actions from '../constants'
 
 const inittialState: IModalConfirmState = {
     action: () => console.log(),

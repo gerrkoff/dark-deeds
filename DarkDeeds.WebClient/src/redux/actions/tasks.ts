@@ -1,8 +1,7 @@
-import { Dispatch } from 'redux'
 import { di, diToken, ToastService, UtilsService, TaskApi } from '../../di'
 import { Task, TaskModel } from '../../models'
-import { TaskHub } from '../../helpers'
-import * as actions from '../constants/tasks'
+import { TaskHub, ThunkDispatch } from '../../helpers'
+import * as actions from '../constants'
 
 const utilsService = di.get<UtilsService>(diToken.UtilsService)
 const toastService = di.get<ToastService>(diToken.ToastService)
@@ -15,7 +14,7 @@ const taskApi = di.get<TaskApi>(diToken.TaskApi)
 let taskHub: TaskHub | null = null
 
 export function taskHubStart() {
-    return async(dispatch: Dispatch<actions.TasksAction>) => {
+    return async(dispatch: ThunkDispatch<actions.TasksAction>) => {
         if (taskHub === null) {
             taskHub = new TaskHub(taskHubUpdateHandler(dispatch), taskHubHeartbeatHandler(dispatch))
             taskHub.addOnReconnect(taskHubReconnectHandler(dispatch))
@@ -25,13 +24,13 @@ export function taskHubStart() {
 }
 
 export function taskHubStop() {
-    return async(dispatch: Dispatch<actions.TasksAction>) => {
+    return async(dispatch: ThunkDispatch<actions.TasksAction>) => {
         await taskHub!.stop()
     }
 }
 
 export function taskHubSave(tasks: Task[]) {
-    return async(dispatch: Dispatch<actions.TasksAction>) => {
+    return async(dispatch: ThunkDispatch<actions.TasksAction>) => {
         /*
             special hack to manage race conditions
             [saving] & [reconnecting] in some circumstances start executing at the same time and unpredictable order
@@ -51,7 +50,7 @@ export function taskHubSave(tasks: Task[]) {
     }
 }
 
-function taskHubUpdateHandler(dispatch: Dispatch<actions.TasksAction>): (tasks: Task[], localUpdate: boolean) => void {
+function taskHubUpdateHandler(dispatch: ThunkDispatch<actions.TasksAction>): (tasks: Task[], localUpdate: boolean) => void {
     return (tasks, localUpdate) => {
         dispatch({ type: actions.TASKS_UPDATE_TASKS, tasks, localUpdate })
         if (localUpdate) {
@@ -63,13 +62,13 @@ function taskHubUpdateHandler(dispatch: Dispatch<actions.TasksAction>): (tasks: 
     }
 }
 
-function taskHubHeartbeatHandler(dispatch: Dispatch<actions.TasksAction>): () => void {
+function taskHubHeartbeatHandler(dispatch: ThunkDispatch<actions.TasksAction>): () => void {
     return () => {
         dispatch({ type: actions.TASKS_HUB_HEARTBEAT })
     }
 }
 
-function taskHubReconnectHandler(dispatch: Dispatch<actions.TasksAction>): (reconnecting: boolean) => Promise<void> {
+function taskHubReconnectHandler(dispatch: ThunkDispatch<actions.TasksAction>): (reconnecting: boolean) => Promise<void> {
     return async(reconnecting: boolean) => {
         if (reconnecting) {
             dispatch({ type: actions.TASKS_SAVING_FINISH })
@@ -88,7 +87,7 @@ function taskHubReconnectHandler(dispatch: Dispatch<actions.TasksAction>): (reco
 */
 
 export function initialLoadTasks() {
-    return async(dispatch: Dispatch<actions.TasksAction>) => {
+    return async(dispatch: ThunkDispatch<actions.TasksAction>) => {
         dispatch({ type: actions.TASKS_LOADING })
         try {
             const tasks = await taskApi.loadTasks()

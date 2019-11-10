@@ -1,13 +1,13 @@
-import { Dispatch } from 'redux'
 import { di, diToken, TelegramIntegrationApi, ToastService } from '../../di'
 import { TelegramStart } from '../../models'
-import * as actions from '../constants/telegramIntegration'
+import * as actions from '../constants'
+import { ThunkDispatch } from '../../helpers'
 
 const telegramIntegrationApi = di.get<TelegramIntegrationApi>(diToken.TelegramIntegrationApi)
 const toastService = di.get<ToastService>(diToken.ToastService)
 
 export function generateTelegramChatKey() {
-    return async(dispatch: Dispatch<actions.TelegramIntegrationAction>) => {
+    return async(dispatch: ThunkDispatch<actions.TelegramIntegrationAction>) => {
         dispatch({ type: actions.TELEGRAM_INTEGRATION_GENERATE_KEY_PROCESSING })
 
         try {

@@ -3,6 +3,8 @@ import { Overview } from '../components/overview'
 import { Task, TaskModel, TaskLoadingStateEnum } from '../models'
 import { changeAllTasks, openEditTaskWithModel, openEditTaskModal, openModalConfirm, changeTaskStatus } from '../redux/actions'
 import { IAppState } from '../redux/types'
+import { ThunkDispatch } from '../helpers'
+import { RecurrencesViewAction, ModalConfirmAction, EditTaskAction, TasksAction } from '../redux/constants'
 
 function mapStateToProps({ tasks, settings }: IAppState) {
     return {
@@ -12,7 +14,7 @@ function mapStateToProps({ tasks, settings }: IAppState) {
     }
 }
 
-function mapDispatchToProps(dispatch: any) {
+function mapDispatchToProps(dispatch: ThunkDispatch<RecurrencesViewAction | ModalConfirmAction | EditTaskAction | TasksAction>) {
     return {
         confirmAction: (content: React.ReactNode, action: () => void, header: string) => dispatch(openModalConfirm(content, action, header)),
         openEditTask: () => dispatch(openEditTaskModal(true)),

@@ -1,6 +1,7 @@
 import { connect } from 'react-redux'
 import { IAppState } from '../redux/types'
 import { IndicatorPanel } from '../components/indicator-panel'
+import { ThunkDispatch } from '../helpers'
 
 function mapStateToProps({ tasks }: IAppState) {
     return {
@@ -10,7 +11,7 @@ function mapStateToProps({ tasks }: IAppState) {
     }
 }
 
-function mapDispatchToProps(dispatch: any) {
+function mapDispatchToProps(dispatch: ThunkDispatch<any>) {
     return {
     }
 }

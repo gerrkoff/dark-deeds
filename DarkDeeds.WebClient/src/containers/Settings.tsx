@@ -3,6 +3,8 @@ import { Settings } from '../components/settings'
 import { Settings as SettingsModel } from '../models'
 import { signout, generateTelegramChatKey, saveSettings, changeSettings } from '../redux/actions'
 import { IAppState } from '../redux/types'
+import { ThunkDispatch } from '../helpers'
+import { TelegramIntegrationAction, SettingsAction } from '../redux/constants'
 
 function mapStateToProps({ login, general, telegramIntegration, settings }: IAppState) {
     return {
@@ -16,7 +18,7 @@ function mapStateToProps({ login, general, telegramIntegration, settings }: IApp
     }
 }
 
-function mapDispatchToProps(dispatch: any) {
+function mapDispatchToProps(dispatch: ThunkDispatch<TelegramIntegrationAction | SettingsAction>) {
     return {
         signout: () => dispatch(signout()),
         generateTelegramChatKey: () => dispatch(generateTelegramChatKey()),

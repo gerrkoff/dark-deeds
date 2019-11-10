@@ -1,13 +1,13 @@
-import { Dispatch } from 'redux'
 import { di, diToken, SettingsApi, ToastService } from '../../di'
 import { Settings } from '../../models'
-import * as actions from '../constants/settings'
+import * as actions from '../constants'
+import { ThunkDispatch } from '../../helpers'
 
 const settingsApi = di.get<SettingsApi>(diToken.SettingsApi)
 const toastService = di.get<ToastService>(diToken.ToastService)
 
 export function saveSettings(settings: Settings) {
-    return async(dispatch: Dispatch<actions.SettingsAction>) => {
+    return async(dispatch: ThunkDispatch<actions.SettingsAction>) => {
         dispatch({ type: actions.SETTINGS_SAVE_PROCESSING })
 
         try {
@@ -20,7 +20,7 @@ export function saveSettings(settings: Settings) {
 }
 
 export function loadSettings() {
-    return async(dispatch: Dispatch<actions.SettingsAction>) => {
+    return async(dispatch: ThunkDispatch<actions.SettingsAction>) => {
         dispatch({ type: actions.SETTINGS_LOAD_PROCESSING })
 
         try {

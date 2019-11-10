@@ -1,13 +1,13 @@
-import { Dispatch } from 'redux'
 import { di, diToken, RecurrencesApi, ToastService } from '../../di'
-import * as actions from '../constants/recurrencesView'
+import * as actions from '../constants'
 import { PlannedRecurrence } from '../../models'
+import { ThunkDispatch } from '../../helpers'
 
 const recurrencesViewApi = di.get<RecurrencesApi>(diToken.RecurrencesApi)
 const toastService = di.get<ToastService>(diToken.ToastService)
 
 export function createRecurrences() {
-    return async(dispatch: Dispatch<actions.RecurrencesViewAction>) => {
+    return async(dispatch: ThunkDispatch<actions.RecurrencesViewAction>) => {
         dispatch({ type: actions.RECURRENCESVIEW_CREATING_RECURRENCES_PROCESSING })
 
         try {
@@ -21,7 +21,7 @@ export function createRecurrences() {
 }
 
 export function loadRecurrences() {
-    return async(dispatch: Dispatch<actions.RecurrencesViewAction>) => {
+    return async(dispatch: ThunkDispatch<actions.RecurrencesViewAction>) => {
         dispatch({ type: actions.RECURRENCESVIEW_LOADING_RECURRENCES_PROCESSING })
 
         try {
@@ -35,20 +35,20 @@ export function loadRecurrences() {
 }
 
 export function addRecurrence() {
-    return async(dispatch: Dispatch<actions.RecurrencesViewAction>) => {
+    return async(dispatch: ThunkDispatch<actions.RecurrencesViewAction>) => {
         dispatch({ type: actions.RECURRENCESVIEW_ADD_RECURRENCE })
     }
 }
 
 export function saveRecurrences(recurrences: PlannedRecurrence[]) {
-    return async(dispatch: Dispatch<actions.RecurrencesViewAction>) => {
+    return async(dispatch: ThunkDispatch<actions.RecurrencesViewAction>) => {
         dispatch({ type: actions.RECURRENCESVIEW_SAVING_PROCESSING })
 
         try {
             const updatedRecurrencesCount = await recurrencesViewApi.saveRecurrences(recurrences)
             toastService.success(`${updatedRecurrencesCount} recurrences were updated`)
             dispatch({ type: actions.RECURRENCESVIEW_CHANGE_EDITTING_RECURRENCE, edittingRecurrenceId: null })
-            dispatch(loadRecurrences() as any)
+            await dispatch(loadRecurrences())
         } catch (err) {
             toastService.errorProcess('saving recurrences')
         }
@@ -57,13 +57,13 @@ export function saveRecurrences(recurrences: PlannedRecurrence[]) {
 }
 
 export function changeEdittingRecurrence(edittingRecurrenceId: number | null) {
-    return async(dispatch: Dispatch<actions.RecurrencesViewAction>) => {
+    return async(dispatch: ThunkDispatch<actions.RecurrencesViewAction>) => {
         dispatch({ type: actions.RECURRENCESVIEW_CHANGE_EDITTING_RECURRENCE, edittingRecurrenceId })
     }
 }
 
 export function changeRecurrence(plannedRecurrence: PlannedRecurrence) {
-    return async(dispatch: Dispatch<actions.RecurrencesViewAction>) => {
+    return async(dispatch: ThunkDispatch<actions.RecurrencesViewAction>) => {
         dispatch({ type: actions.RECURRENCESVIEW_CHANGE_RECURRENCE, plannedRecurrence })
     }
 }

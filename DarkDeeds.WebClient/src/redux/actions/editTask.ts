@@ -1,6 +1,6 @@
-import { Dispatch } from 'redux'
 import { TaskModel } from '../../models'
-import * as actions from '../constants/editTask'
+import * as actions from '../constants'
+import { ThunkDispatch } from '../../helpers'
 
 export function openEditTaskModal(open: boolean, clientId: number = 0): actions.IEditTaskModalOpen {
     return { type: actions.EDITTASK_MODALOPEN, open, clientId }
@@ -15,7 +15,7 @@ export function setEditTaskModel(model: TaskModel): actions.IEditTaskSetModel {
 }
 
 export function openEditTaskWithModel(model: TaskModel, id: number = 0) {
-    return async(dispatch: Dispatch<actions.EditTaskAction>) => {
+    return async(dispatch: ThunkDispatch<actions.EditTaskAction>) => {
         dispatch(setEditTaskModel(model))
         dispatch(openEditTaskModal(true, id))
     }

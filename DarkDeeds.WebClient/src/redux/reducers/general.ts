@@ -1,5 +1,5 @@
 import { IGeneralState } from '../types'
-import * as actions from '../constants/general'
+import * as actions from '../constants'
 
 const inittialState: IGeneralState = {
     appVersion: ''

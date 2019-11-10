@@ -2,7 +2,9 @@ import { connect } from 'react-redux'
 import { RecurrencesView } from '../components/recurrence'
 import { createRecurrences, loadRecurrences, addRecurrence, saveRecurrences, changeEdittingRecurrence, changeRecurrence } from '../redux/actions'
 import { IAppState } from '../redux/types'
-import { PlannedRecurrence } from 'src/models'
+import { PlannedRecurrence } from '../models'
+import { ThunkDispatch } from '../helpers'
+import { RecurrencesViewAction } from '../redux/constants'
 
 function mapStateToProps({ recurrencesView }: IAppState) {
     return {
@@ -14,7 +16,7 @@ function mapStateToProps({ recurrencesView }: IAppState) {
     }
 }
 
-function mapDispatchToProps(dispatch: any) {
+function mapDispatchToProps(dispatch: ThunkDispatch<RecurrencesViewAction>) {
     return {
         createRecurrences: () => dispatch(createRecurrences()),
         loadRecurrences: () => dispatch(loadRecurrences()),

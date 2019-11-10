@@ -1,5 +1,5 @@
 import { ISettings } from '../types'
-import * as actions from '../constants/settings'
+import * as actions from '../constants'
 
 const inittialState: ISettings = {
     saveProcessing: false,

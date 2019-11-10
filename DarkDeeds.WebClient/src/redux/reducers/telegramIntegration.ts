@@ -1,5 +1,5 @@
 import { ITelegramIntegration } from '../types'
-import * as actions from '../constants/telegramIntegration'
+import * as actions from '../constants'
 
 const inittialState: ITelegramIntegration = {
     startUrl: '',

@@ -2,14 +2,15 @@ import { Dispatch } from 'redux'
 import { push as navigateTo, RouterAction } from 'connected-react-router'
 import { di, diToken, LoginApi, StorageService, ToastService } from '../../di'
 import { SigninResultEnum, SignupResultEnum } from '../../models'
-import * as actions from '../constants/login'
+import * as actions from '../constants'
+import { ThunkDispatch } from '../../helpers'
 
 const loginApi = di.get<LoginApi>(diToken.LoginApi)
 const storageService = di.get<StorageService>(diToken.StorageService)
 const toastService = di.get<ToastService>(diToken.ToastService)
 
 export function initialLogin() {
-    return async(dispatch: Dispatch<actions.LoginAction>) => {
+    return async(dispatch: ThunkDispatch<actions.LoginAction>) => {
         const token = storageService.loadAccessToken()
         if (token === null || token === '') {
             return
@@ -27,7 +28,7 @@ export function initialLogin() {
 }
 
 export function signin(username: string, password: string) {
-    return async(dispatch: Dispatch<actions.LoginAction>) => {
+    return async(dispatch: ThunkDispatch<actions.LoginAction>) => {
         dispatch(processing())
 
         let result: SigninResultEnum
@@ -49,7 +50,7 @@ export function signin(username: string, password: string) {
 }
 
 export function signup(username: string, password: string) {
-    return async(dispatch: Dispatch<actions.LoginAction>) => {
+    return async(dispatch: ThunkDispatch<actions.LoginAction>) => {
         dispatch(processing())
 
         let result: SignupResultEnum
@@ -71,7 +72,7 @@ export function signup(username: string, password: string) {
 }
 
 export function signout() {
-    return async(dispatch: Dispatch<actions.LoginAction | RouterAction>) => {
+    return async(dispatch: ThunkDispatch<actions.LoginAction | RouterAction>) => {
         storageService.clearAccessToken()
         dispatch(navigateTo('/'))
         dispatch(currentUser(false))

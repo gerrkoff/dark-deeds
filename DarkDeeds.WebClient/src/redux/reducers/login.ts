@@ -1,6 +1,6 @@
 import { SigninResultEnum, SignupResultEnum } from '../../models'
 import { ILoginState } from '../types'
-import * as actions from '../constants/login'
+import * as actions from '../constants'
 
 const initialState: ILoginState = {
     formSignin: true,
