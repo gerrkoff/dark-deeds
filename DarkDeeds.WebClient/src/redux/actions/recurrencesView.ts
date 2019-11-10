@@ -1,6 +1,7 @@
 import { Dispatch } from 'redux'
 import { di, diToken, RecurrencesApi, ToastService } from '../../di'
 import * as actions from '../constants/recurrencesView'
+import { PlannedRecurrence } from 'src/models'
 
 const recurrencesViewApi = di.get<RecurrencesApi>(diToken.RecurrencesApi)
 const toastService = di.get<ToastService>(diToken.ToastService)
@@ -35,18 +36,34 @@ export function loadRecurrences() {
 
 export function addRecurrence() {
     return async(dispatch: Dispatch<actions.RecurrencesViewAction>) => {
-        toastService.info('add recurrence')
+        dispatch({ type: actions.RECURRENCESVIEW_ADD_RECURRENCE })
     }
 }
 
-export function saveRecurrences() {
+export function saveRecurrences(recurrences: PlannedRecurrence[]) {
     return async(dispatch: Dispatch<actions.RecurrencesViewAction>) => {
-        toastService.info('save recurrences')
+        dispatch({ type: actions.RECURRENCESVIEW_SAVING_PROCESSING })
+
+        try {
+            const updatedRecurrencesCount = await recurrencesViewApi.saveRecurrences(recurrences)
+            toastService.success(`${updatedRecurrencesCount} recurrences were updated`)
+            dispatch({ type: actions.RECURRENCESVIEW_CHANGE_EDITTING_RECURRENCE, edittingRecurrenceId: null })
+            dispatch(loadRecurrences() as any)
+        } catch (err) {
+            toastService.errorProcess('saving recurrences')
+        }
+        dispatch({ type: actions.RECURRENCESVIEW_SAVING_FINISH })
     }
 }
 
-export function editRecurrence(id: number) {
+export function changeEdittingRecurrence(edittingRecurrenceId: number | null) {
     return async(dispatch: Dispatch<actions.RecurrencesViewAction>) => {
-        toastService.info('edit recurrence ' + id)
+        dispatch({ type: actions.RECURRENCESVIEW_CHANGE_EDITTING_RECURRENCE, edittingRecurrenceId })
+    }
+}
+
+export function changeRecurrence(plannedRecurrence: PlannedRecurrence) {
+    return async(dispatch: Dispatch<actions.RecurrencesViewAction>) => {
+        dispatch({ type: actions.RECURRENCESVIEW_CHANGE_RECURRENCE, plannedRecurrence })
     }
 }

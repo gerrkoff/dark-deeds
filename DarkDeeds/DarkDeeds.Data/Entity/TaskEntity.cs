@@ -6,7 +6,7 @@ using DarkDeeds.Enums;
 
 namespace DarkDeeds.Data.Entity
 {
-    public class TaskEntity : DeletableEntity
+    public class TaskEntity : DeletableEntity, IUserOwnedEntity
     {
         public string Title { get; set; }
         public int Order { get; set; }

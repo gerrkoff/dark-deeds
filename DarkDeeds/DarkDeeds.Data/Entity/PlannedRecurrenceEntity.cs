@@ -5,7 +5,7 @@ using DarkDeeds.Enums;
 
 namespace DarkDeeds.Data.Entity
 {
-    public class PlannedRecurrenceEntity : DeletableEntity
+    public class PlannedRecurrenceEntity : DeletableEntity, IUserOwnedEntity
     {
         public string Task { get; set; }
         

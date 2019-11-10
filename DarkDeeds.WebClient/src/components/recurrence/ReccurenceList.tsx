@@ -6,8 +6,10 @@ import { RecurrenceItem } from '.'
 interface IProps {
     isLoadingRecurrences: boolean
     plannedRecurrences: PlannedRecurrence[]
+    edittingRecurrenceId: number | null
     addRecurrence: () => void
-    editRecurrence: (id: number) => void
+    changeEdittingRecurrence: (id: number) => void
+    changeRecurrence: (recurrence: PlannedRecurrence) => void
 }
 export class RecurrenceList extends React.PureComponent<IProps> {
 
@@ -48,7 +50,9 @@ export class RecurrenceList extends React.PureComponent<IProps> {
                     <RecurrenceItem
                         key={x.id}
                         plannedRecurrence={x}
-                        editRecurrence={this.props.editRecurrence} />
+                        isEditting={x.id === this.props.edittingRecurrenceId}
+                        changeRecurrence={this.props.changeRecurrence}
+                        changeEdittingRecurrence={this.props.changeEdittingRecurrence} />
                 )}
             </React.Fragment>
         )

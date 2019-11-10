@@ -30,7 +30,13 @@ namespace DarkDeeds.Api.Controllers
         [HttpGet]
         public Task<IEnumerable<PlannedRecurrenceDto>> Get()
         {
-            return _recurrenceService.GetRecurrences(GetUser().UserId);
+            return _recurrenceService.LoadAsync(GetUser().UserId);
+        }
+        
+        [HttpPost]
+        public Task<int> Post([FromBody] ICollection<PlannedRecurrenceDto> recurrences)
+        {
+            return _recurrenceService.SaveAsync(recurrences, GetUser().UserId);
         }
     }
 }

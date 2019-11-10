@@ -10,6 +10,7 @@ using DarkDeeds.Data.Entity;
 using DarkDeeds.Data.Repository;
 using DarkDeeds.Enums;
 using DarkDeeds.Models;
+using DarkDeeds.Models.Data;
 using DarkDeeds.Services.Interface;
 using Microsoft.Extensions.Logging;
 
@@ -19,11 +20,13 @@ namespace DarkDeeds.Services.Implementation
     {
         private readonly IRepository<TaskEntity> _tasksRepository;
         private readonly ILogger<TaskService> _logger;
+        private readonly IPermissionsService _permissionsService;
         
-        public TaskService(IRepository<TaskEntity> tasksRepository, ILogger<TaskService> logger)
+        public TaskService(IRepository<TaskEntity> tasksRepository, ILogger<TaskService> logger, IPermissionsService permissionsService)
         {
             _tasksRepository = tasksRepository;
             _logger = logger;
+            _permissionsService = permissionsService;
         }
         
         public async Task<IEnumerable<TaskDto>> LoadActualTasksAsync(string userId, DateTime from)
@@ -50,7 +53,11 @@ namespace DarkDeeds.Services.Implementation
 
         public async Task<IEnumerable<TaskDto>> SaveTasksAsync(ICollection<TaskDto> tasks, string userId)
         {
-            await CheckIfUserCanEditTasks(tasks, userId);
+            await _permissionsService.CheckIfUserCanEditEntitiesAsync(
+                tasks.Cast<IDtoWithId>().ToList(),
+                _tasksRepository,
+                userId,
+                "Task");
 
             int[] taskIds = tasks.Select(x => x.Id).Where(x => x > 0).ToArray();
             
@@ -116,18 +123,6 @@ namespace DarkDeeds.Services.Implementation
             var dto = Mapper.Map<TaskDto>(entity);
             dto.ClientId = clientId;
             return dto;
-        }
-
-        public async Task CheckIfUserCanEditTasks(ICollection<TaskDto> tasks, string userId)
-        {
-            int[] taskIds = tasks.Select(x => x.Id).ToArray();
-            
-            bool notUserTasks = await _tasksRepository.GetAll().AnySafeAsync(x =>
-                !string.Equals(x.UserId, userId) &&
-                taskIds.Contains(x.Id)); 
-            
-            if (notUserTasks)
-                throw ServiceException.InvalidEntity("Task");
         }
     }
 }

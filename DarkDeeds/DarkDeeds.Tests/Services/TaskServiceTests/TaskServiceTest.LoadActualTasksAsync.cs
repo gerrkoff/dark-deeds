@@ -5,6 +5,8 @@ using DarkDeeds.Data.Entity;
 using DarkDeeds.Data.Repository;
 using DarkDeeds.Enums;
 using DarkDeeds.Services.Implementation;
+using DarkDeeds.Services.Interface;
+using Moq;
 using Xunit;
 
 namespace DarkDeeds.Tests.Services.TaskServiceTests
@@ -23,7 +25,7 @@ namespace DarkDeeds.Tests.Services.TaskServiceTests
         [Fact]
         public async Task LoadActualTasksAsync_ReturnOnlyUserTask()
         {   
-            var service = new TaskService(DefaultRepo_LoadActualTasksAsync(), null);
+            var service = new TaskService(DefaultRepo_LoadActualTasksAsync(), null, new Mock<IPermissionsService>().Object);
 
             var result = (await service.LoadActualTasksAsync("2", new DateTime(2000, 1, 1))).ToList();
             
@@ -34,7 +36,7 @@ namespace DarkDeeds.Tests.Services.TaskServiceTests
         [Fact]
         public async Task LoadActualTasksAsync_AdjustDateToUtc()
         {   
-            var service = new TaskService(DefaultRepo_LoadActualTasksAsync(), null);
+            var service = new TaskService(DefaultRepo_LoadActualTasksAsync(), null, new Mock<IPermissionsService>().Object);
 
             var result = (await service.LoadActualTasksAsync("1", new DateTime(2000, 1, 1))).ToList();
             
@@ -44,7 +46,7 @@ namespace DarkDeeds.Tests.Services.TaskServiceTests
         [Fact]
         public async Task LoadActualTasksAsync_IncludeNoDate()
         {
-            var service = new TaskService(DefaultRepo_LoadActualTasksAsync(), null);
+            var service = new TaskService(DefaultRepo_LoadActualTasksAsync(), null, new Mock<IPermissionsService>().Object);
 
             var result = (await service.LoadActualTasksAsync("1", new DateTime(2018, 10, 20))).ToList();
 
@@ -54,7 +56,7 @@ namespace DarkDeeds.Tests.Services.TaskServiceTests
         [Fact]
         public async Task LoadActualTasksAsync_IncludeExpiredButCompleted()
         {
-            var service = new TaskService(DefaultRepo_LoadActualTasksAsync(), null);
+            var service = new TaskService(DefaultRepo_LoadActualTasksAsync(), null, new Mock<IPermissionsService>().Object);
 
             var result = (await service.LoadActualTasksAsync("1", new DateTime(2018, 10, 20))).ToList();
 
@@ -64,7 +66,7 @@ namespace DarkDeeds.Tests.Services.TaskServiceTests
         [Fact]
         public async Task LoadActualTasksAsync_ExcludeExpiredAndCompleted()
         {
-            var service = new TaskService(DefaultRepo_LoadActualTasksAsync(), null);
+            var service = new TaskService(DefaultRepo_LoadActualTasksAsync(), null, new Mock<IPermissionsService>().Object);
 
             var result = (await service.LoadActualTasksAsync("1", new DateTime(2018, 10, 20))).ToList();
 
@@ -74,7 +76,7 @@ namespace DarkDeeds.Tests.Services.TaskServiceTests
         [Fact]
         public async Task LoadActualTasksAsync_ExcludeExpiredAdditional()
         {
-            var service = new TaskService(DefaultRepo_LoadActualTasksAsync(), null);
+            var service = new TaskService(DefaultRepo_LoadActualTasksAsync(), null, new Mock<IPermissionsService>().Object);
 
             var result = (await service.LoadActualTasksAsync("1", new DateTime(2018, 10, 20))).ToList();
 

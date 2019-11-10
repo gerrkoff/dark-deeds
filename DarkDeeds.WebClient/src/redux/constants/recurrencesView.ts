@@ -31,9 +31,46 @@ export interface ILoadRecurrencesSuccess {
     plannedRecurrences: PlannedRecurrence[]
 }
 
+export const RECURRENCESVIEW_CHANGE_EDITTING_RECURRENCE = 'RECURRENCESVIEW_CHANGE_EDITTING_RECURRENCE'
+export type RECURRENCESVIEW_CHANGE_EDITTING_RECURRENCE = typeof RECURRENCESVIEW_CHANGE_EDITTING_RECURRENCE
+export interface IChangeEdittingRecurrence {
+    type: RECURRENCESVIEW_CHANGE_EDITTING_RECURRENCE
+    edittingRecurrenceId: number | null
+}
+
+export const RECURRENCESVIEW_CHANGE_RECURRENCE = 'RECURRENCESVIEW_CHANGE_RECURRENCE'
+export type RECURRENCESVIEW_CHANGE_RECURRENCE = typeof RECURRENCESVIEW_CHANGE_RECURRENCE
+export interface IChangeRecurrence {
+    type: RECURRENCESVIEW_CHANGE_RECURRENCE
+    plannedRecurrence: PlannedRecurrence
+}
+
+export const RECURRENCESVIEW_SAVING_PROCESSING = 'RECURRENCESVIEW_SAVING_PROCESSING'
+export type RECURRENCESVIEW_SAVING_PROCESSING = typeof RECURRENCESVIEW_SAVING_PROCESSING
+export interface ISaveRecurrencesProcessing {
+    type: RECURRENCESVIEW_SAVING_PROCESSING
+}
+
+export const RECURRENCESVIEW_SAVING_FINISH = 'RECURRENCESVIEW_SAVING_FINISH'
+export type RECURRENCESVIEW_SAVING_FINISH = typeof RECURRENCESVIEW_SAVING_FINISH
+export interface ISaveRecurrencesFinish {
+    type: RECURRENCESVIEW_SAVING_FINISH
+}
+
+export const RECURRENCESVIEW_ADD_RECURRENCE = 'RECURRENCESVIEW_ADD_RECURRENCE'
+export type RECURRENCESVIEW_ADD_RECURRENCE = typeof RECURRENCESVIEW_ADD_RECURRENCE
+export interface IAddRecurrence {
+    type: RECURRENCESVIEW_ADD_RECURRENCE
+}
+
 export type RecurrencesViewAction =
     ICreateRecurrencesProcessing |
     ICreateRecurrencesFinish |
     ILoadRecurrencesProcessing |
     ILoadRecurrencesFail |
-    ILoadRecurrencesSuccess
+    ILoadRecurrencesSuccess |
+    IChangeEdittingRecurrence |
+    IChangeRecurrence |
+    ISaveRecurrencesProcessing |
+    ISaveRecurrencesFinish |
+    IAddRecurrence

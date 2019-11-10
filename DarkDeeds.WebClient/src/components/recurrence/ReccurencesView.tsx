@@ -8,12 +8,15 @@ import '../../styles/recurrences-view.css'
 interface IProps {
     isCreatingRecurrences: boolean
     isLoadingRecurrences: boolean
+    isSavingRecurrences: boolean
     plannedRecurrences: PlannedRecurrence[]
+    edittingRecurrenceId: number | null
     createRecurrences: () => void
     loadRecurrences: () => void
     addRecurrence: () => void
-    saveRecurrences: () => void
-    editRecurrence: (id: number) => void
+    saveRecurrences: (recurrences: PlannedRecurrence[]) => void
+    changeEdittingRecurrence: (id: number) => void
+    changeRecurrence: (recurrence: PlannedRecurrence) => void
 }
 export class RecurrencesView extends React.PureComponent<IProps> {
 
@@ -33,16 +36,19 @@ export class RecurrencesView extends React.PureComponent<IProps> {
                     <RecurrenceList
                         isLoadingRecurrences={this.props.isLoadingRecurrences}
                         plannedRecurrences={this.props.plannedRecurrences}
+                        edittingRecurrenceId={this.props.edittingRecurrenceId}
                         addRecurrence={this.props.addRecurrence}
-                        editRecurrence={this.props.editRecurrence} />
+                        changeRecurrence={this.props.changeRecurrence}
+                        changeEdittingRecurrence={this.props.changeEdittingRecurrence} />
                 </Grid.Column>
                 <Grid.Column width={4} textAlign='center'>
                     <RecurrencesSidePanel
                         noRecurrencesCreated={this.props.plannedRecurrences.length === 0}
                         isLoadingRecurrences={this.props.isLoadingRecurrences}
                         isCreatingRecurrences={this.props.isCreatingRecurrences}
+                        isSavingRecurrences={this.props.isSavingRecurrences}
                         addRecurrence={this.props.addRecurrence}
-                        saveRecurrences={this.props.saveRecurrences}
+                        saveRecurrences={() => this.props.saveRecurrences(this.props.plannedRecurrences)}
                         loadRecurrences={this.props.loadRecurrences}
                         createRecurrences={this.props.createRecurrences} />
                 </Grid.Column>

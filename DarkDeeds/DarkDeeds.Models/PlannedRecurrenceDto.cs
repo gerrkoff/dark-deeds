@@ -1,9 +1,10 @@
 ﻿using System;
 using DarkDeeds.Enums;
+using DarkDeeds.Models.Data;
 
 namespace DarkDeeds.Models
 {
-    public class PlannedRecurrenceDto
+    public class PlannedRecurrenceDto : IDtoWithId
     {
         public int Id { get; set; }
         
@@ -18,5 +19,7 @@ namespace DarkDeeds.Models
         public string EveryMonthDay { get; set; }
 
         public RecurrenceWeekdayEnum? EveryWeekday { get; set; }
+        
+        public bool IsDeleted { get; set; }
     }
 }

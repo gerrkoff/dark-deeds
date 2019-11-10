@@ -23,6 +23,21 @@
             color: $color-secondary-text;
             padding-left: 1rem;
         }
+
+        .recurrences-view-recurrence-item-form  {
+            @media (max-width: 767px) {
+                .field {
+                    padding-top: 0.3rem;
+                    padding-bottom: 0.3rem;
+                    width: 100%;
+                }
+            }
+            @media (min-width: 768px) {
+                .field, [role='option'], .label {
+                    font-size: $font-small;
+                }
+            }
+        }
     }
 
     .recurrences-view-empty-state {

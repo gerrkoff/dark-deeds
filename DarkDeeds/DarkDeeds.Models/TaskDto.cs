@@ -1,9 +1,10 @@
 ﻿using System;
 using DarkDeeds.Enums;
+using DarkDeeds.Models.Data;
 
 namespace DarkDeeds.Models
 {
-    public class TaskDto
+    public class TaskDto : IDtoWithId
     {
         public int Id { get; set; }
         public DateTime? Date { get; set; }
