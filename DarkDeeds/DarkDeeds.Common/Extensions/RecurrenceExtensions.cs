@@ -6,16 +6,16 @@ namespace DarkDeeds.Common.Extensions
 {
     public static class RecurrenceExtensions
     {
-        public static ICollection<PlannedRecurrenceDto> ToUtcDate(this ICollection<PlannedRecurrenceDto> tasks)
+        public static ICollection<PlannedRecurrenceDto> ToUtcDate(this ICollection<PlannedRecurrenceDto> recurrences)
         {
-            foreach (var task in tasks)
+            foreach (var recurrence in recurrences)
             {
-                task.StartDate = DateTime.SpecifyKind(task.StartDate, DateTimeKind.Utc);
-                if (task.EndDate != null)
-                    task.EndDate = DateTime.SpecifyKind(task.EndDate.Value, DateTimeKind.Utc);
+                recurrence.StartDate = DateTime.SpecifyKind(recurrence.StartDate, DateTimeKind.Utc);
+                if (recurrence.EndDate != null)
+                    recurrence.EndDate = DateTime.SpecifyKind(recurrence.EndDate.Value, DateTimeKind.Utc);
             }
 
-            return tasks;
+            return recurrences;
         }      
     }
 }

@@ -1,7 +1,7 @@
 import { Dispatch } from 'redux'
 import { di, diToken, RecurrencesApi, ToastService } from '../../di'
 import * as actions from '../constants/recurrencesView'
-import { PlannedRecurrence } from 'src/models'
+import { PlannedRecurrence } from '../../models'
 
 const recurrencesViewApi = di.get<RecurrencesApi>(diToken.RecurrencesApi)
 const toastService = di.get<ToastService>(diToken.ToastService)

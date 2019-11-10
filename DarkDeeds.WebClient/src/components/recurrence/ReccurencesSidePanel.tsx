@@ -24,7 +24,7 @@ export class RecurrencesSidePanel extends React.PureComponent<IProps> {
                                 labelPosition='left'
                                 size='mini'
                                 onClick={this.props.addRecurrence}
-                                disabled={this.props.isLoadingRecurrences || this.props.isSavingRecurrences}>
+                                disabled={this.props.isLoadingRecurrences || this.props.isSavingRecurrences || this.props.isCreatingRecurrences}>
 
                                 <Icon name='add' />
                                 Add
@@ -37,7 +37,7 @@ export class RecurrencesSidePanel extends React.PureComponent<IProps> {
                                 size='mini'
                                 onClick={this.props.saveRecurrences}
                                 loading={this.props.isSavingRecurrences}
-                                disabled={this.props.isLoadingRecurrences}>
+                                disabled={this.props.isLoadingRecurrences || this.props.isCreatingRecurrences}>
 
                                 <Icon name='cloud upload' />
                                 Save
@@ -50,7 +50,7 @@ export class RecurrencesSidePanel extends React.PureComponent<IProps> {
                                 size='mini'
                                 onClick={this.props.loadRecurrences}
                                 loading={this.props.isLoadingRecurrences}
-                                disabled={this.props.isSavingRecurrences}>
+                                disabled={this.props.isSavingRecurrences || this.props.isCreatingRecurrences}>
 
                                 <Icon name='cloud download' />
                                 Load
