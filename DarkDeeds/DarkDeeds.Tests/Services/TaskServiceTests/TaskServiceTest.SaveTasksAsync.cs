@@ -13,6 +13,20 @@ namespace DarkDeeds.Tests.Services.TaskServiceTests
     public partial class TaskServiceTest : BaseTest
     {
         [Fact]
+        public async Task SaveTasksAsync_CheckIsUserCanEdit()
+        {
+            var repoMock = Helper.CreateRepoMock<TaskEntity>();
+            var permissionMock = new Mock<IPermissionsService>();
+            var service = new TaskService(repoMock.Object, null, permissionMock.Object);
+
+            var list = new TaskDto[0];
+            var userId = "userid";
+            await service.SaveTasksAsync(list, userId);
+            
+            permissionMock.Verify(x => x.CheckIfUserCanEditEntitiesAsync(list, repoMock.Object, userId, It.IsAny<string>()));
+        }
+
+        [Fact]
         public async Task SaveTasksAsync_ReturnTasksBack()
         {
             var repoMock = Helper.CreateRepoMock<TaskEntity>();

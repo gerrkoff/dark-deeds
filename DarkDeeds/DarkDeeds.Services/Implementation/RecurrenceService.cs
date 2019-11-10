@@ -54,6 +54,7 @@ namespace DarkDeeds.Services.Implementation
                 {
                     PlannedRecurrenceEntity entity = Mapper.Map<PlannedRecurrenceEntity>(dto);
                     entity.Id = 0;
+                    entity.UserId = userId;
                     await _plannedRecurrenceRepository.SaveAsync(entity);
                     count++;
                 }

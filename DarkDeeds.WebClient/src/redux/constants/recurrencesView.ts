@@ -57,6 +57,12 @@ export interface ISaveRecurrencesFinish {
     type: RECURRENCESVIEW_SAVING_FINISH
 }
 
+export const RECURRENCESVIEW_ADD_RECURRENCE = 'RECURRENCESVIEW_ADD_RECURRENCE'
+export type RECURRENCESVIEW_ADD_RECURRENCE = typeof RECURRENCESVIEW_ADD_RECURRENCE
+export interface IAddRecurrence {
+    type: RECURRENCESVIEW_ADD_RECURRENCE
+}
+
 export type RecurrencesViewAction =
     ICreateRecurrencesProcessing |
     ICreateRecurrencesFinish |
@@ -66,4 +72,5 @@ export type RecurrencesViewAction =
     IChangeEdittingRecurrence |
     IChangeRecurrence |
     ISaveRecurrencesProcessing |
-    ISaveRecurrencesFinish
+    ISaveRecurrencesFinish |
+    IAddRecurrence

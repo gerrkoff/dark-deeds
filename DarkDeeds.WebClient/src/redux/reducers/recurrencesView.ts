@@ -1,6 +1,9 @@
 import { IRecurrencesViewState } from '../types'
+import { di, diToken, DateService } from '../../di'
 import * as actions from '../constants/recurrencesView'
-import { PlannedRecurrence } from 'src/models'
+import { PlannedRecurrence } from '../../models'
+
+const dateService = di.get<DateService>(diToken.DateService)
 
 const inittialState: IRecurrencesViewState = {
     isCreatingRecurrences: false,
@@ -49,13 +52,36 @@ export function recurrencesView(state: IRecurrencesViewState = inittialState, ac
             return { ...state,
                 isSavingRecurrences: false
             }
+        case actions.RECURRENCESVIEW_ADD_RECURRENCE:
+            const addingResult = addRecurrence(state.plannedRecurrences)
+            return { ...state,
+                plannedRecurrences: addingResult.recurrences,
+                edittingRecurrenceId: addingResult.id
+            }
     }
     return state
 }
 
+// TODO: test
 function changeRecurrence(recurrences: PlannedRecurrence[], recurrence: PlannedRecurrence): PlannedRecurrence[] {
     const newRecurrences = [...recurrences]
     const recurrenceIndex = newRecurrences.findIndex(x => x.id === recurrence.id)
     newRecurrences[recurrenceIndex] = { ...recurrence }
     return newRecurrences
+}
+
+// TODO: test
+function addRecurrence(recurrences: PlannedRecurrence[]): {recurrences: PlannedRecurrence[], id: number} {
+    const newRecurrences = [...recurrences]
+    const addedRecurrences = recurrences.filter(x => x.id < 0).map(x => x.id)
+    const id = addedRecurrences.length === 0
+        ? -1
+        : Math.min(...addedRecurrences) - 1
+    const addedRecurrence = new PlannedRecurrence(id, '', dateService.today(), null, null, null, null)
+    newRecurrences.push(addedRecurrence)
+
+    return {
+        recurrences: newRecurrences,
+        id
+    }
 }

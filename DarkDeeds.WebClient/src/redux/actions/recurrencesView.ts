@@ -36,7 +36,7 @@ export function loadRecurrences() {
 
 export function addRecurrence() {
     return async(dispatch: Dispatch<actions.RecurrencesViewAction>) => {
-        toastService.info('add recurrence')
+        dispatch({ type: actions.RECURRENCESVIEW_ADD_RECURRENCE })
     }
 }
 
