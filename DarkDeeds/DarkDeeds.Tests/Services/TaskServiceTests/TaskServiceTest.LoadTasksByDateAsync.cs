@@ -4,6 +4,8 @@ using System.Threading.Tasks;
 using DarkDeeds.Data.Entity;
 using DarkDeeds.Data.Repository;
 using DarkDeeds.Services.Implementation;
+using DarkDeeds.Services.Interface;
+using Moq;
 using Xunit;
 
 namespace DarkDeeds.Tests.Services.TaskServiceTests
@@ -23,7 +25,7 @@ namespace DarkDeeds.Tests.Services.TaskServiceTests
         [Fact]
         public async Task LoadTasksByDateAsync_ReturnOnlyUserTask()
         {   
-            var service = new TaskService(DefaultRepo_LoadTasksByDateAsync(), null);
+            var service = new TaskService(DefaultRepo_LoadTasksByDateAsync(), null, new Mock<IPermissionsService>().Object);
 
             var result = (await service.LoadTasksByDateAsync("2",
                 new DateTime(2000, 1, 1),
@@ -36,7 +38,7 @@ namespace DarkDeeds.Tests.Services.TaskServiceTests
         [Fact]
         public async Task LoadTasksByDateAsync_AdjustDateToUtc()
         {   
-            var service = new TaskService(DefaultRepo_LoadTasksByDateAsync(), null);
+            var service = new TaskService(DefaultRepo_LoadTasksByDateAsync(), null, new Mock<IPermissionsService>().Object);
 
             var result = (await service.LoadTasksByDateAsync("1",
                 new DateTime(2000, 1, 1),
@@ -48,7 +50,7 @@ namespace DarkDeeds.Tests.Services.TaskServiceTests
         [Fact]
         public async Task LoadActualTasksAsync_ExcludeNoDate()
         {
-            var service = new TaskService(DefaultRepo_LoadTasksByDateAsync(), null);
+            var service = new TaskService(DefaultRepo_LoadTasksByDateAsync(), null, new Mock<IPermissionsService>().Object);
 
             var result = (await service.LoadTasksByDateAsync("1",
                 new DateTime(2018, 10, 20),
@@ -60,7 +62,7 @@ namespace DarkDeeds.Tests.Services.TaskServiceTests
         [Fact]
         public async Task LoadActualTasksAsync_IncludeOnlyTasksFromPeriod()
         {
-            var service = new TaskService(DefaultRepo_LoadTasksByDateAsync(), null);
+            var service = new TaskService(DefaultRepo_LoadTasksByDateAsync(), null, new Mock<IPermissionsService>().Object);
 
             var result = (await service.LoadTasksByDateAsync("1",
                 new DateTime(2018, 10, 20),

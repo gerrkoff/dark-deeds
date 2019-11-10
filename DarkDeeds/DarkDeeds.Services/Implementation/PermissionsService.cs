@@ -12,7 +12,6 @@ namespace DarkDeeds.Services.Implementation
 {
     public class PermissionsService : IPermissionsService
     {
-        // TODO! test
         public async Task CheckIfUserCanEditEntitiesAsync<T>(ICollection<IDtoWithId> dtos,
             IRepositoryNonDeletable<T> repository,
             string userId,
