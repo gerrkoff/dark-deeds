@@ -26,3 +26,4 @@ DarkDeeds.E2eTests/bin
 
 appsettings.Development.json
 CI/artifacts/
+Scripts/local-run/db-data
