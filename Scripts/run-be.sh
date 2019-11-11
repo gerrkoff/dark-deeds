@@ -1,5 +1,5 @@
 cd ..
-docker build -t dark-deeds-be -f Scripts/local-run/be.dockerfile .
+docker build -t dark-deeds-be -f Scripts/run/be.dockerfile .
 docker rm -f dark-deeds-be
 docker run \
     -p 5000:80 \
