@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 cd ..
 rm -rf CI/artifacts
-docker build -t dark-deeds-test-e2e -f CI/dockerfile-test-e2e .
+docker build -t dark-deeds-test-e2e -f CI/test-e2e.dockerfile .
 docker rm -f dark-deeds-test-e2e
-docker run \
+docker run -t \
     -e TZ=America/New_York \
     -e RUN_CONTAINER='true' \
     -e ARTIFACTS_PATH='/app/artifacts' \

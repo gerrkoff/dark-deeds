@@ -44,7 +44,7 @@ dotnet publish -c Release -o "$DIR"/CI/artifacts/src || exit $?
 # misc
 print 'COPY ADDITIONAL FILES'
 cd "$DIR" || exit $?
-cp CI/dockerfile-run CI/artifacts/ || exit $?
+cp CI/run.dockerfile CI/artifacts/ || exit $?
 echo copied
 
 print 'SUCCESS'
