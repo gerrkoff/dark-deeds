@@ -6,7 +6,7 @@
 
 Web application (optimized for mobiles as well) which helps you to get your TODO stuff done
 
-### Technology stack
+## Technology stack
 Single-Page App on **React & Redux** with **ASP.NET Core** server and **PostgreSQL** database
 
 
