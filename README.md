@@ -6,7 +6,7 @@
 
 Web application (optimized for mobiles as well) which helps you to get your TODO stuff done
 
-## Technology stack
+### Technology stack
 Single-Page App on **React & Redux** with **ASP.NET Core** server and **PostgreSQL** database
 
 
@@ -34,7 +34,7 @@ Execute from `/DarkDeeds/DarkDeeds.Api` to create settings file from template
 ```
 cp appsettings.json appsettings.Development.json
 ```
-Adjust created `appsettings.Development.json` and set `appDb` connection string. If you are running database from previous step, you config should look like this
+Adjust created `appsettings.Development.json` and set `appDb` connection string. If you are running database from previous step, you config should look like below
 
 **Do not forget** to use you own IP. And yes, you should use IP, not `localhost`
 ```
