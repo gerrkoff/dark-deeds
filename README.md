@@ -4,9 +4,6 @@
 [![Actions Status](https://github.com/gerrkoff/dark-deeds/workflows/CI/badge.svg)](https://github.com/gerrkoff/dark-deeds/actions)
 [![GitHub last commit](https://img.shields.io/github/last-commit/gerrkoff/dark-deeds.svg)](https://github.com/gerrkoff/dark-deeds/commits/master)
 
-Web application (optimized for mobiles as well) which helps you to get your TODO stuff done
-
-## Technology stack
 Single-Page App on **React & Redux** with **ASP.NET Core** server and **PostgreSQL** database
 
 
