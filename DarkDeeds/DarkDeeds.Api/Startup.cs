@@ -39,9 +39,7 @@ namespace DarkDeeds.Api
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            app.UseHealthChecks("/healthcheck");
-
-            if (env.IsDevelopment())
+            if (!env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
                 app.UseCors(builder => builder
@@ -53,8 +51,12 @@ namespace DarkDeeds.Api
             else
             {
                 app.UseHsts();
+                app.UseCors(builder => builder
+                    .WithOrigins("grkf.ru")
+                    .WithMethods("get"));
             }
 
+            app.UseHealthChecks("/healthcheck");
             app.UseResponseCompression();
             app.UseStaticFiles();
             app.UseAuthentication();
