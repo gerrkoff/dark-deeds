@@ -51,9 +51,9 @@ namespace DarkDeeds.Api
             else
             {
                 app.UseHsts();
-                app.UseCors(builder => builder.AllowAnyOrigin());
-//                    .WithOrigins("http://grkf.ru")
-//                    .WithMethods("GET"));
+                app.UseCors(builder => builder
+                    .WithOrigins("http://grkf.ru")
+                    .WithMethods("GET"));
             }
 
             app.UseHealthChecks("/healthcheck"); 
