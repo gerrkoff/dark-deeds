@@ -20,18 +20,18 @@ The only thing you need to run Dark Deeds locally is installed Docker. If you wa
 
 
 ### Database
-Execute from `/Scripts` folder to start docker container with database instance
+Execute from `/Scripts` folder to start docker container with database instance:
 ```
 ./run-db.sh
 ```
 
 
 ### Backend
-Execute from `/DarkDeeds/DarkDeeds.Api` to create settings file from template
+Execute from `/DarkDeeds/DarkDeeds.Api` to create settings file from template:
 ```
 cp appsettings.json appsettings.Development.json
 ```
-Adjust created `appsettings.Development.json` and set `appDb` connection string. If you are running database from previous step, your config should look like below
+Adjust created `appsettings.Development.json` and set `appDb` connection string. If you are running database from previous step, your config should look like below:
 ```
 ...
 "ConnectionStrings": {
@@ -39,20 +39,20 @@ Adjust created `appsettings.Development.json` and set `appDb` connection string.
 },
 ...
 ```
-**Do not forget** to use you own IP. And yes, you should use IP, not `localhost`
+**Do not forget** to use you own IP. And yes, you should use IP, not `localhost`.
 
-Execute from `/Scripts` folder to start docker container with BE application instance
+Execute from `/Scripts` folder to start docker container with BE application instance:
 ```
 ./run-be.sh
 ```
 
 
 ### Frontend
-Execute from `/Scripts` folder to start docker container with FE application instance
+Execute from `/Scripts` folder to start docker container with FE application instance:
 ```
 ./run-fe.sh
 ```
 
 
 ### Finally
-Check your Dark Deeds app on http://localhost:3000
+Check your Dark Deeds app on http://localhost:3000.
