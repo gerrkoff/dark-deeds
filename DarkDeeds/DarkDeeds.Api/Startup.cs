@@ -52,7 +52,7 @@ namespace DarkDeeds.Api
             {
                 app.UseHsts();
                 app.UseCors(builder => builder
-                    .WithOrigins("grkf.ru")
+                    .WithOrigins("http://grkf.ru")
                     .WithMethods("get"));
             }
 
