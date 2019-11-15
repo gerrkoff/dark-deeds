@@ -53,10 +53,10 @@ namespace DarkDeeds.Api
                 app.UseHsts();
                 app.UseCors(builder => builder.AllowAnyOrigin());
 //                    .WithOrigins("http://grkf.ru")
-//                    .WithMethods("get"));
+//                    .WithMethods("GET"));
             }
 
-            app.UseHealthChecks("/healthcheck");
+            app.UseHealthChecks("/healthcheck"); 
             app.UseResponseCompression();
             app.UseStaticFiles();
             app.UseAuthentication();
