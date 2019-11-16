@@ -76,25 +76,27 @@ export class RecurrenceItem extends React.PureComponent<IProps> {
                             onChange={(_, data) => this.handleNthDayChange(data.value)} />
                     </Form.Group>
                     <Form.Group>
-                        <Form.Field
-                            label='Within...'
-                            control={DateInput}
-                            closable hideMobileKeyboard
-                            placeholder='From'
-                            name='startDate'
-                            icon={false}
-                            dateFormat={this.dateService.dateInputFormat}
-                            value={this.parseDate(this.props.recurrence.startDate)}
-                            onChange={this.handleDateChange} />
-                        <Form.Field
-                            control={DateInput}
-                            closable hideMobileKeyboard clearable
-                            placeholder='Untill'
-                            name='endDate'
-                            icon={false}
-                            dateFormat={this.dateService.dateInputFormat}
-                            value={this.parseDate(this.props.recurrence.endDate)}
-                            onChange={this.handleDateChange} />
+                        <Form.Field>
+                            <label>Within...</label>
+                            <DateInput
+                                closable hideMobileKeyboard
+                                placeholder='From'
+                                name='startDate'
+                                icon={false}
+                                dateFormat={this.dateService.dateInputFormat}
+                                value={this.parseDate(this.props.recurrence.startDate)}
+                                onChange={this.handleDateChange} />
+                        </Form.Field>
+                        <Form.Field>
+                            <DateInput
+                                closable hideMobileKeyboard clearable
+                                placeholder='Untill'
+                                name='endDate'
+                                icon={false}
+                                dateFormat={this.dateService.dateInputFormat}
+                                value={this.parseDate(this.props.recurrence.endDate)}
+                                onChange={this.handleDateChange} />
+                        </Form.Field>
                     </Form.Group>
                 </Form>
             </Segment>
@@ -110,16 +112,17 @@ export class RecurrenceItem extends React.PureComponent<IProps> {
     }
 
     private handleDateChange = (_: any, event: { name: string, value: string }) => {
-        console.log(event)
+        if (event.name !== 'startDate' && event.name !== 'endDate') {
+            return
+        }
+
         const date = event.value === ''
             ? null
             : new Date(Date.parse(event.value))
         if (event.name === 'startDate' && date !== null) {
             this.props.recurrence.startDate = date
-        } else if (event.name === 'endDate') {
-            this.props.recurrence.endDate = date
         } else {
-            return
+            this.props.recurrence.endDate = date
         }
 
         if (this.props.recurrence.endDate !== null && this.props.recurrence.startDate > this.props.recurrence.endDate) {
