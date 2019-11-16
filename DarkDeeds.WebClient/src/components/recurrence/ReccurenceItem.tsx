@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { Segment, Header, DropdownItemProps, Form } from 'semantic-ui-react'
-import { DateInput } from 'semantic-ui-calendar-react'
+import { DateInput } from '../common'
 import { di, diToken, RecurrenceService, DateService } from '../../di'
 import { PlannedRecurrence, RecurrenceWeekdayEnum, recurrenceWeekdayEnumValues } from '../../models'
 import { enumExpand, enumReduce } from '../../helpers'
@@ -79,7 +79,7 @@ export class RecurrenceItem extends React.PureComponent<IProps> {
                         <Form.Field>
                             <label>Within...</label>
                             <DateInput
-                                closable hideMobileKeyboard
+                                closable hideMobileKeyboard readonly
                                 placeholder='From'
                                 name='startDate'
                                 icon={false}
@@ -89,7 +89,7 @@ export class RecurrenceItem extends React.PureComponent<IProps> {
                         </Form.Field>
                         <Form.Field>
                             <DateInput
-                                closable hideMobileKeyboard clearable
+                                closable hideMobileKeyboard readonly clearable
                                 placeholder='Untill'
                                 name='endDate'
                                 icon={false}
