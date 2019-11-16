@@ -49,7 +49,7 @@ export class RecurrenceList extends React.PureComponent<IProps> {
                 {plannedRecurrences.map(x =>
                     <RecurrenceItem
                         key={x.id}
-                        plannedRecurrence={x}
+                        recurrence={x}
                         isEditting={x.id === this.props.edittingRecurrenceId}
                         changeRecurrence={this.props.changeRecurrence}
                         changeEdittingRecurrence={this.props.changeEdittingRecurrence} />

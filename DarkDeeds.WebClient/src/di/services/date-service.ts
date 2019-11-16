@@ -3,6 +3,7 @@ import { IDateable } from '../../models'
 
 @injectable()
 export class DateService {
+    public readonly dateInputFormat = 'M/D/YYYY'
     public readonly daysLong = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
     private readonly days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 
@@ -19,7 +20,11 @@ export class DateService {
     }
 
     public toLabel(date: Date): string {
-        return `${date.toLocaleDateString('en-US')} ${this.getWeekdayName(date)}`
+        return `${this.toDateString(date)} ${this.getWeekdayName(date)}`
+    }
+
+    public toDateString(date: Date): string {
+        return date.toLocaleDateString('en-US')
     }
 
     public toNumber(date: Date | null): number {
