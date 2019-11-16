@@ -48,6 +48,7 @@ export class RecurrenceItem extends React.PureComponent<IProps> {
 
                     <Form.Group>
                         <Form.Input
+                            label='Task...'
                             placeholder='Task'
                             value={this.props.plannedRecurrence.task}
                             onChange={(_, data) => this.handleTaskChange(data.value)} />
@@ -55,6 +56,7 @@ export class RecurrenceItem extends React.PureComponent<IProps> {
                     <Form.Group>
                         <Form.Dropdown
                             multiple selection
+                            label='Repeats...'
                             placeholder='Every day of week'
                             options={weekdayOptions}
                             value={this.parseWeekday(this.props.plannedRecurrence.everyWeekday)}
@@ -73,6 +75,7 @@ export class RecurrenceItem extends React.PureComponent<IProps> {
                     </Form.Group>
                     <Form.Group>
                         <Form.Input
+                            label='Within...'
                             placeholder='From' />
                         <Form.Input
                             placeholder='Until' />
