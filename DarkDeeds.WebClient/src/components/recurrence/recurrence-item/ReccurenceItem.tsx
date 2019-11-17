@@ -27,15 +27,15 @@ export class RecurrenceItem extends React.PureComponent<IProps> {
         return (
             <Segment
                 inverted raised padded
-                onClick={() => this.props.changeEdittingRecurrence(this.props.recurrence.id)}
                 className='recurrences-view-recurrence-item'>
 
                 <Header as='h5'>{ print.task }</Header>
                 <span>{ print.repeatative }</span>
                 <span className='recurrences-view-recurrence-item-borders'>{ print.borders }</span>
                 <ButtonPanel
-                    edit={() => this.props.changeEdittingRecurrence(this.props.recurrence.id)}
-                    delete={() => console.log('delete', this.props.recurrence.id)} />
+                    isEditing={false}
+                    onChangeEditing={() => this.props.changeEdittingRecurrence(this.props.recurrence.id)}
+                    onDelete={() => console.log('delete', this.props.recurrence.id)} />
             </Segment>
         )
     }
