@@ -15,7 +15,6 @@ export class ButtonPanel extends React.PureComponent<IProps> {
                 <Label
                     attached='top right'
                     onClick={this.props.onDelete}
-                    color='red'
                     className='recurrences-view-recurrence-item-btn btn-error'>
 
                     <Icon name='cancel' />

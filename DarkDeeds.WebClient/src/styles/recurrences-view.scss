@@ -10,10 +10,6 @@
         @media (max-width: 767px) {
             margin-top: -1rem;
         }
-
-        .segment {
-            cursor: pointer;
-        }
     }
 
     .recurrences-view-recurrence-item {
@@ -46,6 +42,8 @@
         }
 
         .recurrences-view-recurrence-item-btn {
+            cursor: pointer;
+
             i {
                 margin: 0;
                 min-width: 1rem;
