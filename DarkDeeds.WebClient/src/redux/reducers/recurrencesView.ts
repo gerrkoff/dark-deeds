@@ -58,6 +58,10 @@ export function recurrencesView(state: IRecurrencesViewState = inittialState, ac
                 plannedRecurrences: addingResult.recurrences,
                 edittingRecurrenceId: addingResult.id
             }
+        case actions.RECURRENCESVIEW_DELETE_RECURRENCE:
+            return { ...state,
+                plannedRecurrences: deleteRecurrence(state.plannedRecurrences, action.id)
+            }
     }
     return state
 }
@@ -84,4 +88,16 @@ function addRecurrence(recurrences: PlannedRecurrence[]): {recurrences: PlannedR
         recurrences: newRecurrences,
         id
     }
+}
+
+// TODO: test
+function deleteRecurrence(recurrences: PlannedRecurrence[], id: number): PlannedRecurrence[] {
+    if (id < 0) {
+        return recurrences.filter(x => x.id !== id)
+    }
+
+    const newRecurrences = [...recurrences]
+    const recurrenceIndex = newRecurrences.findIndex(x => x.id === id)
+    newRecurrences[recurrenceIndex] = { ...newRecurrences[recurrenceIndex], isDeleted: true }
+    return newRecurrences
 }

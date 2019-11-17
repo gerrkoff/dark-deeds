@@ -63,6 +63,13 @@ export interface IAddRecurrence {
     type: RECURRENCESVIEW_ADD_RECURRENCE
 }
 
+export const RECURRENCESVIEW_DELETE_RECURRENCE = 'RECURRENCESVIEW_DELETE_RECURRENCE'
+export type RECURRENCESVIEW_DELETE_RECURRENCE = typeof RECURRENCESVIEW_DELETE_RECURRENCE
+export interface IDeleteRecurrence {
+    type: RECURRENCESVIEW_DELETE_RECURRENCE
+    id: number
+}
+
 export type RecurrencesViewAction =
     ICreateRecurrencesProcessing |
     ICreateRecurrencesFinish |
@@ -73,4 +80,5 @@ export type RecurrencesViewAction =
     IChangeRecurrence |
     ISaveRecurrencesProcessing |
     ISaveRecurrencesFinish |
-    IAddRecurrence
+    IAddRecurrence |
+    IDeleteRecurrence

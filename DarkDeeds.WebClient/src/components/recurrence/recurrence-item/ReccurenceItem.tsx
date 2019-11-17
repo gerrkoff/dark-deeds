@@ -10,6 +10,7 @@ interface IProps {
     isEditting: boolean
     changeEdittingRecurrence: (id: number | null) => void
     changeRecurrence: (recurrence: PlannedRecurrence) => void
+    deleteRecurrence: (recurrence: PlannedRecurrence) => void
 }
 export class RecurrenceItem extends React.PureComponent<IProps> {
     private recurrenceService = di.get<RecurrenceService>(diToken.RecurrenceService)
@@ -53,8 +54,5 @@ export class RecurrenceItem extends React.PureComponent<IProps> {
         )
     }
 
-    private handleDelete = () => {
-        this.props.recurrence.isDeleted = true
-        this.props.changeRecurrence(this.props.recurrence)
-    }
+    private handleDelete = () => this.props.deleteRecurrence(this.props.recurrence)
 }

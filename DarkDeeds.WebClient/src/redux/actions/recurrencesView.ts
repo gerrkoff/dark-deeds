@@ -67,3 +67,9 @@ export function changeRecurrence(plannedRecurrence: PlannedRecurrence) {
         dispatch({ type: actions.RECURRENCESVIEW_CHANGE_RECURRENCE, plannedRecurrence })
     }
 }
+
+export function deleteRecurrence(id: number) {
+    return async(dispatch: ThunkDispatch<actions.RecurrencesViewAction>) => {
+        dispatch({ type: actions.RECURRENCESVIEW_DELETE_RECURRENCE, id })
+    }
+}
