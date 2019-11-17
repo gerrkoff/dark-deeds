@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Segment, DropdownItemProps, Form } from 'semantic-ui-react'
+import { DropdownItemProps, Form } from 'semantic-ui-react'
 import { DateInput } from '../../../common'
 import { di, diToken, DateService } from '../../../../di'
 import { PlannedRecurrence, RecurrenceWeekdayEnum, recurrenceWeekdayEnumValues } from '../../../../models'
@@ -14,10 +14,7 @@ export class RecurrenceEdit extends React.PureComponent<IProps> {
 
     public render() {
         return (
-            <Segment
-                inverted raised
-                className='recurrences-view-recurrence-item'>
-
+            <React.Fragment>
                 <Form
                     inverted
                     className='recurrences-view-recurrence-item-form'>
@@ -73,7 +70,7 @@ export class RecurrenceEdit extends React.PureComponent<IProps> {
                         </Form.Field>
                     </Form.Group>
                 </Form>
-            </Segment>
+            </React.Fragment>
         )
     }
 

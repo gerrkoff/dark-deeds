@@ -15,20 +15,23 @@ export class RecurrenceItem extends React.PureComponent<IProps> {
     private recurrenceService = di.get<RecurrenceService>(diToken.RecurrenceService)
 
     public render() {
-        if (this.props.isEditting) {
-            return this.renderEdit()
-        }
-
-        return this.renderPrint()
-    }
-
-    private renderPrint() {
-        const print = this.recurrenceService.print(this.props.recurrence)
         return (
             <Segment
                 inverted raised padded
                 className='recurrences-view-recurrence-item'>
 
+                { this.props.isEditting
+                    ? this.renderEdit()
+                    : this.renderPrint()
+                }
+            </Segment>
+        )
+    }
+
+    private renderPrint() {
+        const print = this.recurrenceService.print(this.props.recurrence)
+        return (
+            <React.Fragment>
                 <Header as='h5'>{ print.task }</Header>
                 <span>{ print.repeatative }</span>
                 <span className='recurrences-view-recurrence-item-borders'>{ print.borders }</span>
@@ -36,7 +39,7 @@ export class RecurrenceItem extends React.PureComponent<IProps> {
                     isEditing={false}
                     onChangeEditing={() => this.props.changeEdittingRecurrence(this.props.recurrence.id)}
                     onDelete={() => console.log('delete', this.props.recurrence.id)} />
-            </Segment>
+            </React.Fragment>
         )
     }
 
