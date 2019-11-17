@@ -40,13 +40,14 @@ export class RecurrenceList extends React.PureComponent<IProps> {
     }
 
     private renderList(plannedRecurrences: PlannedRecurrence[]) {
-        if (plannedRecurrences.length === 0) {
+        const nonDeletedRecurrences = plannedRecurrences.filter(x => !x.isDeleted)
+        if (nonDeletedRecurrences.length === 0) {
             return this.renderEmptyState()
         }
 
         return (
             <React.Fragment>
-                {plannedRecurrences.map(x =>
+                {nonDeletedRecurrences.map(x =>
                     <RecurrenceItem
                         key={x.id}
                         recurrence={x}

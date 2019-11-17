@@ -77,7 +77,7 @@ function addRecurrence(recurrences: PlannedRecurrence[]): {recurrences: PlannedR
     const id = addedRecurrences.length === 0
         ? -1
         : Math.min(...addedRecurrences) - 1
-    const addedRecurrence = new PlannedRecurrence(id, '', dateService.today(), null, null, null, null)
+    const addedRecurrence = new PlannedRecurrence(id, '', dateService.today(), null, null, null, null, false)
     newRecurrences.push(addedRecurrence)
 
     return {

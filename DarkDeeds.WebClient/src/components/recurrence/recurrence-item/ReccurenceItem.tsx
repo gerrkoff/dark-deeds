@@ -38,7 +38,7 @@ export class RecurrenceItem extends React.PureComponent<IProps> {
                 <ButtonPanel
                     isEditing={false}
                     onChangeEditing={() => this.props.changeEdittingRecurrence(this.props.recurrence.id)}
-                    onDelete={() => console.log('delete', this.props.recurrence.id)} />
+                    onDelete={this.handleDelete} />
             </React.Fragment>
         )
     }
@@ -48,7 +48,13 @@ export class RecurrenceItem extends React.PureComponent<IProps> {
             <RecurrenceEdit
                 recurrence={this.props.recurrence}
                 stopEditing={() => this.props.changeEdittingRecurrence(null)}
+                delete={this.handleDelete}
                 changeRecurrence={this.props.changeRecurrence} />
         )
+    }
+
+    private handleDelete = () => {
+        this.props.recurrence.isDeleted = true
+        this.props.changeRecurrence(this.props.recurrence)
     }
 }

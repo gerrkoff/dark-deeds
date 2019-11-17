@@ -10,6 +10,7 @@ interface IProps {
     recurrence: PlannedRecurrence
     changeRecurrence: (recurrence: PlannedRecurrence) => void
     stopEditing: () => void
+    delete: () => void
 }
 export class RecurrenceEdit extends React.PureComponent<IProps> {
     private dateService = di.get<DateService>(diToken.DateService)
@@ -75,7 +76,7 @@ export class RecurrenceEdit extends React.PureComponent<IProps> {
                 <ButtonPanel
                     isEditing={true}
                     onChangeEditing={this.props.stopEditing}
-                    onDelete={() => console.log('delete', this.props.recurrence.id)} />
+                    onDelete={this.props.delete} />
             </React.Fragment>
         )
     }
