@@ -4,10 +4,12 @@ import { DateInput } from '../../../common'
 import { di, diToken, DateService } from '../../../../di'
 import { PlannedRecurrence, RecurrenceWeekdayEnum, recurrenceWeekdayEnumValues } from '../../../../models'
 import { enumExpand, enumReduce } from '../../../../helpers'
+import { ButtonPanel } from './ButtonPanel'
 
 interface IProps {
     recurrence: PlannedRecurrence
     changeRecurrence: (recurrence: PlannedRecurrence) => void
+    stopEditing: () => void
 }
 export class RecurrenceEdit extends React.PureComponent<IProps> {
     private dateService = di.get<DateService>(diToken.DateService)
@@ -70,6 +72,10 @@ export class RecurrenceEdit extends React.PureComponent<IProps> {
                         </Form.Field>
                     </Form.Group>
                 </Form>
+                <ButtonPanel
+                    isEditing={true}
+                    onChangeEditing={this.props.stopEditing}
+                    onDelete={() => console.log('delete', this.props.recurrence.id)} />
             </React.Fragment>
         )
     }

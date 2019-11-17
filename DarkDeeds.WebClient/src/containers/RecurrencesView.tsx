@@ -22,7 +22,7 @@ function mapDispatchToProps(dispatch: ThunkDispatch<RecurrencesViewAction>) {
         loadRecurrences: () => dispatch(loadRecurrences()),
         addRecurrence: () => dispatch(addRecurrence()),
         saveRecurrences: (recurrences: PlannedRecurrence[]) => dispatch(saveRecurrences(recurrences)),
-        changeEdittingRecurrence: (id: number) => dispatch(changeEdittingRecurrence(id)),
+        changeEdittingRecurrence: (id: number | null) => dispatch(changeEdittingRecurrence(id)),
         changeRecurrence: (recurrence: PlannedRecurrence) => dispatch(changeRecurrence(recurrence))
     }
 }

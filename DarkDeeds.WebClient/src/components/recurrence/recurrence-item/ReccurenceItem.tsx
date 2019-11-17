@@ -8,7 +8,7 @@ import { ButtonPanel } from './components/ButtonPanel'
 interface IProps {
     recurrence: PlannedRecurrence
     isEditting: boolean
-    changeEdittingRecurrence: (id: number) => void
+    changeEdittingRecurrence: (id: number | null) => void
     changeRecurrence: (recurrence: PlannedRecurrence) => void
 }
 export class RecurrenceItem extends React.PureComponent<IProps> {
@@ -47,6 +47,7 @@ export class RecurrenceItem extends React.PureComponent<IProps> {
         return (
             <RecurrenceEdit
                 recurrence={this.props.recurrence}
+                stopEditing={() => this.props.changeEdittingRecurrence(null)}
                 changeRecurrence={this.props.changeRecurrence} />
         )
     }

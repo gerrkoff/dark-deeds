@@ -35,6 +35,8 @@
                     padding-bottom: 0.3rem;
                     width: 100%;
                 }
+
+                margin-bottom: 1.25rem;
             }
             @media (min-width: 768px) {
                 .field, [role='option'], .label {
@@ -47,6 +49,24 @@
             i {
                 margin: 0;
                 min-width: 1rem;
+            }
+
+            &.btn-info {
+                background-color: $color-info;
+                border-color: $color-info;
+                color: #fff;
+            }
+
+            &.btn-error {
+                background-color: $color-error;
+                border-color: $color-error;
+                color: #fff;
+            }
+
+            &.btn-success {
+                background-color: $color-success;
+                border-color: $color-success;
+                color: #fff;
             }
         }
     }

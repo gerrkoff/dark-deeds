@@ -16,7 +16,7 @@ interface IProps {
     loadRecurrences: () => void
     addRecurrence: () => void
     saveRecurrences: (recurrences: PlannedRecurrence[]) => void
-    changeEdittingRecurrence: (id: number) => void
+    changeEdittingRecurrence: (id: number | null) => void
     changeRecurrence: (recurrence: PlannedRecurrence) => void
 }
 export class RecurrencesView extends React.PureComponent<IProps> {
