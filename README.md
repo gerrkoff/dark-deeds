@@ -31,15 +31,7 @@ Execute from `/DarkDeeds/DarkDeeds.Api` to create settings file from template:
 ```
 cp appsettings.json appsettings.Development.json
 ```
-Adjust created `appsettings.Development.json` and set `appDb` connection string. If you are running database from previous step, your config should look like below:
-```
-...
-"ConnectionStrings": {
-  "appDb": "Host=192.168.0.199;Port=5432;Database=dark-deeds;Username=postgres;Password=password"
-},
-...
-```
-**Do not forget** to use you own IP. And yes, you should use IP, not `localhost`.
+If you aren't using database from previous step, you should change created `appsettings.Development.json` and adjust `appDb` connection string.
 
 Execute from `/Scripts` folder to start docker container with BE application instance:
 ```
