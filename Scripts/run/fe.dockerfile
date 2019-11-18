@@ -1,4 +1,4 @@
-FROM node:8
+FROM node:12.13.0-alpine
 
 COPY DarkDeeds.WebClient /app
 COPY Scripts/run/fe.sh /app/

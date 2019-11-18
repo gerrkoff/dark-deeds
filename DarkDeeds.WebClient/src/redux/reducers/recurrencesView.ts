@@ -58,11 +58,14 @@ export function recurrencesView(state: IRecurrencesViewState = inittialState, ac
                 plannedRecurrences: addingResult.recurrences,
                 edittingRecurrenceId: addingResult.id
             }
+        case actions.RECURRENCESVIEW_DELETE_RECURRENCE:
+            return { ...state,
+                plannedRecurrences: deleteRecurrence(state.plannedRecurrences, action.id)
+            }
     }
     return state
 }
 
-// TODO: test
 function changeRecurrence(recurrences: PlannedRecurrence[], recurrence: PlannedRecurrence): PlannedRecurrence[] {
     const newRecurrences = [...recurrences]
     const recurrenceIndex = newRecurrences.findIndex(x => x.id === recurrence.id)
@@ -70,18 +73,28 @@ function changeRecurrence(recurrences: PlannedRecurrence[], recurrence: PlannedR
     return newRecurrences
 }
 
-// TODO: test
 function addRecurrence(recurrences: PlannedRecurrence[]): {recurrences: PlannedRecurrence[], id: number} {
     const newRecurrences = [...recurrences]
     const addedRecurrences = recurrences.filter(x => x.id < 0).map(x => x.id)
     const id = addedRecurrences.length === 0
         ? -1
         : Math.min(...addedRecurrences) - 1
-    const addedRecurrence = new PlannedRecurrence(id, '', dateService.today(), null, null, null, null)
+    const addedRecurrence = new PlannedRecurrence(id, '', dateService.today(), null, null, null, null, false)
     newRecurrences.push(addedRecurrence)
 
     return {
         recurrences: newRecurrences,
         id
     }
+}
+
+function deleteRecurrence(recurrences: PlannedRecurrence[], id: number): PlannedRecurrence[] {
+    if (id < 0) {
+        return recurrences.filter(x => x.id !== id)
+    }
+
+    const newRecurrences = [...recurrences]
+    const recurrenceIndex = newRecurrences.findIndex(x => x.id === id)
+    newRecurrences[recurrenceIndex] = { ...newRecurrences[recurrenceIndex], isDeleted: true }
+    return newRecurrences
 }

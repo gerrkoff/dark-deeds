@@ -10,10 +10,6 @@
         @media (max-width: 767px) {
             margin-top: -1rem;
         }
-
-        .segment {
-            cursor: pointer;
-        }
     }
 
     .recurrences-view-recurrence-item {
@@ -25,17 +21,50 @@
         }
 
         .recurrences-view-recurrence-item-form  {
+            .fields {
+                align-items: flex-end;
+            }
+
             @media (max-width: 767px) {
                 .field {
                     padding-top: 0.3rem;
                     padding-bottom: 0.3rem;
                     width: 100%;
                 }
+
+                margin-bottom: 1.25rem;
             }
             @media (min-width: 768px) {
                 .field, [role='option'], .label {
                     font-size: $font-small;
                 }
+            }
+        }
+
+        .recurrences-view-recurrence-item-btn {
+            cursor: pointer;
+
+            i {
+                margin: 0;
+                min-width: 1rem;
+            }
+
+            &.btn-info {
+                background-color: $color-info;
+                border-color: $color-info;
+                color: #fff;
+            }
+
+            &.btn-error {
+                background-color: $color-error;
+                border-color: $color-error;
+                color: #fff;
+            }
+
+            &.btn-success {
+                background-color: $color-success;
+                border-color: $color-success;
+                color: #fff;
             }
         }
     }

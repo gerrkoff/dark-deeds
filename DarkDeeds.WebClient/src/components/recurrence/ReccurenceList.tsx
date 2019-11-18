@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { Segment, Header, Icon, Button, Placeholder } from 'semantic-ui-react'
 import { PlannedRecurrence } from '../../models'
-import { RecurrenceItem } from '.'
+import { RecurrenceItem } from './recurrence-item/ReccurenceItem'
 
 interface IProps {
     isLoadingRecurrences: boolean
@@ -10,6 +10,7 @@ interface IProps {
     addRecurrence: () => void
     changeEdittingRecurrence: (id: number) => void
     changeRecurrence: (recurrence: PlannedRecurrence) => void
+    deleteRecurrence: (recurrence: PlannedRecurrence) => void
 }
 export class RecurrenceList extends React.PureComponent<IProps> {
 
@@ -40,18 +41,20 @@ export class RecurrenceList extends React.PureComponent<IProps> {
     }
 
     private renderList(plannedRecurrences: PlannedRecurrence[]) {
-        if (plannedRecurrences.length === 0) {
+        const nonDeletedRecurrences = plannedRecurrences.filter(x => !x.isDeleted)
+        if (nonDeletedRecurrences.length === 0) {
             return this.renderEmptyState()
         }
 
         return (
             <React.Fragment>
-                {plannedRecurrences.map(x =>
+                {nonDeletedRecurrences.map(x =>
                     <RecurrenceItem
                         key={x.id}
-                        plannedRecurrence={x}
+                        recurrence={x}
                         isEditting={x.id === this.props.edittingRecurrenceId}
                         changeRecurrence={this.props.changeRecurrence}
+                        deleteRecurrence={this.props.deleteRecurrence}
                         changeEdittingRecurrence={this.props.changeEdittingRecurrence} />
                 )}
             </React.Fragment>

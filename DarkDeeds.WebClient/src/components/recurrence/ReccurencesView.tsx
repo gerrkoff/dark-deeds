@@ -1,7 +1,8 @@
 import * as React from 'react'
 import { Grid } from 'semantic-ui-react'
 import { PlannedRecurrence } from '../../models'
-import { RecurrenceList, RecurrencesSidePanel } from '.'
+import { RecurrenceList } from './ReccurenceList'
+import { RecurrencesSidePanel } from './ReccurencesSidePanel'
 
 import '../../styles/recurrences-view.css'
 
@@ -15,8 +16,10 @@ interface IProps {
     loadRecurrences: () => void
     addRecurrence: () => void
     saveRecurrences: (recurrences: PlannedRecurrence[]) => void
-    changeEdittingRecurrence: (id: number) => void
+    changeEdittingRecurrence: (id: number | null) => void
     changeRecurrence: (recurrence: PlannedRecurrence) => void
+    confirmAction: (content: React.ReactNode, action: () => void, header: string) => void
+    deleteRecurrence: (id: number) => void
 }
 export class RecurrencesView extends React.PureComponent<IProps> {
 
@@ -39,6 +42,7 @@ export class RecurrencesView extends React.PureComponent<IProps> {
                         edittingRecurrenceId={this.props.edittingRecurrenceId}
                         addRecurrence={this.props.addRecurrence}
                         changeRecurrence={this.props.changeRecurrence}
+                        deleteRecurrence={this.deleteCurrenceWithConfirmation}
                         changeEdittingRecurrence={this.props.changeEdittingRecurrence} />
                 </Grid.Column>
                 <Grid.Column width={4} textAlign='center'>
@@ -53,6 +57,14 @@ export class RecurrencesView extends React.PureComponent<IProps> {
                         createRecurrences={this.props.createRecurrences} />
                 </Grid.Column>
             </Grid>
+        )
+    }
+
+    private deleteCurrenceWithConfirmation = (recurrence: PlannedRecurrence) => {
+        this.props.confirmAction(
+            recurrence.task,
+            () => this.props.deleteRecurrence(recurrence.id),
+            'Delete recurrence'
         )
     }
 }
