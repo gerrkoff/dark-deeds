@@ -6,7 +6,7 @@ import * as actions from '../../redux/constants'
 function createState(
     plannedRecurrences: PlannedRecurrence[] = []
     ): IRecurrencesViewState {
-    return { 
+    return {
         isCreatingRecurrences: false,
         isLoadingRecurrences: false,
         isSavingRecurrences: false,
