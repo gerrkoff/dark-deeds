@@ -66,7 +66,6 @@ export function recurrencesView(state: IRecurrencesViewState = inittialState, ac
     return state
 }
 
-// TODO: test
 function changeRecurrence(recurrences: PlannedRecurrence[], recurrence: PlannedRecurrence): PlannedRecurrence[] {
     const newRecurrences = [...recurrences]
     const recurrenceIndex = newRecurrences.findIndex(x => x.id === recurrence.id)
@@ -74,7 +73,6 @@ function changeRecurrence(recurrences: PlannedRecurrence[], recurrence: PlannedR
     return newRecurrences
 }
 
-// TODO: test
 function addRecurrence(recurrences: PlannedRecurrence[]): {recurrences: PlannedRecurrence[], id: number} {
     const newRecurrences = [...recurrences]
     const addedRecurrences = recurrences.filter(x => x.id < 0).map(x => x.id)
@@ -90,7 +88,6 @@ function addRecurrence(recurrences: PlannedRecurrence[]): {recurrences: PlannedR
     }
 }
 
-// TODO: test
 function deleteRecurrence(recurrences: PlannedRecurrence[], id: number): PlannedRecurrence[] {
     if (id < 0) {
         return recurrences.filter(x => x.id !== id)
