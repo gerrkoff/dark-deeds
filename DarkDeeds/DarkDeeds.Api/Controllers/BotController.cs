@@ -14,23 +14,16 @@ namespace DarkDeeds.Api.Controllers
     public class BotController : ControllerBase
     {
         private readonly IBotProcessMessageService _botProcessMessageService;
-        private readonly IHubContext<TaskHub> _taskHubContext;
         
-        public BotController(IBotProcessMessageService botProcessMessageService, IHubContext<TaskHub> taskHubContext)
+        public BotController(IBotProcessMessageService botProcessMessageService)
         {
             _botProcessMessageService = botProcessMessageService;
-            _taskHubContext = taskHubContext;
         }
 
         [HttpPost]
         public Task Process([FromBody] UpdateDto update)
         {   
-            return _botProcessMessageService.ProcessMessageAsync(update, SendUpdateTasks);
-        }
-
-        private async void SendUpdateTasks(IEnumerable<TaskDto> tasks)
-        {
-            await TaskHub.Update(_taskHubContext, tasks);
+            return _botProcessMessageService.ProcessMessageAsync(update);
         }
     }
 }

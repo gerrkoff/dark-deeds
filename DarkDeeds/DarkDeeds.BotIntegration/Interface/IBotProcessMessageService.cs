@@ -8,6 +8,6 @@ namespace DarkDeeds.BotIntegration.Interface
 {
     public interface IBotProcessMessageService
     {
-        Task ProcessMessageAsync(UpdateDto update, Action<IEnumerable<TaskDto>> sendUpdateTasks);
+        Task ProcessMessageAsync(UpdateDto update);
     }
 }
