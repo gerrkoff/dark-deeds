@@ -19,11 +19,15 @@ namespace DarkDeeds.Services.Implementation
         }
 
         // TODO: refactor
+        // TODO: test
         public TaskDto ParseTask(string task, bool ignoreDate = false)
         {
             var taskDto = new TaskDto();
             var type = TaskTypeEnum.Simple;
-            task = ParseDate(task, out int year, out int month, out int day, out bool withDate, ref type, out int dayAdjustment);
+            int year = 0, month = 0, day = 0, dayAdjustment = 0;
+            bool withDate = false;
+            if (!ignoreDate) 
+                task = ParseDate(task, out year, out month, out day, out withDate, ref type, out dayAdjustment);
             task = ParseTime(task, out int hour, out int minutes, out bool withTime, type);
             task = ParseProbability(task, out bool isProbable);
             
@@ -89,7 +93,7 @@ namespace DarkDeeds.Services.Implementation
             day = 0;
             dayAdjustment = 0;
             withDate = false;
-                        
+
             if (dateWithYearRx.IsMatch(task))
             {
                 date = task.Substring(4, 4);
