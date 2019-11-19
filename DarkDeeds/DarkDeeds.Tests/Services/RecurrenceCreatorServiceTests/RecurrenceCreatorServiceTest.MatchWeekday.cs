@@ -11,7 +11,7 @@ namespace DarkDeeds.Tests.Services.RecurrenceCreatorServiceTests
         [Fact]
         public void MatchWeekday_ShouldMatchOneWeekday()
         {
-            var service = new RecurrenceCreatorService(null, null, null, null, null);
+            var service = new RecurrenceCreatorService(null, null, null, null, null, null);
 
             var result = service.MatchWeekday(new PlannedRecurrenceEntity
             {
@@ -24,7 +24,7 @@ namespace DarkDeeds.Tests.Services.RecurrenceCreatorServiceTests
         [Fact]
         public void MatchWeekday_ShouldMatchOneOfTwoWeekdays()
         {
-            var service = new RecurrenceCreatorService(null, null, null, null, null);
+            var service = new RecurrenceCreatorService(null, null, null, null, null, null);
 
             var result = service.MatchWeekday(new PlannedRecurrenceEntity
             {
@@ -37,7 +37,7 @@ namespace DarkDeeds.Tests.Services.RecurrenceCreatorServiceTests
         [Fact]
         public void MatchWeekday_ShouldNotMatchOneOfWeekdays()
         {
-            var service = new RecurrenceCreatorService(null, null, null, null, null);
+            var service = new RecurrenceCreatorService(null, null, null, null, null, null);
 
             var result = service.MatchWeekday(new PlannedRecurrenceEntity
             {
@@ -50,7 +50,7 @@ namespace DarkDeeds.Tests.Services.RecurrenceCreatorServiceTests
         [Fact]
         public void MatchWeekday_ShouldMatchIfWeekdayIsNull()
         {
-            var service = new RecurrenceCreatorService(null, null, null, null, null);
+            var service = new RecurrenceCreatorService(null, null, null, null, null, null);
 
             var result = service.MatchWeekday(new PlannedRecurrenceEntity
             {

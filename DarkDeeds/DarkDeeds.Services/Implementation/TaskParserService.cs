@@ -19,12 +19,17 @@ namespace DarkDeeds.Services.Implementation
         }
 
         // TODO: refactor
-        public TaskDto ParseTask(string task)
+        public TaskDto ParseTask(string task, bool ignoreDate = false)
         {
             var taskDto = new TaskDto();
             var type = TaskTypeEnum.Simple;
-            task = ParseDate(task, out int year, out int month, out int day, out bool withDate, ref type, out int dayAdjustment);
-            task = ParseTime(task, out int hour, out int minutes, out bool withTime, type);
+            int year = 0, month = 0, day = 0, dayAdjustment = 0, hour = 0, minutes = 0;
+            bool withDate = false, withTime = false;
+            
+            if (!ignoreDate) 
+                task = ParseDate(task, out year, out month, out day, out withDate, out type, out dayAdjustment);
+            if (type != TaskTypeEnum.Additional)
+                task = ParseTime(task, out hour, out minutes, out withTime);
             task = ParseProbability(task, out bool isProbable);
             
             taskDto.Title = task;
@@ -50,16 +55,13 @@ namespace DarkDeeds.Services.Implementation
             return task;
         }
 
-        private string ParseTime(string task, out int hour, out int minutes, out bool withTime, TaskTypeEnum type)
+        private string ParseTime(string task, out int hour, out int minutes, out bool withTime)
         {
             var timeRx = new Regex(@"^\d{4}\s");
             string time = string.Empty;
             hour = 0;
             minutes = 0;
             withTime = false;
-
-            if (type == TaskTypeEnum.Additional)
-                return task;
 
             if (timeRx.IsMatch(task))
             {
@@ -77,19 +79,20 @@ namespace DarkDeeds.Services.Implementation
             return task;
         }
 
-        private string ParseDate(string task, out int year, out int month, out int day, out bool withDate, ref TaskTypeEnum type, out int dayAdjustment)
+        private string ParseDate(string task, out int year, out int month, out int day, out bool withDate, out TaskTypeEnum type, out int dayAdjustment)
         {
             var dateWithYearRx = new Regex(@"^\d{8}!?\s");
             var dateRx = new Regex(@"^\d{4}!?\s");
             var todayShiftRx = new Regex(@"^!+\s");
             var weekShiftRx = new Regex(@"^![1-7]\s");
             string date = string.Empty;
+            type = TaskTypeEnum.Simple;
             year = 0;
             month = 0;
             day = 0;
             dayAdjustment = 0;
             withDate = false;
-                        
+
             if (dateWithYearRx.IsMatch(task))
             {
                 date = task.Substring(4, 4);

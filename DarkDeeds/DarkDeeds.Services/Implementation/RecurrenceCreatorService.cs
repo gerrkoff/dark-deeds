@@ -2,10 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using DarkDeeds.Common.Extensions;
 using DarkDeeds.Data.Entity;
 using DarkDeeds.Data.Repository;
 using DarkDeeds.Enums;
+using DarkDeeds.Models;
 using DarkDeeds.Services.Interface;
 using Microsoft.Extensions.Logging;
 
@@ -20,19 +22,22 @@ namespace DarkDeeds.Services.Implementation
         private readonly IRepositoryNonDeletable<RecurrenceEntity> _recurrenceRepository;
         private readonly IDateService _dateService;
         private readonly ILogger<RecurrenceCreatorService> _logger;
+        private readonly ITaskParserService _taskParserService;
 
         public RecurrenceCreatorService(
             IRepository<TaskEntity> taskRepository,
             IRepository<PlannedRecurrenceEntity> plannedRecurrenceRepository,
             IRepositoryNonDeletable<RecurrenceEntity> recurrenceRepository,
             IDateService dateService,
-            ILogger<RecurrenceCreatorService> logger)
+            ILogger<RecurrenceCreatorService> logger,
+            ITaskParserService taskParserService)
         {
             _taskRepository = taskRepository;
             _plannedRecurrenceRepository = plannedRecurrenceRepository;
             _recurrenceRepository = recurrenceRepository;
             _dateService = dateService;
             _logger = logger;
+            _taskParserService = taskParserService;
         }
 
         public async Task<int> CreateAsync(string userId)
@@ -66,14 +71,14 @@ namespace DarkDeeds.Services.Implementation
             return createdRecurrencesCount;
         }
 
-        // TODO: parse task text
         private TaskEntity CreateTaskFromRecurrence(PlannedRecurrenceEntity plannedRecurrence, DateTime date)
-            => new TaskEntity
-            {
-                Title = plannedRecurrence.Task,
-                UserId = plannedRecurrence.UserId,
-                Date = date,
-            };
+        {
+            TaskDto dto = _taskParserService.ParseTask(plannedRecurrence.Task, ignoreDate: true);
+            var task = Mapper.Map<TaskEntity>(dto);
+            task.Date = date;
+            task.UserId = plannedRecurrence.UserId;
+            return task;
+        }
 
         private RecurrenceEntity CreateRecurrenceEntity(int plannedRecurrenceId, int taskId, DateTime date)
             => new RecurrenceEntity
@@ -89,6 +94,11 @@ namespace DarkDeeds.Services.Implementation
             var dates = new List<DateTime>();
             for (DateTime i = periodStart; i != periodEnd; i = i.AddDays(1))
             {
+                if (!plannedRecurrence.EveryNthDay.HasValue &&
+                    !plannedRecurrence.EveryWeekday.HasValue &&
+                    string.IsNullOrEmpty(plannedRecurrence.EveryMonthDay))
+                    continue;
+                
                 if (!MatchPeriod(plannedRecurrence, i))
                     continue;
 

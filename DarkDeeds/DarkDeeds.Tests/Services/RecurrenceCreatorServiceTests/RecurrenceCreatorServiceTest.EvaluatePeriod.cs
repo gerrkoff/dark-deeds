@@ -13,7 +13,7 @@ namespace DarkDeeds.Tests.Services.RecurrenceCreatorServiceTests
         {
             var dateMock = new Mock<IDateService>();
             dateMock.SetupGet(x => x.Now).Returns(new DateTime(2019, 9, 2));
-            var service = new RecurrenceCreatorService(null, null, null, dateMock.Object, null);
+            var service = new RecurrenceCreatorService(null, null, null, dateMock.Object, null, null);
 
             var (_, result) = service.EvaluatePeriod();
             
@@ -26,7 +26,7 @@ namespace DarkDeeds.Tests.Services.RecurrenceCreatorServiceTests
         {
             var dateMock = new Mock<IDateService>();
             dateMock.SetupGet(x => x.Now).Returns(new DateTime(2019, 9, 1));
-            var service = new RecurrenceCreatorService(null, null, null, dateMock.Object, null);
+            var service = new RecurrenceCreatorService(null, null, null, dateMock.Object, null, null);
 
             var (_, result) = service.EvaluatePeriod();
 
@@ -38,7 +38,7 @@ namespace DarkDeeds.Tests.Services.RecurrenceCreatorServiceTests
         {
             var dateMock = new Mock<IDateService>();
             dateMock.SetupGet(x => x.Now).Returns(new DateTime(2019, 9, 1, 23, 0, 0));
-            var service = new RecurrenceCreatorService(null, null, null, dateMock.Object, null);
+            var service = new RecurrenceCreatorService(null, null, null, dateMock.Object, null, null);
 
             var (_, result) = service.EvaluatePeriod();
 
@@ -50,7 +50,7 @@ namespace DarkDeeds.Tests.Services.RecurrenceCreatorServiceTests
         {
             var dateMock = new Mock<IDateService>();
             dateMock.SetupGet(x => x.Now).Returns(new DateTime(2019, 9, 3, 11, 59, 59));
-            var service = new RecurrenceCreatorService(null, null, null, dateMock.Object, null);
+            var service = new RecurrenceCreatorService(null, null, null, dateMock.Object, null, null);
 
             var (result, _) = service.EvaluatePeriod();
 

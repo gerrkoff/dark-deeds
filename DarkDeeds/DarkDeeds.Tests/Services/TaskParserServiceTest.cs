@@ -264,8 +264,21 @@ namespace DarkDeeds.Tests.Services
         }
         
         #endregion
-
+        
         #region Other TaskParserService tests
+        
+        [Fact]
+        public void ParseTask_IgnoreDateTaskWithTime()
+        {
+            var service = new TaskParserService(dateServiceMock());
+
+            var result = service.ParseTask("1010 Test!", ignoreDate: true);
+            
+            Assert.Equal("Test!", result.Title);
+            Assert.Equal(TaskTypeEnum.Simple, result.Type);
+            Assert.Null(result.Date);
+            Assert.Equal(610, result.Time);
+        }
         
         [Fact]
         public void PrintTasks_ReturnTitle()
