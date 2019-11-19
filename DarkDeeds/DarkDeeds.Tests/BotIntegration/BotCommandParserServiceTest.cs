@@ -17,7 +17,7 @@ namespace DarkDeeds.Tests.BotIntegration
             var task = new TaskDto();
             var telegramMock = new Mock<ITelegramService>();
             var taskParserMock = new Mock<ITaskParserService>();
-            taskParserMock.Setup(x => x.ParseTask("Some task")).Returns(task);
+            taskParserMock.Setup(x => x.ParseTask("Some task", It.IsAny<bool>())).Returns(task);
             var service = new BotCommandParserService(taskParserMock.Object, telegramMock.Object);
 
             var result = await service.ParseCommand("Some task", 100500);

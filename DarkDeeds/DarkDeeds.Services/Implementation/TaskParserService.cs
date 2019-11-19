@@ -19,7 +19,7 @@ namespace DarkDeeds.Services.Implementation
         }
 
         // TODO: refactor
-        public TaskDto ParseTask(string task)
+        public TaskDto ParseTask(string task, bool ignoreDate = false)
         {
             var taskDto = new TaskDto();
             var type = TaskTypeEnum.Simple;
