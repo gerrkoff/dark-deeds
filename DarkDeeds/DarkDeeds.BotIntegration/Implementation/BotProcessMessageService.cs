@@ -32,7 +32,7 @@ namespace DarkDeeds.BotIntegration.Implementation
             _startCommandProcessor = startCommandProcessor;
         }
 
-        public async Task ProcessMessageAsync(UpdateDto update, Action<IEnumerable<TaskDto>> sendUpdateTasks)
+        public async Task ProcessMessageAsync(UpdateDto update)
         {
             string text = update.Message.Text.Trim();
             int userChatId = update.Message.Chat.Id;
@@ -55,7 +55,6 @@ namespace DarkDeeds.BotIntegration.Implementation
 
             if (command is CreateTaskCommand createTaskCommand)
             {
-                _createTaskCommandProcessor.BindSendUpdateTasks(sendUpdateTasks);
                 await _createTaskCommandProcessor.ProcessAsync(createTaskCommand);
                 return;
             }

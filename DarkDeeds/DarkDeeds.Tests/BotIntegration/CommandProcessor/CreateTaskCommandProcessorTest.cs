@@ -17,12 +17,13 @@ namespace DarkDeeds.Tests.BotIntegration.CommandProcessor
         {
             var task = new TaskDto();
             var tasks = new TaskDto[0];
-            var (telegramMock, taskServiceMock, sendMessageMock) = SetupMocks(task, tasks, 100);
+            var (telegramMock, taskServiceMock, sendMessageMock, taskHubService) = SetupMocks(task, tasks, 100);
             
             var service = new CreateTaskCommandProcessor(
                 sendMessageMock.Object,
                 telegramMock.Object,
                 taskServiceMock.Object,
+                taskHubService.Object,
                 null);
 
             await service.ProcessAsync(new CreateTaskCommand(task)
@@ -39,30 +40,26 @@ namespace DarkDeeds.Tests.BotIntegration.CommandProcessor
         {
             var task = new TaskDto();
             var tasks = new TaskDto[0];
-            var (telegramMock, taskServiceMock, sendMessageMock) = SetupMocks(task, tasks, 100);
+            var (telegramMock, taskServiceMock, sendMessageMock, taskHubService) = SetupMocks(task, tasks, 100);
             
             var service = new CreateTaskCommandProcessor(
                 sendMessageMock.Object,
                 telegramMock.Object,
                 taskServiceMock.Object,
+                taskHubService.Object,
                 null);
-
-            bool updateTaskSent = false;
-            service.BindSendUpdateTasks(updatedTasks =>
-            {
-                Assert.Same(tasks, updatedTasks);
-                updateTaskSent = true;
-            });
 
             await service.ProcessAsync(new CreateTaskCommand(task)
             {
                 UserChatId = 100
             });
 
-            Assert.True(updateTaskSent);
+            taskHubService.Verify(x => x.Update(
+                It.Is<IEnumerable<TaskDto>>(y => y == tasks)
+            ));
         }
 
-        private (Mock<ITelegramService>, Mock<ITaskService>, Mock<IBotSendMessageService>)
+        private (Mock<ITelegramService>, Mock<ITaskService>, Mock<IBotSendMessageService>, Mock<ITaskHubService>)
             SetupMocks(TaskDto task, TaskDto[] tasks, int chatId)
         {   
             var telegramMock = new Mock<ITelegramService>();
@@ -75,7 +72,9 @@ namespace DarkDeeds.Tests.BotIntegration.CommandProcessor
             
             var sendMessageMock = new Mock<IBotSendMessageService>();
 
-            return (telegramMock, taskServiceMock, sendMessageMock);
+            var taskHubServiceMock = new Mock<ITaskHubService>();
+
+            return (telegramMock, taskServiceMock, sendMessageMock, taskHubServiceMock);
         } 
     }
 }

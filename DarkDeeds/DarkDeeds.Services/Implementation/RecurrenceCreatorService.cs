@@ -23,6 +23,7 @@ namespace DarkDeeds.Services.Implementation
         private readonly IDateService _dateService;
         private readonly ILogger<RecurrenceCreatorService> _logger;
         private readonly ITaskParserService _taskParserService;
+        private readonly ITaskHubService _taskHubService;
 
         public RecurrenceCreatorService(
             IRepository<TaskEntity> taskRepository,
@@ -30,7 +31,8 @@ namespace DarkDeeds.Services.Implementation
             IRepositoryNonDeletable<RecurrenceEntity> recurrenceRepository,
             IDateService dateService,
             ILogger<RecurrenceCreatorService> logger,
-            ITaskParserService taskParserService)
+            ITaskParserService taskParserService,
+            ITaskHubService taskHubService)
         {
             _taskRepository = taskRepository;
             _plannedRecurrenceRepository = plannedRecurrenceRepository;
@@ -38,6 +40,7 @@ namespace DarkDeeds.Services.Implementation
             _dateService = dateService;
             _logger = logger;
             _taskParserService = taskParserService;
+            _taskHubService = taskHubService;
         }
 
         public async Task<int> CreateAsync(string userId)
@@ -61,14 +64,20 @@ namespace DarkDeeds.Services.Implementation
                     
                     TaskEntity task = CreateTaskFromRecurrence(plannedRecurrence, date);
                     await _taskRepository.SaveAsync(task);
-                    // TODO: notify about task created
                     await _recurrenceRepository.SaveAsync(
                         CreateRecurrenceEntity(plannedRecurrence.Id, task.Id, date));
                     createdRecurrencesCount++;
+                    Notify(task);
                 }
             }
 
             return createdRecurrencesCount;
+        }
+
+        private void Notify(TaskEntity task)
+        {
+            var dto = Mapper.Map<TaskDto>(task);
+            _taskHubService.Update(new[] {dto});
         }
 
         private TaskEntity CreateTaskFromRecurrence(PlannedRecurrenceEntity plannedRecurrence, DateTime date)
