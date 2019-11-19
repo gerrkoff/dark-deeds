@@ -40,7 +40,6 @@ namespace DarkDeeds.Services.Implementation
             _taskParserService = taskParserService;
         }
 
-        // TODO: fix no repeats
         public async Task<int> CreateAsync(string userId)
         {
             var createdRecurrencesCount = 0;
@@ -95,6 +94,11 @@ namespace DarkDeeds.Services.Implementation
             var dates = new List<DateTime>();
             for (DateTime i = periodStart; i != periodEnd; i = i.AddDays(1))
             {
+                if (!plannedRecurrence.EveryNthDay.HasValue &&
+                    !plannedRecurrence.EveryWeekday.HasValue &&
+                    string.IsNullOrEmpty(plannedRecurrence.EveryMonthDay))
+                    continue;
+                
                 if (!MatchPeriod(plannedRecurrence, i))
                     continue;
 
