@@ -28,6 +28,7 @@ namespace DarkDeeds.Api.Hubs
             await Clients.Others.SendAsync("update", updatedTasks, false);
         }
 
+        // TODO: remove
         public static async Task Update(IHubContext<TaskHub> context, IEnumerable<TaskDto> updatedTasks)
         {
             await context.Clients.All.SendAsync("update", updatedTasks, false);

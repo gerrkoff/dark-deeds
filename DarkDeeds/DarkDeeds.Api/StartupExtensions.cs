@@ -4,6 +4,7 @@ using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using DarkDeeds.Api.Filters;
+using DarkDeeds.Api.Hubs;
 using DarkDeeds.AutoMapper;
 using DarkDeeds.BotIntegration.Implementation;
 using DarkDeeds.BotIntegration.Implementation.CommandProcessor;
@@ -67,6 +68,7 @@ namespace DarkDeeds.Api
             services.AddScoped<IDateService, DateService>();
             services.AddScoped<IRecurrenceService, RecurrenceService>();
             services.AddScoped<IPermissionsService, PermissionsService>();
+            services.AddScoped<ITaskHubService, TaskHubService>();
             
             services.AddScoped<IBotCommandParserService, BotCommandParserService>();
             services.AddScoped<IShowTodoCommandProcessor, ShowTodoCommandProcessor>();

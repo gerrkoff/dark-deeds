@@ -10,7 +10,7 @@ namespace DarkDeeds.Tests.Services.RecurrenceCreatorServiceTests
         [Fact]
         public void MatchPeriod_ShouldMatchIfWithidPeriod()
         {
-            var service = new RecurrenceCreatorService(null, null, null, null, null, null);
+            var service = new RecurrenceCreatorService(null, null, null, null, null, null, null);
 
             var result = service.MatchPeriod(new PlannedRecurrenceEntity
             {
@@ -24,7 +24,7 @@ namespace DarkDeeds.Tests.Services.RecurrenceCreatorServiceTests
         [Fact]
         public void MatchPeriod_ShouldMatchIfEqualsToStartDate()
         {
-            var service = new RecurrenceCreatorService(null, null, null, null, null, null);
+            var service = new RecurrenceCreatorService(null, null, null, null, null, null, null);
 
             var result = service.MatchPeriod(new PlannedRecurrenceEntity
             {
@@ -38,7 +38,7 @@ namespace DarkDeeds.Tests.Services.RecurrenceCreatorServiceTests
         [Fact]
         public void MatchPeriod_ShouldMatchIfEqualsToEndDate()
         {
-            var service = new RecurrenceCreatorService(null, null, null, null, null, null);
+            var service = new RecurrenceCreatorService(null, null, null, null, null, null, null);
 
             var result = service.MatchPeriod(new PlannedRecurrenceEntity
             {
@@ -52,7 +52,7 @@ namespace DarkDeeds.Tests.Services.RecurrenceCreatorServiceTests
         [Fact]
         public void MatchPeriod_ShouldMatchEvenIfEndDateIsNull()
         {
-            var service = new RecurrenceCreatorService(null, null, null, null, null, null);
+            var service = new RecurrenceCreatorService(null, null, null, null, null, null, null);
 
             var result = service.MatchPeriod(new PlannedRecurrenceEntity
             {
@@ -65,7 +65,7 @@ namespace DarkDeeds.Tests.Services.RecurrenceCreatorServiceTests
         [Fact]
         public void MatchPeriod_ShouldNotMatchIfLessThanStartDate()
         {
-            var service = new RecurrenceCreatorService(null, null, null, null, null, null);
+            var service = new RecurrenceCreatorService(null, null, null, null, null, null, null);
 
             var result = service.MatchPeriod(new PlannedRecurrenceEntity
             {
