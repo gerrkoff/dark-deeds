@@ -27,9 +27,14 @@ function renderMenuItem(
     const active = currentPath === '/'
         ? path === '/'
         : path !== '/' && currentPath.startsWith(path)
+    const dataTestId = `nav-${path}`
 
     return (
-        <Menu.Item onClick={() => navigateTo(path)} active={active}>
+        <Menu.Item
+            onClick={() => navigateTo(path)}
+            active={active}
+            data-test-id={dataTestId}>
+
             <Icon name={icon} />
         </Menu.Item>
     )

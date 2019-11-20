@@ -202,5 +202,31 @@ namespace DarkDeeds.E2eTests
                 }
             });
         }
+
+        [Fact]
+        public void RecurrenceTest()
+        {
+            Test(driver =>
+            {
+                driver.SignIn(Username, Password);
+                driver.WaitUntillUserLoaded();
+                
+                driver.NavigateToRecurrences();
+                driver.WaitUntilRecurrencesLoaded();
+
+                string task = RandomizeText("recurrence");
+                string recurrenceTask = $"2359 {task}";
+                driver.CreateRecurrence(recurrenceTask);
+                driver.WaitUntilRecurrencesLoaded();
+                
+                driver.CreateTaskRecurrences(2);
+                
+                driver.NavigateToOverview();
+                
+                var overviewSectionParser = new OverviewSectionParser(driver.GetCurrentSection());
+                overviewSectionParser.FindBlock(1).FindDay(7).FindTask($"23:59 {task}").GetElement();
+                overviewSectionParser.FindBlock(2).FindDay(7).FindTask($"23:59 {task}").GetElement();
+            });
+        }
     }
 }
