@@ -81,5 +81,12 @@ namespace DarkDeeds.E2eTests.Common
                 $"//*{Xpath.ClassContains("Toastify__toast--success")}" +
                 $"//*{Xpath.ClassContains("Toastify__toast-body")}{Xpath.TextContains(text)}"
             );
+        
+        public static void WaitUntilRecurrenceAppeared(this RemoteWebDriver driver, string text) =>
+            driver.WaitUntilAppeared(
+                $"//*{Xpath.ClassContains("recurrences-view-recurrence-list")}" +
+                $"//*{Xpath.ClassContains("recurrences-view-recurrence-item")}" +
+                $"//*{Xpath.TextContains(text)}"
+            );
     }
 }

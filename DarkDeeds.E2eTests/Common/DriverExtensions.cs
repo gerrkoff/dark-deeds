@@ -65,6 +65,7 @@ namespace DarkDeeds.E2eTests.Common
             driver.GetCreateRecurrenceFormWeekday().Click();
             driver.GetCreateRecurrenceFormWeekdayOption(7).Click();
             driver.GetSaveRecurrencesButton().Click();
+            driver.WaitUntilRecurrenceAppeared(recurrenceTask);
         }
 
         public static void WaitUntilRecurrencesLoaded(this RemoteWebDriver driver)

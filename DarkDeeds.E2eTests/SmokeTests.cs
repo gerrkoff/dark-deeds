@@ -217,7 +217,6 @@ namespace DarkDeeds.E2eTests
                 string task = RandomizeText("recurrence");
                 string recurrenceTask = $"2359 {task}";
                 driver.CreateRecurrence(recurrenceTask);
-                driver.WaitUntilRecurrencesLoaded();
                 
                 driver.CreateTaskRecurrences(2);
                 
