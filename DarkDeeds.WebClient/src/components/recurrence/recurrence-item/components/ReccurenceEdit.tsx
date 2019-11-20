@@ -32,6 +32,7 @@ export class RecurrenceEdit extends React.PureComponent<IProps> {
                     <Form.Group>
                         <Form.Dropdown
                             multiple selection
+                            data-test-id='create-recurrence-form-weekdays'
                             label='Repeats...'
                             placeholder='Every day of week'
                             options={weekdayOptions}

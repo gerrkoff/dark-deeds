@@ -23,6 +23,7 @@ export class RecurrencesSidePanel extends React.PureComponent<IProps> {
                                 icon
                                 labelPosition='left'
                                 size='mini'
+                                data-test-id='add-recurrence-button'
                                 onClick={this.props.addRecurrence}
                                 disabled={this.props.isLoadingRecurrences || this.props.isSavingRecurrences || this.props.isCreatingRecurrences}>
 
@@ -35,6 +36,7 @@ export class RecurrencesSidePanel extends React.PureComponent<IProps> {
                                 icon
                                 labelPosition='left'
                                 size='mini'
+                                data-test-id='save-recurrences-button'
                                 onClick={this.props.saveRecurrences}
                                 loading={this.props.isSavingRecurrences}
                                 disabled={this.props.isLoadingRecurrences || this.props.isCreatingRecurrences}>
@@ -63,6 +65,7 @@ export class RecurrencesSidePanel extends React.PureComponent<IProps> {
                         icon
                         labelPosition='left'
                         size='mini'
+                        data-test-id='create-recurrences-button'
                         onClick={this.props.createRecurrences}
                         disabled={this.props.isLoadingRecurrences || this.props.noRecurrencesCreated || this.props.isSavingRecurrences}
                         loading={this.props.isCreatingRecurrences}>

@@ -27,7 +27,10 @@ export class RecurrenceList extends React.PureComponent<IProps> {
 
     private renderSkeleton() {
         return (
-            <Segment inverted raised>
+            <Segment
+                inverted raised
+                data-test-id='recurrences-skeleton'>
+
                 <Placeholder inverted>
                     <Placeholder.Header>
                         <Placeholder.Line length='medium' />
