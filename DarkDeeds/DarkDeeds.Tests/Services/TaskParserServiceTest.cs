@@ -114,11 +114,11 @@ namespace DarkDeeds.Tests.Services
         
         // #8
         [Fact]
-        public void ParseTask_ReturnAdditionalTaskWithShortDate()
+        public void ParseTask_ReturnAdditionalTaskWithDate()
         {
             var service = new TaskParserService(dateServiceMock());
 
-            var result = service.ParseTask("0220! Test");
+            var result = service.ParseTask("0220 Test !");
             
             Assert.Equal("Test", result.Title);
             Assert.Equal(TaskTypeEnum.Additional, result.Type);
@@ -128,29 +128,45 @@ namespace DarkDeeds.Tests.Services
         
         // #9
         [Fact]
-        public void ParseTask_ReturnAdditionalTaskWithLongDate()
+        public void ParseTask_ReturnAdditionalTaskWithDateAndTime()
         {
             var service = new TaskParserService(dateServiceMock());
 
-            var result = service.ParseTask("20150220! Test");
+            var result = service.ParseTask("20150220 2359 Test !");
             
             Assert.Equal("Test", result.Title);
             Assert.Equal(TaskTypeEnum.Additional, result.Type);
             Assert.Equal(new DateTime(2015, 2, 20, 0, 0, 0),  result.Date);
-            Assert.Null(result.Time);
+            Assert.Equal(1439, result.Time);
         }
         
         // #10
         [Fact]
-        public void ParseTask_IgnoreTimeIfAdditional()
+        public void ParseTask_AdditionalAndProbable()
         {
             var service = new TaskParserService(dateServiceMock());
 
-            var result = service.ParseTask("20150606! 2359 Test");
+            var result = service.ParseTask("Test !?");
             
-            Assert.Equal("2359 Test", result.Title);
+            Assert.Equal("Test", result.Title);
             Assert.Equal(TaskTypeEnum.Additional, result.Type);
-            Assert.Equal(new DateTime(2015, 6, 6, 0, 0, 0),  result.Date);
+            Assert.True(result.IsProbable);
+            Assert.Null(result.Date);
+            Assert.Null(result.Time);
+        }
+        
+        // #10.1
+        [Fact]
+        public void ParseTask_ProbableAndAdditional()
+        {
+            var service = new TaskParserService(dateServiceMock());
+
+            var result = service.ParseTask("Test ?!");
+            
+            Assert.Equal("Test", result.Title);
+            Assert.Equal(TaskTypeEnum.Additional, result.Type);
+            Assert.True(result.IsProbable);
+            Assert.Null(result.Date);
             Assert.Null(result.Time);
         }
         
@@ -261,6 +277,20 @@ namespace DarkDeeds.Tests.Services
             var result = service.ParseTask("!11 Test");
             
             Assert.Equal("!11 Test", result.Title);
+        }
+        
+        // #19
+        [Fact]
+        public void ParseTask_DateWithExclamation()
+        {
+            var service = new TaskParserService(dateServiceMock());
+
+            var result = service.ParseTask("1231! Test");
+            
+            Assert.Equal("1231! Test", result.Title);
+            Assert.Equal(TaskTypeEnum.Simple, result.Type);
+            Assert.Null(result.Date);
+            Assert.Null(result.Time);
         }
         
         #endregion
