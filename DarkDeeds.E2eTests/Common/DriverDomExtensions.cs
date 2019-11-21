@@ -59,6 +59,15 @@ namespace DarkDeeds.E2eTests.Common
         public static IWebElement GetCreateRecurrenceFormWeekdayOption(this RemoteWebDriver driver, int optionIndex) =>
             driver.GetElement($"//{Xpath.CreateRecurrenceFormWeekdays()}//*[@role='option'][{optionIndex}]");
 
+        public static IWebElement GetDeleteRecurrenceButton(this RemoteWebDriver driver, string recurrenceText) =>
+            driver.GetElement($"//{Xpath.RecurrenceList()}//{Xpath.RecurrenceItem()}" +
+                              $"[//*{Xpath.TextContains(recurrenceText)}]" +
+                              $"//{Xpath.RecurrenceItemButton("top")}"
+            );
+
+        public static IWebElement GetToast(this RemoteWebDriver driver, string text = null) =>
+            driver.GetElement(Xpath.Toast(text));
+
         
         public static void WaitUntilLoginComponentDisappeared(this RemoteWebDriver driver) =>
             driver.WaitUntilDisappeared("//*[@data-test-id='login-component']");
@@ -75,18 +84,18 @@ namespace DarkDeeds.E2eTests.Common
         public static void WaitUntilRecurrencesSkeletonDisappeared(this RemoteWebDriver driver) =>
             driver.WaitUntilDisappeared("//*[@data-test-id='recurrences-skeleton']");
 
-        public static void WaitUntilToastAppeared(this RemoteWebDriver driver, string text) =>
-            driver.WaitUntilAppeared(
-                $"//*{Xpath.ClassContains("Toastify__toast-container")}" +
-                $"//*{Xpath.ClassContains("Toastify__toast--success")}" +
-                $"//*{Xpath.ClassContains("Toastify__toast-body")}{Xpath.TextContains(text)}"
-            );
+        public static void WaitUntilToastAppeared(this RemoteWebDriver driver, string text = null)
+            => driver.WaitUntilAppeared(Xpath.Toast(text));
         
+        public static void WaitUntilToastDisappeared(this RemoteWebDriver driver, string text = null)
+            => driver.WaitUntilDisappeared(Xpath.Toast(text));
+
         public static void WaitUntilRecurrenceAppeared(this RemoteWebDriver driver, string text) =>
             driver.WaitUntilAppeared(
-                $"//*{Xpath.ClassContains("recurrences-view-recurrence-list")}" +
-                $"//*{Xpath.ClassContains("recurrences-view-recurrence-item")}" +
-                $"//*{Xpath.TextContains(text)}"
-            );
+                $"//{Xpath.RecurrenceList()}//{Xpath.RecurrenceItem()}//*{Xpath.TextContains(text)}");
+
+
+        public static bool ToastExists(this RemoteWebDriver driver, string text = null) =>
+            driver.ElementExists(Xpath.Toast(text));
     }
 }

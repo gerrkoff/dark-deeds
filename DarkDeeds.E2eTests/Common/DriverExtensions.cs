@@ -1,5 +1,7 @@
+using System.Threading;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Remote;
+using Xunit;
 
 namespace DarkDeeds.E2eTests.Common
 {
@@ -66,6 +68,16 @@ namespace DarkDeeds.E2eTests.Common
             driver.GetCreateRecurrenceFormWeekdayOption(7).Click();
             driver.GetSaveRecurrencesButton().Click();
             driver.WaitUntilRecurrenceAppeared(recurrenceTask);
+            driver.HideToasts();
+        }
+        
+        public static void DeleteRecurrence(this RemoteWebDriver driver, string recurrenceTask)
+        {
+            driver.GetDeleteRecurrenceButton(recurrenceTask).Click();
+            driver.GetModalConfirmButton().Click();
+            driver.GetSaveRecurrencesButton().Click();
+            driver.WaitUntilRecurrencesSkeletonDisappeared();
+            driver.HideToasts();
         }
 
         public static void WaitUntilRecurrencesLoaded(this RemoteWebDriver driver)
@@ -77,6 +89,21 @@ namespace DarkDeeds.E2eTests.Common
         {
             driver.GetCreateRecurrencesButton().Click();
             driver.WaitUntilToastAppeared($"{expectedTaskRecurrencesCount} recurrences were created");
+            driver.HideToasts();
         }
+
+        public static void HideToasts(this RemoteWebDriver driver)
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                if (!driver.ToastExists())
+                    return;
+                
+                driver.GetToast().Click();
+                Thread.Sleep(1000);
+            }
+
+            Assert.True(false, "Too many toasts");
+        } 
     }
 }
