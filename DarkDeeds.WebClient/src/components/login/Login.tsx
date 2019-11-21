@@ -17,7 +17,7 @@ interface IProps {
 export class Login extends React.PureComponent<IProps> {
     public render() {
         return (
-            <Segment data-test-id='loginComponent' id='login-container' inverted>
+            <Segment data-test-id='login-component' id='login-container' inverted>
                 <Form inverted>
                     {this.props.formSignin
                         ? <Signin processing={this.props.processing} signinResult={this.props.signinResult} signin={this.props.signin} switchForm={this.props.switchForm} />

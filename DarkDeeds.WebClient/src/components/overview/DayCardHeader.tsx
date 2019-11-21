@@ -26,7 +26,7 @@ export class DayCardHeader extends React.PureComponent<IProps, IState> {
     public render() {
         const menuItemProps = new Array<MenuItemProps>()
         menuItemProps.push({
-            content: <span><Icon data-test-id='addTaskToDayButton' name='plus' />Add</span>,
+            content: <span><Icon data-test-id='add-task-to-day-button' name='plus' />Add</span>,
             disabled: !this.props.openTaskModal,
             name: 'add',
             onClick: this.handleAdd

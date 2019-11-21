@@ -11,6 +11,6 @@
             
         public static string CreateRecurrenceFormWeekdays() => $"*[@data-test-id='create-recurrence-form-weekdays']";
 
-        public static string SavingIndicator() => "*[@data-test-id='savingIndicator']";
+        public static string SavingIndicator() => "*[@data-test-id='saving-indicator']";
     }
 }

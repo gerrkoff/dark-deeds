@@ -69,7 +69,7 @@ export class Overview extends React.PureComponent<IProps> {
         }
 
         panels.push({
-            content: { content: this.renderDaysBlock(model.current, 'currentDaysBlockComponent', 7) },
+            content: { content: this.renderDaysBlock(model.current, 'current-days-block-component', 7) },
             key: 'current',
             title: 'Current'
         })
@@ -87,7 +87,7 @@ export class Overview extends React.PureComponent<IProps> {
         return (
             <React.Fragment>
                 <Accordion
-                    data-test-id='overviewComponent'
+                    data-test-id='overview-component'
                     defaultActiveIndex={this.evalOpenedTabs()}
                     panels={panels}
                     exclusive={false}

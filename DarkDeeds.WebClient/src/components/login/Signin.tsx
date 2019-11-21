@@ -25,13 +25,13 @@ export class Signin extends React.PureComponent<IProps, IState> {
         return (
             <React.Fragment>
                 <Form.Input
-                    data-test-id='usernameInput'
+                    data-test-id='username-input'
                     label='Username'
                     placeholder='Username'
                     value={this.state.username}
                     onChange={(e: any) => this.handleInput('username', e.target.value)} />
                 <Form.Input
-                    data-test-id='passwordInput'
+                    data-test-id='password-input'
                     label='Password'
                     placeholder='Password'
                     type='password'
@@ -40,7 +40,7 @@ export class Signin extends React.PureComponent<IProps, IState> {
                 <Message negative
                     content='The username or password you entered is incorrect'
                     hidden={!showErrorCredMsg} />
-                <Form.Button data-test-id='signinButton' onClick={this.handleSubmit} loading={this.props.processing} className='submit-btn' primary>Sign in</Form.Button>
+                <Form.Button data-test-id='signin-button' onClick={this.handleSubmit} loading={this.props.processing} className='submit-btn' primary>Sign in</Form.Button>
                 <span>Haven't got an account yet?&nbsp;<a href='' onClick={this.handleSwitchForm}>Sign up here.</a></span>
             </React.Fragment>
         )

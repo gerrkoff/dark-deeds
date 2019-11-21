@@ -35,7 +35,7 @@ export class EditTaskModal extends React.PureComponent<IProps, IState> {
                 <Modal.Header><Icon name='sticky note outline' />{this.props.clientId === 0 ? 'New task' : 'Edit task'}</Modal.Header>
                 <Modal.Content>
                     <Input focus fluid inverted
-                        data-test-id='editTaskInput'
+                        data-test-id='edit-task-input'
                         placeholder='1231 2359 December 31, 23:59 ...'
                         value={this.props.model}
                         onChange={(_event, data) => this.handleTaskModelChange(data.value)}
@@ -51,7 +51,7 @@ export class EditTaskModal extends React.PureComponent<IProps, IState> {
                     <Button basic color='red' inverted onClick={this.props.closeModal}>
                         <Icon name='remove' /> Cancel
                     </Button>
-                    <Button color='green' data-test-id='saveTaskButton' inverted onClick={this.handleSave}>
+                    <Button color='green' data-test-id='save-task-button' inverted onClick={this.handleSave}>
                         <Icon name='checkmark' /> Save
                     </Button>
                 </Modal.Actions>
