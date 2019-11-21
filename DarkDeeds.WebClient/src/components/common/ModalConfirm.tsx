@@ -26,7 +26,7 @@ export class ModalConfirm extends React.PureComponent<IProps> {
                         <Button color='red' basic onClick={this.props.close} inverted>
                             <Icon name='delete' /> No
                         </Button>
-                        <Button color='green' basic onClick={this.handleConfirm} inverted data-test-id='modalConfirmButton'>
+                        <Button color='green' basic onClick={this.handleConfirm} inverted data-test-id='modal-confirm-button'>
                             <Icon name='checkmark' /> Yes
                         </Button>
                     </Modal.Actions>

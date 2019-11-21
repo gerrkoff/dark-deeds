@@ -32,6 +32,11 @@ namespace DarkDeeds.E2eTests.Common
             return driver.FindElementByXPath(xpath);
         }
 
+        public static bool ElementExists(this RemoteWebDriver driver, string xpath)
+        {
+            return driver.FindElementsByXPath(xpath).Count != 0;
+        }
+
         public static void ScrollToElement(this RemoteWebDriver driver, IWebElement element)
         {
             driver.ExecuteJavaScript("arguments[0].scrollIntoView(true);", element);

@@ -214,17 +214,20 @@ namespace DarkDeeds.E2eTests
                 driver.NavigateToRecurrences();
                 driver.WaitUntilRecurrencesLoaded();
 
-                string task = RandomizeText("recurrence");
-                string recurrenceTask = $"2359 {task}";
+                var task = RandomizeText("recurrence");
+                var recurrenceTask = $"2359 {task}";
                 driver.CreateRecurrence(recurrenceTask);
-                
                 driver.CreateTaskRecurrences(2);
+                driver.DeleteRecurrence(recurrenceTask);
                 
                 driver.NavigateToOverview();
-                
+
                 var overviewSectionParser = new OverviewSectionParser(driver.GetCurrentSection());
-                overviewSectionParser.FindBlock(1).FindDay(7).FindTask($"23:59 {task}").GetElement();
-                overviewSectionParser.FindBlock(2).FindDay(7).FindTask($"23:59 {task}").GetElement();
+                var task1 = overviewSectionParser.FindBlock(1).FindDay(7).FindTask($"23:59 {task}").GetElement();
+                var task2 = overviewSectionParser.FindBlock(2).FindDay(7).FindTask($"23:59 {task}").GetElement();
+                
+                driver.DeleteTask(task1);
+                driver.DeleteTask(task2);
             });
         }
     }

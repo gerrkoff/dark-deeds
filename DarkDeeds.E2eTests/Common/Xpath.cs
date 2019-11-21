@@ -9,8 +9,30 @@
 
         public static string CreateRecurrenceForm() => $"form{ClassContains("recurrences-view-recurrence-item-form")}";
             
-        public static string CreateRecurrenceFormWeekdays() => $"*[@data-test-id='create-recurrence-form-weekdays']";
+        public static string CreateRecurrenceFormWeekdays() => "*[@data-test-id='create-recurrence-form-weekdays']";
 
-        public static string SavingIndicator() => "*[@data-test-id='savingIndicator']";
+        public static string SavingIndicator() => "*[@data-test-id='saving-indicator']";
+        
+        public static string RecurrenceList() => $"*{ClassContains("recurrences-view-recurrence-list")}";
+        
+        public static string RecurrenceItem() => $"*{ClassContains("recurrences-view-recurrence-item")}";
+
+        public static string RecurrenceItemButton(string position) =>
+            $"*{ClassContains("recurrences-view-recurrence-item-btn")}{ClassContains(position)}";
+
+        public static string Toast(string text)
+        {
+            var success = $"*{ClassContains("Toastify__toast--success")}";
+            
+            var container = $"*{ClassContains("Toastify__toast-container")}";
+            var body = $"*{ClassContains("Toastify__toast-body")}";
+            var xpath = $"//{container}//{body}";
+            if (!string.IsNullOrWhiteSpace(text))
+            {
+                xpath += $"{TextContains(text)}";
+            }
+
+            return xpath;
+        }
     }
 }

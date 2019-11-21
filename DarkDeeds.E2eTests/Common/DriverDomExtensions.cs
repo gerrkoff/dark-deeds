@@ -6,37 +6,37 @@ namespace DarkDeeds.E2eTests.Common
     public static class DriverDomExtensions
     {
         public static IWebElement GetUsernameInput(this RemoteWebDriver driver) =>
-            driver.GetElement("//*[@data-test-id='usernameInput']/input");
+            driver.GetElement("//*[@data-test-id='username-input']/input");
         
         public static IWebElement GetPasswordInput(this RemoteWebDriver driver) =>
-            driver.GetElement("//*[@data-test-id='passwordInput']/input");
+            driver.GetElement("//*[@data-test-id='password-input']/input");
         
         public static IWebElement GetSignInButton(this RemoteWebDriver driver) =>
-            driver.GetElement("//*[@data-test-id='signinButton']");
+            driver.GetElement("//*[@data-test-id='signin-button']");
         
         public static IWebElement GetAddTaskButton(this RemoteWebDriver driver) =>
-            driver.GetElement("//*[@data-test-id='addTaskButton']");
+            driver.GetElement("//*[@data-test-id='add-task-button']");
         
         public static IWebElement GetEditTaskInput(this RemoteWebDriver driver) =>
-            driver.GetElement("//*[@data-test-id='editTaskInput']/input");
+            driver.GetElement("//*[@data-test-id='edit-task-input']/input");
         
         public static IWebElement GetSaveTaskButton(this RemoteWebDriver driver) =>
-            driver.GetElement("//*[@data-test-id='saveTaskButton']");
+            driver.GetElement("//*[@data-test-id='save-task-button']");
         
         public static IWebElement GetAddTaskToDayButton(this RemoteWebDriver driver) =>
-            driver.GetElement("//*[@data-test-id='addTaskToDayButton']");
+            driver.GetElement("//*[@data-test-id='add-task-to-day-button']");
         
         public static IWebElement GetDeleteTaskButton(this RemoteWebDriver driver) =>
-            driver.GetElement("//*[@data-test-id='deleteTaskButton']");
+            driver.GetElement("//*[@data-test-id='delete-task-button']");
         
         public static IWebElement GetModalConfirmButton(this RemoteWebDriver driver) =>
-            driver.GetElement("//*[@data-test-id='modalConfirmButton']");
+            driver.GetElement("//*[@data-test-id='modal-confirm-button']");
 
         public static IWebElement GetTaskByTextInNoDateSection(this RemoteWebDriver driver, string text) =>
             driver.GetElement($"//div[@id='no-date-card']//{Xpath.TaskWithText(text)}");
         
         public static IWebElement GetCurrentSection(this RemoteWebDriver driver) =>
-            driver.GetElement("//*[@data-test-id='currentDaysBlockComponent']");
+            driver.GetElement("//*[@data-test-id='current-days-block-component']");
 
         public static IWebElement GetNavLink(this RemoteWebDriver driver, string link) =>
             driver.GetElement($"//*[@data-test-id='nav-{link}']");
@@ -59,12 +59,21 @@ namespace DarkDeeds.E2eTests.Common
         public static IWebElement GetCreateRecurrenceFormWeekdayOption(this RemoteWebDriver driver, int optionIndex) =>
             driver.GetElement($"//{Xpath.CreateRecurrenceFormWeekdays()}//*[@role='option'][{optionIndex}]");
 
+        public static IWebElement GetDeleteRecurrenceButton(this RemoteWebDriver driver, string recurrenceText) =>
+            driver.GetElement($"//{Xpath.RecurrenceList()}//{Xpath.RecurrenceItem()}" +
+                              $"[//*{Xpath.TextContains(recurrenceText)}]" +
+                              $"//{Xpath.RecurrenceItemButton("top")}"
+            );
+
+        public static IWebElement GetToast(this RemoteWebDriver driver, string text = null) =>
+            driver.GetElement(Xpath.Toast(text));
+
         
         public static void WaitUntilLoginComponentDisappeared(this RemoteWebDriver driver) =>
-            driver.WaitUntilDisappeared("//*[@data-test-id='loginComponent']");
+            driver.WaitUntilDisappeared("//*[@data-test-id='login-component']");
         
         public static void WaitUntilOverviewComponentAppeared(this RemoteWebDriver driver) =>
-            driver.WaitUntilAppeared("//*[@data-test-id='overviewComponent']");
+            driver.WaitUntilAppeared("//*[@data-test-id='overview-component']");
         
         public static void WaitUntilSavingIndicatorDisappeared(this RemoteWebDriver driver) =>
             driver.WaitUntilDisappeared($"//{Xpath.SavingIndicator()}");
@@ -75,18 +84,18 @@ namespace DarkDeeds.E2eTests.Common
         public static void WaitUntilRecurrencesSkeletonDisappeared(this RemoteWebDriver driver) =>
             driver.WaitUntilDisappeared("//*[@data-test-id='recurrences-skeleton']");
 
-        public static void WaitUntilToastAppeared(this RemoteWebDriver driver, string text) =>
-            driver.WaitUntilAppeared(
-                $"//*{Xpath.ClassContains("Toastify__toast-container")}" +
-                $"//*{Xpath.ClassContains("Toastify__toast--success")}" +
-                $"//*{Xpath.ClassContains("Toastify__toast-body")}{Xpath.TextContains(text)}"
-            );
+        public static void WaitUntilToastAppeared(this RemoteWebDriver driver, string text = null)
+            => driver.WaitUntilAppeared(Xpath.Toast(text));
         
+        public static void WaitUntilToastDisappeared(this RemoteWebDriver driver, string text = null)
+            => driver.WaitUntilDisappeared(Xpath.Toast(text));
+
         public static void WaitUntilRecurrenceAppeared(this RemoteWebDriver driver, string text) =>
             driver.WaitUntilAppeared(
-                $"//*{Xpath.ClassContains("recurrences-view-recurrence-list")}" +
-                $"//*{Xpath.ClassContains("recurrences-view-recurrence-item")}" +
-                $"//*{Xpath.TextContains(text)}"
-            );
+                $"//{Xpath.RecurrenceList()}//{Xpath.RecurrenceItem()}//*{Xpath.TextContains(text)}");
+
+
+        public static bool ToastExists(this RemoteWebDriver driver, string text = null) =>
+            driver.ElementExists(Xpath.Toast(text));
     }
 }
