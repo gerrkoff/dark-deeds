@@ -94,9 +94,9 @@ test('[convertStringToModel] is probable', () => {
 })
 
 // #8
-test('[convertStringToModel] additional with short date', () => {
+test('[convertStringToModel] additional with date', () => {
     const service = serviceWithToday()
-    const result = service.convertStringToModel('0220! Test')
+    const result = service.convertStringToModel('0220 Test !')
 
     expect(result.title).toBe('Test')
     expect(result.type).toBe(TaskTypeEnum.Additional)
@@ -105,24 +105,37 @@ test('[convertStringToModel] additional with short date', () => {
 })
 
 // #9
-test('[convertStringToModel] additional with long date', () => {
+test('[convertStringToModel] additional with date and time', () => {
     const service = serviceWithToday()
-    const result = service.convertStringToModel('20150220! Test')
+    const result = service.convertStringToModel('20150220 2359 Test !')
 
     expect(result.title).toBe('Test')
     expect(result.type).toBe(TaskTypeEnum.Additional)
     expect(result.date!.getTime()).toBe(dt(2015, 1, 20))
-    expect(result.time).toBeNull()
+    expect(result.time).toBe(1439)
 })
 
 // #10
-test('[convertStringToModel] ignore time if additional', () => {
+test('[convertStringToModel] additional and probable', () => {
     const service = serviceWithToday()
-    const result = service.convertStringToModel('20150606! 2359 Test')
+    const result = service.convertStringToModel('Test !?')
 
-    expect(result.title).toBe('2359 Test')
+    expect(result.title).toBe('Test')
     expect(result.type).toBe(TaskTypeEnum.Additional)
-    expect(result.date!.getTime()).toBe(dt(2015, 5, 6))
+    expect(result.isProbable).toBe(true)
+    expect(result.date).toBeNull()
+    expect(result.time).toBeNull()
+})
+
+// #10.1
+test('[convertStringToModel] probable and additional', () => {
+    const service = serviceWithToday()
+    const result = service.convertStringToModel('Test ?!')
+
+    expect(result.title).toBe('Test')
+    expect(result.type).toBe(TaskTypeEnum.Additional)
+    expect(result.isProbable).toBe(true)
+    expect(result.date).toBeNull()
     expect(result.time).toBeNull()
 })
 
@@ -214,6 +227,19 @@ test('[convertStringToModel] !11 is not week shift pattern', () => {
     expect(result.time).toBeNull()
 })
 
+// #18
+test('[convertStringToModel] date with exclamation', () => {
+    const service = serviceWithToday()
+    const result = service.convertStringToModel('1231! Test')
+
+    expect(result.title).toBe('1231! Test')
+    expect(result.type).toBe(TaskTypeEnum.Simple)
+    expect(result.date).toBeNull()
+    expect(result.time).toBeNull()
+})
+
+//
+
 test('[convertModelToString] no date', () => {
     const service = serviceWithToday()
     const result = service.convertModelToString(new TaskModel('Test!'))
@@ -266,7 +292,16 @@ test('[convertModelToString] additional', () => {
         new Date(new Date().getFullYear(), 0, 1),
         TaskTypeEnum.Additional
     ))
-    expect(result).toBe('0101! Test!')
+    expect(result).toBe('0101 Test! !')
+})
+
+test('[convertModelToString] additional and probable', () => {
+    const service = serviceWithToday()
+    const result = service.convertModelToString(new TaskModel('Test!',
+        new Date(new Date().getFullYear(), 0, 1),
+        TaskTypeEnum.Additional, true
+    ))
+    expect(result).toBe('0101 Test! ?!')
 })
 
 test('[convertModelToString] date with year', () => {
