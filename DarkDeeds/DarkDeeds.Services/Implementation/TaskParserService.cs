@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using DarkDeeds.Enums;
@@ -18,19 +19,16 @@ namespace DarkDeeds.Services.Implementation
             _dateService = dateService;
         }
 
-        // TODO: refactor
         public TaskDto ParseTask(string task, bool ignoreDate = false)
         {
             var taskDto = new TaskDto();
-            var type = TaskTypeEnum.Simple;
-            int year = 0, month = 0, day = 0, dayAdjustment = 0, hour = 0, minutes = 0;
-            bool withDate = false, withTime = false;
+            int year = 0, month = 0, day = 0, dayAdjustment = 0;
+            bool withDate = false;
             
             if (!ignoreDate) 
-                task = ParseDate(task, out year, out month, out day, out withDate, out type, out dayAdjustment);
-            if (type != TaskTypeEnum.Additional)
-                task = ParseTime(task, out hour, out minutes, out withTime);
-            task = ParseProbability(task, out bool isProbable);
+                task = ParseDate(task, out year, out month, out day, out withDate, out dayAdjustment);
+            task = ParseTime(task, out int hour, out int minutes, out bool withTime);
+            task = ParseFlags(task, out bool isProbable, out TaskTypeEnum type);
             
             taskDto.Title = task;
             taskDto.Type = type;
@@ -43,16 +41,25 @@ namespace DarkDeeds.Services.Implementation
             return taskDto;
         }
 
-        private string ParseProbability(string task, out bool isProbable)
+        private string ParseFlags(string task, out bool isProbable, out TaskTypeEnum type)
         {
+            var flagsRx = new Regex(@"\s[\?!]+$");
+            
             isProbable = false;
-            if (task.EndsWith(" ?"))
+            type = TaskTypeEnum.Simple;
+
+            if (!flagsRx.IsMatch(task))
+                return task;
+
+            foreach (var f in task.Split(' ').Last())
             {
-                task = task.Substring(0, task.Length - 2);
-                isProbable = true;
+                if (f == '?')
+                    isProbable = true;
+                else if (f == '!')
+                    type = TaskTypeEnum.Additional;
             }
 
-            return task;
+            return flagsRx.Replace(task, "");
         }
 
         private string ParseTime(string task, out int hour, out int minutes, out bool withTime)
@@ -79,14 +86,13 @@ namespace DarkDeeds.Services.Implementation
             return task;
         }
 
-        private string ParseDate(string task, out int year, out int month, out int day, out bool withDate, out TaskTypeEnum type, out int dayAdjustment)
+        private string ParseDate(string task, out int year, out int month, out int day, out bool withDate, out int dayAdjustment)
         {
-            var dateWithYearRx = new Regex(@"^\d{8}!?\s");
-            var dateRx = new Regex(@"^\d{4}!?\s");
+            var dateWithYearRx = new Regex(@"^\d{8}\s");
+            var dateRx = new Regex(@"^\d{4}\s");
             var todayShiftRx = new Regex(@"^!+\s");
             var weekShiftRx = new Regex(@"^![1-7]\s");
             string date = string.Empty;
-            type = TaskTypeEnum.Simple;
             year = 0;
             month = 0;
             day = 0;
@@ -97,17 +103,13 @@ namespace DarkDeeds.Services.Implementation
             {
                 date = task.Substring(4, 4);
                 year = int.Parse(task.Substring(0, 4));
-                task = task.Substring(8);
-                task = ParseAdditional(task, ref type);
-                task = task.Substring(1);
+                task = task.Substring(9);
             }
             else if (dateRx.IsMatch(task))
             {
                 date = task.Substring(0, 4);
                 year = _dateService.Today.Year;
-                task = task.Substring(4);
-                task = ParseAdditional(task, ref type);
-                task = task.Substring(1);
+                task = task.Substring(5);
             }
             else if (todayShiftRx.IsMatch(task))
             {
@@ -149,17 +151,6 @@ namespace DarkDeeds.Services.Implementation
             dayAdjustment = new Regex("!+").Matches(task)[0].Length;
             dayAdjustment--;
             return task.Substring(dayAdjustment + 2);
-        }
-
-        private string ParseAdditional(string task, ref TaskTypeEnum type)
-        {
-            if (task.StartsWith("!"))
-            {
-                task = task.Substring(1);
-                type = TaskTypeEnum.Additional;
-            }
-
-            return task;
         }
 
         private DateTime CreateDateTime(int year, int month, int day, int dayAdjustment)

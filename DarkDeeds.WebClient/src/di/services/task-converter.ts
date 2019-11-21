@@ -13,12 +13,12 @@ export class TaskConverter {
     public convertStringToModel(text: string): TaskModel {
         const result = new StringConvertingResult(this.dateService.today())
 
-        if (/^\d{8}!?\s/.test(text)) {
+        if (/^\d{8}\s/.test(text)) {
             result.setHasDate()
             text = result.extractYear(text)
             text = result.extractMonth(text)
             text = result.extractDay(text)
-        } else if (/^\d{4}!?\s/.test(text)) {
+        } else if (/^\d{4}\s/.test(text)) {
             result.setHasDate()
             text = result.extractMonth(text)
             text = result.extractDay(text)
@@ -30,24 +30,18 @@ export class TaskConverter {
             text = result.extractWeekShift(text)
         }
 
-        if (/^!\s/.test(text) && result.hasDate) {
-            text = result.extractAdditionalType(text)
+        text = text.trimLeft()
+
+        if (/^\d{4}\s/.test(text)) {
+            result.setHasTime()
+            text = result.extractHour(text)
+            text = result.extractMinute(text)
         }
 
         text = text.trimLeft()
 
-        if (result.timeIsApplicable) {
-            if (/^\d{4}\s/.test(text)) {
-                result.setHasTime()
-                text = result.extractHour(text)
-                text = result.extractMinute(text)
-            }
-        }
-
-        text = text.trimLeft()
-
-        if (/ \?$/.test(text)) {
-            text = result.extractProbability(text)
+        if (/\s[\?!]+$/.test(text)) {
+            text = result.extractFlags(text)
         }
 
         return result.getModel(text)
@@ -62,9 +56,7 @@ export class TaskConverter {
             }
             s += `${this.str2digits(model.date.getMonth() + 1)}${this.str2digits(model.date.getDate())}`
 
-            if (model.type === TaskTypeEnum.Additional) {
-                s += '! '
-            } else if (model.time !== null) {
+            if (model.time !== null) {
                 const time = new Time(model.time)
                 s += ` ${time.hourString}${time.minuteString} `
             } else {
@@ -72,9 +64,15 @@ export class TaskConverter {
             }
         }
 
-        let suffix: string = ''
+        let suffix: string = ' '
         if (model.isProbable) {
-            suffix = ' ?'
+            suffix += '?'
+        }
+        if (model.type === TaskTypeEnum.Additional) {
+            suffix += '!'
+        }
+        if (suffix.length === 1) {
+            suffix = ''
         }
 
         return `${s}${model.title}${suffix}`
@@ -131,11 +129,6 @@ class StringConvertingResult {
         return text.slice(2)
     }
 
-    public extractAdditionalType(text: string): string {
-        this.type = TaskTypeEnum.Additional
-        return text.slice(2)
-    }
-
     public extractHour(text: string): string {
         this.hour = Number(text.substr(0, 2))
         return text.slice(2)
@@ -146,9 +139,16 @@ class StringConvertingResult {
         return text.slice(2)
     }
 
-    public extractProbability(text: string): string {
-        this.isProbable = true
-        return text.slice(0, text.length - 2)
+    public extractFlags(text: string): string {
+        const flags = text.split(' ').reverse()[0]
+        flags.split('').forEach(x => {
+            if (x === '!') {
+                this.type = TaskTypeEnum.Additional
+            } else if (x === '?') {
+                this.isProbable = true
+            }
+        })
+        return text.slice(0, text.length - 1 - flags.length)
     }
 
     public setHasDate() {
@@ -157,10 +157,6 @@ class StringConvertingResult {
 
     public setHasTime() {
         this.hasTime = true
-    }
-
-    get timeIsApplicable(): boolean {
-        return this.type !== TaskTypeEnum.Additional
     }
 
     public getModel(text: string): TaskModel {
