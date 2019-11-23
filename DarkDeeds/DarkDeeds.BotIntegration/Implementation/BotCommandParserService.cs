@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using DarkDeeds.BotIntegration.Interface;
 using DarkDeeds.BotIntegration.Objects.Commands;
@@ -12,11 +13,13 @@ namespace DarkDeeds.BotIntegration.Implementation
 
         private readonly ITaskParserService _taskParserService;
         private readonly ITelegramService _telegramService;
+        private readonly IDateService _dateService;
 
-        public BotCommandParserService(ITaskParserService taskParserService, ITelegramService telegramService)
+        public BotCommandParserService(ITaskParserService taskParserService, ITelegramService telegramService, IDateService dateService)
         {
             _taskParserService = taskParserService;
             _telegramService = telegramService;
+            _dateService = dateService;
         }
 
         public async Task<BotCommand> ParseCommand(string command, int chatId)
@@ -27,7 +30,8 @@ namespace DarkDeeds.BotIntegration.Implementation
             if (CheckAndTrimCommand(TodoCommand, command, out args))
             {
                 int timeAdjustment = await _telegramService.GetUserTimeAdjustment(chatId);
-                return new ShowTodoCommand(args, timeAdjustment);
+                DateTime now = _dateService.Now;
+                return new ShowTodoCommand(args, now, timeAdjustment);
             }
 
             if (!command.StartsWith("/"))

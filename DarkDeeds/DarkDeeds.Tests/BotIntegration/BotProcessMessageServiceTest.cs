@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using DarkDeeds.BotIntegration.Dto;
 using DarkDeeds.BotIntegration.Implementation;
@@ -52,7 +53,7 @@ namespace DarkDeeds.Tests.BotIntegration
         [Fact]
         public async Task BotProcessMessageServiceTest_RunShowTodoCommand()
         {
-            var command = new ShowTodoCommand("", 0);
+            var command = new ShowTodoCommand("", new DateTime(), 0);
             var commandParserMock = createCommandParserMock(command);
             var commandMock = new Mock<IShowTodoCommandProcessor>();
             var service = new BotProcessMessageService(
