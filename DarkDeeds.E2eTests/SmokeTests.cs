@@ -228,6 +228,8 @@ namespace DarkDeeds.E2eTests
                 
                 driver.DeleteTask(task1);
                 driver.DeleteTask(task2);
+                
+                driver.WaitUntillSavingFinished();
             });
         }
     }
