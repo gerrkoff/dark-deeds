@@ -9,16 +9,16 @@ namespace DarkDeeds.BotIntegration.Objects.Commands
 
         private readonly string _args;
 
-        public ShowTodoCommand(string args, int timeAdjustment)
+        public ShowTodoCommand(string args, DateTime now, int timeAdjustment)
         {
             _args = args;
             if (string.IsNullOrWhiteSpace(args))
             {
-                From = DateTime.UtcNow.AddMinutes(timeAdjustment).Date;
+                From = now.AddMinutes(timeAdjustment).Date;
             }
             else if (args.Length == 4)
             {
-                int year = DateTime.UtcNow.AddMinutes(timeAdjustment).Year;
+                int year = now.AddMinutes(timeAdjustment).Year;
                 int month = int.Parse(args.Substring(0, 2));
                 int day = int.Parse(args.Substring(2, 2));
                 From = new DateTime(year, month, day); 

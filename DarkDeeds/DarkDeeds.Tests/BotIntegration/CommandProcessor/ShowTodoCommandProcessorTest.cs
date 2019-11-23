@@ -25,7 +25,7 @@ namespace DarkDeeds.Tests.BotIntegration.CommandProcessor
                 taskParserMock.Object,
                 null);
 
-            await service.ProcessAsync(new ShowTodoCommand(string.Empty, 0)
+            await service.ProcessAsync(new ShowTodoCommand(string.Empty, new DateTime(), 0)
             {
                 UserChatId = 100
             });
@@ -46,7 +46,7 @@ namespace DarkDeeds.Tests.BotIntegration.CommandProcessor
                 taskParserMock.Object,
                 null);
 
-            await service.ProcessAsync(new ShowTodoCommand(string.Empty, 0)
+            await service.ProcessAsync(new ShowTodoCommand(string.Empty, new DateTime(), 0)
             {
                 UserChatId = 100
             });
