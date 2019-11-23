@@ -4,6 +4,7 @@
     {
         public static string ClassContains(string className) => $"[contains(concat(' ', @class, ' '), ' {className} ')]";
         public static string TextContains(string text) => $"[text()='{text}']";
+        public static string NotContainsAttr(string attr) => $"[not(@{attr})]";
         
         public static string TaskWithText(string text) => $"span{ClassContains("task-item")}{TextContains(text)}";
 

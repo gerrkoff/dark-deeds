@@ -42,13 +42,13 @@ namespace DarkDeeds.E2eTests.Common
             driver.GetElement($"//*[@data-test-id='nav-{link}']");
         
         public static IWebElement GetAddRecurrenceButton(this RemoteWebDriver driver) =>
-            driver.GetElement($"//*[@data-test-id='add-recurrence-button']");
+            driver.GetElement($"//*[@data-test-id='add-recurrence-button']{Xpath.NotContainsAttr("disabled")}");
         
         public static IWebElement GetSaveRecurrencesButton(this RemoteWebDriver driver) =>
-            driver.GetElement($"//*[@data-test-id='save-recurrences-button']");
+            driver.GetElement($"//*[@data-test-id='save-recurrences-button']{Xpath.NotContainsAttr("disabled")}");
         
         public static IWebElement GetCreateRecurrencesButton(this RemoteWebDriver driver) =>
-            driver.GetElement($"//*[@data-test-id='create-recurrences-button']");
+            driver.GetElement($"//*[@data-test-id='create-recurrences-button']{Xpath.NotContainsAttr("disabled")}");
         
         public static IWebElement GetCreateRecurrenceFormTaskInput(this RemoteWebDriver driver) =>
             driver.GetElement($"//{Xpath.CreateRecurrenceForm()}//input[1]");
