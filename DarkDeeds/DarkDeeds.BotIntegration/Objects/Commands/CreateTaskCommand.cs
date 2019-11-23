@@ -9,7 +9,6 @@ namespace DarkDeeds.BotIntegration.Objects.Commands
         public CreateTaskCommand(TaskDto task)
         {
             Task = task;
-            Task.ClientId = -1;
         }
 
         public override string ToString()

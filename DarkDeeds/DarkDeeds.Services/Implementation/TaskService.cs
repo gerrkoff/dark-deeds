@@ -79,7 +79,7 @@ namespace DarkDeeds.Services.Implementation
         private async Task<TaskDto> SaveTaskAsync(Dictionary<int, TaskEntity> existingTasks, TaskDto taskToSave, string userId)
         {   
             TaskEntity entity;
-            if (taskToSave.Deleted || taskToSave.ClientId >= 0)
+            if (taskToSave.Deleted || taskToSave.ClientId > 0)
             {
                 if (!existingTasks.ContainsKey(taskToSave.Id))
                 {
@@ -99,7 +99,7 @@ namespace DarkDeeds.Services.Implementation
                 return taskToSave;
             }
             // create
-            if (taskToSave.ClientId < 0)
+            if (taskToSave.ClientId <= 0)
             {
                 entity = Mapper.Map<TaskEntity>(taskToSave);
                 entity.Id = 0;
