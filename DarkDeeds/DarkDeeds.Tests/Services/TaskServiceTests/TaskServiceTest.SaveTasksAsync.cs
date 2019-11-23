@@ -65,7 +65,7 @@ namespace DarkDeeds.Tests.Services.TaskServiceTests
             var loggerMock = new Mock<ILogger<TaskService>>();
             var service = new TaskService(repoMock.Object, loggerMock.Object, new Mock<IPermissionsService>().Object);
 
-            var items = new[] {new TaskDto {Id = 1000, ClientId = 0}, new TaskDto {Id = 2000, Deleted = true}};
+            var items = new[] {new TaskDto {Id = 1000, ClientId = 1}, new TaskDto {Id = 2000, Deleted = true}};
             var result = (await service.SaveTasksAsync(items, string.Empty)).ToList();
             
             repoMock.Verify(x => x.GetAll());
