@@ -62,7 +62,7 @@ export class RecurrencesSidePanel extends React.PureComponent<IProps> {
                 </Menu.Item>
                 <Menu.Item className='recurrences-view-side-panel-group-2'>
                     <Button
-                        icon
+                        icon primary
                         labelPosition='left'
                         size='mini'
                         data-test-id='create-recurrences-button'

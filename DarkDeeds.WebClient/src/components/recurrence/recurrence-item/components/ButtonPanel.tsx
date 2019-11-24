@@ -9,7 +9,6 @@ interface IProps {
 export class ButtonPanel extends React.PureComponent<IProps> {
 
     public render() {
-        const classChangeEditBtn = this.props.isEditing ? 'btn-success' : 'btn-info'
         return (
             <React.Fragment>
                 <Label
@@ -22,7 +21,7 @@ export class ButtonPanel extends React.PureComponent<IProps> {
                 <Label
                     attached='bottom right'
                     onClick={this.props.onChangeEditing}
-                    className={'recurrences-view-recurrence-item-btn ' + classChangeEditBtn}>
+                    className='recurrences-view-recurrence-item-btn'>
 
                     { this.props.isEditing
                         ? <Icon name='checkmark' />
