@@ -2,7 +2,7 @@ import { IRecurrencesViewState } from '../types'
 import { di, diToken, DateService } from '../../di'
 import * as actions from '../constants'
 import { PlannedRecurrence } from '../../models'
-import { objectsEqual, copyArray } from 'src/helpers'
+import { objectsEqual, copyArray } from '../..//helpers'
 
 const dateService = di.get<DateService>(diToken.DateService)
 
