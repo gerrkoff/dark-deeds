@@ -1,17 +1,18 @@
-import { di, diToken, RecurrencesApi, ToastService } from '../../di'
+import { di, diToken, RecurrencesApi, ToastService, DateService } from '../../di'
 import * as actions from '../constants'
 import { PlannedRecurrence } from '../../models'
 import { ThunkDispatch } from '../../helpers'
 
 const recurrencesViewApi = di.get<RecurrencesApi>(diToken.RecurrencesApi)
 const toastService = di.get<ToastService>(diToken.ToastService)
+const dateService = di.get<DateService>(diToken.DateService)
 
 export function createRecurrences() {
     return async(dispatch: ThunkDispatch<actions.RecurrencesViewAction>) => {
         dispatch({ type: actions.RECURRENCESVIEW_CREATING_RECURRENCES_PROCESSING })
 
         try {
-            const createdRecurrencesCount = await recurrencesViewApi.createRecurrences()
+            const createdRecurrencesCount = await recurrencesViewApi.createRecurrences(dateService.getTimezoneOffset())
             toastService.success(`${createdRecurrencesCount} recurrences were created`)
         } catch (err) {
             toastService.errorProcess('creating recurrences')

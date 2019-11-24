@@ -22,9 +22,9 @@ namespace DarkDeeds.Api.Controllers
 
         [Route("create")]
         [HttpPost]
-        public Task<int> Create()
+        public Task<int> Create(int timezoneOffset)
         {
-            return _recurrenceCreatorService.CreateAsync(GetUser().UserId);
+            return _recurrenceCreatorService.CreateAsync(timezoneOffset, GetUser().UserId);
         }
         
         [HttpGet]

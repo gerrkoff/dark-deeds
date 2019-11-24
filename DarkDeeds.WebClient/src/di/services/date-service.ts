@@ -89,6 +89,10 @@ export class DateService {
         return dateX.getTime() === dateY.getTime()
     }
 
+    public getTimezoneOffset(): number {
+        return -(new Date().getTimezoneOffset())
+    }
+
     private fixAfterServer(date: Date): Date {
         const fixed = new Date(date)
         fixed.setMinutes(fixed.getMinutes() + fixed.getTimezoneOffset())

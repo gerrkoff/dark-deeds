@@ -11,8 +11,8 @@ export class RecurrencesApi {
         @inject(diToken.DateService) private dateService: DateService
     ) {}
 
-    public createRecurrences(): Promise<number> {
-        return this.api.post<number>('api/recurrences/create', null)
+    public createRecurrences(timezoneOffset: number): Promise<number> {
+        return this.api.post<number>(`api/recurrences/create?timezoneOffset=${timezoneOffset}`, null)
     }
 
     public async loadRecurrences(): Promise<PlannedRecurrence[]> {

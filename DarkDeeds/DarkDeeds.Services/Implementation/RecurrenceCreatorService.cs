@@ -43,7 +43,7 @@ namespace DarkDeeds.Services.Implementation
             _taskHubService = taskHubService;
         }
 
-        public async Task<int> CreateAsync(string userId)
+        public async Task<int> CreateAsync(int timezoneOffset, string userId)
         {
             var createdRecurrencesCount = 0;
             List<PlannedRecurrenceEntity> plannedRecurrences = await _plannedRecurrenceRepository
@@ -53,7 +53,7 @@ namespace DarkDeeds.Services.Implementation
 
             foreach (PlannedRecurrenceEntity plannedRecurrence in plannedRecurrences)
             {
-                ICollection<DateTime> dates = EvaluateRecurrenceDatesWithinPeriod(plannedRecurrence);
+                ICollection<DateTime> dates = EvaluateRecurrenceDatesWithinPeriod(plannedRecurrence, timezoneOffset);
                 foreach (var date in dates)
                 {
                     bool alreadyExists = await _recurrenceRepository.GetAll().AnySafeAsync(
@@ -97,9 +97,9 @@ namespace DarkDeeds.Services.Implementation
                 TaskId = taskId,
             };
 
-        private ICollection<DateTime> EvaluateRecurrenceDatesWithinPeriod(PlannedRecurrenceEntity plannedRecurrence)
+        private ICollection<DateTime> EvaluateRecurrenceDatesWithinPeriod(PlannedRecurrenceEntity plannedRecurrence, int timezoneOffset)
         {
-            var (periodStart, periodEnd) = EvaluatePeriod();
+            var (periodStart, periodEnd) = EvaluatePeriod(timezoneOffset);
             var dates = new List<DateTime>();
             for (DateTime i = periodStart; i != periodEnd; i = i.AddDays(1))
             {
@@ -126,14 +126,12 @@ namespace DarkDeeds.Services.Implementation
         }
 
         /// <remarks>End date is not included</remarks>
-        public (DateTime, DateTime) EvaluatePeriod()
+        public (DateTime, DateTime) EvaluatePeriod(int timezoneOffset)
         {
-            var startDate = _dateService.Now.AddHours(-12).Date;
-
-            var startDateForEndDate = _dateService.Now.AddHours(12);
-            var currentDayOfWeek = (int) startDateForEndDate.DayOfWeek;
+            var startDate = _dateService.Now.AddMinutes(timezoneOffset).Date;
+            var currentDayOfWeek = (int) startDate.DayOfWeek;
             var currentDayOfWeekFixed = (6 + currentDayOfWeek) % 7 + 1;
-            var endDate = startDateForEndDate
+            var endDate = startDate
                 .AddDays(RecurrencePeriodInDays - currentDayOfWeekFixed + 1)
                 .Date;
             
