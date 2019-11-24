@@ -12,7 +12,8 @@ function mapStateToProps({ recurrencesView }: IAppState) {
         isLoadingRecurrences: recurrencesView.isLoadingRecurrences,
         isSavingRecurrences: recurrencesView.isSavingRecurrences,
         plannedRecurrences: recurrencesView.plannedRecurrences,
-        edittingRecurrenceId: recurrencesView.edittingRecurrenceId
+        edittingRecurrenceId: recurrencesView.edittingRecurrenceId,
+        hasNotSavedChanges: recurrencesView.hasNotSavedChanges
     }
 }
 

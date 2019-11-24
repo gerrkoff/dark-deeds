@@ -11,7 +11,8 @@ function createState(
         isLoadingRecurrences: false,
         isSavingRecurrences: false,
         plannedRecurrences,
-        edittingRecurrenceId: null
+        edittingRecurrenceId: null,
+        hasNotSavedChanges: false
     }
 }
 

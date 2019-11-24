@@ -10,10 +10,14 @@ const inittialState: IRecurrencesViewState = {
     isLoadingRecurrences: false,
     isSavingRecurrences: false,
     plannedRecurrences: [],
-    edittingRecurrenceId: null
+    edittingRecurrenceId: null,
+    hasNotSavedChanges: false
 }
 
+let lastSavedRecurrencs: PlannedRecurrence[] = inittialState.plannedRecurrences
+
 export function recurrencesView(state: IRecurrencesViewState = inittialState, action: actions.RecurrencesViewAction): IRecurrencesViewState {
+    let newRecurrences: PlannedRecurrence[]
     switch (action.type) {
         case actions.RECURRENCESVIEW_CREATING_RECURRENCES_PROCESSING:
             return { ...state,
@@ -32,35 +36,48 @@ export function recurrencesView(state: IRecurrencesViewState = inittialState, ac
                 isLoadingRecurrences: false
             }
         case actions.RECURRENCESVIEW_LOADING_RECURRENCES_SUCCESS:
+            lastSavedRecurrencs = action.plannedRecurrences
             return { ...state,
                 isLoadingRecurrences: false,
-                plannedRecurrences: action.plannedRecurrences
+                plannedRecurrences: action.plannedRecurrences,
+                hasNotSavedChanges: false
             }
         case actions.RECURRENCESVIEW_CHANGE_EDITTING_RECURRENCE:
             return { ...state,
                 edittingRecurrenceId: action.edittingRecurrenceId
             }
         case actions.RECURRENCESVIEW_CHANGE_RECURRENCE:
+            newRecurrences = changeRecurrence(state.plannedRecurrences, action.plannedRecurrence)
             return { ...state,
-                plannedRecurrences: changeRecurrence(state.plannedRecurrences, action.plannedRecurrence)
+                plannedRecurrences: newRecurrences,
+                hasNotSavedChanges: evalHasNotSavedChanges(newRecurrences)
             }
         case actions.RECURRENCESVIEW_SAVING_PROCESSING:
             return { ...state,
                 isSavingRecurrences: true
             }
-        case actions.RECURRENCESVIEW_SAVING_FINISH:
+        case actions.RECURRENCESVIEW_SAVING_FAIL:
             return { ...state,
                 isSavingRecurrences: false
+            }
+        case actions.RECURRENCESVIEW_SAVING_SUCCESS:
+            lastSavedRecurrencs = state.plannedRecurrences
+            return { ...state,
+                isSavingRecurrences: false,
+                hasNotSavedChanges: false
             }
         case actions.RECURRENCESVIEW_ADD_RECURRENCE:
             const addingResult = addRecurrence(state.plannedRecurrences)
             return { ...state,
                 plannedRecurrences: addingResult.recurrences,
-                edittingRecurrenceId: addingResult.id
+                edittingRecurrenceId: addingResult.id,
+                hasNotSavedChanges: evalHasNotSavedChanges(addingResult.recurrences)
             }
         case actions.RECURRENCESVIEW_DELETE_RECURRENCE:
+            newRecurrences = deleteRecurrence(state.plannedRecurrences, action.id)
             return { ...state,
-                plannedRecurrences: deleteRecurrence(state.plannedRecurrences, action.id)
+                plannedRecurrences: newRecurrences,
+                hasNotSavedChanges: evalHasNotSavedChanges(newRecurrences)
             }
     }
     return state
@@ -97,4 +114,10 @@ function deleteRecurrence(recurrences: PlannedRecurrence[], id: number): Planned
     const recurrenceIndex = newRecurrences.findIndex(x => x.id === id)
     newRecurrences[recurrenceIndex] = { ...newRecurrences[recurrenceIndex], isDeleted: true }
     return newRecurrences
+}
+
+// TODO:
+function evalHasNotSavedChanges(recurrences: PlannedRecurrence[]): boolean {
+    console.log(lastSavedRecurrencs, recurrences, lastSavedRecurrencs === recurrences)
+    return lastSavedRecurrencs !== recurrences
 }
