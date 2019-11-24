@@ -10,6 +10,7 @@ interface IProps {
     isCreatingRecurrences: boolean
     isLoadingRecurrences: boolean
     isSavingRecurrences: boolean
+    hasNotSavedChanges: boolean
     plannedRecurrences: PlannedRecurrence[]
     edittingRecurrenceId: number | null
     createRecurrences: () => void
@@ -51,6 +52,7 @@ export class RecurrencesView extends React.PureComponent<IProps> {
                         isLoadingRecurrences={this.props.isLoadingRecurrences}
                         isCreatingRecurrences={this.props.isCreatingRecurrences}
                         isSavingRecurrences={this.props.isSavingRecurrences}
+                        hasNotSavedChanges={this.props.hasNotSavedChanges}
                         addRecurrence={this.props.addRecurrence}
                         saveRecurrences={() => this.props.saveRecurrences(this.props.plannedRecurrences)}
                         loadRecurrences={this.props.loadRecurrences}

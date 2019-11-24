@@ -6,6 +6,7 @@ interface IProps {
     isLoadingRecurrences: boolean
     isCreatingRecurrences: boolean
     isSavingRecurrences: boolean
+    hasNotSavedChanges: boolean
     createRecurrences: () => void
     addRecurrence: () => void
     saveRecurrences: () => void
@@ -37,6 +38,7 @@ export class RecurrencesSidePanel extends React.PureComponent<IProps> {
                                 labelPosition='left'
                                 size='mini'
                                 data-test-id='save-recurrences-button'
+                                positive={this.props.hasNotSavedChanges}
                                 onClick={this.props.saveRecurrences}
                                 loading={this.props.isSavingRecurrences}
                                 disabled={this.props.isLoadingRecurrences || this.props.isCreatingRecurrences}>
@@ -62,7 +64,7 @@ export class RecurrencesSidePanel extends React.PureComponent<IProps> {
                 </Menu.Item>
                 <Menu.Item className='recurrences-view-side-panel-group-2'>
                     <Button
-                        icon
+                        icon primary
                         labelPosition='left'
                         size='mini'
                         data-test-id='create-recurrences-button'

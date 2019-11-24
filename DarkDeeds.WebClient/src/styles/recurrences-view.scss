@@ -43,28 +43,11 @@
 
         .recurrences-view-recurrence-item-btn {
             cursor: pointer;
+            background-color: rgb(224, 225, 226);
 
             i {
                 margin: 0;
                 min-width: 1rem;
-            }
-
-            &.btn-info {
-                background-color: $color-info;
-                border-color: $color-info;
-                color: #fff;
-            }
-
-            &.btn-error {
-                background-color: $color-error;
-                border-color: $color-error;
-                color: #fff;
-            }
-
-            &.btn-success {
-                background-color: $color-success;
-                border-color: $color-success;
-                color: #fff;
             }
         }
     }
