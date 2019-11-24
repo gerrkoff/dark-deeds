@@ -113,10 +113,6 @@ function deleteRecurrence(recurrences: PlannedRecurrence[], id: number): Planned
 
 // TODO: test
 function evalHasNotSavedChanges(recurrences: PlannedRecurrence[]): boolean {
-    if (recurrences === lastSavedRecurrencs) {
-        return false
-    }
-
     if (recurrences.length !== lastSavedRecurrencs.length) {
         return true
     }
