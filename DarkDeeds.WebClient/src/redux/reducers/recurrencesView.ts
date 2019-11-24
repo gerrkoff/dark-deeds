@@ -2,6 +2,7 @@ import { IRecurrencesViewState } from '../types'
 import { di, diToken, DateService } from '../../di'
 import * as actions from '../constants'
 import { PlannedRecurrence } from '../../models'
+import { objectsEqual, copyArray } from 'src/helpers'
 
 const dateService = di.get<DateService>(diToken.DateService)
 
@@ -36,7 +37,7 @@ export function recurrencesView(state: IRecurrencesViewState = inittialState, ac
                 isLoadingRecurrences: false
             }
         case actions.RECURRENCESVIEW_LOADING_RECURRENCES_SUCCESS:
-            lastSavedRecurrencs = action.plannedRecurrences
+            lastSavedRecurrencs = copyArray(action.plannedRecurrences)
             return { ...state,
                 isLoadingRecurrences: false,
                 plannedRecurrences: action.plannedRecurrences,
@@ -56,15 +57,9 @@ export function recurrencesView(state: IRecurrencesViewState = inittialState, ac
             return { ...state,
                 isSavingRecurrences: true
             }
-        case actions.RECURRENCESVIEW_SAVING_FAIL:
+        case actions.RECURRENCESVIEW_SAVING_FINISH:
             return { ...state,
                 isSavingRecurrences: false
-            }
-        case actions.RECURRENCESVIEW_SAVING_SUCCESS:
-            lastSavedRecurrencs = state.plannedRecurrences
-            return { ...state,
-                isSavingRecurrences: false,
-                hasNotSavedChanges: false
             }
         case actions.RECURRENCESVIEW_ADD_RECURRENCE:
             const addingResult = addRecurrence(state.plannedRecurrences)
@@ -116,8 +111,22 @@ function deleteRecurrence(recurrences: PlannedRecurrence[], id: number): Planned
     return newRecurrences
 }
 
-// TODO:
+// TODO: test
 function evalHasNotSavedChanges(recurrences: PlannedRecurrence[]): boolean {
-    console.log(lastSavedRecurrencs, recurrences, lastSavedRecurrencs === recurrences)
-    return lastSavedRecurrencs !== recurrences
+    if (recurrences === lastSavedRecurrencs) {
+        return false
+    }
+
+    if (recurrences.length !== lastSavedRecurrencs.length) {
+        return true
+    }
+
+    for (const recurrence of recurrences) {
+        const lastSaved = lastSavedRecurrencs.find(x => x.id === recurrence.id)
+        if (!objectsEqual(lastSaved, recurrence)) {
+            return true
+        }
+    }
+
+    return false
 }
