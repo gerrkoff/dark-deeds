@@ -4,7 +4,6 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace DarkDeeds.Data.Migrations
 {
-    // ReSharper disable once InconsistentNaming
     public partial class N003_Add_PlannedRecurences_And_Recurrences : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)

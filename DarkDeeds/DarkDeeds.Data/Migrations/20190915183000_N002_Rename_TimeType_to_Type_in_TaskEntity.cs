@@ -2,7 +2,6 @@
 
 namespace DarkDeeds.Data.Migrations
 {
-    // ReSharper disable once InconsistentNaming
     public partial class N002_Rename_TimeType_to_Type_in_TaskEntity : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)

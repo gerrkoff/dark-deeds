@@ -3,12 +3,12 @@ using System;
 using DarkDeeds.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace DarkDeeds.Data.Migrations
 {
     [DbContext(typeof(DarkDeedsContext))]
-    // ReSharper disable once PartialTypeWithSinglePart
     partial class DarkDeedsContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
