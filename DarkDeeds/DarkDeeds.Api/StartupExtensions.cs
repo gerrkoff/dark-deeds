@@ -113,7 +113,7 @@ namespace DarkDeeds.Api
                         .Build();
                     options.Filters.Add(new AuthorizeFilter(policy));
                 })
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+                .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
             return services;
         }
 

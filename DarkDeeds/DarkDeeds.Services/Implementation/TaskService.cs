@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using DarkDeeds.Common.Exceptions;
 using DarkDeeds.Common.Extensions;
 using DarkDeeds.Data.Entity;
 using DarkDeeds.Data.Repository;
