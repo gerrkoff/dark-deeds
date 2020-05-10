@@ -29,16 +29,8 @@ print 'BE: TEST'
 cd "$DIR"/DarkDeeds/DarkDeeds.Tests/ || exit $?
 dotnet test "--logger:trx;LogFileName=results.trx" --results-directory "$DIR"/CI/artifacts/test-results || exit $?
 
-print 'BE: SET BUILD VERSION'
-cd "$DIR"/DarkDeeds/DarkDeeds.Api/ || exit $?
-if [ -z "$1" ]
-    then
-        echo "No BUILD_VERSION provided, skip"
-    else
-        dotnet "$DIR"/Tools/dotnet-setversion/dotnet-setversion.dll vs $1
-fi
-
 print 'BE: BUILD'
+cd "$DIR"/DarkDeeds/DarkDeeds.Api/ || exit $?
 dotnet publish -c Release -o "$DIR"/CI/artifacts/src || exit $?
 
 # misc
