@@ -1,12 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using DarkDeeds.Api.Hubs;
+﻿using System.Threading.Tasks;
 using DarkDeeds.BotIntegration.Dto;
 using DarkDeeds.BotIntegration.Interface;
-using DarkDeeds.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.SignalR;
 
 namespace DarkDeeds.Api.Controllers
 {

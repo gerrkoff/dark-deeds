@@ -58,24 +58,15 @@ namespace DarkDeeds.Api
             app.UseHealthChecks("/healthcheck"); 
             app.UseResponseCompression();
             app.UseStaticFiles();
+            app.UseRouting();
             app.UseAuthentication();
-            app.UseSignalR(options =>
+            app.UseEndpoints(endpoints =>
             {
-                options.MapHub<TaskHub>("/ws/task");
-            });
-            app.UseMvc(routes =>
-            {
-                routes
-                    .MapRoute(
-                        name: "default",
-                        template: "{controller=Home}/{action=Index}/{id?}")
-                    .MapRoute(
-                        name: "bot",
-                        template: $"api/bot/{Configuration["Bot"]}",
-                        defaults: new {controller = "Bot", action = "Process"})
-                    .MapSpaFallbackRoute(
-                        name: "spa-fallback",
-                        defaults: new {controller = "Home", action = "Index"});
+                endpoints.MapHub<TaskHub>("/ws/task");
+                endpoints.MapFallbackToController("Index", "Home");
+                endpoints.MapControllers();
+                endpoints.MapControllerRoute("bot", $"api/bot/{Configuration["Bot"]}",
+                    new {controller = "Home", action = "Index"});
             });
         }
     }
