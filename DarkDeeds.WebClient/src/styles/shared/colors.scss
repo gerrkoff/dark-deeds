@@ -1,25 +1,16 @@
-$color-base: #555555;
-$color-dark-1: darken($color-base, 13.75%); // #323232
-$color-dark-2: darken($color-base, 27%); // #101010
-$color-light-1: lighten($color-base, 13.5%); // #777777
-$color-light-2: lighten($color-base, 26.75%); // #999999
+html {
+    --clr-base: #555;
+    --clr-main: #101010;
+    --clr-help: #323232;
 
-$color-background: $color-base;
-$color-day-header-border: $color-base;
-$color-item-selected: $color-base;
-$color-day-expired: $color-dark-1;
-$color-day-default: $color-dark-2;
+    --clr-text-primary: #fdfdfd;
+    --clr-text-secondary: #646464;
 
-$color-shadow-light: #0000004d;
-$color-shadow-solid: #353A45;
+    --clr-shadow-light: #0000004d;
+    --clr-shadow-solid: #353A45;
 
-$color-primary-text: #fdfdfd;
-$color-secondary-text: #646464;
-
-$color-success: #058909;
-$color-error: #B43B2F;
-$color-warn: #BE9B0C;
-$color-info: #2875A8;
-
-// not used
-$old-cool-bg: #282c34;
+    --clr-success: #058909;
+    --clr-error: #B43B2F;
+    --clr-warn: #BE9B0C;
+    --clr-info: #2875A8;
+}

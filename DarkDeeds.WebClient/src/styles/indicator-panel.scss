@@ -1,15 +1,14 @@
-@import 'shared/colors.scss';
 @import 'shared/common-mixin.scss';
 
 .indicator-panel {
     position: fixed;
     top: 0.5rem;
     right: 0.5rem;
-    color: $color-primary-text;
+    color: var(--clr-text-primary);
 }
 
 .indicator-panel-error {
-    color: $color-error;
+    color: var(--clr-error);
     @include animation(fade-blink, 0.75s, ease, infinite)
 }
 

@@ -1,8 +1,6 @@
-@import 'shared/colors.scss';
-
 #add-task-button {
     position: fixed;
     bottom: 3rem;
     right: 1rem;
-    box-shadow: 2px 2px 20px 2px $color-shadow-light;
+    box-shadow: 2px 2px 20px 2px var(--clr-shadow-light);
 }
