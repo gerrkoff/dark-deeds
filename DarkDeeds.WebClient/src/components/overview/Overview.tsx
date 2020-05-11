@@ -91,8 +91,7 @@ export class Overview extends React.PureComponent<IProps> {
                     defaultActiveIndex={this.evalOpenedTabs()}
                     panels={panels}
                     exclusive={false}
-                    onTitleClick={this.panelClickHandler}
-                    inverted />
+                    onTitleClick={this.panelClickHandler} />
                 <AddTaskButton openModal={this.props.openEditTask} />
             </React.Fragment>
         )

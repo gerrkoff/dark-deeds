@@ -19,7 +19,6 @@ export class RecurrenceEdit extends React.PureComponent<IProps> {
         return (
             <React.Fragment>
                 <Form
-                    inverted
                     className='recurrences-view-recurrence-item-form'>
 
                     <Form.Group>

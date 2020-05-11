@@ -1,13 +1,14 @@
+// https://encycolorpedia.ru/dcdcdc
 html {
-    --clr-base: #555;
-    --clr-main: #101010;
-    --clr-help: #323232;
+    --clr-base: gainsboro;
+    --clr-main: white;
+    --clr-help: gray;
 
-    --clr-text-primary: #fdfdfd;
-    --clr-text-secondary: #646464;
+    --clr-text-primary: black;
+    --clr-text-secondary: dimgray;
 
-    --clr-shadow-light: #0000004d;
-    --clr-shadow-solid: #353A45;
+    --clr-shadow-light: lightgray;
+    --clr-shadow-solid: gray;
 
     --clr-success: #058909;
     --clr-error: #B43B2F;

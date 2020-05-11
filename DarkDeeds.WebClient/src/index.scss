@@ -10,9 +10,15 @@ body {
     padding-bottom: 3rem;
 }
 
-/* Force semantic-ui raised segment to bring shadow back */
-.ui.inverted.raised.segment {
+/* Adjust semantic-ui to use our colors */
+#root .ui.inverted.raised.segment {
     box-shadow: 0 2px 4px 0 var(--clr-shadow-solid), 0 2px 10px 0 var(--clr-shadow-solid);
+    background-color: var(--clr-main);
+    color: var(--clr-text-primary);
+
+    .ui.header {
+        color: var(--clr-text-primary);
+    }
 }
 
 @import 'styles/shared/device-adjustments.scss';
