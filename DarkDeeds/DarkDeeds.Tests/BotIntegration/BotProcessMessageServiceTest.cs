@@ -28,7 +28,7 @@ namespace DarkDeeds.Tests.BotIntegration
         {
             var commandParserMock = new Mock<IBotCommandParserService>();
             commandParserMock.Setup(x => x.ParseCommand(It.IsAny<string>(), It.IsAny<int>()))
-                .Returns(() => Task.FromResult<BotCommand>(command));
+                .Returns(() => Task.FromResult(command));
             return commandParserMock;
         }
         

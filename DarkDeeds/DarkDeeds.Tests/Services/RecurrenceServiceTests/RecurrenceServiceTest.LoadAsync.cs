@@ -7,12 +7,12 @@ using Xunit;
 
 namespace DarkDeeds.Tests.Services.RecurrenceServiceTests
 {
-    public partial class RecurrenceServiceTest : BaseTest
+    public partial class RecurrenceServiceTest
     {
         [Fact]
         public async Task LoadAsync_ReturnOnlyUserEntities()
         {
-            var repoMock = Helper.CreateRepoMock<PlannedRecurrenceEntity>(
+            var repoMock = Helper.CreateRepoMock(
                 new PlannedRecurrenceEntity {UserId = "userid1"},
                 new PlannedRecurrenceEntity {UserId = "userid2"}
             );
@@ -20,7 +20,7 @@ namespace DarkDeeds.Tests.Services.RecurrenceServiceTests
 
             var result = await service.LoadAsync("userid2");
 
-            Assert.Equal(1, result.Count());
+            Assert.Single(result);
         }
         
         [Fact]
