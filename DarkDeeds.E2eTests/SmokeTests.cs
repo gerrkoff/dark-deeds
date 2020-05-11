@@ -221,7 +221,7 @@ namespace DarkDeeds.E2eTests
                 _output.WriteLine("___2___");
                 driver.CreateTaskRecurrences(2);
                 _output.WriteLine("___3___");
-                driver.DeleteRecurrence(recurrenceTask);
+                driver.DeleteRecurrence(recurrenceTask, _output);
                 _output.WriteLine("___4___");
                 driver.NavigateToOverview();
                 _output.WriteLine("___5___");

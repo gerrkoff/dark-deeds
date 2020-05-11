@@ -2,6 +2,7 @@ using System.Threading;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Remote;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace DarkDeeds.E2eTests.Common
 {
@@ -71,13 +72,19 @@ namespace DarkDeeds.E2eTests.Common
             driver.HideToasts();
         }
         
-        public static void DeleteRecurrence(this RemoteWebDriver driver, string recurrenceTask)
+        public static void DeleteRecurrence(this RemoteWebDriver driver, string recurrenceTask, ITestOutputHelper _output)
         {
+            _output.WriteLine("___!!1___");
             driver.GetDeleteRecurrenceButton(recurrenceTask).Click();
+            _output.WriteLine("___!!2___");
             driver.GetModalConfirmButton().Click();
+            _output.WriteLine("___!!3___");
             driver.GetSaveRecurrencesButton().Click();
+            _output.WriteLine("___!!4___");
             driver.WaitUntilRecurrencesSkeletonDisappeared();
+            _output.WriteLine("___!!5___");
             driver.HideToasts();
+            _output.WriteLine("___!!6___");
         }
 
         public static void WaitUntilRecurrencesLoaded(this RemoteWebDriver driver)
