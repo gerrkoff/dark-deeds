@@ -73,19 +73,13 @@ namespace DarkDeeds.E2eTests.Common
             driver.HideToasts();
         }
         
-        public static void DeleteRecurrence(this RemoteWebDriver driver, string recurrenceTask, ITestOutputHelper _output)
+        public static void DeleteRecurrence(this RemoteWebDriver driver, string recurrenceTask)
         {
-            _output.WriteLine("___!!1___");
             driver.GetDeleteRecurrenceButton(recurrenceTask).Click();
-            _output.WriteLine("___!!2___");
             driver.GetModalConfirmButton().Click();
-            _output.WriteLine("___!!3___");
             driver.GetSaveRecurrencesButton().Click();
-            _output.WriteLine("___!!4___");
             driver.WaitUntilRecurrencesSkeletonDisappeared();
-            _output.WriteLine("___!!5___");
-            driver.HideToasts(_output);
-            _output.WriteLine("___!!6___");
+            driver.HideToasts();
         }
 
         public static void WaitUntilRecurrencesLoaded(this RemoteWebDriver driver)
@@ -100,32 +94,23 @@ namespace DarkDeeds.E2eTests.Common
             driver.HideToasts();
         }
 
-        public static void HideToasts(this RemoteWebDriver driver, ITestOutputHelper _output = null)
+        public static void HideToasts(this RemoteWebDriver driver)
         {
-            _output?.WriteLine("___%%1___");
             for (int i = 0; i < 5; i++)
             {
-                _output?.WriteLine("___%%2___");
                 if (!driver.ToastExists())
-                {
-                    _output?.WriteLine("___%%3___");
                     return;
-                }
-                    
-                _output?.WriteLine("___%%4___");
+
                 try
                 {
                     driver.GetToast().Click();
                 }
-                catch (Exception e)
+                catch (ElementNotInteractableException)
                 {
-                    _output?.WriteLine("___%%511___" + e.GetType().ToString());
-                    throw;
+                    return;
                 }
 
-                _output?.WriteLine("___%%5___");
                 Thread.Sleep(1000);
-                _output?.WriteLine("___%%6___");
             }
 
             Assert.True(false, "Too many toasts");
