@@ -1,9 +1,7 @@
-using System;
 using System.Threading;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Remote;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace DarkDeeds.E2eTests.Common
 {
