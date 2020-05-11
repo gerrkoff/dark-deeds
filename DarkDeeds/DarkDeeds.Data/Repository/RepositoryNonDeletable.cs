@@ -80,7 +80,7 @@ namespace DarkDeeds.Data.Repository
 
         public Task<T> GetByIdAsync(int id)
         {
-            return Entities.FindAsync(id);
+            return Entities.FindAsync(id).AsTask();
         }
     }
 }
