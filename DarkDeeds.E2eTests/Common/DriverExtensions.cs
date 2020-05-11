@@ -84,7 +84,7 @@ namespace DarkDeeds.E2eTests.Common
             _output.WriteLine("___!!4___");
             driver.WaitUntilRecurrencesSkeletonDisappeared();
             _output.WriteLine("___!!5___");
-            driver.HideToasts();
+            driver.HideToasts(_output);
             _output.WriteLine("___!!6___");
         }
 
