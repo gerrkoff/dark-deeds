@@ -221,7 +221,7 @@ namespace DarkDeeds.E2eTests
                 driver.DeleteRecurrence(recurrenceTask);
                 
                 driver.NavigateToOverview();
-                
+
                 var overviewSectionParser = new OverviewSectionParser(driver.GetCurrentSection());
                 var task1 = overviewSectionParser.FindBlock(1).FindDay(7).FindTask($"23:59 {task}").GetElement();
                 var task2 = overviewSectionParser.FindBlock(2).FindDay(7).FindTask($"23:59 {task}").GetElement();
