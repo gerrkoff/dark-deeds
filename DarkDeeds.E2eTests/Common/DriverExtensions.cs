@@ -98,8 +98,16 @@ namespace DarkDeeds.E2eTests.Common
             {
                 if (!driver.ToastExists())
                     return;
-                
-                driver.GetToast().Click();
+
+                try
+                {
+                    driver.GetToast().Click();
+                }
+                catch (ElementNotInteractableException)
+                {
+                    return;
+                }
+
                 Thread.Sleep(1000);
             }
 

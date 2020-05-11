@@ -113,7 +113,10 @@ namespace DarkDeeds.Api
                         .Build();
                     options.Filters.Add(new AuthorizeFilter(policy));
                 })
-                .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+                .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
+                .AddNewtonsoftJson(options =>
+                    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+                );
             return services;
         }
 

@@ -23,6 +23,7 @@ namespace DarkDeeds.E2eTests
         private RemoteWebDriver CreateDriver()
         {
             ChromeOptions options = new ChromeOptions();
+            options.AddArguments("--ignore-certificate-errors");
             if (RunContainer)
             {
                 options.AddArguments("headless", "no-sandbox");
