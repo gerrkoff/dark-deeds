@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Remote;
@@ -99,15 +100,32 @@ namespace DarkDeeds.E2eTests.Common
             driver.HideToasts();
         }
 
-        public static void HideToasts(this RemoteWebDriver driver)
+        public static void HideToasts(this RemoteWebDriver driver, ITestOutputHelper _output = null)
         {
+            _output?.WriteLine("___%%1___");
             for (int i = 0; i < 5; i++)
             {
+                _output?.WriteLine("___%%2___");
                 if (!driver.ToastExists())
+                {
+                    _output?.WriteLine("___%%3___");
                     return;
-                
-                driver.GetToast().Click();
+                }
+                    
+                _output?.WriteLine("___%%4___");
+                try
+                {
+                    driver.GetToast().Click();
+                }
+                catch (Exception e)
+                {
+                    _output?.WriteLine("___%%511___" + e.GetType().ToString());
+                    throw;
+                }
+
+                _output?.WriteLine("___%%5___");
                 Thread.Sleep(1000);
+                _output?.WriteLine("___%%6___");
             }
 
             Assert.True(false, "Too many toasts");
