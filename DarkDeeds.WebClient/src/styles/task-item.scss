@@ -8,6 +8,7 @@
     padding-left: 0.5rem;
     padding-top: 0.1rem;
     padding-bottom: 0.1rem;
+    color: var(--clr-text-primary);
 
     /* NO SELECT */
     -webkit-touch-callout: none; /* iOS Safari */
@@ -27,10 +28,6 @@
     border-radius: 2px;
     background: var(--clr-base);
     color: var(--clr-text-primary) !important;
-
-    span {
-        color: var(--clr-text-primary) !important;
-    }
 }
 
 .task-item-completed {
