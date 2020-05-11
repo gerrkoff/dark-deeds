@@ -2,6 +2,7 @@
 using DarkDeeds.Api.Hubs;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -56,6 +57,10 @@ namespace DarkDeeds.Api
                     .WithMethods("GET"));
             }
 
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+            });
             app.UseHealthChecks("/healthcheck"); 
             app.UseResponseCompression();
             app.UseStaticFiles();
