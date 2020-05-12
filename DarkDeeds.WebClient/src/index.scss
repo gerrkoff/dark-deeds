@@ -49,7 +49,7 @@ body {
         }
     }
 
-    .ui.placeholder {
+    .ui.placeholder:not(.segment) {
         background-image: linear-gradient(to right, var(--clr-help) 0, var(--clr-base) 15%, var(--clr-help) 30%);
 
         &>:before, .line:after {
