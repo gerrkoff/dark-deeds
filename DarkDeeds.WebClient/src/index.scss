@@ -32,6 +32,22 @@ body {
     .ui.accordion .title {
         color: var(--clr-text-primary) !important;
     }
+
+    .ui.menu.item {
+        background-color: var(--clr-main);
+
+        a.item {
+            color: var(--clr-text-primary) !important;
+
+            &.active {
+                background-color: var(--clr-help-2);
+            }
+
+            &:hover {
+                background-color: var(--clr-help);
+            }
+        }
+    }
 }
 
 @import 'styles/shared/device-adjustments.scss';
