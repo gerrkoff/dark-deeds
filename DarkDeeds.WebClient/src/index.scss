@@ -48,6 +48,14 @@ body {
             }
         }
     }
+
+    .ui.placeholder {
+        background-image: linear-gradient(to right, var(--clr-help) 0, var(--clr-base) 15%, var(--clr-help) 30%);
+
+        &>:before, .line:after {
+            background-color: var(--clr-main);
+        }
+    }
 }
 
 @import 'styles/shared/device-adjustments.scss';
