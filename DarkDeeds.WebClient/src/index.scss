@@ -8,10 +8,13 @@ body {
 
 /* Adjust semantic-ui styles */
 #root {
-    .ui.inverted.raised.segment {
-        box-shadow: 0 2px 4px 0 var(--clr-shadow-solid), 0 2px 10px 0 var(--clr-shadow-solid);
+    .ui.inverted.segment {
         background-color: var(--clr-main);
         color: var(--clr-text-primary);
+
+        &.raised {
+            box-shadow: 0 2px 4px 0 var(--clr-shadow-solid), 0 2px 10px 0 var(--clr-shadow-solid);
+        }
 
         .ui.header {
             color: var(--clr-text-primary);
