@@ -1,4 +1,3 @@
-@import 'shared/colors.scss';
 @import 'shared/fonts.scss';
 
 .task-item {
@@ -9,6 +8,7 @@
     padding-left: 0.5rem;
     padding-top: 0.1rem;
     padding-bottom: 0.1rem;
+    color: var(--clr-text-primary);
 
     /* NO SELECT */
     -webkit-touch-callout: none; /* iOS Safari */
@@ -26,17 +26,13 @@
 
 .task-item-selected {
     border-radius: 2px;
-    background: $color-item-selected;
-    color: $color-primary-text !important;
-
-    span {
-        color: $color-primary-text !important;
-    }
+    background: var(--clr-base);
+    color: var(--clr-text-primary) !important;
 }
 
 .task-item-completed {
     text-decoration: line-through;
-    color: $color-secondary-text;
+    color: var(--clr-text-secondary);
 }
 
 .task-item-probable {

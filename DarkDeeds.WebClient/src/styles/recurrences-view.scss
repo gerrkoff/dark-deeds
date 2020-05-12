@@ -1,5 +1,4 @@
 
-@import 'shared/colors.scss';
 @import 'shared/fonts.scss';
 
 #recurrences-view {
@@ -16,7 +15,7 @@
         font-size: $font-less-normal;
 
         .recurrences-view-recurrence-item-borders {
-            color: $color-secondary-text;
+            color: var(--clr-text-secondary);
             padding-left: 1rem;
         }
 

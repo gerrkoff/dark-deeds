@@ -34,7 +34,7 @@ export class EditTaskModal extends React.PureComponent<IProps, IState> {
             <Modal basic size='small' open={this.props.open} onClose={this.props.closeModal}>
                 <Modal.Header><Icon name='sticky note outline' />{this.props.clientId === 0 ? 'New task' : 'Edit task'}</Modal.Header>
                 <Modal.Content>
-                    <Input focus fluid inverted
+                    <Input focus fluid
                         data-test-id='edit-task-input'
                         placeholder='1231 2359 December 31, 23:59 ...'
                         value={this.props.model}

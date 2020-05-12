@@ -31,7 +31,7 @@ export class RecurrenceList extends React.PureComponent<IProps> {
                 inverted raised
                 data-test-id='recurrences-skeleton'>
 
-                <Placeholder inverted>
+                <Placeholder>
                     <Placeholder.Header>
                         <Placeholder.Line length='medium' />
                     </Placeholder.Header>
@@ -67,7 +67,7 @@ export class RecurrenceList extends React.PureComponent<IProps> {
     private renderEmptyState() {
         return (
             <React.Fragment>
-                <Segment placeholder raised inverted className='recurrences-view-empty-state'>
+                <Segment placeholder inverted raised className='recurrences-view-empty-state'>
                     <Header icon>
                         <Icon name='sync alternate' />
                         No recurrences have been created yet.

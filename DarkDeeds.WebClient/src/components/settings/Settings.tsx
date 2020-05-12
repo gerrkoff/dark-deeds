@@ -21,7 +21,7 @@ interface IProps {
 export class Settings extends React.PureComponent<IProps> {
     public render() {
         return (
-            <Segment inverted>
+            <Segment inverted raised>
                 <UserInfo username={this.props.username} signout={this.props.signout} />
                 <UserSettings loadProcessing={this.props.settingsLoadProcessing} saveProcessing={this.props.settingsSaveProcessing} showCompleted={this.props.settingsShowCompleted} saveSettings={this.props.saveSettings} changeSettings={this.props.changeSettings} />
                 <TelegramIntegration startUrl={this.props.telegramStartUrl} generateKeyProcessing={this.props.telegramGenerateKeyProcessing} generateKey={this.props.generateTelegramChatKey} />
