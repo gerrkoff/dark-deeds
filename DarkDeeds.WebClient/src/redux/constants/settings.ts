@@ -1,39 +1,39 @@
-import { Settings } from '../../models'
+import { SettingsServer } from '../../models'
 
-export const SETTINGS_LOAD_PROCESSING = 'SETTINGS_LOAD_PROCESSING'
-export type SETTINGS_LOAD_PROCESSING = typeof SETTINGS_LOAD_PROCESSING
-export interface ISettingsLoadProcessing {
-    type: SETTINGS_LOAD_PROCESSING
+export const SETTINGS_SERVER_LOAD_PROCESSING = 'SETTINGS_SERVER_LOAD_PROCESSING'
+export type SETTINGS_SERVER_LOAD_PROCESSING = typeof SETTINGS_SERVER_LOAD_PROCESSING
+export interface ISettingsServerLoadProcessing {
+    type: SETTINGS_SERVER_LOAD_PROCESSING
 }
 
-export const SETTINGS_LOAD_FINISH = 'SETTINGS_LOAD_FINISH'
-export type SETTINGS_LOAD_FINISH = typeof SETTINGS_LOAD_FINISH
-export interface ISettingsLoadFinish {
-    type: SETTINGS_LOAD_FINISH
+export const SETTINGS_SERVER_LOAD_FINISH = 'SETTINGS_SERVER_LOAD_FINISH'
+export type SETTINGS_SERVER_LOAD_FINISH = typeof SETTINGS_SERVER_LOAD_FINISH
+export interface ISettingsServerLoadFinish {
+    type: SETTINGS_SERVER_LOAD_FINISH
 }
 
-export const SETTINGS_SAVE_PROCESSING = 'SETTINGS_SAVE_PROCESSING'
-export type SETTINGS_SAVE_PROCESSING = typeof SETTINGS_SAVE_PROCESSING
-export interface ISettingsSaveProcessing {
-    type: SETTINGS_SAVE_PROCESSING
+export const SETTINGS_SERVER_SAVE_PROCESSING = 'SETTINGS_SERVER_SAVE_PROCESSING'
+export type SETTINGS_SERVER_SAVE_PROCESSING = typeof SETTINGS_SERVER_SAVE_PROCESSING
+export interface ISettingsServerSaveProcessing {
+    type: SETTINGS_SERVER_SAVE_PROCESSING
 }
 
-export const SETTINGS_SAVE_FINISH = 'SETTINGS_SAVE_FINISH'
-export type SETTINGS_SAVE_FINISH = typeof SETTINGS_SAVE_FINISH
-export interface ISettingsSaveFinish {
-    type: SETTINGS_SAVE_FINISH
+export const SETTINGS_SERVER_SAVE_FINISH = 'SETTINGS_SERVER_SAVE_FINISH'
+export type SETTINGS_SERVER_SAVE_FINISH = typeof SETTINGS_SERVER_SAVE_FINISH
+export interface ISettingsServerSaveFinish {
+    type: SETTINGS_SERVER_SAVE_FINISH
 }
 
-export const SETTINGS_CHANGE = 'SETTINGS_CHANGE'
-export type SETTINGS_CHANGE = typeof SETTINGS_CHANGE
-export interface ISettingsChange {
-    type: SETTINGS_CHANGE
-    settings: Settings
+export const SETTINGS_SERVER_CHANGE = 'SETTINGS_SERVER_CHANGE'
+export type SETTINGS_SERVER_CHANGE = typeof SETTINGS_SERVER_CHANGE
+export interface ISettingsServerChange {
+    type: SETTINGS_SERVER_CHANGE
+    settings: SettingsServer
 }
 
 export type SettingsAction =
-    ISettingsSaveProcessing |
-    ISettingsSaveFinish |
-    ISettingsLoadProcessing |
-    ISettingsLoadFinish |
-    ISettingsChange
+    ISettingsServerLoadProcessing |
+    ISettingsServerLoadFinish |
+    ISettingsServerSaveProcessing |
+    ISettingsServerSaveFinish |
+    ISettingsServerChange

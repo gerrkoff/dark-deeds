@@ -1,7 +1,7 @@
 import { injectable, inject } from 'inversify'
 import { Api } from '..'
 import diToken from '../token'
-import { Settings } from '../../models'
+import { SettingsServer } from '../../models'
 
 @injectable()
 export class SettingsApi {
@@ -10,11 +10,11 @@ export class SettingsApi {
         @inject(diToken.Api) private api: Api
     ) {}
 
-    public load(): Promise<Settings> {
-        return this.api.get<Settings>('api/settings')
+    public load(): Promise<SettingsServer> {
+        return this.api.get<SettingsServer>('api/settings')
     }
 
-    public save(settings: Settings): Promise<void> {
+    public save(settings: SettingsServer): Promise<void> {
         return this.api.post('api/settings', settings)
     }
 }

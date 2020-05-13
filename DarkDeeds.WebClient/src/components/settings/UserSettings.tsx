@@ -1,14 +1,13 @@
 import * as React from 'react'
 import { Button, Checkbox } from 'semantic-ui-react'
-import { Settings } from '../../models'
+import { SettingsServer } from '../../models'
 import { SettingsDivider } from './'
+import { ISettings } from '../../redux/types'
 
 interface IProps {
-    loadProcessing: boolean
-    saveProcessing: boolean
-    showCompleted: boolean
-    saveSettings: (settings: Settings) => void
-    changeSettings: (settings: Settings) => void
+    settings: ISettings
+    saveServerSettings: (settings: SettingsServer) => void
+    changeServerSettings: (settings: SettingsServer) => void
 }
 export class UserSettings extends React.PureComponent<IProps> {
     public render() {
@@ -16,20 +15,20 @@ export class UserSettings extends React.PureComponent<IProps> {
             <React.Fragment>
                 <SettingsDivider label='User Settings' icon='options' />
                 <div>
-                    <Checkbox label='Show completed' checked={this.props.showCompleted} disabled={this.props.loadProcessing}
-                        onChange={() => this.props.changeSettings({ ...this.settings(), showCompleted: !this.props.showCompleted })} />
+                    <Checkbox label='Show completed' checked={this.props.settings.showCompleted} disabled={this.props.settings.loadProcessing}
+                        onChange={() => this.props.changeServerSettings({ ...this.settings(), showCompleted: !this.props.settings.showCompleted })} />
                 </div>
                 <br />
-                <Button onClick={this.handleSaveClick} loading={this.props.saveProcessing} disabled={this.props.loadProcessing} size='mini'>Save</Button>
+                <Button onClick={this.handleSaveClick} loading={this.props.settings.saveProcessing} disabled={this.props.settings.loadProcessing} size='mini'>Save</Button>
             </React.Fragment>
         )
     }
 
     private settings = () => {
         return {
-            showCompleted: this.props.showCompleted
+            showCompleted: this.props.settings.showCompleted
         }
     }
 
-    private handleSaveClick = () => this.props.saveSettings(this.settings())
+    private handleSaveClick = () => this.props.saveServerSettings(this.settings())
 }
