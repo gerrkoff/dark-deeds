@@ -1,10 +1,11 @@
-import { di, diToken, SettingsApi, ToastService } from '../../di'
+import { di, diToken, SettingsApi, ToastService, LocalSettingsService } from '../../di'
 import { SettingsServer, SettingsClient } from '../../models'
 import * as actions from '../constants'
 import { ThunkDispatch } from '../../helpers'
 
 const settingsApi = di.get<SettingsApi>(diToken.SettingsApi)
 const toastService = di.get<ToastService>(diToken.ToastService)
+const localSettingsService = di.get<LocalSettingsService>(diToken.LocalSettingsService)
 
 export function saveServerSettings(settings: SettingsServer) {
     return async(dispatch: ThunkDispatch<actions.SettingsAction>) => {
@@ -20,6 +21,14 @@ export function saveServerSettings(settings: SettingsServer) {
 }
 
 export function loadSettings() {
+    return async(dispatch: ThunkDispatch<actions.SettingsAction>) => {
+        const localSettings = localSettingsService.load()
+        dispatch({ type: actions.SETTINGS_CLIENT_CHANGE, settings: localSettings })
+        await dispatch(loadServerSettings())
+    }
+}
+
+export function loadServerSettings() {
     return async(dispatch: ThunkDispatch<actions.SettingsAction>) => {
         dispatch({ type: actions.SETTINGS_SERVER_LOAD_PROCESSING })
 
@@ -38,5 +47,8 @@ export function changeServerSettings(settings: SettingsServer): actions.ISetting
 }
 
 export function changeClientSettings(settings: SettingsClient): actions.ISettingsClientChange {
+    const localSettings = localSettingsService.load()
+    localSettings.appearanceTheme = settings.appearanceTheme
+    localSettingsService.save()
     return { type: actions.SETTINGS_CLIENT_CHANGE, settings }
 }
