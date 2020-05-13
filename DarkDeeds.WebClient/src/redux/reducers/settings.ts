@@ -1,10 +1,12 @@
 import { ISettings } from '../types'
 import * as actions from '../constants'
+import { AppearanceThemeEnum } from 'src/models'
 
 const inittialState: ISettings = {
     saveProcessing: false,
     loadProcessing: false,
-    showCompleted: false
+    showCompleted: false,
+    appearanceTheme: AppearanceThemeEnum.Dark
 }
 
 export function settings(state: ISettings = inittialState, action: actions.SettingsAction): ISettings {
@@ -12,6 +14,10 @@ export function settings(state: ISettings = inittialState, action: actions.Setti
         case actions.SETTINGS_SERVER_CHANGE:
             return { ...state,
                 showCompleted: action.settings.showCompleted
+            }
+        case actions.SETTINGS_CLIENT_CHANGE:
+            return { ...state,
+                appearanceTheme: action.settings.appearanceTheme
             }
         case actions.SETTINGS_SERVER_LOAD_PROCESSING:
             return { ...state,

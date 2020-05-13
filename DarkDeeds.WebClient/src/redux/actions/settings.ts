@@ -1,5 +1,5 @@
 import { di, diToken, SettingsApi, ToastService } from '../../di'
-import { SettingsServer } from '../../models'
+import { SettingsServer, SettingsClient } from '../../models'
 import * as actions from '../constants'
 import { ThunkDispatch } from '../../helpers'
 
@@ -35,4 +35,8 @@ export function loadSettings() {
 
 export function changeServerSettings(settings: SettingsServer): actions.ISettingsServerChange {
     return { type: actions.SETTINGS_SERVER_CHANGE, settings }
+}
+
+export function changeClientSettings(settings: SettingsClient): actions.ISettingsClientChange {
+    return { type: actions.SETTINGS_CLIENT_CHANGE, settings }
 }

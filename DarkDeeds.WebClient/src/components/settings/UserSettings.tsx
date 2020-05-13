@@ -1,6 +1,6 @@
 import * as React from 'react'
-import { Button, Checkbox } from 'semantic-ui-react'
-import { SettingsServer } from '../../models'
+import { Button, Checkbox, Form, Radio } from 'semantic-ui-react'
+import { SettingsServer, SettingsClient, AppearanceThemeEnum } from '../../models'
 import { SettingsDivider } from './'
 import { ISettings } from '../../redux/types'
 
@@ -8,27 +8,72 @@ interface IProps {
     settings: ISettings
     saveServerSettings: (settings: SettingsServer) => void
     changeServerSettings: (settings: SettingsServer) => void
+    changeClientSettings: (settings: SettingsClient) => void
 }
 export class UserSettings extends React.PureComponent<IProps> {
     public render() {
         return (
             <React.Fragment>
                 <SettingsDivider label='User Settings' icon='options' />
-                <div>
-                    <Checkbox label='Show completed' checked={this.props.settings.showCompleted} disabled={this.props.settings.loadProcessing}
-                        onChange={() => this.props.changeServerSettings({ ...this.settings(), showCompleted: !this.props.settings.showCompleted })} />
-                </div>
-                <br />
-                <Button onClick={this.handleSaveClick} loading={this.props.settings.saveProcessing} disabled={this.props.settings.loadProcessing} size='mini'>Save</Button>
+                <Form>
+                    <Form.Field>
+                        <Checkbox label='Show completed' checked={this.props.settings.showCompleted} disabled={this.props.settings.loadProcessing}
+                            onChange={() => this.props.changeServerSettings({ ...this.settingsServer(), showCompleted: !this.props.settings.showCompleted })} />
+                    </Form.Field>
+                    <Form.Field>
+                        <Button onClick={this.handleSaveClick} loading={this.props.settings.saveProcessing} disabled={this.props.settings.loadProcessing} size='mini'>Save</Button>
+                    </Form.Field>
+                    <Form.Group inline>
+                        <label>Appearance:</label>
+                        <Form.Field>
+                            <Radio
+                                label='Dark'
+                                name='appearanceRadioGroup'
+                                checked={this.props.settings.appearanceTheme === AppearanceThemeEnum.Dark}
+                                onChange={() => this.props.changeClientSettings({ ...this.settingsClient(), appearanceTheme:  AppearanceThemeEnum.Dark })}
+                            />
+                        </Form.Field>
+                        <Form.Field>
+                            <Radio
+                                label='Light'
+                                name='appearanceRadioGroup'
+                                checked={this.props.settings.appearanceTheme === AppearanceThemeEnum.Light}
+                                onChange={() => this.props.changeClientSettings({ ...this.settingsClient(), appearanceTheme:  AppearanceThemeEnum.Light })}
+                            />
+                        </Form.Field>
+                        <Form.Field>
+                            <Radio
+                                label='VK'
+                                name='appearanceRadioGroup'
+                                checked={this.props.settings.appearanceTheme === AppearanceThemeEnum.Vk}
+                                onChange={() => this.props.changeClientSettings({ ...this.settingsClient(), appearanceTheme:  AppearanceThemeEnum.Vk })}
+                            />
+                        </Form.Field>
+                        <Form.Field>
+                            <Radio
+                                label='Bizarre'
+                                name='appearanceRadioGroup'
+                                checked={this.props.settings.appearanceTheme === AppearanceThemeEnum.Bizarre}
+                                onChange={() => this.props.changeClientSettings({ ...this.settingsClient(), appearanceTheme:  AppearanceThemeEnum.Bizarre })}
+                            />
+                        </Form.Field>
+                    </Form.Group>
+                </Form>
             </React.Fragment>
         )
     }
 
-    private settings = () => {
+    private settingsServer = () => {
         return {
             showCompleted: this.props.settings.showCompleted
         }
     }
 
-    private handleSaveClick = () => this.props.saveServerSettings(this.settings())
+    private settingsClient = () => {
+        return {
+            appearanceTheme: this.props.settings.appearanceTheme
+        }
+    }
+
+    private handleSaveClick = () => this.props.saveServerSettings(this.settingsServer())
 }

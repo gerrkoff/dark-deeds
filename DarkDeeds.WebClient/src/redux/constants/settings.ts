@@ -1,4 +1,4 @@
-import { SettingsServer } from '../../models'
+import { SettingsServer, SettingsClient } from '../../models'
 
 export const SETTINGS_SERVER_LOAD_PROCESSING = 'SETTINGS_SERVER_LOAD_PROCESSING'
 export type SETTINGS_SERVER_LOAD_PROCESSING = typeof SETTINGS_SERVER_LOAD_PROCESSING
@@ -31,9 +31,17 @@ export interface ISettingsServerChange {
     settings: SettingsServer
 }
 
+export const SETTINGS_CLIENT_CHANGE = 'SETTINGS_CLIENT_CHANGE'
+export type SETTINGS_CLIENT_CHANGE = typeof SETTINGS_CLIENT_CHANGE
+export interface ISettingsClientChange {
+    type: SETTINGS_CLIENT_CHANGE
+    settings: SettingsClient
+}
+
 export type SettingsAction =
     ISettingsServerLoadProcessing |
     ISettingsServerLoadFinish |
     ISettingsServerSaveProcessing |
     ISettingsServerSaveFinish |
-    ISettingsServerChange
+    ISettingsServerChange |
+    ISettingsClientChange
