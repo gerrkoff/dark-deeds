@@ -51,10 +51,18 @@ export class UserSettings extends React.PureComponent<IProps> {
                         </Form.Field>
                         <Form.Field>
                             <Radio
-                                label='Bizarre'
+                                label='Dolls'
                                 name='appearanceRadioGroup'
-                                checked={this.props.settings.appearanceTheme === AppearanceThemeEnum.Bizarre}
-                                onChange={() => this.props.changeClientSettings({ ...this.settingsClient(), appearanceTheme:  AppearanceThemeEnum.Bizarre })}
+                                checked={this.props.settings.appearanceTheme === AppearanceThemeEnum.Dolls}
+                                onChange={() => this.props.changeClientSettings({ ...this.settingsClient(), appearanceTheme:  AppearanceThemeEnum.Dolls })}
+                            />
+                        </Form.Field>
+                        <Form.Field>
+                            <Radio
+                                label='Nature'
+                                name='appearanceRadioGroup'
+                                checked={this.props.settings.appearanceTheme === AppearanceThemeEnum.Nature}
+                                onChange={() => this.props.changeClientSettings({ ...this.settingsClient(), appearanceTheme:  AppearanceThemeEnum.Nature })}
                             />
                         </Form.Field>
                     </Form.Group>
