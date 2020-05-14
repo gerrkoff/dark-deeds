@@ -18,7 +18,7 @@ export class LocalSettingsService {
             const settingsSerialized = this.storageService.loadSettings()
             this.settings = settingsSerialized === null
                 ? new LocalSettings()
-                : JSON.parse(settingsSerialized)
+                : { ...(new LocalSettings()), ...JSON.parse(settingsSerialized) }
         }
         return this.settings
     }
