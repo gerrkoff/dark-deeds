@@ -1,7 +1,7 @@
 import { connect } from 'react-redux'
 import { Settings } from '../components/settings'
-import { Settings as SettingsModel } from '../models'
-import { signout, generateTelegramChatKey, saveSettings, changeSettings } from '../redux/actions'
+import { SettingsServer, SettingsClient } from '../models'
+import { signout, generateTelegramChatKey, saveServerSettings, changeServerSettings, changeClientSettings } from '../redux/actions'
 import { IAppState } from '../redux/types'
 import { ThunkDispatch } from '../helpers'
 import { TelegramIntegrationAction, SettingsAction } from '../redux/constants'
@@ -12,9 +12,7 @@ function mapStateToProps({ login, general, telegramIntegration, settings }: IApp
         appVersion: general.appVersion,
         telegramStartUrl: telegramIntegration.startUrl,
         telegramGenerateKeyProcessing: telegramIntegration.generateKeyProcessing,
-        settingsLoadProcessing: settings.loadProcessing,
-        settingsSaveProcessing: settings.saveProcessing,
-        settingsShowCompleted: settings.showCompleted
+        settings
     }
 }
 
@@ -22,8 +20,9 @@ function mapDispatchToProps(dispatch: ThunkDispatch<TelegramIntegrationAction | 
     return {
         signout: () => dispatch(signout()),
         generateTelegramChatKey: () => dispatch(generateTelegramChatKey()),
-        saveSettings: (settings: SettingsModel) => dispatch(saveSettings(settings)),
-        changeSettings: (settings: SettingsModel) => dispatch(changeSettings(settings))
+        saveServerSettings: (settings: SettingsServer) => dispatch(saveServerSettings(settings)),
+        changeServerSettings: (settings: SettingsServer) => dispatch(changeServerSettings(settings)),
+        changeClientSettings: (settings: SettingsClient) => dispatch(changeClientSettings(settings))
     }
 }
 

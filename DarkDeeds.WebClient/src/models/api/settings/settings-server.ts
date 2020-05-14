@@ -1,4 +1,4 @@
-export class Settings {
+export class SettingsServer {
     constructor(
         public showCompleted: boolean
     ) {}

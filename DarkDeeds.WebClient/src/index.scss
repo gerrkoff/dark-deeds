@@ -21,7 +21,7 @@ body {
         }
     }
 
-    .ui.form .field label, .ui.checkbox label {
+    .ui.form .field label, .ui.form .inline label, .ui.checkbox label {
         color: var(--clr-text-primary);
     }
 
@@ -38,6 +38,7 @@ body {
 
         a.item {
             color: var(--clr-text-primary) !important;
+            border-radius: 0;
 
             &.active {
                 background-color: var(--clr-help-2);
