@@ -1,4 +1,4 @@
-import { di, diToken, SettingsApi, ToastService, LocalSettingsService } from '../../di'
+import { di, diToken, SettingsApi, ToastService, LocalSettingsService, AppearanceService } from '../../di'
 import { SettingsServer, SettingsClient } from '../../models'
 import * as actions from '../constants'
 import { ThunkDispatch } from '../../helpers'
@@ -6,6 +6,7 @@ import { ThunkDispatch } from '../../helpers'
 const settingsApi = di.get<SettingsApi>(diToken.SettingsApi)
 const toastService = di.get<ToastService>(diToken.ToastService)
 const localSettingsService = di.get<LocalSettingsService>(diToken.LocalSettingsService)
+const appearanceService = di.get<AppearanceService>(diToken.AppearanceService)
 
 export function saveServerSettings(settings: SettingsServer) {
     return async(dispatch: ThunkDispatch<actions.SettingsAction>) => {
@@ -47,6 +48,7 @@ export function changeServerSettings(settings: SettingsServer): actions.ISetting
 }
 
 export function changeClientSettings(settings: SettingsClient): actions.ISettingsClientChange {
+    appearanceService.applyTheme(settings.appearanceTheme)
     const localSettings = localSettingsService.load()
     localSettings.appearanceTheme = settings.appearanceTheme
     localSettingsService.save()

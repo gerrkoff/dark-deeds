@@ -38,6 +38,7 @@ body {
 
         a.item {
             color: var(--clr-text-primary) !important;
+            border-radius: 0;
 
             &.active {
                 background-color: var(--clr-help-2);
