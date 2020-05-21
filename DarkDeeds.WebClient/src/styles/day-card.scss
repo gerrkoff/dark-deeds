@@ -25,5 +25,8 @@
 
 .all-day-item {
     text-align: right;
-    color: var(--clr-text-secondary);
+
+    .task-item {
+        color: var(--clr-text-secondary);
+    }
 }
