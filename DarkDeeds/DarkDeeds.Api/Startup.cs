@@ -73,7 +73,7 @@ namespace DarkDeeds.Api
                 endpoints.MapFallbackToController("Index", "Home");
                 endpoints.MapControllers();
                 endpoints.MapControllerRoute("bot", $"api/bot/{Configuration["Bot"]}",
-                    new {controller = "Home", action = "Index"});
+                    new {controller = "Bot", action = "Process"});
             });
         }
     }
