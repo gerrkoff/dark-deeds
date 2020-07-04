@@ -32,7 +32,7 @@ namespace DarkDeeds.Api
                     config.Sources.Clear();
                     var env = hostingContext.HostingEnvironment;
                     config
-                        .AddJsonFile("settings/appsettings.json", optional: true, reloadOnChange: false)
+                        .AddJsonFile("appsettings.json", optional: true, reloadOnChange: false)
                         .AddJsonFile($"settings/appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: false)
                         .AddEnvironmentVariables();
                 })
