@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using NLog.Web;
 
 namespace DarkDeeds.Api
@@ -26,6 +27,15 @@ namespace DarkDeeds.Api
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
+                .ConfigureAppConfiguration((hostingContext, config) =>
+                {
+                    config.Sources.Clear();
+                    var env = hostingContext.HostingEnvironment;
+                    config
+                        .AddJsonFile("settings/appsettings.json", optional: true, reloadOnChange: false)
+                        .AddJsonFile($"settings/appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: false)
+                        .AddEnvironmentVariables();
+                })
                 .UseStartup<Startup>()
                 .UseNLog();
     }
