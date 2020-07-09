@@ -1,9 +1,8 @@
 #!/usr/bin/env bash
-cp ../DarkDeeds/DarkDeeds.Api/appsettings.Development.json ../CI/artifacts/src/settings/appsettings.Production.json || exit $?
-cd ../CI/artifacts || exit $?
-docker build -t dark-deeds -f run.dockerfile .
+cp DarkDeeds/DarkDeeds.Api/settings/appsettings.Development.json DarkDeeds/DarkDeeds.Api/settings/appsettings.Production.json || exit $?
 docker rm -f dark-deeds
 docker run -t \
     -p 5000:80 \
+    -v "$(pwd)"/DarkDeeds/DarkDeeds.Api/settings:/app/settings \
     --name dark-deeds \
-    dark-deeds
+    gerrkoff/dark-deeds:latest

@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-cd ..
 rm -rf CI/artifacts
 docker build -t dark-deeds-test-e2e -f CI/test-e2e.dockerfile . || exit $?
 docker rm -f dark-deeds-test-e2e

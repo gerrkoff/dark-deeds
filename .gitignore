@@ -25,4 +25,5 @@ DarkDeeds.E2eTests/obj
 DarkDeeds.E2eTests/bin
 
 appsettings.Development.json
+appsettings.Production.json
 CI/artifacts/
