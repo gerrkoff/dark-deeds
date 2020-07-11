@@ -19,5 +19,5 @@ docker build \
     -t gerrkoff/dark-deeds:$VERSION \
     -t gerrkoff/dark-deeds:latest \
     . || exit $?
-docker push gerrkoff/dark-deeds:$VERSION
-docker push gerrkoff/dark-deeds:latest
+# docker push gerrkoff/dark-deeds:$VERSION
+# docker push gerrkoff/dark-deeds:latest
