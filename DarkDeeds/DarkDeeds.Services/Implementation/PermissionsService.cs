@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using DarkDeeds.Common.Exceptions;
 using DarkDeeds.Common.Extensions;
 using DarkDeeds.Entities.Models.Base;
 using DarkDeeds.Infrastructure.Interfaces.Data;
 using DarkDeeds.Models.Data;
+using DarkDeeds.Services.Exceptions;
 using DarkDeeds.Services.Interface;
 
 namespace DarkDeeds.Services.Implementation

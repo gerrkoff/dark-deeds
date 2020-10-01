@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DarkDeeds.BotIntegration.Dto;
 using DarkDeeds.BotIntegration.Interface;
-using DarkDeeds.Common.Exceptions;
+using DarkDeeds.Services.Exceptions;
 using Newtonsoft.Json;
 
 namespace DarkDeeds.BotIntegration.Implementation

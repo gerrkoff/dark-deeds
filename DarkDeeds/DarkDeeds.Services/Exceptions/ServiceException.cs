@@ -1,6 +1,6 @@
 using System;
 
-namespace DarkDeeds.Common.Exceptions
+namespace DarkDeeds.Services.Exceptions
 {
     [Serializable]
     public class ServiceException : Exception
