@@ -22,6 +22,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1 Entities", "1 Entities", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.Entities", "DarkDeeds.Entities\DarkDeeds.Entities.csproj", "{D921B1EE-1040-4ECD-87FB-2EFE4AAD096C}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2 Services", "2 Services", "{40227636-0181-4BD7-BA8A-CCB34DFDD6F4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -71,5 +73,6 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{D921B1EE-1040-4ECD-87FB-2EFE4AAD096C} = {D1AFAA7E-0D28-4C6E-ACE0-ADCCFBFFD404}
+		{9C8EA434-0378-4B6F-88A0-54756128E52C} = {40227636-0181-4BD7-BA8A-CCB34DFDD6F4}
 	EndGlobalSection
 EndGlobal
