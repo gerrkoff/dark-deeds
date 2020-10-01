@@ -1,7 +1,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using DarkDeeds.Entities.Models;
-using DarkDeeds.Models;
+using DarkDeeds.Services.Dto;
 using DarkDeeds.Services.Implementation;
 using DarkDeeds.Services.Interface;
 using Microsoft.Extensions.Logging;

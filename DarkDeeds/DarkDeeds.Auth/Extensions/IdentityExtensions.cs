@@ -1,8 +1,8 @@
 using System;
 using System.Security.Claims;
-using DarkDeeds.Models.Entity;
+using DarkDeeds.Auth.Models;
 
-namespace DarkDeeds.Common.Extensions
+namespace DarkDeeds.Auth.Extensions
 {
     public static class IdentityExtensions
     {

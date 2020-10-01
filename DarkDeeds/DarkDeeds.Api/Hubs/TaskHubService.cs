@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using DarkDeeds.Models;
+using DarkDeeds.Services.Dto;
 using DarkDeeds.Services.Interface;
 using Microsoft.AspNetCore.SignalR;
 

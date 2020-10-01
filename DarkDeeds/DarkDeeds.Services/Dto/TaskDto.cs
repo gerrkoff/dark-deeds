@@ -1,8 +1,8 @@
 ﻿using System;
 using DarkDeeds.Entities.Enums;
-using DarkDeeds.Models.Data;
+using DarkDeeds.Services.Dto.Base;
 
-namespace DarkDeeds.Models
+namespace DarkDeeds.Services.Dto
 {
     public class TaskDto : IDtoWithId
     {

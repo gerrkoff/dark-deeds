@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using DarkDeeds.Common.Extensions;
 using DarkDeeds.Entities.Models.Base;
 using DarkDeeds.Infrastructure.Interfaces.Data;
-using DarkDeeds.Models.Data;
+using DarkDeeds.Services.Dto.Base;
 using DarkDeeds.Services.Exceptions;
 using DarkDeeds.Services.Interface;
 

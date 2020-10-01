@@ -1,4 +1,5 @@
 using AutoMapper;
+using DarkDeeds.Auth.Mapping;
 using DarkDeeds.Services.Mapping;
 
 namespace DarkDeeds.Tests
@@ -7,7 +8,11 @@ namespace DarkDeeds.Tests
     {
         static BaseTest()
         {
-            Mapper.Initialize(cfg => cfg.AddProfile<MappingProfile>());
+            Mapper.Initialize(cfg =>
+            {
+                cfg.AddProfile<ServicesMappingProfile>();
+                cfg.AddProfile<AuthMappingProfile>();
+            });
         }
     }
 }

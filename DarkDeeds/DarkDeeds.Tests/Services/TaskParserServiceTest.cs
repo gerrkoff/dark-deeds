@@ -1,6 +1,6 @@
 using System;
 using DarkDeeds.Entities.Enums;
-using DarkDeeds.Models;
+using DarkDeeds.Services.Dto;
 using DarkDeeds.Services.Implementation;
 using DarkDeeds.Services.Interface;
 using Moq;

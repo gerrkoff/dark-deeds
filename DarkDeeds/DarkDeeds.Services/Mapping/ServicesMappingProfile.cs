@@ -1,14 +1,12 @@
 using AutoMapper;
 using DarkDeeds.Entities.Models;
-using DarkDeeds.Models;
-using DarkDeeds.Models.Account;
-using DarkDeeds.Models.Entity;
+using DarkDeeds.Services.Dto;
 
 namespace DarkDeeds.Services.Mapping
 {
-    public class MappingProfile : Profile
+    public class ServicesMappingProfile : Profile
     {
-        public MappingProfile()
+        public ServicesMappingProfile()
         {
             CreateMap<TaskEntity, TaskDto>()
                 .ForMember(x => x.Completed, e => e.MapFrom(x => x.IsCompleted))
@@ -17,10 +15,6 @@ namespace DarkDeeds.Services.Mapping
             CreateMap<TaskDto, TaskEntity>()
                 .ForMember(x => x.IsCompleted, e => e.MapFrom(x => x.Completed))
                 .ForMember(x => x.IsDeleted, e => e.MapFrom(x => x.Deleted));
-
-            CreateMap<CurrentUser, CurrentUserDto>()
-                .ForMember(x => x.Username, e => e.MapFrom(x => x.DisplayName))
-                .ForMember(x => x.UserAuthenticated, e => e.MapFrom(x => !string.IsNullOrEmpty(x.Username)));
 
             CreateMap<SettingsEntity, SettingsDto>().ReverseMap();
             

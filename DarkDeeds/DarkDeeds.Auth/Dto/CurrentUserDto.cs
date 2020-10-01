@@ -1,4 +1,4 @@
-﻿namespace DarkDeeds.Models.Account
+﻿namespace DarkDeeds.Auth.Dto
 {
     public class CurrentUserDto
     {

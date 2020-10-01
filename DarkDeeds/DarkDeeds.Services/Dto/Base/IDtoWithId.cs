@@ -1,4 +1,4 @@
-﻿namespace DarkDeeds.Models.Data
+﻿namespace DarkDeeds.Services.Dto.Base
 {
     public interface IDtoWithId
     {

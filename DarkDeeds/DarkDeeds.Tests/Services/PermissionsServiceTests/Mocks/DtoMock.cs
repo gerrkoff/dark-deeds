@@ -1,4 +1,4 @@
-﻿using DarkDeeds.Models.Data;
+﻿using DarkDeeds.Services.Dto.Base;
 
 namespace DarkDeeds.Tests.Services.PermissionsServiceTests.Mocks
 {

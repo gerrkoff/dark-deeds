@@ -3,7 +3,6 @@ using AutoMapper;
 using DarkDeeds.Api.Controllers.Base;
 using DarkDeeds.Auth.Dto;
 using DarkDeeds.Auth.Interface;
-using DarkDeeds.Models.Account;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

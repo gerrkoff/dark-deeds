@@ -7,6 +7,7 @@ using DarkDeeds.Api.Filters;
 using DarkDeeds.Api.Hubs;
 using DarkDeeds.Auth.Implementation;
 using DarkDeeds.Auth.Interface;
+using DarkDeeds.Auth.Mapping;
 using DarkDeeds.Auth.Settings;
 using DarkDeeds.BotIntegration.Implementation;
 using DarkDeeds.BotIntegration.Implementation.CommandProcessor;
@@ -87,7 +88,11 @@ namespace DarkDeeds.Api
         
         public static IServiceCollection ConfigureAutoMapper(this IServiceCollection services)
         {
-            Mapper.Initialize(cfg => cfg.AddProfile<MappingProfile>());
+            Mapper.Initialize(cfg =>
+            {
+                cfg.AddProfile<ServicesMappingProfile>();
+                cfg.AddProfile<AuthMappingProfile>();
+            });
             return services;
         }
         

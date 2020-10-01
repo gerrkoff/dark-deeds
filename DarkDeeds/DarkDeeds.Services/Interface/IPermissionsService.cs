@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using DarkDeeds.Entities.Models.Base;
 using DarkDeeds.Infrastructure.Interfaces.Data;
-using DarkDeeds.Models.Data;
+using DarkDeeds.Services.Dto.Base;
 
 namespace DarkDeeds.Services.Interface
 {

@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 using DarkDeeds.Api.Controllers.Base;
-using DarkDeeds.Models;
+using DarkDeeds.Services.Dto;
 using DarkDeeds.Services.Interface;
 using Microsoft.AspNetCore.Mvc;
 

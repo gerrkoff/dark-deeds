@@ -10,6 +10,7 @@
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.0" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\DarkDeeds.Auth\DarkDeeds.Auth.csproj" />
     <ProjectReference Include="..\DarkDeeds.BotIntegration\DarkDeeds.BotIntegration.csproj" />
     <ProjectReference Include="..\DarkDeeds.Data\DarkDeeds.Data.csproj" />
     <ProjectReference Include="..\DarkDeeds.Services\DarkDeeds.Services.csproj" />

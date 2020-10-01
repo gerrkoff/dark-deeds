@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using DarkDeeds.Models;
+using DarkDeeds.Services.Dto;
 
 namespace DarkDeeds.Services.Interface
 {

@@ -7,7 +7,7 @@ using DarkDeeds.Common.Extensions;
 using DarkDeeds.Entities.Enums;
 using DarkDeeds.Entities.Models;
 using DarkDeeds.Infrastructure.Interfaces.Data;
-using DarkDeeds.Models;
+using DarkDeeds.Services.Dto;
 using DarkDeeds.Services.Interface;
 using Microsoft.Extensions.Logging;
 
