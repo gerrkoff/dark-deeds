@@ -18,6 +18,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.Tests", "DarkDeed
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.BotIntegration", "DarkDeeds.BotIntegration\DarkDeeds.BotIntegration.csproj", "{A3D1545D-6D7D-42C7-9858-3F19E8404520}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1 Entities", "1 Entities", "{D1AFAA7E-0D28-4C6E-ACE0-ADCCFBFFD404}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.Entities", "DarkDeeds.Entities\DarkDeeds.Entities.csproj", "{D921B1EE-1040-4ECD-87FB-2EFE4AAD096C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -60,5 +64,12 @@ Global
 		{A3D1545D-6D7D-42C7-9858-3F19E8404520}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A3D1545D-6D7D-42C7-9858-3F19E8404520}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A3D1545D-6D7D-42C7-9858-3F19E8404520}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D921B1EE-1040-4ECD-87FB-2EFE4AAD096C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D921B1EE-1040-4ECD-87FB-2EFE4AAD096C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D921B1EE-1040-4ECD-87FB-2EFE4AAD096C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D921B1EE-1040-4ECD-87FB-2EFE4AAD096C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{D921B1EE-1040-4ECD-87FB-2EFE4AAD096C} = {D1AFAA7E-0D28-4C6E-ACE0-ADCCFBFFD404}
 	EndGlobalSection
 EndGlobal
