@@ -4,7 +4,7 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\DarkDeeds.Common\DarkDeeds.Common.csproj" />
-    <ProjectReference Include="..\DarkDeeds.Data\DarkDeeds.Data.csproj" />
+    <ProjectReference Include="..\DarkDeeds.Infrastructure.Interfaces\DarkDeeds.Infrastructure.Interfaces.csproj" />
     <ProjectReference Include="..\DarkDeeds.Models\DarkDeeds.Models.csproj" />
     <ProjectReference Include="..\DarkDeeds.Entities\DarkDeeds.Entities.csproj" />
   </ItemGroup>

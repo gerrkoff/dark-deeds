@@ -4,10 +4,9 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using DarkDeeds.Entities.Models.Base;
 
-namespace DarkDeeds.Data.Repository
+namespace DarkDeeds.Infrastructure.Interfaces.Data
 {
-    public interface IRepositoryNonDeletable<T> 
-        where T : BaseEntity
+    public interface IRepositoryNonDeletable<T> where T : BaseEntity
     {
         IQueryable<T> GetAll();
         Task SaveAsync(T entity);

@@ -1,8 +1,8 @@
 using System.Threading.Tasks;
 using AutoMapper;
 using DarkDeeds.Common.Extensions;
-using DarkDeeds.Data.Repository;
 using DarkDeeds.Entities.Models;
+using DarkDeeds.Infrastructure.Interfaces.Data;
 using DarkDeeds.Models;
 using DarkDeeds.Services.Interface;
 

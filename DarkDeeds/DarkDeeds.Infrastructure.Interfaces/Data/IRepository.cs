@@ -1,10 +1,9 @@
 using System.Threading.Tasks;
 using DarkDeeds.Entities.Models.Base;
 
-namespace DarkDeeds.Data.Repository
+namespace DarkDeeds.Infrastructure.Interfaces.Data
 {
-    public interface IRepository<T> : IRepositoryNonDeletable<T>
-        where T : DeletableEntity
+    public interface IRepository<T> : IRepositoryNonDeletable<T> where T : DeletableEntity
     {
         Task DeleteAsync(int id);
         Task DeleteAsync(T entity);

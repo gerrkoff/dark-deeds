@@ -14,6 +14,7 @@ using DarkDeeds.Common.Settings;
 using DarkDeeds.Data.Context;
 using DarkDeeds.Data.Repository;
 using DarkDeeds.Entities.Models;
+using DarkDeeds.Infrastructure.Interfaces.Data;
 using DarkDeeds.Services.Implementation;
 using DarkDeeds.Services.Interface;
 using Microsoft.AspNetCore.Authentication.JwtBearer;

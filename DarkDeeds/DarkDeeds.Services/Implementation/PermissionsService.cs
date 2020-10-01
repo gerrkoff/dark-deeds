@@ -3,8 +3,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using DarkDeeds.Common.Exceptions;
 using DarkDeeds.Common.Extensions;
-using DarkDeeds.Data.Repository;
 using DarkDeeds.Entities.Models.Base;
+using DarkDeeds.Infrastructure.Interfaces.Data;
 using DarkDeeds.Models.Data;
 using DarkDeeds.Services.Interface;
 
