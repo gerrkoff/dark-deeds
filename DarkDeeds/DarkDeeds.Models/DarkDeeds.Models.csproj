@@ -4,7 +4,6 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\DarkDeeds.Entities\DarkDeeds.Entities.csproj" />
-    <ProjectReference Include="..\DarkDeeds.Enums\DarkDeeds.Enums.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="System.ComponentModel.Annotations">

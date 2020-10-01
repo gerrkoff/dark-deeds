@@ -8,6 +8,7 @@ using DarkDeeds.Entities.Models;
 using DarkDeeds.Infrastructure.Interfaces.Data;
 using DarkDeeds.Models;
 using DarkDeeds.Models.Data;
+using DarkDeeds.Services.Extensions;
 using DarkDeeds.Services.Interface;
 
 namespace DarkDeeds.Services.Implementation

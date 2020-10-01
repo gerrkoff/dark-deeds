@@ -1,9 +1,9 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using DarkDeeds.Auth.Dto;
+using DarkDeeds.Auth.Enums;
 using DarkDeeds.Auth.Interface;
 using DarkDeeds.Entities.Models;
-using DarkDeeds.Enums;
 using Microsoft.AspNetCore.Identity;
 
 namespace DarkDeeds.Auth.Implementation

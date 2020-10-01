@@ -1,4 +1,4 @@
-﻿using DarkDeeds.Enums;
+﻿using DarkDeeds.Auth.Enums;
 
 namespace DarkDeeds.Auth.Dto
 {

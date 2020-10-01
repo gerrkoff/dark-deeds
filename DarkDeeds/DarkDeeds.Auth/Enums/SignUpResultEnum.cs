@@ -1,4 +1,4 @@
-﻿namespace DarkDeeds.Enums
+﻿namespace DarkDeeds.Auth.Enums
 {
     public enum SignUpResultEnum
     {

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using DarkDeeds.Models;
 
-namespace DarkDeeds.Common.Extensions
+namespace DarkDeeds.Services.Extensions
 {
     public static class TaskExtensions
     {
