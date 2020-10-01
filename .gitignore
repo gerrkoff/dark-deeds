@@ -16,8 +16,8 @@ DarkDeeds/DarkDeeds.BotIntegration/obj
 DarkDeeds/DarkDeeds.BotIntegration/bin
 DarkDeeds/DarkDeeds.Entities/obj
 DarkDeeds/DarkDeeds.Entities/bin
-DarkDeeds/DarkDeeds.Infrastructure.Interfaces/obj
-DarkDeeds/DarkDeeds.Infrastructure.Interfaces/bin
+DarkDeeds/DarkDeeds.Infrastructure/obj
+DarkDeeds/DarkDeeds.Infrastructure/bin
 DarkDeeds/DarkDeeds.Auth/obj
 DarkDeeds/DarkDeeds.Auth/bin
 DarkDeeds/DarkDeeds.EfCoreExtensions/obj

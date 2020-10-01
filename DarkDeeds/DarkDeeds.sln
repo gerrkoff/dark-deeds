@@ -16,7 +16,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.Entities", "DarkD
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2 Services", "2 Services", "{40227636-0181-4BD7-BA8A-CCB34DFDD6F4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.Infrastructure.Interfaces", "DarkDeeds.Infrastructure.Interfaces\DarkDeeds.Infrastructure.Interfaces.csproj", "{AE678F02-F805-4833-9569-25C6A554A41B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.Infrastructure", "DarkDeeds.Infrastructure\DarkDeeds.Infrastructure.csproj", "{AE678F02-F805-4833-9569-25C6A554A41B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "5 Frameworks", "5 Frameworks", "{016C7E3B-0F77-4DC6-83C5-DA1904BE02BC}"
 EndProject

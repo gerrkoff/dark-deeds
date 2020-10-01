@@ -4,8 +4,8 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\DarkDeeds.EfCoreExtensions\DarkDeeds.EfCoreExtensions.csproj" />
-    <ProjectReference Include="..\DarkDeeds.Infrastructure.Interfaces\DarkDeeds.Infrastructure.Interfaces.csproj" />
     <ProjectReference Include="..\DarkDeeds.Entities\DarkDeeds.Entities.csproj" />
+    <ProjectReference Include="..\DarkDeeds.Infrastructure\DarkDeeds.Infrastructure.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="AutoMapper">

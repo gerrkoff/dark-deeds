@@ -11,7 +11,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DarkDeeds.Entities\DarkDeeds.Entities.csproj" />
-    <ProjectReference Include="..\DarkDeeds.Infrastructure.Interfaces\DarkDeeds.Infrastructure.Interfaces.csproj" />
+    <ProjectReference Include="..\DarkDeeds.Infrastructure\DarkDeeds.Infrastructure.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Migrations" />
