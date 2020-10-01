@@ -13,7 +13,6 @@
     <ItemGroup>
       <ProjectReference Include="..\DarkDeeds.Data\DarkDeeds.Data.csproj" />
       <ProjectReference Include="..\DarkDeeds.Models\DarkDeeds.Models.csproj" />
-      <ProjectReference Include="..\DarkDeeds.Services\DarkDeeds.Services.csproj" />
     </ItemGroup>
 
 </Project>
