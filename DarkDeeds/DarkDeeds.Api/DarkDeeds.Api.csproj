@@ -30,6 +30,7 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\DarkDeeds.Auth\DarkDeeds.Auth.csproj" />
     <ProjectReference Include="..\DarkDeeds.AutoMapper\DarkDeeds.AutoMapper.csproj" />
     <ProjectReference Include="..\DarkDeeds.BotIntegration\DarkDeeds.BotIntegration.csproj" />
     <ProjectReference Include="..\DarkDeeds.Data\DarkDeeds.Data.csproj" />

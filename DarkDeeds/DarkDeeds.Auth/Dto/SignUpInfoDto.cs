@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace DarkDeeds.Models.Account
+namespace DarkDeeds.Auth.Dto
 {
-    public class SignInInfoDto
+    public class SignUpInfoDto
     {
         [Required]
         public string Username { get; set; }

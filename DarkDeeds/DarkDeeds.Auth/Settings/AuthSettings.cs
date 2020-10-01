@@ -1,4 +1,4 @@
-﻿namespace DarkDeeds.Common.Settings
+﻿namespace DarkDeeds.Auth.Settings
 {
     public class AuthSettings
     {

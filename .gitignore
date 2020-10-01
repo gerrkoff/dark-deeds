@@ -13,10 +13,6 @@ DarkDeeds/DarkDeeds.Common/obj
 DarkDeeds/DarkDeeds.Common/bin
 DarkDeeds/DarkDeeds.Data/obj
 DarkDeeds/DarkDeeds.Data/bin
-DarkDeeds/DarkDeeds.AutoMapper/bin
-DarkDeeds/DarkDeeds.AutoMapper/obj
-DarkDeeds/DarkDeeds.Enums/obj
-DarkDeeds/DarkDeeds.Enums/bin
 DarkDeeds/DarkDeeds.Tests/obj
 DarkDeeds/DarkDeeds.Tests/bin
 DarkDeeds/DarkDeeds.BotIntegration/obj
@@ -25,6 +21,8 @@ DarkDeeds/DarkDeeds.Entities/obj
 DarkDeeds/DarkDeeds.Entities/bin
 DarkDeeds/DarkDeeds.Infrastructure.Interfaces/obj
 DarkDeeds/DarkDeeds.Infrastructure.Interfaces/bin
+DarkDeeds/DarkDeeds.Auth/obj
+DarkDeeds/DarkDeeds.Auth/bin
 DarkDeeds.E2eTests/obj
 DarkDeeds.E2eTests/bin
 

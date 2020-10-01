@@ -1,12 +1,12 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+using DarkDeeds.Auth.Dto;
+using DarkDeeds.Auth.Interface;
 using DarkDeeds.Entities.Models;
 using DarkDeeds.Enums;
-using DarkDeeds.Models.Account;
-using DarkDeeds.Services.Interface;
 using Microsoft.AspNetCore.Identity;
 
-namespace DarkDeeds.Services.Implementation
+namespace DarkDeeds.Auth.Implementation
 {
     public class AccountService : IAccountService
     {

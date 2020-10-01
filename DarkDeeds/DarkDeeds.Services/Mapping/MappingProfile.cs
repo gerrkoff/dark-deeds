@@ -4,7 +4,7 @@ using DarkDeeds.Models;
 using DarkDeeds.Models.Account;
 using DarkDeeds.Models.Entity;
 
-namespace DarkDeeds.AutoMapper
+namespace DarkDeeds.Services.Mapping
 {
     public class MappingProfile : Profile
     {

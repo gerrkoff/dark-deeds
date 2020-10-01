@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using DarkDeeds.Common.Settings;
+using DarkDeeds.Auth.Interface;
+using DarkDeeds.Auth.Settings;
 using DarkDeeds.Entities.Models;
-using DarkDeeds.Services.Interface;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
-namespace DarkDeeds.Services.Implementation
+namespace DarkDeeds.Auth.Implementation
 {
     public class TokenService : ITokenService
     {

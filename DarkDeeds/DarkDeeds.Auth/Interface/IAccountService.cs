@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
-using DarkDeeds.Models.Account;
+using DarkDeeds.Auth.Dto;
 
-namespace DarkDeeds.Services.Interface
+namespace DarkDeeds.Auth.Interface
 {
     public interface IAccountService
     {

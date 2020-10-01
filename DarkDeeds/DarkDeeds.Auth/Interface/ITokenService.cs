@@ -1,7 +1,7 @@
 ﻿using System;
 using DarkDeeds.Entities.Models;
 
-namespace DarkDeeds.Services.Interface
+namespace DarkDeeds.Auth.Interface
 {
     public interface ITokenService
     {

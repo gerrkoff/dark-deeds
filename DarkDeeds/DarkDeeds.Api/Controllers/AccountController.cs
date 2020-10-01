@@ -1,6 +1,8 @@
 ﻿using System.Threading.Tasks;
 using AutoMapper;
 using DarkDeeds.Api.Controllers.Base;
+using DarkDeeds.Auth.Dto;
+using DarkDeeds.Auth.Interface;
 using DarkDeeds.Models.Account;
 using DarkDeeds.Services.Interface;
 using Microsoft.AspNetCore.Authorization;
