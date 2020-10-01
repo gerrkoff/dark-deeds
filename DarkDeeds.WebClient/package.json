@@ -25,7 +25,7 @@
   "scripts": {
     "build-css": "node-sass-chokidar src/ -o src/",
     "build-js": "react-scripts-ts build",
-    "build-copy": "npx copyfiles \"build/**\" \"../DarkDeeds/DarkDeeds.Web/wwwroot\" -u 1 -e build && echo files copied",
+    "build-copy": "npx copyfiles \"build/**\" \"../DarkDeeds/DarkDeeds.Api/wwwroot\" -u 1 -e build && echo files copied",
     "build": "npm run build-css && npm run build-js && npm run build-copy",
     "test-ci": "npm run build-css && cross-env CI=true react-scripts-ts test --env=jsdom",
     "watch-css": "npm run build-css && node-sass-chokidar src/ -o src/ --watch --recursive",
