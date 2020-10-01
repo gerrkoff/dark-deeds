@@ -2,8 +2,8 @@
 .idea
 DarkDeeds/DarkDeeds.sln.DotSettings.user
 
-DarkDeeds/DarkDeeds.Api/obj
-DarkDeeds/DarkDeeds.Api/bin
+DarkDeeds/DarkDeeds.Web/obj
+DarkDeeds/DarkDeeds.Web/bin
 DarkDeeds/DarkDeeds.Services/bin
 DarkDeeds/DarkDeeds.Services/obj
 DarkDeeds/DarkDeeds.Common/obj
