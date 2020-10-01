@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.Web", "DarkDeeds.Web\DarkDeeds.Web.csproj", "{5BF23C9F-31CA-4708-8571-33D912A8FEF5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.App", "DarkDeeds.App\DarkDeeds.App.csproj", "{5BF23C9F-31CA-4708-8571-33D912A8FEF5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.Services", "DarkDeeds.Services\DarkDeeds.Services.csproj", "{9C8EA434-0378-4B6F-88A0-54756128E52C}"
 EndProject
