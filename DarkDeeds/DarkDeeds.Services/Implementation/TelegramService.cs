@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using DarkDeeds.Common.Exceptions;
-using DarkDeeds.Data.Entity;
+using DarkDeeds.Entities.Models;
 using DarkDeeds.Services.Interface;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;

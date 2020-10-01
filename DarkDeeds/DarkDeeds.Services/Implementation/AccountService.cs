@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-using DarkDeeds.Data.Entity;
+using DarkDeeds.Entities.Models;
 using DarkDeeds.Enums;
 using DarkDeeds.Models.Account;
 using DarkDeeds.Services.Interface;

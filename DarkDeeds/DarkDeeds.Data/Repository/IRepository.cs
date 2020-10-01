@@ -1,5 +1,5 @@
 using System.Threading.Tasks;
-using DarkDeeds.Data.Entity.Base;
+using DarkDeeds.Entities.Models.Base;
 
 namespace DarkDeeds.Data.Repository
 {

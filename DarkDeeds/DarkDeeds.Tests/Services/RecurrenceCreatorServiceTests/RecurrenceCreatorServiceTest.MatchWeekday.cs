@@ -1,6 +1,6 @@
 using System;
-using DarkDeeds.Data.Entity;
-using DarkDeeds.Enums;
+using DarkDeeds.Entities.Enums;
+using DarkDeeds.Entities.Models;
 using DarkDeeds.Services.Implementation;
 using Xunit;
 

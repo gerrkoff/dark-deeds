@@ -1,5 +1,5 @@
 using System;
-using DarkDeeds.Data.Entity;
+using DarkDeeds.Entities.Models;
 using DarkDeeds.Services.Implementation;
 using Microsoft.Extensions.Logging;
 using Moq;

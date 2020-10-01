@@ -1,5 +1,5 @@
 using AutoMapper;
-using DarkDeeds.Data.Entity;
+using DarkDeeds.Entities.Models;
 using DarkDeeds.Models;
 using DarkDeeds.Models.Account;
 using DarkDeeds.Models.Entity;

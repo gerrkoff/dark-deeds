@@ -1,5 +1,5 @@
 ﻿using System;
-using DarkDeeds.Data.Entity;
+using DarkDeeds.Entities.Models;
 
 namespace DarkDeeds.Services.Interface
 {

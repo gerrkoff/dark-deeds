@@ -11,7 +11,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\DarkDeeds.Data\DarkDeeds.Data.csproj" />
+      <ProjectReference Include="..\DarkDeeds.Entities\DarkDeeds.Entities.csproj" />
       <ProjectReference Include="..\DarkDeeds.Models\DarkDeeds.Models.csproj" />
     </ItemGroup>
 

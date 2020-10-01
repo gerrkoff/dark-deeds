@@ -1,8 +1,8 @@
 using System;
 using System.Threading.Tasks;
-using DarkDeeds.Data.Entity;
 using DarkDeeds.Data.Repository;
-using DarkDeeds.Enums;
+using DarkDeeds.Entities.Enums;
+using DarkDeeds.Entities.Models;
 using DarkDeeds.Models;
 using DarkDeeds.Services.Implementation;
 using DarkDeeds.Services.Interface;
