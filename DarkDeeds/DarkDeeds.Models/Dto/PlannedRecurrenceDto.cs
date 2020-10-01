@@ -1,8 +1,8 @@
 ﻿using System;
 using DarkDeeds.Entities.Enums;
-using DarkDeeds.Services.Dto.Base;
+using DarkDeeds.Models.Dto.Base;
 
-namespace DarkDeeds.Services.Dto
+namespace DarkDeeds.Models.Dto
 {
     public class PlannedRecurrenceDto : IDtoWithId
     {

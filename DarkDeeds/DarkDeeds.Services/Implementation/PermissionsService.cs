@@ -4,8 +4,8 @@ using System.Threading.Tasks;
 using DarkDeeds.EfCoreExtensions;
 using DarkDeeds.Entities.Models.Base;
 using DarkDeeds.Infrastructure.Interfaces.Data;
-using DarkDeeds.Services.Dto.Base;
-using DarkDeeds.Services.Exceptions;
+using DarkDeeds.Models.Dto.Base;
+using DarkDeeds.Models.Exceptions;
 using DarkDeeds.Services.Interface;
 
 namespace DarkDeeds.Services.Implementation

@@ -1,4 +1,4 @@
-namespace DarkDeeds.Services.Dto
+namespace DarkDeeds.Models.Dto
 {
     public class SettingsDto
     {

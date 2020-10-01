@@ -6,6 +6,7 @@
     <ProjectReference Include="..\DarkDeeds.EfCoreExtensions\DarkDeeds.EfCoreExtensions.csproj" />
     <ProjectReference Include="..\DarkDeeds.Entities\DarkDeeds.Entities.csproj" />
     <ProjectReference Include="..\DarkDeeds.Infrastructure\DarkDeeds.Infrastructure.csproj" />
+    <ProjectReference Include="..\DarkDeeds.Models\DarkDeeds.Models.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="AutoMapper">

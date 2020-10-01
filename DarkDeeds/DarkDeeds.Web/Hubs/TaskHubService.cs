@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using DarkDeeds.Services.Dto;
-using DarkDeeds.Services.Interface;
+using DarkDeeds.Infrastructure.Services;
+using DarkDeeds.Models.Dto;
 using Microsoft.AspNetCore.SignalR;
 
 namespace DarkDeeds.Api.Hubs

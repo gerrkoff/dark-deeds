@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using DarkDeeds.Api.Controllers.Base;
-using DarkDeeds.Services.Dto;
+using DarkDeeds.Models.Dto;
 using DarkDeeds.Services.Interface;
 using Microsoft.AspNetCore.Mvc;
 

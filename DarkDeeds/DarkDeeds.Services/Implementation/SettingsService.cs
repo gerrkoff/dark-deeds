@@ -3,7 +3,7 @@ using AutoMapper;
 using DarkDeeds.EfCoreExtensions;
 using DarkDeeds.Entities.Models;
 using DarkDeeds.Infrastructure.Interfaces.Data;
-using DarkDeeds.Services.Dto;
+using DarkDeeds.Models.Dto;
 using DarkDeeds.Services.Interface;
 
 namespace DarkDeeds.Services.Implementation

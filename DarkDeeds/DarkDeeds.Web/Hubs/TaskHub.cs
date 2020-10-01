@@ -3,7 +3,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using DarkDeeds.Auth.Extensions;
 using DarkDeeds.Auth.Models;
-using DarkDeeds.Services.Dto;
+using DarkDeeds.Models.Dto;
 using DarkDeeds.Services.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;

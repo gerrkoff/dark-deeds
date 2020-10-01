@@ -1,5 +1,5 @@
 using System.Threading.Tasks;
-using DarkDeeds.Services.Exceptions;
+using DarkDeeds.Models.Exceptions;
 using DarkDeeds.Services.Implementation;
 using DarkDeeds.Tests.Services.PermissionsServiceTests.Mocks;
 using Xunit;

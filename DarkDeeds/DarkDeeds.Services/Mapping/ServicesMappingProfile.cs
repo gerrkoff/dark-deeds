@@ -1,6 +1,6 @@
 using AutoMapper;
 using DarkDeeds.Entities.Models;
-using DarkDeeds.Services.Dto;
+using DarkDeeds.Models.Dto;
 
 namespace DarkDeeds.Services.Mapping
 {

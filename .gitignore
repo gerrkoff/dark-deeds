@@ -22,6 +22,8 @@ DarkDeeds/DarkDeeds.Auth/obj
 DarkDeeds/DarkDeeds.Auth/bin
 DarkDeeds/DarkDeeds.EfCoreExtensions/obj
 DarkDeeds/DarkDeeds.EfCoreExtensions/bin
+DarkDeeds/DarkDeeds.Models/obj
+DarkDeeds/DarkDeeds.Models/bin
 DarkDeeds.E2eTests/obj
 DarkDeeds.E2eTests/bin
 

@@ -6,8 +6,8 @@ using AutoMapper.QueryableExtensions;
 using DarkDeeds.EfCoreExtensions;
 using DarkDeeds.Entities.Models;
 using DarkDeeds.Infrastructure.Interfaces.Data;
-using DarkDeeds.Services.Dto;
-using DarkDeeds.Services.Dto.Base;
+using DarkDeeds.Models.Dto;
+using DarkDeeds.Models.Dto.Base;
 using DarkDeeds.Services.Extensions;
 using DarkDeeds.Services.Interface;
 
