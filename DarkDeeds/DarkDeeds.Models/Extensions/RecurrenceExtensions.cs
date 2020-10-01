@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using DarkDeeds.Models.Dto;
 
-namespace DarkDeeds.Services.Extensions
+namespace DarkDeeds.Models.Extensions
 {
     public static class RecurrenceExtensions
     {

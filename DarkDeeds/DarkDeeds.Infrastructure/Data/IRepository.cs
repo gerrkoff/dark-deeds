@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using DarkDeeds.Entities.Models.Base;
 
-namespace DarkDeeds.Infrastructure.Interfaces.Data
+namespace DarkDeeds.Infrastructure.Data
 {
     public interface IRepository<T> : IRepositoryNonDeletable<T> where T : DeletableEntity
     {

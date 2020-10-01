@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.App", "DarkDeeds.App\DarkDeeds.App.csproj", "{5BF23C9F-31CA-4708-8571-33D912A8FEF5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.Web", "DarkDeeds.Web\DarkDeeds.Web.csproj", "{5BF23C9F-31CA-4708-8571-33D912A8FEF5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.Services", "DarkDeeds.Services\DarkDeeds.Services.csproj", "{9C8EA434-0378-4B6F-88A0-54756128E52C}"
 EndProject
@@ -18,15 +18,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2 Services", "2 Services", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.Infrastructure", "DarkDeeds.Infrastructure\DarkDeeds.Infrastructure.csproj", "{AE678F02-F805-4833-9569-25C6A554A41B}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "5 Frameworks", "5 Frameworks", "{016C7E3B-0F77-4DC6-83C5-DA1904BE02BC}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4 Frameworks", "4 Frameworks", "{016C7E3B-0F77-4DC6-83C5-DA1904BE02BC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.Auth", "DarkDeeds.Auth\DarkDeeds.Auth.csproj", "{F2B99587-351C-4E4D-A3DD-A9A60D6B08FC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.EfCoreExtensions", "DarkDeeds.EfCoreExtensions\DarkDeeds.EfCoreExtensions.csproj", "{5E22A7B1-FBB6-42E7-BB9A-028AE738530D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3 Addons", "3 Addons", "{B6614832-42AE-48D3-A1B3-1743209A36B2}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4 Web", "4 Web", "{32D1EFC2-8D48-4ECE-87C2-30BE9FC89A03}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.Models", "DarkDeeds.Models\DarkDeeds.Models.csproj", "{42A4A6D2-3CA1-4AF8-A4B6-91E9C8096C8F}"
 EndProject

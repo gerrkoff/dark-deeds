@@ -2,7 +2,7 @@ using System;
 using System.Threading.Tasks;
 using DarkDeeds.Entities.Enums;
 using DarkDeeds.Entities.Models;
-using DarkDeeds.Infrastructure.Interfaces.Data;
+using DarkDeeds.Infrastructure.Data;
 using DarkDeeds.Models.Dto;
 using DarkDeeds.Services.Implementation;
 using DarkDeeds.Services.Interface;

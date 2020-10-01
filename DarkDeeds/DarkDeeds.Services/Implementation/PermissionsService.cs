@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using DarkDeeds.EfCoreExtensions;
 using DarkDeeds.Entities.Models.Base;
-using DarkDeeds.Infrastructure.Interfaces.Data;
+using DarkDeeds.Infrastructure.Data;
 using DarkDeeds.Models.Dto.Base;
 using DarkDeeds.Models.Exceptions;
 using DarkDeeds.Services.Interface;

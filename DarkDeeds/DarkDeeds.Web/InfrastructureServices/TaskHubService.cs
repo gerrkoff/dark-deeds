@@ -1,10 +1,11 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using DarkDeeds.Api.Hubs;
 using DarkDeeds.Infrastructure.Services;
 using DarkDeeds.Models.Dto;
 using Microsoft.AspNetCore.SignalR;
 
-namespace DarkDeeds.Api.Hubs
+namespace DarkDeeds.Api.InfrastructureServices
 {
     public class TaskHubService : ITaskHubService
     {

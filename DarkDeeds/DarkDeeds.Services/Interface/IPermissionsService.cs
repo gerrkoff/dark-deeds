@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using DarkDeeds.Entities.Models.Base;
-using DarkDeeds.Infrastructure.Interfaces.Data;
+using DarkDeeds.Infrastructure.Data;
 using DarkDeeds.Models.Dto.Base;
 
 namespace DarkDeeds.Services.Interface

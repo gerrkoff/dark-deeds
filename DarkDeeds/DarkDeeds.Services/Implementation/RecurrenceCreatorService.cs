@@ -6,7 +6,7 @@ using AutoMapper;
 using DarkDeeds.EfCoreExtensions;
 using DarkDeeds.Entities.Enums;
 using DarkDeeds.Entities.Models;
-using DarkDeeds.Infrastructure.Interfaces.Data;
+using DarkDeeds.Infrastructure.Data;
 using DarkDeeds.Infrastructure.Services;
 using DarkDeeds.Models.Dto;
 using DarkDeeds.Services.Interface;

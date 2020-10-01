@@ -2,7 +2,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using DarkDeeds.EfCoreExtensions;
 using DarkDeeds.Entities.Models;
-using DarkDeeds.Infrastructure.Interfaces.Data;
+using DarkDeeds.Infrastructure.Data;
 using DarkDeeds.Models.Dto;
 using DarkDeeds.Services.Interface;
 

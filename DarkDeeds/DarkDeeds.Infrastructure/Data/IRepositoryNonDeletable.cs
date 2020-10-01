@@ -4,7 +4,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using DarkDeeds.Entities.Models.Base;
 
-namespace DarkDeeds.Infrastructure.Interfaces.Data
+namespace DarkDeeds.Infrastructure.Data
 {
     public interface IRepositoryNonDeletable<T> where T : BaseEntity
     {

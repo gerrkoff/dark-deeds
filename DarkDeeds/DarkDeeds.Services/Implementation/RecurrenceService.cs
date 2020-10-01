@@ -5,10 +5,10 @@ using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using DarkDeeds.EfCoreExtensions;
 using DarkDeeds.Entities.Models;
-using DarkDeeds.Infrastructure.Interfaces.Data;
+using DarkDeeds.Infrastructure.Data;
 using DarkDeeds.Models.Dto;
 using DarkDeeds.Models.Dto.Base;
-using DarkDeeds.Services.Extensions;
+using DarkDeeds.Models.Extensions;
 using DarkDeeds.Services.Interface;
 
 namespace DarkDeeds.Services.Implementation
