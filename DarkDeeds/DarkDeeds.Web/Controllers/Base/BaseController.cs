@@ -7,7 +7,7 @@ namespace DarkDeeds.Api.Controllers.Base
     {
         protected void Validate()
         {
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
                 throw new ModelValidationException(ModelState);
         }
     }

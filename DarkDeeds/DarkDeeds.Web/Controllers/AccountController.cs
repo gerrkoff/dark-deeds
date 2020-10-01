@@ -21,17 +21,17 @@ namespace DarkDeeds.Api.Controllers
         }
 
         [HttpPost(nameof(SignUp))]
-        public async Task<SignUpResultDto> SignUp(SignUpInfoDto signUpInfo)
+        public Task<SignUpResultDto> SignUp(SignUpInfoDto signUpInfo)
         {
             Validate();
-            return await _accountService.SignUp(signUpInfo);
+            return _accountService.SignUp(signUpInfo);
         }
 
         [HttpPost(nameof(SignIn))]
-        public async Task<SignInResultDto> SignIn(SignInInfoDto signInInfo)
+        public Task<SignInResultDto> SignIn(SignInInfoDto signInInfo)
         {
             Validate();
-            return await _accountService.SignIn(signInInfo);
+            return _accountService.SignIn(signInInfo);
         }
 
         [HttpGet]

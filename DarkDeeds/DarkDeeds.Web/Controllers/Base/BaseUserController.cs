@@ -6,9 +6,6 @@ namespace DarkDeeds.Api.Controllers.Base
 {
     public class BaseUserController : BaseController
     {
-        protected CurrentUser GetUser()
-        {
-            return ((ClaimsIdentity) User.Identity).ToCurrentUser();
-        }
+        protected CurrentUser GetUser() => ((ClaimsIdentity) User.Identity).ToCurrentUser();
     }
 }
