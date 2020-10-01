@@ -27,7 +27,7 @@ DarkDeeds/DarkDeeds.Models/bin
 DarkDeeds.E2eTests/obj
 DarkDeeds.E2eTests/bin
 
-DarkDeeds/DarkDeeds.Api/wwwroot
+DarkDeeds/DarkDeeds.Web/wwwroot
 appsettings.Development.json
 appsettings.Production.json
 CI/artifacts/
