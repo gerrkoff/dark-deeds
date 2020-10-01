@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using DarkDeeds.Common.Extensions;
+using DarkDeeds.EfCoreExtensions;
 using DarkDeeds.Entities.Enums;
 using DarkDeeds.Entities.Models;
 using DarkDeeds.Infrastructure.Interfaces.Data;

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using DarkDeeds.Common.Extensions;
+using DarkDeeds.EfCoreExtensions;
 using DarkDeeds.Entities.Models.Base;
 using DarkDeeds.Infrastructure.Interfaces.Data;
 using DarkDeeds.Services.Dto.Base;

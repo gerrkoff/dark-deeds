@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
-namespace DarkDeeds.Common.Extensions
+namespace DarkDeeds.EfCoreExtensions
 {
     public static class EfAsyncExtensions
     {

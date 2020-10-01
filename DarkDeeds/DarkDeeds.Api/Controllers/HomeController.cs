@@ -1,6 +1,5 @@
 ﻿using System.IO;
 using System.Reflection;
-using DarkDeeds.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -32,10 +31,15 @@ namespace DarkDeeds.Api.Controllers
         {
             return new BuildInfoDto
             {
-                Version = Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>()
+                Version = Assembly.GetExecutingAssembly()
+                    .GetCustomAttribute<AssemblyInformationalVersionAttribute>()?
                     .InformationalVersion
             };
-
+        }
+        
+        public class BuildInfoDto
+        {
+            public string Version { get; set; }
         }
     }
 }

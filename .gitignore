@@ -4,11 +4,8 @@ DarkDeeds/DarkDeeds.sln.DotSettings.user
 
 DarkDeeds/DarkDeeds.Api/obj
 DarkDeeds/DarkDeeds.Api/bin
-DarkDeeds/DarkDeeds.Models/obj
 DarkDeeds/DarkDeeds.Services/bin
 DarkDeeds/DarkDeeds.Services/obj
-DarkDeeds/DarkDeeds.Models/bin
-DarkDeeds/DarkDeeds.Api/wwwroot
 DarkDeeds/DarkDeeds.Common/obj
 DarkDeeds/DarkDeeds.Common/bin
 DarkDeeds/DarkDeeds.Data/obj
@@ -23,9 +20,12 @@ DarkDeeds/DarkDeeds.Infrastructure.Interfaces/obj
 DarkDeeds/DarkDeeds.Infrastructure.Interfaces/bin
 DarkDeeds/DarkDeeds.Auth/obj
 DarkDeeds/DarkDeeds.Auth/bin
+DarkDeeds/DarkDeeds.EfCoreExtensions/obj
+DarkDeeds/DarkDeeds.EfCoreExtensions/bin
 DarkDeeds.E2eTests/obj
 DarkDeeds.E2eTests/bin
 
+DarkDeeds/DarkDeeds.Api/wwwroot
 appsettings.Development.json
 appsettings.Production.json
 CI/artifacts/
