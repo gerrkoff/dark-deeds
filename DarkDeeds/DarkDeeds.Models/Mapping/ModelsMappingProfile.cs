@@ -2,7 +2,7 @@ using AutoMapper;
 using DarkDeeds.Entities.Models;
 using DarkDeeds.Models.Dto;
 
-namespace DarkDeeds.Services.Mapping
+namespace DarkDeeds.Models.Mapping
 {
     public class ServicesMappingProfile : Profile
     {

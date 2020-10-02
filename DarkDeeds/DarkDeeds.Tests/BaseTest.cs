@@ -1,6 +1,6 @@
 using AutoMapper;
 using DarkDeeds.Auth.Mapping;
-using DarkDeeds.Services.Mapping;
+using DarkDeeds.Models.Mapping;
 
 namespace DarkDeeds.Tests
 {
