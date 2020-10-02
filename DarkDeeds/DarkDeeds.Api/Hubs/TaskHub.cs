@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using DarkDeeds.Common.Extensions;
-using DarkDeeds.Models;
-using DarkDeeds.Models.Entity;
+using DarkDeeds.Auth.Extensions;
+using DarkDeeds.Auth.Models;
+using DarkDeeds.Models.Dto;
 using DarkDeeds.Services.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;

@@ -1,9 +1,9 @@
 using System.Threading.Tasks;
 using AutoMapper;
-using DarkDeeds.Common.Extensions;
-using DarkDeeds.Data.Entity;
-using DarkDeeds.Data.Repository;
-using DarkDeeds.Models;
+using DarkDeeds.EfCoreExtensions;
+using DarkDeeds.Entities.Models;
+using DarkDeeds.Infrastructure.Data;
+using DarkDeeds.Models.Dto;
 using DarkDeeds.Services.Interface;
 
 namespace DarkDeeds.Services.Implementation

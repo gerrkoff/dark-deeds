@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using DarkDeeds.Common.Extensions;
-using DarkDeeds.Data.Entity;
-using DarkDeeds.Data.Repository;
-using DarkDeeds.Enums;
-using DarkDeeds.Models;
+using DarkDeeds.EfCoreExtensions;
+using DarkDeeds.Entities.Enums;
+using DarkDeeds.Entities.Models;
+using DarkDeeds.Infrastructure.Data;
+using DarkDeeds.Infrastructure.Services;
+using DarkDeeds.Models.Dto;
 using DarkDeeds.Services.Interface;
 using Microsoft.Extensions.Logging;
 
@@ -103,26 +104,24 @@ namespace DarkDeeds.Services.Implementation
             var dates = new List<DateTime>();
             for (DateTime i = periodStart; i != periodEnd; i = i.AddDays(1))
             {
-                if (!plannedRecurrence.EveryNthDay.HasValue &&
-                    !plannedRecurrence.EveryWeekday.HasValue &&
-                    string.IsNullOrEmpty(plannedRecurrence.EveryMonthDay))
-                    continue;
-                
-                if (!MatchPeriod(plannedRecurrence, i))
-                    continue;
-
-                if (!MatchWeekday(plannedRecurrence, i))
-                    continue;
-                
-                if (!MatchNthDay(plannedRecurrence, i))
-                    continue;
-                
-                if (!MatchMonthDay(plannedRecurrence, i))
+                if (!HasSchedule(plannedRecurrence) ||
+                    !MatchPeriod(plannedRecurrence, i) ||
+                    !MatchWeekday(plannedRecurrence, i) ||
+                    !MatchNthDay(plannedRecurrence, i) ||
+                    !MatchMonthDay(plannedRecurrence, i))
                     continue;
                 
                 dates.Add(i);
             }
+
             return dates;
+        }
+
+        private bool HasSchedule(PlannedRecurrenceEntity plannedRecurrence)
+        {
+            return plannedRecurrence.EveryNthDay.HasValue ||
+                   plannedRecurrence.EveryWeekday.HasValue ||
+                   !string.IsNullOrEmpty(plannedRecurrence.EveryMonthDay);
         }
 
         /// <remarks>End date is not included</remarks>

@@ -3,7 +3,8 @@ using System.Threading.Tasks;
 using DarkDeeds.BotIntegration.Interface;
 using DarkDeeds.BotIntegration.Interface.CommandProcessor;
 using DarkDeeds.BotIntegration.Objects.Commands;
-using DarkDeeds.Models;
+using DarkDeeds.Infrastructure.Services;
+using DarkDeeds.Models.Dto;
 using DarkDeeds.Services.Interface;
 using Microsoft.Extensions.Logging;
 

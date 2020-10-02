@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using DarkDeeds.Api.Controllers.Base;
-using DarkDeeds.Models;
+using DarkDeeds.Models.Dto;
 using DarkDeeds.Services.Interface;
 using Microsoft.AspNetCore.Mvc;
 
@@ -21,16 +21,16 @@ namespace DarkDeeds.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<TaskDto>> Get([Required] DateTime? from)
+        public Task<IEnumerable<TaskDto>> Get([Required] DateTime? from)
         {
             from = from.GetValueOrDefault().ToUniversalTime();
-            return await _taskService.LoadActualTasksAsync(GetUser().UserId, from.GetValueOrDefault());
+            return _taskService.LoadActualTasksAsync(GetUser().UserId, from.GetValueOrDefault());
         }
         
         [HttpPost]
-        public async Task<IEnumerable<TaskDto>> Post([FromBody] ICollection<TaskDto> tasks)
+        public Task<IEnumerable<TaskDto>> Post([FromBody] ICollection<TaskDto> tasks)
         {
-            return await _taskService.SaveTasksAsync(tasks, GetUser().UserId);
+            return _taskService.SaveTasksAsync(tasks, GetUser().UserId);
         }
     }
 }

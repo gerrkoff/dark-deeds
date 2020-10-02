@@ -1,14 +1,11 @@
 ﻿using System.Security.Claims;
-using DarkDeeds.Common.Extensions;
-using DarkDeeds.Models.Entity;
+using DarkDeeds.Auth.Extensions;
+using DarkDeeds.Auth.Models;
 
 namespace DarkDeeds.Api.Controllers.Base
 {
     public class BaseUserController : BaseController
     {
-        protected CurrentUser GetUser()
-        {
-            return ((ClaimsIdentity) User.Identity).ToCurrentUser();
-        }
+        protected CurrentUser GetUser() => ((ClaimsIdentity) User.Identity).ToCurrentUser();
     }
 }

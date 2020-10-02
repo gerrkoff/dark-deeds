@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using DarkDeeds.Enums;
-using DarkDeeds.Models;
+using DarkDeeds.Entities.Enums;
+using DarkDeeds.Models.Dto;
 using DarkDeeds.Services.Interface;
 
 namespace DarkDeeds.Services.Implementation

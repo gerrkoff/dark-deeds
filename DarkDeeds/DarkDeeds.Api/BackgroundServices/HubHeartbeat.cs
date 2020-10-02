@@ -5,8 +5,7 @@ using Microsoft.Extensions.Hosting;
 
 namespace DarkDeeds.Api.BackgroundServices
 {
-    public class HubHeartbeat<T> : BackgroundService
-        where T: Hub
+    public class HubHeartbeat<T> : BackgroundService where T: Hub
     {
         private const int HeartbeatTimer = 60 * 1000;
         

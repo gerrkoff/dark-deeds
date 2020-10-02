@@ -1,6 +1,6 @@
 using System.Linq;
-using DarkDeeds.Data.Entity.Base;
-using DarkDeeds.Data.Repository;
+using DarkDeeds.Entities.Models.Base;
+using DarkDeeds.Infrastructure.Data;
 using Moq;
 
 namespace DarkDeeds.Tests

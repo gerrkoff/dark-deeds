@@ -1,5 +1,5 @@
 using System.Threading.Tasks;
-using DarkDeeds.Models;
+using DarkDeeds.Models.Dto;
 
 namespace DarkDeeds.Services.Interface
 {

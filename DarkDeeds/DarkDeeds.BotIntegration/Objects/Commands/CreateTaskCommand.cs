@@ -1,4 +1,4 @@
-using DarkDeeds.Models;
+using DarkDeeds.Models.Dto;
 
 namespace DarkDeeds.BotIntegration.Objects.Commands
 {

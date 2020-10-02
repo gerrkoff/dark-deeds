@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using DarkDeeds.Models;
+using DarkDeeds.Models.Dto;
 
 namespace DarkDeeds.Services.Interface
 {

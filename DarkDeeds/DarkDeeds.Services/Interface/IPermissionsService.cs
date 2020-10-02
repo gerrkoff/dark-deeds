@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using DarkDeeds.Data.Entity.Base;
-using DarkDeeds.Data.Repository;
-using DarkDeeds.Models.Data;
+using DarkDeeds.Entities.Models.Base;
+using DarkDeeds.Infrastructure.Data;
+using DarkDeeds.Models.Dto.Base;
 
 namespace DarkDeeds.Services.Interface
 {

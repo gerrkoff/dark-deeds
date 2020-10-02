@@ -1,7 +1,8 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using DarkDeeds.Data.Entity.Base;
+using DarkDeeds.Entities.Models.Base;
+using DarkDeeds.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace DarkDeeds.Data.Repository

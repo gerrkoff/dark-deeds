@@ -1,8 +1,9 @@
 using System;
 using System.Threading.Tasks;
-using DarkDeeds.Data.Entity;
-using DarkDeeds.Enums;
-using DarkDeeds.Models;
+using DarkDeeds.Entities.Enums;
+using DarkDeeds.Entities.Models;
+using DarkDeeds.Infrastructure.Services;
+using DarkDeeds.Models.Dto;
 using DarkDeeds.Services.Implementation;
 using DarkDeeds.Services.Interface;
 using Moq;

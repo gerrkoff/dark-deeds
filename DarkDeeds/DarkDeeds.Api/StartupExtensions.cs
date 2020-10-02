@@ -4,16 +4,21 @@ using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using DarkDeeds.Api.Filters;
-using DarkDeeds.Api.Hubs;
-using DarkDeeds.AutoMapper;
+using DarkDeeds.Api.InfrastructureServices;
+using DarkDeeds.Auth.Implementation;
+using DarkDeeds.Auth.Interface;
+using DarkDeeds.Auth.Mapping;
+using DarkDeeds.Auth.Settings;
 using DarkDeeds.BotIntegration.Implementation;
 using DarkDeeds.BotIntegration.Implementation.CommandProcessor;
 using DarkDeeds.BotIntegration.Interface;
 using DarkDeeds.BotIntegration.Interface.CommandProcessor;
-using DarkDeeds.Common.Settings;
 using DarkDeeds.Data.Context;
-using DarkDeeds.Data.Entity;
 using DarkDeeds.Data.Repository;
+using DarkDeeds.Entities.Models;
+using DarkDeeds.Infrastructure.Data;
+using DarkDeeds.Infrastructure.Services;
+using DarkDeeds.Models.Mapping;
 using DarkDeeds.Services.Implementation;
 using DarkDeeds.Services.Interface;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -84,7 +89,11 @@ namespace DarkDeeds.Api
         
         public static IServiceCollection ConfigureAutoMapper(this IServiceCollection services)
         {
-            Mapper.Initialize(cfg => cfg.AddProfile<MappingProfile>());
+            Mapper.Initialize(cfg =>
+            {
+                cfg.AddProfile<ModelsMappingProfile>();
+                cfg.AddProfile<AuthMappingProfile>();
+            });
             return services;
         }
         

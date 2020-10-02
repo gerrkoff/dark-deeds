@@ -1,8 +1,8 @@
 ﻿using System.Threading.Tasks;
 using AutoMapper;
 using DarkDeeds.Api.Controllers.Base;
-using DarkDeeds.Models.Account;
-using DarkDeeds.Services.Interface;
+using DarkDeeds.Auth.Dto;
+using DarkDeeds.Auth.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -21,17 +21,17 @@ namespace DarkDeeds.Api.Controllers
         }
 
         [HttpPost(nameof(SignUp))]
-        public async Task<SignUpResultDto> SignUp(SignUpInfoDto signUpInfo)
+        public Task<SignUpResultDto> SignUp(SignUpInfoDto signUpInfo)
         {
             Validate();
-            return await _accountService.SignUp(signUpInfo);
+            return _accountService.SignUp(signUpInfo);
         }
 
         [HttpPost(nameof(SignIn))]
-        public async Task<SignInResultDto> SignIn(SignInInfoDto signInInfo)
+        public Task<SignInResultDto> SignIn(SignInInfoDto signInInfo)
         {
             Validate();
-            return await _accountService.SignIn(signInInfo);
+            return _accountService.SignIn(signInInfo);
         }
 
         [HttpGet]

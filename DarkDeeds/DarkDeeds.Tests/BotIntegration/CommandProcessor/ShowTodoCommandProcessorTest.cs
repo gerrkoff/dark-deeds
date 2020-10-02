@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using DarkDeeds.BotIntegration.Implementation.CommandProcessor;
 using DarkDeeds.BotIntegration.Interface;
 using DarkDeeds.BotIntegration.Objects.Commands;
-using DarkDeeds.Models;
+using DarkDeeds.Models.Dto;
 using DarkDeeds.Services.Interface;
 using Moq;
 using Xunit;
