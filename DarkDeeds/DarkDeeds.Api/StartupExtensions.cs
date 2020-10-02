@@ -91,7 +91,7 @@ namespace DarkDeeds.Api
         {
             Mapper.Initialize(cfg =>
             {
-                cfg.AddProfile<ServicesMappingProfile>();
+                cfg.AddProfile<ModelsMappingProfile>();
                 cfg.AddProfile<AuthMappingProfile>();
             });
             return services;

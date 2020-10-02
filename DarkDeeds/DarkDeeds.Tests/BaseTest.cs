@@ -10,7 +10,7 @@ namespace DarkDeeds.Tests
         {
             Mapper.Initialize(cfg =>
             {
-                cfg.AddProfile<ServicesMappingProfile>();
+                cfg.AddProfile<ModelsMappingProfile>();
                 cfg.AddProfile<AuthMappingProfile>();
             });
         }

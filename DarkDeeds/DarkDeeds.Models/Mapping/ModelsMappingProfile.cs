@@ -4,9 +4,9 @@ using DarkDeeds.Models.Dto;
 
 namespace DarkDeeds.Models.Mapping
 {
-    public class ServicesMappingProfile : Profile
+    public class ModelsMappingProfile : Profile
     {
-        public ServicesMappingProfile()
+        public ModelsMappingProfile()
         {
             CreateMap<TaskEntity, TaskDto>()
                 .ForMember(x => x.Completed, e => e.MapFrom(x => x.IsCompleted))
