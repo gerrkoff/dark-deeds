@@ -4,6 +4,8 @@ using System.Threading.Tasks;
 using DarkDeeds.BotIntegration.Implementation.CommandProcessor;
 using DarkDeeds.BotIntegration.Interface;
 using DarkDeeds.BotIntegration.Objects.Commands;
+using DarkDeeds.Infrastructure.Communication;
+using DarkDeeds.Infrastructure.Communication.Dto;
 using DarkDeeds.Models.Dto;
 using DarkDeeds.Services.Interface;
 using Moq;
@@ -21,9 +23,8 @@ namespace DarkDeeds.Tests.BotIntegration.CommandProcessor
             var service = new ShowTodoCommandProcessor(
                 sendMessageMock.Object,
                 telegramMock.Object,
-                taskServiceMock.Object,
-                taskParserMock.Object,
-                null);
+                null,
+                taskParserMock.Object);
 
             await service.ProcessAsync(new ShowTodoCommand(string.Empty, new DateTime(), 0)
             {
@@ -42,9 +43,8 @@ namespace DarkDeeds.Tests.BotIntegration.CommandProcessor
             var service = new ShowTodoCommandProcessor(
                 sendMessageMock.Object,
                 telegramMock.Object,
-                taskServiceMock.Object,
-                taskParserMock.Object,
-                null);
+                null,
+                taskParserMock.Object);
 
             await service.ProcessAsync(new ShowTodoCommand(string.Empty, new DateTime(), 0)
             {
@@ -55,7 +55,7 @@ namespace DarkDeeds.Tests.BotIntegration.CommandProcessor
             sendMessageMock.Verify(x => x.SendTextAsync(100, "No tasks"));
         }
 
-        private (Mock<ITelegramService>, Mock<ITaskService>, Mock<ITaskParserService>, Mock<IBotSendMessageService>)
+        private (Mock<ITelegramService>, Mock<ITaskServiceApp>, Mock<ITaskServiceApp>, Mock<IBotSendMessageService>)
             SetupMocks(string tasksAsString, int chatId)
         {
             var tasks = new TaskDto[0];
@@ -64,13 +64,13 @@ namespace DarkDeeds.Tests.BotIntegration.CommandProcessor
             telegramMock.Setup(x => x.GetUserId(chatId))
                 .Returns(Task.FromResult("userid"));
             
-            var taskServiceMock = new Mock<ITaskService>();
+            var taskServiceMock = new Mock<ITaskServiceApp>();
             taskServiceMock.Setup(x => x.LoadTasksByDateAsync("userid", It.IsAny<DateTime>(), It.IsAny<DateTime>()))
                 .Returns(Task.FromResult((IEnumerable<TaskDto>) tasks));
             
-            var taskParserMock = new Mock<ITaskParserService>();
+            var taskParserMock = new Mock<ITaskServiceApp>();
             taskParserMock.Setup(x => x.PrintTasks(tasks))
-                .Returns(tasksAsString);
+                .Returns(Task.FromResult(tasksAsString));
             
             var sendMessageMock = new Mock<IBotSendMessageService>();
 

@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using DarkDeeds.Api.Controllers.Base;
+using DarkDeeds.Infrastructure.Communication;
+using DarkDeeds.Infrastructure.Communication.Dto;
 using DarkDeeds.Models.Dto;
-using DarkDeeds.Services.Interface;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DarkDeeds.Api.Controllers
@@ -13,24 +14,23 @@ namespace DarkDeeds.Api.Controllers
     [ApiController]
     public class TasksController : BaseUserController
     {
-        private readonly ITaskService _taskService;
+        private readonly ITaskServiceApp _taskServiceApp;
 
-        public TasksController(ITaskService taskService)
+        public TasksController(ITaskServiceApp taskServiceApp)
         {
-            _taskService = taskService;
+            _taskServiceApp = taskServiceApp;
         }
 
         [HttpGet]
-        public Task<IEnumerable<TaskDto>> Get([Required] DateTime? from)
+        public Task<IEnumerable<TaskDto>> Get([Required] DateTime from)
         {
-            from = from.GetValueOrDefault().ToUniversalTime();
-            return _taskService.LoadActualTasksAsync(GetUser().UserId, from.GetValueOrDefault());
+            return _taskServiceApp.LoadActualTasksAsync(GetUser().UserId, from);
         }
         
         [HttpPost]
         public Task<IEnumerable<TaskDto>> Post([FromBody] ICollection<TaskDto> tasks)
         {
-            return _taskService.SaveTasksAsync(tasks, GetUser().UserId);
+            return _taskServiceApp.SaveTasksAsync(tasks, GetUser().UserId);
         }
     }
 }

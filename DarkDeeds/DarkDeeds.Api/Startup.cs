@@ -25,12 +25,11 @@ namespace DarkDeeds.Api
                 .RegisterServices(Configuration)
                 .ConfigureAutoMapper()
                 .ConfigureDatabase(Configuration)
-                .ConfigureSettings(Configuration)
-                .ConfigureAuthentication(Configuration)
                 .AddIdentity()
                 .AddCompression() 
                 .ConfigureMvc();
 
+            services.AddDarkDeedsAuth(Configuration);
             services.AddHostedService<HubHeartbeat<TaskHub>>();
             services.AddHealthChecks();
             services.AddSignalR()

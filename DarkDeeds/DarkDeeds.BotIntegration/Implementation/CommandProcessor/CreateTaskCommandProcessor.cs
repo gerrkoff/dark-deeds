@@ -3,6 +3,8 @@ using System.Threading.Tasks;
 using DarkDeeds.BotIntegration.Interface;
 using DarkDeeds.BotIntegration.Interface.CommandProcessor;
 using DarkDeeds.BotIntegration.Objects.Commands;
+using DarkDeeds.Infrastructure.Communication;
+using DarkDeeds.Infrastructure.Communication.Dto;
 using DarkDeeds.Infrastructure.Services;
 using DarkDeeds.Models.Dto;
 using DarkDeeds.Services.Interface;
@@ -14,26 +16,26 @@ namespace DarkDeeds.BotIntegration.Implementation.CommandProcessor
     {
         private readonly IBotSendMessageService _botSendMessageService;
         private readonly ITelegramService _telegramService;
-        private readonly ITaskService _taskService;
+        private readonly ITaskServiceApp _taskServiceApp;
         private readonly ITaskHubService _taskHubService;
 
         public CreateTaskCommandProcessor(
             IBotSendMessageService botSendMessageService,
             ITelegramService telegramService,
-            ITaskService taskService,
+            ITaskServiceApp taskServiceApp,
             ITaskHubService taskHubService,
             ILogger<BaseCommandProcessor<BotCommand>> logger) : base(botSendMessageService, logger)
         {
             _botSendMessageService = botSendMessageService;
             _telegramService = telegramService;
-            _taskService = taskService;
+            _taskServiceApp = taskServiceApp;
             _taskHubService = taskHubService;
         }
 
         protected override async Task ProcessCoreAsync(CreateTaskCommand command)
         {
             string userId = await _telegramService.GetUserId(command.UserChatId);
-            IEnumerable<TaskDto> updatedTasks = await _taskService.SaveTasksAsync(new[] {command.Task}, userId);
+            IEnumerable<TaskDto> updatedTasks = await _taskServiceApp.SaveTasksAsync(new[] {command.Task}, userId);
             await _botSendMessageService.SendTextAsync(command.UserChatId, "Task created");
             await _taskHubService.Update(updatedTasks);
         }

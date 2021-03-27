@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using DarkDeeds.Api.Controllers.Base;
+using DarkDeeds.Infrastructure.Communication;
+using DarkDeeds.Infrastructure.Communication.Dto;
 using DarkDeeds.Models.Dto;
-using DarkDeeds.Services.Interface;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DarkDeeds.Api.Controllers
@@ -11,32 +12,30 @@ namespace DarkDeeds.Api.Controllers
     [ApiController]
     public class RecurrencesController : BaseUserController
     {
-        private readonly IRecurrenceCreatorService _recurrenceCreatorService;
-        private readonly IRecurrenceService _recurrenceService;
+        private readonly ITaskServiceApp _taskServiceApp;
 
-        public RecurrencesController(IRecurrenceCreatorService recurrenceCreatorService, IRecurrenceService recurrenceService)
+        public RecurrencesController(ITaskServiceApp taskServiceApp)
         {
-            _recurrenceCreatorService = recurrenceCreatorService;
-            _recurrenceService = recurrenceService;
+            _taskServiceApp = taskServiceApp;
         }
 
         [Route("create")]
         [HttpPost]
         public Task<int> Create(int timezoneOffset)
         {
-            return _recurrenceCreatorService.CreateAsync(timezoneOffset, GetUser().UserId);
+            return _taskServiceApp.CreateRecurrencesAsync(timezoneOffset, GetUser().UserId);
         }
         
         [HttpGet]
         public Task<IEnumerable<PlannedRecurrenceDto>> Get()
         {
-            return _recurrenceService.LoadAsync(GetUser().UserId);
+            return _taskServiceApp.LoadRecurrencesAsync(GetUser().UserId);
         }
         
         [HttpPost]
         public Task<int> Post([FromBody] ICollection<PlannedRecurrenceDto> recurrences)
         {
-            return _recurrenceService.SaveAsync(recurrences, GetUser().UserId);
+            return _taskServiceApp.SaveRecurrencesAsync(recurrences, GetUser().UserId);
         }
     }
 }

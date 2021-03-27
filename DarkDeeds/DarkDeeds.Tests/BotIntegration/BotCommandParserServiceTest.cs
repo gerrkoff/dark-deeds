@@ -2,6 +2,8 @@ using System;
 using System.Threading.Tasks;
 using DarkDeeds.BotIntegration.Implementation;
 using DarkDeeds.BotIntegration.Objects.Commands;
+using DarkDeeds.Infrastructure.Communication;
+using DarkDeeds.Infrastructure.Communication.Dto;
 using DarkDeeds.Models.Dto;
 using DarkDeeds.Services.Interface;
 using Moq;
@@ -16,9 +18,9 @@ namespace DarkDeeds.Tests.BotIntegration
         {
             var task = new TaskDto();
             var telegramMock = new Mock<ITelegramService>();
-            var taskParserMock = new Mock<ITaskParserService>();
-            taskParserMock.Setup(x => x.ParseTask("Some task", It.IsAny<bool>())).Returns(task);
-            var service = new BotCommandParserService(taskParserMock.Object, telegramMock.Object, null);
+            var taskParserMock = new Mock<ITaskServiceApp>();
+            taskParserMock.Setup(x => x.ParseTask("Some task")).Returns(Task.FromResult(task));
+            var service = new BotCommandParserService(telegramMock.Object, null, taskParserMock.Object);
 
             var result = await service.ParseCommand("Some task", 100500);
 
@@ -33,7 +35,7 @@ namespace DarkDeeds.Tests.BotIntegration
             dateServiceMock.SetupGet(x => x.Now).Returns(new DateTime(2010, 10, 10));
             var telegramMock = new Mock<ITelegramService>();
             telegramMock.Setup(x => x.GetUserTimeAdjustment(100500)).Returns(Task.FromResult(100));
-            var service = new BotCommandParserService(null, telegramMock.Object, dateServiceMock.Object);
+            var service = new BotCommandParserService(telegramMock.Object, dateServiceMock.Object, null);
 
             var result = await service.ParseCommand("/todo", 100500);
 

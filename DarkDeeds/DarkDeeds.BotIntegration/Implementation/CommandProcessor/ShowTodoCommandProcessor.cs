@@ -3,6 +3,8 @@ using System.Threading.Tasks;
 using DarkDeeds.BotIntegration.Interface;
 using DarkDeeds.BotIntegration.Interface.CommandProcessor;
 using DarkDeeds.BotIntegration.Objects.Commands;
+using DarkDeeds.Infrastructure.Communication;
+using DarkDeeds.Infrastructure.Communication.Dto;
 using DarkDeeds.Models.Dto;
 using DarkDeeds.Services.Interface;
 using Microsoft.Extensions.Logging;
@@ -13,27 +15,24 @@ namespace DarkDeeds.BotIntegration.Implementation.CommandProcessor
     {
         private readonly IBotSendMessageService _botSendMessageService;
         private readonly ITelegramService _telegramService;
-        private readonly ITaskService _taskService;
-        private readonly ITaskParserService _taskParserService;
+        private readonly ITaskServiceApp _taskServiceApp;
 
         public ShowTodoCommandProcessor(
             IBotSendMessageService botSendMessageService,
             ITelegramService telegramService,
-            ITaskService taskService,
-            ITaskParserService taskParserService,
-            ILogger<BaseCommandProcessor<BotCommand>> logger) : base(botSendMessageService, logger)
+            ILogger<BaseCommandProcessor<BotCommand>> logger,
+            ITaskServiceApp taskServiceApp) : base(botSendMessageService, logger)
         {
             _botSendMessageService = botSendMessageService;
             _telegramService = telegramService;
-            _taskService = taskService;
-            _taskParserService = taskParserService;
+            _taskServiceApp = taskServiceApp;
         }
 
         protected override async Task ProcessCoreAsync(ShowTodoCommand command)
         {
             string userId = await _telegramService.GetUserId(command.UserChatId);
-            IEnumerable<TaskDto> tasks = await _taskService.LoadTasksByDateAsync(userId, command.From, command.To);
-            string tasksAsString = _taskParserService.PrintTasks(tasks);
+            IEnumerable<TaskDto> tasks = await _taskServiceApp.LoadTasksByDateAsync(userId, command.From, command.To);
+            string tasksAsString = await _taskServiceApp.PrintTasks(tasks);
             if (string.IsNullOrEmpty(tasksAsString))
                 tasksAsString = "No tasks";
             await _botSendMessageService.SendTextAsync(command.UserChatId, tasksAsString);

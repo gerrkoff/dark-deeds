@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using DarkDeeds.BotIntegration.Interface;
 using DarkDeeds.BotIntegration.Objects.Commands;
+using DarkDeeds.Infrastructure.Communication;
 using DarkDeeds.Services.Interface;
 
 namespace DarkDeeds.BotIntegration.Implementation
@@ -11,15 +12,15 @@ namespace DarkDeeds.BotIntegration.Implementation
         const string TodoCommand = "/todo";
         const string StartCommand = "/start";
 
-        private readonly ITaskParserService _taskParserService;
         private readonly ITelegramService _telegramService;
         private readonly IDateService _dateService;
+        private readonly ITaskServiceApp _taskServiceApp;
 
-        public BotCommandParserService(ITaskParserService taskParserService, ITelegramService telegramService, IDateService dateService)
+        public BotCommandParserService(ITelegramService telegramService, IDateService dateService, ITaskServiceApp taskServiceApp)
         {
-            _taskParserService = taskParserService;
             _telegramService = telegramService;
             _dateService = dateService;
+            _taskServiceApp = taskServiceApp;
         }
 
         public async Task<BotCommand> ParseCommand(string command, int chatId)
@@ -35,7 +36,7 @@ namespace DarkDeeds.BotIntegration.Implementation
             }
 
             if (!command.StartsWith("/"))
-                return new CreateTaskCommand(_taskParserService.ParseTask(command));
+                return new CreateTaskCommand(await _taskServiceApp.ParseTask(command));
 
             return null;
         }

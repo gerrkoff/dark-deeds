@@ -3,6 +3,8 @@ using System.Threading.Tasks;
 using DarkDeeds.BotIntegration.Implementation.CommandProcessor;
 using DarkDeeds.BotIntegration.Interface;
 using DarkDeeds.BotIntegration.Objects.Commands;
+using DarkDeeds.Infrastructure.Communication;
+using DarkDeeds.Infrastructure.Communication.Dto;
 using DarkDeeds.Infrastructure.Services;
 using DarkDeeds.Models.Dto;
 using DarkDeeds.Services.Interface;
@@ -60,14 +62,14 @@ namespace DarkDeeds.Tests.BotIntegration.CommandProcessor
             ));
         }
 
-        private (Mock<ITelegramService>, Mock<ITaskService>, Mock<IBotSendMessageService>, Mock<ITaskHubService>)
+        private (Mock<ITelegramService>, Mock<ITaskServiceApp>, Mock<IBotSendMessageService>, Mock<ITaskHubService>)
             SetupMocks(TaskDto task, TaskDto[] tasks, int chatId)
         {   
             var telegramMock = new Mock<ITelegramService>();
             telegramMock.Setup(x => x.GetUserId(chatId))
                 .Returns(Task.FromResult("userid"));
             
-            var taskServiceMock = new Mock<ITaskService>();
+            var taskServiceMock = new Mock<ITaskServiceApp>();
             taskServiceMock.Setup(x => x.SaveTasksAsync(It.Is<ICollection<TaskDto>>(v => v.Contains(task)), "userid"))
                 .Returns(Task.FromResult((IEnumerable<TaskDto>) tasks));
             

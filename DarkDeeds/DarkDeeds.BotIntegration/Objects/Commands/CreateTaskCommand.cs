@@ -1,3 +1,4 @@
+using DarkDeeds.Infrastructure.Communication.Dto;
 using DarkDeeds.Models.Dto;
 
 namespace DarkDeeds.BotIntegration.Objects.Commands

@@ -3,6 +3,8 @@ using System.Threading.Tasks;
 using DarkDeeds.Auth.Dto;
 using DarkDeeds.Auth.Enums;
 using DarkDeeds.Auth.Interface;
+using DarkDeeds.Authentication.Models;
+using DarkDeeds.Authentication.Services;
 using DarkDeeds.Entities.Models;
 using Microsoft.AspNetCore.Identity;
 
@@ -44,7 +46,7 @@ namespace DarkDeeds.Auth.Implementation
             if (createUserResult.Succeeded)
             {
                 result.Result = SignUpResultEnum.Success;
-                result.Token = _tokenService.GetToken(user);
+                result.Token = _tokenService.GetToken(ToCurrentUser(user));
             }
             else if (createUserResult.Errors.Any(x => string.Equals(x.Code, DuplicateUserNameCode)))
             {
@@ -83,10 +85,17 @@ namespace DarkDeeds.Auth.Implementation
             else
             {
                 result.Result = SignInResultEnum.Success;
-                result.Token = _tokenService.GetToken(user);
+                result.Token = _tokenService.GetToken(ToCurrentUser(user));
             }
 
             return result;
         }
+
+        private CurrentUser ToCurrentUser(UserEntity user) => new CurrentUser()
+        {
+            UserId = user.Id,
+            Username = user.UserName,
+            DisplayName = user.DisplayName,
+        };
     }
 }
