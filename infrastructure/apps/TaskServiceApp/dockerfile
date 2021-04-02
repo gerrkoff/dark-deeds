@@ -1,7 +1,7 @@
 FROM mcr.microsoft.com/dotnet/sdk:5.0-focal
 
 
-COPY code/apps/TaskServiceApp /app
+COPY code /app
 COPY infrastructure/apps/TaskServiceApp/entry.sh /app/
 WORKDIR /app
 

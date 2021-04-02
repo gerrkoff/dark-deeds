@@ -1,0 +1,10 @@
+FROM mcr.microsoft.com/dotnet/sdk:5.0-focal
+
+
+COPY code /app
+COPY infrastructure/apps/AuthServiceApp/entry.sh /app/
+WORKDIR /app
+
+ENV ASPNETCORE_URLS=http://0.0.0.0:80
+
+ENTRYPOINT ["/bin/sh", "-c", "./entry.sh"]

@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net5.0</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\DarkDeeds.AuthServiceApp.Data\DarkDeeds.AuthServiceApp.Data.csproj" />
+      <ProjectReference Include="..\DarkDeeds.AuthServiceApp.Services\DarkDeeds.AuthServiceApp.Services.csproj" />
+    </ItemGroup>
+
+</Project>

@@ -9,8 +9,5 @@ namespace DarkDeeds.Entities.Models
         
         [Required]
         public string UserId { get; set; }
-        
-        [Required]
-        public UserEntity User { get; set; }
     }
 }

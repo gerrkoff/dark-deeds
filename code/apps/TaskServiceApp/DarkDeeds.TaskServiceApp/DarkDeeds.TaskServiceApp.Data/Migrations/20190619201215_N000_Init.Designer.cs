@@ -9,7 +9,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace DarkDeeds.Data.Migrations
 {
-    [DbContext(typeof(DarkDeedsContext))]
+    [DbContext(typeof(DarkDeedsTaskContext))]
     [Migration("20190619201215_N000_Init")]
     partial class N000_Init
     {

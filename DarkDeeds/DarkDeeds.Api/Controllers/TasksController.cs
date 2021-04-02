@@ -3,16 +3,16 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using DarkDeeds.Api.Controllers.Base;
-using DarkDeeds.Infrastructure.Communication;
-using DarkDeeds.Infrastructure.Communication.Dto;
-using DarkDeeds.Models.Dto;
+using DarkDeeds.Authentication;
+using DarkDeeds.Infrastructure.Communication.TaskServiceApp;
+using DarkDeeds.Infrastructure.Communication.TaskServiceApp.Dto;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DarkDeeds.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class TasksController : BaseUserController
+    public class TasksController : BaseController
     {
         private readonly ITaskServiceApp _taskServiceApp;
 
@@ -24,13 +24,13 @@ namespace DarkDeeds.Api.Controllers
         [HttpGet]
         public Task<IEnumerable<TaskDto>> Get([Required] DateTime from)
         {
-            return _taskServiceApp.LoadActualTasksAsync(GetUser().UserId, from);
+            return _taskServiceApp.LoadActualTasksAsync(User.ToAuthToken().UserId, from);
         }
         
         [HttpPost]
         public Task<IEnumerable<TaskDto>> Post([FromBody] ICollection<TaskDto> tasks)
         {
-            return _taskServiceApp.SaveTasksAsync(tasks, GetUser().UserId);
+            return _taskServiceApp.SaveTasksAsync(tasks, User.ToAuthToken().UserId);
         }
     }
 }

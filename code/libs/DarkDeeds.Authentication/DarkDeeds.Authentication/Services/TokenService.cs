@@ -18,14 +18,14 @@ namespace DarkDeeds.Authentication.Services
             _authSettings = authSettings.Value;
         }
 
-        public string GetToken(CurrentUser user)
+        public string Serialize(AuthToken authToken)
         {
-            ClaimsIdentity identity = ToIdentity(user);
+            ClaimsIdentity identity = ToIdentity(authToken);
 
             var now = DateTime.UtcNow;
             var jwt = new JwtSecurityToken(
-                issuer: _authSettings.Issuer,
-                audience: _authSettings.Audience,
+                _authSettings.Issuer,
+                _authSettings.Audience,
                 notBefore: now,
                 claims: identity.Claims,
                 expires: now.Add(TimeSpan.FromMinutes(_authSettings.Lifetime)),
@@ -36,16 +36,16 @@ namespace DarkDeeds.Authentication.Services
             return encodedJwt;
         }
 
-        public CurrentUser GetUser(string token)
+        public AuthToken Deserialize(string serializedToken)
         {
             var validationParams = TokenValidationParams.Get(_authSettings);
 
-            var claims = new JwtSecurityTokenHandler().ValidateToken(token, validationParams, out SecurityToken _);
+            var claims = new JwtSecurityTokenHandler().ValidateToken(serializedToken, validationParams, out SecurityToken _);
 
-            return FromIdentity(claims);
+            return claims.ToAuthToken();
         }
 
-        private ClaimsIdentity ToIdentity(CurrentUser user)
+        private ClaimsIdentity ToIdentity(AuthToken user)
         {
             var claims = new List<Claim>
             {
@@ -58,33 +58,6 @@ namespace DarkDeeds.Authentication.Services
                 new ClaimsIdentity(claims, "Token",
                     ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
             return claimsIdentity;
-        }
-        
-        private CurrentUser FromIdentity(ClaimsPrincipal principal)
-        {
-            var identity = (ClaimsIdentity) principal.Identity;
-            if (identity == null)
-                return new CurrentUser();
-
-            string expiration = identity.FindFirst("exp")?.Value;
-            var user = new CurrentUser
-            {
-                Username = identity.FindFirst(ClaimsIdentity.DefaultNameClaimType)?.Value,
-                UserId = identity.FindFirst(ClaimTypes.Sid)?.Value,
-                DisplayName = identity.FindFirst(ClaimTypes.GivenName)?.Value,
-                Expires = string.IsNullOrWhiteSpace(expiration)
-                    ? null
-                    : UnixTimeStampToDateTime(double.Parse(expiration))
-            };
-            
-            static DateTime UnixTimeStampToDateTime(double unixTimeStamp)
-            {
-                var dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
-                dtDateTime = dtDateTime.AddSeconds(unixTimeStamp).ToLocalTime();
-                return dtDateTime;
-            }
-            
-            return user;
         }
     }
 }

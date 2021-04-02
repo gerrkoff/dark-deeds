@@ -4,7 +4,7 @@ namespace DarkDeeds.Authentication.Services
 {
     public interface ITokenService
     {
-        string GetToken(CurrentUser user);
-        CurrentUser GetUser(string token);
+        string Serialize(AuthToken authToken);
+        AuthToken Deserialize(string serializedToken);
     }
 }

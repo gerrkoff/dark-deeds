@@ -15,7 +15,7 @@ namespace DarkDeeds.TaskServiceApp.App
 {
     public static class StartupExtensions
     {
-        public static IServiceCollection RegisterServices(this IServiceCollection services, IConfiguration configuration)
+        public static void AddTaskServices(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             services.AddScoped(typeof(IRepositoryNonDeletable<>), typeof(RepositoryNonDeletable<>));
@@ -26,25 +26,21 @@ namespace DarkDeeds.TaskServiceApp.App
             services.AddScoped<IRecurrenceService, RecurrenceService>();
             services.AddScoped<IPermissionsService, PermissionsService>();
             services.AddScoped<ITaskHubService, TaskHubService>();
-
-            return services;
         }
         
-        public static IServiceCollection ConfigureAutoMapper(this IServiceCollection services)
+        public static void AddTaskAutoMapper(this IServiceCollection services)
         {
             Mapper.Initialize(cfg =>
             {
                 cfg.AddProfile<ModelsMappingProfile>();
             });
-            return services;
         }
 
-        public static IServiceCollection ConfigureDatabase(this IServiceCollection services, IConfiguration configuration)
+        public static void AddTaskDatabase(this IServiceCollection services, IConfiguration configuration)
         {            
             string connectionString = configuration.GetConnectionString("appDb");
-            services.AddDbContext<DarkDeedsContext>(options => options.UseNpgsql(connectionString));
-            services.AddScoped<DbContext, DarkDeedsContext>();
-            return services;
+            services.AddDbContext<DarkDeedsTaskContext>(options => options.UseNpgsql(connectionString));
+            services.AddScoped<DbContext, DarkDeedsTaskContext>();
         }
     }
 }

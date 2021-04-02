@@ -9,7 +9,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace DarkDeeds.Data.Migrations
 {
-    [DbContext(typeof(DarkDeedsContext))]
+    [DbContext(typeof(DarkDeedsTaskContext))]
     [Migration("20191027214301_N003_Add_PlannedRecurences_And_Recurrences")]
     partial class N003_Add_PlannedRecurences_And_Recurrences
     {

@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using DarkDeeds.BotIntegration.Interface;
 using DarkDeeds.BotIntegration.Objects.Commands;
 using DarkDeeds.Infrastructure.Communication;
+using DarkDeeds.Infrastructure.Communication.TaskServiceApp;
 using DarkDeeds.Services.Interface;
 
 namespace DarkDeeds.BotIntegration.Implementation

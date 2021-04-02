@@ -9,7 +9,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace DarkDeeds.Data.Migrations
 {
-    [DbContext(typeof(DarkDeedsContext))]
+    [DbContext(typeof(DarkDeedsTaskContext))]
     [Migration("20190914163948_N001_Add_Time_to_TaskEntity")]
     partial class N001_Add_Time_to_TaskEntity
     {

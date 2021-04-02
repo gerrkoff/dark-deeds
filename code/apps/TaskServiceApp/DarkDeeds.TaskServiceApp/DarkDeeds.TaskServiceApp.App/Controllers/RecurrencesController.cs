@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
-using DarkDeeds.TaskServiceApp.App.Controllers.Base;
 using DarkDeeds.TaskServiceApp.Models.Dto;
 using DarkDeeds.TaskServiceApp.Services.Interface;
 using Microsoft.AspNetCore.Mvc;
@@ -10,7 +9,7 @@ namespace DarkDeeds.TaskServiceApp.App.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class RecurrencesController : BaseController
+    public class RecurrencesController : Controller
     {
         private readonly IRecurrenceCreatorService _recurrenceCreatorService;
         private readonly IRecurrenceService _recurrenceService;

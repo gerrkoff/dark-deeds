@@ -2,8 +2,6 @@ using System.IO.Compression;
 using AutoMapper;
 using DarkDeeds.Api.Filters;
 using DarkDeeds.Api.InfrastructureServices;
-using DarkDeeds.Auth.Implementation;
-using DarkDeeds.Auth.Interface;
 using DarkDeeds.BotIntegration.Implementation;
 using DarkDeeds.BotIntegration.Implementation.CommandProcessor;
 using DarkDeeds.BotIntegration.Interface;
@@ -12,7 +10,8 @@ using DarkDeeds.Communication;
 using DarkDeeds.Data.Context;
 using DarkDeeds.Data.Repository;
 using DarkDeeds.Entities.Models;
-using DarkDeeds.Infrastructure.Communication;
+using DarkDeeds.Infrastructure.Communication.AuthServiceApp;
+using DarkDeeds.Infrastructure.Communication.TaskServiceApp;
 using DarkDeeds.Infrastructure.Data;
 using DarkDeeds.Infrastructure.Services;
 using DarkDeeds.Models.Mapping;
@@ -58,12 +57,13 @@ namespace DarkDeeds.Api
         {
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             services.AddScoped(typeof(IRepositoryNonDeletable<>), typeof(RepositoryNonDeletable<>));
-            services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<ITelegramService, TelegramService>();
             services.AddScoped<ISettingsService, SettingsService>();
             services.AddScoped<IDateService, DateService>();
             services.AddScoped<ITaskHubService, TaskHubService>();
+            
             services.AddScoped<ITaskServiceApp, TaskServiceApp>();
+            services.AddScoped<IAuthServiceApp, AuthServiceApp>();
             
             services.AddScoped<IBotCommandParserService, BotCommandParserService>();
             services.AddScoped<IShowTodoCommandProcessor, ShowTodoCommandProcessor>();

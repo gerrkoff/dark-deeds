@@ -9,7 +9,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace DarkDeeds.Data.Migrations
 {
-    [DbContext(typeof(DarkDeedsContext))]
+    [DbContext(typeof(DarkDeedsTaskContext))]
     partial class DarkDeedsContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

@@ -6,11 +6,11 @@ namespace DarkDeeds.Authentication
 {
     public static class AuthExtensions
     {
-        public static CurrentUser ToCurrentUser(this ClaimsPrincipal principal)
+        public static AuthToken ToAuthToken(this ClaimsPrincipal principal)
         {
             var identity = (ClaimsIdentity) principal.Identity;
             
-            var user = new CurrentUser
+            var user = new AuthToken
             {
                 Username = identity.FindFirst(ClaimsIdentity.DefaultNameClaimType).Value,
                 UserId = identity.FindFirst(ClaimTypes.Sid).Value,

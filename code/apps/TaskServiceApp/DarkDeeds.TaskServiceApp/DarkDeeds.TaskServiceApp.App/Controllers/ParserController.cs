@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using DarkDeeds.TaskServiceApp.App.Controllers.Base;
 using DarkDeeds.TaskServiceApp.Models.Dto;
 using DarkDeeds.TaskServiceApp.Services.Interface;
 using Microsoft.AspNetCore.Mvc;
@@ -9,7 +8,7 @@ namespace DarkDeeds.TaskServiceApp.App.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ParserController : BaseController
+    public class ParserController : Controller
     {
         private readonly ITaskParserService _taskParserService;
 
