@@ -1,0 +1,71 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.WebClientBffApp.App", "DarkDeeds.WebClientBffApp.App\DarkDeeds.WebClientBffApp.App.csproj", "{BB53E1D5-3EC9-46DA-9778-D0DC04864D2B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1 Entities", "1 Entities", "{25B8A82D-2046-4AB0-9AE1-5917BD0623E8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2 Services", "2 Services", "{A7EB91D2-1EE1-4C4C-9ED6-4603D3FC4263}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3 UseCases", "3 UseCases", "{B6BEB6B7-97DC-45CF-9ADE-FB7976E80470}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4 Frameworks", "4 Frameworks", "{29480459-EC0C-437F-B241-F13CF9CB1A8A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "5 Deps", "5 Deps", "{56D59880-C9CD-4DA3-A9E7-CBA004A169D2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.WebClientBffApp.Entities", "DarkDeeds.WebClientBffApp.Entities\DarkDeeds.WebClientBffApp.Entities.csproj", "{859DF4A8-FD33-47DB-BCF4-EC7A0CE0B68A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.WebClientBffApp.Services", "DarkDeeds.WebClientBffApp.Services\DarkDeeds.WebClientBffApp.Services.csproj", "{A0EED284-8FDD-4967-BE5A-7B8A48087EEB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.WebClientBffApp.Infrastructure", "DarkDeeds.WebClientBffApp.Infrastructure\DarkDeeds.WebClientBffApp.Infrastructure.csproj", "{A78A5472-4344-4BF5-BD32-9F6729600C84}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.WebClientBffApp.Communication", "DarkDeeds.WebClientBffApp.Communication\DarkDeeds.WebClientBffApp.Communication.csproj", "{0799C77A-BFDC-49BD-810E-07E12B80B573}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.WebClientBffApp.Data", "DarkDeeds.WebClientBffApp.Data\DarkDeeds.WebClientBffApp.Data.csproj", "{CB5FEDD5-1011-4934-8F58-3849F8C08AB6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.Authentication", "..\..\..\libs\DarkDeeds.Authentication\DarkDeeds.Authentication\DarkDeeds.Authentication.csproj", "{0544A8D7-ED49-433A-A8F4-FC153E297687}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BB53E1D5-3EC9-46DA-9778-D0DC04864D2B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BB53E1D5-3EC9-46DA-9778-D0DC04864D2B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BB53E1D5-3EC9-46DA-9778-D0DC04864D2B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BB53E1D5-3EC9-46DA-9778-D0DC04864D2B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{859DF4A8-FD33-47DB-BCF4-EC7A0CE0B68A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{859DF4A8-FD33-47DB-BCF4-EC7A0CE0B68A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{859DF4A8-FD33-47DB-BCF4-EC7A0CE0B68A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{859DF4A8-FD33-47DB-BCF4-EC7A0CE0B68A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A0EED284-8FDD-4967-BE5A-7B8A48087EEB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A0EED284-8FDD-4967-BE5A-7B8A48087EEB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A0EED284-8FDD-4967-BE5A-7B8A48087EEB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A0EED284-8FDD-4967-BE5A-7B8A48087EEB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A78A5472-4344-4BF5-BD32-9F6729600C84}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A78A5472-4344-4BF5-BD32-9F6729600C84}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A78A5472-4344-4BF5-BD32-9F6729600C84}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A78A5472-4344-4BF5-BD32-9F6729600C84}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0799C77A-BFDC-49BD-810E-07E12B80B573}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0799C77A-BFDC-49BD-810E-07E12B80B573}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0799C77A-BFDC-49BD-810E-07E12B80B573}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0799C77A-BFDC-49BD-810E-07E12B80B573}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CB5FEDD5-1011-4934-8F58-3849F8C08AB6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CB5FEDD5-1011-4934-8F58-3849F8C08AB6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CB5FEDD5-1011-4934-8F58-3849F8C08AB6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CB5FEDD5-1011-4934-8F58-3849F8C08AB6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0544A8D7-ED49-433A-A8F4-FC153E297687}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0544A8D7-ED49-433A-A8F4-FC153E297687}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0544A8D7-ED49-433A-A8F4-FC153E297687}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0544A8D7-ED49-433A-A8F4-FC153E297687}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{BB53E1D5-3EC9-46DA-9778-D0DC04864D2B} = {29480459-EC0C-437F-B241-F13CF9CB1A8A}
+		{859DF4A8-FD33-47DB-BCF4-EC7A0CE0B68A} = {25B8A82D-2046-4AB0-9AE1-5917BD0623E8}
+		{A0EED284-8FDD-4967-BE5A-7B8A48087EEB} = {A7EB91D2-1EE1-4C4C-9ED6-4603D3FC4263}
+		{A78A5472-4344-4BF5-BD32-9F6729600C84} = {A7EB91D2-1EE1-4C4C-9ED6-4603D3FC4263}
+		{0799C77A-BFDC-49BD-810E-07E12B80B573} = {29480459-EC0C-437F-B241-F13CF9CB1A8A}
+		{CB5FEDD5-1011-4934-8F58-3849F8C08AB6} = {29480459-EC0C-437F-B241-F13CF9CB1A8A}
+		{0544A8D7-ED49-433A-A8F4-FC153E297687} = {56D59880-C9CD-4DA3-A9E7-CBA004A169D2}
+	EndGlobalSection
+EndGlobal

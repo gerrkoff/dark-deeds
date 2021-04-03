@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net5.0</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\..\..\libs\DarkDeeds.Authentication\DarkDeeds.Authentication\DarkDeeds.Authentication.csproj" />
+      <ProjectReference Include="..\DarkDeeds.WebClientBffApp.Communication\DarkDeeds.WebClientBffApp.Communication.csproj" />
+      <ProjectReference Include="..\DarkDeeds.WebClientBffApp.Data\DarkDeeds.WebClientBffApp.Data.csproj" />
+      <ProjectReference Include="..\DarkDeeds.WebClientBffApp.Services\DarkDeeds.WebClientBffApp.Services.csproj" />
+    </ItemGroup>
+
+</Project>
