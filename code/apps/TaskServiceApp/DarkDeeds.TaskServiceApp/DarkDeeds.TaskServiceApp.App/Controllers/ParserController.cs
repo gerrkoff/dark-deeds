@@ -8,7 +8,7 @@ namespace DarkDeeds.TaskServiceApp.App.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ParserController : Controller
+    public class ParserController : ControllerBase
     {
         private readonly ITaskParserService _taskParserService;
 

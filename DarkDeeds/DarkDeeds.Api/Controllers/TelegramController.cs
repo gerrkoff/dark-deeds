@@ -1,8 +1,7 @@
 ﻿using System.Threading.Tasks;
 using DarkDeeds.Api.Controllers.Base;
-using DarkDeeds.Authentication;
-using DarkDeeds.Models.Dto;
-using DarkDeeds.Services.Interface;
+using DarkDeeds.Infrastructure.Communication.TelegramClientApp;
+using DarkDeeds.Infrastructure.Communication.TelegramClientApp.Dto;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DarkDeeds.Api.Controllers
@@ -11,22 +10,17 @@ namespace DarkDeeds.Api.Controllers
     [ApiController]
     public class TelegramController : BaseController
     {
-        private readonly ITelegramService _telegramService;
+        private readonly ITelegramClientApp _telegramClientApp;
 
-        public TelegramController(ITelegramService telegramService)
+        public TelegramController(ITelegramClientApp telegramClientApp)
         {
-            _telegramService = telegramService;
+            _telegramClientApp = telegramClientApp;
         }
 
         [HttpGet]
-        public async Task<TelegramStartDto> Start(int timezoneOffset)
+        public Task<TelegramStartDto> Start(int timezoneOffset)
         {
-            string chatKey = await _telegramService.GenerateKey(User.ToAuthToken().UserId, timezoneOffset);
-            string botName = "darkdeedsbot";
-            return new TelegramStartDto
-            {
-                Url = $"https://telegram.me/{botName}?start={chatKey}"
-            };
+            return _telegramClientApp.Start(timezoneOffset);
         }
     }
 }

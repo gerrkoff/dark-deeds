@@ -22,10 +22,9 @@ namespace DarkDeeds.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services
-                .RegisterServices(Configuration)
+                .RegisterServices()
                 .ConfigureAutoMapper()
                 .ConfigureDatabase(Configuration)
-                .AddIdentity()
                 .AddCompression() 
                 .ConfigureMvc();
 

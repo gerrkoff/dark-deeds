@@ -1,12 +1,17 @@
 using System.Threading.Tasks;
 using DarkDeeds.Infrastructure.Communication.AuthServiceApp;
 using DarkDeeds.Infrastructure.Communication.AuthServiceApp.Dto;
+using Microsoft.AspNetCore.Http;
 
 namespace DarkDeeds.Communication
 {
     public class AuthServiceApp : ServiceAppBase, IAuthServiceApp
     {
         private const string Url = "http://localhost:5002/api/auth";
+        
+        public AuthServiceApp(IHttpContextAccessor httpContextAccessor) : base(httpContextAccessor)
+        {
+        }
         
         public async Task<SignUpResultDto> SignUpAsync(SignUpInfoDto signUpInfo)
         {

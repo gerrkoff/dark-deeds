@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DarkDeeds.AuthServiceApp.App.Controllers.Base
 {
-    public class BaseController : Controller
+    public class BaseController : ControllerBase
     {
         protected void Validate()
         {

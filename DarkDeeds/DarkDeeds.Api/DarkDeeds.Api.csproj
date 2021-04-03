@@ -18,7 +18,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\code\libs\DarkDeeds.Authentication\DarkDeeds.Authentication\DarkDeeds.Authentication.csproj" />
-    <ProjectReference Include="..\DarkDeeds.BotIntegration\DarkDeeds.BotIntegration.csproj" />
     <ProjectReference Include="..\DarkDeeds.Communication\DarkDeeds.Communication.csproj" />
     <ProjectReference Include="..\DarkDeeds.Data\DarkDeeds.Data.csproj" />
     <ProjectReference Include="..\DarkDeeds.Services\DarkDeeds.Services.csproj" />

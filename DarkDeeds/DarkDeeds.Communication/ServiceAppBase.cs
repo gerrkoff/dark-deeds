@@ -1,21 +1,32 @@
 using System;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Mime;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Net.Http.Headers;
 
 namespace DarkDeeds.Communication
 {
-    public class ServiceAppBase
+    public abstract class ServiceAppBase
     {
-        private readonly JsonSerializerOptions _jsonOptions = new JsonSerializerOptions
+        private readonly Lazy<HttpClient> _httpClient;
+
+        protected ServiceAppBase(IHttpContextAccessor httpContextAccessor)
         {
-            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-        };
-        
-        protected readonly HttpClient HttpClient = new HttpClient();
-        
+            _httpClient = new Lazy<HttpClient>(() =>
+            {
+                var httpClient = new HttpClient();
+                var auth = httpContextAccessor.HttpContext.Request.Headers[HeaderNames.Authorization];
+                httpClient.DefaultRequestHeaders.Add(HeaderNames.Authorization, auth.FirstOrDefault());
+                return httpClient;
+            });
+        }
+
+        protected HttpClient HttpClient => _httpClient.Value;
+
         protected HttpContent SerializePayload<T>(T payload) =>
             new StringContent(JsonSerializer.Serialize(payload, _jsonOptions), Encoding.UTF8,
                 MediaTypeNames.Application.Json);
@@ -28,5 +39,11 @@ namespace DarkDeeds.Communication
 
         protected string DateToString(DateTime dateTime) =>
             dateTime.ToUniversalTime().ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'fff'Z'");
+        
+        
+        private readonly JsonSerializerOptions _jsonOptions = new JsonSerializerOptions
+        {
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+        };
     }
 }

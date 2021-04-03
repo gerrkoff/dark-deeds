@@ -1,0 +1,76 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.TelegramClientApp.App", "DarkDeeds.TelegramClientApp.App\DarkDeeds.TelegramClientApp.App.csproj", "{58042605-1EAB-4021-85FF-F4705A5BD326}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1 Entities", "1 Entities", "{7DB67F1B-B22B-4A1F-8E7C-E9990FE15F0B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2 Services", "2 Services", "{F8087683-3DA5-4052-A3F4-D73B26C9B238}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3 Frameworks", "3 Frameworks", "{ADDDF1B9-9DCD-4696-9071-4A01F1C7A1D7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.TelegramClientApp.Entities", "DarkDeeds.TelegramClientApp.Entities\DarkDeeds.TelegramClientApp.Entities.csproj", "{537BAB93-0DB2-4332-96F1-63CC6535DBB6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.TelegramClientApp.Infrastructure", "DarkDeeds.TelegramClientApp.Infrastructure\DarkDeeds.TelegramClientApp.Infrastructure.csproj", "{95562C35-BF20-4DA4-946B-30D98BF86000}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.TelegramClientApp.Services", "DarkDeeds.TelegramClientApp.Services\DarkDeeds.TelegramClientApp.Services.csproj", "{199B0480-FE78-461D-97C8-D9E6475F961E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.TelegramClientApp.Tests", "DarkDeeds.TelegramClientApp.Tests\DarkDeeds.TelegramClientApp.Tests.csproj", "{16D86039-079A-47D1-8CF5-C55FEA6620C7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.TelegramClientApp.Data", "DarkDeeds.TelegramClientApp.Data\DarkDeeds.TelegramClientApp.Data.csproj", "{584AAB98-178B-416B-9C81-5FE59B3F2296}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.TelegramClientApp.Communication", "DarkDeeds.TelegramClientApp.Communication\DarkDeeds.TelegramClientApp.Communication.csproj", "{8B5854FF-81BB-45E5-B912-3A5B9240668F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4 Deps", "4 Deps", "{110C55B1-C364-4D01-B28F-62680326D761}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.Authentication", "..\..\..\libs\DarkDeeds.Authentication\DarkDeeds.Authentication\DarkDeeds.Authentication.csproj", "{81AA2C88-E4E2-46A9-BEC4-EFB328CD59AA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{58042605-1EAB-4021-85FF-F4705A5BD326}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{58042605-1EAB-4021-85FF-F4705A5BD326}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{58042605-1EAB-4021-85FF-F4705A5BD326}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{58042605-1EAB-4021-85FF-F4705A5BD326}.Release|Any CPU.Build.0 = Release|Any CPU
+		{537BAB93-0DB2-4332-96F1-63CC6535DBB6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{537BAB93-0DB2-4332-96F1-63CC6535DBB6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{537BAB93-0DB2-4332-96F1-63CC6535DBB6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{537BAB93-0DB2-4332-96F1-63CC6535DBB6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{95562C35-BF20-4DA4-946B-30D98BF86000}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{95562C35-BF20-4DA4-946B-30D98BF86000}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{95562C35-BF20-4DA4-946B-30D98BF86000}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{95562C35-BF20-4DA4-946B-30D98BF86000}.Release|Any CPU.Build.0 = Release|Any CPU
+		{199B0480-FE78-461D-97C8-D9E6475F961E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{199B0480-FE78-461D-97C8-D9E6475F961E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{199B0480-FE78-461D-97C8-D9E6475F961E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{199B0480-FE78-461D-97C8-D9E6475F961E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{16D86039-079A-47D1-8CF5-C55FEA6620C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{16D86039-079A-47D1-8CF5-C55FEA6620C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{16D86039-079A-47D1-8CF5-C55FEA6620C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{16D86039-079A-47D1-8CF5-C55FEA6620C7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{584AAB98-178B-416B-9C81-5FE59B3F2296}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{584AAB98-178B-416B-9C81-5FE59B3F2296}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{584AAB98-178B-416B-9C81-5FE59B3F2296}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{584AAB98-178B-416B-9C81-5FE59B3F2296}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8B5854FF-81BB-45E5-B912-3A5B9240668F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8B5854FF-81BB-45E5-B912-3A5B9240668F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8B5854FF-81BB-45E5-B912-3A5B9240668F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8B5854FF-81BB-45E5-B912-3A5B9240668F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{81AA2C88-E4E2-46A9-BEC4-EFB328CD59AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{81AA2C88-E4E2-46A9-BEC4-EFB328CD59AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{81AA2C88-E4E2-46A9-BEC4-EFB328CD59AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{81AA2C88-E4E2-46A9-BEC4-EFB328CD59AA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{58042605-1EAB-4021-85FF-F4705A5BD326} = {ADDDF1B9-9DCD-4696-9071-4A01F1C7A1D7}
+		{537BAB93-0DB2-4332-96F1-63CC6535DBB6} = {7DB67F1B-B22B-4A1F-8E7C-E9990FE15F0B}
+		{95562C35-BF20-4DA4-946B-30D98BF86000} = {F8087683-3DA5-4052-A3F4-D73B26C9B238}
+		{199B0480-FE78-461D-97C8-D9E6475F961E} = {F8087683-3DA5-4052-A3F4-D73B26C9B238}
+		{16D86039-079A-47D1-8CF5-C55FEA6620C7} = {ADDDF1B9-9DCD-4696-9071-4A01F1C7A1D7}
+		{584AAB98-178B-416B-9C81-5FE59B3F2296} = {ADDDF1B9-9DCD-4696-9071-4A01F1C7A1D7}
+		{8B5854FF-81BB-45E5-B912-3A5B9240668F} = {ADDDF1B9-9DCD-4696-9071-4A01F1C7A1D7}
+		{81AA2C88-E4E2-46A9-BEC4-EFB328CD59AA} = {110C55B1-C364-4D01-B28F-62680326D761}
+	EndGlobalSection
+EndGlobal

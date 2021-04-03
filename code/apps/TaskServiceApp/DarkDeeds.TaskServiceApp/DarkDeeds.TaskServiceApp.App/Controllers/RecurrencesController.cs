@@ -9,7 +9,7 @@ namespace DarkDeeds.TaskServiceApp.App.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class RecurrencesController : Controller
+    public class RecurrencesController : ControllerBase
     {
         private readonly IRecurrenceCreatorService _recurrenceCreatorService;
         private readonly IRecurrenceService _recurrenceService;

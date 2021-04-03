@@ -9,6 +9,9 @@
     </ItemGroup>
 
     <ItemGroup>
+      <PackageReference Include="Microsoft.AspNetCore.Authentication.Abstractions" Version="2.2.0" />
+      <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
+      <PackageReference Include="Microsoft.Net.Http.Headers" Version="2.2.8" />
       <PackageReference Include="System.Text.Json" Version="5.0.1" />
     </ItemGroup>
 

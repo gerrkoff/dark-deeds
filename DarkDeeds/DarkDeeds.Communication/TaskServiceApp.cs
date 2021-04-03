@@ -3,12 +3,17 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using DarkDeeds.Infrastructure.Communication.TaskServiceApp;
 using DarkDeeds.Infrastructure.Communication.TaskServiceApp.Dto;
+using Microsoft.AspNetCore.Http;
 
 namespace DarkDeeds.Communication
 {
     public class TaskServiceApp : ServiceAppBase, ITaskServiceApp
     {
         private const string Url = "http://localhost:5001/api";
+        
+        public TaskServiceApp(IHttpContextAccessor httpContextAccessor) : base(httpContextAccessor)
+        {
+        }
 
         public async Task<IEnumerable<TaskDto>> LoadActualTasksAsync(string userId, DateTime from)
         {

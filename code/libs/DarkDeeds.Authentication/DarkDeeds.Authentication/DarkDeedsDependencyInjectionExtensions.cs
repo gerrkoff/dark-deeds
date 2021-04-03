@@ -11,12 +11,15 @@ namespace Microsoft.Extensions.DependencyInjection
     public static class DarkDeedsDependencyInjectionExtensions
     {
         private const string AuthSection = "Auth";
-        
-        public static void AddDarkDeedsAuth(this IServiceCollection services, IConfiguration configuration)
+
+        public static void AddDarkDeedsAuthTokenService(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddScoped<ITokenService, TokenService>();
             services.Configure<AuthSettings>(options => configuration.GetSection(AuthSection).Bind(options));
+        }
 
+        public static void AddDarkDeedsAuth(this IServiceCollection services, IConfiguration configuration)
+        {
             AuthSettings authSettings = configuration.GetSection(AuthSection).Get<AuthSettings>();
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>

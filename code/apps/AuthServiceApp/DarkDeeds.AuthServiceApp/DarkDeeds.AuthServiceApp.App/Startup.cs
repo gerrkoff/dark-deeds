@@ -21,7 +21,7 @@ namespace DarkDeeds.AuthServiceApp.App
             services.AddAuthIdentity();
             services.AddAuthServices();
             services.AddAuthDatabase(Configuration);
-            services.AddDarkDeedsAuth(Configuration);
+            services.AddDarkDeedsAuthTokenService(Configuration);
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
