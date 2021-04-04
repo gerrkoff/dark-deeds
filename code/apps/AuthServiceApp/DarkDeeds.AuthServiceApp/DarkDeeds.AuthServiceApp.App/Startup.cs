@@ -1,5 +1,7 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -21,9 +23,15 @@ namespace DarkDeeds.AuthServiceApp.App
             services.AddAuthIdentity();
             services.AddAuthServices();
             services.AddAuthDatabase(Configuration);
-            services.AddDarkDeedsAuthTokenService(Configuration);
+            services.AddDarkDeedsAuth(Configuration);
 
-            services.AddControllers();
+            services.AddControllers(options =>
+            {
+                var authRequired = new AuthorizationPolicyBuilder()
+                    .RequireAuthenticatedUser()
+                    .Build();
+                options.Filters.Add(new AuthorizeFilter(authRequired));
+            });
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo {Title = "DarkDeeds.AuthServiceApp", Version = "v1"});
@@ -32,7 +40,7 @@ namespace DarkDeeds.AuthServiceApp.App
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
+            if (!env.IsProduction())
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();

@@ -1,10 +1,11 @@
 FROM mcr.microsoft.com/dotnet/sdk:5.0-focal
 
+COPY code/apps/AuthServiceApp /app/code/apps/AuthServiceApp
+COPY code/libs/DarkDeeds.Authentication /app/code/libs/DarkDeeds.Authentication
+COPY infrastructure/apps/AuthServiceApp/entry.sh /app/code/apps/AuthServiceApp/DarkDeeds.AuthServiceApp/DarkDeeds.AuthServiceApp.App
 
-COPY code /app
-COPY infrastructure/apps/AuthServiceApp/entry.sh /app/
-WORKDIR /app
+WORKDIR /app/code/apps/AuthServiceApp/DarkDeeds.AuthServiceApp/DarkDeeds.AuthServiceApp.App
 
-ENV ASPNETCORE_URLS=http://0.0.0.0:80
+RUN dotnet build
 
 ENTRYPOINT ["/bin/sh", "-c", "./entry.sh"]

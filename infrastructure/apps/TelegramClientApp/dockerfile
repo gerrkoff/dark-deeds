@@ -1,0 +1,11 @@
+FROM mcr.microsoft.com/dotnet/sdk:5.0-focal
+
+COPY code/apps/TelegramClientApp /app/code/apps/TelegramClientApp
+COPY code/libs/DarkDeeds.Authentication /app/code/libs/DarkDeeds.Authentication
+COPY infrastructure/apps/TelegramClientApp/entry.sh /app/code/apps/TelegramClientApp/DarkDeeds.TelegramClientApp/DarkDeeds.TelegramClientApp.App
+
+WORKDIR /app/code/apps/TelegramClientApp/DarkDeeds.TelegramClientApp/DarkDeeds.TelegramClientApp.App
+
+RUN dotnet build
+
+ENTRYPOINT ["/bin/sh", "-c", "./entry.sh"]

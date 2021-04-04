@@ -43,6 +43,8 @@ namespace DarkDeeds.TelegramClientApp.App
 #endif
             services.AddScoped<ITaskServiceApp, TaskServiceApp>();
             services.AddScoped<ITaskHubService, TaskHubService>();
+            services.Configure<CommunicationSettings>(
+                options => configuration.GetSection("Communication").Bind(options));
         }
 
         public static void AddTelegramClientDatabase(this IServiceCollection services, IConfiguration configuration)

@@ -1,15 +1,15 @@
-if docker network ls | grep -q dark-deeds-nw
+if docker network ls | grep -q dd-network
 then 
    echo "Network has been created already"
 else
-   docker network create -d bridge dark-deeds-nw
+   docker network create -d bridge dd-network
 fi
 
-docker rm -f dark-deeds-db
+docker rm -f dd-postgres-db
 docker run -d \
     -p 5432:5432 \
     -v dark-deeds-psql-volume:/var/lib/postgresql/data \
     -e POSTGRES_PASSWORD=password \
-    --network=dark-deeds-nw \
-    --name dark-deeds-db \
+    --network=dd-network \
+    --name dd-postgres-db \
     postgres:12.0

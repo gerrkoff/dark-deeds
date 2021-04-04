@@ -13,23 +13,22 @@ namespace DarkDeeds.AuthServiceApp.App
     {
         public static void AddAuthIdentity(this IServiceCollection services)
         {
-            IdentityBuilder builder = services.AddIdentityCore<UserEntity>(options =>
-            {
+            services.AddIdentityCore<UserEntity>(options =>
+                {
 #if DEBUG
-                options.Password.RequiredLength = 3;
-                options.Password.RequiredUniqueChars = 0;
-                options.Password.RequireDigit = false;
-                options.Password.RequireLowercase = false;
-                options.Password.RequireUppercase = false;
-                options.Password.RequireNonAlphanumeric = false;
+                    options.Password.RequiredLength = 3;
 #endif
-            });
-            builder = new IdentityBuilder(builder.UserType, typeof(IdentityRole), builder.Services);
-            builder
+                    options.Password.RequiredLength = 8;
+                    options.Password.RequiredUniqueChars = 0;
+                    options.Password.RequireDigit = false;
+                    options.Password.RequireLowercase = false;
+                    options.Password.RequireUppercase = false;
+                    options.Password.RequireNonAlphanumeric = false;
+                })
                 .AddDefaultTokenProviders()
-                .AddEntityFrameworkStores<DarkDeedsAuthContext>();
-            
-            services.AddScoped<UserManager<UserEntity>>();
+                .AddEntityFrameworkStores<DarkDeedsAuthContext>()
+                .AddUserManager<UserManager<UserEntity>>();
+            services.AddHttpContextAccessor();
         }
 
         public static void AddAuthServices(this IServiceCollection services)

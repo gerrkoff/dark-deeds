@@ -19,7 +19,7 @@ namespace DarkDeeds.WebClientBffApp.App
 {
     public static class StartupExtensions
     {
-        public static void AddWebClientBffServices(this IServiceCollection services)
+        public static void AddWebClientBffServices(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddScoped(typeof(IRepositoryNonDeletable<>), typeof(RepositoryNonDeletable<>));
             services.AddScoped<ISettingsService, SettingsService>();
@@ -28,8 +28,9 @@ namespace DarkDeeds.WebClientBffApp.App
             services.AddScoped<ITaskServiceApp, TaskServiceApp>();
             services.AddScoped<IAuthServiceApp, AuthServiceApp>();
             services.AddScoped<ITelegramClientApp, TelegramClientApp>();
-
             services.AddHttpContextAccessor();
+            services.Configure<CommunicationSettings>(
+                options => configuration.GetSection("Communication").Bind(options));
         }
         
         public static void AddWebClientBffAutoMapper(this IServiceCollection services)

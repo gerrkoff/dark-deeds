@@ -2,7 +2,6 @@ using DarkDeeds.WebClientBffApp.App.Hubs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -22,7 +21,7 @@ namespace DarkDeeds.WebClientBffApp.App
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddWebClientBffServices();
+            services.AddWebClientBffServices(Configuration);
             services.AddWebClientBffAutoMapper();
             services.AddWebClientBffDatabase(Configuration);
             services.AddDarkDeedsAuth(Configuration);
@@ -45,7 +44,7 @@ namespace DarkDeeds.WebClientBffApp.App
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
+            if (!env.IsProduction())
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();

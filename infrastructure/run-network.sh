@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
-if docker network ls | grep -q dark-deeds-nw
+if docker network ls | grep -q dd-network
 then 
    echo "Network has been created already"
 else
-   docker network create -d bridge dark-deeds-nw
+   docker network create -d bridge dd-network
 fi

@@ -1,3 +1,3 @@
-cd apps/TaskServiceApp/DarkDeeds.TaskServiceApp/DarkDeeds.TaskServiceApp.App/
-dotnet build
-dotnet bin/Debug/net5.0/DarkDeeds.TaskServiceApp.App.dll
+ASPNETCORE_URLS=http://0.0.0.0:80
+ASPNETCORE_ENVIRONMENT=Staging
+dotnet run --no-launch-profile
