@@ -5,4 +5,5 @@
 ./infrastructure/run-task-service.sh
 ./infrastructure/run-telegram-client.sh
 ./infrastructure/run-web-client-bff.sh
+./infrastructure/run-api-gateway.sh
 ./infrastructure/run-web-client.sh

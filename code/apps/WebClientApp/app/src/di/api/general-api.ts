@@ -11,6 +11,6 @@ export class GeneralApi {
     ) {}
 
     public loadBuildInfo(): Promise<BuildInfo> {
-        return this.api.get<BuildInfo>('api/build-info')
+        return this.api.get<BuildInfo>('web/api/build-info')
     }
 }

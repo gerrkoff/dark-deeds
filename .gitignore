@@ -3,9 +3,9 @@
 bin/
 obj/
 wwwroot/
-appsettings.Development.json
-appsettings.Staging.json
-appsettings.Production.json
+*.Development.json
+*.Staging.json
+*.Production.json
 CI/artifacts/
 node_modules
 build

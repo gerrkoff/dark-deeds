@@ -1,0 +1,57 @@
+{
+  "Routes": [
+    {
+      "DownstreamPathTemplate": "/{path}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "dd-web-client-bff",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/web/{path}",
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE", "OPTIONS" ]
+    },
+    {
+      "DownstreamPathTemplate": "/ws/{path}",
+      "DownstreamScheme": "ws",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "dd-web-client-bff",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/ws/web/{path}",
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE", "OPTIONS" ]
+    },
+
+    {
+      "DownstreamPathTemplate": "/api/bot/{path}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "dd-telegram-client",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/telegram/api/bot/{path}",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    
+    {
+      "DownstreamPathTemplate": "/{path}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "dd-web-client",
+          "Port": 3000
+        }
+      ],
+      "UpstreamPathTemplate": "/{path}",
+      "UpstreamHttpMethod": [ "GET" ]
+    }
+  ],
+  "GlobalConfiguration": {
+    "BaseUrl": "localhost"
+  }
+}

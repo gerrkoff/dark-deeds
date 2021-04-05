@@ -1,0 +1,5 @@
+const express = require('express')
+let app = express()
+app.use(express.static(__dirname + '/build'))
+app.listen(3000)
+console.log('server is listening to 3000 port')
