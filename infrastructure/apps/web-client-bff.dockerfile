@@ -2,7 +2,6 @@ FROM mcr.microsoft.com/dotnet/sdk:5.0-focal
 
 COPY code/apps/WebClientBffApp /app/code/apps/WebClientBffApp
 COPY code/libs/DarkDeeds.Authentication /app/code/libs/DarkDeeds.Authentication
-COPY infrastructure/apps/WebClientBffApp/entry.sh /app/code/apps/WebClientBffApp/DarkDeeds.WebClientBffApp/DarkDeeds.WebClientBffApp.App
 
 WORKDIR /app/code/apps/WebClientBffApp/DarkDeeds.WebClientBffApp/DarkDeeds.WebClientBffApp.App
 

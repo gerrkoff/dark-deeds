@@ -5,7 +5,7 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "dd-web-client-bff",
+          "Host": "web-client-bff",
           "Port": 80
         }
       ],
@@ -17,7 +17,7 @@
       "DownstreamScheme": "ws",
       "DownstreamHostAndPorts": [
         {
-          "Host": "dd-web-client-bff",
+          "Host": "web-client-bff",
           "Port": 80
         }
       ],
@@ -30,7 +30,7 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "dd-telegram-client",
+          "Host": "telegram-client",
           "Port": 80
         }
       ],
@@ -43,7 +43,7 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "dd-web-client",
+          "Host": "web-client",
           "Port": 3000
         }
       ],

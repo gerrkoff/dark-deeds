@@ -1,0 +1,56 @@
+version: '3'
+
+services:
+  postgres-db:
+    image: postgres:13.0-alpine
+    environment:
+      - POSTGRES_PASSWORD=password
+    volumes:
+      - postgres-db-volume:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+
+  api-gateway:
+    build:
+      context: ../
+      dockerfile: infrastructure/apps/api-gateway.dockerfile
+    ports:
+      - 5000:80
+
+  auth-service:
+    build:
+      context: ../
+      dockerfile: infrastructure/apps/auth-service.dockerfile
+    ports:
+      - 5002:80
+
+  task-service:
+    build:
+      context: ../
+      dockerfile: infrastructure/apps/task-service.dockerfile
+    ports:
+      - 5001:80
+
+  telegram-client:
+    build:
+      context: ../
+      dockerfile: infrastructure/apps/telegram-client.dockerfile
+    ports:
+      - 5003:80
+
+  web-client:
+    build:
+      context: ../
+      dockerfile: infrastructure/apps/web-client.dockerfile
+    ports:
+      - 3000:3000
+
+  web-client-bff:
+    build:
+      context: ../
+      dockerfile: infrastructure/apps/web-client-bff.dockerfile
+    ports:
+      - 5004:80
+
+volumes:
+  postgres-db-volume:
