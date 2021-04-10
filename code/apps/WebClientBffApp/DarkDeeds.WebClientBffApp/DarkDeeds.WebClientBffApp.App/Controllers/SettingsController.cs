@@ -1,8 +1,9 @@
 ﻿using System.Threading.Tasks;
-using DarkDeeds.Authentication;
 using DarkDeeds.WebClientBffApp.App.Controllers.Base;
 using DarkDeeds.WebClientBffApp.Services.Dto;
-using DarkDeeds.WebClientBffApp.Services.Interface;
+using DarkDeeds.WebClientBffApp.UseCases.Handlers.Settings.Load;
+using DarkDeeds.WebClientBffApp.UseCases.Handlers.Settings.Save;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DarkDeeds.WebClientBffApp.App.Controllers
@@ -11,23 +12,23 @@ namespace DarkDeeds.WebClientBffApp.App.Controllers
     [ApiController]
     public class SettingsController : BaseController
     {
-        private readonly ISettingsService _settingsService;
+        private readonly IMediator _mediator;
 
-        public SettingsController(ISettingsService settingsService)
+        public SettingsController(IMediator mediator)
         {
-            _settingsService = settingsService;
+            _mediator = mediator;
         }
 
         [HttpGet]
         public Task<SettingsDto> Get()
         {
-            return _settingsService.LoadAsync(User.ToAuthToken().UserId);
+            return _mediator.Send(new LoadRequestModel());
         }
         
         [HttpPost]
         public Task Post([FromBody] SettingsDto settings)
         {
-            return _settingsService.SaveAsync(settings, User.ToAuthToken().UserId);
+            return _mediator.Send(new SaveRequestModel(settings));
         }
     }
 }

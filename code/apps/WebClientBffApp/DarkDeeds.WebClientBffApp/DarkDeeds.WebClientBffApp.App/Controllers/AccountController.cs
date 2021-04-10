@@ -1,10 +1,11 @@
 ﻿using System.Threading.Tasks;
-using DarkDeeds.Authentication;
-using DarkDeeds.Authentication.Models;
 using DarkDeeds.WebClientBffApp.App.Controllers.Base;
-using DarkDeeds.WebClientBffApp.App.Dto;
-using DarkDeeds.WebClientBffApp.Infrastructure.Communication.AuthServiceApp;
 using DarkDeeds.WebClientBffApp.Infrastructure.Communication.AuthServiceApp.Dto;
+using DarkDeeds.WebClientBffApp.UseCases.Handlers.Account.Dto;
+using DarkDeeds.WebClientBffApp.UseCases.Handlers.Account.GetCurrentUser;
+using DarkDeeds.WebClientBffApp.UseCases.Handlers.Account.SignIn;
+using DarkDeeds.WebClientBffApp.UseCases.Handlers.Account.SignUp;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,39 +16,31 @@ namespace DarkDeeds.WebClientBffApp.App.Controllers
     [ApiController]
     public class AccountController : BaseController
     {
-        private readonly IAuthServiceApp _authServiceApp;
+        private readonly IMediator _mediator;
 
-        public AccountController(IAuthServiceApp authServiceApp)
+        public AccountController(IMediator mediator)
         {
-            _authServiceApp = authServiceApp;
+            _mediator = mediator;
         }
 
         [HttpPost(nameof(SignUp))]
         public Task<SignUpResultDto> SignUp(SignUpInfoDto signUpInfo)
         {
             Validate();
-            return _authServiceApp.SignUpAsync(signUpInfo);
+            return _mediator.Send(new SignUpRequestModel(signUpInfo));
         }
 
         [HttpPost(nameof(SignIn))]
         public Task<SignInResultDto> SignIn(SignInInfoDto signInInfo)
         {
             Validate();
-            return _authServiceApp.SignInAsync(signInInfo);
+            return _mediator.Send(new SignInRequestModel(signInInfo));
         }
 
         [HttpGet]
-        public CurrentUserDto Current()
+        public Task<CurrentUserDto> Current()
         {
-            return User.Identity != null && User.Identity.IsAuthenticated
-                ? ToDto(User.ToAuthToken())
-                : new CurrentUserDto();
-
-            CurrentUserDto ToDto(AuthToken user) => new()
-            {
-                Username = user.DisplayName,
-                UserAuthenticated = !string.IsNullOrEmpty(user.Username)
-            };
+            return _mediator.Send(new GetCurrentUserRequestModel());
         }
     }
 }

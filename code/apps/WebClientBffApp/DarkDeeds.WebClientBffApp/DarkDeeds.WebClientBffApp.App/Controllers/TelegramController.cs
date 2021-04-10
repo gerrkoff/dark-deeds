@@ -1,7 +1,8 @@
 ﻿using System.Threading.Tasks;
 using DarkDeeds.WebClientBffApp.App.Controllers.Base;
-using DarkDeeds.WebClientBffApp.Infrastructure.Communication.TelegramClientApp;
 using DarkDeeds.WebClientBffApp.Infrastructure.Communication.TelegramClientApp.Dto;
+using DarkDeeds.WebClientBffApp.UseCases.Handlers.Telegram.Start;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DarkDeeds.WebClientBffApp.App.Controllers
@@ -10,17 +11,17 @@ namespace DarkDeeds.WebClientBffApp.App.Controllers
     [ApiController]
     public class TelegramController : BaseController
     {
-        private readonly ITelegramClientApp _telegramClientApp;
+        private readonly IMediator _mediator;
 
-        public TelegramController(ITelegramClientApp telegramClientApp)
+        public TelegramController(IMediator mediator)
         {
-            _telegramClientApp = telegramClientApp;
+            _mediator = mediator;
         }
 
         [HttpGet]
         public Task<TelegramStartDto> Start(int timezoneOffset)
         {
-            return _telegramClientApp.Start(timezoneOffset);
+            return _mediator.Send(new StartRequestModel(timezoneOffset));
         }
     }
 }

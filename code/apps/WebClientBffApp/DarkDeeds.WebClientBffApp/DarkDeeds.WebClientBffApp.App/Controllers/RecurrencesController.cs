@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using DarkDeeds.Authentication;
 using DarkDeeds.WebClientBffApp.App.Controllers.Base;
-using DarkDeeds.WebClientBffApp.Infrastructure.Communication.TaskServiceApp;
 using DarkDeeds.WebClientBffApp.Infrastructure.Communication.TaskServiceApp.Dto;
-using Microsoft.AspNetCore.Authentication;
+using DarkDeeds.WebClientBffApp.UseCases.Handlers.Recurrences.Create;
+using DarkDeeds.WebClientBffApp.UseCases.Handlers.Recurrences.Load;
+using DarkDeeds.WebClientBffApp.UseCases.Handlers.Recurrences.Save;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DarkDeeds.WebClientBffApp.App.Controllers
@@ -13,30 +14,30 @@ namespace DarkDeeds.WebClientBffApp.App.Controllers
     [ApiController]
     public class RecurrencesController : BaseController
     {
-        private readonly ITaskServiceApp _taskServiceApp;
+        private readonly IMediator _mediator;
 
-        public RecurrencesController(ITaskServiceApp taskServiceApp)
+        public RecurrencesController(IMediator mediator)
         {
-            _taskServiceApp = taskServiceApp;
+            _mediator = mediator;
         }
 
         [Route("create")]
         [HttpPost]
         public Task<int> Create(int timezoneOffset)
         {
-            return _taskServiceApp.CreateRecurrencesAsync(timezoneOffset, User.ToAuthToken().UserId);
+            return _mediator.Send(new CreateRequestModel(timezoneOffset));
         }
         
         [HttpGet]
-        public async Task<IEnumerable<PlannedRecurrenceDto>> Get()
+        public Task<IEnumerable<PlannedRecurrenceDto>> Get()
         {
-            return await _taskServiceApp.LoadRecurrencesAsync(User.ToAuthToken().UserId);
+            return _mediator.Send(new LoadRequestModel());
         }
         
         [HttpPost]
         public Task<int> Post([FromBody] ICollection<PlannedRecurrenceDto> recurrences)
         {
-            return _taskServiceApp.SaveRecurrencesAsync(recurrences, User.ToAuthToken().UserId);
+            return _mediator.Send(new SaveRequestModel(recurrences));
         }
     }
 }

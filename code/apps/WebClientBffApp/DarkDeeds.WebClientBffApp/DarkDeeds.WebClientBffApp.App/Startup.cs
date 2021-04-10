@@ -1,12 +1,14 @@
+using DarkDeeds.Authentication.DependencyInjection;
 using DarkDeeds.WebClientBffApp.App.Hubs;
-using Microsoft.AspNetCore.Authorization;
+using DarkDeeds.WebClientBffApp.Communication;
+using DarkDeeds.WebClientBffApp.Data;
+using DarkDeeds.WebClientBffApp.Services;
+using DarkDeeds.WebClientBffApp.UseCases;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.OpenApi.Models;
 
 namespace DarkDeeds.WebClientBffApp.App
 {
@@ -21,25 +23,14 @@ namespace DarkDeeds.WebClientBffApp.App
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddWebClientBffServices(Configuration);
-            services.AddWebClientBffAutoMapper();
-            services.AddWebClientBffDatabase(Configuration);
             services.AddDarkDeedsAuth(Configuration);
-
-            services.AddHostedService<HubHeartbeat<TaskHub>>();
-            services.AddSignalR()
-                .AddHubOptions<TaskHub>(options => options.EnableDetailedErrors = true);
-            services.AddControllers(options =>
-            {
-                var authRequired = new AuthorizationPolicyBuilder()
-                    .RequireAuthenticatedUser()
-                    .Build();
-                options.Filters.Add(new AuthorizeFilter(authRequired));
-            });
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "DarkDeeds.WebClientBffApp", Version = "v1" });
-            });
+            services.AddWebClientBffServices();
+            services.AddWebClientBffUseCases();
+            services.AddWebClientBffCommunications(Configuration);
+            services.AddWebClientBffData(Configuration);
+            services.AddWebClientBffCommonServices();
+            services.AddWebClientBffApi();
+            services.AddWebClientBffSockets();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -50,7 +41,7 @@ namespace DarkDeeds.WebClientBffApp.App
                 app.UseSwagger();
                 app.UseSwaggerUI(c =>
                 {
-                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "DarkDeeds.WebClientBffApp v1");
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "DarkDeeds.WebClientBff v1");
                     c.RoutePrefix = string.Empty;
                 });
                 app.UseCors(builder => builder
@@ -63,6 +54,7 @@ namespace DarkDeeds.WebClientBffApp.App
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
+            app.UseDarkDeedsAuthToken();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

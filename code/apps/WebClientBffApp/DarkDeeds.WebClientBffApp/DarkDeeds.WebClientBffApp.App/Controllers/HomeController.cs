@@ -1,5 +1,4 @@
-﻿using System.Reflection;
-using DarkDeeds.WebClientBffApp.App.Dto;
+﻿using DarkDeeds.Common.Misc;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,14 +9,9 @@ namespace DarkDeeds.WebClientBffApp.App.Controllers
     {
         [Route("api/build-info")]
         [HttpGet]
-        public BuildInfoDto BuildInfo()
+        public BuildInfo BuildInfo()
         {
-            return new()
-            {
-                Version = Assembly.GetExecutingAssembly()
-                    .GetCustomAttribute<AssemblyInformationalVersionAttribute>()?
-                    .InformationalVersion
-            };
+            return new(typeof(Startup), null);
         }
     }
 }

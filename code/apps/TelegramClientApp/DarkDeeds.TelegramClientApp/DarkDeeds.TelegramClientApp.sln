@@ -24,6 +24,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4 Deps", "4 Deps", "{110C55
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.Authentication", "..\..\..\libs\DarkDeeds.Authentication\DarkDeeds.Authentication\DarkDeeds.Authentication.csproj", "{81AA2C88-E4E2-46A9-BEC4-EFB328CD59AA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.Authentication.DependencyInjection", "..\..\..\libs\DarkDeeds.Authentication\DarkDeeds.Authentication.DependencyInjection\DarkDeeds.Authentication.DependencyInjection.csproj", "{A7103D42-B6FD-40CE-978B-A3913A50C3C1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -62,6 +64,10 @@ Global
 		{81AA2C88-E4E2-46A9-BEC4-EFB328CD59AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{81AA2C88-E4E2-46A9-BEC4-EFB328CD59AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{81AA2C88-E4E2-46A9-BEC4-EFB328CD59AA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A7103D42-B6FD-40CE-978B-A3913A50C3C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A7103D42-B6FD-40CE-978B-A3913A50C3C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A7103D42-B6FD-40CE-978B-A3913A50C3C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A7103D42-B6FD-40CE-978B-A3913A50C3C1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{58042605-1EAB-4021-85FF-F4705A5BD326} = {ADDDF1B9-9DCD-4696-9071-4A01F1C7A1D7}
@@ -72,5 +78,6 @@ Global
 		{584AAB98-178B-416B-9C81-5FE59B3F2296} = {ADDDF1B9-9DCD-4696-9071-4A01F1C7A1D7}
 		{8B5854FF-81BB-45E5-B912-3A5B9240668F} = {ADDDF1B9-9DCD-4696-9071-4A01F1C7A1D7}
 		{81AA2C88-E4E2-46A9-BEC4-EFB328CD59AA} = {110C55B1-C364-4D01-B28F-62680326D761}
+		{A7103D42-B6FD-40CE-978B-A3913A50C3C1} = {110C55B1-C364-4D01-B28F-62680326D761}
 	EndGlobalSection
 EndGlobal

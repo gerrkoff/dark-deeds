@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
-using DarkDeeds.Authentication;
 using DarkDeeds.WebClientBffApp.App.Controllers.Base;
-using DarkDeeds.WebClientBffApp.Infrastructure.Communication.TaskServiceApp;
 using DarkDeeds.WebClientBffApp.Infrastructure.Communication.TaskServiceApp.Dto;
+using DarkDeeds.WebClientBffApp.UseCases.Handlers.Tasks.LoadActual;
+using DarkDeeds.WebClientBffApp.UseCases.Handlers.Tasks.Save;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DarkDeeds.WebClientBffApp.App.Controllers
@@ -14,23 +15,23 @@ namespace DarkDeeds.WebClientBffApp.App.Controllers
     [ApiController]
     public class TasksController : BaseController
     {
-        private readonly ITaskServiceApp _taskServiceApp;
+        private readonly IMediator _mediator;
 
-        public TasksController(ITaskServiceApp taskServiceApp)
+        public TasksController(IMediator mediator)
         {
-            _taskServiceApp = taskServiceApp;
+            _mediator = mediator;
         }
 
         [HttpGet]
         public Task<IEnumerable<TaskDto>> Get([Required] DateTime from)
         {
-            return _taskServiceApp.LoadActualTasksAsync(User.ToAuthToken().UserId, from);
+            return _mediator.Send(new LoadActualRequestModel(from));
         }
         
         [HttpPost]
         public Task<IEnumerable<TaskDto>> Post([FromBody] ICollection<TaskDto> tasks)
         {
-            return _taskServiceApp.SaveTasksAsync(tasks, User.ToAuthToken().UserId);
+            return _mediator.Send(new SaveRequestModel(tasks));
         }
     }
 }

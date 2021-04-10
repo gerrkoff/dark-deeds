@@ -9,7 +9,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\..\..\libs\DarkDeeds.Authentication\DarkDeeds.Authentication\DarkDeeds.Authentication.csproj" />
+      <ProjectReference Include="..\..\..\..\libs\DarkDeeds.Authentication\DarkDeeds.Authentication.DependencyInjection\DarkDeeds.Authentication.DependencyInjection.csproj" />
       <ProjectReference Include="..\DarkDeeds.TelegramClientApp.Communication\DarkDeeds.TelegramClientApp.Communication.csproj" />
       <ProjectReference Include="..\DarkDeeds.TelegramClientApp.Data\DarkDeeds.TelegramClientApp.Data.csproj" />
       <ProjectReference Include="..\DarkDeeds.TelegramClientApp.Services\DarkDeeds.TelegramClientApp.Services.csproj" />

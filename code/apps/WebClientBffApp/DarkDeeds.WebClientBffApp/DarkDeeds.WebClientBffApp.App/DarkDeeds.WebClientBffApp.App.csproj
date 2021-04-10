@@ -2,6 +2,7 @@
 
     <PropertyGroup>
         <TargetFramework>net5.0</TargetFramework>
+        <VersionPrefix>1.0.0</VersionPrefix>
     </PropertyGroup>
 
     <ItemGroup>
@@ -9,10 +10,12 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\..\..\libs\DarkDeeds.Authentication\DarkDeeds.Authentication\DarkDeeds.Authentication.csproj" />
+      <ProjectReference Include="..\..\..\..\libs\DarkDeeds.Authentication\DarkDeeds.Authentication.DependencyInjection\DarkDeeds.Authentication.DependencyInjection.csproj" />
+      <ProjectReference Include="..\..\..\..\libs\DarkDeeds.Common\DarkDeeds.Common\DarkDeeds.Common.csproj" />
       <ProjectReference Include="..\DarkDeeds.WebClientBffApp.Communication\DarkDeeds.WebClientBffApp.Communication.csproj" />
       <ProjectReference Include="..\DarkDeeds.WebClientBffApp.Data\DarkDeeds.WebClientBffApp.Data.csproj" />
       <ProjectReference Include="..\DarkDeeds.WebClientBffApp.Services\DarkDeeds.WebClientBffApp.Services.csproj" />
+      <ProjectReference Include="..\DarkDeeds.WebClientBffApp.UseCases\DarkDeeds.WebClientBffApp.UseCases.csproj" />
     </ItemGroup>
 
 </Project>
