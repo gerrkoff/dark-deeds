@@ -25,6 +25,7 @@ namespace DarkDeeds.TaskServiceApp.Services.Implementation
         private readonly ILogger<RecurrenceCreatorService> _logger;
         private readonly ITaskParserService _taskParserService;
         private readonly ITaskHubService _taskHubService;
+        private readonly IMapper _mapper;
 
         public RecurrenceCreatorService(
             IRepository<TaskEntity> taskRepository,
@@ -33,7 +34,8 @@ namespace DarkDeeds.TaskServiceApp.Services.Implementation
             IDateService dateService,
             ILogger<RecurrenceCreatorService> logger,
             ITaskParserService taskParserService,
-            ITaskHubService taskHubService)
+            ITaskHubService taskHubService, 
+            IMapper mapper)
         {
             _taskRepository = taskRepository;
             _plannedRecurrenceRepository = plannedRecurrenceRepository;
@@ -42,6 +44,7 @@ namespace DarkDeeds.TaskServiceApp.Services.Implementation
             _logger = logger;
             _taskParserService = taskParserService;
             _taskHubService = taskHubService;
+            _mapper = mapper;
         }
 
         public async Task<int> CreateAsync(int timezoneOffset, string userId)
@@ -77,14 +80,14 @@ namespace DarkDeeds.TaskServiceApp.Services.Implementation
 
         private void Notify(TaskEntity task)
         {
-            var dto = Mapper.Map<TaskDto>(task);
+            var dto = _mapper.Map<TaskDto>(task);
             _taskHubService.Update(new[] {dto});
         }
 
         private TaskEntity CreateTaskFromRecurrence(PlannedRecurrenceEntity plannedRecurrence, DateTime date)
         {
             TaskDto dto = _taskParserService.ParseTask(plannedRecurrence.Task, ignoreDate: true);
-            var task = Mapper.Map<TaskEntity>(dto);
+            var task = _mapper.Map<TaskEntity>(dto);
             task.Date = date;
             task.UserId = plannedRecurrence.UserId;
             return task;

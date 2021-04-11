@@ -5,12 +5,13 @@ namespace DarkDeeds.TaskServiceApp.Tests
 {
     public class BaseTest
     {
+        protected static readonly IMapper Mapper;
         static BaseTest()
         {
-            Mapper.Initialize(cfg =>
-            {
+            var config = new MapperConfiguration(cfg => {
                 cfg.AddProfile<ModelsMappingProfile>();
             });
+            Mapper = config.CreateMapper();
         }
     }
 }

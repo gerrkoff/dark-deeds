@@ -1,9 +1,11 @@
+using DarkDeeds.Authentication.DependencyInjection;
+using DarkDeeds.TaskServiceApp.ContractImpl;
+using DarkDeeds.TaskServiceApp.ContractImpl.Contract;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.OpenApi.Models;
 
 namespace DarkDeeds.TaskServiceApp.App
 {
@@ -18,15 +20,15 @@ namespace DarkDeeds.TaskServiceApp.App
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDarkDeedsAuth(Configuration);
+            
             services.AddTaskServices(Configuration);
             services.AddTaskAutoMapper();
             services.AddTaskDatabase(Configuration);
+            
+            services.AddTaskServiceContractImpl();
 
-            services.AddControllers();
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo {Title = "DarkDeeds.TaskServiceApp", Version = "v1"});
-            });
+            services.AddTaskServiceApi();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -37,7 +39,7 @@ namespace DarkDeeds.TaskServiceApp.App
                 app.UseSwagger();
                 app.UseSwaggerUI(c =>
                 {
-                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "DarkDeeds.TaskServiceApp v1");
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "DarkDeeds.TaskService v1");
                     c.RoutePrefix = string.Empty;
                 });
             }
@@ -45,7 +47,17 @@ namespace DarkDeeds.TaskServiceApp.App
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
-            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapGrpcService<ParserServiceImpl>();
+                endpoints.MapGrpcService<TaskServiceImpl>();
+                endpoints.MapGrpcService<RecurrenceServiceImpl>();
+                if (!env.IsProduction())
+                {
+                    endpoints.MapGrpcReflectionService();
+                }
+                endpoints.MapControllers();
+            });
         }
     }
 }

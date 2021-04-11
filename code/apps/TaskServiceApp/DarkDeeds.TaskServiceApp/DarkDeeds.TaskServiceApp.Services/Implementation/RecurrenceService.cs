@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using DarkDeeds.TaskServiceApp.EfCoreExtensions;
 using DarkDeeds.TaskServiceApp.Entities.Models;
 using DarkDeeds.TaskServiceApp.Infrastructure.Data;
@@ -17,19 +16,20 @@ namespace DarkDeeds.TaskServiceApp.Services.Implementation
     {
         private readonly IRepository<PlannedRecurrenceEntity> _plannedRecurrenceRepository;
         private readonly IPermissionsService _permissionsService;
+        private readonly IMapper _mapper;
 
-        public RecurrenceService(IRepository<PlannedRecurrenceEntity> plannedRecurrenceRepository, IPermissionsService permissionsService)
+        public RecurrenceService(IRepository<PlannedRecurrenceEntity> plannedRecurrenceRepository, IPermissionsService permissionsService, IMapper mapper)
         {
             _plannedRecurrenceRepository = plannedRecurrenceRepository;
             _permissionsService = permissionsService;
+            _mapper = mapper;
         }
 
         public async Task<IEnumerable<PlannedRecurrenceDto>> LoadAsync(string userId)
         {
-            return (await _plannedRecurrenceRepository.GetAll()
-                .Where(x => string.Equals(x.UserId, userId))
-                .ProjectTo<PlannedRecurrenceDto>()
-                .ToListSafeAsync())
+            var recurrences = _plannedRecurrenceRepository.GetAll()
+                .Where(x => string.Equals(x.UserId, userId));
+            return (await _mapper.ProjectTo<PlannedRecurrenceDto>(recurrences).ToListSafeAsync())
                 .ToUtcDate();
         }
 
@@ -51,7 +51,7 @@ namespace DarkDeeds.TaskServiceApp.Services.Implementation
                 }
                 else if (dto.Id < 0)
                 {
-                    PlannedRecurrenceEntity entity = Mapper.Map<PlannedRecurrenceEntity>(dto);
+                    PlannedRecurrenceEntity entity = _mapper.Map<PlannedRecurrenceEntity>(dto);
                     entity.Id = 0;
                     entity.UserId = userId;
                     await _plannedRecurrenceRepository.SaveAsync(entity);

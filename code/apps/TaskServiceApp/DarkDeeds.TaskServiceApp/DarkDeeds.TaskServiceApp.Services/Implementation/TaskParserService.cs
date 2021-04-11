@@ -160,17 +160,9 @@ namespace DarkDeeds.TaskServiceApp.Services.Implementation
             return dateTime;
         }
 
-        public string PrintTasks(IEnumerable<TaskDto> tasks)
+        public IList<string> PrintTasks(IEnumerable<TaskDto> tasks)
         {
-            var sb = new StringBuilder();
-            foreach (var task in tasks)
-            {
-                if (sb.Length > 0)
-                    sb.AppendLine();
-                sb.Append(TaskToString(task));
-            }
-
-            return sb.ToString();
+            return tasks.Select(TaskToString).ToList();
         }
 
         private string TaskToString(TaskDto task)

@@ -25,7 +25,7 @@ namespace DarkDeeds.TaskServiceApp.App.Controllers
         }
         
         [HttpGet(nameof(Print))]
-        public string Print([FromBody] ICollection<TaskDto> tasks)
+        public IEnumerable<string> Print([FromBody] ICollection<TaskDto> tasks)
         {
             return _taskParserService.PrintTasks(tasks);
         }

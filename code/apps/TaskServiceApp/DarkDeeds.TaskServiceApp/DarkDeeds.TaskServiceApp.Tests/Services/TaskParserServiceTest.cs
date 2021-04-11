@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using DarkDeeds.TaskServiceApp.Entities.Enums;
 using DarkDeeds.TaskServiceApp.Models.Dto;
 using DarkDeeds.TaskServiceApp.Services.Implementation;
@@ -320,7 +321,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services
                 Title = "Task text"
             }});
 
-            Assert.Equal("Task text", result);
+            Assert.Equal("Task text", result.Single());
         }
         
         [Fact]
@@ -335,7 +336,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services
                 Time = 1060
             }});
 
-            Assert.Equal("17:40 Task", result);
+            Assert.Equal("17:40 Task", result.Single());
         }
         
         #endregion

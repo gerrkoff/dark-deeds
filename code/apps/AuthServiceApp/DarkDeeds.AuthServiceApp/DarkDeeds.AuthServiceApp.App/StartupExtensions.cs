@@ -50,14 +50,14 @@ namespace DarkDeeds.AuthServiceApp.App
             });
 
             var buildInfo = new BuildInfo(typeof(Startup),
-                typeof(DarkDeeds.AuthServiceApp.Contract.AuthService));
+                typeof(Contract.AuthService));
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo
                 {
                     Title = "DarkDeeds.AuthService",
                     Version = $"v{buildInfo.AppVersion} ({buildInfo.ContractVersion})",
-                    Description = "Check gRPC contract"
+                    Description = "Check gRPC contract",
                 });
             });
         }

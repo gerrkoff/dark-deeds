@@ -1,7 +1,9 @@
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using DarkDeeds.TaskServiceApp.Entities.Models;
 using DarkDeeds.TaskServiceApp.Models.Dto;
+using DarkDeeds.TaskServiceApp.Models.Mapping;
 using DarkDeeds.TaskServiceApp.Services.Interface;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -16,7 +18,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.TaskService
         {
             var repoMock = Helper.CreateRepoMock<TaskEntity>();
             var permissionMock = new Mock<IPermissionsService>();
-            var service = new TaskServiceApp.Services.Implementation.TaskService(repoMock.Object, null, permissionMock.Object);
+            var service = new TaskServiceApp.Services.Implementation.TaskService(repoMock.Object, null, permissionMock.Object, Mapper);
 
             var list = new TaskDto[0];
             var userId = "userid";
@@ -30,7 +32,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.TaskService
         {
             var repoMock = Helper.CreateRepoMock<TaskEntity>();
             var loggerMock = new Mock<ILogger<TaskServiceApp.Services.Implementation.TaskService>>();
-            var service = new TaskServiceApp.Services.Implementation.TaskService(repoMock.Object, loggerMock.Object, new Mock<IPermissionsService>().Object);
+            var service = new TaskServiceApp.Services.Implementation.TaskService(repoMock.Object, loggerMock.Object, new Mock<IPermissionsService>().Object, Mapper);
 
             var items = new[] {new TaskDto {Id = 1000, ClientId = -1}, new TaskDto {Id = 2000, ClientId = -2}};
             var result = (await service.SaveTasksAsync(items, string.Empty)).ToList();
@@ -44,7 +46,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.TaskService
             var repoMock = Helper.CreateRepoMock(
                 new TaskEntity {Id = 1000, UserId = "1", Version = 10, Title = "Old"});
             var loggerMock = new Mock<ILogger<TaskServiceApp.Services.Implementation.TaskService>>();
-            var service = new TaskServiceApp.Services.Implementation.TaskService(repoMock.Object, loggerMock.Object, new Mock<IPermissionsService>().Object);
+            var service = new TaskServiceApp.Services.Implementation.TaskService(repoMock.Object, loggerMock.Object, new Mock<IPermissionsService>().Object, Mapper);
 
             var items = new[] {new TaskDto {Id = 1000, ClientId = 20, Version = 5, Title = "New"}};
             var result = (await service.SaveTasksAsync(items, "1")).ToList();
@@ -62,7 +64,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.TaskService
         {
             var repoMock = Helper.CreateRepoMock<TaskEntity>();
             var loggerMock = new Mock<ILogger<TaskServiceApp.Services.Implementation.TaskService>>();
-            var service = new TaskServiceApp.Services.Implementation.TaskService(repoMock.Object, loggerMock.Object, new Mock<IPermissionsService>().Object);
+            var service = new TaskServiceApp.Services.Implementation.TaskService(repoMock.Object, loggerMock.Object, new Mock<IPermissionsService>().Object, Mapper);
 
             var items = new[] {new TaskDto {Id = 1000, ClientId = 1}, new TaskDto {Id = 2000, Deleted = true}};
             var result = (await service.SaveTasksAsync(items, string.Empty)).ToList();
@@ -79,7 +81,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.TaskService
             var repoMock = Helper.CreateRepoMock(
                 new TaskEntity {Id = 1000, UserId = "1"});
             var loggerMock = new Mock<ILogger<TaskServiceApp.Services.Implementation.TaskService>>();
-            var service = new TaskServiceApp.Services.Implementation.TaskService(repoMock.Object, loggerMock.Object, new Mock<IPermissionsService>().Object);
+            var service = new TaskServiceApp.Services.Implementation.TaskService(repoMock.Object, loggerMock.Object, new Mock<IPermissionsService>().Object, Mapper);
 
             var items = new[] {new TaskDto {Id = 1000, Deleted = true}};
             await service.SaveTasksAsync(items, "1");
@@ -94,7 +96,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.TaskService
         {
             var repoMock = Helper.CreateRepoMock<TaskEntity>();
             var loggerMock = new Mock<ILogger<TaskServiceApp.Services.Implementation.TaskService>>();
-            var service = new TaskServiceApp.Services.Implementation.TaskService(repoMock.Object, loggerMock.Object, new Mock<IPermissionsService>().Object);
+            var service = new TaskServiceApp.Services.Implementation.TaskService(repoMock.Object, loggerMock.Object, new Mock<IPermissionsService>().Object, Mapper);
 
             var items = new[] {new TaskDto {Id = 1000, ClientId = -1, Title = "Task"}};
             await service.SaveTasksAsync(items, "1");
@@ -115,7 +117,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.TaskService
             var repoMock = Helper.CreateRepoMock(
                 new TaskEntity {Id = 1000, UserId = "1", Title = "Task Old", Version = 100500});
             var loggerMock = new Mock<ILogger<TaskServiceApp.Services.Implementation.TaskService>>();
-            var service = new TaskServiceApp.Services.Implementation.TaskService(repoMock.Object, loggerMock.Object, new Mock<IPermissionsService>().Object);
+            var service = new TaskServiceApp.Services.Implementation.TaskService(repoMock.Object, loggerMock.Object, new Mock<IPermissionsService>().Object, Mapper);
 
             var items = new[] {new TaskDto {Id = 1000, ClientId = 1, Title = "Task New", Version = 100500}};
             await service.SaveTasksAsync(items, "1");
@@ -133,11 +135,18 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.TaskService
         [Fact]
         public async Task SaveTasksAsync_KeepClientIdWhenCreatingOrUpdating()
         {
+            var config = new MapperConfiguration(cfg => {
+                cfg.AddProfile<ModelsMappingProfile>();
+            });
+            var mapper = config.CreateMapper();
+            
+            var q = mapper.ConfigurationProvider.GetMappers().ToList();
+            
             var repoMock = Helper.CreateRepoMock(
                 new TaskEntity {Id = 1000, UserId = "1"},
                 new TaskEntity {Id = 2000, UserId = "1"});
             var loggerMock = new Mock<ILogger<TaskServiceApp.Services.Implementation.TaskService>>();
-            var service = new TaskServiceApp.Services.Implementation.TaskService(repoMock.Object, loggerMock.Object, new Mock<IPermissionsService>().Object);
+            var service = new TaskServiceApp.Services.Implementation.TaskService(repoMock.Object, loggerMock.Object, new Mock<IPermissionsService>().Object, mapper);
 
             var items = new[] {new TaskDto {Id = 1000, ClientId = -1}, new TaskDto {Id = 2000, ClientId = 1}};
             var result = (await service.SaveTasksAsync(items, "1")).ToList();

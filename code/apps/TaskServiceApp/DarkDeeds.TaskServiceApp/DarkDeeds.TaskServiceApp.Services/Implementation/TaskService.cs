@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using DarkDeeds.TaskServiceApp.EfCoreExtensions;
 using DarkDeeds.TaskServiceApp.Entities.Enums;
 using DarkDeeds.TaskServiceApp.Entities.Models;
@@ -21,12 +20,14 @@ namespace DarkDeeds.TaskServiceApp.Services.Implementation
         private readonly IRepository<TaskEntity> _tasksRepository;
         private readonly ILogger<TaskService> _logger;
         private readonly IPermissionsService _permissionsService;
+        private readonly IMapper _mapper;
         
-        public TaskService(IRepository<TaskEntity> tasksRepository, ILogger<TaskService> logger, IPermissionsService permissionsService)
+        public TaskService(IRepository<TaskEntity> tasksRepository, ILogger<TaskService> logger, IPermissionsService permissionsService, IMapper mapper)
         {
             _tasksRepository = tasksRepository;
             _logger = logger;
             _permissionsService = permissionsService;
+            _mapper = mapper;
         }
         
         public async Task<IEnumerable<TaskDto>> LoadActualTasksAsync(string userId, DateTime from)
@@ -38,7 +39,7 @@ namespace DarkDeeds.TaskServiceApp.Services.Implementation
                     !x.Date.HasValue ||
                     x.Date >= from);
             
-            return (await tasks.ProjectTo<TaskDto>().ToListSafeAsync()).ToUtcDate();
+            return (await _mapper.ProjectTo<TaskDto>(tasks).ToListSafeAsync()).ToUtcDate();
         }
 
         public async Task<IEnumerable<TaskDto>> LoadTasksByDateAsync(string userId, DateTime from, DateTime to)
@@ -48,7 +49,7 @@ namespace DarkDeeds.TaskServiceApp.Services.Implementation
                 .Where(x => x.Date.HasValue)
                 .Where(x => x.Date >= from && x.Date < to);
 
-            return (await tasks.ProjectTo<TaskDto>().ToListSafeAsync()).ToUtcDate();
+            return (await _mapper.ProjectTo<TaskDto>(tasks).ToListSafeAsync()).ToUtcDate();
         }
 
         public async Task<IEnumerable<TaskDto>> SaveTasksAsync(ICollection<TaskDto> tasks, string userId)
@@ -101,7 +102,7 @@ namespace DarkDeeds.TaskServiceApp.Services.Implementation
             // create
             if (taskToSave.ClientId <= 0)
             {
-                entity = Mapper.Map<TaskEntity>(taskToSave);
+                entity = _mapper.Map<TaskEntity>(taskToSave);
                 entity.Id = 0;
                 entity.UserId = userId;
                 await _tasksRepository.SaveAsync(entity);
@@ -110,7 +111,7 @@ namespace DarkDeeds.TaskServiceApp.Services.Implementation
             else
             {
                 entity = existingTasks[taskToSave.Id];
-                entity = Mapper.Map(taskToSave, entity);
+                entity = _mapper.Map(taskToSave, entity);
                 entity.Version++;
                 await _tasksRepository.SaveAsync(entity);
             }
@@ -120,7 +121,7 @@ namespace DarkDeeds.TaskServiceApp.Services.Implementation
 
         private TaskDto ConvertTaskToDto(TaskEntity entity, int clientId)
         {
-            var dto = Mapper.Map<TaskDto>(entity);
+            var dto = _mapper.Map<TaskDto>(entity);
             dto.ClientId = clientId;
             return dto;
         }

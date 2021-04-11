@@ -6,6 +6,6 @@ namespace DarkDeeds.TaskServiceApp.Services.Interface
     public interface ITaskParserService
     {
         TaskDto ParseTask(string task, bool ignoreDate = false);
-        string PrintTasks(IEnumerable<TaskDto> tasks);
+        IList<string> PrintTasks(IEnumerable<TaskDto> tasks);
     }
 }
