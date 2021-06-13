@@ -1,5 +1,4 @@
 using System.Threading.Tasks;
-using DarkDeeds.Services.Interface;
 using DarkDeeds.TelegramClientApp.Services.Implementation.CommandProcessor;
 using DarkDeeds.TelegramClientApp.Services.Interface;
 using DarkDeeds.TelegramClientApp.Services.Models.Commands;

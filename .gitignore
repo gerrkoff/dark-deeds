@@ -9,3 +9,4 @@ wwwroot/
 CI/artifacts/
 node_modules
 build
+infrastructure/.env

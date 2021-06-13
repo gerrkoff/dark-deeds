@@ -1,6 +1,6 @@
 using System;
 
-namespace DarkDeeds.Services.Interface
+namespace DarkDeeds.TelegramClientApp.Services.Interface
 {
     public interface IDateService
     {

@@ -4,6 +4,7 @@ using DarkDeeds.AuthServiceApp.ContractImpl.Contract;
 using DarkDeeds.AuthServiceApp.Data;
 using DarkDeeds.AuthServiceApp.Services;
 using DarkDeeds.Common.Validation;
+using DarkDeeds.Communication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -25,6 +26,7 @@ namespace DarkDeeds.AuthServiceApp.App
         {
             services.AddDarkDeedsAuth(Configuration);
             services.AddDarkDeedsValidation();
+            services.AddDarkDeedsAppRegistration("auth-service");
             
             services.AddAuthServiceServices();
             services.AddAuthServiceContractImpl();

@@ -1,4 +1,5 @@
 using DarkDeeds.Authentication.DependencyInjection;
+using DarkDeeds.Communication;
 using DarkDeeds.TaskServiceApp.ContractImpl;
 using DarkDeeds.TaskServiceApp.ContractImpl.Contract;
 using Microsoft.AspNetCore.Builder;
@@ -21,13 +22,12 @@ namespace DarkDeeds.TaskServiceApp.App
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDarkDeedsAuth(Configuration);
+            services.AddDarkDeedsAppRegistration("task-service");
             
             services.AddTaskServices(Configuration);
             services.AddTaskAutoMapper();
             services.AddTaskDatabase(Configuration);
-            
             services.AddTaskServiceContractImpl();
-
             services.AddTaskServiceApi();
         }
 

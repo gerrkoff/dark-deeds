@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 
-namespace DarkDeeds.Services.Interface
+namespace DarkDeeds.TelegramClientApp.Services.Interface
 {
     public interface ITelegramService
     {

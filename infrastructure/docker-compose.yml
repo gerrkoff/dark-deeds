@@ -1,6 +1,11 @@
 version: '3'
 
 services:
+  consul:
+    image: consul
+    ports:
+      - 8500:8500
+      
   postgres-db:
     image: postgres:13.0-alpine
     environment:
@@ -15,28 +20,40 @@ services:
       context: ../
       dockerfile: infrastructure/apps/api-gateway.dockerfile
     ports:
-      - 5000:80
+      - 5000:5000
 
   auth-service:
     build:
       context: ../
       dockerfile: infrastructure/apps/auth-service.dockerfile
     ports:
-      - 5002:80
+      - 5002:5002
+    environment:
+      - DD_SERVICE_DISCOVERY_CONSUL=http://consul:8500
+      - DD_SERVICE_DISCOVERY_HOST=${IP:-auth-service}
+      - DD_SERVICE_DISCOVERY_PORT=5002
 
   task-service:
     build:
       context: ../
       dockerfile: infrastructure/apps/task-service.dockerfile
     ports:
-      - 5001:80
+      - 5001:5001
+    environment:
+      - DD_SERVICE_DISCOVERY_CONSUL=http://consul:8500
+      - DD_SERVICE_DISCOVERY_HOST=${IP:-task-service}
+      - DD_SERVICE_DISCOVERY_PORT=5001
 
   telegram-client:
     build:
       context: ../
       dockerfile: infrastructure/apps/telegram-client.dockerfile
     ports:
-      - 5003:80
+      - 5003:5003
+    environment:
+      - DD_SERVICE_DISCOVERY_CONSUL=http://consul:8500
+      - DD_SERVICE_DISCOVERY_HOST=${IP:-telegram-client}
+      - DD_SERVICE_DISCOVERY_PORT=5003
 
   web-client:
     build:
@@ -50,7 +67,11 @@ services:
       context: ../
       dockerfile: infrastructure/apps/web-client-bff.dockerfile
     ports:
-      - 5004:80
+      - 5004:5004
+    environment:
+      - DD_SERVICE_DISCOVERY_CONSUL=http://consul:8500
+      - DD_SERVICE_DISCOVERY_HOST=${IP:-web-client-bff}
+      - DD_SERVICE_DISCOVERY_PORT=5004
 
 volumes:
   postgres-db-volume:

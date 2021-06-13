@@ -1,17 +1,21 @@
-using DarkDeeds.Services.Interface;
+using DarkDeeds.Common.Misc;
+using DarkDeeds.Communication;
+using DarkDeeds.TaskServiceApp.Contract;
 using DarkDeeds.TelegramClientApp.Communication;
 using DarkDeeds.TelegramClientApp.Data.Context;
 using DarkDeeds.TelegramClientApp.Entities;
 using DarkDeeds.TelegramClientApp.Infrastructure.Communication.TaskServiceApp;
-using DarkDeeds.TelegramClientApp.Infrastructure.Services;
 using DarkDeeds.TelegramClientApp.Services.Implementation;
 using DarkDeeds.TelegramClientApp.Services.Implementation.CommandProcessor;
 using DarkDeeds.TelegramClientApp.Services.Interface;
 using DarkDeeds.TelegramClientApp.Services.Interface.CommandProcessor;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.OpenApi.Models;
 
 namespace DarkDeeds.TelegramClientApp.App
 {
@@ -41,10 +45,13 @@ namespace DarkDeeds.TelegramClientApp.App
 #if DEBUG
             services.AddScoped<IBotSendMessageService>(_ => new BotSendMessageDebugService(configuration["Bot"]));
 #endif
-            services.AddScoped<ITaskServiceApp, TaskServiceApp>();
-            services.AddScoped<ITaskHubService, TaskHubService>();
-            services.Configure<CommunicationSettings>(
-                options => configuration.GetSection("Communication").Bind(options));
+        }
+
+        public static void AddTelegramClientCommunications(this IServiceCollection services)
+        {
+            services.AddDarkDeedsGrpcClientFactory<TaskService.TaskServiceClient>("task-service");
+            services.AddScoped<ITaskServiceApp, Communication.TaskServiceApp>();
+            services.AddAutoMapper(typeof(ModelsMappingProfile));
         }
 
         public static void AddTelegramClientDatabase(this IServiceCollection services, IConfiguration configuration)
@@ -52,6 +59,27 @@ namespace DarkDeeds.TelegramClientApp.App
             string connectionString = configuration.GetConnectionString("appDb");
             services.AddDbContext<DarkDeedsTelegramClientContext>(options => options.UseNpgsql(connectionString));
             services.AddScoped<DbContext, DarkDeedsTelegramClientContext>();
+        }
+
+        public static void AddTelegramClientApi(this IServiceCollection services)
+        {
+            services.AddControllers(options =>
+            {
+                var authRequired = new AuthorizationPolicyBuilder()
+                    .RequireAuthenticatedUser()
+                    .Build();
+                options.Filters.Add(new AuthorizeFilter(authRequired));
+            });
+
+            var buildInfo = new BuildInfo(typeof(Startup), null);
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "DarkDeeds.TelegramClient",
+                    Version = buildInfo.AppVersion
+                });
+            });
         }
     }
 }

@@ -10,7 +10,7 @@ WORKDIR /app/code/apps/WebClientBffApp/DarkDeeds.WebClientBffApp/DarkDeeds.WebCl
 
 RUN dotnet build
 
-ENV ASPNETCORE_URLS=http://0.0.0.0:80
+ENV ASPNETCORE_URLS=http://0.0.0.0:5004
 ENV ASPNETCORE_ENVIRONMENT=Staging
 
 ENTRYPOINT ["dotnet", "run", "--no-launch-profile"]

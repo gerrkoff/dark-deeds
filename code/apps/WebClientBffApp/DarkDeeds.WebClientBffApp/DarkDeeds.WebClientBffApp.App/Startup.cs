@@ -1,4 +1,5 @@
 using DarkDeeds.Authentication.DependencyInjection;
+using DarkDeeds.Communication;
 using DarkDeeds.WebClientBffApp.App.Hubs;
 using DarkDeeds.WebClientBffApp.Communication;
 using DarkDeeds.WebClientBffApp.Data;
@@ -23,10 +24,11 @@ namespace DarkDeeds.WebClientBffApp.App
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDarkDeedsAppRegistration("web-client-bff");
             services.AddDarkDeedsAuth(Configuration);
             services.AddWebClientBffServices();
             services.AddWebClientBffUseCases();
-            services.AddWebClientBffCommunications(Configuration);
+            services.AddWebClientBffCommunications();
             services.AddWebClientBffData(Configuration);
             services.AddWebClientBffCommonServices();
             services.AddWebClientBffApi();

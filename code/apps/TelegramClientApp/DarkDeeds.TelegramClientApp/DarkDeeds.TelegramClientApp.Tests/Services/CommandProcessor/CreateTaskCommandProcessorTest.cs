@@ -1,9 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using DarkDeeds.Services.Interface;
 using DarkDeeds.TelegramClientApp.Infrastructure.Communication.TaskServiceApp;
 using DarkDeeds.TelegramClientApp.Infrastructure.Communication.TaskServiceApp.Dto;
-using DarkDeeds.TelegramClientApp.Infrastructure.Services;
 using DarkDeeds.TelegramClientApp.Services.Implementation.CommandProcessor;
 using DarkDeeds.TelegramClientApp.Services.Interface;
 using DarkDeeds.TelegramClientApp.Services.Models.Commands;
@@ -19,13 +17,12 @@ namespace DarkDeeds.TelegramClientApp.Tests.Services.CommandProcessor
         {
             var task = new TaskDto();
             var tasks = new TaskDto[0];
-            var (telegramMock, taskServiceMock, sendMessageMock, taskHubService) = SetupMocks(task, tasks, 100);
+            var (telegramMock, taskServiceMock, sendMessageMock) = SetupMocks(task, tasks, 100);
             
             var service = new CreateTaskCommandProcessor(
                 sendMessageMock.Object,
                 telegramMock.Object,
                 taskServiceMock.Object,
-                taskHubService.Object,
                 null);
 
             await service.ProcessAsync(new CreateTaskCommand(task)
@@ -36,32 +33,8 @@ namespace DarkDeeds.TelegramClientApp.Tests.Services.CommandProcessor
 
             sendMessageMock.Verify(x => x.SendTextAsync(100, "Task created"));
         }
-        
-        [Fact]
-        public async Task ProcessAsync_SendUpdateTasks()
-        {
-            var task = new TaskDto();
-            var tasks = new TaskDto[0];
-            var (telegramMock, taskServiceMock, sendMessageMock, taskHubService) = SetupMocks(task, tasks, 100);
-            
-            var service = new CreateTaskCommandProcessor(
-                sendMessageMock.Object,
-                telegramMock.Object,
-                taskServiceMock.Object,
-                taskHubService.Object,
-                null);
 
-            await service.ProcessAsync(new CreateTaskCommand(task)
-            {
-                UserChatId = 100
-            });
-
-            taskHubService.Verify(x => x.Update(
-                It.Is<IEnumerable<TaskDto>>(y => y == tasks)
-            ));
-        }
-
-        private (Mock<ITelegramService>, Mock<ITaskServiceApp>, Mock<IBotSendMessageService>, Mock<ITaskHubService>)
+        private (Mock<ITelegramService>, Mock<ITaskServiceApp>, Mock<IBotSendMessageService>)
             SetupMocks(TaskDto task, TaskDto[] tasks, int chatId)
         {   
             var telegramMock = new Mock<ITelegramService>();
@@ -74,9 +47,7 @@ namespace DarkDeeds.TelegramClientApp.Tests.Services.CommandProcessor
             
             var sendMessageMock = new Mock<IBotSendMessageService>();
 
-            var taskHubServiceMock = new Mock<ITaskHubService>();
-
-            return (telegramMock, taskServiceMock, sendMessageMock, taskHubServiceMock);
+            return (telegramMock, taskServiceMock, sendMessageMock);
         } 
     }
 }

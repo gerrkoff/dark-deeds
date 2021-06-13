@@ -1,5 +1,5 @@
 using System;
-using DarkDeeds.Services.Interface;
+using DarkDeeds.TelegramClientApp.Services.Interface;
 
 namespace DarkDeeds.TelegramClientApp.Services.Implementation
 {

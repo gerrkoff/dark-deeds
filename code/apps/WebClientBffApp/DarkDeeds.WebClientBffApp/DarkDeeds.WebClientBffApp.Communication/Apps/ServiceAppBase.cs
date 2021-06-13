@@ -1,33 +1,25 @@
 using System;
-using System.Linq;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Net.Mime;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Net.Http.Headers;
+using DarkDeeds.Communication.Services.Interface;
 
-namespace DarkDeeds.WebClientBffApp.Communication
+namespace DarkDeeds.WebClientBffApp.Communication.Apps
 {
     public abstract class ServiceAppBase
     {
-        private readonly Lazy<Task<HttpClient>> _httpClient;
-
-        protected ServiceAppBase(IHttpContextAccessor httpContextAccessor)
+        private readonly IDdHttpClientFactory _clientFactory;
+        
+        protected ServiceAppBase(IDdHttpClientFactory clientFactory)
         {
-            _httpClient = new Lazy<Task<HttpClient>>(async () =>
-            {
-                var httpClient = new HttpClient();
-                var token = await httpContextAccessor.HttpContext.GetTokenAsync("access_token");
-                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-                return httpClient;
-            });
+            _clientFactory = clientFactory;
         }
 
-        protected Task<HttpClient> HttpClient => _httpClient.Value;
+        protected abstract string AppName { get; }
+        
+        protected Task<HttpClient> HttpClient => _clientFactory.Create(AppName);
 
         protected HttpContent SerializePayload<T>(T payload) =>
             new StringContent(JsonSerializer.Serialize(payload, _jsonOptions), Encoding.UTF8,

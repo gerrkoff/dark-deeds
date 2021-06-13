@@ -66,7 +66,7 @@ namespace DarkDeeds.TaskServiceApp.App
                 c.SwaggerDoc("v1", new OpenApiInfo
                 {
                     Title = "DarkDeeds.TaskService", 
-                    Version = $"v{buildInfo.AppVersion} ({buildInfo.ContractVersion})",
+                    Version = $"{buildInfo.AppVersion} / {buildInfo.ContractVersion}",
                     Description = "Check gRPC contract",
                 });
             });

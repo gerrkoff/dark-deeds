@@ -2,4 +2,4 @@
 docker-compose \
     -f infrastructure/docker-compose.yml \
     -p dd \
-    logs -f
+    logs -f $1

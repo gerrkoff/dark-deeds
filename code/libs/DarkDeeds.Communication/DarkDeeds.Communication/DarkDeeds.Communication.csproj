@@ -5,14 +5,19 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\DarkDeeds.Authentication\DarkDeeds.Authentication\DarkDeeds.Authentication.csproj" />
       <ProjectReference Include="..\..\DarkDeeds.Common\DarkDeeds.Common\DarkDeeds.Common.csproj" />
     </ItemGroup>
 
     <ItemGroup>
+      <PackageReference Include="Consul" Version="1.6.1.1" />
+      <PackageReference Include="Grpc.Core" Version="2.37.0" />
       <PackageReference Include="Grpc.Net.ClientFactory" Version="2.36.0" />
       <PackageReference Include="Microsoft.AspNetCore.Authentication.Abstractions" Version="2.2.0" />
       <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
+      <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel" Version="2.2.0" />
       <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.1" />
+      <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="5.0.0" />
       <PackageReference Include="Microsoft.Net.Http.Headers" Version="2.2.8" />
     </ItemGroup>
 
