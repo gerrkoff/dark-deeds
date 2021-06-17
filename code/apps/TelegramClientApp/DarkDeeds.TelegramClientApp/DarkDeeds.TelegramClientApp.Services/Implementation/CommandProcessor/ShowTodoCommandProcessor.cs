@@ -30,10 +30,11 @@ namespace DarkDeeds.TelegramClientApp.Services.Implementation.CommandProcessor
         {
             string userId = await _telegramService.GetUserId(command.UserChatId);
             IEnumerable<TaskDto> tasks = await _taskServiceApp.LoadTasksByDateAsync(userId, command.From, command.To);
-            string tasksAsString = await _taskServiceApp.PrintTasks(tasks);
-            if (string.IsNullOrEmpty(tasksAsString))
-                tasksAsString = "No tasks";
-            await _botSendMessageService.SendTextAsync(command.UserChatId, tasksAsString);
+            ICollection<string> tasksAsString = await _taskServiceApp.PrintTasks(tasks);
+            string text = tasksAsString.Count == 0
+                ? "No tasks"
+                : string.Join("\n", tasksAsString);
+            await _botSendMessageService.SendTextAsync(command.UserChatId, text);
         }
     }
 }

@@ -1,66 +1,93 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-// using AutoMapper;
-// using DarkDeeds.Communication.Services.Interface;
-// using DarkDeeds.TaskServiceApp.Contract;
+using AutoMapper;
+using DarkDeeds.Authentication.Models;
+using DarkDeeds.Authentication.Services;
+using DarkDeeds.Communication;
+using DarkDeeds.Communication.Services.Interface;
+using DarkDeeds.TaskServiceApp.Contract;
 using DarkDeeds.TelegramClientApp.Infrastructure.Communication.TaskServiceApp;
 using DarkDeeds.TelegramClientApp.Infrastructure.Communication.TaskServiceApp.Dto;
-// using Grpc.Core;
+using Grpc.Core;
 
 namespace DarkDeeds.TelegramClientApp.Communication
 {
     public class TaskServiceApp : ITaskServiceApp
     {
-        // private readonly IMapper _mapper;
-        // private readonly IDdGrpcClientFactory<TaskService.TaskServiceClient> _clientFactory;
-        //
-        // public TaskServiceApp(IMapper mapper, IDdGrpcClientFactory<TaskService.TaskServiceClient> clientFactory)
-        // {
-        //     _mapper = mapper;
-        //     _clientFactory = clientFactory;
-        // }
-
-        public Task<IEnumerable<TaskDto>> LoadTasksByDateAsync(string userId, DateTime from, DateTime to)
+        private readonly IMapper _mapper;
+        private readonly ITokenService _tokenService;
+        private readonly IDdGrpcClientFactory<TaskService.TaskServiceClient> _taskClientFactory;
+        private readonly IDdGrpcClientFactory<ParserService.ParserServiceClient> _parserClientFactory;
+        
+        public TaskServiceApp(IMapper mapper, IDdGrpcClientFactory<TaskService.TaskServiceClient> taskClientFactory, ITokenService tokenService, IDdGrpcClientFactory<ParserService.ParserServiceClient> parserClientFactory)
         {
-            // var client = await _clientFactory.Create();
-            // var reply = await client.LoadByDateAsync(new LoadByDateRequest
-            // {
-            //     FromDate = from.Ticks,
-            //     ToDate = to.Ticks
-            // }, AuthMetadata(userId));
-            // return _mapper.Map<IEnumerable<TaskDto>>(reply);
-            
-            throw new NotImplementedException();
+            _mapper = mapper;
+            _taskClientFactory = taskClientFactory;
+            _tokenService = tokenService;
+            _parserClientFactory = parserClientFactory;
         }
 
-        public Task<IEnumerable<TaskDto>> SaveTasksAsync(ICollection<TaskDto> tasks, string userId)
+        public async Task<IEnumerable<TaskDto>> LoadTasksByDateAsync(string userId, DateTime from, DateTime to)
         {
-            // var url = $"{_url}/tasks?userId={userId}";
-            // var response = await HttpClient.PostAsync(url, SerializePayload(tasks));
-            // return await ParseBodyAsync<IEnumerable<TaskDto>>(response);
-            
-            throw new NotImplementedException();
+            var client = await _taskClientFactory.Create();
+            var metadata = CreateHeaders(userId);
+            var reply = await client.LoadByDateAsync(new LoadByDateRequest
+            {
+                FromDate = from.Ticks,
+                ToDate = to.Ticks
+            }, metadata);
+            return _mapper.Map<IEnumerable<TaskDto>>(reply.Tasks);
         }
 
-        public Task<TaskDto> ParseTask(string text)
+        public async Task<IEnumerable<TaskDto>> SaveTasksAsync(ICollection<TaskDto> tasks, string userId)
         {
-            // var url = $"{_url}/parser?text={text}";
-            // var response = await HttpClient.GetAsync(url);
-            // return await ParseBodyAsync<TaskDto>(response);
+            var client = await _taskClientFactory.Create();
+            var metadata = CreateHeaders(userId);
+            var reply = await client.SaveAsync(new SaveRequest
+            {
+                Tasks = {_mapper.Map<IEnumerable<TaskModel>>(tasks)}
+            }, metadata);
             
-            throw new NotImplementedException();
+            return _mapper.Map<IEnumerable<TaskDto>>(reply.Tasks);
         }
 
-        public Task<string> PrintTasks(IEnumerable<TaskDto> tasks)
+        public async Task<TaskDto> ParseTask(string text)
         {
-            // var url = $"{_url}/parser/print";
-            // var response = await HttpClient.PostAsync(url, SerializePayload(tasks));
-            // return await ParseBodyAsync<string>(response);
+            var client = await _parserClientFactory.Create();
+            var reply = await client.ParseAsync(new ParseRequest
+            {
+                Text = text,
+            });
             
-            throw new NotImplementedException();
+            return _mapper.Map<TaskDto>(reply.Task);
         }
 
-        // private Metadata AuthMetadata(string userId) => new Metadata {{"UserId", userId}};
+        public async Task<ICollection<string>> PrintTasks(IEnumerable<TaskDto> tasks)
+        {
+            var client = await _parserClientFactory.Create();
+            var reply = await client.PrintAsync(new PrintRequest
+            {
+                Tasks = {_mapper.Map<IEnumerable<TaskModel>>(tasks)}
+            });
+
+            return reply.Texts;
+        }
+
+        private Metadata CreateHeaders(string userId)
+        {
+            var headers = new Metadata();
+            
+            var token = new AuthToken
+            {
+                UserId = userId,
+                Username = "",
+                DisplayName = "",
+            };
+            var tokenSerialized = _tokenService.Serialize(token);
+            headers.AddAuthorization(tokenSerialized);
+
+            return headers;
+        }
     }
 }

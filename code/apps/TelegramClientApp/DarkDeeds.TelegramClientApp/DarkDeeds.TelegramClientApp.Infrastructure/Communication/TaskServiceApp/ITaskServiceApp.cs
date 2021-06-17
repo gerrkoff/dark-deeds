@@ -11,6 +11,6 @@ namespace DarkDeeds.TelegramClientApp.Infrastructure.Communication.TaskServiceAp
         Task<IEnumerable<TaskDto>> SaveTasksAsync(ICollection<TaskDto> tasks, string userId);
 
         Task<TaskDto> ParseTask(string text);
-        Task<string> PrintTasks(IEnumerable<TaskDto> tasks);
+        Task<ICollection<string>> PrintTasks(IEnumerable<TaskDto> tasks);
     }
 }
