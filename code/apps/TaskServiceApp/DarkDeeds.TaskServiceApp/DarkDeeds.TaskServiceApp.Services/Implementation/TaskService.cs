@@ -62,14 +62,14 @@ namespace DarkDeeds.TaskServiceApp.Services.Implementation
 
             int[] taskIds = tasks.Select(x => x.Id).Where(x => x > 0).ToArray();
             
-            Dictionary<int, TaskEntity> existingTasks = await _tasksRepository.GetAll()
+            var existingTasks = await _tasksRepository.GetAll()
                 .Where(x => taskIds.Contains(x.Id))
                 .ToDictionarySafeAsync(x => x.Id, x => x);
 
             var savedTasks = new List<TaskDto>();
             foreach (var task in tasks)
             {
-                TaskDto savedTask = await SaveTaskAsync(existingTasks, task, userId);
+                var savedTask = await SaveTaskAsync(existingTasks, task, userId);
                 if (savedTask != null)
                     savedTasks.Add(savedTask);
             }
@@ -78,7 +78,7 @@ namespace DarkDeeds.TaskServiceApp.Services.Implementation
         }
 
         private async Task<TaskDto> SaveTaskAsync(Dictionary<int, TaskEntity> existingTasks, TaskDto taskToSave, string userId)
-        {   
+        {
             TaskEntity entity;
             if (taskToSave.Deleted || taskToSave.ClientId > 0)
             {

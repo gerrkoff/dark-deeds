@@ -37,9 +37,8 @@ namespace DarkDeeds.Communication.Services.Implementation
                 HttpClient = httpClient
             });
 
-            channel.Intercept(_authInterceptor);
+            var callInvoker = channel.Intercept(_authInterceptor);
 
-            var callInvoker = channel.CreateCallInvoker();
             return (T) Activator.CreateInstance(typeof(T), callInvoker);
         }
     }
