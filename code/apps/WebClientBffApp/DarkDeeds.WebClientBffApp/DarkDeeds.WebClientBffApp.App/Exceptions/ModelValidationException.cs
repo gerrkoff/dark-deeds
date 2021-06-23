@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
-using System.Security.Permissions;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace DarkDeeds.WebClientBffApp.App.Exceptions
@@ -15,7 +14,7 @@ namespace DarkDeeds.WebClientBffApp.App.Exceptions
 
 		public ModelValidationException(string message) : base("Model validation exception")
 		{
-			Errors = new List<ModelError> { new ModelError(message) };
+			Errors = new List<ModelError> { new(message) };
 		}
         
         public ModelValidationException(ModelStateDictionary modeState) : base("Model validation exception")

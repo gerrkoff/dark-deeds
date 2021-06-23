@@ -15,6 +15,7 @@
     <ItemGroup>
       <ProjectReference Include="..\..\..\..\libs\DarkDeeds.Communication\DarkDeeds.Communication\DarkDeeds.Communication.csproj" />
       <ProjectReference Include="..\..\..\AuthServiceApp\DarkDeeds.AuthServiceApp\DarkDeeds.AuthServiceApp.Contract\DarkDeeds.AuthServiceApp.Contract.csproj" />
+      <ProjectReference Include="..\..\..\TaskServiceApp\DarkDeeds.TaskServiceApp\DarkDeeds.TaskServiceApp.Contract\DarkDeeds.TaskServiceApp.Contract.csproj" />
       <ProjectReference Include="..\DarkDeeds.WebClientBffApp.Infrastructure\DarkDeeds.WebClientBffApp.Infrastructure.csproj" />
     </ItemGroup>
 

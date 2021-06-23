@@ -1,4 +1,4 @@
-using DarkDeeds.WebClientBffApp.UseCases.Handlers.Account.Dto;
+using DarkDeeds.WebClientBffApp.UseCases.Dto;
 using MediatR;
 
 namespace DarkDeeds.WebClientBffApp.UseCases.Handlers.Account.GetCurrentUser

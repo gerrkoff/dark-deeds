@@ -1,72 +1,81 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using AutoMapper;
 using DarkDeeds.Communication.Services.Interface;
+using DarkDeeds.TaskServiceApp.Contract;
 using DarkDeeds.WebClientBffApp.Infrastructure.Communication.TaskServiceApp;
 using DarkDeeds.WebClientBffApp.Infrastructure.Communication.TaskServiceApp.Dto;
+using Grpc.Core;
 
 namespace DarkDeeds.WebClientBffApp.Communication.Apps
 {
-    public class TaskServiceApp : ServiceAppBase, ITaskServiceApp
-    {   
-        public TaskServiceApp(IDdHttpClientFactory clientFactory) : base(clientFactory) {}
+    public class TaskServiceApp : ITaskServiceApp
+    {
+        private readonly IMapper _mapper;
+        private readonly IDdGrpcClientFactory<TaskService.TaskServiceClient> _taskClientFactory;
+        private readonly IDdGrpcClientFactory<RecurrenceService.RecurrenceServiceClient> _recurrenceClientFactory;
 
-        protected override string AppName => "task-service-app";
-
-        public async Task<IEnumerable<TaskDto>> LoadActualTasksAsync(string userId, DateTime from)
+        public TaskServiceApp(IMapper mapper,
+            IDdGrpcClientFactory<TaskService.TaskServiceClient> taskClientFactory,
+            IDdGrpcClientFactory<RecurrenceService.RecurrenceServiceClient> recurrenceClientFactory)
         {
-            var url = $"/api/tasks?from={DateToString(from)}&userId={userId}";
-            var response = await (await HttpClient).GetAsync(url);
-            return await ParseBodyAsync<IEnumerable<TaskDto>>(response);
+            _mapper = mapper;
+            _taskClientFactory = taskClientFactory;
+            _recurrenceClientFactory = recurrenceClientFactory;
         }
 
-        public async Task<IEnumerable<TaskDto>> LoadTasksByDateAsync(string userId, DateTime from, DateTime to)
+
+        public async Task<IEnumerable<TaskDto>> LoadActualTasksAsync(DateTime from)
         {
-            var url = $"/api/tasks/byDate?from={DateToString(from)}&to={DateToString(to)}&userId={userId}";
-            var response = await (await HttpClient).GetAsync(url);
-            return await ParseBodyAsync<IEnumerable<TaskDto>>(response);
+            var request = new LoadActualRequest
+            {
+                FromDate = from.Ticks
+            };
+            var client = await _taskClientFactory.Create();
+            var response = await client.LoadActualAsync(request, new Metadata());
+            return _mapper.Map<IEnumerable<TaskDto>>(response.Tasks);
         }
 
-        public async Task<IEnumerable<TaskDto>> SaveTasksAsync(ICollection<TaskDto> tasks, string userId)
+        public async Task<IEnumerable<TaskDto>> SaveTasksAsync(ICollection<TaskDto> tasks)
         {
-            var url = $"/api/tasks?userId={userId}";
-            var response = await (await HttpClient).PostAsync(url, SerializePayload(tasks));
-            return await ParseBodyAsync<IEnumerable<TaskDto>>(response);
+            var request = new SaveRequest
+            {
+                Tasks = {_mapper.Map<IEnumerable<TaskModel>>(tasks)}
+            };
+            var client = await _taskClientFactory.Create();
+            var response = await client.SaveAsync(request, new Metadata());
+            return _mapper.Map<IEnumerable<TaskDto>>(response.Tasks);
         }
 
-        public async Task<int> CreateRecurrencesAsync(int timezoneOffset, string userId)
+        public async Task<int> CreateRecurrencesAsync(int timezoneOffset)
         {
-            var url = $"/api/recurrences/create?timezoneOffset={timezoneOffset}&userId={userId}";
-            var response = await (await HttpClient).PostAsync(url, null);
-            return await ParseBodyAsync<int>(response);
+            var request = new CreateTasksRequest
+            {
+                TimezoneOffset = timezoneOffset
+            };
+            var client = await _recurrenceClientFactory.Create();
+            var response = await client.CreateTasksAsync(request, new Metadata());
+            return response.TasksCreatedCount;
         }
 
-        public async Task<IEnumerable<PlannedRecurrenceDto>> LoadRecurrencesAsync(string userId)
+        public async Task<IEnumerable<PlannedRecurrenceDto>> LoadRecurrencesAsync()
         {
-            var url = $"/api/recurrences?userId={userId}";
-            var response = await (await HttpClient).GetAsync(url);
-            return await ParseBodyAsync<IEnumerable<PlannedRecurrenceDto>>(response);
+            var request = new LoadRecurrencesRequest();
+            var client = await _recurrenceClientFactory.Create();
+            var response = await client.LoadRecurrencesAsync(request, new Metadata());
+            return _mapper.Map<IEnumerable<PlannedRecurrenceDto>>(response.Recurrences);
         }
 
-        public async Task<int> SaveRecurrencesAsync(ICollection<PlannedRecurrenceDto> recurrences, string userId)
+        public async Task<int> SaveRecurrencesAsync(ICollection<PlannedRecurrenceDto> recurrences)
         {
-            var url = $"/api/recurrences?userId={userId}";
-            var response = await (await HttpClient).PostAsync(url, SerializePayload(recurrences));
-            return await ParseBodyAsync<int>(response);
-        }
-
-        public async Task<TaskDto> ParseTask(string text)
-        {
-            var url = $"/api/parser?text={text}";
-            var response = await (await HttpClient).GetAsync(url);
-            return await ParseBodyAsync<TaskDto>(response);
-        }
-
-        public async Task<string> PrintTasks(IEnumerable<TaskDto> tasks)
-        {
-            var url = "/api/parser/print";
-            var response = await (await HttpClient).PostAsync(url, SerializePayload(tasks));
-            return await ParseBodyAsync<string>(response);
+            var request = new SaveRecurrencesRequest
+            {
+                Recurrences = {_mapper.Map<IEnumerable<PlannedRecurrenceModel>>(recurrences)}
+            };
+            var client = await _recurrenceClientFactory.Create();
+            var response = await client.SaveRecurrencesAsync(request, new Metadata());
+            return response.RecurrencesUpdatedCount;
         }
     }
 }

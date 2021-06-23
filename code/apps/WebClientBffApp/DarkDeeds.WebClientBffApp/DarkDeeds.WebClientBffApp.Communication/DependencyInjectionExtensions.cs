@@ -1,5 +1,6 @@
 using DarkDeeds.AuthServiceApp.Contract;
 using DarkDeeds.Communication;
+using DarkDeeds.TaskServiceApp.Contract;
 using DarkDeeds.WebClientBffApp.Communication.Apps;
 using DarkDeeds.WebClientBffApp.Communication.Mapping;
 using DarkDeeds.WebClientBffApp.Infrastructure.Communication.AuthServiceApp;
@@ -13,13 +14,17 @@ namespace DarkDeeds.WebClientBffApp.Communication
     {
         public static void AddWebClientBffCommunications(this IServiceCollection services)
         {
-            services.AddDarkDeedsHttpClientFactory();
             services.AddDarkDeedsGrpcClientFactory<AuthService.AuthServiceClient>("auth-service");
             services.AddScoped<IAuthServiceApp, Apps.AuthServiceApp>();
-            services.AddScoped<ITaskServiceApp, TaskServiceApp>();
+            
+            services.AddDarkDeedsGrpcClientFactory<TaskService.TaskServiceClient>("task-service");
+            services.AddDarkDeedsGrpcClientFactory<RecurrenceService.RecurrenceServiceClient>("task-service");
+            services.AddScoped<ITaskServiceApp, Apps.TaskServiceApp>();
+            
+            services.AddDarkDeedsHttpClientFactory();
             services.AddScoped<ITelegramClientApp, TelegramClientApp>();
 
-            services.AddAutoMapper(typeof(ModelsMappingProfile));
+            services.AddAutoMapper(typeof(AuthServiceModelsMapping));
         }
     }
 }

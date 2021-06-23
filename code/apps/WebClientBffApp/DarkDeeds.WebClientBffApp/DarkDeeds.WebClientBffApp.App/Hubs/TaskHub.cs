@@ -1,7 +1,5 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using DarkDeeds.Authentication;
-using DarkDeeds.Authentication.Models;
 using DarkDeeds.WebClientBffApp.Infrastructure.Communication.TaskServiceApp;
 using DarkDeeds.WebClientBffApp.Infrastructure.Communication.TaskServiceApp.Dto;
 using Microsoft.AspNetCore.Authorization;
@@ -21,8 +19,7 @@ namespace DarkDeeds.WebClientBffApp.App.Hubs
         
         public async Task Save(ICollection<TaskDto> tasks)
         {
-            AuthToken authToken = Context.User.ToAuthToken();
-            IEnumerable<TaskDto> updatedTasks = await _taskServiceApp.SaveTasksAsync(tasks, authToken.UserId);
+            IEnumerable<TaskDto> updatedTasks = await _taskServiceApp.SaveTasksAsync(tasks);
             await Clients.Caller.SendAsync("update", updatedTasks, true);
             await Clients.Others.SendAsync("update", updatedTasks, false);
         }

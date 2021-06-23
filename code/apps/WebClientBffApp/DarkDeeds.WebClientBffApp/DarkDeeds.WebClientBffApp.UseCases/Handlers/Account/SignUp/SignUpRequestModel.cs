@@ -1,5 +1,4 @@
 using DarkDeeds.WebClientBffApp.Infrastructure.Communication.AuthServiceApp.Dto;
-using DarkDeeds.WebClientBffApp.UseCases.Handlers.Account.Dto;
 using MediatR;
 
 namespace DarkDeeds.WebClientBffApp.UseCases.Handlers.Account.SignUp

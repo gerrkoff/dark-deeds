@@ -1,4 +1,4 @@
-namespace DarkDeeds.WebClientBffApp.UseCases.Handlers.Account.Dto
+namespace DarkDeeds.WebClientBffApp.UseCases.Dto
 {
     public class CurrentUserDto
     {

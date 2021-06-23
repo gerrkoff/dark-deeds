@@ -34,6 +34,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.WebClientBffApp.U
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.Authentication", "..\..\..\libs\DarkDeeds.Authentication\DarkDeeds.Authentication\DarkDeeds.Authentication.csproj", "{EDB9AC81-235D-4687-BB20-E4B3F00B50AF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.TaskServiceApp.Contract", "..\..\TaskServiceApp\DarkDeeds.TaskServiceApp\DarkDeeds.TaskServiceApp.Contract\DarkDeeds.TaskServiceApp.Contract.csproj", "{267AD969-9B35-4555-B712-B680C000BA79}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -88,6 +90,10 @@ Global
 		{EDB9AC81-235D-4687-BB20-E4B3F00B50AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EDB9AC81-235D-4687-BB20-E4B3F00B50AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EDB9AC81-235D-4687-BB20-E4B3F00B50AF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{267AD969-9B35-4555-B712-B680C000BA79}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{267AD969-9B35-4555-B712-B680C000BA79}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{267AD969-9B35-4555-B712-B680C000BA79}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{267AD969-9B35-4555-B712-B680C000BA79}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{BB53E1D5-3EC9-46DA-9778-D0DC04864D2B} = {29480459-EC0C-437F-B241-F13CF9CB1A8A}
@@ -102,5 +108,6 @@ Global
 		{53E69EC2-449D-43B6-B2EF-850776C8DB2E} = {B6BEB6B7-97DC-45CF-9ADE-FB7976E80470}
 		{EDB9AC81-235D-4687-BB20-E4B3F00B50AF} = {56D59880-C9CD-4DA3-A9E7-CBA004A169D2}
 		{0799C77A-BFDC-49BD-810E-07E12B80B573} = {29480459-EC0C-437F-B241-F13CF9CB1A8A}
+		{267AD969-9B35-4555-B712-B680C000BA79} = {56D59880-C9CD-4DA3-A9E7-CBA004A169D2}
 	EndGlobalSection
 EndGlobal

@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using DarkDeeds.WebClientBffApp.App.Controllers.Base;
 using DarkDeeds.WebClientBffApp.Infrastructure.Communication.AuthServiceApp.Dto;
-using DarkDeeds.WebClientBffApp.UseCases.Handlers.Account.Dto;
+using DarkDeeds.WebClientBffApp.UseCases.Dto;
 using DarkDeeds.WebClientBffApp.UseCases.Handlers.Account.GetCurrentUser;
 using DarkDeeds.WebClientBffApp.UseCases.Handlers.Account.SignIn;
 using DarkDeeds.WebClientBffApp.UseCases.Handlers.Account.SignUp;

@@ -4,9 +4,9 @@ using DarkDeeds.WebClientBffApp.Infrastructure.Communication.AuthServiceApp.Dto;
 
 namespace DarkDeeds.WebClientBffApp.Communication.Mapping
 {
-    public class ModelsMappingProfile : Profile
+    public class AuthServiceModelsMapping : Profile
     {
-        public ModelsMappingProfile()
+        public AuthServiceModelsMapping()
         {
             CreateMap<SignInInfoDto, SignInRequest>();
             CreateMap<SignInReply, SignInResultDto>();

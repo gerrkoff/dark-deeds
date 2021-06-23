@@ -2,7 +2,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using DarkDeeds.Authentication;
-using DarkDeeds.WebClientBffApp.UseCases.Handlers.Account.Dto;
+using DarkDeeds.WebClientBffApp.UseCases.Dto;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 

@@ -12,14 +12,14 @@ namespace DarkDeeds.WebClientBffApp.Data.Repository
     public class RepositoryNonDeletable<T> : IRepositoryNonDeletable<T>
         where T : BaseEntity
     {
-        private readonly DbContext Context;
+        private readonly DbContext _context;
 
         public RepositoryNonDeletable(DbContext context)
         {
-            Context = context;
+            _context = context;
         }
 
-        private DbSet<T> Entities => Context.Set<T>();
+        private DbSet<T> Entities => _context.Set<T>();
         
         
         public virtual IQueryable<T> GetAll()
@@ -36,10 +36,10 @@ namespace DarkDeeds.WebClientBffApp.Data.Repository
             else
             {
                 Entities.Attach(entity);
-                Context.Entry(entity).State = EntityState.Modified;
+                _context.Entry(entity).State = EntityState.Modified;
             }
 
-            await Context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
         }
 
         public async Task SavePropertiesAsync(T entity, params Expression<Func<T, object>>[] properties)
@@ -52,16 +52,16 @@ namespace DarkDeeds.WebClientBffApp.Data.Repository
             Entities.Attach(entity);
 
             IList<string> propertiesToSave = properties
-                .Select(x => Context.Entry(entity).Property(x))
+                .Select(x => _context.Entry(entity).Property(x))
                 .Select(x => x.Metadata.GetFieldName())
                 .ToList();
 
-            foreach (var property in Context.Entry(entity).Properties)
+            foreach (var property in _context.Entry(entity).Properties)
             {
                 property.IsModified = propertiesToSave.Contains(property.Metadata.GetFieldName());
             }
 
-            await Context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
         }
 
         public async Task DeleteHardAsync(int id)
@@ -70,13 +70,13 @@ namespace DarkDeeds.WebClientBffApp.Data.Repository
             entity.Id = id;			
             Entities.Attach(entity);
             Entities.Remove(entity);
-            await Context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
         }
 
         public async Task DeleteHardAsync(T entity)
         {
             Entities.Remove(entity);
-            await Context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
         }
 
         public Task<T> GetByIdAsync(int id)
