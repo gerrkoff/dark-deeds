@@ -4,9 +4,9 @@ using DarkDeeds.WebClientBffApp.UseCases.Dto;
 
 namespace DarkDeeds.WebClientBffApp.UseCases.Mapping
 {
-    public class ModelsMappingProfile : Profile
+    public class ModelsMapping : Profile
     {
-        public ModelsMappingProfile()
+        public ModelsMapping()
         {
             CreateMap<AuthToken, CurrentUserDto>()
                 .ForMember(x => x.Username,

@@ -1,31 +1,40 @@
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using DarkDeeds.Authentication.Services;
 using DarkDeeds.Communication.Services.Interface;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Http;
 
 namespace DarkDeeds.Communication.Services.Implementation
 {
     class DdHttpClientFactory : IDdHttpClientFactory
     {
         private readonly IServiceDiscovery _serviceDiscovery;
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IAuthTokenProvider _authTokenProvider;
 
-        public DdHttpClientFactory(IHttpContextAccessor httpContextAccessor, IServiceDiscovery serviceDiscovery)
+        public DdHttpClientFactory(IServiceDiscovery serviceDiscovery, IAuthTokenProvider authTokenProvider)
         {
-            _httpContextAccessor = httpContextAccessor;
             _serviceDiscovery = serviceDiscovery;
+            _authTokenProvider = authTokenProvider;
         }
 
         public async Task<HttpClient> Create(string appName)
         {
             var uri = await _serviceDiscovery.GetService(appName);
-            
-            var httpClient = new HttpClient();
-            var token = await _httpContextAccessor.HttpContext.GetTokenAsync("access_token");
+
+            var httpClientHandler = new HttpClientHandler
+            {
+                ServerCertificateCustomValidationCallback =
+                    HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+            };
+
+            var httpClient = new HttpClient(httpClientHandler)
+            {
+                BaseAddress = uri,
+            };
+
+            var token = await _authTokenProvider.GetToken();
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-            httpClient.BaseAddress = uri;
+
             return httpClient;
         }
     }

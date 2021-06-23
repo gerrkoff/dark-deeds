@@ -8,8 +8,8 @@ namespace DarkDeeds.WebClientBffApp.UseCases
     {
         public static void AddWebClientBffUseCases(this IServiceCollection services)
         {
-            services.AddMediatR(typeof(ModelsMappingProfile));
-            services.AddAutoMapper(typeof(ModelsMappingProfile));
+            services.AddMediatR(typeof(ModelsMapping));
+            services.AddAutoMapper(typeof(ModelsMapping));
         }
     }
 }
