@@ -56,7 +56,6 @@ namespace DarkDeeds.WebClientBffApp.App
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
-            app.UseDarkDeedsAuthToken();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

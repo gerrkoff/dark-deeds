@@ -8,7 +8,7 @@ using Grpc.Net.Client;
 
 namespace DarkDeeds.Communication.Services.Implementation
 {
-    internal class DdGrpcClientFactory<T> : IDdGrpcClientFactory<T>
+    class DdGrpcClientFactory<T> : IDdGrpcClientFactory<T>
     {
         private readonly string _name;
         private readonly IServiceDiscovery _serviceDiscovery;

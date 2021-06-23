@@ -6,7 +6,7 @@ using DarkDeeds.Communication.Services.Interface;
 
 namespace DarkDeeds.Communication.Services.Implementation
 {
-    internal class ServiceDiscovery : IServiceDiscovery
+    class ServiceDiscovery : IServiceDiscovery
     {
         private readonly IConsulClient _consul;
 

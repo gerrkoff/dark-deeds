@@ -85,7 +85,7 @@ namespace DarkDeeds.TelegramClientApp.Communication
                 DisplayName = "",
             };
             var tokenSerialized = _tokenService.Serialize(token);
-            headers.AddAuthorization(tokenSerialized);
+            headers.AddAuthorizationIfEmpty(tokenSerialized);
 
             return headers;
         }

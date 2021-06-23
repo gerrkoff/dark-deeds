@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 
 namespace DarkDeeds.Communication.Services.Implementation
 {
-    internal class AddressService : IAddressService
+    class AddressService : IAddressService
     {
         private readonly ILogger<AddressService> _logger;
 

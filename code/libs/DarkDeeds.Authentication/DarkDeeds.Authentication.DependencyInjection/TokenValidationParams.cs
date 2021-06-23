@@ -3,7 +3,7 @@ using System.Text;
 using DarkDeeds.Authentication.Models;
 using Microsoft.IdentityModel.Tokens;
 
-namespace DarkDeeds.Authentication
+namespace DarkDeeds.Authentication.DependencyInjection
 {
     public static class TokenValidationParams
     {

@@ -4,12 +4,13 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using DarkDeeds.Authentication.Models;
+using DarkDeeds.Authentication.Services;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
-namespace DarkDeeds.Authentication.Services
+namespace DarkDeeds.Authentication.DependencyInjection.Services
 {
-    public class TokenService : ITokenService
+    class TokenService : ITokenService
     {
         private readonly AuthSettings _authSettings;
 

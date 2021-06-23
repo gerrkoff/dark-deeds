@@ -4,7 +4,7 @@ using DarkDeeds.Common.Validation.Exceptions;
 
 namespace DarkDeeds.Common.Validation.Services
 {
-    internal class ValidatorService : IValidatorService
+    class ValidatorService : IValidatorService
     {
         public void Validate<T>(T input)
         {

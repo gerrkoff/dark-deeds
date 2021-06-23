@@ -9,7 +9,7 @@ using Microsoft.Extensions.Logging;
 
 namespace DarkDeeds.Communication.Services.Implementation
 {
-    internal class AppRegistrationService : IHostedService
+    class AppRegistrationService : IHostedService
     {
         private readonly IConsulClient _consul;
         private readonly ILogger<AppRegistrationService> _logger;

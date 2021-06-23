@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace DarkDeeds.Communication.Services.Implementation
 {
-    internal class DdHttpClientFactory : IDdHttpClientFactory
+    class DdHttpClientFactory : IDdHttpClientFactory
     {
         private readonly IServiceDiscovery _serviceDiscovery;
         private readonly IHttpContextAccessor _httpContextAccessor;

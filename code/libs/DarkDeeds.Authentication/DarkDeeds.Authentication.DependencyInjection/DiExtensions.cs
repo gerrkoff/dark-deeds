@@ -1,21 +1,23 @@
 using System.Threading.Tasks;
-using DarkDeeds.Authentication.DependencyInjection.Middlewares;
+using DarkDeeds.Authentication.DependencyInjection.Services;
 using DarkDeeds.Authentication.Models;
 using DarkDeeds.Authentication.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DarkDeeds.Authentication.DependencyInjection
 {
-    public static class DependencyInjectionExtensions
+    public static class DiExtensions
     {
         private const string AuthSection = "Auth";
 
         public static void AddDarkDeedsAuth(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddScoped<ITokenService, TokenService>();
+            services.AddHttpContextAccessor();
+            services.AddTransient<ITokenService, TokenService>();
+            services.AddTransient<IAuthTokenProvider, AuthTokenProvider>();
+
             services.Configure<AuthSettings>(options => configuration.GetSection(AuthSection).Bind(options));
             
             AuthSettings authSettings = configuration.GetSection(AuthSection).Get<AuthSettings>();
@@ -39,11 +41,6 @@ namespace DarkDeeds.Authentication.DependencyInjection
                         }
                     };
                 });
-        }
-
-        public static IApplicationBuilder UseDarkDeedsAuthToken(this IApplicationBuilder builder)
-        {
-            return builder.UseMiddleware<ParseAuthTokenMiddleware>();
         }
     }
 }

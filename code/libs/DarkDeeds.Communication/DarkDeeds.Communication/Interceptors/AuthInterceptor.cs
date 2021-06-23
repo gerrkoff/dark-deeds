@@ -1,38 +1,28 @@
+using System.Threading.Tasks;
 using DarkDeeds.Authentication.Services;
-using Grpc.Core;
 using Grpc.Core.Interceptors;
-using Microsoft.AspNetCore.Http;
 
 namespace DarkDeeds.Communication.Interceptors
 {
-    public class AuthInterceptor : Interceptor
+    public class AuthInterceptor : ClientAsyncInterceptor
     {
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IAuthTokenProvider _authTokenProvider;
 
-        public AuthInterceptor(IHttpContextAccessor httpContextAccessor)
+        public AuthInterceptor(IAuthTokenProvider authTokenProvider)
         {
-            _httpContextAccessor = httpContextAccessor;
+            _authTokenProvider = authTokenProvider;
         }
 
-        public override AsyncUnaryCall<TResponse> AsyncUnaryCall<TRequest, TResponse>(TRequest request,
-            ClientInterceptorContext<TRequest, TResponse> context,
-            AsyncUnaryCallContinuation<TRequest, TResponse> continuation)
+        protected override async Task Intercept<TRequest, TResponse>(TRequest request,
+            ClientInterceptorContext<TRequest, TResponse> context)
+            where TRequest : class where TResponse : class
         {
-            FindAndSetAuthToken(context);
+            var token = await _authTokenProvider.GetToken();
+
+            if (token == null)
+                return;
             
-            return continuation(request, context);
-        }
-
-        private void FindAndSetAuthToken<TRequest, TResponse>(ClientInterceptorContext<TRequest, TResponse> context)
-            where TRequest : class
-            where TResponse : class
-        {
-            if (_httpContextAccessor.HttpContext == null) return;
-
-            var token = _httpContextAccessor.HttpContext.Items["access_token"] as string;
-
-            if (!string.IsNullOrWhiteSpace(token))
-                context.Options.Headers.AddAuthorization(token);
+            context.Options.Headers?.AddAuthorizationIfEmpty(token);
         }
     }
 }
