@@ -5,6 +5,17 @@ services:
     image: consul:1.10
     ports:
       - 8500:8500
+
+  rabbit-mq:
+    image: rabbitmq:3-management-alpine
+    ports:
+      - 5672:5672
+      - 15672:15672
+
+  mongo-db:
+    image: mongo:4.4
+    ports:
+      - 27017:27017
       
   postgres-db:
     image: postgres:13.0-alpine
