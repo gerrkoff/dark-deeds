@@ -14,6 +14,8 @@ services:
 
   mongo-db:
     image: mongo:4.4
+    volumes:
+      - mongo-db-volume:/data/db
     ports:
       - 27017:27017
       
@@ -32,6 +34,8 @@ services:
       dockerfile: infrastructure/apps/api-gateway.dockerfile
     ports:
       - 5000:5000
+    depends_on:
+      - consul
 
   auth-service:
     build:
@@ -43,6 +47,9 @@ services:
       - DD_SERVICE_DISCOVERY_CONSUL=http://consul:8500
       - DD_SERVICE_DISCOVERY_HOST=${IP:-auth-service}
       - DD_SERVICE_DISCOVERY_PORT=5002
+    depends_on:
+      - consul
+      - postgres-db
 
   task-service:
     build:
@@ -54,6 +61,9 @@ services:
       - DD_SERVICE_DISCOVERY_CONSUL=http://consul:8500
       - DD_SERVICE_DISCOVERY_HOST=${IP:-task-service}
       - DD_SERVICE_DISCOVERY_PORT=5001
+    depends_on:
+      - consul
+      - postgres-db
 
   telegram-client:
     build:
@@ -65,6 +75,9 @@ services:
       - DD_SERVICE_DISCOVERY_CONSUL=http://consul:8500
       - DD_SERVICE_DISCOVERY_HOST=${IP:-telegram-client}
       - DD_SERVICE_DISCOVERY_PORT=5003
+    depends_on:
+      - consul
+      - postgres-db
 
   web-client:
     build:
@@ -72,6 +85,8 @@ services:
       dockerfile: infrastructure/apps/web-client.dockerfile
     ports:
       - 3000:3000
+    depends_on:
+      - consul
 
   web-client-bff:
     build:
@@ -83,6 +98,10 @@ services:
       - DD_SERVICE_DISCOVERY_CONSUL=http://consul:8500
       - DD_SERVICE_DISCOVERY_HOST=${IP:-web-client-bff}
       - DD_SERVICE_DISCOVERY_PORT=5004
+    depends_on:
+      - consul
+      - postgres-db
 
 volumes:
   postgres-db-volume:
+  mongo-db-volume:
