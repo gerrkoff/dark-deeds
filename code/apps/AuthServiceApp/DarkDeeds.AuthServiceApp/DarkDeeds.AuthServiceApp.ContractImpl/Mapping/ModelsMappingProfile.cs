@@ -14,7 +14,7 @@ namespace DarkDeeds.AuthServiceApp.ContractImpl.Mapping
                     e => e.MapFrom(x => x.Token ?? string.Empty));
             
             CreateMap<SignUpRequest, SignUpInfoDto>();
-            CreateMap<SignUpResultDto, SignInReply>()
+            CreateMap<SignUpResultDto, SignUpReply>()
                 .ForMember(x => x.Token,
                     e => e.MapFrom(x => x.Token ?? string.Empty));
         }
