@@ -1,5 +1,8 @@
 using System;
 using Consul;
+using DarkDeeds.Communication.Amqp.Common;
+using DarkDeeds.Communication.Amqp.Publish;
+using DarkDeeds.Communication.Amqp.Subscribe;
 using DarkDeeds.Communication.Interceptors;
 using DarkDeeds.Communication.Services.Implementation;
 using DarkDeeds.Communication.Services.Interface;
@@ -10,6 +13,28 @@ namespace DarkDeeds.Communication
 {
     public static class DiExtensions
     {
+        private static void AddDarkDeedsAmpqServices(this IServiceCollection services)
+        {
+            services.TryAddTransient<IChannelProvider, ChannelProvider>();
+            services.TryAddTransient<IAmqpItemSerializer, AmqpItemSerializer>();
+            services.TryAddTransient(typeof(IPublisher<>), typeof(Publisher<>));
+            services.TryAddTransient(typeof(ISubscriber<>), typeof(Subscriber<>));
+        }
+        
+        public static void AddDarkDeedsAmpqPublisher<TService, TImplementation, TPayload>(this IServiceCollection services)
+            where TImplementation : AbstractMessagePublisher<TPayload>, TService
+        {
+            services.AddDarkDeedsAmpqServices();
+            services.AddSingleton(typeof(TService), typeof(TImplementation));
+        }
+        
+        public static void AddDarkDeedsAmpqSubscriber<TService, TPayload>(this IServiceCollection services)
+            where TService : AbstractMessageSubscriber<TPayload>
+        {
+            services.AddDarkDeedsAmpqServices();
+            services.AddHostedService<TService>();
+        }
+        
         public static void AddDarkDeedsAppRegistration(this IServiceCollection services, string appName)
         {
             services.AddDarkDeedsServiceDiscovery();

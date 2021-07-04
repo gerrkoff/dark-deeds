@@ -5,15 +5,15 @@ using System.Threading.Tasks;
 
 namespace DarkDeeds.Common.Multithreading
 {
-    public abstract class ConcurrentQueueProcessor<T>
+    // TODO: test
+    public abstract class ConcurrentQueueProcessor<T> : IDisposable
     {
         private readonly Lazy<ConcurrentQueue<T>> _queue;
         private readonly SemaphoreSlim _syncSemaphore = new(0);
-        private readonly CancellationToken _cancellationToken;
+        private readonly CancellationTokenSource _cancellationTokenSource = new();
 
-        protected ConcurrentQueueProcessor(CancellationToken cancellationToken)
+        protected ConcurrentQueueProcessor()
         {
-            _cancellationToken = cancellationToken;
             _queue = new Lazy<ConcurrentQueue<T>>(CreateQueue);
         }
         
@@ -25,13 +25,14 @@ namespace DarkDeeds.Common.Multithreading
         
         private ConcurrentQueue<T> CreateQueue()
         {
+            OnQueueCreated();
             new Task(async () => await ProcessQueue(), TaskCreationOptions.LongRunning).Start();
             return new ConcurrentQueue<T>();
         }
         
         private async Task ProcessQueue()
         {
-            while (!_cancellationToken.IsCancellationRequested)
+            while (!_cancellationTokenSource.Token.IsCancellationRequested)
             {
                 if (!await WaitSemaphore())
                     return;
@@ -39,7 +40,7 @@ namespace DarkDeeds.Common.Multithreading
                 if (!_queue.Value.TryDequeue(out T item))
                     continue;
 
-                await Process(item, _cancellationToken);
+                await Process(item, _cancellationTokenSource.Token);
             }
         }
 
@@ -47,7 +48,7 @@ namespace DarkDeeds.Common.Multithreading
         {
             try
             {
-                await _syncSemaphore.WaitAsync(_cancellationToken);
+                await _syncSemaphore.WaitAsync(_cancellationTokenSource.Token);
             }
             catch (OperationCanceledException)
             {
@@ -58,5 +59,14 @@ namespace DarkDeeds.Common.Multithreading
         }
 
         protected abstract Task Process(T item, CancellationToken cancellationToken);
+        
+        protected virtual void OnQueueCreated() {}
+
+        public virtual void Dispose()
+        {
+            _syncSemaphore?.Dispose();
+            _cancellationTokenSource?.Cancel();
+            _cancellationTokenSource?.Dispose();
+        }
     }
 }

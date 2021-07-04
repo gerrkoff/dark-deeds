@@ -28,6 +28,7 @@ namespace DarkDeeds.WebClientBffApp.App.Controllers
             return _mediator.Send(new LoadActualRequestModel(from));
         }
         
+        // TODO: use separate dto?
         [HttpPost]
         public Task<IEnumerable<TaskDto>> Post([FromBody] ICollection<TaskDto> tasks)
         {

@@ -64,6 +64,7 @@ services:
     depends_on:
       - consul
       - postgres-db
+      - rabbit-mq
 
   telegram-client:
     build:

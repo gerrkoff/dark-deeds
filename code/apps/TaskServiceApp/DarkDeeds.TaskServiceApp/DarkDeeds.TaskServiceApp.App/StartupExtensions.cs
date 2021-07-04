@@ -29,7 +29,7 @@ namespace DarkDeeds.TaskServiceApp.App
             services.AddScoped<IDateService, DateService>();
             services.AddScoped<IRecurrenceService, RecurrenceService>();
             services.AddScoped<IPermissionsService, PermissionsService>();
-            services.AddScoped<ITaskHubService, TaskHubService>();
+            services.AddScoped<INotifierService, NotifierService>();
         }
         
         public static void AddTaskAutoMapper(this IServiceCollection services)

@@ -10,6 +10,7 @@ namespace DarkDeeds.WebClientBffApp.Services
         public static void AddWebClientBffServices(this IServiceCollection services)
         {
             services.AddScoped<ISettingsService, SettingsService>();
+            services.AddTransient<ITaskUpdatedListener, TaskUpdatedListener>();
             services.AddAutoMapper(typeof(ModelsMapping));
         }
     }

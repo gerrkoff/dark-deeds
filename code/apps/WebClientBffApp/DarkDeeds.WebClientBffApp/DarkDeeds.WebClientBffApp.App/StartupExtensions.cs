@@ -1,5 +1,7 @@
 using DarkDeeds.Common.Misc;
+using DarkDeeds.WebClientBffApp.App.BackgroundServices;
 using DarkDeeds.WebClientBffApp.App.Hubs;
+using DarkDeeds.WebClientBffApp.App.Services;
 using DarkDeeds.WebClientBffApp.Infrastructure.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
@@ -12,7 +14,7 @@ namespace DarkDeeds.WebClientBffApp.App
     {
         public static void AddWebClientBffCommonServices(this IServiceCollection services)
         {
-            services.AddScoped<ITaskHubService, TaskHubService>();
+            services.AddTransient<INotifierService, NotifierService>();
             services.AddHttpContextAccessor();
         }
 

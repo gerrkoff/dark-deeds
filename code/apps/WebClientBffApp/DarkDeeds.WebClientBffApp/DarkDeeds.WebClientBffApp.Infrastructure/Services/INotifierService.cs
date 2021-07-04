@@ -4,8 +4,9 @@ using DarkDeeds.WebClientBffApp.Infrastructure.Communication.TaskServiceApp.Dto;
 
 namespace DarkDeeds.WebClientBffApp.Infrastructure.Services
 {
-    public interface ITaskHubService
+    public interface INotifierService
     {
-        Task Update(IEnumerable<TaskDto> updatedTasks);
+        // TODO: separate model
+        Task TaskUpdated(IEnumerable<TaskDto> updatedTasks);
     }
 }

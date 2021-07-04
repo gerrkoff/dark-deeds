@@ -4,8 +4,8 @@ using DarkDeeds.TaskServiceApp.Models.Dto;
 
 namespace DarkDeeds.TaskServiceApp.Infrastructure.Services
 {
-    public interface ITaskHubService
+    public interface INotifierService
     {
-        Task Update(IEnumerable<TaskDto> updatedTasks);
+        Task TaskUpdated(ICollection<TaskDto> updatedTasks);
     }
 }

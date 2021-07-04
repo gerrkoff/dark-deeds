@@ -5,6 +5,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\..\..\libs\DarkDeeds.Communication\DarkDeeds.Communication\DarkDeeds.Communication.csproj" />
       <ProjectReference Include="..\DarkDeeds.TaskServiceApp.Infrastructure\DarkDeeds.TaskServiceApp.Infrastructure.csproj" />
     </ItemGroup>
 

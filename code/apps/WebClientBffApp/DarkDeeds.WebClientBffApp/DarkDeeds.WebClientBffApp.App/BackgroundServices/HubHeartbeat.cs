@@ -3,9 +3,10 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Hosting;
 
-namespace DarkDeeds.WebClientBffApp.App.Hubs
+namespace DarkDeeds.WebClientBffApp.App.BackgroundServices
 {
-    public class HubHeartbeat<T> : BackgroundService where T: Hub
+    public class HubHeartbeat<T> : BackgroundService
+        where T: Hub
     {
         private const int HeartbeatTimer = 60 * 1000;
         

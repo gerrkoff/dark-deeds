@@ -51,7 +51,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.RecurrenceCreatorService
             var dateServiceMock = new Mock<IDateService>();
             dateServiceMock.SetupGet(x => x.Now).Returns(someDate);
             var taskParser = CreateTaskParser(new TaskDto {Title = "Task"});
-            var taskHubMock = new Mock<ITaskHubService>();
+            var taskHubMock = new Mock<INotifierService>();
             
             var service = new TaskServiceApp.Services.Implementation.RecurrenceCreatorService(taskRepo.Object, plannedRecurrenceRepo.Object, recurrenceRepo.Object, dateServiceMock.Object, null, taskParser, taskHubMock.Object, Mapper);
             
@@ -78,7 +78,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.RecurrenceCreatorService
             var recurrenceRepo = Helper.CreateRepoNonDeletableMock<RecurrenceEntity>();
             var dateServiceMock = new Mock<IDateService>();
             dateServiceMock.SetupGet(x => x.Now).Returns(now);
-            var taskHubMock = new Mock<ITaskHubService>();
+            var taskHubMock = new Mock<INotifierService>();
             
             var service = new TaskServiceApp.Services.Implementation.RecurrenceCreatorService(taskRepo.Object, plannedRecurrenceRepo.Object, recurrenceRepo.Object, dateServiceMock.Object, null, CreateTaskParser(), taskHubMock.Object, Mapper);
             
@@ -100,7 +100,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.RecurrenceCreatorService
             var recurrenceRepo = Helper.CreateRepoNonDeletableMock<RecurrenceEntity>();
             var dateServiceMock = new Mock<IDateService>();
             dateServiceMock.SetupGet(x => x.Now).Returns(new DateTime(2019, 9, 3));
-            var taskHubMock = new Mock<ITaskHubService>();
+            var taskHubMock = new Mock<INotifierService>();
             
             var service = new TaskServiceApp.Services.Implementation.RecurrenceCreatorService(taskRepo.Object, plannedRecurrenceRepo.Object, recurrenceRepo.Object, dateServiceMock.Object, null, CreateTaskParser(), taskHubMock.Object, Mapper);
             
@@ -121,7 +121,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.RecurrenceCreatorService
             var recurrenceRepo = Helper.CreateRepoNonDeletableMock<RecurrenceEntity>();
             var dateServiceMock = new Mock<IDateService>();
             dateServiceMock.SetupGet(x => x.Now).Returns(new DateTime(2019, 9, 6));
-            var taskHubMock = new Mock<ITaskHubService>();
+            var taskHubMock = new Mock<INotifierService>();
             
             var service = new TaskServiceApp.Services.Implementation.RecurrenceCreatorService(taskRepo.Object, plannedRecurrenceRepo.Object, recurrenceRepo.Object, dateServiceMock.Object, null, CreateTaskParser(), taskHubMock.Object, Mapper);
             
@@ -148,7 +148,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.RecurrenceCreatorService
             var recurrenceRepo = Helper.CreateRepoNonDeletableMock<RecurrenceEntity>();
             var dateServiceMock = new Mock<IDateService>();
             dateServiceMock.SetupGet(x => x.Now).Returns(new DateTime(2019, 9, 6));
-            var taskHubMock = new Mock<ITaskHubService>();
+            var taskHubMock = new Mock<INotifierService>();
             
             var service = new TaskServiceApp.Services.Implementation.RecurrenceCreatorService(taskRepo.Object, plannedRecurrenceRepo.Object, recurrenceRepo.Object, dateServiceMock.Object, null, CreateTaskParser(), taskHubMock.Object, Mapper);
             
@@ -175,7 +175,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.RecurrenceCreatorService
             var recurrenceRepo = Helper.CreateRepoNonDeletableMock<RecurrenceEntity>();
             var dateServiceMock = new Mock<IDateService>();
             dateServiceMock.SetupGet(x => x.Now).Returns(new DateTime(2019, 9, 6));
-            var taskHubMock = new Mock<ITaskHubService>();
+            var taskHubMock = new Mock<INotifierService>();
             
             var service = new TaskServiceApp.Services.Implementation.RecurrenceCreatorService(taskRepo.Object, plannedRecurrenceRepo.Object, recurrenceRepo.Object, dateServiceMock.Object, null, CreateTaskParser(), taskHubMock.Object, Mapper);
             
@@ -203,7 +203,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.RecurrenceCreatorService
             var recurrenceRepo = Helper.CreateRepoNonDeletableMock<RecurrenceEntity>();
             var dateServiceMock = new Mock<IDateService>();
             dateServiceMock.SetupGet(x => x.Now).Returns(new DateTime(2019, 9, 6));
-            var taskHubMock = new Mock<ITaskHubService>();
+            var taskHubMock = new Mock<INotifierService>();
             
             var service = new TaskServiceApp.Services.Implementation.RecurrenceCreatorService(taskRepo.Object, plannedRecurrenceRepo.Object, recurrenceRepo.Object, dateServiceMock.Object, null, CreateTaskParser(), taskHubMock.Object, Mapper);
             
@@ -230,7 +230,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.RecurrenceCreatorService
             });
             var dateServiceMock = new Mock<IDateService>();
             dateServiceMock.SetupGet(x => x.Now).Returns(new DateTime(2019, 9, 3));
-            var taskHubMock = new Mock<ITaskHubService>();
+            var taskHubMock = new Mock<INotifierService>();
             
             var service = new TaskServiceApp.Services.Implementation.RecurrenceCreatorService(taskRepo.Object, plannedRecurrenceRepo.Object, recurrenceRepo.Object, dateServiceMock.Object, null, CreateTaskParser(), taskHubMock.Object, Mapper);
             
@@ -290,14 +290,14 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.RecurrenceCreatorService
             var recurrenceRepo = Helper.CreateRepoNonDeletableMock<RecurrenceEntity>();
             var dateServiceMock = new Mock<IDateService>();
             dateServiceMock.SetupGet(x => x.Now).Returns(new DateTime(2019, 9, 6));
-            var taskHubMock = new Mock<ITaskHubService>();
+            var taskHubMock = new Mock<INotifierService>();
             var taskParser = CreateTaskParser(new TaskDto {Title = "Task"});
             
             var service = new TaskServiceApp.Services.Implementation.RecurrenceCreatorService(taskRepo.Object, plannedRecurrenceRepo.Object, recurrenceRepo.Object, dateServiceMock.Object, null, taskParser, taskHubMock.Object, Mapper);
             
             await service.CreateAsync(0, "userId");
 
-            taskHubMock.Verify(x => x.Update(
+            taskHubMock.Verify(x => x.TaskUpdated(
                 It.Is<TaskDto[]>(y => y.Length == 1 && y[0].Title == "Task")
             ));
         }
