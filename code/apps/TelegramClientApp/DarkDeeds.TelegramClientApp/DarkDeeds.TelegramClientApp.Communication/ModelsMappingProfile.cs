@@ -23,7 +23,7 @@ namespace DarkDeeds.TelegramClientApp.Communication
 
             CreateMap<TaskModel, TaskDto>()
                 .ForMember(x => x.Date, e =>
-                    e.MapFrom(x => x.DateExist ? (DateTime?) new DateTime(x.Date) : null))
+                    e.MapFrom(x => x.DateExist ? (DateTime?) new DateTime(x.Date, DateTimeKind.Utc) : null))
                 .ForMember(x => x.Time, e =>
                     e.MapFrom(x => x.TimeExist ? (int?) x.Time : null))
                 .ForMember(x => x.IsProbable,

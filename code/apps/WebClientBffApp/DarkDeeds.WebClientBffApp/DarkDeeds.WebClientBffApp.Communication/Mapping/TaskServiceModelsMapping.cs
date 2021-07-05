@@ -24,7 +24,7 @@ namespace DarkDeeds.WebClientBffApp.Communication.Mapping
 
             CreateMap<TaskModel, TaskDto>()
                 .ForMember(x => x.Date, e =>
-                    e.MapFrom(x => x.DateExist ? (DateTime?) new DateTime(x.Date) : null))
+                    e.MapFrom(x => x.DateExist ? (DateTime?) new DateTime(x.Date, DateTimeKind.Utc) : null))
                 .ForMember(x => x.Time, e =>
                     e.MapFrom(x => x.TimeExist ? (int?) x.Time : null))
                 .ForMember(x => x.IsProbable,
@@ -50,13 +50,15 @@ namespace DarkDeeds.WebClientBffApp.Communication.Mapping
             
             CreateMap<PlannedRecurrenceModel, PlannedRecurrenceDto>()
                 .ForMember(x => x.EndDate, e =>
-                    e.MapFrom(x => x.EndDateExist ? (DateTime?) new DateTime(x.EndDate) : null))
+                    e.MapFrom(x => x.EndDateExist ? (DateTime?) new DateTime(x.EndDate, DateTimeKind.Utc) : null))
                 .ForMember(x => x.EveryNthDay, e =>
                     e.MapFrom(x => x.EveryNthDayExist ? (int?) x.EveryNthDay : null))
                 .ForMember(x => x.EveryWeekday, e =>
                     e.MapFrom(x => x.EveryWeekdayExist ? (RecurrenceWeekdayEnum?) x.EveryWeekday : null))
+                .ForMember(x => x.EveryMonthDay, e =>
+                    e.MapFrom(x => x.EveryMonthDay != string.Empty ? x.EveryMonthDay : null))
                 .ForMember(x => x.StartDate, e =>
-                    e.MapFrom(x => new DateTime(x.StartDate)));
+                    e.MapFrom(x => new DateTime(x.StartDate, DateTimeKind.Utc)));
         }
     }
 }

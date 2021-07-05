@@ -20,6 +20,7 @@ export class TaskHubApi {
             .withUrl(baseUrl + 'ws/web/task', {
                 accessTokenFactory: () => this.storageService.loadAccessToken() as string
             })
+            // TODO: different levels in prod
             .configureLogging(signalR.LogLevel.Information)
             .build()
     }
