@@ -10,3 +10,4 @@ CI/artifacts/
 node_modules
 build
 infrastructure/.env
+infrastructure/tests/results

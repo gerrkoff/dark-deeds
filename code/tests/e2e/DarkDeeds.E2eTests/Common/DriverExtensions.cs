@@ -15,12 +15,12 @@ namespace DarkDeeds.E2eTests.Common
             driver.WaitUntilLoginComponentDisappeared();
         }
 
-        public static void WaitUntillUserLoaded(this RemoteWebDriver driver)
+        public static void WaitUntilUserLoaded(this RemoteWebDriver driver)
         {
             driver.WaitUntilOverviewComponentAppeared();
         }
         
-        public static void WaitUntillSavingFinished(this RemoteWebDriver driver)
+        public static void WaitUntilSavingFinished(this RemoteWebDriver driver)
         {
             driver.WaitUntilSavingIndicatorAppeared();
             driver.WaitUntilSavingIndicatorDisappeared();

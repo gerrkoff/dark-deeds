@@ -22,9 +22,7 @@
             $"*{ClassContains("recurrences-view-recurrence-item-btn")}{ClassContains(position)}";
 
         public static string Toast(string text)
-        {
-            var success = $"*{ClassContains("Toastify__toast--success")}";
-            
+        {   
             var container = $"*{ClassContains("Toastify__toast-container")}";
             var body = $"*{ClassContains("Toastify__toast-body")}";
             var xpath = $"//{container}//{body}";
