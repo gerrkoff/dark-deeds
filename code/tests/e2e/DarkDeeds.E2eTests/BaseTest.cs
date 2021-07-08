@@ -16,7 +16,7 @@ namespace DarkDeeds.E2eTests
     public class BaseTest
     {
         private const string Password = "Qwerty6^";
-        private static readonly string Username = Guid.NewGuid().ToString();
+        protected static readonly string Username = Guid.NewGuid().ToString();
         
         private static readonly bool RunContainer = bool.Parse(Environment.GetEnvironmentVariable("RUN_CONTAINER") ?? "false");
         private static readonly string ArtifactsPath = Environment.GetEnvironmentVariable("ARTIFACTS_PATH") ?? "artifacts";
@@ -38,7 +38,7 @@ namespace DarkDeeds.E2eTests
             return driver;
         }
 
-        protected async Task Test(Action<RemoteWebDriver> action)
+        protected async Task Test(Func<RemoteWebDriver, Task> action)
         {
             using var driver = CreateDriver();
             try
@@ -47,7 +47,7 @@ namespace DarkDeeds.E2eTests
                 driver.SignIn(Username, Password);
                 driver.WaitUntilUserLoaded();
 
-                action(driver);
+                await action(driver);
             }
             catch (Exception)
             {
@@ -68,10 +68,13 @@ namespace DarkDeeds.E2eTests
             var handler = new HttpClientHandler
             {
                 ClientCertificateOptions = ClientCertificateOption.Manual,
-                ServerCertificateCustomValidationCallback = (_, _, _, _) => true
+                ServerCertificateCustomValidationCallback = (_, _, _, _) => true,
             };
 
-            return new HttpClient(handler);
+            return new HttpClient(handler)
+            {
+                BaseAddress = new Uri(Url)
+            };
         }
 
         private async Task CreateUser()
@@ -79,7 +82,7 @@ namespace DarkDeeds.E2eTests
             using var client = CreateHttpClient();
             var payload = JsonConvert.SerializeObject(new {username = Username, password = Password});
             var content = new StringContent(payload, Encoding.UTF8, MediaTypeNames.Application.Json);
-            await client.PostAsync($"{Url}/web/api/account/signup", content);
+            await client.PostAsync("/web/api/account/signup", content);
         }
     }
 }

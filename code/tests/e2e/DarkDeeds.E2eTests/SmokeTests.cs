@@ -11,7 +11,6 @@ using Xunit.Abstractions;
 
 namespace DarkDeeds.E2eTests
 {
-    // TODO: create user for each test
     public class SmokeTests : BaseTest
     {
         private readonly ITestOutputHelper _output;
@@ -24,19 +23,17 @@ namespace DarkDeeds.E2eTests
         [Fact]
         public async void GetBuildVersionTest()
         {
-            using (var httpClient = CreateHttpClient())
-            {
-                var url = $"{Url}/web/api/build-info";
-                var result = await httpClient.GetStringAsync(url);
-                var version = (string) JObject.Parse(result)["appVersion"];
-                _output.WriteLine($"App Version: {version}");
-            }
+            using var httpClient = CreateHttpClient();
+            var url = "/web/api/build-info";
+            var result = await httpClient.GetStringAsync(url);
+            var version = (string) JObject.Parse(result)["appVersion"];
+            _output.WriteLine($"App Version: {version}");
         }
 
         [Fact]
         public Task SignInTest()
         {
-            return Test(_ => { });
+            return Test(_ => Task.CompletedTask);
         }
         
         [Fact]
@@ -51,6 +48,8 @@ namespace DarkDeeds.E2eTests
                 var task = driver.GetTaskByTextInNoDateSection(taskText);
                 driver.DeleteTask(task);
                 driver.WaitUntilSavingFinished();
+                
+                return Task.CompletedTask;
             });
         }
 
@@ -103,12 +102,8 @@ namespace DarkDeeds.E2eTests
                 Assert.True(task1Saved.Location.X == task3Saved.Location.X);
                 Assert.True(task1Saved.Location.Y > task2Saved.Location.Y);
                 Assert.True(task1Saved.Location.Y < task3Saved.Location.Y);
-
-                driver.DeleteTask(task1Saved);
-                driver.DeleteTask(task2Saved);
-                driver.DeleteTask(task3Saved);
                 
-                driver.WaitUntilSavingFinished();
+                return Task.CompletedTask;
             });
         }
         
@@ -137,6 +132,8 @@ namespace DarkDeeds.E2eTests
                 
                 driver.SwitchTo().Window(tabs[0]);
                 driver.WaitUntilDisappeared(Xpath.TaskWithText(taskText));
+                
+                return Task.CompletedTask;
             });
         }
 
@@ -154,8 +151,9 @@ namespace DarkDeeds.E2eTests
                 Assert.Equal(expiredDaysCount, currentExpiredDaysCount);
                 
                 driver.CreateTaskViaAddButton(taskTextWithDate);
-                var task = overviewSectionParser.FindBlock(1).FindDay(expiredDaysCount + 1).FindTask(originalTaskText).GetElement();
-                driver.DeleteTask(task);
+                overviewSectionParser.FindBlock(1).FindDay(expiredDaysCount + 1).FindTask(originalTaskText).GetElement();
+
+                return Task.CompletedTask;
             });
         }
         
@@ -188,6 +186,8 @@ namespace DarkDeeds.E2eTests
                     Assert.Equal(days[0].Location.X, day.Location.X);
                     Assert.NotEqual(days[0].Location.Y, day.Location.Y);
                 }
+                
+                return Task.CompletedTask;
             });
         }
 
@@ -203,18 +203,14 @@ namespace DarkDeeds.E2eTests
                 var recurrenceTask = $"2359 {task}";
                 driver.CreateRecurrence(recurrenceTask);
                 driver.CreateTaskRecurrences(2);
-                driver.DeleteRecurrence(recurrenceTask);
                 
                 driver.NavigateToOverview();
 
                 var overviewSectionParser = new OverviewSectionParser(driver.GetCurrentSection());
-                var task1 = overviewSectionParser.FindBlock(1).FindDay(7).FindTask($"23:59 {task}").GetElement();
-                var task2 = overviewSectionParser.FindBlock(2).FindDay(7).FindTask($"23:59 {task}").GetElement();
-                
-                driver.DeleteTask(task1);
-                driver.DeleteTask(task2);
-                
-                driver.WaitUntilSavingFinished();
+                overviewSectionParser.FindBlock(1).FindDay(7).FindTask($"23:59 {task}").GetElement();
+                overviewSectionParser.FindBlock(2).FindDay(7).FindTask($"23:59 {task}").GetElement();
+
+                return Task.CompletedTask;
             });
         }
     }

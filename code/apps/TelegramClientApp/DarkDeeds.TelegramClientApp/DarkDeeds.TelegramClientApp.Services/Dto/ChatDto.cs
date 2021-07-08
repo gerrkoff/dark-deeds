@@ -1,26 +1,26 @@
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace DarkDeeds.TelegramClientApp.Services.Dto
 {
     public class ChatDto
     {
-        [JsonProperty(PropertyName = "id")]
+        [JsonPropertyName("id")]
         public int Id { get; set; }
         
         // private, group, supergroup, channel
-        [JsonProperty(PropertyName = "type")]
+        [JsonPropertyName("type")]
         public string Type { get; set; }
         
-        [JsonProperty(PropertyName = "title")]
+        [JsonPropertyName("title")]
         public string Title { get; set; }
         
-        [JsonProperty(PropertyName = "first_name")]
+        [JsonPropertyName("first_name")]
         public string FirstName { get; set; }
         
-        [JsonProperty(PropertyName = "last_name")]
+        [JsonPropertyName("last_name")]
         public string LastName { get; set; }
         
-        [JsonProperty(PropertyName = "username")]
+        [JsonPropertyName("username")]
         public string UserName { get; set; }
     }
 }

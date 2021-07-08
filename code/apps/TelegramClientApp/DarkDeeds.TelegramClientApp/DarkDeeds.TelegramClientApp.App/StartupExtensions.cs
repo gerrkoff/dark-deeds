@@ -45,6 +45,7 @@ namespace DarkDeeds.TelegramClientApp.App
 #if DEBUG
             services.AddScoped<IBotSendMessageService>(_ => new BotSendMessageDebugService(configuration["Bot"]));
 #endif
+            services.AddScoped<ITestService, TestService>();
         }
 
         public static void AddTelegramClientCommunications(this IServiceCollection services)

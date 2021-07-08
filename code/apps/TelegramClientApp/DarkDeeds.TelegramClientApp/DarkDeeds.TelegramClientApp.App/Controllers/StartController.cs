@@ -2,14 +2,12 @@
 using DarkDeeds.Authentication;
 using DarkDeeds.TelegramClientApp.App.Dto;
 using DarkDeeds.TelegramClientApp.Services.Interface;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DarkDeeds.TelegramClientApp.App.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [AllowAnonymous]
     public class StartController : ControllerBase
     {
         private readonly ITelegramService _telegramService;

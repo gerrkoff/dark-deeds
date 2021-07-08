@@ -22,9 +22,9 @@
     },
 
     {
-      "DownstreamPathTemplate": "/api/bot/{path}",
+      "DownstreamPathTemplate": "/{path}",
       "DownstreamScheme": "https",
-      "UpstreamPathTemplate": "/telegram/api/bot/{path}",
+      "UpstreamPathTemplate": "/telegram/{path}",
       "UpstreamHttpMethod": [ "POST" ],
       "ServiceName": "telegram-client",
       "LoadBalancerOptions": {
