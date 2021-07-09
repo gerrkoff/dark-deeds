@@ -1,34 +1,37 @@
+using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Hosting;
+using DarkDeeds.Communication.Common;
+using Microsoft.Extensions.Logging;
+using RabbitMQ.Client.Exceptions;
 
 namespace DarkDeeds.Communication.Amqp.Subscribe
 {
-    public abstract class AbstractMessageSubscriber<T> : BackgroundService
-    {
+    public abstract class AbstractMessageSubscriber<T> : AbstractRegisterBackgroundService<BrokerUnreachableException>, IDisposable
+    {   
         private readonly string _exchange;
         private readonly ISubscriber<T> _subscriber;
+        private readonly ILogger<AbstractMessageSubscriber<T>> _logger;
 
-        protected AbstractMessageSubscriber(string exchange, ISubscriber<T> subscriber)
+        protected AbstractMessageSubscriber(string exchange, ISubscriber<T> subscriber, ILogger<AbstractMessageSubscriber<T>> logger) :
+            base(logger)
         {
             _exchange = exchange;
             _subscriber = subscriber;
+            _logger = logger;
         }
 
-        protected override Task ExecuteAsync(CancellationToken stoppingToken)
+        protected override Func<CancellationToken, Task> CreateRegisterJob() => cancellationToken =>
         {
-            stoppingToken.ThrowIfCancellationRequested();
-            
             _subscriber.Subscribe(_exchange, ProcessMessage);
-            
+            _logger.LogInformation($"Subscribed to RabbitMQ '{_exchange}' successfully");
             return Task.CompletedTask;
-        }
-
+        };
+        
         protected abstract Task ProcessMessage(T message);
-
-        public override void Dispose()
+        
+        public void Dispose()
         {
-            base.Dispose();
             _subscriber?.Dispose();
         }
     }

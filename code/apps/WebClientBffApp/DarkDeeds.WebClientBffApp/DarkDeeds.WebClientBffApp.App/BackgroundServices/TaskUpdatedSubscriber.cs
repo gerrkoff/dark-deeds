@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using DarkDeeds.Communication.Amqp.Subscribe;
 using DarkDeeds.WebClientBffApp.Infrastructure.Communication.TaskServiceApp.Dto;
 using DarkDeeds.WebClientBffApp.Services.Services.Interface;
+using Microsoft.Extensions.Logging;
 
 namespace DarkDeeds.WebClientBffApp.App.BackgroundServices
 {
@@ -12,8 +13,9 @@ namespace DarkDeeds.WebClientBffApp.App.BackgroundServices
         
         public TaskUpdatedSubscriber(
             ISubscriber<ICollection<TaskDto>> subscriber, 
-            ITaskUpdatedListener listener) 
-            : base("notify-task-updated", subscriber)
+            ITaskUpdatedListener listener, 
+            ILogger<TaskUpdatedSubscriber> logger) 
+            : base("notify-task-updated", subscriber, logger)
         {
             _listener = listener;
         }

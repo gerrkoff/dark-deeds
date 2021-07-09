@@ -1,22 +1,24 @@
 using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Consul;
+using DarkDeeds.Communication.Common;
 using DarkDeeds.Communication.Services.Interface;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
 namespace DarkDeeds.Communication.Services.Implementation
 {
-    class AppRegistrationService : IHostedService
+    class AppRegistrationService : AbstractRegisterBackgroundService<HttpRequestException>
     {
         private readonly IConsulClient _consul;
         private readonly ILogger<AppRegistrationService> _logger;
         private readonly string _appName;
         private readonly IAddressService _addressService;
 
-        public AppRegistrationService(IConsulClient consul, ILogger<AppRegistrationService> logger, string appName, IAddressService addressService)
+        public AppRegistrationService(IConsulClient consul, ILogger<AppRegistrationService> logger, string appName, IAddressService addressService) :
+            base(logger)
         {
             _consul = consul;
             _logger = logger;
@@ -27,11 +29,11 @@ namespace DarkDeeds.Communication.Services.Implementation
         private string _id;
         private string GetId() => _id ??= Guid.NewGuid().ToString();
 
-        public async Task StartAsync(CancellationToken cancellationToken)
+        protected override Func<CancellationToken, Task> CreateRegisterJob()
         {
             var id = GetId();
             if (!_addressService.TryGetAddress(out Uri uri))
-                return;
+                return null;
             
             var registration = new AgentServiceRegistration()
             {
@@ -48,32 +50,13 @@ namespace DarkDeeds.Communication.Services.Implementation
                     DeregisterCriticalServiceAfter = new TimeSpan(0, 0, 20),
                 }
             };
-            
-            _logger.LogInformation(
-                $"Register service [{registration.Name}] at [{registration.Address}:{registration.Port}] as [{registration.ID}]");
 
-            try
+            return async cancellationToken =>
             {
                 await _consul.Agent.ServiceRegister(registration, cancellationToken);
-            }
-            catch (Exception e)
-            {
-                _logger.LogWarning($"Failed to register app, error: {e.Message}");
-            }
-        }
-
-        public async Task StopAsync(CancellationToken cancellationToken)
-        {
-            var id = GetId();
-            _logger.LogInformation($"Deregister service [{id}]");
-            try
-            {
-                await _consul.Agent.ServiceDeregister(id, cancellationToken);
-            }
-            catch (Exception e)
-            {
-                _logger.LogWarning($"Failed to deregister app, error: {e.Message}");
-            }
+                _logger.LogInformation(
+                    $"Register service [{registration.Name}] at [{registration.Address}:{registration.Port}] as [{registration.ID}]");
+            };
         }
     }
 }
