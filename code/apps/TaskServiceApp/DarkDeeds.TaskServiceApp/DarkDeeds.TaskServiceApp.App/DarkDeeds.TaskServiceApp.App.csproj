@@ -21,4 +21,8 @@
       <ProjectReference Include="..\DarkDeeds.TaskServiceApp.Services\DarkDeeds.TaskServiceApp.Services.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Controllers" />
+    </ItemGroup>
+
 </Project>
