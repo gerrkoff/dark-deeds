@@ -5,7 +5,7 @@ export type EDITTASK_MODALOPEN = typeof EDITTASK_MODALOPEN
 export interface IEditTaskModalOpen {
     type: EDITTASK_MODALOPEN
     open: boolean
-    clientId: number
+    uid: string | null
 }
 
 export const EDITTASK_TASKMODEL = 'EDITTASK_TASKMODEL'

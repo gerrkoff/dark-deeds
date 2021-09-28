@@ -1,11 +1,9 @@
-using System.Collections.Generic;
 using DarkDeeds.Authentication.DependencyInjection;
 using DarkDeeds.Communication;
-using DarkDeeds.TaskServiceApp.Communication;
 using DarkDeeds.TaskServiceApp.Communication.Publishers;
 using DarkDeeds.TaskServiceApp.ContractImpl;
 using DarkDeeds.TaskServiceApp.ContractImpl.Contract;
-using DarkDeeds.TaskServiceApp.Models.Dto;
+using DarkDeeds.TaskServiceApp.Infrastructure.Services.Dto;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -27,7 +25,7 @@ namespace DarkDeeds.TaskServiceApp.App
         {
             services.AddDarkDeedsAuth(Configuration);
             services.AddDarkDeedsAppRegistration("task-service");
-            services.AddDarkDeedsAmpqPublisher<ITaskUpdatedPublisher, TaskUpdatedPublisher, ICollection<TaskDto>>();
+            services.AddDarkDeedsAmpqPublisher<ITaskUpdatedPublisher, TaskUpdatedPublisher, TaskUpdatedDto>();
             
             services.AddTaskServices(Configuration);
             services.AddTaskAutoMapper();

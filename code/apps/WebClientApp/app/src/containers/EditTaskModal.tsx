@@ -8,7 +8,7 @@ import { EditTaskAction, TasksAction } from '../redux/constants'
 
 function mapStateToProps({ editTask }: IAppState) {
     return {
-        clientId: editTask.clientId,
+        uid: editTask.uid,
         model: editTask.taskModel,
         open: editTask.modalOpen
     }
@@ -18,7 +18,7 @@ function mapDispatchToProps(dispatch: ThunkDispatch<EditTaskAction | TasksAction
     return {
         changeModel: (value: string) => dispatch(changeEditTaskModel(value)),
         closeModal: () => dispatch(openEditTaskModal(false)),
-        changeTask: (taskModel: TaskModel, clientId: number) => dispatch(changeTask(taskModel, clientId))
+        changeTask: (taskModel: TaskModel, uid: string | null) => dispatch(changeTask(taskModel, uid))
     }
 }
 

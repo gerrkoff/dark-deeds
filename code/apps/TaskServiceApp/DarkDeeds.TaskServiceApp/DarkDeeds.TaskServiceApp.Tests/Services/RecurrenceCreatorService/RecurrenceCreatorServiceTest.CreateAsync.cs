@@ -1,8 +1,10 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using DarkDeeds.TaskServiceApp.Entities.Enums;
 using DarkDeeds.TaskServiceApp.Entities.Models;
 using DarkDeeds.TaskServiceApp.Infrastructure.Services;
+using DarkDeeds.TaskServiceApp.Infrastructure.Services.Dto;
 using DarkDeeds.TaskServiceApp.Models.Dto;
 using DarkDeeds.TaskServiceApp.Services.Interface;
 using Moq;
@@ -58,7 +60,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.RecurrenceCreatorService
             await service.CreateAsync(0, "userId");
             
             taskRepo.Verify(x => x.SaveAsync(It.Is<TaskEntity>(
-                y => y.Title == "Task" && y.UserId == "userId" && y.Date == someDate
+                y => y.Title == "Task" && y.UserId == "userId" && y.Date == someDate && y.Uid != null
                 )));
         }
         
@@ -298,7 +300,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.RecurrenceCreatorService
             await service.CreateAsync(0, "userId");
 
             taskHubMock.Verify(x => x.TaskUpdated(
-                It.Is<TaskDto[]>(y => y.Length == 1 && y[0].Title == "Task")
+                It.Is<TaskUpdatedDto>(y => y.Tasks.Count == 1 && y.Tasks.First().Title == "Task")
             ));
         }
     }

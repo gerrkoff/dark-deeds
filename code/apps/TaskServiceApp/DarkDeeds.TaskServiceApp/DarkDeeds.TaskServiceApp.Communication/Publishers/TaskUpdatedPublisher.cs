@@ -1,18 +1,17 @@
-using System.Collections.Generic;
 using DarkDeeds.Communication.Amqp.Publish;
-using DarkDeeds.TaskServiceApp.Models.Dto;
+using DarkDeeds.TaskServiceApp.Infrastructure.Services.Dto;
 
 namespace DarkDeeds.TaskServiceApp.Communication.Publishers
 {
-    public class TaskUpdatedPublisher : AbstractMessagePublisher<ICollection<TaskDto>>, ITaskUpdatedPublisher 
+    public class TaskUpdatedPublisher : AbstractMessagePublisher<TaskUpdatedDto>, ITaskUpdatedPublisher 
     {
-        public TaskUpdatedPublisher(IPublisher<ICollection<TaskDto>> publisher) : base("notify-task-updated", publisher)
+        public TaskUpdatedPublisher(IPublisher<TaskUpdatedDto> publisher) : base("notify-task-updated", publisher)
         {
         }
 
-        public void Send(ICollection<TaskDto> tasks)
+        public void Send(TaskUpdatedDto updatedTasks)
         {
-            Publish(new PublishItem<ICollection<TaskDto>>(tasks));
+            Publish(new PublishItem<TaskUpdatedDto>(updatedTasks));
         }
     }
 }

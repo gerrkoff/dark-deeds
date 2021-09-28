@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/sdk:5.0-focal
+FROM mcr.microsoft.com/dotnet/sdk:5.0
 
 COPY code/apps/WebClientBffApp /app/code/apps/WebClientBffApp
 COPY code/libs/DarkDeeds.Authentication /app/code/libs/DarkDeeds.Authentication

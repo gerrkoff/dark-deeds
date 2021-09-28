@@ -11,18 +11,15 @@ using Newtonsoft.Json;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Remote;
 
-namespace DarkDeeds.E2eTests
+namespace DarkDeeds.E2eTests.Base
 {
     public class BaseTest
     {
-        private const string Password = "Qwerty6^";
-        protected static readonly string Username = Guid.NewGuid().ToString();
-        
         private static readonly bool RunContainer = bool.Parse(Environment.GetEnvironmentVariable("RUN_CONTAINER") ?? "false");
         private static readonly string ArtifactsPath = Environment.GetEnvironmentVariable("ARTIFACTS_PATH") ?? "artifacts";
         protected static readonly string Url = Environment.GetEnvironmentVariable("URL") ?? "http://localhost:5000";
-        
-        private static readonly Random Random = new Random();
+        private const string Password = "Qwerty!1";
+        private static readonly Random Random = new();
 
         private RemoteWebDriver CreateDriver()
         {
@@ -37,16 +34,12 @@ namespace DarkDeeds.E2eTests
             driver.Navigate().GoToUrl(Url);
             return driver;
         }
-
-        protected async Task Test(Func<RemoteWebDriver, Task> action)
+        
+        protected virtual async Task Test(Func<RemoteWebDriver, Task> action)
         {
             using var driver = CreateDriver();
             try
             {
-                await CreateUser();
-                driver.SignIn(Username, Password);
-                driver.WaitUntilUserLoaded();
-
                 await action(driver);
             }
             catch (Exception)
@@ -61,6 +54,13 @@ namespace DarkDeeds.E2eTests
         protected string RandomizeText(string text)
         {
             return $"{text} {Random.Next()}";
+        }
+        
+        protected async Task CreateUserAndLogin(RemoteWebDriver driver, string username)
+        {
+            await CreateUser(username);
+            driver.SignIn(username, Password);
+            driver.WaitUntilUserLoaded();
         }
 
         protected HttpClient CreateHttpClient()
@@ -77,10 +77,10 @@ namespace DarkDeeds.E2eTests
             };
         }
 
-        private async Task CreateUser()
+        private async Task CreateUser(string username)
         {
             using var client = CreateHttpClient();
-            var payload = JsonConvert.SerializeObject(new {username = Username, password = Password});
+            var payload = JsonConvert.SerializeObject(new {username, password = Password});
             var content = new StringContent(payload, Encoding.UTF8, MediaTypeNames.Application.Json);
             await client.PostAsync("/web/api/account/signup", content);
         }

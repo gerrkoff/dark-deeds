@@ -5,6 +5,7 @@ using DarkDeeds.WebClientBffApp.App.Services;
 using DarkDeeds.WebClientBffApp.Infrastructure.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 
@@ -42,6 +43,7 @@ namespace DarkDeeds.WebClientBffApp.App
         public static void AddWebClientBffSockets(this IServiceCollection services)
         {
             services.AddHostedService<HubHeartbeat<TaskHub>>();
+            services.AddTransient<IUserIdProvider, HubUserIdProvider>();
             services.AddSignalR()
                 .AddHubOptions<TaskHub>(options => options.EnableDetailedErrors = true);
         }

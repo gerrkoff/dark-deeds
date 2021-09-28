@@ -8,8 +8,8 @@ import '../../styles/no-date-card.css'
 
 interface IProps {
     tasks: Task[]
-    openTaskModal?: (model: TaskModel, id?: number) => void
-    changeTaskStatus?: (clientId: number, completed?: boolean, deleted?: boolean) => void
+    openTaskModal?: (model: TaskModel, uid: string | null) => void
+    changeTaskStatus?: (uid: string, completed?: boolean, deleted?: boolean) => void
     confirmAction?: (content: React.ReactNode, action: () => void, header: string) => void
 }
 export class NoDateCard extends React.PureComponent<IProps> {
@@ -21,7 +21,7 @@ export class NoDateCard extends React.PureComponent<IProps> {
             <Segment raised inverted id='no-date-card'>
                 <List bulleted className='no-date-card-tasks-view fixed-list dragula-container' data-id={0}>
                     {tasks.map(x =>
-                        <List.Item key={x.clientId} data-id={x.clientId}>
+                        <List.Item key={x.uid} data-id={x.uid}>
                             <TaskItem task={x} changeTaskStatus={this.props.changeTaskStatus} confirmAction={this.props.confirmAction} openTaskModal={this.props.openTaskModal} />
                         </List.Item>
                     )}

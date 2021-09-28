@@ -15,7 +15,6 @@ export class TaskApi {
         const monday = this.dateService.monday(this.dateService.today()).toISOString()
         const params = new Map<string, any>([['from', monday]])
         const result = await this.api.get<Task[]>('web/api/tasks', params)
-        result.forEach(x => x.clientId = x.id)
         return this.dateService.adjustDatesAfterLoading(result) as Task[]
     }
 

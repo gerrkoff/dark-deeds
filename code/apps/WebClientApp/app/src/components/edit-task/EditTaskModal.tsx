@@ -6,8 +6,8 @@ import { TaskModel } from '../../models'
 interface IProps {
     open: boolean
     model: string
-    clientId: number
-    changeTask: (taskModel: TaskModel, clientId: number) => void
+    uid: string | null
+    changeTask: (taskModel: TaskModel, uid: string | null) => void
     closeModal: () => void
     changeModel: (value: string) => void
 }
@@ -32,7 +32,7 @@ export class EditTaskModal extends React.PureComponent<IProps, IState> {
     public render() {
         return (
             <Modal basic size='small' open={this.props.open} onClose={this.props.closeModal}>
-                <Modal.Header><Icon name='sticky note outline' />{this.props.clientId === 0 ? 'New task' : 'Edit task'}</Modal.Header>
+                <Modal.Header><Icon name='sticky note outline' />{this.props.uid === null ? 'New task' : 'Edit task'}</Modal.Header>
                 <Modal.Content>
                     <Input focus fluid
                         data-test-id='edit-task-input'
@@ -77,7 +77,7 @@ export class EditTaskModal extends React.PureComponent<IProps, IState> {
             return
         }
 
-        this.props.changeTask(taskModel, this.props.clientId)
+        this.props.changeTask(taskModel, this.props.uid)
         this.props.changeModel('')
         this.props.closeModal()
     }

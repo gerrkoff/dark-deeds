@@ -56,6 +56,11 @@ services:
       - 5000:5000
     depends_on:
       - consul
+      - auth-service
+      - task-service
+      - telegram-client
+      - web-client
+      - web-client-bff
     deploy:
       resources:
         limits:

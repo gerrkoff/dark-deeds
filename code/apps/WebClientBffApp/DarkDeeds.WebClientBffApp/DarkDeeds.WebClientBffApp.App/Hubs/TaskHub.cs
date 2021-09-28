@@ -17,6 +17,7 @@ namespace DarkDeeds.WebClientBffApp.App.Hubs
             _taskServiceApp = taskServiceApp;
         }
         
+        // TODO: remove
         public async Task Save(ICollection<TaskDto> tasks)
         {
             IEnumerable<TaskDto> updatedTasks = await _taskServiceApp.SaveTasksAsync(tasks);

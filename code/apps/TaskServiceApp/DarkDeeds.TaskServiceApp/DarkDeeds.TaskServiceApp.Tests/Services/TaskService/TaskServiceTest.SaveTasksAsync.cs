@@ -1,8 +1,9 @@
 using System.Linq;
 using System.Threading.Tasks;
 using DarkDeeds.TaskServiceApp.Entities.Models;
+using DarkDeeds.TaskServiceApp.Infrastructure.Data;
+using DarkDeeds.TaskServiceApp.Infrastructure.Services;
 using DarkDeeds.TaskServiceApp.Models.Dto;
-using DarkDeeds.TaskServiceApp.Services.Interface;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Xunit;
@@ -11,172 +12,179 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.TaskService
 {
     public partial class TaskServiceTest : BaseTest
     {
-        [Fact]
-        public async Task SaveTasksAsync_CheckIsUserCanEdit()
-        {
-            var repoMock = Helper.CreateRepoMock<TaskEntity>();
-            var permissionMock = new Mock<IPermissionsService>();
-            var service = new TaskServiceApp.Services.Implementation.TaskService(
-                repoMock.Object, 
-                null,
-                permissionMock.Object,
-                Mapper);
+        private Mock<IRepository<TaskEntity>> _repoMock;
+        private Mock<ILogger<TaskServiceApp.Services.Implementation.TaskService>> _loggerMock;
+        private TaskServiceApp.Services.Implementation.TaskService _service;
+        private Mock<INotifierService> _notifierServiceMock;
 
-            var list = new TaskDto[0];
-            var userId = "userid";
-            await service.SaveTasksAsync(list, userId);
-            
-            permissionMock.Verify(x => x.CheckIfUserCanEditEntitiesAsync(list, repoMock.Object, userId, It.IsAny<string>()));
+        private void CreateService(params TaskEntity[] values)
+        {
+            _repoMock = Helper.CreateRepoMock(values);
+            _loggerMock = new Mock<ILogger<TaskServiceApp.Services.Implementation.TaskService>>();
+            _notifierServiceMock = new Mock<INotifierService>();
+            _service = new TaskServiceApp.Services.Implementation.TaskService(
+                _repoMock.Object, 
+                _loggerMock.Object,
+                Mapper,
+                _notifierServiceMock.Object);
         }
 
         [Fact]
         public async Task SaveTasksAsync_ReturnTasksBack()
         {
-            var repoMock = Helper.CreateRepoMock<TaskEntity>();
-            var loggerMock = new Mock<ILogger<TaskServiceApp.Services.Implementation.TaskService>>();
-            var service = new TaskServiceApp.Services.Implementation.TaskService(
-                repoMock.Object,
-                loggerMock.Object,
-                new Mock<IPermissionsService>().Object, 
-                Mapper);
+            CreateService();
 
             var items = new[] {new TaskDto {Id = 1000, ClientId = -1}, new TaskDto {Id = 2000, ClientId = -2}};
-            var result = (await service.SaveTasksAsync(items, string.Empty)).ToList();
+            var result = (await _service.SaveTasksAsync(items, string.Empty)).ToList();
 
             Assert.Equal(2, result.Count);
         }
 
         [Fact]
-        public async Task SaveTasksAsync_StopSavingIfThereIsNoTaskInDbWithSuchId()
-        {
-            var repoMock = Helper.CreateRepoMock(
-                new TaskEntity {Id = 1000, UserId = "1", Version = 10, Title = "Old"});
-            var loggerMock = new Mock<ILogger<TaskServiceApp.Services.Implementation.TaskService>>();
-            var service = new TaskServiceApp.Services.Implementation.TaskService(
-                repoMock.Object, 
-                loggerMock.Object, 
-                new Mock<IPermissionsService>().Object,
-                Mapper);
-
-            var items = new[] {new TaskDto {Id = 1000, ClientId = 20, Version = 5, Title = "New"}};
-            var result = (await service.SaveTasksAsync(items, "1")).ToList();
-            
-            repoMock.Verify(x => x.GetAll());
-            repoMock.VerifyNoOtherCalls();
-            Assert.Single(result);
-            Assert.Equal(1000, result[0].Id);
-            Assert.Equal(10, result[0].Version);
-            Assert.Equal("Old", result[0].Title);
-        }
-        
-        [Fact]
         public async Task SaveTasksAsync_StopSavingAndReturnActualTaskIfVersionMismatch()
         {
-            var repoMock = Helper.CreateRepoMock<TaskEntity>();
-            var loggerMock = new Mock<ILogger<TaskServiceApp.Services.Implementation.TaskService>>();
-            var service = new TaskServiceApp.Services.Implementation.TaskService(
-                repoMock.Object,
-                loggerMock.Object, 
-                new Mock<IPermissionsService>().Object,
-                Mapper);
+            CreateService(new TaskEntity {Uid = "uid", UserId = "userid", Version = 10, Title = "old"});
 
-            var items = new[] {new TaskDto {Id = 1000, ClientId = 1}, new TaskDto {Id = 2000, Deleted = true}};
-            var result = (await service.SaveTasksAsync(items, string.Empty)).ToList();
+            var items = new[] {new TaskDto {Uid = "uid", Version = 9, Title = "new"}};
+            var result = (await _service.SaveTasksAsync(items, "userid")).ToList();
             
-            repoMock.Verify(x => x.GetAll());
-            repoMock.VerifyNoOtherCalls();
-            Assert.Empty(result);
+            Assert.Collection(result, x =>
+            {
+                Assert.Equal("uid", x.Uid);
+                Assert.Equal(10, x.Version);
+                Assert.Equal("old", x.Title);
+            });
+            _repoMock.Verify(x => x.GetAll());
+            _repoMock.VerifyNoOtherCalls();
         }
         
         
         [Fact]
         public async Task SaveTasksAsync_WhenDeletingCallDelete()
         {
-            var repoMock = Helper.CreateRepoMock(
-                new TaskEntity {Id = 1000, UserId = "1"});
-            var loggerMock = new Mock<ILogger<TaskServiceApp.Services.Implementation.TaskService>>();
-            var service = new TaskServiceApp.Services.Implementation.TaskService(
-                repoMock.Object,
-                loggerMock.Object,
-                new Mock<IPermissionsService>().Object,
-                Mapper);
+            CreateService(new TaskEntity {Id = 1000, UserId = "1"});
 
             var items = new[] {new TaskDto {Id = 1000, Deleted = true}};
-            await service.SaveTasksAsync(items, "1");
+            await _service.SaveTasksAsync(items, "1");
             
-            repoMock.Verify(x => x.GetAll());
-            repoMock.Verify(x => x.DeleteAsync(It.Is<TaskEntity>(y => y.Id == 1000)));
-            repoMock.VerifyNoOtherCalls();
-        }
-        
-        [Fact]
-        public async Task SaveTasksAsync_WhenCreatingResetIdAndSetUserIdAndCallSave()
-        {
-            var repoMock = Helper.CreateRepoMock<TaskEntity>();
-            var loggerMock = new Mock<ILogger<TaskServiceApp.Services.Implementation.TaskService>>();
-            var service = new TaskServiceApp.Services.Implementation.TaskService(
-                repoMock.Object,
-                loggerMock.Object,
-                new Mock<IPermissionsService>().Object,
-                Mapper);
-
-            var items = new[] {new TaskDto {Id = 1000, ClientId = -1, Title = "Task"}};
-            await service.SaveTasksAsync(items, "1");
-            
-            repoMock.Verify(x => x.GetAll());
-            repoMock.Verify(x => x.SaveAsync(
-                It.Is<TaskEntity>(y =>
-                    y.Id == 0 &&
-                    y.UserId == "1" &&
-                    y.Title == "Task" &&
-                    y.Version == 0)));
-            repoMock.VerifyNoOtherCalls();
+            _repoMock.Verify(x => x.GetAll());
+            _repoMock.Verify(x => x.DeleteAsync(It.Is<TaskEntity>(y => y.Id == 1000)));
+            _repoMock.VerifyNoOtherCalls();
         }
         
         [Fact]
         public async Task SaveTasksAsync_WhenUpdatingUpdateAndIncrementVersionAndCallSave()
         {
-            var repoMock = Helper.CreateRepoMock(
-                new TaskEntity {Id = 1000, UserId = "1", Title = "Task Old", Version = 100500});
-            var loggerMock = new Mock<ILogger<TaskServiceApp.Services.Implementation.TaskService>>();
-            var service = new TaskServiceApp.Services.Implementation.TaskService(
-                repoMock.Object,
-                loggerMock.Object, 
-                new Mock<IPermissionsService>().Object,
-                Mapper);
+            CreateService(new TaskEntity {Id = 1000, UserId = "1", Title = "Task Old", Version = 100500});
 
             var items = new[] {new TaskDto {Id = 1000, ClientId = 1, Title = "Task New", Version = 100500}};
-            await service.SaveTasksAsync(items, "1");
+            await _service.SaveTasksAsync(items, "1");
             
-            repoMock.Verify(x => x.GetAll());
-            repoMock.Verify(x => x.SaveAsync(
+            _repoMock.Verify(x => x.GetAll());
+            _repoMock.Verify(x => x.SaveAsync(
                 It.Is<TaskEntity>(y =>
                     y.Id == 1000 &&
                     y.UserId == "1" &&
                     y.Title == "Task New" &&
                     y.Version == 100501)));
-            repoMock.VerifyNoOtherCalls();
+            _repoMock.VerifyNoOtherCalls();
         }
         
         [Fact]
-        public async Task SaveTasksAsync_KeepClientIdWhenCreatingOrUpdating()
+        public async Task SaveTasksAsync_IgnoreForeignTasks()
         {
-            var repoMock = Helper.CreateRepoMock(
-                new TaskEntity {Id = 1000, UserId = "1"},
-                new TaskEntity {Id = 2000, UserId = "1"});
-            var loggerMock = new Mock<ILogger<TaskServiceApp.Services.Implementation.TaskService>>();
-            var service = new TaskServiceApp.Services.Implementation.TaskService(
-                repoMock.Object, 
-                loggerMock.Object,
-                new Mock<IPermissionsService>().Object,
-                Mapper);
+            CreateService(new TaskEntity {Uid = "uid", UserId = "foreign user"});
 
-            var items = new[] {new TaskDto {Id = 1000, ClientId = -1}, new TaskDto {Id = 2000, ClientId = 1}};
-            var result = (await service.SaveTasksAsync(items, "1")).ToList();
+            var items = new[] {new TaskDto {Uid = "uid"}};
+            
+            var result = (await _service.SaveTasksAsync(items, "user")).ToList();
 
-            Assert.Collection(result,
-                x => Assert.Equal(-1, x.ClientId),
-                x => Assert.Equal(1, x.ClientId));
+            Assert.Empty(result);
+            _repoMock.Verify(x => x.GetAll());
+            _repoMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task SaveTasksAsync_IgnoreAlreadyDeletedOnDelete()
+        {
+            CreateService();
+
+            var items = new[] {new TaskDto {Uid = "uid", Deleted = true}};
+            
+            var result = (await _service.SaveTasksAsync(items, "user")).ToList();
+
+            Assert.Collection(result, _ => { });
+            _repoMock.Verify(x => x.GetAll());
+            _repoMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task SaveTasksAsync_Delete()
+        {
+            CreateService(new TaskEntity {Id = 1000, Uid = "uid", UserId = "user"});
+
+            var items = new[] {new TaskDto {Uid = "uid", Deleted = true, Version = 7}};
+            
+            var result = (await _service.SaveTasksAsync(items, "user")).ToList();
+
+            Assert.Collection(result, x =>
+            {
+                Assert.Equal("uid", x.Uid);
+                Assert.Equal(8, x.Version);
+            });
+            _repoMock.Verify(x => x.GetAll());
+            _repoMock.Verify(x => x.DeleteAsync(It.Is<TaskEntity>(y => y.Id == 1000)));
+            _repoMock.VerifyNoOtherCalls();
+        }
+        
+        [Fact]
+        public async Task SaveTasksAsync_Update()
+        {
+            CreateService(new TaskEntity {Id = 1000, Uid = "uid", UserId = "user", Title = "Task Old", Version = 100500});
+
+            var items = new[] {new TaskDto {Uid = "uid", Title = "Task New", Version = 100500}};
+            var result = (await _service.SaveTasksAsync(items, "user")).ToList();
+            
+            Assert.Collection(result, x =>
+            {
+                Assert.Equal("Task New", x.Title);
+                Assert.Equal("uid", x.Uid);
+                Assert.Equal(100501, x.Version);
+            });
+            _repoMock.Verify(x => x.GetAll());
+            _repoMock.Verify(x => x.SaveAsync(
+                It.Is<TaskEntity>(y =>
+                    y.Id == 1000 &&
+                    y.Uid == "uid" &&
+                    y.UserId == "user" &&
+                    y.Title == "Task New" &&
+                    y.Version == 100501)));
+            _repoMock.VerifyNoOtherCalls();
+        }
+        
+        [Fact]
+        public async Task SaveTasksAsync_Create()
+        {
+            CreateService();
+
+            var items = new[] {new TaskDto {Uid = "uid", Title = "Task"}};
+            var result = (await _service.SaveTasksAsync(items, "user")).ToList();
+            
+            Assert.Collection(result, x =>
+            {
+                Assert.Equal("Task", x.Title);
+                Assert.Equal("uid", x.Uid);
+                Assert.Equal(1, x.Version);
+            });
+            _repoMock.Verify(x => x.GetAll());
+            _repoMock.Verify(x => x.SaveAsync(
+                It.Is<TaskEntity>(y =>
+                    y.Id == 0 &&
+                    y.Uid == "uid" &&
+                    y.UserId == "user" &&
+                    y.Title == "Task" &&
+                    y.Version == 1)));
+            _repoMock.VerifyNoOtherCalls();
         }
     }
 }

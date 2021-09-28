@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/sdk:5.0-focal
+FROM mcr.microsoft.com/dotnet/sdk:5.0
 
 COPY code/apps/TelegramClientApp /app/code/apps/TelegramClientApp
 COPY code/libs/DarkDeeds.Authentication /app/code/libs/DarkDeeds.Authentication
@@ -10,6 +10,7 @@ WORKDIR /app/code/apps/TelegramClientApp/DarkDeeds.TelegramClientApp/DarkDeeds.T
 
 RUN dotnet build
 
+RUN dotnet dev-certs https --trust
 ENV ASPNETCORE_URLS=https://0.0.0.0:5003
 ENV ASPNETCORE_ENVIRONMENT=Staging
 

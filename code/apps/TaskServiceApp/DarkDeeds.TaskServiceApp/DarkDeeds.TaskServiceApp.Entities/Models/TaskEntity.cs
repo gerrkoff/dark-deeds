@@ -19,6 +19,8 @@ namespace DarkDeeds.TaskServiceApp.Entities.Models
 
         public int Version { get; set; }
         
+        public string Uid { get; set; }
+        
         [Required]
         public string UserId { get; set; }
     }

@@ -51,6 +51,11 @@ namespace DarkDeeds.E2eTests.Common
             }
             driver.GetScreenshot().SaveAsFile(Path.Combine(path, $"{name}.png"));
         }
+
+        public static void CreateTab(this RemoteWebDriver driver)
+        {
+            driver.ExecuteJavaScript("window.open()");
+        }
     }
 }
 

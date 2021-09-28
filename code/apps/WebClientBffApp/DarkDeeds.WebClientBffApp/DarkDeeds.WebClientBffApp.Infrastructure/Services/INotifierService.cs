@@ -7,6 +7,6 @@ namespace DarkDeeds.WebClientBffApp.Infrastructure.Services
     public interface INotifierService
     {
         // TODO: separate model
-        Task TaskUpdated(IEnumerable<TaskDto> updatedTasks);
+        Task TaskUpdated(IEnumerable<TaskDto> updatedTasks, string userId);
     }
 }

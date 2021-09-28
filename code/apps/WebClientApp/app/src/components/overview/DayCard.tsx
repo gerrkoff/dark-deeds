@@ -9,8 +9,8 @@ import '../../styles/day-card.css'
 interface IProps {
     day: DayCardModel,
     expiredDate?: Date,
-    openTaskModal?: (model: TaskModel, id?: number) => void
-    changeTaskStatus?: (clientId: number, completed?: boolean, deleted?: boolean) => void
+    openTaskModal?: (model: TaskModel, uid: string | null) => void
+    changeTaskStatus?: (uid: string, completed?: boolean, deleted?: boolean) => void
     confirmAction?: (content: React.ReactNode, action: () => void, header: string) => void
 }
 export class DayCard extends React.PureComponent<IProps> {
@@ -35,7 +35,7 @@ export class DayCard extends React.PureComponent<IProps> {
         return (
             <List className='fixed-list'>
                 {tasks.map((x: Task) =>
-                    <List.Item key={x.clientId} className='all-day-item'>
+                    <List.Item key={x.uid} className='all-day-item'>
                         {this.renderTask(x)}
                     </List.Item>
                 )}
@@ -47,7 +47,7 @@ export class DayCard extends React.PureComponent<IProps> {
         return (
             <List bulleted className='day-card-tasks-view fixed-list dragula-container' data-id={this.props.day.date.getTime()}>
                 {tasks.map((x: Task) =>
-                    <List.Item key={x.clientId} data-id={x.clientId}>
+                    <List.Item key={x.uid} data-id={x.uid}>
                         {this.renderTask(x)}
                     </List.Item>
                 )}

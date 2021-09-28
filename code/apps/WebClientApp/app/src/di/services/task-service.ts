@@ -50,21 +50,7 @@ export class TaskService {
         return model
     }
 
-    public tasksEqual(taskA: Task, taskB: Task): boolean {
-        return this.dateService.toNumber(taskA.date) === this.dateService.toNumber(taskB.date)
-            && taskA.title === taskB.title
-            && taskA.order === taskB.order
-            && taskA.id === taskB.id
-            && taskA.completed === taskB.completed
-            && taskA.deleted === taskB.deleted
-            && taskA.type === taskB.type
-            && taskA.isProbable === taskB.isProbable
-            && taskA.time === taskB.time
-    }
-
     public sorting(taskA: Task, taskB: Task): number {
-        return taskA.order === taskB.order
-            ? taskA.clientId > taskB.clientId ? 1 : -1
-            : taskA.order > taskB.order ? 1 : -1
+        return taskA.order > taskB.order ? 1 : -1
     }
 }

@@ -8,9 +8,9 @@ import '../../styles/task-item.css'
 
 interface IProps {
     task: Task
-    changeTaskStatus?: (clientId: number, completed?: boolean, deleted?: boolean) => void
+    changeTaskStatus?: (uid: string, completed?: boolean, deleted?: boolean) => void
     confirmAction?: (content: React.ReactNode, action: () => void, header: string) => void
-    openTaskModal?: (model: TaskModel, id?: number) => void
+    openTaskModal?: (model: TaskModel, uid: string | null) => void
 }
 interface IState {
     selected: boolean
@@ -86,7 +86,7 @@ export class TaskItem extends React.PureComponent<IProps, IState> {
 
     private handleComplete = () => {
         if (this.props.changeTaskStatus) {
-            this.props.changeTaskStatus(this.props.task.clientId, !this.props.task.completed)
+            this.props.changeTaskStatus(this.props.task.uid, !this.props.task.completed)
         }
     }
 
@@ -98,13 +98,13 @@ export class TaskItem extends React.PureComponent<IProps, IState> {
 
     private handleDelete = () => {
         if (this.props.changeTaskStatus) {
-            this.props.changeTaskStatus(this.props.task.clientId, undefined, true)
+            this.props.changeTaskStatus(this.props.task.uid, undefined, true)
         }
     }
 
     private handleEdit = () => {
         if (this.props.openTaskModal) {
-            this.props.openTaskModal(this.props.task, this.props.task.clientId)
+            this.props.openTaskModal(this.props.task, this.props.task.uid)
         }
     }
 

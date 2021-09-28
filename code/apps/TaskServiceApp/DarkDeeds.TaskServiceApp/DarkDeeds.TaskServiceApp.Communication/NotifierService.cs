@@ -1,9 +1,7 @@
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using DarkDeeds.TaskServiceApp.Communication.Publishers;
 using DarkDeeds.TaskServiceApp.Infrastructure.Services;
-using DarkDeeds.TaskServiceApp.Models.Dto;
+using DarkDeeds.TaskServiceApp.Infrastructure.Services.Dto;
 
 namespace DarkDeeds.TaskServiceApp.Communication
 {
@@ -16,7 +14,7 @@ namespace DarkDeeds.TaskServiceApp.Communication
             _taskUpdatedPublisher = taskUpdatedPublisher;
         }
 
-        public Task TaskUpdated(ICollection<TaskDto> updatedTasks)
+        public Task TaskUpdated(TaskUpdatedDto updatedTasks)
         {
             // TODO: change to ICollection
             _taskUpdatedPublisher.Send(updatedTasks);

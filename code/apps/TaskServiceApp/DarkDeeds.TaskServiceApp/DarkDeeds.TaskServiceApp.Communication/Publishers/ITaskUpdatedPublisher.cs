@@ -1,10 +1,9 @@
-using System.Collections.Generic;
-using DarkDeeds.TaskServiceApp.Models.Dto;
+using DarkDeeds.TaskServiceApp.Infrastructure.Services.Dto;
 
 namespace DarkDeeds.TaskServiceApp.Communication.Publishers
 {
     public interface ITaskUpdatedPublisher
     {
-        void Send(ICollection<TaskDto> tasks);
+        void Send(TaskUpdatedDto updatedTasks);
     }
 }

@@ -10,7 +10,7 @@ namespace DarkDeeds.TelegramClientApp.Services.Implementation
 {
     public class TestService : ITestService
     {
-        private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1);
+        private static readonly SemaphoreSlim Semaphore = new SemaphoreSlim(1);
         
         private readonly UserManager<UserEntity> _userManager;
 
@@ -21,7 +21,7 @@ namespace DarkDeeds.TelegramClientApp.Services.Implementation
 
         public async Task<int> GetTestChatIdForUser(string username)
         {
-            await _semaphore.WaitAsync();
+            await Semaphore.WaitAsync();
 
             try
             {
@@ -33,7 +33,7 @@ namespace DarkDeeds.TelegramClientApp.Services.Implementation
             }
             finally
             {
-                _semaphore.Release();
+                Semaphore.Release();
             }
         }
     }

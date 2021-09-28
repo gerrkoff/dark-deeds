@@ -1,12 +1,11 @@
-using System.Collections.Generic;
 using DarkDeeds.Authentication.DependencyInjection;
 using DarkDeeds.Communication;
 using DarkDeeds.WebClientBffApp.App.BackgroundServices;
 using DarkDeeds.WebClientBffApp.App.Hubs;
 using DarkDeeds.WebClientBffApp.Communication;
 using DarkDeeds.WebClientBffApp.Data;
-using DarkDeeds.WebClientBffApp.Infrastructure.Communication.TaskServiceApp.Dto;
 using DarkDeeds.WebClientBffApp.Services;
+using DarkDeeds.WebClientBffApp.Services.Dto;
 using DarkDeeds.WebClientBffApp.UseCases;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -37,7 +36,7 @@ namespace DarkDeeds.WebClientBffApp.App
             services.AddWebClientBffApi();
             services.AddWebClientBffSockets();
             
-            services.AddDarkDeedsAmpqSubscriber<TaskUpdatedSubscriber, ICollection<TaskDto>>();
+            services.AddDarkDeedsAmpqSubscriber<TaskUpdatedSubscriber, TaskUpdatedDto>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

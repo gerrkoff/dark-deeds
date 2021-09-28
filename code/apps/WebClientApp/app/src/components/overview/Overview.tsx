@@ -13,9 +13,9 @@ interface IProps {
     tasksLoaded: boolean
     showCompleted: boolean
     openEditTask: () => void
-    openTaskModal: (model: TaskModel, id?: number) => void
+    openTaskModal: (model: TaskModel, uid: string | null) => void
     changeAllTasks: (tasks: Task[]) => void
-    changeTaskStatus?: (clientId: number, completed?: boolean, deleted?: boolean) => void
+    changeTaskStatus?: (uid: string, completed?: boolean, deleted?: boolean) => void
     confirmAction?: (content: React.ReactNode, action: () => void, header: string) => void
 }
 export class Overview extends React.PureComponent<IProps> {
@@ -138,14 +138,14 @@ export class Overview extends React.PureComponent<IProps> {
             this.taskMoveService.moveTask(
                 this.props.tasks,
                 getId(el),
-                getId(target),
-                getId(source),
+                Number(getId(target)),
+                Number(getId(source)),
                 sibling ? getId(sibling) : null
             )
         )
     }
 }
 
-function getId(el: HTMLElement): number {
-    return Number(el.dataset.id)
+function getId(el: HTMLElement): string {
+    return el.dataset.id!
 }

@@ -14,6 +14,9 @@ namespace DarkDeeds.E2eTests.Common
         public static IWebElement GetSignInButton(this RemoteWebDriver driver) =>
             driver.GetElement("//*[@data-test-id='signin-button']");
         
+        public static IWebElement GetSignOutButton(this RemoteWebDriver driver) =>
+            driver.GetElement("//*[@data-test-id='signout-button']");
+        
         public static IWebElement GetAddTaskButton(this RemoteWebDriver driver) =>
             driver.GetElement("//*[@data-test-id='add-task-button']");
         
@@ -89,6 +92,9 @@ namespace DarkDeeds.E2eTests.Common
         
         public static void WaitUntilToastDisappeared(this RemoteWebDriver driver, string text = null)
             => driver.WaitUntilDisappeared(Xpath.Toast(text));
+        
+        public static void WaitUntilTaskDisappeared(this RemoteWebDriver driver, string text) =>
+            driver.WaitUntilDisappeared($"//{Xpath.TaskWithText(text)}");
 
         public static void WaitUntilRecurrenceAppeared(this RemoteWebDriver driver, string text) =>
             driver.WaitUntilAppeared(

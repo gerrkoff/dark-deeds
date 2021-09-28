@@ -110,6 +110,9 @@ namespace DarkDeeds.Data.Migrations
                     b.Property<string>("UserId")
                         .IsRequired();
 
+                    b.Property<string>("Uid")
+                        .IsRequired();
+
                     b.Property<int>("Version");
 
                     b.HasKey("Id");

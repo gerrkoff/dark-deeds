@@ -51,6 +51,7 @@ export class TaskHubApi {
         this.connection.on('heartbeat', heartbeat)
     }
 
+    // TODO: remove
     public saveTasks(tasks: Task[]): Promise<void> {
         const fixedTasks = this.dateService.adjustDatesBeforeSaving(tasks)
         return this.connection.send('save', fixedTasks)

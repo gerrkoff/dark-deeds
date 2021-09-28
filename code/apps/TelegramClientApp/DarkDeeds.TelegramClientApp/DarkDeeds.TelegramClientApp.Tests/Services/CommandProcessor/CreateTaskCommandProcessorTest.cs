@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using DarkDeeds.TelegramClientApp.Infrastructure.Communication.TaskServiceApp;
 using DarkDeeds.TelegramClientApp.Infrastructure.Communication.TaskServiceApp.Dto;
@@ -15,7 +16,10 @@ namespace DarkDeeds.TelegramClientApp.Tests.Services.CommandProcessor
         [Fact]
         public async Task ProcessAsync()
         {
-            var task = new TaskDto();
+            var task = new TaskDto
+            {
+                Title = "Task",
+            };
             var tasks = new TaskDto[0];
             var (telegramMock, taskServiceMock, sendMessageMock) = SetupMocks(task, tasks, 100);
             
@@ -32,6 +36,13 @@ namespace DarkDeeds.TelegramClientApp.Tests.Services.CommandProcessor
 
 
             sendMessageMock.Verify(x => x.SendTextAsync(100, "Task created"));
+            taskServiceMock.Verify(x => x.SaveTasksAsync(
+                It.Is<ICollection<TaskDto>>(y => y.Any(e =>
+                    e.Title == "Task" &&
+                    e.Uid != null
+                )),
+                "userid"
+            ));
         }
 
         private (Mock<ITelegramService>, Mock<ITaskServiceApp>, Mock<IBotSendMessageService>)

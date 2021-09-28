@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using DarkDeeds.TelegramClientApp.Infrastructure.Communication.TaskServiceApp;
 using DarkDeeds.TelegramClientApp.Services.Interface;
@@ -27,6 +28,7 @@ namespace DarkDeeds.TelegramClientApp.Services.Implementation.CommandProcessor
         protected override async Task ProcessCoreAsync(CreateTaskCommand command)
         {
             string userId = await _telegramService.GetUserId(command.UserChatId);
+            command.Task.Uid = Guid.NewGuid().ToString();
             await _taskServiceApp.SaveTasksAsync(new[] {command.Task}, userId);
             await _botSendMessageService.SendTextAsync(command.UserChatId, "Task created");
         }

@@ -1,7 +1,9 @@
+using System;
 using System.Net.Http;
 using System.Net.Mime;
 using System.Text;
 using System.Threading.Tasks;
+using DarkDeeds.E2eTests.Base;
 using DarkDeeds.E2eTests.Common;
 using Newtonsoft.Json;
 using Xunit;
@@ -15,14 +17,14 @@ namespace DarkDeeds.E2eTests
         {
             return Test(async driver =>
             {
-                var testChatId = await GetTestChatId(Username);
+                var username = Guid.NewGuid().ToString();
+                await CreateUserAndLogin(driver, username);
+
+                var testChatId = await GetTestChatId(username);
                 
                 var task = RandomizeText("task");
                 await SendCommand(task, testChatId);
-               
-                // TODO: remove this when will start notifying about changes on task save
-                driver.Navigate().Refresh();
-                
+
                 driver.GetTaskByTextInNoDateSection(task);
             });
         }

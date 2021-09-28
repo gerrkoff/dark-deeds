@@ -18,6 +18,7 @@ message TaskModel {
   bool deleted = 11;
   TaskType type = 12;
   int32 version = 13;
+  string uid = 14;
 }
 
 enum TaskType {

@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/sdk:5.0-focal
+FROM mcr.microsoft.com/dotnet/sdk:5.0
 
 COPY code/apps/AuthServiceApp /app/code/apps/AuthServiceApp
 COPY code/libs/DarkDeeds.Authentication /app/code/libs/DarkDeeds.Authentication
@@ -9,6 +9,7 @@ WORKDIR /app/code/apps/AuthServiceApp/DarkDeeds.AuthServiceApp/DarkDeeds.AuthSer
 
 RUN dotnet build
 
+RUN dotnet dev-certs https --trust
 ENV ASPNETCORE_URLS=https://0.0.0.0:5002
 ENV ASPNETCORE_ENVIRONMENT=Staging
 

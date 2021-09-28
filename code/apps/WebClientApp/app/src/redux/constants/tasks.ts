@@ -36,14 +36,14 @@ export type TASKS_CHANGE_TASK = typeof TASKS_CHANGE_TASK
 export interface ITasksChangeTask {
     type: TASKS_CHANGE_TASK
     taskModel: TaskModel
-    clientId: number
+    uid: string | null
 }
 
 export const TASKS_CHANGE_TASK_STATUS = 'TASKS_CHANGE_TASK_STATUS'
 export type TASKS_CHANGE_TASK_STATUS = typeof TASKS_CHANGE_TASK_STATUS
 export interface ITasksChangeTaskStatus {
     type: TASKS_CHANGE_TASK_STATUS
-    clientId: number
+    uid: string
     completed?: boolean
     deleted?: boolean
 }

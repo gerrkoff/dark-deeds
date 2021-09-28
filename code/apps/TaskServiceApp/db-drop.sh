@@ -1,1 +1,3 @@
-dotnet ef database drop -p ../DarkDeeds/DarkDeeds.Data/DarkDeeds.Data.csproj -s ../DarkDeeds/DarkDeeds.Api/DarkDeeds.Api.csproj
+dotnet ef database drop \
+    -p DarkDeeds.TaskServiceApp/DarkDeeds.TaskServiceApp.Data/DarkDeeds.TaskServiceApp.Data.csproj  \
+    -s DarkDeeds.TaskServiceApp/DarkDeeds.TaskServiceApp.App/DarkDeeds.TaskServiceApp.App.csproj 

@@ -2,16 +2,16 @@
 using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
+using DarkDeeds.E2eTests.Base;
 using DarkDeeds.E2eTests.Common;
 using Newtonsoft.Json.Linq;
 using OpenQA.Selenium.Interactions;
-using OpenQA.Selenium.Support.Extensions;
 using Xunit;
 using Xunit.Abstractions;
 
 namespace DarkDeeds.E2eTests
 {
-    public class SmokeTests : BaseTest
+    public class SmokeTests : UserLoginTest
     {
         private readonly ITestOutputHelper _output;
 
@@ -112,26 +112,21 @@ namespace DarkDeeds.E2eTests
         {
             string taskText = RandomizeText("task to sync");
             return Test(driver =>
-            {   
-                driver.ExecuteJavaScript("window.open()");
-                var tabs = driver.WindowHandles;
-                driver.SwitchTo().Window(tabs[1]);
+            {
+                driver.OpenNewTab(Url);
                 
-                driver.Navigate().GoToUrl(Url);
-                driver.WaitUntilUserLoaded();
-                
-                driver.SwitchTo().Window(tabs[0]);
+                driver.SwitchToTab(0);
                 driver.CreateTaskViaAddButton(taskText);
                 driver.WaitUntilSavingFinished();
                 driver.GetTaskByTextInNoDateSection(taskText);
                 
-                driver.SwitchTo().Window(tabs[1]);
+                driver.SwitchToTab(1);
                 var task = driver.GetTaskByTextInNoDateSection(taskText);
                 driver.DeleteTask(task);
                 driver.WaitUntilSavingFinished();
                 
-                driver.SwitchTo().Window(tabs[0]);
-                driver.WaitUntilDisappeared(Xpath.TaskWithText(taskText));
+                driver.SwitchToTab(0);
+                driver.WaitUntilTaskDisappeared(taskText);
                 
                 return Task.CompletedTask;
             });

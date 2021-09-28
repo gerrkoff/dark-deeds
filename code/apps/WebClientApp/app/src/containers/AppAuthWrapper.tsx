@@ -2,7 +2,7 @@ import { push, RouterAction } from 'connected-react-router'
 import { connect } from 'react-redux'
 import { AppAuthWrapper } from '../components/app'
 import { Task, TaskLoadingStateEnum } from '../models'
-import { initialLoadTasks, openEditTaskModal, initialLogin, loadGeneralInfo, taskHubSave, taskHubStart, taskHubStop, loadSettings, createRecurrences } from '../redux/actions'
+import { initialLoadTasks, openEditTaskModal, initialLogin, loadGeneralInfo, taskSave, taskHubStart, taskHubStop, loadSettings, createRecurrences } from '../redux/actions'
 import { IAppState } from '../redux/types'
 import { ThunkDispatch } from '../helpers'
 import { RecurrencesViewAction, EditTaskAction } from '../redux/constants'
@@ -24,7 +24,7 @@ function mapDispatchToProps(dispatch: ThunkDispatch<RecurrencesViewAction | Edit
         loadTasks: () => dispatch(initialLoadTasks()),
         navigateTo: (path: string) => dispatch(push(path)),
         openEditTask: () => dispatch(openEditTaskModal(true)),
-        saveTasks: (tasks: Task[]) => dispatch(taskHubSave(tasks)),
+        saveTasks: (tasks: Task[]) => dispatch(taskSave(tasks)),
         initialLogin: () => dispatch(initialLogin()),
         loadGeneralInfo: () => dispatch(loadGeneralInfo()),
         startTaskHub: () => dispatch(taskHubStart()),

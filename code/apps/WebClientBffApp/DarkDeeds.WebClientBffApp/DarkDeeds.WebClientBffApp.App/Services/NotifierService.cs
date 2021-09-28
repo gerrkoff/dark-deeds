@@ -16,10 +16,10 @@ namespace DarkDeeds.WebClientBffApp.App.Services
             _hubContext = hubContext;
         }
         
-        public async Task TaskUpdated(IEnumerable<TaskDto> updatedTasks)
-        {
-            // TODO: send personal updates, not all
-            await _hubContext.Clients.All.SendAsync("update", updatedTasks, false);
+        public async Task TaskUpdated(IEnumerable<TaskDto> updatedTasks, string userId)
+        {   
+            await _hubContext.Clients.User(userId)
+                .SendAsync("update", updatedTasks, false);
         }        
     }
 }

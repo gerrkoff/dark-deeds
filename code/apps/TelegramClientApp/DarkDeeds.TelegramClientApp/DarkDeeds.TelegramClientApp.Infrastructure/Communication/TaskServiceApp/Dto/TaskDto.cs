@@ -16,5 +16,6 @@ namespace DarkDeeds.TelegramClientApp.Infrastructure.Communication.TaskServiceAp
         public bool Deleted { get; set; }
         public TaskTypeEnum Type { get; set; }
         public int Version { get; set; }
+        public string Uid { get; set; }
     }
 }

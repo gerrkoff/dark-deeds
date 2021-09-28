@@ -4,6 +4,7 @@ import { di, diToken, LoginApi, StorageService, ToastService } from '../../di'
 import { SigninResultEnum, SignupResultEnum } from '../../models'
 import * as actions from '../constants'
 import { ThunkDispatch } from '../../helpers'
+import { changeAllTasks } from './tasks'
 
 const loginApi = di.get<LoginApi>(diToken.LoginApi)
 const storageService = di.get<StorageService>(diToken.StorageService)
@@ -72,7 +73,8 @@ export function signup(username: string, password: string) {
 }
 
 export function signout() {
-    return async(dispatch: ThunkDispatch<actions.LoginAction | RouterAction>) => {
+    return async(dispatch: ThunkDispatch<actions.LoginAction | RouterAction | actions.TasksAction>) => {
+        dispatch(changeAllTasks([]))
         storageService.clearAccessToken()
         dispatch(navigateTo('/'))
         dispatch(currentUser(false))

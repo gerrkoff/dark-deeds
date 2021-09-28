@@ -12,8 +12,8 @@ export class TaskMoveService {
         @inject(diToken.TaskService) private taskService: TaskService
     ) {}
 
-    public moveTask(tasks: Task[], taskId: number, targetDate: number, sourceDate: number, nextSiblingId: number | null): Task[] {
-        const task = tasks.find(x => x.clientId === taskId)
+    public moveTask(tasks: Task[], taskId: string, targetDate: number, sourceDate: number, nextSiblingId: string | null): Task[] {
+        const task = tasks.find(x => x.uid === taskId)
 
         if (task === undefined) {
             return tasks
@@ -21,16 +21,16 @@ export class TaskMoveService {
 
         const filteredTasks = tasks.filter(x => x.type !== TaskTypeEnum.Additional)
 
-        const changedTasks = SetExtended.create<number>()
+        const changedTasks = SetExtended.create<string>()
 
         changedTasks.add(this.changeTaskDate(task, targetDate))
         changedTasks.addRange(this.changeTargetTasksOrder(filteredTasks, targetDate, task, nextSiblingId))
         if (targetDate !== sourceDate) {
-            changedTasks.addRange(this.changeSourceTasksOrder(filteredTasks, sourceDate, task.clientId))
+            changedTasks.addRange(this.changeSourceTasksOrder(filteredTasks, sourceDate))
         }
 
         for (let i = 0; i < tasks.length; i++) {
-            if (changedTasks.has(tasks[i].clientId)) {
+            if (changedTasks.has(tasks[i].uid)) {
                 tasks[i] = {
                     ...tasks[i],
                     changed: true
@@ -41,21 +41,21 @@ export class TaskMoveService {
         return [...tasks]
     }
 
-    private changeTaskDate(task: Task, targetDate: number): number {
+    private changeTaskDate(task: Task, targetDate: number): string {
         task.date = targetDate === 0 ? null : new Date(targetDate)
-        return task.clientId
+        return task.uid
     }
 
-    private changeTargetTasksOrder(tasks: Task[], targetDate: number, task: Task, nextSiblingId: number | null): number[] {
+    private changeTargetTasksOrder(tasks: Task[], targetDate: number, task: Task, nextSiblingId: string | null): string[] {
         const targetTasks = tasks
                 .filter(x =>
-                    x.clientId !== task.clientId &&
+                    x.uid !== task.uid &&
                     this.dateService.toNumber(x.date) === targetDate)
                 .sort(this.taskService.sorting)
 
         const movedTaskTargetIndex = nextSiblingId === null
             ? null
-            : targetTasks.findIndex(x => x.clientId === nextSiblingId)
+            : targetTasks.findIndex(x => x.uid === nextSiblingId)
 
         if (movedTaskTargetIndex === null) {
             targetTasks.push(task)
@@ -68,17 +68,17 @@ export class TaskMoveService {
         return this.adjustTasksOrder(targetTasks)
     }
 
-    private changeSourceTasksOrder(tasks: Task[], sourceDate: number, taskId: number): number[] {
+    private changeSourceTasksOrder(tasks: Task[], sourceDate: number): string[] {
         const sourceTasks = tasks.filter(x => this.dateService.toNumber(x.date) === sourceDate).sort(this.taskService.sorting)
         return this.adjustTasksOrder(sourceTasks)
     }
 
-    private adjustTasksOrder(tasks: Task[]): number[] {
-        const changedIds: number[] = []
+    private adjustTasksOrder(tasks: Task[]): string[] {
+        const changedIds: string[] = []
         tasks.forEach((x, order) => {
             if (x.order !== order + 1) {
                 x.order = order + 1
-                changedIds.push(x.clientId)
+                changedIds.push(x.uid)
             }
         })
         return changedIds

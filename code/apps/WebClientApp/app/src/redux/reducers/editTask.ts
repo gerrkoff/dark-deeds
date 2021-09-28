@@ -5,7 +5,7 @@ import * as actions from '../constants'
 const taskConverter = di.get<TaskConverter>(diToken.TaskConverter)
 
 const inittialState: IEditTaskState = {
-    clientId: 0,
+    uid: null,
     modalOpen: false,
     taskModel: ''
 }
@@ -14,7 +14,7 @@ export function editTask(state: IEditTaskState = inittialState, action: actions.
     switch (action.type) {
         case actions.EDITTASK_MODALOPEN:
             return { ...state,
-                clientId: action.clientId,
+                uid: action.uid,
                 modalOpen: action.open
             }
         case actions.EDITTASK_TASKMODEL:

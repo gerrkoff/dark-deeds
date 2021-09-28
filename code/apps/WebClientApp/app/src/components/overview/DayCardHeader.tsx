@@ -8,7 +8,7 @@ import '../../styles/day-card-header.css'
 
 interface IProps {
     date: Date
-    openTaskModal?: (model: TaskModel, id?: number) => void
+    openTaskModal?: (model: TaskModel, uid: string | null) => void
 }
 interface IState {
     menuPopupOpen: boolean
@@ -61,7 +61,7 @@ export class DayCardHeader extends React.PureComponent<IProps, IState> {
 
     private handleAdd = () => {
         if (this.props.openTaskModal) {
-            this.props.openTaskModal(new TaskModel('', this.props.date))
+            this.props.openTaskModal(new TaskModel('', this.props.date), null)
         }
     }
 }

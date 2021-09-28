@@ -8,6 +8,7 @@ using DarkDeeds.TaskServiceApp.Entities.Enums;
 using DarkDeeds.TaskServiceApp.Entities.Models;
 using DarkDeeds.TaskServiceApp.Infrastructure.Data;
 using DarkDeeds.TaskServiceApp.Infrastructure.Services;
+using DarkDeeds.TaskServiceApp.Infrastructure.Services.Dto;
 using DarkDeeds.TaskServiceApp.Models.Dto;
 using DarkDeeds.TaskServiceApp.Services.Interface;
 using Microsoft.Extensions.Logging;
@@ -71,17 +72,21 @@ namespace DarkDeeds.TaskServiceApp.Services.Implementation
                     await _recurrenceRepository.SaveAsync(
                         CreateRecurrenceEntity(plannedRecurrence.Id, task.Id, date));
                     createdRecurrencesCount++;
-                    Notify(task);
+                    Notify(task, userId);
                 }
             }
 
             return createdRecurrencesCount;
         }
 
-        private void Notify(TaskEntity task)
+        private void Notify(TaskEntity task, string userId)
         {
             var dto = _mapper.Map<TaskDto>(task);
-            _notifierService.TaskUpdated(new[] {dto});
+            _notifierService.TaskUpdated(new TaskUpdatedDto
+            {
+                Tasks = new[] {dto},
+                UserId = userId,
+            });
         }
 
         private TaskEntity CreateTaskFromRecurrence(PlannedRecurrenceEntity plannedRecurrence, DateTime date)
@@ -90,6 +95,7 @@ namespace DarkDeeds.TaskServiceApp.Services.Implementation
             var task = _mapper.Map<TaskEntity>(dto);
             task.Date = date;
             task.UserId = plannedRecurrence.UserId;
+            task.Uid = Guid.NewGuid().ToString();
             return task;
         }
 

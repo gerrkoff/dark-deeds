@@ -7,8 +7,9 @@ using DarkDeeds.TaskServiceApp.EfCoreExtensions;
 using DarkDeeds.TaskServiceApp.Entities.Enums;
 using DarkDeeds.TaskServiceApp.Entities.Models;
 using DarkDeeds.TaskServiceApp.Infrastructure.Data;
+using DarkDeeds.TaskServiceApp.Infrastructure.Services;
+using DarkDeeds.TaskServiceApp.Infrastructure.Services.Dto;
 using DarkDeeds.TaskServiceApp.Models.Dto;
-using DarkDeeds.TaskServiceApp.Models.Dto.Base;
 using DarkDeeds.TaskServiceApp.Models.Extensions;
 using DarkDeeds.TaskServiceApp.Services.Interface;
 using Microsoft.Extensions.Logging;
@@ -19,15 +20,15 @@ namespace DarkDeeds.TaskServiceApp.Services.Implementation
     {
         private readonly IRepository<TaskEntity> _tasksRepository;
         private readonly ILogger<TaskService> _logger;
-        private readonly IPermissionsService _permissionsService;
         private readonly IMapper _mapper;
+        private readonly INotifierService _notifierService;
         
-        public TaskService(IRepository<TaskEntity> tasksRepository, ILogger<TaskService> logger, IPermissionsService permissionsService, IMapper mapper)
+        public TaskService(IRepository<TaskEntity> tasksRepository, ILogger<TaskService> logger, IMapper mapper, INotifierService notifierService)
         {
             _tasksRepository = tasksRepository;
             _logger = logger;
-            _permissionsService = permissionsService;
             _mapper = mapper;
+            _notifierService = notifierService;
         }
         
         public async Task<IEnumerable<TaskDto>> LoadActualTasksAsync(string userId, DateTime from)
@@ -54,76 +55,63 @@ namespace DarkDeeds.TaskServiceApp.Services.Implementation
 
         public async Task<IEnumerable<TaskDto>> SaveTasksAsync(ICollection<TaskDto> tasks, string userId)
         {
-            await _permissionsService.CheckIfUserCanEditEntitiesAsync(
-                tasks.Cast<IDtoWithId>().ToList(),
-                _tasksRepository,
-                userId,
-                "Task");
-
-            int[] taskIds = tasks.Select(x => x.Id).Where(x => x > 0).ToArray();
-            
-            var existingTasks = await _tasksRepository.GetAll()
-                .Where(x => taskIds.Contains(x.Id))
-                .ToDictionarySafeAsync(x => x.Id, x => x);
-
             var savedTasks = new List<TaskDto>();
-            foreach (var task in tasks)
+
+            foreach (var taskDto in tasks)
             {
-                var savedTask = await SaveTaskAsync(existingTasks, task, userId);
+                var savedTask = await SaveTaskByUidAsync(taskDto, userId);
                 if (savedTask != null)
                     savedTasks.Add(savedTask);
             }
 
+            await _notifierService.TaskUpdated(new TaskUpdatedDto
+            {
+                Tasks = savedTasks,
+                UserId = userId,
+            });
+
             return savedTasks;
         }
 
-        private async Task<TaskDto> SaveTaskAsync(Dictionary<int, TaskEntity> existingTasks, TaskDto taskToSave, string userId)
+        private async Task<TaskDto> SaveTaskByUidAsync(TaskDto taskToSave, string userId)
         {
-            TaskEntity entity;
-            if (taskToSave.Deleted || taskToSave.ClientId > 0)
-            {
-                if (!existingTasks.ContainsKey(taskToSave.Id))
-                {
-                    _logger.LogWarning($"Tried to update non existing task. TaskId: {taskToSave.Id}");
-                    return null;
-                }
+            var entity = await _tasksRepository.GetAll()
+                .FirstOrDefaultSafeAsync(x => string.Equals(x.Uid, taskToSave.Uid));
 
-                if (existingTasks[taskToSave.Id].Version != taskToSave.Version)
-                    return ConvertTaskToDto(existingTasks[taskToSave.Id], taskToSave.ClientId);
+            if (entity != null && !string.Equals(entity.UserId, userId))
+            {
+                _logger.LogWarning($"Tried to update foreign task. TaskUid: {taskToSave.Uid} User: {userId}");
+                return null;
             }
 
-            // delete
             if (taskToSave.Deleted)
-            {   
-                entity = existingTasks[taskToSave.Id];
-                await _tasksRepository.DeleteAsync(entity);
+            {
+                if (entity == null)
+                    _logger.LogWarning($"Tried to delete non existing task. TaskUid: {taskToSave.Uid}");
+                else
+                    await _tasksRepository.DeleteAsync(entity);
+                taskToSave.Version++;
                 return taskToSave;
             }
-            // create
-            if (taskToSave.ClientId <= 0)
+
+            if (entity == null)
             {
                 entity = _mapper.Map<TaskEntity>(taskToSave);
                 entity.Id = 0;
                 entity.UserId = userId;
+                entity.Version = 1;
                 await _tasksRepository.SaveAsync(entity);
             }
-            // update
-            else
+            else if (entity.Version == taskToSave.Version)
             {
-                entity = existingTasks[taskToSave.Id];
+                var id = entity.Id;
                 entity = _mapper.Map(taskToSave, entity);
                 entity.Version++;
+                entity.Id = id;
                 await _tasksRepository.SaveAsync(entity);
             }
-
-            return ConvertTaskToDto(entity, taskToSave.ClientId);
-        }
-
-        private TaskDto ConvertTaskToDto(TaskEntity entity, int clientId)
-        {
-            var dto = _mapper.Map<TaskDto>(entity);
-            dto.ClientId = clientId;
-            return dto;
+            
+            return _mapper.Map<TaskDto>(entity);
         }
     }
 }

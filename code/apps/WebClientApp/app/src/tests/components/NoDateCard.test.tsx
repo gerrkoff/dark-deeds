@@ -6,7 +6,7 @@ import { Task } from '../../models'
 test('renders tasks', () => {
     const tasks = []
     for (let i = 1; i < 20; i++) {
-        tasks.push(new Task(i, '', new Date()))
+        tasks.push(new Task(i.toString(), '', new Date()))
     }
     const component = enzyme.shallow(<NoDateCard tasks={tasks} />)
 

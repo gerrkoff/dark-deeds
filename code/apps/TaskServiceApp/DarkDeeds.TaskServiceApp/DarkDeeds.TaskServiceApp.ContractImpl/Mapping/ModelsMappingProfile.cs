@@ -19,6 +19,8 @@ namespace DarkDeeds.TaskServiceApp.ContractImpl.Mapping
                     e.MapFrom(x => x.Time ?? 0))
                 .ForMember(x => x.TimeExist, e =>
                     e.MapFrom(x => x.Time.HasValue))
+                .ForMember(x => x.Uid, e =>
+                    e.MapFrom(x => x.Uid ?? string.Empty))
                 .ForMember(x => x.Probable,
                     e => e.MapFrom(x => x.IsProbable));
 

@@ -6,7 +6,7 @@ import { DayCardModel, Task, TaskTypeEnum } from '../../models'
 test('renders tasks', () => {
     const tasks = []
     for (let i = 1; i < 20; i++) {
-        tasks.push(new Task(i, '', new Date()))
+        tasks.push(new Task(i.toString(), '', new Date()))
     }
     const model = new DayCardModel(new Date(), tasks)
     const component = enzyme.shallow(<DayCard day={model} />)
@@ -45,10 +45,10 @@ test('renders ready for drag-n-drop', () => {
 test('renders all day tasks as separate list with all-day-item classes', () => {
     const tasks = []
     for (let i = 1; i < 5; i++) {
-        tasks.push(new Task(i, '', new Date()))
+        tasks.push(new Task(i.toString(), '', new Date()))
     }
     for (let i = 1; i < 3; i++) {
-        tasks.push(new Task(i + 5, '', new Date(), 0, false, 0, false, false, TaskTypeEnum.Additional))
+        tasks.push(new Task((i + 5).toString(), '', new Date(), 0, false, false, false, TaskTypeEnum.Additional))
     }
     const model = new DayCardModel(new Date(), tasks)
     const component = enzyme.shallow(<DayCard day={model} />)

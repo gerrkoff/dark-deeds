@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Threading;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Remote;
@@ -60,6 +61,11 @@ namespace DarkDeeds.E2eTests.Common
             driver.GetNavLink("/recurrences").Click();
         }
         
+        public static void NavigateToSettings(this RemoteWebDriver driver)
+        {
+            driver.GetNavLink("/settings").Click();
+        }
+        
         public static void CreateRecurrence(this RemoteWebDriver driver, string recurrenceTask)
         {
             driver.GetAddRecurrenceButton().Click();
@@ -90,6 +96,19 @@ namespace DarkDeeds.E2eTests.Common
             driver.GetCreateRecurrencesButton().Click();
             driver.WaitUntilToastAppeared($"{expectedTaskRecurrencesCount} recurrences were created");
             driver.HideToasts();
+        }
+
+        public static void SwitchToTab(this RemoteWebDriver driver, int tabIndex)
+        {
+            driver.SwitchTo().Window(driver.WindowHandles[tabIndex]);
+        }
+        
+        public static void OpenNewTab(this RemoteWebDriver driver, string url)
+        {
+            driver.CreateTab();
+            driver.SwitchTo().Window(driver.WindowHandles.Last());
+            driver.Navigate().GoToUrl(url);
+            driver.WaitUntilUserLoaded();
         }
 
         public static void HideToasts(this RemoteWebDriver driver)

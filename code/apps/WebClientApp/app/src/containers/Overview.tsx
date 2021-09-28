@@ -18,8 +18,8 @@ function mapDispatchToProps(dispatch: ThunkDispatch<RecurrencesViewAction | Moda
     return {
         confirmAction: (content: React.ReactNode, action: () => void, header: string) => dispatch(openModalConfirm(content, action, header)),
         openEditTask: () => dispatch(openEditTaskModal(true)),
-        openTaskModal: (model: TaskModel, id?: number) => dispatch(openEditTaskWithModel(model, id)),
-        changeTaskStatus: (clientId: number, completed?: boolean, deleted?: boolean) => dispatch(changeTaskStatus(clientId, completed, deleted)),
+        openTaskModal: (model: TaskModel, uid: string | null = null) => dispatch(openEditTaskWithModel(model, uid)),
+        changeTaskStatus: (uid: string, completed?: boolean, deleted?: boolean) => dispatch(changeTaskStatus(uid, completed, deleted)),
         changeAllTasks: (tasks: Task[]) => dispatch(changeAllTasks(tasks))
     }
 }

@@ -1,11 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using DarkDeeds.TaskServiceApp.Models.Dto;
+﻿using System.Threading.Tasks;
+using DarkDeeds.TaskServiceApp.Infrastructure.Services.Dto;
 
 namespace DarkDeeds.TaskServiceApp.Infrastructure.Services
 {
     public interface INotifierService
     {
-        Task TaskUpdated(ICollection<TaskDto> updatedTasks);
+        Task TaskUpdated(TaskUpdatedDto updatedTasks);
     }
 }

@@ -9,8 +9,8 @@ interface IProps {
     testId?: string,
     daysInRow?: number,
     expiredDate?: Date,
-    openTaskModal?: (model: TaskModel, id?: number) => void
-    changeTaskStatus?: (clientId: number, completed?: boolean, deleted?: boolean) => void
+    openTaskModal?: (model: TaskModel, uid: string | null) => void
+    changeTaskStatus?: (uid: string, completed?: boolean, deleted?: boolean) => void
     confirmAction?: (content: React.ReactNode, action: () => void, header: string) => void
 }
 export class DaysBlock extends React.PureComponent<IProps> {

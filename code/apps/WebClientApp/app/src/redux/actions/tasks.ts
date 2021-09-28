@@ -7,6 +7,8 @@ const utilsService = di.get<UtilsService>(diToken.UtilsService)
 const toastService = di.get<ToastService>(diToken.ToastService)
 const taskApi = di.get<TaskApi>(diToken.TaskApi)
 
+// TODO: refactor it
+
 /*
         TASK HUB
 */
@@ -29,6 +31,7 @@ export function taskHubStop() {
     }
 }
 
+// TODO: remove
 export function taskHubSave(tasks: Task[]) {
     return async(dispatch: ThunkDispatch<actions.TasksAction>) => {
         /*
@@ -50,6 +53,19 @@ export function taskHubSave(tasks: Task[]) {
     }
 }
 
+export function taskSave(tasks: Task[]) {
+    return async(dispatch: ThunkDispatch<actions.TasksAction>) => {
+        dispatch({ type: actions.TASKS_SAVING })
+        try {
+            const savedTasks = await taskApi.saveTasks(tasks)
+            taskHubUpdateHandler(dispatch)(savedTasks, true)
+        } catch (err) {
+            toastService.errorProcess('saving tasks')
+        }
+    }
+}
+
+// TODO: adjust, remove local update
 function taskHubUpdateHandler(dispatch: ThunkDispatch<actions.TasksAction>): (tasks: Task[], localUpdate: boolean) => void {
     return (tasks, localUpdate) => {
         dispatch({ type: actions.TASKS_UPDATE_TASKS, tasks, localUpdate })
@@ -104,10 +120,10 @@ export function changeAllTasks(tasks: Task[]): actions.ITasksChangeAllTasks {
     return { type: actions.TASKS_CHANGE_ALL_TASKS, tasks }
 }
 
-export function changeTask(taskModel: TaskModel, clientId: number): actions.ITasksChangeTask {
-    return { type: actions.TASKS_CHANGE_TASK, taskModel, clientId }
+export function changeTask(taskModel: TaskModel, uid: string | null): actions.ITasksChangeTask {
+    return { type: actions.TASKS_CHANGE_TASK, taskModel, uid }
 }
 
-export function changeTaskStatus(clientId: number, completed?: boolean, deleted?: boolean): actions.ITasksChangeTaskStatus {
-    return { type: actions.TASKS_CHANGE_TASK_STATUS, clientId, completed, deleted }
+export function changeTaskStatus(uid: string, completed?: boolean, deleted?: boolean): actions.ITasksChangeTaskStatus {
+    return { type: actions.TASKS_CHANGE_TASK_STATUS, uid, completed, deleted }
 }
