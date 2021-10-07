@@ -6,7 +6,6 @@ WORKDIR /app/code/apps/ApiGatewayApp/DarkDeeds.ApiGatewayApp/DarkDeeds.ApiGatewa
 
 RUN dotnet build
 
-ENV ASPNETCORE_URLS=http://0.0.0.0:5000
 ENV ASPNETCORE_ENVIRONMENT=Staging
 
 ENTRYPOINT ["dotnet", "run", "--no-launch-profile"]

@@ -54,6 +54,8 @@ services:
       dockerfile: infrastructure/apps/api-gateway.dockerfile
     ports:
       - 5000:5000
+    environment:
+      - ASPNETCORE_URLS=http://0.0.0.0:5000
     depends_on:
       - consul
       - auth-service
@@ -77,6 +79,7 @@ services:
       - DD_SERVICE_DISCOVERY_CONSUL=http://consul:8500
       - DD_SERVICE_DISCOVERY_HOST=${IP:-auth-service}
       - DD_SERVICE_DISCOVERY_PORT=5002
+      - ASPNETCORE_URLS=https://0.0.0.0:5002
     depends_on:
       - consul
       - postgres-db
@@ -96,6 +99,7 @@ services:
       - DD_SERVICE_DISCOVERY_CONSUL=http://consul:8500
       - DD_SERVICE_DISCOVERY_HOST=${IP:-task-service}
       - DD_SERVICE_DISCOVERY_PORT=5001
+      - ASPNETCORE_URLS=https://0.0.0.0:5001
     depends_on:
       - consul
       - postgres-db
@@ -116,6 +120,7 @@ services:
       - DD_SERVICE_DISCOVERY_CONSUL=http://consul:8500
       - DD_SERVICE_DISCOVERY_HOST=${IP:-telegram-client}
       - DD_SERVICE_DISCOVERY_PORT=5003
+      - ASPNETCORE_URLS=https://0.0.0.0:5003
     depends_on:
       - consul
       - postgres-db
@@ -131,8 +136,6 @@ services:
       dockerfile: infrastructure/apps/web-client.dockerfile
     ports:
       - 3000:3000
-    depends_on:
-      - consul
     deploy:
       resources:
         limits:
@@ -149,6 +152,7 @@ services:
       - DD_SERVICE_DISCOVERY_CONSUL=http://consul:8500
       - DD_SERVICE_DISCOVERY_HOST=${IP:-web-client-bff}
       - DD_SERVICE_DISCOVERY_PORT=5004
+      - ASPNETCORE_URLS=http://0.0.0.0:5004
     depends_on:
       - consul
       - postgres-db

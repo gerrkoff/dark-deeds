@@ -11,7 +11,6 @@ WORKDIR /app/code/apps/TelegramClientApp/DarkDeeds.TelegramClientApp/DarkDeeds.T
 RUN dotnet build
 
 RUN dotnet dev-certs https --trust
-ENV ASPNETCORE_URLS=https://0.0.0.0:5003
 ENV ASPNETCORE_ENVIRONMENT=Staging
 
 ENTRYPOINT ["dotnet", "run", "--no-launch-profile"]

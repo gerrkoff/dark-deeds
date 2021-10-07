@@ -10,7 +10,6 @@ WORKDIR /app/code/apps/AuthServiceApp/DarkDeeds.AuthServiceApp/DarkDeeds.AuthSer
 RUN dotnet build
 
 RUN dotnet dev-certs https --trust
-ENV ASPNETCORE_URLS=https://0.0.0.0:5002
 ENV ASPNETCORE_ENVIRONMENT=Staging
 
 ENTRYPOINT ["dotnet", "run", "--no-launch-profile"]

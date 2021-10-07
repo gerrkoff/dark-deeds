@@ -3,11 +3,12 @@
 bin/
 obj/
 wwwroot/
-*.Development.json
-*.Staging.json
-*.Production.json
+*ocelot.Development.json
+*appsettings.Development.json
+*appsettings.Staging.json
+*appsettings.Production.json
 CI/artifacts/
 node_modules
 build
-infrastructure/.env
+.env
 infrastructure/tests/results

@@ -200,4 +200,15 @@ VALUES ('20191027214301_N003_Add_PlannedRecurences_And_Recurrences', '5.0.5');
 
 COMMIT;
 
+START TRANSACTION;
+
+ALTER TABLE "Tasks" ADD "Uid" text NULL DEFAULT '';
+
+UPDATE "Tasks" SET "Uid" = "Id";
+
+INSERT INTO "__EFMigrationsHistory" ("MigrationId", "ProductVersion")
+VALUES ('20210928165654_N004_Add_Uid_to_Tasks', '5.0.5');
+
+COMMIT;
+
 
