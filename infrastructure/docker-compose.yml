@@ -16,6 +16,8 @@ services:
     ports:
       - 5672:5672
       - 15672:15672
+    volumes:
+      - ./settings/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
     deploy:
       resources:
         limits:

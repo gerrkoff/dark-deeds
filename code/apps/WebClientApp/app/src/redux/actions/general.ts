@@ -13,5 +13,5 @@ export function loadGeneralInfo() {
 }
 
 function updateBuildInfo(buildInfo: BuildInfo): actions.IUpdateBuildInfo {
-    return { type: actions.GENERAL_UPDATE_BUILD_INFO, appVersion: buildInfo.version }
+    return { type: actions.GENERAL_UPDATE_BUILD_INFO, appVersion: buildInfo.appVersion }
 }

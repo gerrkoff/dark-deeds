@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-echo IP=$1 > infrastructure/.env
-cat infrastructure/.env
+export IP=$1
+
 docker-compose \
     -f infrastructure/docker-compose.yml \
     -p dd \

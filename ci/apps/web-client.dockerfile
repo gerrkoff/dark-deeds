@@ -5,7 +5,6 @@ WORKDIR /code/apps/WebClientApp/app
 RUN npm install
 RUN npm run test-ci
 RUN npm run build
-RUN ls
 
 FROM node:12.13.0-alpine
 

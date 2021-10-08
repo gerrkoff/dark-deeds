@@ -3,16 +3,16 @@ using System.Net.Http;
 using System.Net.Mime;
 using System.Text;
 using System.Threading.Tasks;
+using DarkDeeds.E2eTests.Attributes;
 using DarkDeeds.E2eTests.Base;
 using DarkDeeds.E2eTests.Common;
 using Newtonsoft.Json;
-using Xunit;
 
 namespace DarkDeeds.E2eTests
 {
     public class TelegramTests : BaseTest
     {
-        [Fact]
+        [SkipOnStagingFact]
         public Task CreateTaskCheckUpdateShowTodoTest()
         {
             return Test(async driver =>

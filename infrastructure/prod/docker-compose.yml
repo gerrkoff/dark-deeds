@@ -8,7 +8,7 @@ services:
     environment:
       - ASPNETCORE_URLS=http://0.0.0.0:5000
     volumes:
-      - /Users/antonprokofev/_/Projects/dark-deeds/infrastructure/prod/settings/api-gateway-ocelot.json:/app/ocelot.Production.json
+      - ./settings/api-gateway-ocelot.json:/app/ocelot.Production.json
     depends_on:
       - consul
       - auth-service
@@ -19,30 +19,26 @@ services:
 
   auth-service:
     image: gerrkoff/dark-deeds-auth-service:${BUILD_VERSION}
-    ports:
-      - 5002:5002
     environment:
       - DD_SERVICE_DISCOVERY_CONSUL=http://consul:8500
       - DD_SERVICE_DISCOVERY_HOST=auth-service
-      - DD_SERVICE_DISCOVERY_PORT=5002
-      - ASPNETCORE_URLS=https://0.0.0.0:5002
+      - DD_SERVICE_DISCOVERY_PORT=5000
+      - ASPNETCORE_URLS=https://0.0.0.0:5000
     volumes:
-      - /Users/antonprokofev/_/Projects/dark-deeds/infrastructure/prod/settings/auth-service-appsettings.json:/app/appsettings.Production.json
+      - ./settings/auth-service-appsettings.json:/app/appsettings.Production.json
     depends_on:
       - consul
       - postgres-db
 
   task-service:
     image: gerrkoff/dark-deeds-task-service:${BUILD_VERSION}
-    ports:
-      - 5001:5001
     environment:
       - DD_SERVICE_DISCOVERY_CONSUL=http://consul:8500
       - DD_SERVICE_DISCOVERY_HOST=task-service
-      - DD_SERVICE_DISCOVERY_PORT=5001
-      - ASPNETCORE_URLS=https://0.0.0.0:5001
+      - DD_SERVICE_DISCOVERY_PORT=5000
+      - ASPNETCORE_URLS=https://0.0.0.0:5000
     volumes:
-      - /Users/antonprokofev/_/Projects/dark-deeds/infrastructure/prod/settings/task-service-appsettings.json:/app/appsettings.Production.json
+      - ./settings/task-service-appsettings.json:/app/appsettings.Production.json
     depends_on:
       - consul
       - postgres-db
@@ -50,30 +46,26 @@ services:
 
   telegram-client:
     image: gerrkoff/dark-deeds-telegram-client:${BUILD_VERSION}
-    ports:
-      - 5003:5003
     environment:
       - DD_SERVICE_DISCOVERY_CONSUL=http://consul:8500
       - DD_SERVICE_DISCOVERY_HOST=telegram-client
-      - DD_SERVICE_DISCOVERY_PORT=5003
-      - ASPNETCORE_URLS=https://0.0.0.0:5003
+      - DD_SERVICE_DISCOVERY_PORT=5000
+      - ASPNETCORE_URLS=https://0.0.0.0:5000
     volumes:
-      - /Users/antonprokofev/_/Projects/dark-deeds/infrastructure/prod/settings/telegram-client-appsettings.json:/app/appsettings.Production.json
+      - ./settings/telegram-client-appsettings.json:/app/appsettings.Production.json
     depends_on:
       - consul
       - postgres-db
 
   web-client-bff:
     image: gerrkoff/dark-deeds-web-client-bff:${BUILD_VERSION}
-    ports:
-      - 5004:5004
     environment:
       - DD_SERVICE_DISCOVERY_CONSUL=http://consul:8500
-      - DD_SERVICE_DISCOVERY_HOST=${IP:-web-client-bff}
-      - DD_SERVICE_DISCOVERY_PORT=5004
-      - ASPNETCORE_URLS=http://0.0.0.0:5004
+      - DD_SERVICE_DISCOVERY_HOST=web-client-bff
+      - DD_SERVICE_DISCOVERY_PORT=5000
+      - ASPNETCORE_URLS=http://0.0.0.0:5000
     volumes:
-      - /Users/antonprokofev/_/Projects/dark-deeds/infrastructure/prod/settings/web-client-bff-appsettings.json:/app/appsettings.Production.json
+      - ./settings/web-client-bff-appsettings.json:/app/appsettings.Production.json
     depends_on:
       - consul
       - postgres-db
@@ -81,19 +73,18 @@ services:
 
   web-client:
     image: gerrkoff/dark-deeds-web-client:${BUILD_VERSION}
-    ports:
-      - 3000:3000
 
   consul:
     image: consul:1.10
     ports:
-      - 8500:8500
+      - 5001:8500
 
   rabbit-mq:
     image: rabbitmq:3-management-alpine
     ports:
-      - 5672:5672
-      - 15672:15672
+      - 5002:15672
+    volumes:
+      - ./settings/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
       
   postgres-db:
     image: postgres:13.0-alpine
@@ -101,9 +92,6 @@ services:
       - POSTGRES_PASSWORD=password
     volumes:
       - postgres-db-volume:/var/lib/postgresql/data
-    ports:
-      - 5432:5432
 
 volumes:
   postgres-db-volume:
-  mongo-db-volume:

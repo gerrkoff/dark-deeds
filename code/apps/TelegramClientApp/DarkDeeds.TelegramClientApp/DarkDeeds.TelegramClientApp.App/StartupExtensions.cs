@@ -1,6 +1,7 @@
 using DarkDeeds.Common.Misc;
 using DarkDeeds.Communication;
 using DarkDeeds.TaskServiceApp.Contract;
+using DarkDeeds.TelegramClientApp.App.Filters;
 using DarkDeeds.TelegramClientApp.Communication;
 using DarkDeeds.TelegramClientApp.Data.Context;
 using DarkDeeds.TelegramClientApp.Entities;
@@ -41,11 +42,16 @@ namespace DarkDeeds.TelegramClientApp.App
             services.AddScoped<ICreateTaskCommandProcessor, CreateTaskCommandProcessor>();
             services.AddScoped<IStartCommandProcessor, StartCommandProcessor>();
             services.AddScoped<IBotProcessMessageService, BotProcessMessageService>();
-            services.AddScoped<IBotSendMessageService>(_ => new BotSendMessageService(configuration["Bot"]));
-#if DEBUG
-            services.AddScoped<IBotSendMessageService>(_ => new BotSendMessageDebugService(configuration["Bot"]));
-#endif
             services.AddScoped<ITestService, TestService>();
+
+            if (bool.TryParse(configuration["EnableTelegramIntegration"], out bool v) && v)
+            {
+                services.AddScoped<IBotSendMessageService>(_ => new BotSendMessageService(configuration["Bot"]));
+            }
+            else
+            {
+                services.AddScoped<IBotSendMessageService>(_ => new BotSendMessageDebugService(configuration["Bot"]));
+            }
         }
 
         public static void AddTelegramClientCommunications(this IServiceCollection services)
@@ -65,6 +71,7 @@ namespace DarkDeeds.TelegramClientApp.App
 
         public static void AddTelegramClientApi(this IServiceCollection services)
         {
+            services.AddScoped<TestAttribute>();
             services.AddControllers(options =>
             {
                 var authRequired = new AuthorizationPolicyBuilder()

@@ -6,5 +6,5 @@ docker-compose \
 
 docker-compose \
     -f infrastructure/prod/docker-compose.yml \
-    -p dd \
+    -p dd_prod \
     rm -v

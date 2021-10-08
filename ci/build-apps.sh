@@ -11,7 +11,8 @@ else
     BUILD_VERSION="$BRANCH"
 fi
 
-echo BUILD_VERSION=$BUILD_VERSION > ci/.env
+export BUILD_VERSION=$BUILD_VERSION
+
 docker-compose \
     -f "${DOCKER_COMPOSE_FILE}" \
     build || exit $?

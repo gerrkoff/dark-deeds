@@ -1,11 +1,12 @@
 ﻿using System.Threading.Tasks;
+using DarkDeeds.TelegramClientApp.App.Filters;
 using DarkDeeds.TelegramClientApp.Services.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DarkDeeds.TelegramClientApp.App.Controllers
 {
-#if DEBUG
+    [ServiceFilter(typeof(TestAttribute))]
     [Route("test")]
     [AllowAnonymous]
     [ApiController]
@@ -24,5 +25,4 @@ namespace DarkDeeds.TelegramClientApp.App.Controllers
             return _testService.GetTestChatIdForUser(username);
         }
     }
-#endif
 }

@@ -30,12 +30,21 @@ namespace DarkDeeds.Communication.Amqp.Common
             if (_connection != null)
                 return;
             
-            var host = GetConnectionInfo();
-            var factory = new ConnectionFactory {HostName = host};
+            var connectionInfo = GetConnectionInfo();
+            var factory = new ConnectionFactory
+            {
+                HostName = connectionInfo.host,
+                UserName = connectionInfo.user,
+                Password = connectionInfo.pass,
+            };
             _connection = factory.CreateConnection();
         }
 
-        private string GetConnectionInfo() => _configuration.GetConnectionString(Constants.ConnectionString);
+        private (string host, string user, string pass) GetConnectionInfo()
+        {
+            var values = _configuration.GetConnectionString(Constants.ConnectionString).Split(";");
+            return (values[0], values[1], values[2]);
+        }
 
         public void Dispose()
         {

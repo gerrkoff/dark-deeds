@@ -46,7 +46,9 @@ namespace DarkDeeds.TaskServiceApp.ContractImpl.Mapping
                 .ForMember(x => x.EveryWeekday, e =>
                     e.MapFrom(x => x.EveryWeekday ?? 0))
                 .ForMember(x => x.EveryWeekdayExist, e =>
-                    e.MapFrom(x => x.EveryWeekday.HasValue));
+                    e.MapFrom(x => x.EveryWeekday.HasValue))
+                .ForMember(x => x.EveryMonthDay, e =>
+                    e.MapFrom(x => x.EveryMonthDay ?? string.Empty));
 
             CreateMap<PlannedRecurrenceModel, PlannedRecurrenceDto>()
                 .ForMember(x => x.StartDate, e =>
@@ -56,7 +58,9 @@ namespace DarkDeeds.TaskServiceApp.ContractImpl.Mapping
                 .ForMember(x => x.EveryNthDay, e =>
                     e.MapFrom(x => x.EveryNthDayExist ? (DateTime?) new DateTime(x.EveryNthDay) : null))
                 .ForMember(x => x.EveryWeekday, e =>
-                    e.MapFrom(x => x.EveryWeekdayExist ? (RecurrenceWeekdayEnum?) x.EveryWeekday : null));
+                    e.MapFrom(x => x.EveryWeekdayExist ? (RecurrenceWeekdayEnum?) x.EveryWeekday : null))
+                .ForMember(x => x.EveryMonthDay, e =>
+                    e.MapFrom(x => !string.IsNullOrEmpty(x.EveryMonthDay) ? x.EveryMonthDay : null));
         }
     }
 }
