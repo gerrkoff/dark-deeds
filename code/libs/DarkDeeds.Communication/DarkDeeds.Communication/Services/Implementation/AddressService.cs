@@ -22,7 +22,7 @@ namespace DarkDeeds.Communication.Services.Implementation
             var serviceDiscoveryHost = Environment.GetEnvironmentVariable(Constants.ServiceDiscoveryHost);
             if (!string.IsNullOrWhiteSpace(serviceDiscoveryPort) && !string.IsNullOrWhiteSpace(serviceDiscoveryHost))
             {
-                uri = new Uri($"https://{serviceDiscoveryHost}:{serviceDiscoveryPort}");
+                uri = new Uri($"http://{serviceDiscoveryHost}:{serviceDiscoveryPort}");
                 return true;
             }
             

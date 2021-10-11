@@ -80,7 +80,7 @@ services:
     environment:
       - DD_SERVICE_DISCOVERY_HOST=${IP:-auth-service}
       - DD_SERVICE_DISCOVERY_PORT=5002
-      - ASPNETCORE_URLS=https://0.0.0.0:5002
+      - ASPNETCORE_URLS=http://0.0.0.0:5002
     depends_on:
       - consul
       - postgres-db
@@ -99,7 +99,7 @@ services:
     environment:
       - DD_SERVICE_DISCOVERY_HOST=${IP:-task-service}
       - DD_SERVICE_DISCOVERY_PORT=5001
-      - ASPNETCORE_URLS=https://0.0.0.0:5001
+      - ASPNETCORE_URLS=http://0.0.0.0:5001
     depends_on:
       - consul
       - postgres-db
@@ -119,7 +119,7 @@ services:
     environment:
       - DD_SERVICE_DISCOVERY_HOST=${IP:-telegram-client}
       - DD_SERVICE_DISCOVERY_PORT=5003
-      - ASPNETCORE_URLS=https://0.0.0.0:5003
+      - ASPNETCORE_URLS=http://0.0.0.0:5003
     depends_on:
       - consul
       - postgres-db

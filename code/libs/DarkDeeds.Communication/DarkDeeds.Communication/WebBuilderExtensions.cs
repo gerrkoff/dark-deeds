@@ -28,5 +28,21 @@ namespace DarkDeeds.Communication
                 });
             }
         }
+
+        public static void ForceHttp2IfNoTls(this IWebHostBuilder webBuilder)
+        {
+            var url = Environment.GetEnvironmentVariable("ASPNETCORE_URLS");
+            if (string.IsNullOrWhiteSpace(url))
+                throw new InvalidOperationException("Application Url must not be empty");
+
+            var uri = new Uri(url);
+            if (string.Equals(uri.Scheme, "https"))
+                return;
+
+            webBuilder.ConfigureKestrel(options =>
+            {
+                options.ListenAnyIP(uri.Port, o => o.Protocols = HttpProtocols.Http2);
+            });
+        }
     }
 }

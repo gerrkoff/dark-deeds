@@ -23,14 +23,13 @@
 
     {
       "DownstreamPathTemplate": "/{path}",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "UpstreamPathTemplate": "/telegram/{path}",
       "UpstreamHttpMethod": [ "POST" ],
       "ServiceName": "telegram-client",
       "LoadBalancerOptions": {
         "Type": "LeastConnection"
-      },
-      "DangerousAcceptAnyServerCertificateValidator": true
+      }
     },
     
     {

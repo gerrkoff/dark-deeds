@@ -22,7 +22,7 @@ services:
     environment:
       - DD_SERVICE_DISCOVERY_HOST=auth-service
       - DD_SERVICE_DISCOVERY_PORT=5000
-      - ASPNETCORE_URLS=https://0.0.0.0:5000
+      - ASPNETCORE_URLS=http://0.0.0.0:5000
     volumes:
       - ./settings/auth-service-appsettings.json:/app/appsettings.Production.json
     depends_on:
@@ -34,7 +34,7 @@ services:
     environment:
       - DD_SERVICE_DISCOVERY_HOST=task-service
       - DD_SERVICE_DISCOVERY_PORT=5000
-      - ASPNETCORE_URLS=https://0.0.0.0:5000
+      - ASPNETCORE_URLS=http://0.0.0.0:5000
     volumes:
       - ./settings/task-service-appsettings.json:/app/appsettings.Production.json
     depends_on:
@@ -47,7 +47,7 @@ services:
     environment:
       - DD_SERVICE_DISCOVERY_HOST=telegram-client
       - DD_SERVICE_DISCOVERY_PORT=5000
-      - ASPNETCORE_URLS=https://0.0.0.0:5000
+      - ASPNETCORE_URLS=http://0.0.0.0:5000
     volumes:
       - ./settings/telegram-client-appsettings.json:/app/appsettings.Production.json
     depends_on:

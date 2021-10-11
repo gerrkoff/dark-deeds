@@ -16,7 +16,7 @@ namespace DarkDeeds.TaskServiceApp.App
             return Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.SplitHttpProtocolsIfDevelopment();
+                    webBuilder.ForceHttp2IfNoTls();
                     webBuilder.UseStartup<Startup>();
                 });
         }
