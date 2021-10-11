@@ -1,42 +1,33 @@
 #!/usr/bin/env bash
 
-print () {
-   printf "\n\e[46m\e[1m    $1    \e[0m\e[0m\n\n"
-}
+DOCKER_COMPOSE_FILE="ci/docker-compose.yml"
+BRANCH=$(git rev-parse --abbrev-ref HEAD)
+NOW=$(date +"%Y-%m-%d.%H-%M-%S")
+DEPLOY_BRANCH="staging"
 
-cd ..
-DIR="$PWD"
+if [ "$BRANCH" = "$DEPLOY_BRANCH" ]; then
+    BUILD_VERSION="$NOW"
+else
+    BUILD_VERSION="$BRANCH"
+fi
 
-# cleanup
-print 'CLEAN'
-rm -rf "$DIR"/CI/artifacts
-echo cleaned
+export BUILD_VERSION=$BUILD_VERSION
 
-# test & build FE
-print 'FE: GET DEPS'
-cd "$DIR"/DarkDeeds.WebClient/ || exit $?
-npm install || exit $?
-npm rebuild node-sass || exit $?
+docker-compose \
+    -f "${DOCKER_COMPOSE_FILE}" \
+    build || exit $?
 
-print 'FE: TEST'
-npm run test-ci || exit $?
+IMAGES=$(cat ${DOCKER_COMPOSE_FILE} | grep 'image: ' | cut -d':' -f 2 | tr -d '"')
+for IMAGE in $IMAGES
+do
+    if [ "$BRANCH" = "$DEPLOY_BRANCH" ]; then
+        docker tag "${IMAGE}":"${BUILD_VERSION}" "${IMAGE}":latest
+    fi
 
-print 'FE: BUILD'
-npm run build || exit $?
-
-# test & build BE
-print 'BE: TEST'
-cd "$DIR"/DarkDeeds/DarkDeeds.Tests/ || exit $?
-dotnet test "--logger:trx;LogFileName=results.trx" --results-directory "$DIR"/CI/artifacts/test-results || exit $?
-
-print 'BE: BUILD'
-cd "$DIR"/DarkDeeds/DarkDeeds.Api/ || exit $?
-dotnet publish -c Release -o "$DIR"/CI/artifacts/src || exit $?
-
-# misc
-print 'COPY ADDITIONAL FILES'
-cd "$DIR" || exit $?
-cp CI/run.dockerfile CI/artifacts/ || exit $?
-echo copied
-
-print 'SUCCESS'
+    if [ "$1" = "push" ]; then
+        docker push "${IMAGE}":"${BUILD_VERSION}"
+        if [ "$BRANCH" = "$DEPLOY_BRANCH" ]; then
+            docker push "${IMAGE}":latest
+        fi
+    fi
+done
