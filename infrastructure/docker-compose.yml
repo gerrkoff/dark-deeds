@@ -78,7 +78,6 @@ services:
     ports:
       - 5002:5002
     environment:
-      - DD_SERVICE_DISCOVERY_CONSUL=http://consul:8500
       - DD_SERVICE_DISCOVERY_HOST=${IP:-auth-service}
       - DD_SERVICE_DISCOVERY_PORT=5002
       - ASPNETCORE_URLS=https://0.0.0.0:5002
@@ -98,7 +97,6 @@ services:
     ports:
       - 5001:5001
     environment:
-      - DD_SERVICE_DISCOVERY_CONSUL=http://consul:8500
       - DD_SERVICE_DISCOVERY_HOST=${IP:-task-service}
       - DD_SERVICE_DISCOVERY_PORT=5001
       - ASPNETCORE_URLS=https://0.0.0.0:5001
@@ -119,7 +117,6 @@ services:
     ports:
       - 5003:5003
     environment:
-      - DD_SERVICE_DISCOVERY_CONSUL=http://consul:8500
       - DD_SERVICE_DISCOVERY_HOST=${IP:-telegram-client}
       - DD_SERVICE_DISCOVERY_PORT=5003
       - ASPNETCORE_URLS=https://0.0.0.0:5003
@@ -151,7 +148,6 @@ services:
     ports:
       - 5004:5004
     environment:
-      - DD_SERVICE_DISCOVERY_CONSUL=http://consul:8500
       - DD_SERVICE_DISCOVERY_HOST=${IP:-web-client-bff}
       - DD_SERVICE_DISCOVERY_PORT=5004
       - ASPNETCORE_URLS=http://0.0.0.0:5004

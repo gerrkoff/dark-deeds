@@ -6,6 +6,7 @@ using DarkDeeds.Communication.Amqp.Subscribe;
 using DarkDeeds.Communication.Interceptors;
 using DarkDeeds.Communication.Services.Implementation;
 using DarkDeeds.Communication.Services.Interface;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
@@ -35,18 +36,18 @@ namespace DarkDeeds.Communication
             services.AddHostedService<TService>();
         }
         
-        public static void AddDarkDeedsAppRegistration(this IServiceCollection services, string appName)
+        public static void AddDarkDeedsAppRegistration(this IServiceCollection services, string appName, IConfiguration configuration)
         {
-            services.AddDarkDeedsServiceDiscovery();
+            services.AddDarkDeedsServiceDiscovery(configuration);
 
             services.AddTransient<IAddressService, AddressService>();
             services.AddHostedService(x =>
                 ActivatorUtilities.CreateInstance<AppRegistrationService>(x, appName));
         }
         
-        public static void AddDarkDeedsGrpcClientFactory<T>(this IServiceCollection services, string name)
+        public static void AddDarkDeedsGrpcClientFactory<T>(this IServiceCollection services, string name, IConfiguration configuration)
         {
-            services.AddDarkDeedsServiceDiscovery();
+            services.AddDarkDeedsServiceDiscovery(configuration);
             
             services.AddHttpContextAccessor();
             services.TryAddTransient<AuthInterceptor>();
@@ -56,22 +57,20 @@ namespace DarkDeeds.Communication
             );
         }
 
-        public static void AddDarkDeedsHttpClientFactory(this IServiceCollection services)
+        public static void AddDarkDeedsHttpClientFactory(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddDarkDeedsServiceDiscovery();
+            services.AddDarkDeedsServiceDiscovery(configuration);
 
             services.AddTransient<IDdHttpClientFactory, DdHttpClientFactory>();
         }
 
-        private static void AddDarkDeedsServiceDiscovery(this IServiceCollection services)
+        private static void AddDarkDeedsServiceDiscovery(this IServiceCollection services, IConfiguration configuration)
         {
-            services.TryAddSingleton<IConsulClient>(_ => new ConsulClient(config =>
-            {
-                var serviceDiscoveryConsul = Environment.GetEnvironmentVariable(EnvVariables.ConsulUri);
-                if (string.IsNullOrWhiteSpace(serviceDiscoveryConsul))
-                    serviceDiscoveryConsul = "http://localhost:8500";
-                config.Address = new Uri(serviceDiscoveryConsul);
-            }));
+            var serviceDiscoveryConsul = configuration?.GetConnectionString(Constants.ConnectionStringConsul) ??
+                                         "http://localhost:8500";
+
+            services.TryAddSingleton<IConsulClient>(_ =>
+                new ConsulClient(config => config.Address = new Uri(serviceDiscoveryConsul)));
 
             services.TryAddSingleton<IServiceDiscovery, ServiceDiscovery>();
         }

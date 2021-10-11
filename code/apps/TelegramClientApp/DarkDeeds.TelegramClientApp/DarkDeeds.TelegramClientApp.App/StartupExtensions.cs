@@ -54,10 +54,10 @@ namespace DarkDeeds.TelegramClientApp.App
             }
         }
 
-        public static void AddTelegramClientCommunications(this IServiceCollection services)
+        public static void AddTelegramClientCommunications(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddDarkDeedsGrpcClientFactory<TaskService.TaskServiceClient>("task-service");
-            services.AddDarkDeedsGrpcClientFactory<ParserService.ParserServiceClient>("task-service");
+            services.AddDarkDeedsGrpcClientFactory<TaskService.TaskServiceClient>("task-service", configuration);
+            services.AddDarkDeedsGrpcClientFactory<ParserService.ParserServiceClient>("task-service", configuration);
             services.AddScoped<ITaskServiceApp, Communication.TaskServiceApp>();
             services.AddAutoMapper(typeof(ModelsMappingProfile));
         }

@@ -20,7 +20,6 @@ services:
   auth-service:
     image: gerrkoff/dark-deeds-auth-service:${BUILD_VERSION}
     environment:
-      - DD_SERVICE_DISCOVERY_CONSUL=http://consul:8500
       - DD_SERVICE_DISCOVERY_HOST=auth-service
       - DD_SERVICE_DISCOVERY_PORT=5000
       - ASPNETCORE_URLS=https://0.0.0.0:5000
@@ -33,7 +32,6 @@ services:
   task-service:
     image: gerrkoff/dark-deeds-task-service:${BUILD_VERSION}
     environment:
-      - DD_SERVICE_DISCOVERY_CONSUL=http://consul:8500
       - DD_SERVICE_DISCOVERY_HOST=task-service
       - DD_SERVICE_DISCOVERY_PORT=5000
       - ASPNETCORE_URLS=https://0.0.0.0:5000
@@ -47,7 +45,6 @@ services:
   telegram-client:
     image: gerrkoff/dark-deeds-telegram-client:${BUILD_VERSION}
     environment:
-      - DD_SERVICE_DISCOVERY_CONSUL=http://consul:8500
       - DD_SERVICE_DISCOVERY_HOST=telegram-client
       - DD_SERVICE_DISCOVERY_PORT=5000
       - ASPNETCORE_URLS=https://0.0.0.0:5000
@@ -60,7 +57,6 @@ services:
   web-client-bff:
     image: gerrkoff/dark-deeds-web-client-bff:${BUILD_VERSION}
     environment:
-      - DD_SERVICE_DISCOVERY_CONSUL=http://consul:8500
       - DD_SERVICE_DISCOVERY_HOST=web-client-bff
       - DD_SERVICE_DISCOVERY_PORT=5000
       - ASPNETCORE_URLS=http://0.0.0.0:5000

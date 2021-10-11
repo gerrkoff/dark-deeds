@@ -42,7 +42,7 @@ namespace DarkDeeds.Communication.Amqp.Common
 
         private (string host, string user, string pass) GetConnectionInfo()
         {
-            var values = _configuration.GetConnectionString(Constants.ConnectionString).Split(";");
+            var values = _configuration.GetConnectionString(Constants.ConnectionStringRmq).Split(";");
             return (values[0], values[1], values[2]);
         }
 
@@ -52,4 +52,6 @@ namespace DarkDeeds.Communication.Amqp.Common
             _channel?.Dispose();
         }
     }
+    
+    // TODO: implement it right: https://www.rabbitmq.com/tutorials/tutorial-four-dotnet.html
 }

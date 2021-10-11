@@ -26,7 +26,7 @@ namespace DarkDeeds.AuthServiceApp.App
         {
             services.AddDarkDeedsAuth(Configuration);
             services.AddDarkDeedsValidation();
-            services.AddDarkDeedsAppRegistration("auth-service");
+            services.AddDarkDeedsAppRegistration("auth-service", Configuration);
             
             services.AddAuthServiceServices();
             services.AddAuthServiceContractImpl();

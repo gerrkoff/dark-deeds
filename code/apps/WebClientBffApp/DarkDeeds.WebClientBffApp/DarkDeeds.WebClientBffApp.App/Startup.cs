@@ -26,11 +26,11 @@ namespace DarkDeeds.WebClientBffApp.App
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDarkDeedsAppRegistration("web-client-bff");
+            services.AddDarkDeedsAppRegistration("web-client-bff", Configuration);
             services.AddDarkDeedsAuth(Configuration);
             services.AddWebClientBffServices();
             services.AddWebClientBffUseCases();
-            services.AddWebClientBffCommunications();
+            services.AddWebClientBffCommunications(Configuration);
             services.AddWebClientBffData(Configuration);
             services.AddWebClientBffCommonServices();
             services.AddWebClientBffApi();

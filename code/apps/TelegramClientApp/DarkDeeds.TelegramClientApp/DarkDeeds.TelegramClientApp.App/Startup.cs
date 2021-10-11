@@ -20,10 +20,10 @@ namespace DarkDeeds.TelegramClientApp.App
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDarkDeedsAuth(Configuration);
-            services.AddDarkDeedsAppRegistration("telegram-client");
+            services.AddDarkDeedsAppRegistration("telegram-client", Configuration);
 
             services.AddTelegramClientIdentity();
-            services.AddTelegramClientCommunications();
+            services.AddTelegramClientCommunications(Configuration);
             services.AddTelegramClientServices(Configuration);
             services.AddTelegramClientDatabase(Configuration);
             services.AddTelegramClientApi();

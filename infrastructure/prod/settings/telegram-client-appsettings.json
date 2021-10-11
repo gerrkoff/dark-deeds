@@ -6,7 +6,8 @@
     "Lifetime": 100
   },
   "ConnectionStrings": {
-    "appDb": "Host=postgres-db;Port=5432;Database=dark-deeds;Username=postgres;Password=password;"
+    "appDb": "Host=postgres-db;Port=5432;Database=dark-deeds;Username=postgres;Password=password;",
+    "consul": "http://consul:8500"
   },
   "Bot": "bot",
   "EnableTestHandlers": "true",

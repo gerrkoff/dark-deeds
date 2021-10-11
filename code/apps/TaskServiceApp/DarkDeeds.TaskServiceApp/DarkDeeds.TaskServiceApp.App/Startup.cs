@@ -24,7 +24,7 @@ namespace DarkDeeds.TaskServiceApp.App
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDarkDeedsAuth(Configuration);
-            services.AddDarkDeedsAppRegistration("task-service");
+            services.AddDarkDeedsAppRegistration("task-service", Configuration);
             services.AddDarkDeedsAmpqPublisher<ITaskUpdatedPublisher, TaskUpdatedPublisher, TaskUpdatedDto>();
             
             services.AddTaskServices(Configuration);

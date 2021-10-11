@@ -35,7 +35,7 @@ namespace DarkDeeds.Communication.Services.Implementation
             if (!_addressService.TryGetAddress(out Uri uri))
                 return null;
             
-            var registration = new AgentServiceRegistration()
+            var registration = new AgentServiceRegistration
             {
                 ID = id,
                 Name = _appName,

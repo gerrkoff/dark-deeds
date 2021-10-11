@@ -7,6 +7,7 @@
   },
   "ConnectionStrings": {
     "appDb": "Host=postgres-db;Port=5432;Database=dark-deeds;Username=postgres;Password=password;",
-    "rabbitMq": "rabbit-mq"
+    "rabbitMq": "rabbit-mq;guest;guest",
+    "consul": "http://consul:8500"
   }
 }

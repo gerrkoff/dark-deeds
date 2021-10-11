@@ -18,8 +18,8 @@ namespace DarkDeeds.Communication.Services.Implementation
 
         public bool TryGetAddress(out Uri uri)
         {
-            var serviceDiscoveryPort = Environment.GetEnvironmentVariable(EnvVariables.ServiceDiscoveryPort);
-            var serviceDiscoveryHost = Environment.GetEnvironmentVariable(EnvVariables.ServiceDiscoveryHost);
+            var serviceDiscoveryPort = Environment.GetEnvironmentVariable(Constants.ServiceDiscoveryPort);
+            var serviceDiscoveryHost = Environment.GetEnvironmentVariable(Constants.ServiceDiscoveryHost);
             if (!string.IsNullOrWhiteSpace(serviceDiscoveryPort) && !string.IsNullOrWhiteSpace(serviceDiscoveryHost))
             {
                 uri = new Uri($"https://{serviceDiscoveryHost}:{serviceDiscoveryPort}");
