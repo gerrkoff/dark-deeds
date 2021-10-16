@@ -13,11 +13,13 @@ jobs:
         node-version: 12.x
     - name: Build FE
       run: |
-        cd DarkDeeds.WebClient
+        cd code/apps/WebClientApp/app
         npm install
         npm rebuild node-sass
         npm run test-ci
         npm run build
+        cd ../server
+        npm install
 
   build-be:
     runs-on: ubuntu-latest
@@ -26,10 +28,25 @@ jobs:
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 3.1.100
+        dotnet-version: 5.0.x
     - name: Build BE
       run: |
-        cd DarkDeeds/DarkDeeds.Tests/
-        dotnet test
-        cd ../DarkDeeds.Api/
-        dotnet publish -c Release
+        dotnet test code/apps/TaskServiceApp/DarkDeeds.TaskServiceApp/DarkDeeds.TaskServiceApp.Tests/DarkDeeds.TaskServiceApp.Tests.csproj
+        dotnet test code/apps/TelegramClientApp/DarkDeeds.TelegramClientApp/DarkDeeds.TelegramClientApp.Tests/DarkDeeds.TelegramClientApp.Tests.csproj
+        dotnet publish -c Release code/apps/ApiGatewayApp/DarkDeeds.ApiGatewayApp/DarkDeeds.ApiGatewayApp.App/DarkDeeds.ApiGatewayApp.App.csproj
+        dotnet publish -c Release code/apps/AuthServiceApp/DarkDeeds.AuthServiceApp/DarkDeeds.AuthServiceApp.App/DarkDeeds.AuthServiceApp.App.csproj
+        dotnet publish -c Release code/apps/TaskServiceApp/DarkDeeds.TaskServiceApp/DarkDeeds.TaskServiceApp.App/DarkDeeds.TaskServiceApp.App.csproj
+        dotnet publish -c Release code/apps/TelegramClientApp/DarkDeeds.TelegramClientApp/DarkDeeds.TelegramClientApp.App/DarkDeeds.TelegramClientApp.App.csproj
+        dotnet publish -c Release code/apps/WebClientBffApp/DarkDeeds.WebClientBffApp/DarkDeeds.WebClientBffApp.App/DarkDeeds.WebClientBffApp.App.csproj
+
+  build-e2e-tests:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.x
+    - name: Build E2E Tests
+      run: |
+        dotnet build code/tests/e2e/DarkDeeds.E2eTests/DarkDeeds.E2eTests.csproj
