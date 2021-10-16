@@ -12,6 +12,7 @@ else
 fi
 
 export BUILD_VERSION=$BUILD_VERSION
+echo BUILD_VERSION=$BUILD_VERSION
 
 docker-compose \
     -f "${DOCKER_COMPOSE_FILE}" \
