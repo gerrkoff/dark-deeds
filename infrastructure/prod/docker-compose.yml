@@ -1,0 +1,93 @@
+version: '3'
+
+services:
+  api-gateway:
+    image: gerrkoff/dark-deeds-api-gateway:${BUILD_VERSION}
+    ports:
+      - 5000:5000
+    environment:
+      - ASPNETCORE_URLS=http://0.0.0.0:5000
+    volumes:
+      - ./settings/api-gateway-ocelot.json:/app/ocelot.Production.json
+    depends_on:
+      - consul
+      - auth-service
+      - task-service
+      - telegram-client
+      - web-client
+      - web-client-bff
+
+  auth-service:
+    image: gerrkoff/dark-deeds-auth-service:${BUILD_VERSION}
+    environment:
+      - DD_SERVICE_DISCOVERY_HOST=auth-service
+      - DD_SERVICE_DISCOVERY_PORT=5000
+      - ASPNETCORE_URLS=http://0.0.0.0:5000
+    volumes:
+      - ./settings/auth-service-appsettings.json:/app/appsettings.Production.json
+    depends_on:
+      - consul
+      - postgres-db
+
+  task-service:
+    image: gerrkoff/dark-deeds-task-service:${BUILD_VERSION}
+    environment:
+      - DD_SERVICE_DISCOVERY_HOST=task-service
+      - DD_SERVICE_DISCOVERY_PORT=5000
+      - ASPNETCORE_URLS=http://0.0.0.0:5000
+    volumes:
+      - ./settings/task-service-appsettings.json:/app/appsettings.Production.json
+    depends_on:
+      - consul
+      - postgres-db
+      - rabbit-mq
+
+  telegram-client:
+    image: gerrkoff/dark-deeds-telegram-client:${BUILD_VERSION}
+    environment:
+      - DD_SERVICE_DISCOVERY_HOST=telegram-client
+      - DD_SERVICE_DISCOVERY_PORT=5000
+      - ASPNETCORE_URLS=http://0.0.0.0:5000
+    volumes:
+      - ./settings/telegram-client-appsettings.json:/app/appsettings.Production.json
+    depends_on:
+      - consul
+      - postgres-db
+
+  web-client-bff:
+    image: gerrkoff/dark-deeds-web-client-bff:${BUILD_VERSION}
+    environment:
+      - DD_SERVICE_DISCOVERY_HOST=web-client-bff
+      - DD_SERVICE_DISCOVERY_PORT=5000
+      - ASPNETCORE_URLS=http://0.0.0.0:5000
+    volumes:
+      - ./settings/web-client-bff-appsettings.json:/app/appsettings.Production.json
+    depends_on:
+      - consul
+      - postgres-db
+      - rabbit-mq
+
+  web-client:
+    image: gerrkoff/dark-deeds-web-client:${BUILD_VERSION}
+
+  consul:
+    image: consul:1.10
+    ports:
+      - 5001:8500
+
+  rabbit-mq:
+    image: rabbitmq:3-management-alpine
+    ports:
+      - 5002:15672
+    volumes:
+      - ./settings/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
+      
+  postgres-db:
+    image: postgres:13.0-alpine
+    environment:
+      - POSTGRES_PASSWORD=password
+    volumes:
+      - postgres-db-volume:/var/lib/postgresql/data
+
+volumes:
+  postgres-db-volume:

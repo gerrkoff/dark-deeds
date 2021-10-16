@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+option csharp_namespace = "DarkDeeds.TaskServiceApp.Contract";
+
+import "Protos/models.proto";
+
+package taskServiceApp;
+
+service ParserService {
+  rpc Parse (ParseRequest) returns (ParseReply);
+  rpc Print (PrintRequest) returns (PrintReply);
+}
+
+message ParseRequest {
+  string text = 1;
+}
+
+message ParseReply {
+  TaskModel task = 1;
+}
+
+message PrintRequest {
+  repeated TaskModel tasks = 1;
+}
+
+message PrintReply {
+  repeated string texts = 1;
+}

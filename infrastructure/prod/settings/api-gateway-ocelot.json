@@ -1,0 +1,11 @@
+{
+  "GlobalConfiguration": {
+    "BaseUrl": "localhost",
+    "ServiceDiscoveryProvider": {
+      "Scheme": "http",
+      "Host": "consul",
+      "Port": 8500,
+      "Type": "Consul"
+    }
+  }
+}

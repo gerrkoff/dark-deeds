@@ -1,0 +1,166 @@
+version: '3'
+
+services:
+  consul:
+    image: consul:1.10
+    ports:
+      - 8500:8500
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 300M
+
+  rabbit-mq:
+    image: rabbitmq:3-management-alpine
+    ports:
+      - 5672:5672
+      - 15672:15672
+    volumes:
+      - ./settings/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 300M
+
+  mongo-db:
+    image: mongo:4.4
+    volumes:
+      - mongo-db-volume:/data/db
+    ports:
+      - 27017:27017
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 300M
+      
+  postgres-db:
+    image: postgres:13.0-alpine
+    environment:
+      - POSTGRES_PASSWORD=password
+    volumes:
+      - postgres-db-volume:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 300M
+
+  api-gateway:
+    build:
+      context: ../
+      dockerfile: infrastructure/apps/api-gateway.dockerfile
+    ports:
+      - 5000:5000
+    environment:
+      - ASPNETCORE_URLS=http://0.0.0.0:5000
+    depends_on:
+      - consul
+      - auth-service
+      - task-service
+      - telegram-client
+      - web-client
+      - web-client-bff
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 300M
+
+  auth-service:
+    build:
+      context: ../
+      dockerfile: infrastructure/apps/auth-service.dockerfile
+    ports:
+      - 5002:5002
+    environment:
+      - DD_SERVICE_DISCOVERY_HOST=${IP:-auth-service}
+      - DD_SERVICE_DISCOVERY_PORT=5002
+      - ASPNETCORE_URLS=http://0.0.0.0:5002
+    depends_on:
+      - consul
+      - postgres-db
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 300M
+
+  task-service:
+    build:
+      context: ../
+      dockerfile: infrastructure/apps/task-service.dockerfile
+    ports:
+      - 5001:5001
+    environment:
+      - DD_SERVICE_DISCOVERY_HOST=${IP:-task-service}
+      - DD_SERVICE_DISCOVERY_PORT=5001
+      - ASPNETCORE_URLS=http://0.0.0.0:5001
+    depends_on:
+      - consul
+      - postgres-db
+      - rabbit-mq
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 300M
+
+  telegram-client:
+    build:
+      context: ../
+      dockerfile: infrastructure/apps/telegram-client.dockerfile
+    ports:
+      - 5003:5003
+    environment:
+      - DD_SERVICE_DISCOVERY_HOST=${IP:-telegram-client}
+      - DD_SERVICE_DISCOVERY_PORT=5003
+      - ASPNETCORE_URLS=http://0.0.0.0:5003
+    depends_on:
+      - consul
+      - postgres-db
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 300M
+
+  web-client:
+    build:
+      context: ../
+      dockerfile: infrastructure/apps/web-client.dockerfile
+    ports:
+      - 3000:3000
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 300M
+
+  web-client-bff:
+    build:
+      context: ../
+      dockerfile: infrastructure/apps/web-client-bff.dockerfile
+    ports:
+      - 5004:5004
+    environment:
+      - DD_SERVICE_DISCOVERY_HOST=${IP:-web-client-bff}
+      - DD_SERVICE_DISCOVERY_PORT=5004
+      - ASPNETCORE_URLS=http://0.0.0.0:5004
+    depends_on:
+      - consul
+      - postgres-db
+      - rabbit-mq
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 300M
+
+volumes:
+  postgres-db-volume:
+  mongo-db-volume:

@@ -1,0 +1,50 @@
+version: '3'
+
+services:
+  api-gateway:
+    image: gerrkoff/dark-deeds-api-gateway:${BUILD_VERSION}
+    build:
+      context: ../
+      dockerfile: ci/apps/api-gateway.dockerfile
+      args:
+        - BUILD_VERSION=${BUILD_VERSION}
+  
+  auth-service:
+    image: gerrkoff/dark-deeds-auth-service:${BUILD_VERSION}
+    build:
+      context: ../
+      dockerfile: ci/apps/auth-service.dockerfile
+      args:
+        - BUILD_VERSION=${BUILD_VERSION}
+
+  task-service:
+    image: gerrkoff/dark-deeds-task-service:${BUILD_VERSION}
+    build:
+      context: ../
+      dockerfile: ci/apps/task-service.dockerfile
+      args:
+        - BUILD_VERSION=${BUILD_VERSION}
+
+  telegram-client:
+    image: gerrkoff/dark-deeds-telegram-client:${BUILD_VERSION}
+    build:
+      context: ../
+      dockerfile: ci/apps/telegram-client.dockerfile
+      args:
+        - BUILD_VERSION=${BUILD_VERSION}
+
+  web-client-bff:
+    image: gerrkoff/dark-deeds-web-client-bff:${BUILD_VERSION}
+    build:
+      context: ../
+      dockerfile: ci/apps/web-client-bff.dockerfile
+      args:
+        - BUILD_VERSION=${BUILD_VERSION}
+
+  web-client:
+    image: gerrkoff/dark-deeds-web-client:${BUILD_VERSION}
+    build:
+      context: ../
+      dockerfile: ci/apps/web-client.dockerfile
+      args:
+        - BUILD_VERSION=${BUILD_VERSION}

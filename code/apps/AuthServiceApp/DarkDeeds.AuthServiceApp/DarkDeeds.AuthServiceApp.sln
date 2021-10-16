@@ -1,0 +1,92 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.AuthServiceApp.App", "DarkDeeds.AuthServiceApp.App\DarkDeeds.AuthServiceApp.App.csproj", "{B2400C5A-B511-4E76-A419-056115D169B6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1 Entities", "1 Entities", "{CD620348-ECA1-465D-9163-2013E3EA0B32}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2 Services", "2 Services", "{F0F410C2-D181-4D45-A0BC-C86E98499E1C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4 Frameworks", "4 Frameworks", "{E990B441-65EB-429A-9436-253640823912}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.AuthServiceApp.Services", "DarkDeeds.AuthServiceApp.Services\DarkDeeds.AuthServiceApp.Services.csproj", "{E53A9B47-A58F-467A-BDA2-228F6C393384}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "5 Libs", "5 Libs", "{78E62EF9-278C-43D3-A53A-438EC46588AC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.Authentication", "..\..\..\libs\DarkDeeds.Authentication\DarkDeeds.Authentication\DarkDeeds.Authentication.csproj", "{6C0354CE-6B4C-4E19-AEF3-A10ECF1F78C0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.AuthServiceApp.Entities", "DarkDeeds.AuthServiceApp.Entities\DarkDeeds.AuthServiceApp.Entities.csproj", "{980DB714-1695-408F-80B0-44CB6A298364}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.AuthServiceApp.Data", "DarkDeeds.AuthServiceApp.Data\DarkDeeds.AuthServiceApp.Data.csproj", "{17E4490F-9686-4CE8-8158-8AF34E932F15}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.AuthServiceApp.Contract", "DarkDeeds.AuthServiceApp.Contract\DarkDeeds.AuthServiceApp.Contract.csproj", "{922451B1-0A9A-4526-BC4A-4DC416772C17}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3 gRPC", "3 gRPC", "{54A65628-3335-452A-9881-A78593BF5697}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.AuthServiceApp.ContractImpl", "DarkDeeds.AuthServiceApp.ContractImpl\DarkDeeds.AuthServiceApp.ContractImpl.csproj", "{D44F0EB9-8855-4506-A807-7B7628C0C06A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.Authentication.DependencyInjection", "..\..\..\libs\DarkDeeds.Authentication\DarkDeeds.Authentication.DependencyInjection\DarkDeeds.Authentication.DependencyInjection.csproj", "{DC186E60-C5D7-4B08-993C-53B907BCE23A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.Common", "..\..\..\libs\DarkDeeds.Common\DarkDeeds.Common\DarkDeeds.Common.csproj", "{6D0625C4-6399-44A1-B329-6A994371BEA4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.Communication", "..\..\..\libs\DarkDeeds.Communication\DarkDeeds.Communication\DarkDeeds.Communication.csproj", "{7875AC46-F865-4D6B-BE81-C366C91989B3}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B2400C5A-B511-4E76-A419-056115D169B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B2400C5A-B511-4E76-A419-056115D169B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B2400C5A-B511-4E76-A419-056115D169B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B2400C5A-B511-4E76-A419-056115D169B6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E53A9B47-A58F-467A-BDA2-228F6C393384}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E53A9B47-A58F-467A-BDA2-228F6C393384}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E53A9B47-A58F-467A-BDA2-228F6C393384}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E53A9B47-A58F-467A-BDA2-228F6C393384}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6C0354CE-6B4C-4E19-AEF3-A10ECF1F78C0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6C0354CE-6B4C-4E19-AEF3-A10ECF1F78C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6C0354CE-6B4C-4E19-AEF3-A10ECF1F78C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6C0354CE-6B4C-4E19-AEF3-A10ECF1F78C0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{980DB714-1695-408F-80B0-44CB6A298364}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{980DB714-1695-408F-80B0-44CB6A298364}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{980DB714-1695-408F-80B0-44CB6A298364}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{980DB714-1695-408F-80B0-44CB6A298364}.Release|Any CPU.Build.0 = Release|Any CPU
+		{17E4490F-9686-4CE8-8158-8AF34E932F15}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{17E4490F-9686-4CE8-8158-8AF34E932F15}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{17E4490F-9686-4CE8-8158-8AF34E932F15}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{17E4490F-9686-4CE8-8158-8AF34E932F15}.Release|Any CPU.Build.0 = Release|Any CPU
+		{922451B1-0A9A-4526-BC4A-4DC416772C17}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{922451B1-0A9A-4526-BC4A-4DC416772C17}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{922451B1-0A9A-4526-BC4A-4DC416772C17}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{922451B1-0A9A-4526-BC4A-4DC416772C17}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D44F0EB9-8855-4506-A807-7B7628C0C06A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D44F0EB9-8855-4506-A807-7B7628C0C06A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D44F0EB9-8855-4506-A807-7B7628C0C06A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D44F0EB9-8855-4506-A807-7B7628C0C06A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DC186E60-C5D7-4B08-993C-53B907BCE23A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DC186E60-C5D7-4B08-993C-53B907BCE23A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DC186E60-C5D7-4B08-993C-53B907BCE23A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DC186E60-C5D7-4B08-993C-53B907BCE23A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6D0625C4-6399-44A1-B329-6A994371BEA4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6D0625C4-6399-44A1-B329-6A994371BEA4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6D0625C4-6399-44A1-B329-6A994371BEA4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6D0625C4-6399-44A1-B329-6A994371BEA4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7875AC46-F865-4D6B-BE81-C366C91989B3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7875AC46-F865-4D6B-BE81-C366C91989B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7875AC46-F865-4D6B-BE81-C366C91989B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7875AC46-F865-4D6B-BE81-C366C91989B3}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{B2400C5A-B511-4E76-A419-056115D169B6} = {E990B441-65EB-429A-9436-253640823912}
+		{E53A9B47-A58F-467A-BDA2-228F6C393384} = {F0F410C2-D181-4D45-A0BC-C86E98499E1C}
+		{6C0354CE-6B4C-4E19-AEF3-A10ECF1F78C0} = {78E62EF9-278C-43D3-A53A-438EC46588AC}
+		{980DB714-1695-408F-80B0-44CB6A298364} = {CD620348-ECA1-465D-9163-2013E3EA0B32}
+		{17E4490F-9686-4CE8-8158-8AF34E932F15} = {E990B441-65EB-429A-9436-253640823912}
+		{922451B1-0A9A-4526-BC4A-4DC416772C17} = {54A65628-3335-452A-9881-A78593BF5697}
+		{D44F0EB9-8855-4506-A807-7B7628C0C06A} = {54A65628-3335-452A-9881-A78593BF5697}
+		{DC186E60-C5D7-4B08-993C-53B907BCE23A} = {78E62EF9-278C-43D3-A53A-438EC46588AC}
+		{6D0625C4-6399-44A1-B329-6A994371BEA4} = {78E62EF9-278C-43D3-A53A-438EC46588AC}
+		{7875AC46-F865-4D6B-BE81-C366C91989B3} = {78E62EF9-278C-43D3-A53A-438EC46588AC}
+	EndGlobalSection
+EndGlobal
