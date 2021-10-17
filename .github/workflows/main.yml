@@ -33,11 +33,7 @@ jobs:
       run: |
         dotnet test code/backend/DarkDeeds.TaskServiceApp.Tests/DarkDeeds.TaskServiceApp.Tests.csproj
         dotnet test code/backend/DarkDeeds.TelegramClientApp.Tests/DarkDeeds.TelegramClientApp.Tests.csproj
-        dotnet publish -c Release code/backend/DarkDeeds.ApiGatewayApp.App/DarkDeeds.ApiGatewayApp.App.csproj
-        dotnet publish -c Release code/backend/DarkDeeds.AuthServiceApp.App/DarkDeeds.AuthServiceApp.App.csproj
-        dotnet publish -c Release code/backend/DarkDeeds.TaskServiceApp.App/DarkDeeds.TaskServiceApp.App.csproj
-        dotnet publish -c Release code/backend/DarkDeeds.TelegramClientApp.App/DarkDeeds.TelegramClientApp.App.csproj
-        dotnet publish -c Release code/backend/DarkDeeds.WebClientBffApp.App/DarkDeeds.WebClientBffApp.App.csproj
+        dotnet build code/backend/DarkDeeds.sln
 
   build-e2e-tests:
     runs-on: ubuntu-latest
@@ -49,4 +45,4 @@ jobs:
         dotnet-version: 5.0.x
     - name: Build E2E Tests
       run: |
-        dotnet build code/tests/DarkDeeds.E2eTests/DarkDeeds.E2eTests.csproj
+        dotnet build code/tests/DarkDeeds.E2eTests/DarkDeeds.E2eTests.sln
