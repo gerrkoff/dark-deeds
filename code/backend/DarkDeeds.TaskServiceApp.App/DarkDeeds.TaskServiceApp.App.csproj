@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net5.0</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.5" />
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
+        <PackageReference Include="Grpc.AspNetCore" Version="2.36.0" />
+        <PackageReference Include="Grpc.AspNetCore.Server.Reflection" Version="2.36.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\DarkDeeds.Authentication.DependencyInjection\DarkDeeds.Authentication.DependencyInjection.csproj" />
+      <ProjectReference Include="..\DarkDeeds.Common\DarkDeeds.Common.csproj" />
+      <ProjectReference Include="..\DarkDeeds.Communication\DarkDeeds.Communication.csproj" />
+      <ProjectReference Include="..\DarkDeeds.TaskServiceApp.Communication\DarkDeeds.TaskServiceApp.Communication.csproj" />
+      <ProjectReference Include="..\DarkDeeds.TaskServiceApp.ContractImpl\DarkDeeds.TaskServiceApp.ContractImpl.csproj" />
+      <ProjectReference Include="..\DarkDeeds.TaskServiceApp.Data\DarkDeeds.TaskServiceApp.Data.csproj" />
+      <ProjectReference Include="..\DarkDeeds.TaskServiceApp.Services\DarkDeeds.TaskServiceApp.Services.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Controllers" />
+    </ItemGroup>
+
+</Project>
