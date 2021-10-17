@@ -5,7 +5,7 @@ WORKDIR /code
 ARG BUILD_VERSION
 
 RUN dotnet publish -c Release -o /build --version-suffix ${BUILD_VERSION}  \
-    /code/apps/WebClientBffApp/DarkDeeds.WebClientBffApp/DarkDeeds.WebClientBffApp.App/DarkDeeds.WebClientBffApp.App.csproj
+    /code/backend/DarkDeeds.WebClientBffApp.App/DarkDeeds.WebClientBffApp.App.csproj
 
 FROM mcr.microsoft.com/dotnet/aspnet:5.0
 
