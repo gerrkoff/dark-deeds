@@ -1,8 +1,8 @@
 FROM mcr.microsoft.com/dotnet/sdk:5.0
 
-COPY code/apps/ApiGatewayApp /app/code/apps/ApiGatewayApp
+COPY code/backend /app/
 
-WORKDIR /app/code/apps/ApiGatewayApp/DarkDeeds.ApiGatewayApp/DarkDeeds.ApiGatewayApp.App
+WORKDIR /app/DarkDeeds.ApiGatewayApp.App
 
 RUN dotnet build
 

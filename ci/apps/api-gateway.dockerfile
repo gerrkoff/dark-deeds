@@ -5,7 +5,7 @@ WORKDIR /code
 ARG BUILD_VERSION
 
 RUN dotnet publish -c Release -o /build --version-suffix ${BUILD_VERSION}  \
-    /code/apps/ApiGatewayApp/DarkDeeds.ApiGatewayApp/DarkDeeds.ApiGatewayApp.App/DarkDeeds.ApiGatewayApp.App.csproj
+    /code/backend/DarkDeeds.ApiGatewayApp.App/DarkDeeds.ApiGatewayApp.App.csproj
 
 FROM mcr.microsoft.com/dotnet/aspnet:5.0
 
