@@ -35,14 +35,12 @@
     {
       "DownstreamPathTemplate": "/{path}",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "web-client",
-          "Port": 3000
-        }
-      ],
       "UpstreamPathTemplate": "/{path}",
-      "UpstreamHttpMethod": [ "GET" ]
+      "UpstreamHttpMethod": [ "GET" ],
+      "ServiceName": "web-client",
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      }
     }
   ],
   "GlobalConfiguration": {
