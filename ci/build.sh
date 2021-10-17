@@ -21,14 +21,16 @@ docker-compose \
 IMAGES=$(cat ${DOCKER_COMPOSE_FILE} | grep 'image: ' | cut -d':' -f 2 | tr -d '"')
 for IMAGE in $IMAGES
 do
-    if [ "$BRANCH" = "$DEPLOY_BRANCH" ]; then
-        docker tag "${IMAGE}":"${BUILD_VERSION}" "${IMAGE}":latest
-    fi
-
     if [ "$1" = "push" ]; then
         docker push "${IMAGE}":"${BUILD_VERSION}"
+
         if [ "$BRANCH" = "$DEPLOY_BRANCH" ]; then
+            docker tag "${IMAGE}":"${BUILD_VERSION}" "${IMAGE}":latest
             docker push "${IMAGE}":latest
         fi
     fi
 done
+if [ "$BRANCH" = "$DEPLOY_BRANCH" ]; then
+    git tag v$BUILD_VERSION
+    git push --tags
+fi
