@@ -1,0 +1,63 @@
+html {
+    font-size: 16px;
+}
+
+body {
+    background-color: var(--clr-base);
+}
+
+/* Adjust semantic-ui styles */
+#root {
+    .ui.inverted.segment {
+        background-color: var(--clr-main);
+        color: var(--clr-text-primary);
+
+        &.raised {
+            box-shadow: 0 2px 4px 0 var(--clr-shadow), 0 2px 10px 0 var(--clr-shadow);
+        }
+
+        .ui.header {
+            color: var(--clr-text-primary);
+        }
+    }
+
+    .ui.form .field label, .ui.form .inline label, .ui.checkbox label {
+        color: var(--clr-text-primary);
+    }
+
+    .ui.container {
+        padding-bottom: 3rem;
+    }
+
+    .ui.accordion .title {
+        color: var(--clr-text-primary) !important;
+    }
+
+    .ui.menu.item {
+        background-color: var(--clr-main);
+
+        a.item {
+            color: var(--clr-text-primary) !important;
+            border-radius: 0;
+
+            &.active {
+                background-color: var(--clr-help-2);
+            }
+
+            &:hover {
+                background-color: var(--clr-help);
+            }
+        }
+    }
+
+    .ui.placeholder:not(.segment) {
+        background-image: linear-gradient(to right, var(--clr-help) 0, var(--clr-base) 15%, var(--clr-help) 30%);
+
+        &>:before, .line:after {
+            background-color: var(--clr-main);
+        }
+    }
+}
+
+@import 'styles/shared/device-adjustments.scss';
+@import 'styles/shared/colors.scss';

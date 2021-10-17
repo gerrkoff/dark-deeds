@@ -1,0 +1,17 @@
+@import 'shared/fonts.scss';
+
+.day-card-header {
+    width: 100%;
+    display: inline-block;
+    text-align: right;
+    font-size: $font-smaller;
+    cursor: pointer;
+    color: var(--clr-text-primary);
+    border-bottom: 1px solid var(--clr-base);
+    margin-bottom: 0.2rem;
+}
+
+.day-card-header-selected {
+    border-radius: 2px;
+    background: var(--clr-base);
+}

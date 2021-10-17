@@ -1,0 +1,34 @@
+@import 'shared/common-mixin.scss';
+
+.indicator-panel {
+    position: fixed;
+    top: 0.5rem;
+    right: 0.5rem;
+    color: var(--clr-text-primary);
+}
+
+.indicator-panel-error {
+    color: var(--clr-error);
+    @include animation(fade-blink, 0.75s, ease, infinite)
+}
+
+.indicator-panel-process {
+    @include animation(fade-blink, 1.25s, linear, infinite)
+}
+
+$low-opacity: 0.25;
+@-webkit-keyframes fade-blink {
+    from { opacity: 1.0; }
+    50% { opacity: $low-opacity; }
+    to { opacity: 1.0; }
+}
+@-moz-keyframes fade-blink {
+    from { opacity: 1.0; }
+    50% { opacity: $low-opacity; }
+    to { opacity: 1.0; }
+}
+@keyframes fade-blink {
+    from { opacity: 1.0; }
+    50% { opacity: $low-opacity; }
+    to { opacity: 1.0; }
+}
