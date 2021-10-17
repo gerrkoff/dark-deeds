@@ -135,6 +135,9 @@ services:
       dockerfile: infrastructure/apps/web-client.dockerfile
     ports:
       - 3000:3000
+    environment:
+      - DD_SERVICE_DISCOVERY_HOST=${IP:-web-client}
+      - DD_SERVICE_DISCOVERY_PORT=3000
     deploy:
       resources:
         limits:

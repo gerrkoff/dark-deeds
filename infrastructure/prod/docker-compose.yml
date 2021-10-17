@@ -69,6 +69,11 @@ services:
 
   web-client:
     image: gerrkoff/dark-deeds-web-client:${BUILD_VERSION}
+    environment:
+      - DD_SERVICE_DISCOVERY_HOST=web-client
+      - DD_SERVICE_DISCOVERY_PORT=3000
+    volumes:
+      - ./settings/web-client-settings.json:/app/settings.json
 
   consul:
     image: consul:1.10
