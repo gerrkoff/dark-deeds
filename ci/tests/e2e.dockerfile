@@ -25,7 +25,7 @@ RUN curl -sSL https://dl.google.com/linux/linux_signing_key.pub | apt-key add - 
 
 RUN dpkg-reconfigure -f noninteractive tzdata
 
-COPY code/tests/e2e/DarkDeeds.E2eTests/ /app
+COPY code/tests/DarkDeeds.E2eTests/ /app
 WORKDIR /app
 
 ENTRYPOINT ["dotnet", "test", "--results-directory", "artifacts", "--logger:trx;LogFileName=results.trx"]
