@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.1</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="AutoMapper" Version="10.1.1" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.3" />
+      <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\DarkDeeds.WebClientBffApp.Entities\DarkDeeds.WebClientBffApp.Entities.csproj" />
+      <ProjectReference Include="..\DarkDeeds.WebClientBffApp.Infrastructure\DarkDeeds.WebClientBffApp.Infrastructure.csproj" />
+    </ItemGroup>
+
+</Project>
