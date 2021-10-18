@@ -33,8 +33,6 @@ namespace DarkDeeds.TaskServiceApp.ContractImpl.Mapping
                     e => e.MapFrom(x => x.Probable));
             
             CreateMap<PlannedRecurrenceDto, PlannedRecurrenceModel>()
-                .ForMember(x => x.StartDate, e =>
-                    e.MapFrom(x => x.StartDate.Ticks))
                 .ForMember(x => x.EndDate, e =>
                     e.MapFrom(x => x.EndDate.HasValue ? x.EndDate.Value.Ticks : 0))
                 .ForMember(x => x.EndDateExist, e =>
@@ -47,20 +45,22 @@ namespace DarkDeeds.TaskServiceApp.ContractImpl.Mapping
                     e.MapFrom(x => x.EveryWeekday ?? 0))
                 .ForMember(x => x.EveryWeekdayExist, e =>
                     e.MapFrom(x => x.EveryWeekday.HasValue))
+                .ForMember(x => x.StartDate, e =>
+                    e.MapFrom(x => x.StartDate.Ticks))
                 .ForMember(x => x.EveryMonthDay, e =>
                     e.MapFrom(x => x.EveryMonthDay ?? string.Empty));
-
+            
             CreateMap<PlannedRecurrenceModel, PlannedRecurrenceDto>()
-                .ForMember(x => x.StartDate, e =>
-                    e.MapFrom(x => new DateTime(x.StartDate, DateTimeKind.Utc)))
                 .ForMember(x => x.EndDate, e =>
                     e.MapFrom(x => x.EndDateExist ? (DateTime?) new DateTime(x.EndDate, DateTimeKind.Utc) : null))
                 .ForMember(x => x.EveryNthDay, e =>
-                    e.MapFrom(x => x.EveryNthDayExist ? (DateTime?) new DateTime(x.EveryNthDay) : null))
+                    e.MapFrom(x => x.EveryNthDayExist ? (int?) x.EveryNthDay : null))
                 .ForMember(x => x.EveryWeekday, e =>
                     e.MapFrom(x => x.EveryWeekdayExist ? (RecurrenceWeekdayEnum?) x.EveryWeekday : null))
                 .ForMember(x => x.EveryMonthDay, e =>
-                    e.MapFrom(x => !string.IsNullOrEmpty(x.EveryMonthDay) ? x.EveryMonthDay : null));
+                    e.MapFrom(x => x.EveryMonthDay != string.Empty ? x.EveryMonthDay : null))
+                .ForMember(x => x.StartDate, e =>
+                    e.MapFrom(x => new DateTime(x.StartDate, DateTimeKind.Utc)));
         }
     }
 }
