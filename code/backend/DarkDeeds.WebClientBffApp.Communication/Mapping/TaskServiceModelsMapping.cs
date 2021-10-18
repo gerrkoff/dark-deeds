@@ -38,7 +38,7 @@ namespace DarkDeeds.WebClientBffApp.Communication.Mapping
                 .ForMember(x => x.EveryNthDay, e =>
                     e.MapFrom(x => x.EveryNthDay ?? 0))
                 .ForMember(x => x.EveryNthDayExist, e =>
-                    e.MapFrom(x => x.EndDate.HasValue))
+                    e.MapFrom(x => x.EveryNthDay.HasValue))
                 .ForMember(x => x.EveryWeekday, e =>
                     e.MapFrom(x => x.EveryWeekday ?? 0))
                 .ForMember(x => x.EveryWeekdayExist, e =>
