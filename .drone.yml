@@ -8,6 +8,11 @@ platform:
 
 steps:
 - name: docker login
+  environment:
+    docker_user:
+      from_secret: docker_user
+    docker_pass:
+      from_secret: docker_pass
   commands:
   - echo ${docker_user} ${docker_pass}
   - docker login ${docker_user} ${docker_pass}
