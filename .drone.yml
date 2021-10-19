@@ -1,25 +1,25 @@
----
-kind: pipeline
-type: exec
-name: build
+# ---
+# kind: pipeline
+# type: exec
+# name: build
 
-platform:
-  os: linux
-  arch: amd64
+# platform:
+#   os: linux
+#   arch: amd64
 
-steps:
-- name: docker login
-  environment:
-    USERNAME:
-      from_secret: docker_user
-    PASSWORD:
-      from_secret: docker_pass
-  commands:
-  - docker login -u $USERNAME -p $PASSWORD
+# steps:
+# - name: docker login
+#   environment:
+#     USERNAME:
+#       from_secret: docker_user
+#     PASSWORD:
+#       from_secret: docker_pass
+#   commands:
+#   - docker login -u $USERNAME -p $PASSWORD
 
-- name: build
-  commands:
-  - ./ci/build.sh push
+# - name: build
+#   commands:
+#   - ./ci/build.sh push
 
 ---
 kind: pipeline
