@@ -24,6 +24,7 @@ steps:
 trigger:
   branch:
   - staging
+  event:
   - custom
 
 # ---111
