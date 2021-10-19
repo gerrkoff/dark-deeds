@@ -22,8 +22,6 @@ steps:
   - ./ci/build.sh push
 
 trigger:
-  branch:
-  - staging
   event:
   - custom
 
