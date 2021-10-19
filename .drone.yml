@@ -14,8 +14,8 @@ steps:
     docker_pass:
       from_secret: docker_pass
   commands:
-  - echo ${docker_user} ${docker_pass}
-  - docker login ${docker_user} ${docker_pass}
+  - echo $docker_user $docker_pass
+  - docker login $docker_user $docker_pass
 - name: build
   commands:
   - ./ci/build.sh
