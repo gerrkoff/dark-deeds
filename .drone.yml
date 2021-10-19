@@ -21,19 +21,23 @@ steps:
   commands:
   - ./ci/build.sh push
 
----
-kind: pipeline
-type: exec
-name: test
+trigger:
+  branch:
+  - staging
 
-platform:
-  os: linux
-  arch: amd64
+# ---
+# kind: pipeline
+# type: exec
+# name: test
 
-steps:
-- name: test
-  environment:
-    URL:
-      from_secret: staging_url
-  commands:
-  - ./ci/test.sh $URL
+# platform:
+#   os: linux
+#   arch: amd64
+
+# steps:
+# - name: test
+#   environment:
+#     URL:
+#       from_secret: staging_url
+#   commands:
+#   - ./ci/test.sh $URL
