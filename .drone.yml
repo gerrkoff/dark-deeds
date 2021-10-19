@@ -1,6 +1,29 @@
 ---
 kind: pipeline
 type: exec
+name: build
+
+platform:
+  os: linux
+  arch: amd64
+
+steps:
+- name: docker login
+  environment:
+    USERNAME:
+      from_secret: docker_user
+    PASSWORD:
+      from_secret: docker_pass
+  commands:
+  - docker login -u $USERNAME -p $PASSWORD
+
+- name: build
+  commands:
+  - ./ci/build.sh push
+
+---
+kind: pipeline
+type: exec
 name: test
 
 platform:
@@ -8,46 +31,9 @@ platform:
   arch: amd64
 
 steps:
-- name: greeting
+- name: test
+  environment:
+    URL:
+      from_secret: staging_url
   commands:
-  - echo hello world
-
-
-# ---
-# kind: pipeline
-# type: exec
-# name: test
-
-# platform:
-#   os: linux
-#   arch: amd64
-
-# - name: test
-#   environment:
-#     URL:
-#       from_secret: staging_url
-#   commands:
-#   - echo 123
-
-# ---
-# kind: pipeline
-# type: exec
-# name: build
-
-# platform:
-#   os: linux
-#   arch: amd64
-
-# steps:
-# - name: docker login
-#   environment:
-#     USERNAME:
-#       from_secret: docker_user
-#     PASSWORD:
-#       from_secret: docker_pass
-#   commands:
-#   - docker login -u $USERNAME -p $PASSWORD
-
-# - name: build
-#   commands:
-#   - ./ci/build.sh push
+  - echo 123
