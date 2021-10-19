@@ -21,9 +21,9 @@ steps:
   commands:
   - ./ci/build.sh push
 
-trigger:
-  event:
-  - custom
+# trigger:
+#   event:
+#   - custom
 
 # ---111
 # kind: pipeline
