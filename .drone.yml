@@ -1,6 +1,7 @@
+---
 kind: pipeline
 type: exec
-name: default
+name: build
 
 platform:
   os: linux
@@ -14,13 +15,25 @@ steps:
     PASSWORD:
       from_secret: docker_pass
   commands:
-  - echo $USERNAME $PASSWORD
   - docker login -u $USERNAME -p $PASSWORD
 
 - name: build
   commands:
-  - ./ci/build.sh
+  - ./ci/build.sh push
 
-# trigger:
-#   branch:
-  # - staging
+---
+kind: pipeline
+type: exec
+name: test
+
+platform:
+  os: linux
+  arch: amd64
+
+- name: test
+  environment:
+    URL:
+      from_secret: staging_url
+  commands:
+  - ./ci/test.sh $URL
+---
