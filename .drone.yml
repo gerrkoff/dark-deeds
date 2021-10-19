@@ -1,18 +1,33 @@
 ---
 kind: pipeline
 type: exec
-name: test
+name: default
 
 platform:
   os: linux
   arch: amd64
 
-- name: test
-  environment:
-    URL:
-      from_secret: staging_url
+steps:
+- name: greeting
   commands:
-  - ./ci/test.sh $URL
+  - echo hello world
+
+
+# ---
+# kind: pipeline
+# type: exec
+# name: test
+
+# platform:
+#   os: linux
+#   arch: amd64
+
+# - name: test
+#   environment:
+#     URL:
+#       from_secret: staging_url
+#   commands:
+#   - echo 123
 
 # ---
 # kind: pipeline
