@@ -24,7 +24,7 @@ steps:
 trigger:
   branch:
     include:
-    - staging
+    - setup-drone
 
 # ---111
 # kind: pipeline
