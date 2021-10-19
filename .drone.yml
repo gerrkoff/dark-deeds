@@ -36,4 +36,4 @@ steps:
     URL:
       from_secret: staging_url
   commands:
-  - echo 123
+  - ./ci/test.sh $URL
