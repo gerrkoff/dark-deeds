@@ -9,12 +9,13 @@ platform:
 steps:
 - name: docker login
   environment:
-    docker_user:
+    USERNAME:
       from_secret: docker_user
-    docker_pass:
+    PASSWORD:
       from_secret: docker_pass
   commands:
-  - echo "$docker_user" "$docker_pass"
+  - echo $USERNAME $PASSWORD
+  - docker login -u $USERNAME -p $PASSWORD
 
 - name: build
   commands:
