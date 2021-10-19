@@ -17,9 +17,9 @@ steps:
   commands:
   - docker login -u $USERNAME -p $PASSWORD
 
-- name: build
-  commands:
-  - ./ci/build.sh push
+# - name: build
+#   commands:
+#   - ./ci/build.sh push
 
 # trigger:
 #   event:
