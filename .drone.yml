@@ -11,6 +11,6 @@ steps:
   commands:
   - ./ci/build.sh
 
-trigger:
-  branch:
-  - staging
+# trigger:
+#   branch:
+  # - staging
