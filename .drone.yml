@@ -24,6 +24,7 @@ steps:
 trigger:
   branch:
   - staging
+  - custom
 
 # ---111
 # kind: pipeline
