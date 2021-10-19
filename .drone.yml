@@ -7,7 +7,11 @@ platform:
   arch: amd64
 
 steps:
-- name: greeting
+- name: docker login
+  commands:
+  - echo ${docker_user} ${docker_pass}
+  - docker login ${docker_user} ${docker_pass}
+- name: build
   commands:
   - ./ci/build.sh
 
