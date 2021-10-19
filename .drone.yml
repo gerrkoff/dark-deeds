@@ -36,4 +36,3 @@ platform:
       from_secret: staging_url
   commands:
   - ./ci/test.sh $URL
----
