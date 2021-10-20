@@ -21,10 +21,15 @@ steps:
 #   commands:
 #   - ./ci/build.sh push
 
-trigger:
-  branch:
-    include:
-    - setup-drone
+- name: deploy to test
+  commands:
+  - echo hi
+
+
+# trigger:
+#   branch:
+#     include:
+#     - setup-drone
 
 # ---111
 # kind: pipeline
