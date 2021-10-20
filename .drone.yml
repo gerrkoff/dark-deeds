@@ -51,7 +51,7 @@ steps:
 
 trigger:
   branch:
-  - adjust-ci
+  - staging
   event:
   - push
 
@@ -100,7 +100,7 @@ trigger:
   - success
   - failure
   branch:
-  - adjust-ci
+  - staging
   event:
   - push
   - promote
