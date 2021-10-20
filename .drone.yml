@@ -1,7 +1,7 @@
 ---
 kind: pipeline
 type: exec
-name: build & deploy
+name: build & test
 
 platform:
   os: linux
@@ -16,18 +16,10 @@ steps:
       from_secret: docker_pass
   commands:
   - docker login -u $USERNAME -p $PASSWORD
-  when:
-    target:
-      exclude:
-      - production
 
 - name: build
   commands:
   - ./ci/build.sh push
-  when:
-    target:
-      exclude:
-      - production
 
 - name: start staging
   environment:
@@ -35,10 +27,6 @@ steps:
       from_secret: start_staging_cmd
   commands:
   - eval $START_STAGING_CMD
-  when:
-    target:
-      exclude:
-      - production
 
 - name: test
   environment:
@@ -46,10 +34,6 @@ steps:
       from_secret: staging_url
   commands:
   - ./ci/test.sh $URL staging
-  when:
-    target:
-      exclude:
-      - production
 
 - name: stop staging
   environment:
@@ -57,11 +41,26 @@ steps:
       from_secret: stop_staging_cmd
   commands:
   - eval $STOP_STAGING_CMD
-  when:
-    target:
-      exclude:
-      - production
 
+trigger:
+  target:
+    exclude:
+    - production
+  branch:
+  - adjust-ci
+  event:
+  - push
+
+---
+kind: pipeline
+type: exec
+name: deploy
+
+platform:
+  os: linux
+  arch: amd64
+
+steps:
 - name: deploy prod
   environment:
     DEPLOY_PROD_CMD:
@@ -73,7 +72,5 @@ steps:
     - production
 
 trigger:
-  branch:
-  - staging
-  event:
-  - push
+  target:
+  - production
