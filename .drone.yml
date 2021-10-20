@@ -54,6 +54,17 @@ steps:
 #     - production
 
 - name: deploy to prod
+  environment:
+    DEPLOY_PROD_CMD:
+      from_secret: deploy_prod_cmd
+  commands:
+  - eval $DEPLOY_PROD_CMD
+  when:
+    target:
+    - production
+
+
+- name: deploy to prod
   commands:
   - echo 123123
   when:
