@@ -89,7 +89,7 @@ trigger:
 ---
 kind: pipeline
 type: docker
-name: default
+name: notify
 
 steps:
 - name: greeting
@@ -99,3 +99,7 @@ steps:
       from_secret: telegram_bot_token
     to:
       from_secret: telegram_user_id
+
+depends_on:
+- build & test
+- deploy
