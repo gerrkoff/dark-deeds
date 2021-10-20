@@ -26,6 +26,7 @@ steps:
   commands:
   - git config user.name $USERNAME
   - git config user.password $PASSWORD
+  - git remote -v
   - ./ci/build.sh push
 
 # - name: start staging
