@@ -1,3 +1,26 @@
+---
+kind: pipeline
+type: docker
+name: default
+
+steps:
+- name: greeting
+  image: golang:1.12
+  commands:
+  - go build
+  - go test
+
+# ---
+# kind: pipeline
+# type: docker
+# name: notify
+
+# - name: send telegram notification
+#   image: appleboy/drone-telegram
+#   settings:
+#     token: 1758291274:AAHye8DskfeEHXUjyaPGyufQ8H9dbpYQiQA
+#     to: 383469310
+
 # ---
 # kind: pipeline
 # type: exec
@@ -94,13 +117,13 @@
 #   target:
 #   - production
 
----
-kind: pipeline
-type: docker
-name: notify
+# ---
+# kind: pipeline
+# type: docker
+# name: notify
 
-- name: send telegram notification
-  image: appleboy/drone-telegram
-  settings:
-    token: 1758291274:AAHye8DskfeEHXUjyaPGyufQ8H9dbpYQiQA
-    to: 383469310
+# - name: send telegram notification
+#   image: appleboy/drone-telegram
+#   settings:
+#     token: 1758291274:AAHye8DskfeEHXUjyaPGyufQ8H9dbpYQiQA
+#     to: 383469310
