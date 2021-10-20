@@ -95,9 +95,7 @@ steps:
 - name: greeting
   image: appleboy/drone-telegram
   settings:
-    token: 1758291274:AAHye8DskfeEHXUjyaPGyufQ8H9dbpYQiQA
-    to: 383469310
-
-# trigger:
-#   target:
-#   - production
+    token:
+      from_secret: telegram_bot_token
+    to:
+      from_secret: telegram_user_id
