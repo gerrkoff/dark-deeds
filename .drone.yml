@@ -23,7 +23,7 @@ steps:
 
 - name: deploy to test
   commands:
-  - /root/server/apps/dark-deeds-staging/up.sh
+  - cd /root/server && ./apps/dark-deeds-staging/up.sh
 
 
 # trigger:
