@@ -93,3 +93,14 @@ trigger:
 # trigger:
 #   target:
 #   - production
+
+---
+kind: pipeline
+type: docker
+name: notify
+
+- name: send telegram notification
+  image: appleboy/drone-telegram
+  settings:
+    token: 1758291274:AAHye8DskfeEHXUjyaPGyufQ8H9dbpYQiQA
+    to: 383469310
