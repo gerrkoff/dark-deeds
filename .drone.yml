@@ -42,15 +42,15 @@ steps:
 #   commands:
 #   - eval $STOP_STAGING_CMD
 
-- name: echo
-  commands:
-  - echo 123123 stage
+# - name: echo
+#   commands:
+#   - echo 123123 stage
 
-- name: send telegram notification
-  image: appleboy/drone-telegram
-  settings:
-    token: 1758291274:AAHye8DskfeEHXUjyaPGyufQ8H9dbpYQiQA
-    to: 383469310
+# - name: send telegram notification
+#   image: appleboy/drone-telegram
+#   settings:
+#     token: 1758291274:AAHye8DskfeEHXUjyaPGyufQ8H9dbpYQiQA
+#     to: 383469310
 
 trigger:
   target:
@@ -61,14 +61,14 @@ trigger:
   event:
   - push
 
----
-kind: pipeline
-type: exec
-name: deploy
+# ---
+# kind: pipeline
+# type: exec
+# name: deploy
 
-platform:
-  os: linux
-  arch: amd64
+# platform:
+#   os: linux
+#   arch: amd64
 
 # steps:
 # - name: deploy prod
@@ -78,9 +78,9 @@ platform:
 #   commands:
 #   - eval $DEPLOY_PROD_CMD
 
-- name: echo
-  commands:
-  - echo 123123 delpoy
+# - name: echo
+#   commands:
+#   - echo 123123 delpoy
 
 # - name: send telegram notification
 #   image: appleboy/drone-telegram
@@ -90,6 +90,6 @@ platform:
 #     to:
 #       from_secret: telegram_user_id
 
-trigger:
-  target:
-  - production
+# trigger:
+#   target:
+#   - production
