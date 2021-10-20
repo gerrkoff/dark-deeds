@@ -42,9 +42,9 @@ steps:
 #   commands:
 #   - eval $STOP_STAGING_CMD
 
-# - name: echo
-#   commands:
-#   - echo 123123 stage
+- name: echo
+  commands:
+  - echo 123123 stage
 
 # - name: send telegram notification
 #   image: appleboy/drone-telegram
