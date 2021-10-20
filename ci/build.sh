@@ -3,7 +3,8 @@
 DOCKER_COMPOSE_FILE="ci/docker-compose.yml"
 BRANCH=$(git rev-parse --abbrev-ref HEAD)
 NOW=$(date +"%Y%m%d-%H%M%S")
-DEPLOY_BRANCH="staging"
+# DEPLOY_BRANCH="staging"
+DEPLOY_BRANCH="adjust-ci"
 
 if [ "$BRANCH" = "$DEPLOY_BRANCH" ]; then
     BUILD_VERSION="$NOW"
@@ -30,9 +31,6 @@ echo BUILD_VERSION=$BUILD_VERSION
 #         fi
 #     fi
 # done
-
-git config user.name
-git config user.password
 
 # if [ "$BRANCH" = "$DEPLOY_BRANCH" ]; then
     git tag v$BUILD_VERSION
