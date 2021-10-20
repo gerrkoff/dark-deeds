@@ -34,6 +34,6 @@ echo BUILD_VERSION=$BUILD_VERSION
 
 # if [ "$BRANCH" = "$DEPLOY_BRANCH" ]; then
     git tag v$BUILD_VERSION
-    git push --tags
+    git push --tags || true
 # fi
 # q
