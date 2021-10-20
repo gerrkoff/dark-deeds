@@ -1,7 +1,7 @@
 ---
 kind: pipeline
 type: exec
-name: build & deploy
+name: build & test
 
 platform:
   os: linux
@@ -16,29 +16,19 @@ steps:
       from_secret: docker_pass
   commands:
   - docker login -u $USERNAME -p $PASSWORD
-  when:
-    target:
-      exclude:
-      - production
 
 - name: build
   commands:
-  - ./ci/build.sh push
-  when:
-    target:
-      exclude:
-      - production
+  - git remote set-url origin git@github.com:gerrkoff/dark-deeds.git
+  - ./ci/build.sh push "date -d @"
 
 - name: start staging
   environment:
     START_STAGING_CMD:
       from_secret: start_staging_cmd
   commands:
-  - eval $START_STAGING_CMD
-  when:
-    target:
-      exclude:
-      - production
+  - VERSION=$(./ci/version.sh "date -d @")
+  - eval $START_STAGING_CMD $VERSION
 
 - name: test
   environment:
@@ -46,10 +36,6 @@ steps:
       from_secret: staging_url
   commands:
   - ./ci/test.sh $URL staging
-  when:
-    target:
-      exclude:
-      - production
 
 - name: stop staging
   environment:
@@ -57,23 +43,59 @@ steps:
       from_secret: stop_staging_cmd
   commands:
   - eval $STOP_STAGING_CMD
-  when:
-    target:
-      exclude:
-      - production
-
-- name: deploy prod
-  environment:
-    DEPLOY_PROD_CMD:
-      from_secret: deploy_prod_cmd
-  commands:
-  - eval $DEPLOY_PROD_CMD
-  when:
-    target:
-    - production
 
 trigger:
   branch:
   - staging
   event:
   - push
+
+---
+kind: pipeline
+type: exec
+name: deploy
+
+platform:
+  os: linux
+  arch: amd64
+
+steps:
+- name: deploy prod
+  environment:
+    DEPLOY_PROD_CMD:
+      from_secret: deploy_prod_cmd
+  commands:
+  - VERSION=$(./ci/version.sh "date -d @")
+  - eval $DEPLOY_PROD_CMD $VERSION
+
+trigger:
+  event:
+  - promote
+
+---
+kind: pipeline
+type: docker
+name: notify
+
+steps:
+- name: telegram
+  image: appleboy/drone-telegram
+  settings:
+    token:
+      from_secret: telegram_bot_token
+    to:
+      from_secret: telegram_user_id
+
+depends_on:
+- build & test
+- deploy
+
+trigger:
+  status:
+  - success
+  - failure
+  branch:
+  - staging
+  event:
+  - push
+  - promote
