@@ -18,7 +18,14 @@ steps:
   - docker login -u $USERNAME -p $PASSWORD
 
 - name: build
+  environment:
+    USERNAME:
+      from_secret: get_user
+    PASSWORD:
+      from_secret: git_pass
   commands:
+  - git config user.name $USERNAME
+  - git config user.password $PASSWORD
   - ./ci/build.sh push
 
 # - name: start staging
