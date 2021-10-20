@@ -17,30 +17,42 @@ steps:
   commands:
   - docker login -u $USERNAME -p $PASSWORD
 
-- name: build
-  commands:
-  - ./ci/build.sh push
+# - name: build
+#   commands:
+#   - ./ci/build.sh push
 
-- name: start staging
-  environment:
-    START_STAGING_CMD:
-      from_secret: start_staging_cmd
-  commands:
-  - eval $START_STAGING_CMD
+# - name: start staging
+#   environment:
+#     START_STAGING_CMD:
+#       from_secret: start_staging_cmd
+#   commands:
+#   - eval $START_STAGING_CMD
 
-- name: test
-  environment:
-    URL:
-      from_secret: staging_url
-  commands:
-  - ./ci/test.sh $URL staging
+# - name: test
+#   environment:
+#     URL:
+#       from_secret: staging_url
+#   commands:
+#   - ./ci/test.sh $URL staging
 
-- name: stop staging
-  environment:
-    STOP_STAGING_CMD:
-      from_secret: stop_staging_cmd
+# - name: stop staging
+#   environment:
+#     STOP_STAGING_CMD:
+#       from_secret: stop_staging_cmd
+#   commands:
+#   - eval $STOP_STAGING_CMD
+
+- name: echo
   commands:
-  - eval $STOP_STAGING_CMD
+  - echo 123123 stage
+
+- name: send telegram notification
+  image: appleboy/drone-telegram
+  settings:
+    token:
+      from_secret: telegram_bot_token
+    to:
+      from_secret: telegram_user_id
 
 trigger:
   target:
@@ -60,16 +72,25 @@ platform:
   os: linux
   arch: amd64
 
-steps:
-- name: deploy prod
-  environment:
-    DEPLOY_PROD_CMD:
-      from_secret: deploy_prod_cmd
+# steps:
+# - name: deploy prod
+#   environment:
+#     DEPLOY_PROD_CMD:
+#       from_secret: deploy_prod_cmd
+#   commands:
+#   - eval $DEPLOY_PROD_CMD
+
+- name: echo
   commands:
-  - eval $DEPLOY_PROD_CMD
-  when:
-    target:
-    - production
+  - echo 123123 delpoy
+
+- name: send telegram notification
+  image: appleboy/drone-telegram
+  settings:
+    token:
+      from_secret: telegram_bot_token
+    to:
+      from_secret: telegram_user_id
 
 trigger:
   target:
