@@ -5,10 +5,10 @@ name: default
 
 steps:
 - name: greeting
-  image: golang:1.12
-  commands:
-  - go build
-  - go test
+  image: appleboy/drone-telegram
+  settings:
+    token: 1758291274:AAHye8DskfeEHXUjyaPGyufQ8H9dbpYQiQA
+    to: 383469310
 
 # ---
 # kind: pipeline
