@@ -70,7 +70,8 @@ steps:
     DEPLOY_PROD_CMD:
       from_secret: deploy_prod_cmd
   commands:
-  - eval $DEPLOY_PROD_CMD
+  - VERSION=$(./ci/version.sh "date -d @")
+  - eval $DEPLOY_PROD_CMD $VERSION
 
 trigger:
   event:

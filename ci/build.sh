@@ -9,7 +9,7 @@ echo BUILD_VERSION=$BUILD_VERSION
 
 docker-compose \
     -f "${DOCKER_COMPOSE_FILE}" \
-    build || exit $?
+    build --force-rm || exit $?
 
 IMAGES=$(cat ${DOCKER_COMPOSE_FILE} | grep 'image: ' | cut -d':' -f 2 | tr -d '"')
 for IMAGE in $IMAGES
