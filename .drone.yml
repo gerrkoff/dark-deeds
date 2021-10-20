@@ -21,37 +21,48 @@ steps:
       exclude:
       - production
 
-# - name: build
-#   commands:
-#   - ./ci/build.sh push
-#   when:
-#     target:
-#       exclude:
-#       - production
+- name: build
+  commands:
+  - ./ci/build.sh push
+  when:
+    target:
+      exclude:
+      - production
 
-# - name: deploy to test
-#   environment:
-#     DEPLOY_TEST_CMD:
-#       from_secret: deploy_test_cmd
-#   commands:
-#   - eval $DEPLOY_TEST_CMD
-#   when:
-#     target:
-#       exclude:
-#       - production
+- name: start staging
+  environment:
+    START_STAGING_CMD:
+      from_secret: start_staging_cmd
+  commands:
+  - eval $START_STAGING_CMD
+  when:
+    target:
+      exclude:
+      - production
 
 - name: test
   environment:
     URL:
       from_secret: staging_url
   commands:
-  - ./ci/test.sh $URL
+  - ./ci/test.sh $URL staging
   when:
     target:
       exclude:
       - production
 
-- name: deploy to prod
+- name: stop staging
+  environment:
+    STOP_STAGING_CMD:
+      from_secret: stop_staging_cmd
+  commands:
+  - eval $STOP_STAGING_CMD
+  when:
+    target:
+      exclude:
+      - production
+
+- name: deploy prod
   environment:
     DEPLOY_PROD_CMD:
       from_secret: deploy_prod_cmd
