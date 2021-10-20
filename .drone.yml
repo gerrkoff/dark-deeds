@@ -25,12 +25,16 @@ steps:
 #   commands:
 #   - ./ci/build.sh push
 
-# - name: deploy to test
-#   environment:
-#     DEPLOY_TEST_CMD:
-#       from_secret: deploy_test_cmd
-#   commands:
-#   - eval $DEPLOY_TEST_CMD
+- name: deploy to test
+  environment:
+    DEPLOY_TEST_CMD:
+      from_secret: deploy_test_cmd
+  commands:
+  - eval $DEPLOY_TEST_CMD
+  when:
+    target:
+      exclude:
+      - production
 
 # - name: test
 #   environment:
