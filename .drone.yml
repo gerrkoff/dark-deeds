@@ -52,6 +52,6 @@ steps:
     target:
     - production
 
-trigger:
-  event:
-  - custom
+# trigger:
+#   event:
+#   - custom
