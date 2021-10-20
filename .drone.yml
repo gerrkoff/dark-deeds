@@ -51,7 +51,7 @@ steps:
 
 trigger:
   branch:
-  - staging
+  - adjust-ci
   event:
   - push
 
