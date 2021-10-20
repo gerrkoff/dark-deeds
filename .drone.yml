@@ -27,12 +27,13 @@ steps:
   - git remote set-url origin git@github.com:gerrkoff/dark-deeds.git
   - ./ci/build.sh push "date -d @"
 
-# - name: start staging
-#   environment:
-#     START_STAGING_CMD:
-#       from_secret: start_staging_cmd
-#   commands:
-#   - eval $START_STAGING_CMD
+- name: start staging
+  environment:
+    START_STAGING_CMD:
+      from_secret: start_staging_cmd
+  commands:
+  - VERSION=$(./ci/version.sh)
+  - eval $START_STAGING_CMD $VERSION
 
 # - name: test
 #   environment:
@@ -41,16 +42,16 @@ steps:
 #   commands:
 #   - ./ci/test.sh $URL staging
 
-# - name: stop staging
-#   environment:
-#     STOP_STAGING_CMD:
-#       from_secret: stop_staging_cmd
-#   commands:
-#   - eval $STOP_STAGING_CMD
+- name: stop staging
+  environment:
+    STOP_STAGING_CMD:
+      from_secret: stop_staging_cmd
+  commands:
+  - eval $STOP_STAGING_CMD
 
 trigger:
   branch:
-  - adjust-ci
+  - staging
   event:
   - push
 
@@ -64,16 +65,12 @@ platform:
   arch: amd64
 
 steps:
-# - name: deploy prod
-#   environment:
-#     DEPLOY_PROD_CMD:
-#       from_secret: deploy_prod_cmd
-#   commands:
-#   - eval $DEPLOY_PROD_CMD
-
-- name: echo
+- name: deploy prod
+  environment:
+    DEPLOY_PROD_CMD:
+      from_secret: deploy_prod_cmd
   commands:
-  - echo 123123 delpoy
+  - eval $DEPLOY_PROD_CMD
 
 trigger:
   event:
