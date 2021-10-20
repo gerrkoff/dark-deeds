@@ -26,6 +26,7 @@ steps:
   commands:
   - git config user.name $USERNAME
   - git config user.password $PASSWORD
+  - git remote set-url origin git@github.com:gerrkoff/dark-deeds.git
   - git remote -v
   - ./ci/build.sh push
 
