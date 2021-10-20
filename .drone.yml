@@ -17,8 +17,8 @@ steps:
   commands:
   - docker login -u $USERNAME -p $PASSWORD
   when:
-    exclude:
-      target:
+    target:
+      exclude:
       - production
 
 # - name: build
@@ -44,7 +44,7 @@ steps:
 #     DEPLOY_PROD_CMD:
 #       from_secret: deploy_prod_cmd
 #   commands:
-#   - eval $DEPLOY_PROD_CMD 
+#   - eval $DEPLOY_PROD_CMD
 #   when:
 #     target:
 #     - production
