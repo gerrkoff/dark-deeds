@@ -35,12 +35,12 @@ steps:
   - VERSION=$(./ci/version.sh "date -d @")
   - eval $START_STAGING_CMD $VERSION
 
-# - name: test
-#   environment:
-#     URL:
-#       from_secret: staging_url
-#   commands:
-#   - ./ci/test.sh $URL staging
+- name: test
+  environment:
+    URL:
+      from_secret: staging_url
+  commands:
+  - ./ci/test.sh $URL staging
 
 - name: stop staging
   environment:
