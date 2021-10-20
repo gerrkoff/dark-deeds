@@ -26,27 +26,25 @@ steps:
     DEPLOY_TEST_CMD:
       from_secret: deploy_test_cmd
   commands:
-  - eval $DEPLOY_TEST_CMD 
+  - eval $DEPLOY_TEST_CMD
 
-
-# trigger:
-#   branch:
-#     include:
-#     - setup-drone
-
-# ---111
-# kind: pipeline
-# type: exec
-# name: test
-
-# platform:
-#   os: linux
-#   arch: amd64
-
-# steps:
 # - name: test
 #   environment:
 #     URL:
 #       from_secret: staging_url
 #   commands:
 #   - ./ci/test.sh $URL
+
+- name: deploy to prod
+  environment:
+    DEPLOY_PROD_CMD:
+      from_secret: deploy_prod_cmd
+  commands:
+  - eval $DEPLOY_PROD_CMD 
+  when:
+    target:
+    - production
+
+trigger:
+  event:
+  - custom
