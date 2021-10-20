@@ -30,6 +30,10 @@ do
         fi
     fi
 done
+
+git config user.name
+git config user.password
+
 # if [ "$BRANCH" = "$DEPLOY_BRANCH" ]; then
     git tag v$BUILD_VERSION
     git push --tags
