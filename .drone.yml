@@ -21,12 +21,12 @@ steps:
 #   commands:
 #   - ./ci/build.sh push
 
-- name: deploy to test
-  environment:
-    DEPLOY_TEST_CMD:
-      from_secret: deploy_test_cmd
-  commands:
-  - eval $DEPLOY_TEST_CMD
+# - name: deploy to test
+#   environment:
+#     DEPLOY_TEST_CMD:
+#       from_secret: deploy_test_cmd
+#   commands:
+#   - eval $DEPLOY_TEST_CMD
 
 # - name: test
 #   environment:
@@ -35,12 +35,19 @@ steps:
 #   commands:
 #   - ./ci/test.sh $URL
 
+# - name: deploy to prod
+#   environment:
+#     DEPLOY_PROD_CMD:
+#       from_secret: deploy_prod_cmd
+#   commands:
+#   - eval $DEPLOY_PROD_CMD 
+#   when:
+#     target:
+#     - production
+
 - name: deploy to prod
-  environment:
-    DEPLOY_PROD_CMD:
-      from_secret: deploy_prod_cmd
   commands:
-  - eval $DEPLOY_PROD_CMD 
+  - echo 123123
   when:
     target:
     - production
