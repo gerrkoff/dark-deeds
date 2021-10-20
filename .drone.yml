@@ -49,9 +49,6 @@ steps:
 #   - eval $STOP_STAGING_CMD
 
 trigger:
-  target:
-    exclude:
-    - production
   branch:
   - adjust-ci
   event:
@@ -79,8 +76,8 @@ steps:
   - echo 123123 delpoy
 
 trigger:
-  target:
-  - production
+  event:
+  - promote
 
 ---
 kind: pipeline
@@ -104,3 +101,8 @@ trigger:
   status:
   - success
   - failure
+  branch:
+  - adjust-ci
+  event:
+  - push
+  - promote
