@@ -30,7 +30,7 @@ do
         fi
     fi
 done
-if [ "$BRANCH" = "$DEPLOY_BRANCH" ]; then
+# if [ "$BRANCH" = "$DEPLOY_BRANCH" ]; then
     git tag v$BUILD_VERSION
     git push --tags
-fi
+# fi

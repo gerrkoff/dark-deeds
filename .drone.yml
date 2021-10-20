@@ -42,10 +42,6 @@ steps:
 #   commands:
 #   - eval $STOP_STAGING_CMD
 
-- name: echo
-  commands:
-  - echo 123123 stage && exit 1
-
 trigger:
   target:
     exclude:
