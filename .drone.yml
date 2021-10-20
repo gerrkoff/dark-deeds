@@ -1,7 +1,7 @@
 ---
 kind: pipeline
 type: exec
-name: build
+name: build & deploy
 
 platform:
   os: linux
@@ -72,6 +72,8 @@ steps:
     target:
     - production
 
-# trigger:
-#   event:
-#   - custom
+trigger:
+  branch:
+  - staging
+  event:
+  - push
