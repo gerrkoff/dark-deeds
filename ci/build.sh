@@ -5,7 +5,7 @@ BRANCH=$(git rev-parse --abbrev-ref HEAD)
 DEPLOY_BRANCH="staging"
 
 ls
-export BUILD_VERSION=$(./ci/version.sh $2)
+export BUILD_VERSION=$(./ci/version.sh "$2")
 echo BUILD_VERSION=$BUILD_VERSION
 
 docker-compose \
