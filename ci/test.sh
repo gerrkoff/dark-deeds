@@ -12,7 +12,7 @@ fi
 
 rm -rf ci/tests/results
 docker build -t dd-test-e2e -f ci/tests/e2e.dockerfile . || exit $?
-docker run -t -i --rm \
+docker run -t --rm \
     -e TZ=America/New_York \
     -e RUN_CONTAINER='true' \
     -e RUN_STAGING=$RUN_STAGING \
