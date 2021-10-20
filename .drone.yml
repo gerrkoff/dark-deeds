@@ -70,7 +70,7 @@ platform:
   os: linux
   arch: amd64
 
-# steps:
+steps:
 # - name: deploy prod
 #   environment:
 #     DEPLOY_PROD_CMD:
