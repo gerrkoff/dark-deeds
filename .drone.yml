@@ -44,7 +44,7 @@ steps:
 
 - name: echo
   commands:
-  - echo 123123 stage && exit 1
+  - echo 123123 stage
 
 # - name: send telegram notification
 #   image: appleboy/drone-telegram
