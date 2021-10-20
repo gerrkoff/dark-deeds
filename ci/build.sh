@@ -4,7 +4,7 @@ DOCKER_COMPOSE_FILE="ci/docker-compose.yml"
 BRANCH=$(git rev-parse --abbrev-ref HEAD)
 DEPLOY_BRANCH="staging"
 
-export BUILD_VERSION=$(./ci/version.sh)
+export BUILD_VERSION=$(./ci/version.sh $2)
 echo BUILD_VERSION=$BUILD_VERSION
 
 # docker-compose \

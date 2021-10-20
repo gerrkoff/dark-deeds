@@ -32,7 +32,7 @@ steps:
     START_STAGING_CMD:
       from_secret: start_staging_cmd
   commands:
-  - VERSION=$(./ci/version.sh)
+  - VERSION=$(./ci/version.sh "date -d @")
   - eval $START_STAGING_CMD $VERSION
 
 # - name: test
