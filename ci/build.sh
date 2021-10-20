@@ -3,7 +3,8 @@
 DOCKER_COMPOSE_FILE="ci/docker-compose.yml"
 BRANCH=$(git rev-parse --abbrev-ref HEAD)
 COMMIT_TIME=$(git show -s --format=%ct)
-TIME_FORMATTED=$(date -r $COMMIT_TIME +"%Y%m%d-%H%M%S")
+DATE_CMD=${2:-'date -r '}
+TIME_FORMATTED=$($DATE_CMD$COMMIT_TIME +"%Y%m%d-%H%M%S")
 DEPLOY_BRANCH="staging"
 DEPLOY_BRANCH="adjust-ci"
 

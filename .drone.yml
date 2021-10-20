@@ -25,7 +25,7 @@ steps:
       from_secret: git_pass
   commands:
   - git remote set-url origin git@github.com:gerrkoff/dark-deeds.git
-  - ./ci/build.sh push
+  - ./ci/build.sh push "date -d @"
 
 # - name: start staging
 #   environment:
