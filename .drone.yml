@@ -16,6 +16,10 @@ steps:
       from_secret: docker_pass
   commands:
   - docker login -u $USERNAME -p $PASSWORD
+  when:
+    exclude:
+      target:
+      - production
 
 # - name: build
 #   commands:
