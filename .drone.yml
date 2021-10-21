@@ -17,6 +17,25 @@ steps:
   commands:
   - docker login -u $USERNAME -p $PASSWORD
 
+---
+kind: pipeline
+type: exec
+name: build & test
+
+platform:
+  os: linux
+  arch: amd64
+
+steps:
+- name: docker login
+  environment:
+    USERNAME:
+      from_secret: docker_user
+    PASSWORD:
+      from_secret: docker_pass
+  commands:
+  - docker login -u $USERNAME -p $PASSWORD
+
 - name: build
   commands:
   # - git remote set-url origin git@github.com:gerrkoff/dark-deeds.git
