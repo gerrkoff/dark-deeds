@@ -22,31 +22,34 @@ steps:
   - git remote set-url origin git@github.com:gerrkoff/dark-deeds.git
   - ./ci/build.sh push "date -d @"
 
+- name: docker prune
+  commands:
+  - docker system prune -f
+
 - name: start staging
   environment:
     START_STAGING_CMD:
       from_secret: start_staging_cmd
   commands:
-  - VERSION=$(./ci/version.sh "date -d @")
-  - eval $START_STAGING_CMD $VERSION
-
-- name: docker prune
-  commands:
-  - docker system prune -f
+  # - VERSION=$(./ci/version.sh "date -d @")
+  # - eval $START_STAGING_CMD $VERSION
+  - echo start staging
 
 - name: test
   environment:
     URL:
       from_secret: staging_url
   commands:
-  - ./ci/test.sh $URL staging
+  # - ./ci/test.sh $URL staging
+  - echo test
 
 - name: stop staging
   environment:
     STOP_STAGING_CMD:
       from_secret: stop_staging_cmd
   commands:
-  - eval $STOP_STAGING_CMD
+  # - eval $STOP_STAGING_CMD
+  - echo stop staging
 
 trigger:
   branch:
