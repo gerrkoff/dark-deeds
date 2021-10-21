@@ -1,61 +1,7 @@
 ---
-kind: pipeline
-type: exec
-name: build & test
-
-platform:
-  os: linux
-  arch: amd64
-
-steps:
-- name: docker login
-  environment:
-    USERNAME:
-      from_secret: docker_user
-    PASSWORD:
-      from_secret: docker_pass
-  commands:
-  - docker login -u $USERNAME -p $PASSWORD
-
-- name: build
-  commands:
-  - git remote set-url origin git@github.com:gerrkoff/dark-deeds.git
-  - ./ci/build.sh push "date -d @"
-
-- name: start staging
-  environment:
-    START_STAGING_CMD:
-      from_secret: start_staging_cmd
-  commands:
-  - VERSION=$(./ci/version.sh "date -d @")
-  - eval $START_STAGING_CMD $VERSION
-
-- name: docker prune
-  commands:
-  - docker system prune -f
-
-- name: test
-  environment:
-    URL:
-      from_secret: staging_url
-  commands:
-  - ./ci/test.sh $URL staging
-
-- name: stop staging
-  environment:
-    STOP_STAGING_CMD:
-      from_secret: stop_staging_cmd
-  commands:
-  - eval $STOP_STAGING_CMD
-
-trigger:
-  branch:
-  - staging
-  event:
-  - push
-  - custom
-
----
+# ==============================
+# COMMON
+# ==============================
 kind: pipeline
 type: exec
 name: deploy
@@ -77,10 +23,68 @@ trigger:
   event:
   - promote
 
+# ==============================
+# CUSTOM
+# ==============================
+
+---
+kind: pipeline
+type: exec
+name: (custom) build & test
+
+platform:
+  os: linux
+  arch: amd64
+
+steps:
+- name: docker login
+  environment:
+    USERNAME:
+      from_secret: docker_user
+    PASSWORD:
+      from_secret: docker_pass
+  commands:
+  - docker login -u $USERNAME -p $PASSWORD
+
+- name: build
+  commands:
+  - git remote set-url origin git@github.com:gerrkoff/dark-deeds.git
+  - ./ci/build.sh push "date -d @"
+
+- name: docker prune
+  commands:
+  - docker system prune -f
+
+- name: start staging
+  environment:
+    START_STAGING_CMD:
+      from_secret: start_staging_cmd
+  commands:
+  - VERSION=$(./ci/version.sh "date -d @")
+  - eval $START_STAGING_CMD $VERSION
+
+- name: test
+  environment:
+    URL:
+      from_secret: staging_url
+  commands:
+  - ./ci/test.sh $URL staging
+
+- name: stop staging
+  environment:
+    STOP_STAGING_CMD:
+      from_secret: stop_staging_cmd
+  commands:
+  - eval $STOP_STAGING_CMD
+
+trigger:
+  event:
+  - custom
+
 ---
 kind: pipeline
 type: docker
-name: notify
+name: (custom) notify
 
 steps:
 - name: telegram
@@ -92,8 +96,93 @@ steps:
       from_secret: telegram_user_id
 
 depends_on:
-- build & test
+- (custom) build & test
 - deploy
+
+trigger:
+  status:
+  - success
+  - failure
+  event:
+  - promote
+  - custom
+
+# # ==============================
+# # STAGING – FULL COPY OF CUSTOM WITH ADJUSTED TRIGGER
+# # ==============================
+
+---
+kind: pipeline
+type: exec
+name: (staging) build & test
+
+platform:
+  os: linux
+  arch: amd64
+
+steps:
+- name: docker login
+  environment:
+    USERNAME:
+      from_secret: docker_user
+    PASSWORD:
+      from_secret: docker_pass
+  commands:
+  - docker login -u $USERNAME -p $PASSWORD
+
+- name: build
+  commands:
+  - git remote set-url origin git@github.com:gerrkoff/dark-deeds.git
+  - ./ci/build.sh push "date -d @"
+
+- name: docker prune
+  commands:
+  - docker system prune -f
+
+- name: start staging
+  environment:
+    START_STAGING_CMD:
+      from_secret: start_staging_cmd
+  commands:
+  - VERSION=$(./ci/version.sh "date -d @")
+  - eval $START_STAGING_CMD $VERSION
+
+- name: test
+  environment:
+    URL:
+      from_secret: staging_url
+  commands:
+  - ./ci/test.sh $URL staging
+
+- name: stop staging
+  environment:
+    STOP_STAGING_CMD:
+      from_secret: stop_staging_cmd
+  commands:
+  - eval $STOP_STAGING_CMD
+
+trigger:
+  branch:
+  - staging
+  event:
+  - push
+
+---
+kind: pipeline
+type: docker
+name: (staging) notify
+
+steps:
+- name: telegram
+  image: appleboy/drone-telegram
+  settings:
+    token:
+      from_secret: telegram_bot_token
+    to:
+      from_secret: telegram_user_id
+
+depends_on:
+- (staging) build & test
 
 trigger:
   status:
@@ -103,5 +192,3 @@ trigger:
   - staging
   event:
   - push
-  - promote
-  - custom
