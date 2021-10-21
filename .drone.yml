@@ -109,4 +109,5 @@ trigger:
   event:
   - promote
   - custom
-  - push
+
+# COPY PIPELINES FOR STAGING-PUSH
