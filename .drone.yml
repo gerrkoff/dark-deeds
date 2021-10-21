@@ -17,25 +17,6 @@ steps:
   commands:
   - docker login -u $USERNAME -p $PASSWORD
 
----
-kind: pipeline
-type: exec
-name: build & test
-
-platform:
-  os: linux
-  arch: amd64
-
-steps:
-- name: docker login
-  environment:
-    USERNAME:
-      from_secret: docker_user
-    PASSWORD:
-      from_secret: docker_pass
-  commands:
-  - docker login -u $USERNAME -p $PASSWORD
-
 - name: build
   commands:
   # - git remote set-url origin git@github.com:gerrkoff/dark-deeds.git
@@ -44,7 +25,8 @@ steps:
 
 - name: docker prune
   commands:
-  - docker system prune -f
+  # - docker system prune -f
+  - echo docker prune
 
 - name: start staging
   environment:
@@ -94,8 +76,9 @@ steps:
     DEPLOY_PROD_CMD:
       from_secret: deploy_prod_cmd
   commands:
-  - VERSION=$(./ci/version.sh "date -d @")
-  - eval $DEPLOY_PROD_CMD $VERSION
+  # - VERSION=$(./ci/version.sh "date -d @")
+  # - eval $DEPLOY_PROD_CMD $VERSION
+  - echo deploy prod
 
 trigger:
   event:
@@ -126,3 +109,4 @@ trigger:
   event:
   - promote
   - custom
+  - push
