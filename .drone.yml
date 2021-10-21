@@ -64,7 +64,7 @@ trigger:
 ---
 kind: pipeline
 type: exec
-name: deploy
+name: [custom] deploy
 
 platform:
   os: linux
