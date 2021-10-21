@@ -19,8 +19,9 @@ steps:
 
 - name: build
   commands:
-  - git remote set-url origin git@github.com:gerrkoff/dark-deeds.git
-  - ./ci/build.sh push "date -d @"
+  # - git remote set-url origin git@github.com:gerrkoff/dark-deeds.git
+  # - ./ci/build.sh push "date -d @"
+  - echo build
 
 - name: docker prune
   commands:
