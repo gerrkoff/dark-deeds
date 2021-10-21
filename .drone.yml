@@ -106,6 +106,8 @@ trigger:
   status:
   - success
   - failure
+  branch:
+  - staging
   event:
   - promote
   - custom
