@@ -1,7 +1,7 @@
 ---
 kind: pipeline
 type: exec
-name: build & test
+name: [custom] build & test
 
 platform:
   os: linux
@@ -87,7 +87,7 @@ trigger:
 ---
 kind: pipeline
 type: docker
-name: notify
+name: [custom] notify
 
 steps:
 - name: telegram
@@ -99,8 +99,8 @@ steps:
       from_secret: telegram_user_id
 
 depends_on:
-- build & test
-- deploy
+- [custom] build & test
+- [custom] deploy
 
 trigger:
   status:
