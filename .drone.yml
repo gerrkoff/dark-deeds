@@ -30,6 +30,10 @@ steps:
   - VERSION=$(./ci/version.sh "date -d @")
   - eval $START_STAGING_CMD $VERSION
 
+- name: docker prune
+  commands:
+  - docker system prune -f
+
 - name: test
   environment:
     URL:
