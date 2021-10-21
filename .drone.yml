@@ -49,6 +49,7 @@ trigger:
   - staging
   event:
   - push
+  - custom
 
 ---
 kind: pipeline
@@ -99,3 +100,4 @@ trigger:
   event:
   - push
   - promote
+  - custom
