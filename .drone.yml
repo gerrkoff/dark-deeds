@@ -52,10 +52,11 @@ steps:
   - echo stop staging
 
 trigger:
-  branch:
-  - staging
+  # branch:
+  # - staging
+  # - adjust-ci-once-more
   event:
-  - push
+  # - push
   - custom
 
 ---
@@ -102,9 +103,6 @@ trigger:
   status:
   - success
   - failure
-  branch:
-  - staging
   event:
-  - push
   - promote
   - custom
