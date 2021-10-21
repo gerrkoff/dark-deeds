@@ -1,3 +1,30 @@
+# COMMON
+
+---
+kind: pipeline
+type: exec
+name: deploy
+
+platform:
+  os: linux
+  arch: amd64
+
+steps:
+- name: deploy prod
+  environment:
+    DEPLOY_PROD_CMD:
+      from_secret: deploy_prod_cmd
+  commands:
+  # - VERSION=$(./ci/version.sh "date -d @")
+  # - eval $DEPLOY_PROD_CMD $VERSION
+  - echo deploy prod
+
+trigger:
+  event:
+  - promote
+
+# CUSTOM
+
 ---
 kind: pipeline
 type: exec
@@ -54,35 +81,7 @@ steps:
   - echo stop staging
 
 trigger:
-  # branch:
-  # - staging
-  # - adjust-ci-once-more
-  event:
-  # - push
   - custom
-
----
-kind: pipeline
-type: exec
-name: (custom) deploy
-
-platform:
-  os: linux
-  arch: amd64
-
-steps:
-- name: deploy prod
-  environment:
-    DEPLOY_PROD_CMD:
-      from_secret: deploy_prod_cmd
-  commands:
-  # - VERSION=$(./ci/version.sh "date -d @")
-  # - eval $DEPLOY_PROD_CMD $VERSION
-  - echo deploy prod
-
-trigger:
-  event:
-  - promote
 
 ---
 kind: pipeline
@@ -100,16 +99,102 @@ steps:
 
 depends_on:
 - (custom) build & test
-- (custom) deploy
+- deploy
+
+trigger:
+  status:
+  - success
+  - failure
+  event:
+  - promote
+  - custom
+
+# STAGING – FULL COPY OF CUSTOM WITH ADJUSTED TRIGGER
+
+---
+kind: pipeline
+type: exec
+name: (staging) build & test
+
+platform:
+  os: linux
+  arch: amd64
+
+steps:
+- name: docker login
+  environment:
+    USERNAME:
+      from_secret: docker_user
+    PASSWORD:
+      from_secret: docker_pass
+  commands:
+  - docker login -u $USERNAME -p $PASSWORD
+
+- name: build
+  commands:
+  # - git remote set-url origin git@github.com:gerrkoff/dark-deeds.git
+  # - ./ci/build.sh push "date -d @"
+  - echo build
+
+- name: docker prune
+  commands:
+  # - docker system prune -f
+  - echo docker prune
+
+- name: start staging
+  environment:
+    START_STAGING_CMD:
+      from_secret: start_staging_cmd
+  commands:
+  # - VERSION=$(./ci/version.sh "date -d @")
+  # - eval $START_STAGING_CMD $VERSION
+  - echo start staging
+
+- name: test
+  environment:
+    URL:
+      from_secret: staging_url
+  commands:
+  # - ./ci/test.sh $URL staging
+  - echo test
+
+- name: stop staging
+  environment:
+    STOP_STAGING_CMD:
+      from_secret: stop_staging_cmd
+  commands:
+  # - eval $STOP_STAGING_CMD
+  - echo stop staging
+
+trigger:
+  branch:
+  - adjust-ci-once-more
+  event:
+  - push
+
+---
+kind: pipeline
+type: docker
+name: (staging) notify
+
+steps:
+- name: telegram
+  image: appleboy/drone-telegram
+  settings:
+    token:
+      from_secret: telegram_bot_token
+    to:
+      from_secret: telegram_user_id
+
+depends_on:
+- (staging) build & test
+- deploy
 
 trigger:
   status:
   - success
   - failure
   branch:
-  - staging
+  - adjust-ci-once-more
   event:
-  - promote
-  - custom
-
-# COPY PIPELINES FOR STAGING-PUSH
+  - push
