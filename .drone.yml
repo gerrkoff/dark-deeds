@@ -16,9 +16,8 @@ steps:
     DEPLOY_PROD_CMD:
       from_secret: deploy_prod_cmd
   commands:
-  # - VERSION=$(./ci/version.sh "date -d @")
-  # - eval $DEPLOY_PROD_CMD $VERSION
-  - echo deploy prod
+  - VERSION=$(./ci/version.sh "date -d @")
+  - eval $DEPLOY_PROD_CMD $VERSION
 
 trigger:
   event:
@@ -49,39 +48,34 @@ steps:
 
 - name: build
   commands:
-  # - git remote set-url origin git@github.com:gerrkoff/dark-deeds.git
-  # - ./ci/build.sh push "date -d @"
-  - echo build
+  - git remote set-url origin git@github.com:gerrkoff/dark-deeds.git
+  - ./ci/build.sh push "date -d @"
 
 - name: docker prune
   commands:
-  # - docker system prune -f
-  - echo docker prune
+  - docker system prune -f
 
 - name: start staging
   environment:
     START_STAGING_CMD:
       from_secret: start_staging_cmd
   commands:
-  # - VERSION=$(./ci/version.sh "date -d @")
-  # - eval $START_STAGING_CMD $VERSION
-  - echo start staging
+  - VERSION=$(./ci/version.sh "date -d @")
+  - eval $START_STAGING_CMD $VERSION
 
 - name: test
   environment:
     URL:
       from_secret: staging_url
   commands:
-  # - ./ci/test.sh $URL staging
-  - echo test
+  - ./ci/test.sh $URL staging
 
 - name: stop staging
   environment:
     STOP_STAGING_CMD:
       from_secret: stop_staging_cmd
   commands:
-  # - eval $STOP_STAGING_CMD
-  - echo stop staging
+  - eval $STOP_STAGING_CMD
 
 trigger:
   event:
@@ -138,43 +132,38 @@ steps:
 
 - name: build
   commands:
-  # - git remote set-url origin git@github.com:gerrkoff/dark-deeds.git
-  # - ./ci/build.sh push "date -d @"
-  - echo build
+  - git remote set-url origin git@github.com:gerrkoff/dark-deeds.git
+  - ./ci/build.sh push "date -d @"
 
 - name: docker prune
   commands:
-  # - docker system prune -f
-  - echo docker prune
+  - docker system prune -f
 
 - name: start staging
   environment:
     START_STAGING_CMD:
       from_secret: start_staging_cmd
   commands:
-  # - VERSION=$(./ci/version.sh "date -d @")
-  # - eval $START_STAGING_CMD $VERSION
-  - echo start staging
+  - VERSION=$(./ci/version.sh "date -d @")
+  - eval $START_STAGING_CMD $VERSION
 
 - name: test
   environment:
     URL:
       from_secret: staging_url
   commands:
-  # - ./ci/test.sh $URL staging
-  - echo test
+  - ./ci/test.sh $URL staging
 
 - name: stop staging
   environment:
     STOP_STAGING_CMD:
       from_secret: stop_staging_cmd
   commands:
-  # - eval $STOP_STAGING_CMD
-  - echo stop staging
+  - eval $STOP_STAGING_CMD
 
 trigger:
   branch:
-  - adjust-ci-once-more
+  - staging
   event:
   - push
 
@@ -200,6 +189,6 @@ trigger:
   - success
   - failure
   branch:
-  - adjust-ci-once-more
+  - staging
   event:
   - push
