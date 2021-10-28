@@ -21,7 +21,6 @@ namespace DarkDeeds.TaskServiceApp.Services.Implementation
         
         private readonly ITaskRepository _taskRepository;
         private readonly IRepository<PlannedRecurrenceEntity> _plannedRecurrenceRepository;
-        private readonly IRepositoryNonDeletable<RecurrenceEntity> _recurrenceRepository;
         private readonly IDateService _dateService;
         private readonly ILogger<RecurrenceCreatorService> _logger;
         private readonly ITaskParserService _taskParserService;
@@ -31,7 +30,6 @@ namespace DarkDeeds.TaskServiceApp.Services.Implementation
         public RecurrenceCreatorService(
             ITaskRepository taskRepository,
             IRepository<PlannedRecurrenceEntity> plannedRecurrenceRepository,
-            IRepositoryNonDeletable<RecurrenceEntity> recurrenceRepository,
             IDateService dateService,
             ILogger<RecurrenceCreatorService> logger,
             ITaskParserService taskParserService,
@@ -40,7 +38,6 @@ namespace DarkDeeds.TaskServiceApp.Services.Implementation
         {
             _taskRepository = taskRepository;
             _plannedRecurrenceRepository = plannedRecurrenceRepository;
-            _recurrenceRepository = recurrenceRepository;
             _dateService = dateService;
             _logger = logger;
             _taskParserService = taskParserService;
@@ -61,16 +58,15 @@ namespace DarkDeeds.TaskServiceApp.Services.Implementation
                 ICollection<DateTime> dates = EvaluateRecurrenceDatesWithinPeriod(plannedRecurrence, timezoneOffset);
                 foreach (var date in dates)
                 {
-                    bool alreadyExists = await _recurrenceRepository.GetAll().AnySafeAsync(
-                        x => x.PlannedRecurrenceId == plannedRecurrence.Id && x.DateTime == date);
+                    bool alreadyExists = plannedRecurrence.Recurrences.Any(x => x.DateTime == date);
                     
                     if (alreadyExists)
                         continue;
                     
                     TaskEntity task = CreateTaskFromRecurrence(plannedRecurrence, date);
                     await _taskRepository.SaveAsync(task);
-                    await _recurrenceRepository.SaveAsync(
-                        CreateRecurrenceEntity(plannedRecurrence.Id, 0, date)); // TODO! fix
+                    // await _recurrenceRepository.SaveAsync(
+                    //     CreateRecurrenceEntity(plannedRecurrence.Id, 0, date)); // TODO! fix
                     createdRecurrencesCount++;
                     Notify(task, userId);
                 }

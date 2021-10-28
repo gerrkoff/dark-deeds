@@ -12,7 +12,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.RecurrenceCreatorService
         {
             var dateMock = new Mock<IDateService>();
             dateMock.SetupGet(x => x.Now).Returns(new DateTime(2019, 9, 2));
-            var service = new TaskServiceApp.Services.Implementation.RecurrenceCreatorService(null, null, null, dateMock.Object, null, null, null, Mapper);
+            var service = new TaskServiceApp.Services.Implementation.RecurrenceCreatorService(null, null, dateMock.Object, null, null, null, Mapper);
 
             var (_, result) = service.EvaluatePeriod(0);
             
@@ -25,7 +25,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.RecurrenceCreatorService
         {
             var dateMock = new Mock<IDateService>();
             dateMock.SetupGet(x => x.Now).Returns(new DateTime(2019, 9, 1));
-            var service = new TaskServiceApp.Services.Implementation.RecurrenceCreatorService(null, null, null, dateMock.Object, null, null, null, Mapper);
+            var service = new TaskServiceApp.Services.Implementation.RecurrenceCreatorService(null, null, dateMock.Object, null, null, null, Mapper);
 
             var (_, result) = service.EvaluatePeriod(0);
 
@@ -37,7 +37,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.RecurrenceCreatorService
         {
             var dateMock = new Mock<IDateService>();
             dateMock.SetupGet(x => x.Now).Returns(new DateTime(2019, 9, 1, 23, 59, 0));
-            var service = new TaskServiceApp.Services.Implementation.RecurrenceCreatorService(null, null, null, dateMock.Object, null, null, null, Mapper);
+            var service = new TaskServiceApp.Services.Implementation.RecurrenceCreatorService(null, null, dateMock.Object, null, null, null, Mapper);
 
             var (resultStart, resultEnd) = service.EvaluatePeriod(1);
 
