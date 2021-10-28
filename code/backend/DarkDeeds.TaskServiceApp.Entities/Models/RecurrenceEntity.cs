@@ -19,5 +19,7 @@ namespace DarkDeeds.TaskServiceApp.Entities.Models
         
         [Required]
         public TaskEntity Task { get; set; }
+        
+        public string TaskUid { get; set; }
     }
 }

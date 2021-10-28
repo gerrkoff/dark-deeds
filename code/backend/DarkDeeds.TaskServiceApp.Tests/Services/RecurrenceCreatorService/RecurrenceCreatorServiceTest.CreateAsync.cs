@@ -29,7 +29,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.RecurrenceCreatorService
         public async Task CreateAsync_DoNothingIfNoNonDeletedRecurrences()
         {
             var taskRepo = MocksCreator.RepoTask();
-            var plannedRecurrenceRepo = MocksCreator.Repo<PlannedRecurrenceEntity>();
+            var plannedRecurrenceRepo = MocksCreator.RepoRecurrence();
             var recurrenceRepo = MocksCreator.RepoNonDeletable<RecurrenceEntity>();
             
             var service = new TaskServiceApp.Services.Implementation.RecurrenceCreatorService(taskRepo.Object, plannedRecurrenceRepo.Object, null, null, null, null, Mapper);
@@ -47,7 +47,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.RecurrenceCreatorService
         {
             var someDate = DateTime.Now.Date;
             var taskRepo = MocksCreator.RepoTask();
-            var plannedRecurrenceRepo = MocksCreator.Repo(new PlannedRecurrenceEntity
+            var plannedRecurrenceRepo = MocksCreator.RepoRecurrence(new PlannedRecurrenceEntity
             {
                 Id = 1, Task = "Task", EveryNthDay = 1, StartDate = someDate, UserId = "userId", Recurrences = new List<RecurrenceEntity>()
             });
@@ -73,9 +73,9 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.RecurrenceCreatorService
             var taskRepo = MocksCreator.RepoTask();
             taskRepo
                 .Setup(x => x.SaveAsync(It.IsAny<TaskEntity>()))
-                .Returns(Task.CompletedTask);
-                // .Callback<TaskEntity>(x => x.Id = 23);
-            var plannedRecurrenceRepo = MocksCreator.Repo(new PlannedRecurrenceEntity
+                .Returns(Task.CompletedTask)
+                .Callback<TaskEntity>(x => x.Uid = "uid");
+            var plannedRecurrenceRepo = MocksCreator.RepoRecurrence(new PlannedRecurrenceEntity
             {
                 Id = 42, Task = "Task", EveryNthDay = 1, StartDate = now, UserId = "userId", Recurrences = new List<RecurrenceEntity>()
             });
@@ -88,21 +88,20 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.RecurrenceCreatorService
             
             await service.CreateAsync(0, "userId");
             
-            // recurrenceRepo.Verify(x => x.SaveAsync(It.Is<RecurrenceEntity>(
-            //     y => y.PlannedRecurrenceId == 42 && y.TaskId == 0 && y.DateTime == now
-            // )));
-            // TODO! fix
+            plannedRecurrenceRepo.Verify(x => x.SaveRecurrences(It.Is<PlannedRecurrenceEntity>(
+                    y => y.Recurrences.Any(z => z.DateTime == now && z.TaskUid == "uid")
+                )));
         }
         
         [Fact]
         public async Task CreateAsync_CreateEntitiesExpectedNumberOfTimes()
         {
             var taskRepo = MocksCreator.RepoTask();
-            var plannedRecurrenceRepo = MocksCreator.Repo(new PlannedRecurrenceEntity
+            var plannedRecurrenceRepo = MocksCreator.RepoRecurrence(new PlannedRecurrenceEntity
             {
-                EveryNthDay = 1, StartDate = new DateTime(2019, 9, 3), UserId = "userId", Recurrences = new List<RecurrenceEntity>()
+                EveryNthDay = 1, StartDate = new DateTime(2019, 9, 3), UserId = "userId",
+                Recurrences = new List<RecurrenceEntity>()
             });
-            var recurrenceRepo = MocksCreator.RepoNonDeletable<RecurrenceEntity>();
             var dateServiceMock = new Mock<IDateService>();
             dateServiceMock.SetupGet(x => x.Now).Returns(new DateTime(2019, 9, 3));
             var taskHubMock = new Mock<INotifierService>();
@@ -112,15 +111,13 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.RecurrenceCreatorService
             await service.CreateAsync(0, "userId");
             
             taskRepo.Verify(x => x.SaveAsync(It.IsAny<TaskEntity>()), Times.Exactly(13));
-            // TODO!
-            // recurrenceRepo.Verify(x => x.SaveAsync(It.IsAny<RecurrenceEntity>()), Times.Exactly(13));
         }
         
         [Fact]
         public async Task CreateAsync_SimpleTestWeekday()
         {
             var taskRepo = MocksCreator.RepoTask();
-            var plannedRecurrenceRepo = MocksCreator.Repo(new PlannedRecurrenceEntity
+            var plannedRecurrenceRepo = MocksCreator.RepoRecurrence(new PlannedRecurrenceEntity
             {
                 StartDate = new DateTime(2019, 9, 6), EveryWeekday = RecurrenceWeekdayEnum.Monday | RecurrenceWeekdayEnum.Wednesday, UserId = "userId", Recurrences = new List<RecurrenceEntity>()
             });
@@ -146,7 +143,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.RecurrenceCreatorService
         public async Task CreateAsync_SimpleTestMonthDay()
         {
             var taskRepo = MocksCreator.RepoTask();
-            var plannedRecurrenceRepo = MocksCreator.Repo(new PlannedRecurrenceEntity
+            var plannedRecurrenceRepo = MocksCreator.RepoRecurrence(new PlannedRecurrenceEntity
             {
                 StartDate = new DateTime(2019, 9, 6), EveryMonthDay = "9,11", UserId = "userId", Recurrences = new List<RecurrenceEntity>()
             });
@@ -172,7 +169,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.RecurrenceCreatorService
         public async Task CreateAsync_SimpleTestNthDay()
         {
             var taskRepo = MocksCreator.RepoTask();
-            var plannedRecurrenceRepo = MocksCreator.Repo(new PlannedRecurrenceEntity
+            var plannedRecurrenceRepo = MocksCreator.RepoRecurrence(new PlannedRecurrenceEntity
             {
                 StartDate = new DateTime(2019, 9, 6), EveryNthDay = 6, UserId = "userId", Recurrences = new List<RecurrenceEntity>()
             });
@@ -198,7 +195,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.RecurrenceCreatorService
         public async Task CreateAsync_WeekdayAndMonthDayAndNthDayAtTheSameTime()
         {
             var taskRepo = MocksCreator.RepoTask();
-            var plannedRecurrenceRepo = MocksCreator.Repo(new PlannedRecurrenceEntity
+            var plannedRecurrenceRepo = MocksCreator.RepoRecurrence(new PlannedRecurrenceEntity
             {
                 StartDate = new DateTime(2019, 9, 6), EveryNthDay = 6, EveryMonthDay = "6,12,13",
                 EveryWeekday = RecurrenceWeekdayEnum.Thursday | RecurrenceWeekdayEnum.Wednesday, UserId = "userId", Recurrences = new List<RecurrenceEntity>()
@@ -222,13 +219,13 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.RecurrenceCreatorService
         public async Task CreateAsync_IgnoreAlreadyExistingRecurrences()
         {
             var taskRepo = MocksCreator.RepoTask();
-            var plannedRecurrenceRepo = MocksCreator.Repo(new PlannedRecurrenceEntity
+            var plannedRecurrenceRepo = MocksCreator.RepoRecurrence(new PlannedRecurrenceEntity
             {
-                EveryNthDay = 1, StartDate = new DateTime(2019, 9, 3), Id = 42, UserId = "userId", Recurrences = new List<RecurrenceEntity>()
-            });
-            var recurrenceRepo = MocksCreator.RepoNonDeletable(new RecurrenceEntity
-            {
-                PlannedRecurrenceId = 42, DateTime = new DateTime(2019, 9, 3)
+                EveryNthDay = 1, StartDate = new DateTime(2019, 9, 3), Id = 42, UserId = "userId",
+                Recurrences = new List<RecurrenceEntity>
+                {
+                    new() {DateTime = new DateTime(2019, 9, 3)}
+                }
             });
             var dateServiceMock = new Mock<IDateService>();
             dateServiceMock.SetupGet(x => x.Now).Returns(new DateTime(2019, 9, 3));
@@ -238,16 +235,14 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.RecurrenceCreatorService
             
             await service.CreateAsync(0, "userId");
             
-            // taskRepo.Verify(x => x.SaveAsync(It.IsAny<TaskEntity>()), Times.Exactly(12));
-            // recurrenceRepo.Verify(x => x.SaveAsync(It.IsAny<RecurrenceEntity>()), Times.Exactly(12));
-            // TODO! fix
+            taskRepo.Verify(x => x.SaveAsync(It.IsAny<TaskEntity>()), Times.Exactly(12));
         }
         
         [Fact]
         public async Task CreateAsync_IgnorePlannedRecurrencesFromOtherUsers()
         {
             var taskRepo = MocksCreator.RepoTask();
-            var plannedRecurrenceRepo = MocksCreator.Repo(new PlannedRecurrenceEntity
+            var plannedRecurrenceRepo = MocksCreator.RepoRecurrence(new PlannedRecurrenceEntity
             {
                 EveryNthDay = 1, StartDate = new DateTime(2019, 9, 3), Id = 42, UserId = "userId", Recurrences = new List<RecurrenceEntity>()
             });
@@ -267,7 +262,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.RecurrenceCreatorService
         public async Task CreateAsync_NoRepeats()
         {
             var taskRepo = MocksCreator.RepoTask();
-            var plannedRecurrenceRepo = MocksCreator.Repo(new PlannedRecurrenceEntity
+            var plannedRecurrenceRepo = MocksCreator.RepoRecurrence(new PlannedRecurrenceEntity
             {
                 StartDate = new DateTime(2019, 9, 6), UserId = "userId", Recurrences = new List<RecurrenceEntity>()
             });
@@ -286,7 +281,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.RecurrenceCreatorService
         public async Task CreateAsync_NotifyAboutCreatedTasks()
         {
             var taskRepo = MocksCreator.RepoTask();
-            var plannedRecurrenceRepo = MocksCreator.Repo(new PlannedRecurrenceEntity
+            var plannedRecurrenceRepo = MocksCreator.RepoRecurrence(new PlannedRecurrenceEntity
             {
                 StartDate = new DateTime(2019, 9, 6), EveryMonthDay = "6", UserId = "userId", Recurrences = new List<RecurrenceEntity>()
             });

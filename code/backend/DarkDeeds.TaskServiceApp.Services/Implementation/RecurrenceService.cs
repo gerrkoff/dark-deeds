@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -52,7 +53,7 @@ namespace DarkDeeds.TaskServiceApp.Services.Implementation
                 else if (dto.Id < 0)
                 {
                     PlannedRecurrenceEntity entity = _mapper.Map<PlannedRecurrenceEntity>(dto);
-                    entity.Id = 0;
+                    entity.Id = new Random().Next();
                     entity.UserId = userId;
                     await _plannedRecurrenceRepository.SaveAsync(entity);
                     count++;

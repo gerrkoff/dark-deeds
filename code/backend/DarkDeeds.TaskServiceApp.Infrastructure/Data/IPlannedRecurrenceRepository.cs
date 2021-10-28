@@ -10,5 +10,6 @@ namespace DarkDeeds.TaskServiceApp.Infrastructure.Data
         Task<PlannedRecurrenceEntity> GetByIdAsync(int id);
         Task SaveAsync(PlannedRecurrenceEntity entity);
         Task DeleteAsync(int id);
+        Task SaveRecurrences(PlannedRecurrenceEntity entity);
     }
 }

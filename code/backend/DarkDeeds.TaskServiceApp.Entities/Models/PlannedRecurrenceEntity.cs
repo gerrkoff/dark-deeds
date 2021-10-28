@@ -22,7 +22,7 @@ namespace DarkDeeds.TaskServiceApp.Entities.Models
 
         [Required]
         public string UserId { get; set; }
-        
-        public List<RecurrenceEntity> Recurrences { get; set; }
+
+        public List<RecurrenceEntity> Recurrences { get; set; } = new List<RecurrenceEntity>();
     }
 }

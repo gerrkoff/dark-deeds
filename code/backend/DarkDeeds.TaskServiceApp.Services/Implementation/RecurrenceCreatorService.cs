@@ -20,7 +20,7 @@ namespace DarkDeeds.TaskServiceApp.Services.Implementation
         private const int RecurrencePeriodInDays = 14;
         
         private readonly ITaskRepository _taskRepository;
-        private readonly IRepository<PlannedRecurrenceEntity> _plannedRecurrenceRepository;
+        private readonly IPlannedRecurrenceRepository _plannedRecurrenceRepository;
         private readonly IDateService _dateService;
         private readonly ILogger<RecurrenceCreatorService> _logger;
         private readonly ITaskParserService _taskParserService;
@@ -29,7 +29,7 @@ namespace DarkDeeds.TaskServiceApp.Services.Implementation
 
         public RecurrenceCreatorService(
             ITaskRepository taskRepository,
-            IRepository<PlannedRecurrenceEntity> plannedRecurrenceRepository,
+            IPlannedRecurrenceRepository plannedRecurrenceRepository,
             IDateService dateService,
             ILogger<RecurrenceCreatorService> logger,
             ITaskParserService taskParserService,
@@ -65,8 +65,12 @@ namespace DarkDeeds.TaskServiceApp.Services.Implementation
                     
                     TaskEntity task = CreateTaskFromRecurrence(plannedRecurrence, date);
                     await _taskRepository.SaveAsync(task);
-                    // await _recurrenceRepository.SaveAsync(
-                    //     CreateRecurrenceEntity(plannedRecurrence.Id, 0, date)); // TODO! fix
+                    plannedRecurrence.Recurrences.Add(new RecurrenceEntity
+                    {
+                        DateTime = date,
+                        TaskUid = task.Uid
+                    });
+                    await _plannedRecurrenceRepository.SaveRecurrences(plannedRecurrence);
                     createdRecurrencesCount++;
                     Notify(task, userId);
                 }

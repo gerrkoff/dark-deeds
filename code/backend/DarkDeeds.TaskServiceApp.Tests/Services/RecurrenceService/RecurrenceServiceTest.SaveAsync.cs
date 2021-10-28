@@ -50,7 +50,6 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.RecurrenceService
             await service.SaveAsync(new[] {new PlannedRecurrenceDto {Id = -42, Task = "42"}}, "userid1");
 
             repoMock.Verify(x => x.SaveAsync(It.Is<PlannedRecurrenceEntity>(y =>
-                y.Id == 0 &&
                 y.Task == "42" &&
                 y.UserId == "userid1")));
             repoMock.Verify(x => x.GetAll());

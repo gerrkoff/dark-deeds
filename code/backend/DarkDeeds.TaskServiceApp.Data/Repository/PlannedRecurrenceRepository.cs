@@ -48,6 +48,13 @@ namespace DarkDeeds.TaskServiceApp.Data.Repository
             var q = await _collection.ReplaceOneAsync(x => x.Id == entity.Id, entity);
         }
 
+        public async Task SaveRecurrences(PlannedRecurrenceEntity entity)
+        {
+            var update = Builders<PlannedRecurrenceEntity>.Update
+                .Set(x => x.Recurrences, entity.Recurrences);
+            await _collection.UpdateOneAsync(x => x.Id == entity.Id, update);
+        }
+
         
 
         public Task DeleteAsync(int id) => _collection.DeleteOneAsync(x => x.Id == id);
