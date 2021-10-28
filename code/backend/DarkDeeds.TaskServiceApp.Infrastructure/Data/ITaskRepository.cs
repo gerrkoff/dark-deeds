@@ -13,5 +13,6 @@ namespace DarkDeeds.TaskServiceApp.Infrastructure.Data
         Task DeleteAsync(string id);
         
         // TODO: save props
+        // TODO: hard delete
     }
 }
