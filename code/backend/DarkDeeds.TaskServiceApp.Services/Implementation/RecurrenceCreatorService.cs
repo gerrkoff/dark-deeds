@@ -99,14 +99,6 @@ namespace DarkDeeds.TaskServiceApp.Services.Implementation
             return task;
         }
 
-        private RecurrenceEntity CreateRecurrenceEntity(int plannedRecurrenceId, int taskId, DateTime date)
-            => new RecurrenceEntity
-            {
-                DateTime = date,
-                PlannedRecurrenceId = plannedRecurrenceId,
-                TaskId = taskId,
-            };
-
         private ICollection<DateTime> EvaluateRecurrenceDatesWithinPeriod(PlannedRecurrenceEntity plannedRecurrence, int timezoneOffset)
         {
             var (periodStart, periodEnd) = EvaluatePeriod(timezoneOffset);
