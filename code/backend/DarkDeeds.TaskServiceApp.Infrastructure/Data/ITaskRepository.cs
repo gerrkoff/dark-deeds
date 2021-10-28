@@ -9,6 +9,7 @@ namespace DarkDeeds.TaskServiceApp.Infrastructure.Data
     {
         IQueryable<TaskEntity> GetAll();
         Task<IList<TaskEntity>> GetBySpecAsync(ISpecification<TaskEntity> spec);
+        Task<TaskEntity> GetByIdAsync(string id);
         Task SaveAsync(TaskEntity entity);
         Task DeleteAsync(string id);
         

@@ -35,9 +35,9 @@ namespace DarkDeeds.TaskServiceApp.Services.Implementation
         
         public async Task<IEnumerable<TaskDto>> LoadActualTasksAsync(string userId, DateTime from)
         {
-            var spec = _specFactory.New<ITaskSpecification, TaskEntity>();
-                spec = spec.FilterUserOwned(userId);
-                spec = spec.FilterActual(from);
+            var spec = _specFactory.New<ITaskSpecification, TaskEntity>()
+                .FilterUserOwned(userId)
+                .FilterActual(from);
 
             var tasks = await _tasksRepository.GetBySpecAsync(spec);
 
@@ -75,9 +75,8 @@ namespace DarkDeeds.TaskServiceApp.Services.Implementation
         }
 
         private async Task<TaskDto> SaveTaskByUidAsync(TaskDto taskToSave, string userId)
-        {
-            var entity = await _tasksRepository.GetAll()
-                .FirstOrDefaultSafeAsync(x => string.Equals(x.Uid, taskToSave.Uid) && !string.IsNullOrWhiteSpace(x.Uid));
+        {   
+            var entity = await _tasksRepository.GetByIdAsync(taskToSave.Uid);
 
             if (entity != null && !string.Equals(entity.UserId, userId))
             {
@@ -98,17 +97,14 @@ namespace DarkDeeds.TaskServiceApp.Services.Implementation
             if (entity == null)
             {
                 entity = _mapper.Map<TaskEntity>(taskToSave);
-                entity.Id = 0;
                 entity.UserId = userId;
                 entity.Version = 1;
                 await _tasksRepository.SaveAsync(entity);
             }
             else if (entity.Version == taskToSave.Version)
             {
-                var id = entity.Id;
                 entity = _mapper.Map(taskToSave, entity);
                 entity.Version++;
-                entity.Id = id;
                 await _tasksRepository.SaveAsync(entity);
             }
             

@@ -16,6 +16,10 @@ namespace DarkDeeds.TaskServiceApp.Tests.Mocks
             repoMock.Setup(x => x.GetAll()).Returns(values.AsQueryable());
             var result = Task.FromResult(values.ToList() as IList<TaskEntity>);
             repoMock.Setup(x => x.GetBySpecAsync(It.IsAny<ISpecification<TaskEntity>>())).Returns(result);
+            repoMock.Setup(x => x.GetByIdAsync(It.IsAny<string>())).Returns((string id) =>
+            {
+                return Task.FromResult(values.FirstOrDefault(x => x.Uid == id));
+            });
             return repoMock;
         }
         

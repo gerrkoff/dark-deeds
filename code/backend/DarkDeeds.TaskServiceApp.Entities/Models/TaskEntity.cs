@@ -5,7 +5,7 @@ using DarkDeeds.TaskServiceApp.Entities.Models.Base;
 
 namespace DarkDeeds.TaskServiceApp.Entities.Models
 {
-    public class TaskEntity : DeletableEntity, IUserOwnedEntity
+    public class TaskEntity : IUserOwnedEntity
     {
         public string Title { get; set; }
         public int Order { get; set; }
@@ -20,6 +20,8 @@ namespace DarkDeeds.TaskServiceApp.Entities.Models
         public int Version { get; set; }
         
         public string Uid { get; set; }
+        
+        public bool IsDeleted { get; set; }
         
         [Required]
         public string UserId { get; set; }

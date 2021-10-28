@@ -34,7 +34,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.TaskServiceTests
                 Assert.Equal(10, x.Version);
                 Assert.Equal("old", x.Title);
             });
-            _repoMock.Verify(x => x.GetAll());
+            _repoMock.Verify(x => x.GetByIdAsync("uid"));
             _repoMock.VerifyNoOtherCalls();
         }
         
@@ -42,12 +42,12 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.TaskServiceTests
         [Fact]
         public async Task SaveTasksAsync_WhenDeletingCallDelete()
         {
-            CreateService(new TaskEntity {Id = 1000, UserId = "1", Uid = "uid"});
+            CreateService(new TaskEntity {UserId = "1", Uid = "uid"});
 
             var items = new[] {new TaskDto {Uid = "uid", Deleted = true}};
             await _service.SaveTasksAsync(items, "1");
             
-            _repoMock.Verify(x => x.GetAll());
+            _repoMock.Verify(x => x.GetByIdAsync("uid"));
             _repoMock.Verify(x => x.DeleteAsync("uid"));
             _repoMock.VerifyNoOtherCalls();
         }
@@ -55,15 +55,14 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.TaskServiceTests
         [Fact]
         public async Task SaveTasksAsync_WhenUpdatingUpdateAndIncrementVersionAndCallSave()
         {
-            CreateService(new TaskEntity {Id = 1000, UserId = "1", Title = "Task Old", Version = 100500, Uid = "uid"});
+            CreateService(new TaskEntity {UserId = "1", Title = "Task Old", Version = 100500, Uid = "uid"});
 
             var items = new[] {new TaskDto {Uid = "uid", ClientId = 1, Title = "Task New", Version = 100500}};
             await _service.SaveTasksAsync(items, "1");
             
-            _repoMock.Verify(x => x.GetAll());
+            _repoMock.Verify(x => x.GetByIdAsync("uid"));
             _repoMock.Verify(x => x.SaveAsync(
                 It.Is<TaskEntity>(y =>
-                    y.Id == 1000 &&
                     y.UserId == "1" &&
                     y.Title == "Task New" &&
                     y.Version == 100501)));
@@ -80,7 +79,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.TaskServiceTests
             var result = (await _service.SaveTasksAsync(items, "user")).ToList();
 
             Assert.Empty(result);
-            _repoMock.Verify(x => x.GetAll());
+            _repoMock.Verify(x => x.GetByIdAsync("uid"));
             _repoMock.VerifyNoOtherCalls();
         }
 
@@ -94,14 +93,14 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.TaskServiceTests
             var result = (await _service.SaveTasksAsync(items, "user")).ToList();
 
             Assert.Collection(result, _ => { });
-            _repoMock.Verify(x => x.GetAll());
+            _repoMock.Verify(x => x.GetByIdAsync("uid"));
             _repoMock.VerifyNoOtherCalls();
         }
 
         [Fact]
         public async Task SaveTasksAsync_Delete()
         {
-            CreateService(new TaskEntity {Id = 1000, Uid = "uid", UserId = "user"});
+            CreateService(new TaskEntity {Uid = "uid", UserId = "user"});
 
             var items = new[] {new TaskDto {Uid = "uid", Deleted = true, Version = 7}};
             
@@ -112,7 +111,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.TaskServiceTests
                 Assert.Equal("uid", x.Uid);
                 Assert.Equal(8, x.Version);
             });
-            _repoMock.Verify(x => x.GetAll());
+            _repoMock.Verify(x => x.GetByIdAsync("uid"));
             _repoMock.Verify(x => x.DeleteAsync("uid"));
             _repoMock.VerifyNoOtherCalls();
         }
@@ -120,7 +119,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.TaskServiceTests
         [Fact]
         public async Task SaveTasksAsync_Update()
         {
-            CreateService(new TaskEntity {Id = 1000, Uid = "uid", UserId = "user", Title = "Task Old", Version = 100500});
+            CreateService(new TaskEntity {Uid = "uid", UserId = "user", Title = "Task Old", Version = 100500});
 
             var items = new[] {new TaskDto {Uid = "uid", Title = "Task New", Version = 100500}};
             var result = (await _service.SaveTasksAsync(items, "user")).ToList();
@@ -131,10 +130,9 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.TaskServiceTests
                 Assert.Equal("uid", x.Uid);
                 Assert.Equal(100501, x.Version);
             });
-            _repoMock.Verify(x => x.GetAll());
+            _repoMock.Verify(x => x.GetByIdAsync("uid"));
             _repoMock.Verify(x => x.SaveAsync(
                 It.Is<TaskEntity>(y =>
-                    y.Id == 1000 &&
                     y.Uid == "uid" &&
                     y.UserId == "user" &&
                     y.Title == "Task New" &&
@@ -156,10 +154,9 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.TaskServiceTests
                 Assert.Equal("uid", x.Uid);
                 Assert.Equal(1, x.Version);
             });
-            _repoMock.Verify(x => x.GetAll());
+            _repoMock.Verify(x => x.GetByIdAsync("uid"));
             _repoMock.Verify(x => x.SaveAsync(
                 It.Is<TaskEntity>(y =>
-                    y.Id == 0 &&
                     y.Uid == "uid" &&
                     y.UserId == "user" &&
                     y.Title == "Task" &&

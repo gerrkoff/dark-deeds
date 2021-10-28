@@ -1,8 +1,10 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DarkDeeds.TaskServiceApp.Entities.Models;
 using DarkDeeds.TaskServiceApp.Infrastructure.Data;
+using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
 
 namespace DarkDeeds.TaskServiceApp.Data.Repository
@@ -13,13 +15,37 @@ namespace DarkDeeds.TaskServiceApp.Data.Repository
         private readonly IMongoCollection<TaskEntity> _collection;
         
         public TaskRepository()
-        {
+        {   
             var database = new MongoClient("mongodb://192.168.0.199:27017").GetDatabase("dark-deeds-task-service");
             _collection = database.GetCollection<TaskEntity>("tasks");
         }
 
+        static TaskRepository()
+        {
+            BsonClassMap.RegisterClassMap<TaskEntity>(map =>
+            {
+                map.AutoMap();
+                map.SetIgnoreExtraElements(true);
+            });
+        }
+
         public IQueryable<TaskEntity> GetAll() =>
             _collection.AsQueryable();
+        
+        public async Task<IList<TaskEntity>> GetBySpecAsync(ISpecification<TaskEntity> spec)
+        {
+            var r = spec.Apply(_collection.AsQueryable()).ToList();
+            return r;
+        }
+
+        public async Task<TaskEntity> GetByIdAsync(string id)
+        {
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                throw new ArgumentNullException(nameof(id));
+            } 
+            return await (await _collection.FindAsync(x => x.Uid == id)).SingleOrDefaultAsync();
+        }
 
         public async Task SaveAsync(TaskEntity entity)
         {
@@ -47,11 +73,7 @@ namespace DarkDeeds.TaskServiceApp.Data.Repository
             // await _collection.UpdateOneAsync(x => x.Uid == entity.Uid, update);
         }
 
-        public async Task<IList<TaskEntity>> GetBySpecAsync(ISpecification<TaskEntity> spec)
-        {
-            var r = spec.Apply(_collection.AsQueryable()).ToList();
-            return r;
-        }
+        
 
         public Task DeleteAsync(string id) => _collection.DeleteOneAsync(x => x.Uid == id);
     }

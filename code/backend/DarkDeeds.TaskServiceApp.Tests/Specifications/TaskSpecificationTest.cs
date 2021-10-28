@@ -12,11 +12,11 @@ namespace DarkDeeds.TaskServiceApp.Tests.Specifications
     {
         private List<TaskEntity> Collection() => new()
         {
-            new() {Id = 1, Date = new DateTime(2018, 10, 10), IsCompleted = true},
-            new() {Id = 2, Date = new DateTime(2018, 10, 11)},
-            new() {Id = 11, Date = new DateTime(2018, 10, 19), Type = TaskTypeEnum.Additional},
-            new() {Id = 3, Date = new DateTime(2018, 10, 20)},
-            new() {Id = 4}
+            new() {Uid = "1", Date = new DateTime(2018, 10, 10), IsCompleted = true},
+            new() {Uid = "2", Date = new DateTime(2018, 10, 11)},
+            new() {Uid = "11", Date = new DateTime(2018, 10, 19), Type = TaskTypeEnum.Additional},
+            new() {Uid = "3", Date = new DateTime(2018, 10, 20)},
+            new() {Uid = "4"}
         };
 
         [Fact]
@@ -26,7 +26,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Specifications
 
             var result = service.Apply(Collection().AsQueryable()).ToList();
 
-            Assert.Contains(result, x => x.Id == 4);
+            Assert.Contains(result, x => x.Uid == "4");
         }
         
         [Fact]
@@ -36,7 +36,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Specifications
 
             var result = service.Apply(Collection().AsQueryable()).ToList();
         
-            Assert.Contains(result, x => x.Id == 2);
+            Assert.Contains(result, x => x.Uid == "2");
         }
         
         [Fact]
@@ -46,7 +46,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Specifications
 
             var result = service.Apply(Collection().AsQueryable()).ToList();
         
-            Assert.DoesNotContain(result, x => x.Id == 1);
+            Assert.DoesNotContain(result, x => x.Uid == "1");
         }
         
         [Fact]
@@ -56,7 +56,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Specifications
 
             var result = service.Apply(Collection().AsQueryable()).ToList();
         
-            Assert.DoesNotContain(result, x => x.Id == 11);
+            Assert.DoesNotContain(result, x => x.Uid == "11");
         }
     }
 }
