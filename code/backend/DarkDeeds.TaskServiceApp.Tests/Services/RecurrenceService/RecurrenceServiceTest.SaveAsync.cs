@@ -4,6 +4,7 @@ using DarkDeeds.TaskServiceApp.Entities.Enums;
 using DarkDeeds.TaskServiceApp.Entities.Models;
 using DarkDeeds.TaskServiceApp.Infrastructure.Data;
 using DarkDeeds.TaskServiceApp.Models.Dto;
+using DarkDeeds.TaskServiceApp.Models.Exceptions;
 using DarkDeeds.TaskServiceApp.Services.Interface;
 using DarkDeeds.TaskServiceApp.Tests.Mocks;
 using Moq;
@@ -16,15 +17,13 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.RecurrenceService
         [Fact]
         public async Task SaveAsync_CheckIsUserCanEdit()
         {
-            var permissionMock = new Mock<IPermissionsService>();
-            var repoMock = MocksCreator.RepoRecurrence();
-            var service = new TaskServiceApp.Services.Implementation.RecurrenceService(repoMock.Object, permissionMock.Object, Mapper);
+            var repoMock = MocksCreator.RepoRecurrence(new PlannedRecurrenceEntity {UserId = "other", Id = 1});
+            var service = new TaskServiceApp.Services.Implementation.RecurrenceService(repoMock.Object, Mapper);
 
-            var list = new PlannedRecurrenceDto[0];
+            var list = new PlannedRecurrenceDto[] {new() {Id = 1}};
             var userId = "userid";
-            await service.SaveAsync(list, userId);
-            
-            permissionMock.Verify(x => x.CheckIfUserCanEditEntitiesAsync(list, repoMock.Object, userId, It.IsAny<string>()));
+
+            await Assert.ThrowsAsync<ServiceException>(() => service.SaveAsync(list, userId));
         }
         
         [Fact]
@@ -32,11 +31,12 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.RecurrenceService
         {
             var permissionMock = new Mock<IPermissionsService>();
             var repoMock = MocksCreator.RepoRecurrence();
-            var service = new TaskServiceApp.Services.Implementation.RecurrenceService(repoMock.Object, permissionMock.Object, Mapper);
+            var service = new TaskServiceApp.Services.Implementation.RecurrenceService(repoMock.Object, Mapper);
 
             await service.SaveAsync(new[] {new PlannedRecurrenceDto {Id = 42, IsDeleted = true}}, null);
 
             repoMock.Verify(x => x.DeleteAsync(42));
+            repoMock.Verify(x => x.GetAll());
             repoMock.VerifyNoOtherCalls();
         }
         
@@ -45,7 +45,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.RecurrenceService
         {
             var permissionMock = new Mock<IPermissionsService>();
             var repoMock = MocksCreator.RepoRecurrence();
-            var service = new TaskServiceApp.Services.Implementation.RecurrenceService(repoMock.Object, permissionMock.Object, Mapper);
+            var service = new TaskServiceApp.Services.Implementation.RecurrenceService(repoMock.Object, Mapper);
 
             await service.SaveAsync(new[] {new PlannedRecurrenceDto {Id = -42, Task = "42"}}, "userid1");
 
@@ -53,6 +53,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.RecurrenceService
                 y.Id == 0 &&
                 y.Task == "42" &&
                 y.UserId == "userid1")));
+            repoMock.Verify(x => x.GetAll());
             repoMock.VerifyNoOtherCalls();
         }
         
@@ -63,7 +64,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.RecurrenceService
             var repoMock = new Mock<IPlannedRecurrenceRepository>();
             repoMock.Setup(x => x.GetByIdAsync(42))
                 .Returns(() => Task.FromResult(new PlannedRecurrenceEntity {Id = 42}));
-            var service = new TaskServiceApp.Services.Implementation.RecurrenceService(repoMock.Object, permissionMock.Object, Mapper);
+            var service = new TaskServiceApp.Services.Implementation.RecurrenceService(repoMock.Object, Mapper);
 
             await service.SaveAsync(new[]
             {
@@ -88,6 +89,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.RecurrenceService
                 y.EveryMonthDay == "1,2,3" &&
                 y.EveryNthDay == 100500)));
             repoMock.Verify(x => x.GetByIdAsync(42));
+            repoMock.Verify(x => x.GetAll());
             repoMock.VerifyNoOtherCalls();
         }
         
@@ -107,7 +109,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.RecurrenceService
                     EveryMonthDay = "1,2,3",
                     EveryNthDay = 100500
                 }));
-            var service = new TaskServiceApp.Services.Implementation.RecurrenceService(repoMock.Object, permissionMock.Object, Mapper);
+            var service = new TaskServiceApp.Services.Implementation.RecurrenceService(repoMock.Object, Mapper);
 
             await service.SaveAsync(new[]
             {
@@ -124,6 +126,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.RecurrenceService
             }, null);
             
             repoMock.Verify(x => x.GetByIdAsync(42));
+            repoMock.Verify(x => x.GetAll());
             repoMock.VerifyNoOtherCalls();
         }
         
@@ -136,7 +139,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.RecurrenceService
                 .Returns(() => Task.FromResult(new PlannedRecurrenceEntity {Id = 42}));
             repoMock.Setup(x => x.GetByIdAsync(43))
                 .Returns(() => Task.FromResult(new PlannedRecurrenceEntity {Id = 43, Task = "Old"}));
-            var service = new TaskServiceApp.Services.Implementation.RecurrenceService(repoMock.Object, permissionMock.Object, Mapper);
+            var service = new TaskServiceApp.Services.Implementation.RecurrenceService(repoMock.Object, Mapper);
 
             var result = await service.SaveAsync(new[]
             {

@@ -16,7 +16,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.RecurrenceService
                 new PlannedRecurrenceEntity {UserId = "userid1"},
                 new PlannedRecurrenceEntity {UserId = "userid2"}
             );
-            var service = new TaskServiceApp.Services.Implementation.RecurrenceService(repoMock.Object, null, Mapper);
+            var service = new TaskServiceApp.Services.Implementation.RecurrenceService(repoMock.Object, Mapper);
 
             var result = await service.LoadAsync("userid2");
 
@@ -34,7 +34,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.RecurrenceService
                     EndDate = new DateTime(1, DateTimeKind.Unspecified)
                 }
             );
-            var service = new TaskServiceApp.Services.Implementation.RecurrenceService(repoMock.Object, null, Mapper);
+            var service = new TaskServiceApp.Services.Implementation.RecurrenceService(repoMock.Object, Mapper);
 
             var result = (await service.LoadAsync("userid1")).ToList();
 

@@ -6,7 +6,7 @@ using DarkDeeds.TaskServiceApp.EfCoreExtensions;
 using DarkDeeds.TaskServiceApp.Entities.Models;
 using DarkDeeds.TaskServiceApp.Infrastructure.Data;
 using DarkDeeds.TaskServiceApp.Models.Dto;
-using DarkDeeds.TaskServiceApp.Models.Dto.Base;
+using DarkDeeds.TaskServiceApp.Models.Exceptions;
 using DarkDeeds.TaskServiceApp.Models.Extensions;
 using DarkDeeds.TaskServiceApp.Services.Interface;
 
@@ -15,13 +15,11 @@ namespace DarkDeeds.TaskServiceApp.Services.Implementation
     public class RecurrenceService : IRecurrenceService
     {
         private readonly IPlannedRecurrenceRepository _plannedRecurrenceRepository;
-        private readonly IPermissionsService _permissionsService;
         private readonly IMapper _mapper;
 
-        public RecurrenceService(IPlannedRecurrenceRepository plannedRecurrenceRepository, IPermissionsService permissionsService, IMapper mapper)
+        public RecurrenceService(IPlannedRecurrenceRepository plannedRecurrenceRepository, IMapper mapper)
         {
             _plannedRecurrenceRepository = plannedRecurrenceRepository;
-            _permissionsService = permissionsService;
             _mapper = mapper;
         }
 
@@ -34,12 +32,14 @@ namespace DarkDeeds.TaskServiceApp.Services.Implementation
         }
 
         public async Task<int> SaveAsync(ICollection<PlannedRecurrenceDto> recurrences, string userId)
-        {
-            await _permissionsService.CheckIfUserCanEditEntitiesAsync<PlannedRecurrenceEntity>(
-                recurrences.Cast<IDtoWithId>().ToList(),
-                _plannedRecurrenceRepository,
-                userId,
-                "Recurrence");
+        {   
+            int[] ids = recurrences.Select(x => x.Id).ToArray();
+            bool notUserEntities = await _plannedRecurrenceRepository.GetAll().AnySafeAsync(x =>
+                !string.Equals(x.UserId, userId) &&
+                ids.Contains(x.Id));
+
+            if (notUserEntities)
+                throw ServiceException.InvalidEntity("Recurrence");
 
             int count = 0;
             foreach (var dto in recurrences)

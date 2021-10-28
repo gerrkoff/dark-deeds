@@ -6,6 +6,7 @@ using DarkDeeds.TaskServiceApp.Models.Dto.Base;
 
 namespace DarkDeeds.TaskServiceApp.Services.Interface
 {
+    // TODO: remove
     public interface IPermissionsService
     {
         Task CheckIfUserCanEditEntitiesAsync<T>(ICollection<IDtoWithId> dtos,
