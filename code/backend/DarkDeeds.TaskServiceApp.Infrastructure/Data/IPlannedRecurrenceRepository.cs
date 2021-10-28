@@ -4,12 +4,11 @@ using DarkDeeds.TaskServiceApp.Entities.Models;
 
 namespace DarkDeeds.TaskServiceApp.Infrastructure.Data
 {
-    public interface IPlannedRecurrenceRepository : IRepository<PlannedRecurrenceEntity>
-
+    public interface IPlannedRecurrenceRepository
     {
-    // IQueryable<PlannedRecurrenceEntity> GetAll();
-    // Task<PlannedRecurrenceEntity> GetByIdAsync(int id);
-    // Task SaveAsync(PlannedRecurrenceEntity entity);
-    // Task DeleteAsync(int id);
+        IQueryable<PlannedRecurrenceEntity> GetAll();
+        Task<PlannedRecurrenceEntity> GetByIdAsync(int id);
+        Task SaveAsync(PlannedRecurrenceEntity entity);
+        Task DeleteAsync(int id);
     }
 }
