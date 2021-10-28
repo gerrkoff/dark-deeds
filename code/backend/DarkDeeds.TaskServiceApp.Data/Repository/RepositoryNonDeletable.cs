@@ -83,5 +83,10 @@ namespace DarkDeeds.TaskServiceApp.Data.Repository
         {
             return Entities.FindAsync(id).AsTask();
         }
+
+        public async Task<IList<T>> GetBySpecAsync(ISpecification<T> spec)
+        {
+            return await spec.Apply(Entities.AsQueryable()).ToListAsync();
+        }
     }
 }

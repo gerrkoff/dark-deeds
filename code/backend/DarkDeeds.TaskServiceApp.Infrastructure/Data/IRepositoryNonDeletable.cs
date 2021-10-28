@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
@@ -14,5 +15,7 @@ namespace DarkDeeds.TaskServiceApp.Infrastructure.Data
         Task DeleteHardAsync(int id);
         Task DeleteHardAsync(T entity);
         Task<T> GetByIdAsync(int id);
+        
+        Task<IList<T>> GetBySpecAsync(ISpecification<T> spec);
     }
 }
