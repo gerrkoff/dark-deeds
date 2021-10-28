@@ -8,6 +8,7 @@ using DarkDeeds.TaskServiceApp.Infrastructure.Services;
 using DarkDeeds.TaskServiceApp.Models.Mapping;
 using DarkDeeds.TaskServiceApp.Services.Implementation;
 using DarkDeeds.TaskServiceApp.Services.Interface;
+using DarkDeeds.TaskServiceApp.Services.Specifications;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
@@ -30,6 +31,8 @@ namespace DarkDeeds.TaskServiceApp.App
             services.AddScoped<IRecurrenceService, RecurrenceService>();
             services.AddScoped<IPermissionsService, PermissionsService>();
             services.AddScoped<INotifierService, NotifierService>();
+            services.AddScoped<ITaskSpecification, TaskSpecification>();
+            services.AddScoped<ISpecificationFactory, SpecificationFactory>();
         }
         
         public static void AddTaskAutoMapper(this IServiceCollection services)

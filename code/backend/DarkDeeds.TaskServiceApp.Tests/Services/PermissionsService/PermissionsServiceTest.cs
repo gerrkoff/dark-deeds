@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using DarkDeeds.TaskServiceApp.Models.Exceptions;
+using DarkDeeds.TaskServiceApp.Tests.Mocks;
 using DarkDeeds.TaskServiceApp.Tests.Services.PermissionsService.Mocks;
 using Xunit;
 
@@ -11,7 +12,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.PermissionsService
         public async Task CheckIfUserCanEditEntitiesAsync_ThrowsNoExceptionIfDtosAreValid()
         {
             var dtos = new[] {new DtoMock {Id = 1}, new DtoMock {Id = 2}};
-            var repo = Helper.CreateRepoNonDeletableMock(
+            var repo = MocksCreator.RepoNonDeletable(
                 new EntityMock {Id = 1, UserId = "userid1"},
                 new EntityMock {Id = 2, UserId = "userid1"});
             
@@ -24,7 +25,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.PermissionsService
         public async Task CheckIfUserCanEditEntitiesAsync_ThrowsExceptionIfDtosAreNotValid()
         {
             var dtos = new[] {new DtoMock {Id = 1}, new DtoMock {Id = 2}};
-            var repo = Helper.CreateRepoNonDeletableMock(
+            var repo = MocksCreator.RepoNonDeletable(
                 new EntityMock {Id = 1, UserId = "userid1"},
                 new EntityMock {Id = 2, UserId = "userid2"});
             

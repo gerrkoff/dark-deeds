@@ -1,34 +1,14 @@
 using System.Linq;
 using System.Threading.Tasks;
 using DarkDeeds.TaskServiceApp.Entities.Models;
-using DarkDeeds.TaskServiceApp.Infrastructure.Data;
-using DarkDeeds.TaskServiceApp.Infrastructure.Services;
 using DarkDeeds.TaskServiceApp.Models.Dto;
-using Microsoft.Extensions.Logging;
 using Moq;
 using Xunit;
 
-namespace DarkDeeds.TaskServiceApp.Tests.Services.TaskService
+namespace DarkDeeds.TaskServiceApp.Tests.Services.TaskServiceTests
 {
     public partial class TaskServiceTest : BaseTest
     {
-        private Mock<IRepository<TaskEntity>> _repoMock;
-        private Mock<ILogger<TaskServiceApp.Services.Implementation.TaskService>> _loggerMock;
-        private TaskServiceApp.Services.Implementation.TaskService _service;
-        private Mock<INotifierService> _notifierServiceMock;
-
-        private void CreateService(params TaskEntity[] values)
-        {
-            _repoMock = Helper.CreateRepoMock(values);
-            _loggerMock = new Mock<ILogger<TaskServiceApp.Services.Implementation.TaskService>>();
-            _notifierServiceMock = new Mock<INotifierService>();
-            _service = new TaskServiceApp.Services.Implementation.TaskService(
-                _repoMock.Object, 
-                _loggerMock.Object,
-                Mapper,
-                _notifierServiceMock.Object);
-        }
-
         [Fact]
         public async Task SaveTasksAsync_ReturnTasksBack()
         {

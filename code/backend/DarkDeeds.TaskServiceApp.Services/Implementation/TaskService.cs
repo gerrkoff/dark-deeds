@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using DarkDeeds.TaskServiceApp.EfCoreExtensions;
-using DarkDeeds.TaskServiceApp.Entities.Enums;
 using DarkDeeds.TaskServiceApp.Entities.Models;
 using DarkDeeds.TaskServiceApp.Infrastructure.Data;
 using DarkDeeds.TaskServiceApp.Infrastructure.Services;
@@ -12,6 +11,7 @@ using DarkDeeds.TaskServiceApp.Infrastructure.Services.Dto;
 using DarkDeeds.TaskServiceApp.Models.Dto;
 using DarkDeeds.TaskServiceApp.Models.Extensions;
 using DarkDeeds.TaskServiceApp.Services.Interface;
+using DarkDeeds.TaskServiceApp.Services.Specifications;
 using Microsoft.Extensions.Logging;
 
 namespace DarkDeeds.TaskServiceApp.Services.Implementation
@@ -22,25 +22,26 @@ namespace DarkDeeds.TaskServiceApp.Services.Implementation
         private readonly ILogger<TaskService> _logger;
         private readonly IMapper _mapper;
         private readonly INotifierService _notifierService;
+        private readonly ISpecificationFactory _specFactory;
         
-        public TaskService(IRepository<TaskEntity> tasksRepository, ILogger<TaskService> logger, IMapper mapper, INotifierService notifierService)
+        public TaskService(IRepository<TaskEntity> tasksRepository, ILogger<TaskService> logger, IMapper mapper, INotifierService notifierService, ISpecificationFactory specFactory)
         {
             _tasksRepository = tasksRepository;
             _logger = logger;
             _mapper = mapper;
             _notifierService = notifierService;
+            _specFactory = specFactory;
         }
         
         public async Task<IEnumerable<TaskDto>> LoadActualTasksAsync(string userId, DateTime from)
         {
-            IQueryable<TaskEntity> tasks = _tasksRepository.GetAll()
-                .Where(x => string.Equals(x.UserId, userId))
-                .Where(x =>
-                    !x.IsCompleted && x.Type != TaskTypeEnum.Additional ||
-                    !x.Date.HasValue ||
-                    x.Date >= from);
-            
-            return (await _mapper.ProjectTo<TaskDto>(tasks).ToListSafeAsync()).ToUtcDate();
+            var spec = _specFactory.New<ITaskSpecification, TaskEntity>();
+                spec = spec.FilterUserOwned(userId);
+                spec = spec.FilterActual(from);
+
+            var tasks = await _tasksRepository.GetBySpecAsync(spec);
+
+            return _mapper.Map<IList<TaskDto>>(tasks).ToUtcDate();
         }
 
         public async Task<IEnumerable<TaskDto>> LoadTasksByDateAsync(string userId, DateTime from, DateTime to)

@@ -5,6 +5,7 @@ using DarkDeeds.TaskServiceApp.Entities.Models;
 using DarkDeeds.TaskServiceApp.Infrastructure.Data;
 using DarkDeeds.TaskServiceApp.Models.Dto;
 using DarkDeeds.TaskServiceApp.Services.Interface;
+using DarkDeeds.TaskServiceApp.Tests.Mocks;
 using Moq;
 using Xunit;
 
@@ -16,7 +17,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.RecurrenceService
         public async Task SaveAsync_CheckIsUserCanEdit()
         {
             var permissionMock = new Mock<IPermissionsService>();
-            var repoMock = Helper.CreateRepoMock<PlannedRecurrenceEntity>();
+            var repoMock = MocksCreator.Repo<PlannedRecurrenceEntity>();
             var service = new TaskServiceApp.Services.Implementation.RecurrenceService(repoMock.Object, permissionMock.Object, Mapper);
 
             var list = new PlannedRecurrenceDto[0];
@@ -30,7 +31,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.RecurrenceService
         public async Task SaveAsync_DeleteIfDtoIsDeleted()
         {
             var permissionMock = new Mock<IPermissionsService>();
-            var repoMock = Helper.CreateRepoMock<PlannedRecurrenceEntity>();
+            var repoMock = MocksCreator.Repo<PlannedRecurrenceEntity>();
             var service = new TaskServiceApp.Services.Implementation.RecurrenceService(repoMock.Object, permissionMock.Object, Mapper);
 
             await service.SaveAsync(new[] {new PlannedRecurrenceDto {Id = 42, IsDeleted = true}}, null);
@@ -43,7 +44,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.RecurrenceService
         public async Task SaveAsync_CreateNewIfDtoIdIsLessThan0()
         {
             var permissionMock = new Mock<IPermissionsService>();
-            var repoMock = Helper.CreateRepoMock<PlannedRecurrenceEntity>();
+            var repoMock = MocksCreator.Repo<PlannedRecurrenceEntity>();
             var service = new TaskServiceApp.Services.Implementation.RecurrenceService(repoMock.Object, permissionMock.Object, Mapper);
 
             await service.SaveAsync(new[] {new PlannedRecurrenceDto {Id = -42, Task = "42"}}, "userid1");
