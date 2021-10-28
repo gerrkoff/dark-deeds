@@ -48,7 +48,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.TaskServiceTests
             await _service.SaveTasksAsync(items, "1");
             
             _repoMock.Verify(x => x.GetAll());
-            _repoMock.Verify(x => x.DeleteAsync(It.Is<TaskEntity>(y => y.Id == 1000)));
+            _repoMock.Verify(x => x.DeleteAsync("uid"));
             _repoMock.VerifyNoOtherCalls();
         }
         
@@ -113,7 +113,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.TaskServiceTests
                 Assert.Equal(8, x.Version);
             });
             _repoMock.Verify(x => x.GetAll());
-            _repoMock.Verify(x => x.DeleteAsync(It.Is<TaskEntity>(y => y.Id == 1000)));
+            _repoMock.Verify(x => x.DeleteAsync("uid"));
             _repoMock.VerifyNoOtherCalls();
         }
         
