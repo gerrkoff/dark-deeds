@@ -7,9 +7,9 @@ namespace DarkDeeds.TaskServiceApp.Infrastructure.Data
     public interface IPlannedRecurrenceRepository
     {
         IQueryable<PlannedRecurrenceEntity> GetAll();
-        Task<PlannedRecurrenceEntity> GetByIdAsync(int id);
+        Task<PlannedRecurrenceEntity> GetByIdAsync(string id);
         Task SaveAsync(PlannedRecurrenceEntity entity);
-        Task DeleteAsync(int id);
+        Task DeleteAsync(string id);
         Task SaveRecurrences(PlannedRecurrenceEntity entity);
     }
 }

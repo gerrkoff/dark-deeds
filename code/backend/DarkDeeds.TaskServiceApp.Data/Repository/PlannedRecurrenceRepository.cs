@@ -25,14 +25,20 @@ namespace DarkDeeds.TaskServiceApp.Data.Repository
                 map.AutoMap();
                 map.SetIgnoreExtraElements(true);
             });
+            
+            BsonClassMap.RegisterClassMap<RecurrenceEntity>(map =>
+            {
+                map.AutoMap();
+                map.SetIgnoreExtraElements(true);
+            });
         }
 
         public IQueryable<PlannedRecurrenceEntity> GetAll() =>
             _collection.AsQueryable();
 
-        public async Task<PlannedRecurrenceEntity> GetByIdAsync(int id)
+        public async Task<PlannedRecurrenceEntity> GetByIdAsync(string id)
         { 
-            return await (await _collection.FindAsync(x => x.Id == id)).SingleOrDefaultAsync();
+            return await (await _collection.FindAsync(x => x.Uid == id)).SingleOrDefaultAsync();
         }
 
         public async Task SaveAsync(PlannedRecurrenceEntity entity)
@@ -57,6 +63,6 @@ namespace DarkDeeds.TaskServiceApp.Data.Repository
 
         
 
-        public Task DeleteAsync(int id) => _collection.DeleteOneAsync(x => x.Id == id);
+        public Task DeleteAsync(string id) => _collection.DeleteOneAsync(x => x.Uid == id);
     }
 }

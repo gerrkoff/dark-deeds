@@ -20,8 +20,8 @@ function createState(
     }
 }
 
-function createRecurrence(id: number): PlannedRecurrence {
-    return new PlannedRecurrence(id, '', new Date(), null, null, null, null, false)
+function createRecurrence(uid: string): PlannedRecurrence {
+    return new PlannedRecurrence(uid, '', new Date(), null, null, null, null, false)
 }
 
 function setup() {
@@ -30,9 +30,9 @@ function setup() {
 
 test('[RECURRENCESVIEW_ADD_RECURRENCE] should return new objects for changed items', () => {
     setup()
-    const recurrence1 = createRecurrence(1)
-    const recurrence2 = createRecurrence(2)
-    const recurrence3 = createRecurrence(3)
+    const recurrence1 = createRecurrence('1')
+    const recurrence2 = createRecurrence('2')
+    const recurrence3 = createRecurrence('3')
     const recurrences = [recurrence1, recurrence2, recurrence3]
     const state = createState(recurrences)
     const action: actions.IAddRecurrence = {
@@ -48,7 +48,7 @@ test('[RECURRENCESVIEW_ADD_RECURRENCE] should return new objects for changed ite
 
 test('[RECURRENCESVIEW_CHANGE_RECURRENCE] should create new recurrence with default data', () => {
     setup()
-    const state = createState([createRecurrence(1)])
+    const state = createState([createRecurrence('1')])
     const action: actions.IAddRecurrence = {
         type: actions.RECURRENCESVIEW_ADD_RECURRENCE
     }
@@ -60,24 +60,13 @@ test('[RECURRENCESVIEW_CHANGE_RECURRENCE] should create new recurrence with defa
     expect(result.plannedRecurrences[1].startDate.getTime()).toBe(new Date(2010, 10, 10).getTime())
 })
 
-test('[RECURRENCESVIEW_CHANGE_RECURRENCE] should create recurrence with id = -1 if it\'s first', () => {
+test('[RECURRENCESVIEW_CHANGE_RECURRENCE] should create recurrence with some id', () => {
     setup()
-    const state = createState([createRecurrence(1)])
+    const state = createState([createRecurrence('1')])
     const action: actions.IAddRecurrence = {
         type: actions.RECURRENCESVIEW_ADD_RECURRENCE
     }
     const result = recurrencesViewReducer(state, action)
 
-    expect(result.plannedRecurrences[1].id).toBe(-1)
-})
-
-test('[RECURRENCESVIEW_CHANGE_RECURRENCE] should create recurrence with the lowest id', () => {
-    setup()
-    const state = createState([createRecurrence(1), createRecurrence(-100500), createRecurrence(0), createRecurrence(-10)])
-    const action: actions.IAddRecurrence = {
-        type: actions.RECURRENCESVIEW_ADD_RECURRENCE
-    }
-    const result = recurrencesViewReducer(state, action)
-
-    expect(result.plannedRecurrences[4].id).toBe(-100501)
+    expect(result.plannedRecurrences[1].uid).not.toBeNull()
 })

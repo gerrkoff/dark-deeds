@@ -12,15 +12,15 @@ interface IProps {
     isSavingRecurrences: boolean
     hasNotSavedChanges: boolean
     plannedRecurrences: PlannedRecurrence[]
-    edittingRecurrenceId: number | null
+    edittingRecurrenceId: string | null
     createRecurrences: () => void
     loadRecurrences: () => void
     addRecurrence: () => void
     saveRecurrences: (recurrences: PlannedRecurrence[]) => void
-    changeEdittingRecurrence: (id: number | null) => void
+    changeEdittingRecurrence: (uid: string | null) => void
     changeRecurrence: (recurrence: PlannedRecurrence) => void
     confirmAction: (content: React.ReactNode, action: () => void, header: string) => void
-    deleteRecurrence: (id: number) => void
+    deleteRecurrence: (uid: string) => void
 }
 export class RecurrencesView extends React.PureComponent<IProps> {
 
@@ -65,7 +65,7 @@ export class RecurrencesView extends React.PureComponent<IProps> {
     private deleteCurrenceWithConfirmation = (recurrence: PlannedRecurrence) => {
         this.props.confirmAction(
             recurrence.task,
-            () => this.props.deleteRecurrence(recurrence.id),
+            () => this.props.deleteRecurrence(recurrence.uid),
             'Delete recurrence'
         )
     }

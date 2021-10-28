@@ -74,7 +74,14 @@ namespace DarkDeeds.TaskServiceApp.Data.Repository
         }
 
         
-
-        public Task DeleteAsync(string id) => _collection.DeleteOneAsync(x => x.Uid == id);
+        // TODO! fix
+        // var update = Builders<PlannedRecurrenceEntity>.Update
+        //         .Set(x => x.IsDeleted, true);   
+        //     
+        //     return _collection.UpdateOneAsync(x => x.Id == id, update);
+        public Task DeleteAsync(string id)
+        {
+            return _collection.DeleteOneAsync(x => x.Uid == id);
+        }
     }
 }

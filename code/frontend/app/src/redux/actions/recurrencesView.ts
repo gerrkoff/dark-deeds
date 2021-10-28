@@ -57,7 +57,7 @@ export function saveRecurrences(recurrences: PlannedRecurrence[]) {
     }
 }
 
-export function changeEdittingRecurrence(edittingRecurrenceId: number | null) {
+export function changeEdittingRecurrence(edittingRecurrenceId: string | null) {
     return async(dispatch: ThunkDispatch<actions.RecurrencesViewAction>) => {
         dispatch({ type: actions.RECURRENCESVIEW_CHANGE_EDITTING_RECURRENCE, edittingRecurrenceId })
     }
@@ -69,8 +69,8 @@ export function changeRecurrence(plannedRecurrence: PlannedRecurrence) {
     }
 }
 
-export function deleteRecurrence(id: number) {
+export function deleteRecurrence(uid: string) {
     return async(dispatch: ThunkDispatch<actions.RecurrencesViewAction>) => {
-        dispatch({ type: actions.RECURRENCESVIEW_DELETE_RECURRENCE, id })
+        dispatch({ type: actions.RECURRENCESVIEW_DELETE_RECURRENCE, uid })
     }
 }

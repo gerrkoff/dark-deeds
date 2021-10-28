@@ -5,7 +5,7 @@ namespace DarkDeeds.WebClientBffApp.Infrastructure.Communication.TaskServiceApp.
 {
     public class PlannedRecurrenceDto
     {
-        public int Id { get; set; }
+        public string Uid { get; set; }
         
         public string Task { get; set; }
         

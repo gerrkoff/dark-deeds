@@ -8,7 +8,7 @@ import { ButtonPanel } from './components/ButtonPanel'
 interface IProps {
     recurrence: PlannedRecurrence
     isEditting: boolean
-    changeEdittingRecurrence: (id: number | null) => void
+    changeEdittingRecurrence: (uid: string | null) => void
     changeRecurrence: (recurrence: PlannedRecurrence) => void
     deleteRecurrence: (recurrence: PlannedRecurrence) => void
 }
@@ -38,7 +38,7 @@ export class RecurrenceItem extends React.PureComponent<IProps> {
                 <span className='recurrences-view-recurrence-item-borders'>{ print.borders }</span>
                 <ButtonPanel
                     isEditing={false}
-                    onChangeEditing={() => this.props.changeEdittingRecurrence(this.props.recurrence.id)}
+                    onChangeEditing={() => this.props.changeEdittingRecurrence(this.props.recurrence.uid)}
                     onDelete={this.handleDelete} />
             </React.Fragment>
         )

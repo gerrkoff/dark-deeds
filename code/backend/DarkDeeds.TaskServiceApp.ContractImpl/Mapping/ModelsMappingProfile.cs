@@ -48,7 +48,9 @@ namespace DarkDeeds.TaskServiceApp.ContractImpl.Mapping
                 .ForMember(x => x.StartDate, e =>
                     e.MapFrom(x => x.StartDate.Ticks))
                 .ForMember(x => x.EveryMonthDay, e =>
-                    e.MapFrom(x => x.EveryMonthDay ?? string.Empty));
+                    e.MapFrom(x => x.EveryMonthDay ?? string.Empty))
+                .ForMember(x => x.Uid, e =>
+                    e.MapFrom(x => x.Uid ?? string.Empty));
             
             CreateMap<PlannedRecurrenceModel, PlannedRecurrenceDto>()
                 .ForMember(x => x.EndDate, e =>

@@ -33,11 +33,12 @@ namespace DarkDeeds.TaskServiceApp.Services.Implementation
         }
 
         public async Task<int> SaveAsync(ICollection<PlannedRecurrenceDto> recurrences, string userId)
-        {   
-            int[] ids = recurrences.Select(x => x.Id).ToArray();
+        {
+            var rnd = new Random();
+            string[] ids = recurrences.Select(x => x.Uid).ToArray();
             bool notUserEntities = await _plannedRecurrenceRepository.GetAll().AnySafeAsync(x =>
                 !string.Equals(x.UserId, userId) &&
-                ids.Contains(x.Id));
+                ids.Contains(x.Uid));
 
             if (notUserEntities)
                 throw ServiceException.InvalidEntity("Recurrence");
@@ -47,20 +48,22 @@ namespace DarkDeeds.TaskServiceApp.Services.Implementation
             {
                 if (dto.IsDeleted)
                 {
-                    await _plannedRecurrenceRepository.DeleteAsync(dto.Id);
+                    await _plannedRecurrenceRepository.DeleteAsync(dto.Uid);
                     count++;
+                    continue;
                 }
-                else if (dto.Id < 0)
+                
+                PlannedRecurrenceEntity entity = await _plannedRecurrenceRepository.GetByIdAsync(dto.Uid);
+                if (entity == null)
                 {
-                    PlannedRecurrenceEntity entity = _mapper.Map<PlannedRecurrenceEntity>(dto);
-                    entity.Id = new Random().Next();
+                    entity = _mapper.Map<PlannedRecurrenceEntity>(dto);
+                    entity.Id = rnd.Next();
                     entity.UserId = userId;
                     await _plannedRecurrenceRepository.SaveAsync(entity);
                     count++;
                 }
                 else
                 {
-                    PlannedRecurrenceEntity entity = await _plannedRecurrenceRepository.GetByIdAsync(dto.Id);
                     if (!RecurrenceIsChanged(entity, dto))
                         continue;
                     entity.Task = dto.Task;
