@@ -42,9 +42,9 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.TaskServiceTests
         [Fact]
         public async Task SaveTasksAsync_WhenDeletingCallDelete()
         {
-            CreateService(new TaskEntity {Id = 1000, UserId = "1"});
+            CreateService(new TaskEntity {Id = 1000, UserId = "1", Uid = "uid"});
 
-            var items = new[] {new TaskDto {Id = 1000, Deleted = true}};
+            var items = new[] {new TaskDto {Uid = "uid", Deleted = true}};
             await _service.SaveTasksAsync(items, "1");
             
             _repoMock.Verify(x => x.GetAll());
@@ -55,9 +55,9 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.TaskServiceTests
         [Fact]
         public async Task SaveTasksAsync_WhenUpdatingUpdateAndIncrementVersionAndCallSave()
         {
-            CreateService(new TaskEntity {Id = 1000, UserId = "1", Title = "Task Old", Version = 100500});
+            CreateService(new TaskEntity {Id = 1000, UserId = "1", Title = "Task Old", Version = 100500, Uid = "uid"});
 
-            var items = new[] {new TaskDto {Id = 1000, ClientId = 1, Title = "Task New", Version = 100500}};
+            var items = new[] {new TaskDto {Uid = "uid", ClientId = 1, Title = "Task New", Version = 100500}};
             await _service.SaveTasksAsync(items, "1");
             
             _repoMock.Verify(x => x.GetAll());

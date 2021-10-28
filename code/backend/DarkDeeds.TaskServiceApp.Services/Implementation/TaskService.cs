@@ -77,7 +77,7 @@ namespace DarkDeeds.TaskServiceApp.Services.Implementation
         private async Task<TaskDto> SaveTaskByUidAsync(TaskDto taskToSave, string userId)
         {
             var entity = await _tasksRepository.GetAll()
-                .FirstOrDefaultSafeAsync(x => string.Equals(x.Uid, taskToSave.Uid));
+                .FirstOrDefaultSafeAsync(x => string.Equals(x.Uid, taskToSave.Uid) && !string.IsNullOrWhiteSpace(x.Uid));
 
             if (entity != null && !string.Equals(entity.UserId, userId))
             {
