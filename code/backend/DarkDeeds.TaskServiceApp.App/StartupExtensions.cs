@@ -22,14 +22,11 @@ namespace DarkDeeds.TaskServiceApp.App
     {
         public static void AddTaskServices(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
-            services.AddScoped(typeof(IRepositoryNonDeletable<>), typeof(RepositoryNonDeletable<>));
             services.AddScoped<ITaskService, TaskService>();
             services.AddScoped<ITaskParserService, TaskParserService>();
             services.AddScoped<IRecurrenceCreatorService, RecurrenceCreatorService>();
             services.AddScoped<IDateService, DateService>();
             services.AddScoped<IRecurrenceService, RecurrenceService>();
-            services.AddScoped<IPermissionsService, PermissionsService>();
             services.AddScoped<INotifierService, NotifierService>();
             services.AddScoped<ITaskSpecification, TaskSpecification>();
             services.AddScoped<ISpecificationFactory, SpecificationFactory>();
