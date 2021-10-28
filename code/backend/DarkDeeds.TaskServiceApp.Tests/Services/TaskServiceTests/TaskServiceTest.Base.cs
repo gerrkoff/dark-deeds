@@ -1,4 +1,3 @@
-using System;
 using DarkDeeds.TaskServiceApp.Entities.Models;
 using DarkDeeds.TaskServiceApp.Infrastructure.Data;
 using DarkDeeds.TaskServiceApp.Infrastructure.Services;
@@ -13,7 +12,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.TaskServiceTests
 {
     public partial class TaskServiceTest
     {
-        private Mock<IRepository<TaskEntity>> _repoMock;
+        private Mock<ITaskRepository> _repoMock;
         private Mock<ILogger<TaskService>> _loggerMock;
         private TaskService _service;
         private Mock<INotifierService> _notifierServiceMock;
@@ -22,7 +21,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.TaskServiceTests
 
         private void CreateService(params TaskEntity[] values)
         {
-            _repoMock = MocksCreator.Repo(values);
+            _repoMock = MocksCreator.RepoTask(values);
             _loggerMock = new Mock<ILogger<TaskService>>();
             _notifierServiceMock = new Mock<INotifierService>();
             _taskSpecMock = MocksCreator.TaskSpec();

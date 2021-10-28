@@ -33,6 +33,7 @@ namespace DarkDeeds.TaskServiceApp.App
             services.AddScoped<INotifierService, NotifierService>();
             services.AddScoped<ITaskSpecification, TaskSpecification>();
             services.AddScoped<ISpecificationFactory, SpecificationFactory>();
+            services.AddScoped<ITaskRepository, TaskRepository>();
         }
         
         public static void AddTaskAutoMapper(this IServiceCollection services)

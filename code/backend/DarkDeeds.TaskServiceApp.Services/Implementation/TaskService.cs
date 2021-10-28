@@ -18,13 +18,13 @@ namespace DarkDeeds.TaskServiceApp.Services.Implementation
 {
     public class TaskService : ITaskService
     {
-        private readonly IRepository<TaskEntity> _tasksRepository;
+        private readonly ITaskRepository _tasksRepository;
         private readonly ILogger<TaskService> _logger;
         private readonly IMapper _mapper;
         private readonly INotifierService _notifierService;
         private readonly ISpecificationFactory _specFactory;
         
-        public TaskService(IRepository<TaskEntity> tasksRepository, ILogger<TaskService> logger, IMapper mapper, INotifierService notifierService, ISpecificationFactory specFactory)
+        public TaskService(ITaskRepository tasksRepository, ILogger<TaskService> logger, IMapper mapper, INotifierService notifierService, ISpecificationFactory specFactory)
         {
             _tasksRepository = tasksRepository;
             _logger = logger;
