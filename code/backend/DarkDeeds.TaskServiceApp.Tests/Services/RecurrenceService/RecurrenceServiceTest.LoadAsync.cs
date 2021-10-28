@@ -12,7 +12,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.RecurrenceService
         [Fact]
         public async Task LoadAsync_ReturnOnlyUserEntities()
         {
-            var repoMock = MocksCreator.Repo(
+            var repoMock = MocksCreator.RepoRecurrence(
                 new PlannedRecurrenceEntity {UserId = "userid1"},
                 new PlannedRecurrenceEntity {UserId = "userid2"}
             );
@@ -26,7 +26,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.RecurrenceService
         [Fact]
         public async Task LoadAsync_ReturnDatesInUtc()
         {
-            var repoMock = MocksCreator.Repo(
+            var repoMock = MocksCreator.RepoRecurrence(
                 new PlannedRecurrenceEntity
                 {
                     UserId = "userid1",

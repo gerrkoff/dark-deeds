@@ -14,11 +14,11 @@ namespace DarkDeeds.TaskServiceApp.Services.Implementation
 {
     public class RecurrenceService : IRecurrenceService
     {
-        private readonly IRepository<PlannedRecurrenceEntity> _plannedRecurrenceRepository;
+        private readonly IPlannedRecurrenceRepository _plannedRecurrenceRepository;
         private readonly IPermissionsService _permissionsService;
         private readonly IMapper _mapper;
 
-        public RecurrenceService(IRepository<PlannedRecurrenceEntity> plannedRecurrenceRepository, IPermissionsService permissionsService, IMapper mapper)
+        public RecurrenceService(IPlannedRecurrenceRepository plannedRecurrenceRepository, IPermissionsService permissionsService, IMapper mapper)
         {
             _plannedRecurrenceRepository = plannedRecurrenceRepository;
             _permissionsService = permissionsService;
@@ -35,7 +35,7 @@ namespace DarkDeeds.TaskServiceApp.Services.Implementation
 
         public async Task<int> SaveAsync(ICollection<PlannedRecurrenceDto> recurrences, string userId)
         {
-            await _permissionsService.CheckIfUserCanEditEntitiesAsync(
+            await _permissionsService.CheckIfUserCanEditEntitiesAsync<PlannedRecurrenceEntity>(
                 recurrences.Cast<IDtoWithId>().ToList(),
                 _plannedRecurrenceRepository,
                 userId,
