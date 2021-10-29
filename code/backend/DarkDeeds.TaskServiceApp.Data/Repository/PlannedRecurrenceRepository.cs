@@ -30,6 +30,6 @@ namespace DarkDeeds.TaskServiceApp.Data.Repository
             });
         }
 
-        public Task SaveRecurrences(PlannedRecurrenceEntity entity) => SavePropertiesAsync(entity, x => x.Recurrences);
+        public Task SaveRecurrences(PlannedRecurrenceEntity entity) => UpdatePropertiesAsync(entity, x => x.Recurrences);
     }
 }

@@ -51,7 +51,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.RecurrenceServiceTests
 
             await service.SaveAsync(new[] {new PlannedRecurrenceDto {Uid = "42", Task = "42"}}, "userid1");
 
-            repoMock.Verify(x => x.SaveAsync(It.Is<PlannedRecurrenceEntity>(y =>
+            repoMock.Verify(x => x.UpsertAsync(It.Is<PlannedRecurrenceEntity>(y =>
                 y.Uid == "42" &&
                 y.Task == "42" &&
                 y.UserId == "userid1")));
@@ -82,7 +82,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.RecurrenceServiceTests
                 }
             }, null);
 
-            repoMock.Verify(x => x.SaveAsync(It.Is<PlannedRecurrenceEntity>(y =>
+            repoMock.Verify(x => x.UpsertAsync(It.Is<PlannedRecurrenceEntity>(y =>
                 y.Uid == "42" &&
                 y.Task == "42" &&
                 y.StartDate == new DateTime(2010, 10, 10) &&

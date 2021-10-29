@@ -56,7 +56,7 @@ namespace DarkDeeds.TaskServiceApp.Services.Implementation
                 {
                     entity = _mapper.Map<PlannedRecurrenceEntity>(dto);
                     entity.UserId = userId;
-                    await _plannedRecurrenceRepository.SaveAsync(entity);
+                    await _plannedRecurrenceRepository.UpsertAsync(entity);
                     count++;
                 }
                 else
@@ -69,7 +69,7 @@ namespace DarkDeeds.TaskServiceApp.Services.Implementation
                     entity.EveryNthDay = dto.EveryNthDay;
                     entity.EveryWeekday = dto.EveryWeekday;
                     entity.EveryMonthDay = dto.EveryMonthDay;
-                    await _plannedRecurrenceRepository.SaveAsync(entity);
+                    await _plannedRecurrenceRepository.UpsertAsync(entity);
                     count++;
                 }
             }

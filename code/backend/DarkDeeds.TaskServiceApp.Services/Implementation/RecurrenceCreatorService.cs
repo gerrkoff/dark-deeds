@@ -63,7 +63,7 @@ namespace DarkDeeds.TaskServiceApp.Services.Implementation
                         continue;
                     
                     TaskEntity task = CreateTaskFromRecurrence(plannedRecurrence, date);
-                    await _taskRepository.SaveAsync(task);
+                    await _taskRepository.UpsertAsync(task);
                     plannedRecurrence.Recurrences.Add(new RecurrenceEntity
                     {
                         DateTime = date,

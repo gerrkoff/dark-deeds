@@ -54,7 +54,7 @@ namespace DarkDeeds.TaskServiceApp.Data.Repository
             return await cursor.AnyAsync();
         }
 
-        public async Task SaveAsync(T entity)
+        public async Task UpsertAsync(T entity)
         {
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
@@ -67,7 +67,7 @@ namespace DarkDeeds.TaskServiceApp.Data.Repository
                 await Collection.ReplaceOneAsync(x => x.Uid == entity.Uid, entity);
         }
         
-        public Task SavePropertiesAsync(T entity, params Expression<Func<T, object>>[] properties)
+        public Task UpdatePropertiesAsync(T entity, params Expression<Func<T, object>>[] properties)
         {
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));

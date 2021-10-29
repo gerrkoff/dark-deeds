@@ -38,7 +38,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.RecurrenceCreatorServiceTests
             
             await service.CreateAsync(0, "userId");
             
-            _taskRepoMock.Verify(x => x.SaveAsync(It.Is<TaskEntity>(
+            _taskRepoMock.Verify(x => x.UpsertAsync(It.Is<TaskEntity>(
                 y => y.Title == "Task" && y.UserId == "userId" && y.Date == someDate && y.Uid != null
                 )));
         }
@@ -48,7 +48,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.RecurrenceCreatorServiceTests
         {
             var now = new DateTime(2019, 10, 10);
             _taskRepoMock
-                .Setup(x => x.SaveAsync(It.IsAny<TaskEntity>()))
+                .Setup(x => x.UpsertAsync(It.IsAny<TaskEntity>()))
                 .Returns(Task.CompletedTask)
                 .Callback<TaskEntity>(x => x.Uid = "uid");
             _dateServiceMock.SetupGet(x => x.Now).Returns(now);
@@ -79,7 +79,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.RecurrenceCreatorServiceTests
             
             await service.CreateAsync(0, "userId");
             
-            _taskRepoMock.Verify(x => x.SaveAsync(It.IsAny<TaskEntity>()), Times.Exactly(13));
+            _taskRepoMock.Verify(x => x.UpsertAsync(It.IsAny<TaskEntity>()), Times.Exactly(13));
         }
         
         [Fact]
@@ -96,10 +96,10 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.RecurrenceCreatorServiceTests
             
             await service.CreateAsync(0, "userId");
             
-            _taskRepoMock.Verify(x => x.SaveAsync(It.Is<TaskEntity>(
+            _taskRepoMock.Verify(x => x.UpsertAsync(It.Is<TaskEntity>(
                 y => y.Date == new DateTime(2019, 9, 9)
             )));
-            _taskRepoMock.Verify(x => x.SaveAsync(It.Is<TaskEntity>(
+            _taskRepoMock.Verify(x => x.UpsertAsync(It.Is<TaskEntity>(
                 y => y.Date == new DateTime(2019, 9, 11)
             )));
             _taskRepoMock.VerifyNoOtherCalls();
@@ -118,10 +118,10 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.RecurrenceCreatorServiceTests
             
             await service.CreateAsync(0, "userId");
 
-            _taskRepoMock.Verify(x => x.SaveAsync(It.Is<TaskEntity>(
+            _taskRepoMock.Verify(x => x.UpsertAsync(It.Is<TaskEntity>(
                 y => y.Date == new DateTime(2019, 9, 9)
             )));
-            _taskRepoMock.Verify(x => x.SaveAsync(It.Is<TaskEntity>(
+            _taskRepoMock.Verify(x => x.UpsertAsync(It.Is<TaskEntity>(
                 y => y.Date == new DateTime(2019, 9, 11)
             )));
             _taskRepoMock.VerifyNoOtherCalls();
@@ -140,10 +140,10 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.RecurrenceCreatorServiceTests
             
             await service.CreateAsync(0, "userId");
             
-            _taskRepoMock.Verify(x => x.SaveAsync(It.Is<TaskEntity>(
+            _taskRepoMock.Verify(x => x.UpsertAsync(It.Is<TaskEntity>(
                 y => y.Date == new DateTime(2019, 9, 6)
             )));
-            _taskRepoMock.Verify(x => x.SaveAsync(It.Is<TaskEntity>(
+            _taskRepoMock.Verify(x => x.UpsertAsync(It.Is<TaskEntity>(
                 y => y.Date == new DateTime(2019, 9, 12)
             )));
             _taskRepoMock.VerifyNoOtherCalls();
@@ -163,7 +163,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.RecurrenceCreatorServiceTests
             
             await service.CreateAsync(0, "userId");
             
-            _taskRepoMock.Verify(x => x.SaveAsync(It.Is<TaskEntity>(
+            _taskRepoMock.Verify(x => x.UpsertAsync(It.Is<TaskEntity>(
                 y => y.Date == new DateTime(2019, 9, 12)
             )));
             _taskRepoMock.VerifyNoOtherCalls();
@@ -185,7 +185,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.RecurrenceCreatorServiceTests
             
             await service.CreateAsync(0, "userId");
             
-            _taskRepoMock.Verify(x => x.SaveAsync(It.IsAny<TaskEntity>()), Times.Exactly(12));
+            _taskRepoMock.Verify(x => x.UpsertAsync(It.IsAny<TaskEntity>()), Times.Exactly(12));
         }
         
         [Fact]
@@ -201,7 +201,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.RecurrenceCreatorServiceTests
             
             await service.CreateAsync(0, "userId100500");
             
-            _taskRepoMock.Verify(x => x.SaveAsync(It.IsAny<TaskEntity>()), Times.Never);
+            _taskRepoMock.Verify(x => x.UpsertAsync(It.IsAny<TaskEntity>()), Times.Never);
         }
         
         [Fact]
@@ -216,7 +216,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.RecurrenceCreatorServiceTests
             
             await service.CreateAsync(0, "userId");
             
-            _taskRepoMock.Verify(x => x.SaveAsync(It.IsAny<TaskEntity>()), Times.Never);
+            _taskRepoMock.Verify(x => x.UpsertAsync(It.IsAny<TaskEntity>()), Times.Never);
         }
         
         [Fact]

@@ -99,13 +99,13 @@ namespace DarkDeeds.TaskServiceApp.Services.Implementation
                 entity = _mapper.Map<TaskEntity>(taskToSave);
                 entity.UserId = userId;
                 entity.Version = 1;
-                await _tasksRepository.SaveAsync(entity);
+                await _tasksRepository.UpsertAsync(entity);
             }
             else if (entity.Version == taskToSave.Version)
             {
                 entity = _mapper.Map(taskToSave, entity);
                 entity.Version++;
-                await _tasksRepository.SaveAsync(entity);
+                await _tasksRepository.UpsertAsync(entity);
             }
             
             return _mapper.Map<TaskDto>(entity);
