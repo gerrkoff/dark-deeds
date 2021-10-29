@@ -22,12 +22,12 @@ namespace DarkDeeds.TaskServiceApp.Data.Repository
         
         protected abstract IMongoCollection<T> Collection { get; }
         
-        public async Task<T> GetByIdAsync(string id)
+        public async Task<T> GetByIdAsync(string uid)
         {
-            if (string.IsNullOrWhiteSpace(id))
-                throw new ArgumentNullException(nameof(id));
+            if (string.IsNullOrWhiteSpace(uid))
+                throw new ArgumentNullException(nameof(uid));
 
-            var cursor = await Collection.FindAsync(x => x.Uid == id);
+            var cursor = await Collection.FindAsync(x => x.Uid == uid);
             return await cursor.SingleOrDefaultAsync();
         }
 
@@ -85,21 +85,21 @@ namespace DarkDeeds.TaskServiceApp.Data.Repository
             return Collection.UpdateOneAsync(x => x.Uid == entity.Uid, update);
         }
 
-        public Task DeleteAsync(string id)
+        public Task DeleteAsync(string uid)
         {
-            if (string.IsNullOrWhiteSpace(id))
-                throw new ArgumentNullException(nameof(id));
+            if (string.IsNullOrWhiteSpace(uid))
+                throw new ArgumentNullException(nameof(uid));
 
             var update = Builders<T>.Update.Set(x => x.IsDeleted, true);
-            return Collection.UpdateOneAsync(x => x.Uid == id, update);
+            return Collection.UpdateOneAsync(x => x.Uid == uid, update);
         }
 
-        public Task DeleteHardAsync(string id)
+        public Task DeleteHardAsync(string uid)
         {
-            if (string.IsNullOrWhiteSpace(id))
-                throw new ArgumentNullException(nameof(id));
+            if (string.IsNullOrWhiteSpace(uid))
+                throw new ArgumentNullException(nameof(uid));
 
-            return Collection.DeleteOneAsync(x => x.Uid == id);
+            return Collection.DeleteOneAsync(x => x.Uid == uid);
         }
     }
 }

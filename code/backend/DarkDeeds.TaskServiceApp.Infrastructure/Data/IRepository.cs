@@ -11,7 +11,7 @@ namespace DarkDeeds.TaskServiceApp.Infrastructure.Data
     {
         // TODO! id rename
         // TODO! save rename
-        Task<T> GetByIdAsync(string id);
+        Task<T> GetByIdAsync(string uid);
         Task<IList<T>> GetBySpecAsync(ISpecification<T> spec);
         Task<IList<T>> GetListAsync();
 
@@ -21,7 +21,7 @@ namespace DarkDeeds.TaskServiceApp.Infrastructure.Data
         Task SaveAsync(T entity);
         Task SavePropertiesAsync(T entity, params Expression<Func<T, object>>[] properties);
         
-        Task DeleteAsync(string id);
-        Task DeleteHardAsync(string id);
+        Task DeleteAsync(string uid);
+        Task DeleteHardAsync(string uid);
     }
 }
