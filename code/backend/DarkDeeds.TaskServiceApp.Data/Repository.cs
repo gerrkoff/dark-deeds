@@ -5,6 +5,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using DarkDeeds.TaskServiceApp.Entities.Models.Abstractions;
 using DarkDeeds.TaskServiceApp.Infrastructure.Data;
+using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
 
 namespace DarkDeeds.TaskServiceApp.Data
@@ -17,10 +18,19 @@ namespace DarkDeeds.TaskServiceApp.Data
         protected Repository(string tableName)
         {
             // TODO!
-            const string connectionString = "mongodb://192.168.0.199:27017;dark-deeds-task-service";
+            const string connectionString = "192.168.0.199:27017;dark-deeds-task-service";
             var conParts = connectionString.Split(';');
-            var database = new MongoClient(conParts[0]).GetDatabase(conParts[1]);
+            var database = new MongoClient($"mongodb://{conParts[0]}").GetDatabase(conParts[1]);
             _collection = database.GetCollection<T>(tableName);
+        }
+
+        protected static void RegisterDefaultMap<TEntity>()
+        {
+            BsonClassMap.RegisterClassMap<TEntity>(map =>
+            {
+                map.AutoMap();
+                map.SetIgnoreExtraElements(true);
+            });
         }
 
         public async Task<T> GetByIdAsync(string uid)

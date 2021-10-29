@@ -1,6 +1,5 @@
 using DarkDeeds.TaskServiceApp.Entities.Models;
 using DarkDeeds.TaskServiceApp.Infrastructure.Data.EntityRepository;
-using MongoDB.Bson.Serialization;
 
 namespace DarkDeeds.TaskServiceApp.Data.EntityRepository
 {
@@ -12,11 +11,7 @@ namespace DarkDeeds.TaskServiceApp.Data.EntityRepository
 
         static TaskRepository()
         {
-            BsonClassMap.RegisterClassMap<TaskEntity>(map =>
-            {
-                map.AutoMap();
-                map.SetIgnoreExtraElements(true);
-            });
+            RegisterDefaultMap<TaskEntity>();
         }
     }
 }
