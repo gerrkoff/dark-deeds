@@ -1,4 +1,6 @@
+using System;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using DarkDeeds.TaskServiceApp.Entities.Models;
 using DarkDeeds.TaskServiceApp.Infrastructure.Data;
@@ -39,6 +41,11 @@ namespace DarkDeeds.TaskServiceApp.Data.Repository
         public async Task<PlannedRecurrenceEntity> GetByIdAsync(string id)
         { 
             return await (await _collection.FindAsync(x => x.Uid == id)).SingleOrDefaultAsync();
+        }
+
+        public async Task<bool> AnyAsync(Expression<Func<PlannedRecurrenceEntity, bool>> predicate)
+        {
+            return await (await _collection.FindAsync(predicate)).AnyAsync();
         }
 
         public async Task SaveAsync(PlannedRecurrenceEntity entity)

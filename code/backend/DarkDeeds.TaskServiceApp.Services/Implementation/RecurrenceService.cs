@@ -36,7 +36,7 @@ namespace DarkDeeds.TaskServiceApp.Services.Implementation
         {
             var rnd = new Random();
             string[] ids = recurrences.Select(x => x.Uid).ToArray();
-            bool notUserEntities = await _plannedRecurrenceRepository.GetAll().AnySafeAsync(x =>
+            bool notUserEntities = await _plannedRecurrenceRepository.AnyAsync(x =>
                 !string.Equals(x.UserId, userId) &&
                 ids.Contains(x.Uid));
 

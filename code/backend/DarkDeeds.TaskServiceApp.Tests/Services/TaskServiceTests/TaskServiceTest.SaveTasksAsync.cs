@@ -7,7 +7,7 @@ using Xunit;
 
 namespace DarkDeeds.TaskServiceApp.Tests.Services.TaskServiceTests
 {
-    public partial class TaskServiceTest : BaseTest
+    public partial class TaskServiceTest
     {
         [Fact]
         public async Task SaveTasksAsync_ReturnTasksBack()

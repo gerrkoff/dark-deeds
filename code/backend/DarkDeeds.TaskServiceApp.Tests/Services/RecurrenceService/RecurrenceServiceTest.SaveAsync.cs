@@ -1,4 +1,5 @@
 using System;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using DarkDeeds.TaskServiceApp.Entities.Enums;
 using DarkDeeds.TaskServiceApp.Entities.Models;
@@ -17,6 +18,9 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.RecurrenceService
         public async Task SaveAsync_CheckIsUserCanEdit()
         {
             var repoMock = MocksCreator.RepoRecurrence(new PlannedRecurrenceEntity {UserId = "other", Uid = "1"});
+            repoMock.Setup(x => x.AnyAsync(It.IsAny<Expression<Func<PlannedRecurrenceEntity, bool>>>()))
+                .Returns(Task.FromResult(true));
+            
             var service = new TaskServiceApp.Services.Implementation.RecurrenceService(repoMock.Object, Mapper);
 
             var list = new PlannedRecurrenceDto[] {new() {Uid = "1"}};
@@ -34,7 +38,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.RecurrenceService
             await service.SaveAsync(new[] {new PlannedRecurrenceDto {Uid = "42", IsDeleted = true}}, null);
 
             repoMock.Verify(x => x.DeleteAsync("42"));
-            repoMock.Verify(x => x.GetAll());
+            repoMock.Verify(x => x.AnyAsync(It.IsAny<Expression<Func<PlannedRecurrenceEntity, bool>>>()));
             repoMock.VerifyNoOtherCalls();
         }
         
@@ -50,7 +54,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.RecurrenceService
                 y.Uid == "42" &&
                 y.Task == "42" &&
                 y.UserId == "userid1")));
-            repoMock.Verify(x => x.GetAll());
+            repoMock.Verify(x => x.AnyAsync(It.IsAny<Expression<Func<PlannedRecurrenceEntity, bool>>>()));
             repoMock.Verify(x => x.GetByIdAsync("42"));
             repoMock.VerifyNoOtherCalls();
         }
@@ -86,7 +90,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.RecurrenceService
                 y.EveryMonthDay == "1,2,3" &&
                 y.EveryNthDay == 100500)));
             repoMock.Verify(x => x.GetByIdAsync("42"));
-            repoMock.Verify(x => x.GetAll());
+            repoMock.Verify(x => x.AnyAsync(It.IsAny<Expression<Func<PlannedRecurrenceEntity, bool>>>()));
             repoMock.VerifyNoOtherCalls();
         }
         
@@ -122,7 +126,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.RecurrenceService
             }, null);
             
             repoMock.Verify(x => x.GetByIdAsync("42"));
-            repoMock.Verify(x => x.GetAll());
+            repoMock.Verify(x => x.AnyAsync(It.IsAny<Expression<Func<PlannedRecurrenceEntity, bool>>>()));
             repoMock.VerifyNoOtherCalls();
         }
         

@@ -10,7 +10,7 @@ using Moq;
 
 namespace DarkDeeds.TaskServiceApp.Tests.Services.TaskServiceTests
 {
-    public partial class TaskServiceTest
+    public partial class TaskServiceTest : BaseTest
     {
         private Mock<ITaskRepository> _repoMock;
         private Mock<ILogger<TaskService>> _loggerMock;

@@ -4,6 +4,8 @@ option csharp_namespace = "DarkDeeds.TaskServiceApp.Contract";
 
 package taskServiceApp;
 
+// TODO: bool naming
+
 message TaskModel {
   int32 id = 1; // TODO: remove
   int64 date = 2;
