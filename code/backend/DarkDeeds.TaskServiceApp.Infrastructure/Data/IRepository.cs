@@ -15,6 +15,7 @@ namespace DarkDeeds.TaskServiceApp.Infrastructure.Data
 
         Task<bool> AnyAsync(Expression<Func<T, bool>> predicate);
 
+        // TODO: split on update & insert
         Task UpsertAsync(T entity);
         Task UpdatePropertiesAsync(T entity, params Expression<Func<T, object>>[] properties);
         
