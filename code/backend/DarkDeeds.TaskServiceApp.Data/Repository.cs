@@ -12,22 +12,23 @@ namespace DarkDeeds.TaskServiceApp.Data
     public abstract class Repository<T> : IRepository<T>
         where T: Entity
     {
-        protected readonly IMongoDatabase Database;
+        private readonly IMongoCollection<T> _collection;
 
-        protected Repository()
+        protected Repository(string tableName)
         {
             // TODO!
-            Database = new MongoClient("mongodb://192.168.0.199:27017").GetDatabase("dark-deeds-task-service");
+            const string connectionString = "mongodb://192.168.0.199:27017;dark-deeds-task-service";
+            var conParts = connectionString.Split(';');
+            var database = new MongoClient(conParts[0]).GetDatabase(conParts[1]);
+            _collection = database.GetCollection<T>(tableName);
         }
-        
-        protected abstract IMongoCollection<T> Collection { get; }
-        
+
         public async Task<T> GetByIdAsync(string uid)
         {
             if (string.IsNullOrWhiteSpace(uid))
                 throw new ArgumentNullException(nameof(uid));
 
-            var cursor = await Collection.FindAsync(x => x.Uid == uid);
+            var cursor = await _collection.FindAsync(x => x.Uid == uid);
             return await cursor.SingleOrDefaultAsync();
         }
 
@@ -36,12 +37,12 @@ namespace DarkDeeds.TaskServiceApp.Data
             if (spec == null)
                 throw new ArgumentNullException(nameof(spec));
 
-            return Task.FromResult(spec.Apply(Collection.AsQueryable()).ToList() as IList<T>);
+            return Task.FromResult(spec.Apply(_collection.AsQueryable()).ToList() as IList<T>);
         }
 
         public async Task<IList<T>> GetListAsync()
         {
-            var cursor = await Collection.FindAsync(x => true);
+            var cursor = await _collection.FindAsync(x => true);
             return await cursor.ToListAsync();
         }
 
@@ -50,7 +51,7 @@ namespace DarkDeeds.TaskServiceApp.Data
             if (predicate == null)
                 throw new ArgumentNullException(nameof(predicate));
 
-            var cursor = await Collection.FindAsync(predicate);
+            var cursor = await _collection.FindAsync(predicate);
             return await cursor.AnyAsync();
         }
 
@@ -59,12 +60,12 @@ namespace DarkDeeds.TaskServiceApp.Data
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
 
-            var exists = await Collection.CountDocumentsAsync(x => x.Uid == entity.Uid) > 0;
+            var exists = await _collection.CountDocumentsAsync(x => x.Uid == entity.Uid) > 0;
 
             if (!exists)
-                await Collection.InsertOneAsync(entity);
+                await _collection.InsertOneAsync(entity);
             else
-                await Collection.ReplaceOneAsync(x => x.Uid == entity.Uid, entity);
+                await _collection.ReplaceOneAsync(x => x.Uid == entity.Uid, entity);
         }
         
         public Task UpdatePropertiesAsync(T entity, params Expression<Func<T, object>>[] properties)
@@ -82,7 +83,7 @@ namespace DarkDeeds.TaskServiceApp.Data
                 update = update.Set(property, value);
             }
 
-            return Collection.UpdateOneAsync(x => x.Uid == entity.Uid, update);
+            return _collection.UpdateOneAsync(x => x.Uid == entity.Uid, update);
         }
 
         public Task DeleteAsync(string uid)
@@ -91,7 +92,7 @@ namespace DarkDeeds.TaskServiceApp.Data
                 throw new ArgumentNullException(nameof(uid));
 
             var update = Builders<T>.Update.Set(x => x.IsDeleted, true);
-            return Collection.UpdateOneAsync(x => x.Uid == uid, update);
+            return _collection.UpdateOneAsync(x => x.Uid == uid, update);
         }
 
         public Task DeleteHardAsync(string uid)
@@ -99,7 +100,7 @@ namespace DarkDeeds.TaskServiceApp.Data
             if (string.IsNullOrWhiteSpace(uid))
                 throw new ArgumentNullException(nameof(uid));
 
-            return Collection.DeleteOneAsync(x => x.Uid == uid);
+            return _collection.DeleteOneAsync(x => x.Uid == uid);
         }
     }
 }

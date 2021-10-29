@@ -2,18 +2,14 @@ using System.Threading.Tasks;
 using DarkDeeds.TaskServiceApp.Entities.Models;
 using DarkDeeds.TaskServiceApp.Infrastructure.Data.EntityRepository;
 using MongoDB.Bson.Serialization;
-using MongoDB.Driver;
 
 namespace DarkDeeds.TaskServiceApp.Data.EntityRepository
 {
     public class PlannedRecurrenceRepository : Repository<PlannedRecurrenceEntity>, IPlannedRecurrenceRepository
     {
-        public PlannedRecurrenceRepository()
+        public PlannedRecurrenceRepository() : base("plannedRecurrences")
         {
-            Collection = Database.GetCollection<PlannedRecurrenceEntity>("plannedRecurrences");
         }
-
-        protected override IMongoCollection<PlannedRecurrenceEntity> Collection { get; }
 
         static PlannedRecurrenceRepository()
         {
