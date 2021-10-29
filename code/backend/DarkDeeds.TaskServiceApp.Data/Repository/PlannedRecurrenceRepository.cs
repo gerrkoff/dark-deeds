@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
@@ -41,6 +42,11 @@ namespace DarkDeeds.TaskServiceApp.Data.Repository
         public async Task<PlannedRecurrenceEntity> GetByIdAsync(string id)
         { 
             return await (await _collection.FindAsync(x => x.Uid == id)).SingleOrDefaultAsync();
+        }
+
+        public async Task<IList<PlannedRecurrenceEntity>> GetListAsync()
+        {
+            return await (await _collection.FindAsync(x => true)).ToListAsync();
         }
 
         public async Task<bool> AnyAsync(Expression<Func<PlannedRecurrenceEntity, bool>> predicate)

@@ -48,10 +48,10 @@ namespace DarkDeeds.TaskServiceApp.Services.Implementation
         public async Task<int> CreateAsync(int timezoneOffset, string userId)
         {
             var createdRecurrencesCount = 0;
-            List<PlannedRecurrenceEntity> plannedRecurrences = await _plannedRecurrenceRepository
-                .GetAll()
+            List<PlannedRecurrenceEntity> plannedRecurrences = (await _plannedRecurrenceRepository
+                .GetListAsync())
                 .Where(x => string.Equals(x.UserId, userId))
-                .ToListSafeAsync();
+                .ToList();
 
             foreach (PlannedRecurrenceEntity plannedRecurrence in plannedRecurrences)
             {

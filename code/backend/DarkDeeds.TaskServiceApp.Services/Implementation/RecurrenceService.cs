@@ -26,10 +26,9 @@ namespace DarkDeeds.TaskServiceApp.Services.Implementation
 
         public async Task<IEnumerable<PlannedRecurrenceDto>> LoadAsync(string userId)
         {
-            var recurrences = _plannedRecurrenceRepository.GetAll()
+            var recurrences = (await _plannedRecurrenceRepository.GetListAsync())
                 .Where(x => string.Equals(x.UserId, userId));
-            return (await _mapper.ProjectTo<PlannedRecurrenceDto>(recurrences).ToListSafeAsync())
-                .ToUtcDate();
+            return _mapper.Map<IList<PlannedRecurrenceDto>>(recurrences).ToUtcDate();
         }
 
         public async Task<int> SaveAsync(ICollection<PlannedRecurrenceDto> recurrences, string userId)

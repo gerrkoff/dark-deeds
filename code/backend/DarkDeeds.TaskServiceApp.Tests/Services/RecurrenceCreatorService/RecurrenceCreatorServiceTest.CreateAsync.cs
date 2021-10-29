@@ -35,7 +35,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.RecurrenceCreatorService
             
             await service.CreateAsync(0, "");
             
-            plannedRecurrenceRepo.Verify(x => x.GetAll());
+            plannedRecurrenceRepo.Verify(x => x.GetListAsync());
             taskRepo.VerifyNoOtherCalls();
             plannedRecurrenceRepo.VerifyNoOtherCalls();
         }
