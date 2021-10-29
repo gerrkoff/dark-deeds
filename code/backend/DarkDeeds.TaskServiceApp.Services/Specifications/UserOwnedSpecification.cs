@@ -1,4 +1,4 @@
-using DarkDeeds.TaskServiceApp.Entities.Models.Interfaces;
+using DarkDeeds.TaskServiceApp.Entities.Models.Abstractions;
 
 namespace DarkDeeds.TaskServiceApp.Services.Specifications
 {

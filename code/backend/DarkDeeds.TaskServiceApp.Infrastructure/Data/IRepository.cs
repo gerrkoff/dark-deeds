@@ -2,12 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using DarkDeeds.TaskServiceApp.Entities.Models.Interfaces;
+using DarkDeeds.TaskServiceApp.Entities.Models.Abstractions;
 
 namespace DarkDeeds.TaskServiceApp.Infrastructure.Data
 {
     public interface IRepository<T>
-        where T: IEntity
+        where T: Entity
     {
         Task<T> GetByIdAsync(string uid);
         Task<IList<T>> GetBySpecAsync(ISpecification<T> spec);

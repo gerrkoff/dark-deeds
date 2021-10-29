@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using DarkDeeds.TaskServiceApp.Entities.Models.Interfaces;
+using DarkDeeds.TaskServiceApp.Entities.Models.Abstractions;
 using DarkDeeds.TaskServiceApp.Infrastructure.Data;
 using MongoDB.Driver;
 
 namespace DarkDeeds.TaskServiceApp.Data.Repository
 {
     public abstract class Repository<T> : IRepository<T>
-        where T: IEntity
+        where T: Entity
     {
         protected readonly IMongoDatabase Database;
 
