@@ -9,12 +9,10 @@ namespace DarkDeeds.TaskServiceApp.Data.Repository
     // TODO: cleanup
     public class PlannedRecurrenceRepository : Repository<PlannedRecurrenceEntity>, IPlannedRecurrenceRepository
     {
-        private readonly IMongoCollection<PlannedRecurrenceEntity> _collection;
-        
         public PlannedRecurrenceRepository()
         {   
             var database = new MongoClient("mongodb://192.168.0.199:27017").GetDatabase("dark-deeds-task-service");
-            _collection = database.GetCollection<PlannedRecurrenceEntity>("plannedRecurrences");
+            Collection = database.GetCollection<PlannedRecurrenceEntity>("plannedRecurrences");
         }
 
         static PlannedRecurrenceRepository()
@@ -32,13 +30,8 @@ namespace DarkDeeds.TaskServiceApp.Data.Repository
             });
         }
 
-        protected override IMongoCollection<PlannedRecurrenceEntity> Collection => _collection;
+        protected override IMongoCollection<PlannedRecurrenceEntity> Collection { get; }
 
-        public override async Task SaveRecurrences(PlannedRecurrenceEntity entity)
-        {
-            var update = Builders<PlannedRecurrenceEntity>.Update
-                .Set(x => x.Recurrences, entity.Recurrences);
-            await _collection.UpdateOneAsync(x => x.Uid == entity.Uid, update);
-        }
+        public Task SaveRecurrences(PlannedRecurrenceEntity entity) => SavePropertiesAsync(entity, x => x.Recurrences);
     }
 }

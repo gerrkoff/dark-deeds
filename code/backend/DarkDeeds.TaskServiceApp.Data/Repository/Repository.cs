@@ -10,7 +10,7 @@ using MongoDB.Driver;
 namespace DarkDeeds.TaskServiceApp.Data.Repository
 {
     public abstract class Repository<T> : IRepository<T>
-        where T: IWithId
+        where T: IEntity
     {
         protected abstract IMongoCollection<T> Collection { get; }
         
@@ -58,15 +58,40 @@ namespace DarkDeeds.TaskServiceApp.Data.Repository
             else
                 await Collection.ReplaceOneAsync(x => x.Uid == entity.Uid, entity);
         }
+        
+        public Task SavePropertiesAsync(T entity, params Expression<Func<T, object>>[] properties)
+        {
+            if (entity == null)
+                throw new ArgumentNullException(nameof(entity));
+            if (string.IsNullOrWhiteSpace(entity.Uid))
+                throw new ArgumentNullException(nameof(entity.Uid));
+            
+            var update = Builders<T>.Update.Combine();
+
+            foreach (var property in properties)
+            {
+                var value = property.Compile()(entity);
+                update = update.Set(property, value);
+            }
+
+            return Collection.UpdateOneAsync(x => x.Uid == entity.Uid, update);
+        }
 
         public Task DeleteAsync(string id)
         {
             if (string.IsNullOrWhiteSpace(id))
                 throw new ArgumentNullException(nameof(id));
 
-            return Collection.DeleteOneAsync(x => x.Uid == id);
+            var update = Builders<T>.Update.Set(x => x.IsDeleted, true);
+            return Collection.UpdateOneAsync(x => x.Uid == id, update);
         }
 
-        public abstract Task SaveRecurrences(T entity);
+        public Task DeleteHardAsync(string id)
+        {
+            if (string.IsNullOrWhiteSpace(id))
+                throw new ArgumentNullException(nameof(id));
+
+            return Collection.DeleteOneAsync(x => x.Uid == id);
+        }
     }
 }
