@@ -5,14 +5,14 @@ using MongoDB.Driver;
 
 namespace DarkDeeds.TaskServiceApp.Data.Repository
 {
-    // TODO: cleanup
     public class TaskRepository : Repository<TaskEntity>, ITaskRepository
     {
         public TaskRepository()
-        {   
-            var database = new MongoClient("mongodb://192.168.0.199:27017").GetDatabase("dark-deeds-task-service");
-            Collection = database.GetCollection<TaskEntity>("tasks");
+        {
+            Collection = Database.GetCollection<TaskEntity>("tasks");
         }
+
+        protected override IMongoCollection<TaskEntity> Collection { get; }
 
         static TaskRepository()
         {
@@ -22,7 +22,5 @@ namespace DarkDeeds.TaskServiceApp.Data.Repository
                 map.SetIgnoreExtraElements(true);
             });
         }
-
-        protected override IMongoCollection<TaskEntity> Collection { get; }
     }
 }

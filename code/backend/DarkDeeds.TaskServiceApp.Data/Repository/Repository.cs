@@ -12,6 +12,14 @@ namespace DarkDeeds.TaskServiceApp.Data.Repository
     public abstract class Repository<T> : IRepository<T>
         where T: IEntity
     {
+        protected readonly IMongoDatabase Database;
+
+        protected Repository()
+        {
+            // TODO!
+            Database = new MongoClient("mongodb://192.168.0.199:27017").GetDatabase("dark-deeds-task-service");
+        }
+        
         protected abstract IMongoCollection<T> Collection { get; }
         
         public async Task<T> GetByIdAsync(string id)

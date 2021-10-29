@@ -9,6 +9,8 @@ namespace DarkDeeds.TaskServiceApp.Infrastructure.Data
     public interface IRepository<T>
         where T: IEntity
     {
+        // TODO! id rename
+        // TODO! save rename
         Task<T> GetByIdAsync(string id);
         Task<IList<T>> GetBySpecAsync(ISpecification<T> spec);
         Task<IList<T>> GetListAsync();

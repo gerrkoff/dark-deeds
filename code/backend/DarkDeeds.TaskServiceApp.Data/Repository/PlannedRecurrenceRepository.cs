@@ -6,14 +6,14 @@ using MongoDB.Driver;
 
 namespace DarkDeeds.TaskServiceApp.Data.Repository
 {
-    // TODO: cleanup
     public class PlannedRecurrenceRepository : Repository<PlannedRecurrenceEntity>, IPlannedRecurrenceRepository
     {
         public PlannedRecurrenceRepository()
-        {   
-            var database = new MongoClient("mongodb://192.168.0.199:27017").GetDatabase("dark-deeds-task-service");
-            Collection = database.GetCollection<PlannedRecurrenceEntity>("plannedRecurrences");
+        {
+            Collection = Database.GetCollection<PlannedRecurrenceEntity>("plannedRecurrences");
         }
+
+        protected override IMongoCollection<PlannedRecurrenceEntity> Collection { get; }
 
         static PlannedRecurrenceRepository()
         {
@@ -29,8 +29,6 @@ namespace DarkDeeds.TaskServiceApp.Data.Repository
                 map.SetIgnoreExtraElements(true);
             });
         }
-
-        protected override IMongoCollection<PlannedRecurrenceEntity> Collection { get; }
 
         public Task SaveRecurrences(PlannedRecurrenceEntity entity) => SavePropertiesAsync(entity, x => x.Recurrences);
     }
