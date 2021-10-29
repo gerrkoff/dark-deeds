@@ -46,12 +46,13 @@ namespace DarkDeeds.TaskServiceApp.Services.Implementation
 
         public async Task<IEnumerable<TaskDto>> LoadTasksByDateAsync(string userId, DateTime from, DateTime to)
         {
-            IQueryable<TaskEntity> tasks = _tasksRepository.GetAll()
-                .Where(x => string.Equals(x.UserId, userId))
-                .Where(x => x.Date.HasValue)
-                .Where(x => x.Date >= from && x.Date < to);
+            var tasks = (await _tasksRepository.GetListAsync()).Where(x =>
+                string.Equals(x.UserId, userId) &&
+                x.Date.HasValue &&
+                x.Date >= from && x.Date < to
+            ).ToList();
 
-            return (await _mapper.ProjectTo<TaskDto>(tasks).ToListSafeAsync()).ToUtcDate();
+            return _mapper.Map<IList<TaskDto>>(tasks).ToUtcDate();
         }
 
         public async Task<IEnumerable<TaskDto>> SaveTasksAsync(ICollection<TaskDto> tasks, string userId)

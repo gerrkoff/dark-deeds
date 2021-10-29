@@ -12,8 +12,9 @@ namespace DarkDeeds.TaskServiceApp.Tests.Mocks
         public static Mock<ITaskRepository> RepoTask(params TaskEntity[] values)
         {
             var repoMock = new Mock<ITaskRepository>();
-            repoMock.Setup(x => x.GetAll()).Returns(values.AsQueryable());
             var result = Task.FromResult(values.ToList() as IList<TaskEntity>);
+            repoMock.Setup(x => x.GetAll()).Returns(values.AsQueryable());
+            repoMock.Setup(x => x.GetListAsync()).Returns(result);
             repoMock.Setup(x => x.GetBySpecAsync(It.IsAny<ISpecification<TaskEntity>>())).Returns(result);
             repoMock.Setup(x => x.GetByIdAsync(It.IsAny<string>())).Returns((string id) =>
             {
@@ -25,8 +26,8 @@ namespace DarkDeeds.TaskServiceApp.Tests.Mocks
         public static Mock<IPlannedRecurrenceRepository> RepoRecurrence(params PlannedRecurrenceEntity[] values)
         {
             var repoMock = new Mock<IPlannedRecurrenceRepository>();
+            // var result = Task.FromResult(values.ToList() as IList<PlannedRecurrenceEntity>);
             repoMock.Setup(x => x.GetAll()).Returns(values.AsQueryable());
-            var result = Task.FromResult(values.ToList() as IList<PlannedRecurrenceEntity>);
             repoMock.Setup(x => x.GetByIdAsync(It.IsAny<string>())).Returns((string id) =>
             {
                 return Task.FromResult(values.FirstOrDefault(x => x.Uid == id));

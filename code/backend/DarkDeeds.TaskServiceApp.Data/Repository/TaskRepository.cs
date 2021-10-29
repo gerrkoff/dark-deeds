@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using DarkDeeds.TaskServiceApp.Entities.Models;
 using DarkDeeds.TaskServiceApp.Infrastructure.Data;
@@ -36,6 +37,11 @@ namespace DarkDeeds.TaskServiceApp.Data.Repository
         {
             var r = spec.Apply(_collection.AsQueryable()).ToList();
             return r;
+        }
+
+        public async Task<IList<TaskEntity>> GetListAsync()
+        {
+            return await (await _collection.FindAsync(x => true)).ToListAsync();
         }
 
         public async Task<TaskEntity> GetByIdAsync(string id)
