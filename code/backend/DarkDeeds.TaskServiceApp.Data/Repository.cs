@@ -7,7 +7,7 @@ using DarkDeeds.TaskServiceApp.Entities.Models.Abstractions;
 using DarkDeeds.TaskServiceApp.Infrastructure.Data;
 using MongoDB.Driver;
 
-namespace DarkDeeds.TaskServiceApp.Data.Repository
+namespace DarkDeeds.TaskServiceApp.Data
 {
     public abstract class Repository<T> : IRepository<T>
         where T: Entity

@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using DarkDeeds.TaskServiceApp.Entities.Models;
 
-namespace DarkDeeds.TaskServiceApp.Infrastructure.Data
+namespace DarkDeeds.TaskServiceApp.Infrastructure.Data.EntityRepository
 {
     public interface IPlannedRecurrenceRepository : IRepository<PlannedRecurrenceEntity>
     {

@@ -1,8 +1,9 @@
 using DarkDeeds.Common.Misc;
 using DarkDeeds.Communication.Interceptors;
 using DarkDeeds.TaskServiceApp.Communication;
-using DarkDeeds.TaskServiceApp.Data.Repository;
+using DarkDeeds.TaskServiceApp.Data.EntityRepository;
 using DarkDeeds.TaskServiceApp.Infrastructure.Data;
+using DarkDeeds.TaskServiceApp.Infrastructure.Data.EntityRepository;
 using DarkDeeds.TaskServiceApp.Infrastructure.Services;
 using DarkDeeds.TaskServiceApp.Models.Mapping;
 using DarkDeeds.TaskServiceApp.Services.Implementation;

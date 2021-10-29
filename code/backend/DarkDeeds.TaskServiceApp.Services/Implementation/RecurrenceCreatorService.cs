@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using DarkDeeds.TaskServiceApp.Entities.Enums;
 using DarkDeeds.TaskServiceApp.Entities.Models;
-using DarkDeeds.TaskServiceApp.Infrastructure.Data;
+using DarkDeeds.TaskServiceApp.Infrastructure.Data.EntityRepository;
 using DarkDeeds.TaskServiceApp.Infrastructure.Services;
 using DarkDeeds.TaskServiceApp.Infrastructure.Services.Dto;
 using DarkDeeds.TaskServiceApp.Models.Dto;

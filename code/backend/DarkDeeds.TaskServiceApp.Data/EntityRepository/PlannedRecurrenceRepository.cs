@@ -1,10 +1,10 @@
 using System.Threading.Tasks;
 using DarkDeeds.TaskServiceApp.Entities.Models;
-using DarkDeeds.TaskServiceApp.Infrastructure.Data;
+using DarkDeeds.TaskServiceApp.Infrastructure.Data.EntityRepository;
 using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
 
-namespace DarkDeeds.TaskServiceApp.Data.Repository
+namespace DarkDeeds.TaskServiceApp.Data.EntityRepository
 {
     public class PlannedRecurrenceRepository : Repository<PlannedRecurrenceEntity>, IPlannedRecurrenceRepository
     {

@@ -3,12 +3,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using DarkDeeds.TaskServiceApp.Entities.Models;
 using DarkDeeds.TaskServiceApp.Infrastructure.Data;
+using DarkDeeds.TaskServiceApp.Infrastructure.Data.EntityRepository;
 using Moq;
 
 namespace DarkDeeds.TaskServiceApp.Tests.Mocks
 {
     public static partial class MocksCreator
     {
+        // TODO!
         public static Mock<ITaskRepository> RepoTask(params TaskEntity[] values)
         {
             var repoMock = new Mock<ITaskRepository>();
