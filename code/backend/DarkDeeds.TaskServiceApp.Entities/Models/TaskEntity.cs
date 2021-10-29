@@ -4,7 +4,7 @@ using DarkDeeds.TaskServiceApp.Entities.Models.Interfaces;
 
 namespace DarkDeeds.TaskServiceApp.Entities.Models
 {
-    public class TaskEntity : IUserOwnedEntity
+    public class TaskEntity : IWithId, IUserOwnedEntity
     {
         public string Uid { get; set; }
         public string Title { get; set; }

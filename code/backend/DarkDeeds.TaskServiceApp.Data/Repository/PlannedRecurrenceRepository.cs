@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
 using DarkDeeds.TaskServiceApp.Entities.Models;
 using DarkDeeds.TaskServiceApp.Infrastructure.Data;
@@ -10,7 +7,7 @@ using MongoDB.Driver;
 namespace DarkDeeds.TaskServiceApp.Data.Repository
 {
     // TODO: cleanup
-    public class PlannedRecurrenceRepository : IPlannedRecurrenceRepository
+    public class PlannedRecurrenceRepository : Repository<PlannedRecurrenceEntity>, IPlannedRecurrenceRepository
     {
         private readonly IMongoCollection<PlannedRecurrenceEntity> _collection;
         
@@ -35,48 +32,13 @@ namespace DarkDeeds.TaskServiceApp.Data.Repository
             });
         }
 
-        public async Task<PlannedRecurrenceEntity> GetByIdAsync(string id)
-        { 
-            return await (await _collection.FindAsync(x => x.Uid == id)).SingleOrDefaultAsync();
-        }
+        protected override IMongoCollection<PlannedRecurrenceEntity> Collection => _collection;
 
-        public Task<IList<PlannedRecurrenceEntity>> GetBySpecAsync(ISpecification<PlannedRecurrenceEntity> spec)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<IList<PlannedRecurrenceEntity>> GetListAsync()
-        {
-            return await (await _collection.FindAsync(x => true)).ToListAsync();
-        }
-
-        public async Task<bool> AnyAsync(Expression<Func<PlannedRecurrenceEntity, bool>> predicate)
-        {
-            return await (await _collection.FindAsync(predicate)).AnyAsync();
-        }
-
-        public async Task SaveAsync(PlannedRecurrenceEntity entity)
-        {
-            var exists = await _collection.CountDocumentsAsync(x => x.Uid == entity.Uid) > 0;
-
-            if (!exists)
-            {
-                await _collection.InsertOneAsync(entity);
-                return;
-            }
-
-            var q = await _collection.ReplaceOneAsync(x => x.Uid == entity.Uid, entity);
-        }
-
-        public async Task SaveRecurrences(PlannedRecurrenceEntity entity)
+        public override async Task SaveRecurrences(PlannedRecurrenceEntity entity)
         {
             var update = Builders<PlannedRecurrenceEntity>.Update
                 .Set(x => x.Recurrences, entity.Recurrences);
             await _collection.UpdateOneAsync(x => x.Uid == entity.Uid, update);
         }
-
-        
-
-        public Task DeleteAsync(string id) => _collection.DeleteOneAsync(x => x.Uid == id);
     }
 }

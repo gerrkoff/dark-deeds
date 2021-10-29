@@ -5,7 +5,7 @@ using DarkDeeds.TaskServiceApp.Entities.Models.Interfaces;
 
 namespace DarkDeeds.TaskServiceApp.Entities.Models
 {
-    public class PlannedRecurrenceEntity : IUserOwnedEntity
+    public class PlannedRecurrenceEntity : IWithId, IUserOwnedEntity
     {
         public string Uid { get; set; }
         public string Task { get; set; }

@@ -1,7 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
 using DarkDeeds.TaskServiceApp.Entities.Models;
 using DarkDeeds.TaskServiceApp.Infrastructure.Data;
@@ -11,7 +8,7 @@ using MongoDB.Driver;
 namespace DarkDeeds.TaskServiceApp.Data.Repository
 {
     // TODO: cleanup
-    public class TaskRepository : ITaskRepository
+    public class TaskRepository : Repository<TaskEntity>, ITaskRepository
     {
         private readonly IMongoCollection<TaskEntity> _collection;
         
@@ -29,45 +26,10 @@ namespace DarkDeeds.TaskServiceApp.Data.Repository
                 map.SetIgnoreExtraElements(true);
             });
         }
-        
-        public async Task<IList<TaskEntity>> GetBySpecAsync(ISpecification<TaskEntity> spec)
-        {
-            var r = spec.Apply(_collection.AsQueryable()).ToList();
-            return r;
-        }
 
-        public async Task<IList<TaskEntity>> GetListAsync()
-        {
-            return await (await _collection.FindAsync(x => true)).ToListAsync();
-        }
+        protected override IMongoCollection<TaskEntity> Collection => _collection;
 
-        public Task<bool> AnyAsync(Expression<Func<TaskEntity, bool>> predicate)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<TaskEntity> GetByIdAsync(string id)
-        {
-            if (string.IsNullOrWhiteSpace(id))
-            {
-                throw new ArgumentNullException(nameof(id));
-            } 
-            return await (await _collection.FindAsync(x => x.Uid == id)).SingleOrDefaultAsync();
-        }
-
-        public async Task SaveAsync(TaskEntity entity)
-        {
-            var exists = await _collection.CountDocumentsAsync(x => x.Uid == entity.Uid) > 0;
-
-            if (!exists)
-            {
-                await _collection.InsertOneAsync(entity);
-                return;
-            }
-
-            var q = await _collection.ReplaceOneAsync(x => x.Uid == entity.Uid, entity);
-
-            // var update = Builders<TaskEntity>.Update
+        // var update = Builders<TaskEntity>.Update
             //     .Set(x => x.Title, entity.Title)
             //     .Set(x => x.Order, entity.Order)
             //     .Set(x => x.Date, entity.Date)
@@ -79,20 +41,14 @@ namespace DarkDeeds.TaskServiceApp.Data.Repository
             //     .Set(x => x.Uid, entity.Uid)
             //     .Set(x => x.UserId, entity.UserId);
             // await _collection.UpdateOneAsync(x => x.Uid == entity.Uid, update);
-        }
-
         
         // TODO! fix
         // var update = Builders<PlannedRecurrenceEntity>.Update
         //         .Set(x => x.IsDeleted, true);   
         //     
         //     return _collection.UpdateOneAsync(x => x.Id == id, update);
-        public Task DeleteAsync(string id)
-        {
-            return _collection.DeleteOneAsync(x => x.Uid == id);
-        }
 
-        public Task SaveRecurrences(TaskEntity entity)
+        public override Task SaveRecurrences(TaskEntity entity)
         {
             throw new NotImplementedException();
         }
