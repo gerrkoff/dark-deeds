@@ -190,7 +190,7 @@ namespace DarkDeeds.TaskServiceApp.Services.Implementation
                 if (e is OverflowException || e is FormatException)
                 {
                     _logger.LogWarning(
-                        $"Can't parse EveryMonthDay for PlannedRecurrenceId = {plannedRecurrence.Id}, Value = '{plannedRecurrence.EveryMonthDay}'");
+                        $"Can't parse EveryMonthDay for PlannedRecurrenceUid = {plannedRecurrence.Uid}, Value = '{plannedRecurrence.EveryMonthDay}'");
                     return true;
                 }
 

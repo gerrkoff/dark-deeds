@@ -43,7 +43,7 @@ namespace DarkDeeds.TaskServiceApp.Data.Repository
 
         public async Task SaveAsync(PlannedRecurrenceEntity entity)
         {
-            var exists = await _collection.CountDocumentsAsync(x => x.Id == entity.Id) > 0;
+            var exists = await _collection.CountDocumentsAsync(x => x.Uid == entity.Uid) > 0;
 
             if (!exists)
             {
@@ -51,14 +51,14 @@ namespace DarkDeeds.TaskServiceApp.Data.Repository
                 return;
             }
 
-            var q = await _collection.ReplaceOneAsync(x => x.Id == entity.Id, entity);
+            var q = await _collection.ReplaceOneAsync(x => x.Uid == entity.Uid, entity);
         }
 
         public async Task SaveRecurrences(PlannedRecurrenceEntity entity)
         {
             var update = Builders<PlannedRecurrenceEntity>.Update
                 .Set(x => x.Recurrences, entity.Recurrences);
-            await _collection.UpdateOneAsync(x => x.Id == entity.Id, update);
+            await _collection.UpdateOneAsync(x => x.Uid == entity.Uid, update);
         }
 
         

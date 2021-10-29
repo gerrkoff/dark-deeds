@@ -1,4 +1,4 @@
-using DarkDeeds.TaskServiceApp.Entities.Models.Base;
+using DarkDeeds.TaskServiceApp.Entities.Models.Interfaces;
 using DarkDeeds.TaskServiceApp.Infrastructure.Data;
 
 namespace DarkDeeds.TaskServiceApp.Services.Specifications

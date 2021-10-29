@@ -47,7 +47,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.RecurrenceCreatorService
             var taskRepo = MocksCreator.RepoTask();
             var plannedRecurrenceRepo = MocksCreator.RepoRecurrence(new PlannedRecurrenceEntity
             {
-                Id = 1, Task = "Task", EveryNthDay = 1, StartDate = someDate, UserId = "userId", Recurrences = new List<RecurrenceEntity>()
+                Task = "Task", EveryNthDay = 1, StartDate = someDate, UserId = "userId", Recurrences = new List<RecurrenceEntity>()
             });
             var dateServiceMock = new Mock<IDateService>();
             dateServiceMock.SetupGet(x => x.Now).Returns(someDate);
@@ -74,7 +74,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.RecurrenceCreatorService
                 .Callback<TaskEntity>(x => x.Uid = "uid");
             var plannedRecurrenceRepo = MocksCreator.RepoRecurrence(new PlannedRecurrenceEntity
             {
-                Id = 42, Task = "Task", EveryNthDay = 1, StartDate = now, UserId = "userId", Recurrences = new List<RecurrenceEntity>()
+                Task = "Task", EveryNthDay = 1, StartDate = now, UserId = "userId", Recurrences = new List<RecurrenceEntity>()
             });
             var dateServiceMock = new Mock<IDateService>();
             dateServiceMock.SetupGet(x => x.Now).Returns(now);
@@ -213,7 +213,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.RecurrenceCreatorService
             var taskRepo = MocksCreator.RepoTask();
             var plannedRecurrenceRepo = MocksCreator.RepoRecurrence(new PlannedRecurrenceEntity
             {
-                EveryNthDay = 1, StartDate = new DateTime(2019, 9, 3), Id = 42, UserId = "userId",
+                EveryNthDay = 1, StartDate = new DateTime(2019, 9, 3), UserId = "userId",
                 Recurrences = new List<RecurrenceEntity>
                 {
                     new() {DateTime = new DateTime(2019, 9, 3)}
@@ -236,7 +236,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.RecurrenceCreatorService
             var taskRepo = MocksCreator.RepoTask();
             var plannedRecurrenceRepo = MocksCreator.RepoRecurrence(new PlannedRecurrenceEntity
             {
-                EveryNthDay = 1, StartDate = new DateTime(2019, 9, 3), Id = 42, UserId = "userId", Recurrences = new List<RecurrenceEntity>()
+                EveryNthDay = 1, StartDate = new DateTime(2019, 9, 3), UserId = "userId", Recurrences = new List<RecurrenceEntity>()
             });
             var dateServiceMock = new Mock<IDateService>();
             dateServiceMock.SetupGet(x => x.Now).Returns(new DateTime(2019, 9, 3));

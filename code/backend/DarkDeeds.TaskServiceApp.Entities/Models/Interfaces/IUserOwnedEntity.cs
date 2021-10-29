@@ -1,4 +1,4 @@
-﻿namespace DarkDeeds.TaskServiceApp.Entities.Models.Base
+﻿namespace DarkDeeds.TaskServiceApp.Entities.Models.Interfaces
 {
     public interface IUserOwnedEntity
     {
