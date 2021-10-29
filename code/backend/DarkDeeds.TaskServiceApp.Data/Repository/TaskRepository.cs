@@ -29,9 +29,6 @@ namespace DarkDeeds.TaskServiceApp.Data.Repository
                 map.SetIgnoreExtraElements(true);
             });
         }
-
-        public IQueryable<TaskEntity> GetAll() =>
-            _collection.AsQueryable();
         
         public async Task<IList<TaskEntity>> GetBySpecAsync(ISpecification<TaskEntity> spec)
         {
@@ -42,6 +39,11 @@ namespace DarkDeeds.TaskServiceApp.Data.Repository
         public async Task<IList<TaskEntity>> GetListAsync()
         {
             return await (await _collection.FindAsync(x => true)).ToListAsync();
+        }
+
+        public Task<bool> AnyAsync(Expression<Func<TaskEntity, bool>> predicate)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task<TaskEntity> GetByIdAsync(string id)
@@ -88,6 +90,11 @@ namespace DarkDeeds.TaskServiceApp.Data.Repository
         public Task DeleteAsync(string id)
         {
             return _collection.DeleteOneAsync(x => x.Uid == id);
+        }
+
+        public Task SaveRecurrences(TaskEntity entity)
+        {
+            throw new NotImplementedException();
         }
     }
 }

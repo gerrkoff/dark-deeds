@@ -13,7 +13,6 @@ namespace DarkDeeds.TaskServiceApp.Tests.Mocks
         {
             var repoMock = new Mock<ITaskRepository>();
             var result = Task.FromResult(values.ToList() as IList<TaskEntity>);
-            repoMock.Setup(x => x.GetAll()).Returns(values.AsQueryable());
             repoMock.Setup(x => x.GetListAsync()).Returns(result);
             repoMock.Setup(x => x.GetBySpecAsync(It.IsAny<ISpecification<TaskEntity>>())).Returns(result);
             repoMock.Setup(x => x.GetByIdAsync(It.IsAny<string>())).Returns((string id) =>
@@ -27,7 +26,6 @@ namespace DarkDeeds.TaskServiceApp.Tests.Mocks
         {
             var repoMock = new Mock<IPlannedRecurrenceRepository>();
             var result = Task.FromResult(values.ToList() as IList<PlannedRecurrenceEntity>);
-            repoMock.Setup(x => x.GetAll()).Returns(values.AsQueryable());
             repoMock.Setup(x => x.GetListAsync()).Returns(result);
             repoMock.Setup(x => x.GetByIdAsync(It.IsAny<string>())).Returns((string id) =>
             {

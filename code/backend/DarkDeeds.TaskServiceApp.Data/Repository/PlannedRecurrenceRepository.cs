@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using DarkDeeds.TaskServiceApp.Entities.Models;
@@ -36,12 +35,14 @@ namespace DarkDeeds.TaskServiceApp.Data.Repository
             });
         }
 
-        public IQueryable<PlannedRecurrenceEntity> GetAll() =>
-            _collection.AsQueryable();
-
         public async Task<PlannedRecurrenceEntity> GetByIdAsync(string id)
         { 
             return await (await _collection.FindAsync(x => x.Uid == id)).SingleOrDefaultAsync();
+        }
+
+        public Task<IList<PlannedRecurrenceEntity>> GetBySpecAsync(ISpecification<PlannedRecurrenceEntity> spec)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task<IList<PlannedRecurrenceEntity>> GetListAsync()
