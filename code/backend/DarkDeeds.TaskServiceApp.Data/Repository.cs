@@ -15,13 +15,9 @@ namespace DarkDeeds.TaskServiceApp.Data
     {
         private readonly IMongoCollection<T> _collection;
 
-        protected Repository(string tableName)
+        protected Repository(IMongoDbContext dbContext, string tableName)
         {
-            // TODO!
-            const string connectionString = "192.168.0.199:27017;dark-deeds-task-service";
-            var conParts = connectionString.Split(';');
-            var database = new MongoClient($"mongodb://{conParts[0]}").GetDatabase(conParts[1]);
-            _collection = database.GetCollection<T>(tableName);
+            _collection = dbContext.GetCollection<T>(tableName);
         }
 
         protected static void RegisterDefaultMap<TEntity>()

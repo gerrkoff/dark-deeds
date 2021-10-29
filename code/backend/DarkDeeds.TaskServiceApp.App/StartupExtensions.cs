@@ -1,8 +1,8 @@
 using DarkDeeds.Common.Misc;
 using DarkDeeds.Communication.Interceptors;
 using DarkDeeds.TaskServiceApp.Communication;
+using DarkDeeds.TaskServiceApp.Data;
 using DarkDeeds.TaskServiceApp.Data.EntityRepository;
-using DarkDeeds.TaskServiceApp.Infrastructure.Data;
 using DarkDeeds.TaskServiceApp.Infrastructure.Data.EntityRepository;
 using DarkDeeds.TaskServiceApp.Infrastructure.Services;
 using DarkDeeds.TaskServiceApp.Models.Mapping;
@@ -29,8 +29,7 @@ namespace DarkDeeds.TaskServiceApp.App
             services.AddScoped<INotifierService, NotifierService>();
             services.AddScoped<ITaskSpecification, TaskSpecification>();
             services.AddScoped<ISpecificationFactory, SpecificationFactory>();
-            services.AddScoped<ITaskRepository, TaskRepository>();
-            services.AddScoped<IPlannedRecurrenceRepository, PlannedRecurrenceRepository>();
+            
         }
         
         public static void AddTaskAutoMapper(this IServiceCollection services)
@@ -38,13 +37,13 @@ namespace DarkDeeds.TaskServiceApp.App
             services.AddAutoMapper(typeof(ModelsMappingProfile));
         }
 
-        // TODO!
-        // public static void AddTaskDatabase(this IServiceCollection services, IConfiguration configuration)
-        // {            
-        //     string connectionString = configuration.GetConnectionString("appDb");
-        //     services.AddDbContext<DarkDeedsTaskContext>(options => options.UseNpgsql(connectionString));
-        //     services.AddScoped<DbContext, DarkDeedsTaskContext>();
-        // }
+        public static void AddTaskDatabase(this IServiceCollection services, IConfiguration configuration)
+        {
+            string connectionString = configuration.GetConnectionString("mongoDb");
+            services.AddScoped<IMongoDbContext>(_ => new MongoDbContext(connectionString));
+            services.AddScoped<ITaskRepository, TaskRepository>();
+            services.AddScoped<IPlannedRecurrenceRepository, PlannedRecurrenceRepository>();
+        }
 
         public static void AddTaskServiceApi(this IServiceCollection services)
         {

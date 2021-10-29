@@ -29,7 +29,7 @@ namespace DarkDeeds.TaskServiceApp.App
             
             services.AddTaskServices(Configuration);
             services.AddTaskAutoMapper();
-            // services.AddTaskDatabase(Configuration);
+            services.AddTaskDatabase(Configuration);
             services.AddTaskServiceContractImpl();
             services.AddTaskServiceApi();
         }

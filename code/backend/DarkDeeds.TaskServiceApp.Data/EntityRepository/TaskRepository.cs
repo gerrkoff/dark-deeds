@@ -5,7 +5,7 @@ namespace DarkDeeds.TaskServiceApp.Data.EntityRepository
 {
     public class TaskRepository : Repository<TaskEntity>, ITaskRepository
     {
-        public TaskRepository() : base("tasks")
+        public TaskRepository(IMongoDbContext dbContext) : base(dbContext, "tasks")
         {
         }
 

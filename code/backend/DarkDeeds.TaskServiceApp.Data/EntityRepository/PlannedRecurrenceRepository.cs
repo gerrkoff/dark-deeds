@@ -6,7 +6,7 @@ namespace DarkDeeds.TaskServiceApp.Data.EntityRepository
 {
     public class PlannedRecurrenceRepository : Repository<PlannedRecurrenceEntity>, IPlannedRecurrenceRepository
     {
-        public PlannedRecurrenceRepository() : base("plannedRecurrences")
+        public PlannedRecurrenceRepository(IMongoDbContext dbContext) : base(dbContext, "plannedRecurrences")
         {
         }
 
