@@ -1,7 +1,6 @@
 using DarkDeeds.Common.Misc;
 using DarkDeeds.Communication.Interceptors;
 using DarkDeeds.TaskServiceApp.Communication;
-using DarkDeeds.TaskServiceApp.Data.Context;
 using DarkDeeds.TaskServiceApp.Data.Repository;
 using DarkDeeds.TaskServiceApp.Infrastructure.Data;
 using DarkDeeds.TaskServiceApp.Infrastructure.Services;
@@ -11,7 +10,6 @@ using DarkDeeds.TaskServiceApp.Services.Interface;
 using DarkDeeds.TaskServiceApp.Services.Specifications;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
@@ -39,12 +37,13 @@ namespace DarkDeeds.TaskServiceApp.App
             services.AddAutoMapper(typeof(ModelsMappingProfile));
         }
 
-        public static void AddTaskDatabase(this IServiceCollection services, IConfiguration configuration)
-        {            
-            string connectionString = configuration.GetConnectionString("appDb");
-            services.AddDbContext<DarkDeedsTaskContext>(options => options.UseNpgsql(connectionString));
-            services.AddScoped<DbContext, DarkDeedsTaskContext>();
-        }
+        // TODO!
+        // public static void AddTaskDatabase(this IServiceCollection services, IConfiguration configuration)
+        // {            
+        //     string connectionString = configuration.GetConnectionString("appDb");
+        //     services.AddDbContext<DarkDeedsTaskContext>(options => options.UseNpgsql(connectionString));
+        //     services.AddScoped<DbContext, DarkDeedsTaskContext>();
+        // }
 
         public static void AddTaskServiceApi(this IServiceCollection services)
         {
