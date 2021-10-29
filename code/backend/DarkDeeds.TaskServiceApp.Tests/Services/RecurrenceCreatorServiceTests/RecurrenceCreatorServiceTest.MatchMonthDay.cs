@@ -1,17 +1,15 @@
 using System;
 using DarkDeeds.TaskServiceApp.Entities.Models;
-using Microsoft.Extensions.Logging;
-using Moq;
 using Xunit;
 
-namespace DarkDeeds.TaskServiceApp.Tests.Services.RecurrenceCreatorService
+namespace DarkDeeds.TaskServiceApp.Tests.Services.RecurrenceCreatorServiceTests
 {
     public partial class RecurrenceCreatorServiceTest
     { 
         [Fact]
         public void MatchMonthDay_ShouldMatchIfEmpty()
         {
-            var service = new TaskServiceApp.Services.Implementation.RecurrenceCreatorService(null, null, null, null, null, null, Mapper);
+            var service = Service();
 
             var result = service.MatchMonthDay(new PlannedRecurrenceEntity(), new DateTime());
 
@@ -21,7 +19,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.RecurrenceCreatorService
         [Fact]
         public void MatchMonthDay_ShouldMatchOneDate()
         {
-            var service = new TaskServiceApp.Services.Implementation.RecurrenceCreatorService(null, null, null, null, null, null, Mapper);
+            var service = Service();
 
             var result = service.MatchMonthDay(new PlannedRecurrenceEntity
             {
@@ -34,7 +32,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.RecurrenceCreatorService
         [Fact]
         public void MatchMonthDay_ShouldMatchOneOfSeveralDates()
         {
-            var service = new TaskServiceApp.Services.Implementation.RecurrenceCreatorService(null, null, null, null, null, null, Mapper);
+            var service = Service();
 
             var result = service.MatchMonthDay(new PlannedRecurrenceEntity
             {
@@ -47,7 +45,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.RecurrenceCreatorService
         [Fact]
         public void MatchMonthDay_CountBigDateAsLastDayOfMonth()
         {
-            var service = new TaskServiceApp.Services.Implementation.RecurrenceCreatorService(null, null, null, null, null, null, Mapper);
+            var service = Service();
 
             var result = service.MatchMonthDay(new PlannedRecurrenceEntity
             {
@@ -60,7 +58,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.RecurrenceCreatorService
         [Fact]
         public void MatchMonthDay_ShouldNotMatchAnyDateInList()
         {
-            var service = new TaskServiceApp.Services.Implementation.RecurrenceCreatorService(null, null, null, null, null, null, Mapper);
+            var service = Service();
 
             var result = service.MatchMonthDay(new PlannedRecurrenceEntity
             {
@@ -73,8 +71,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.RecurrenceCreatorService
         [Fact]
         public void MatchMonthDay_ShouldMatchIfCanNotParseMonthDays_FormatException()
         {
-            var logger = new Mock<ILogger<TaskServiceApp.Services.Implementation.RecurrenceCreatorService>>().Object;
-            var service = new TaskServiceApp.Services.Implementation.RecurrenceCreatorService(null, null, null, logger, null, null, Mapper);
+            var service = Service();
 
             var result = service.MatchMonthDay(new PlannedRecurrenceEntity
             {
@@ -87,8 +84,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.RecurrenceCreatorService
         [Fact]
         public void MatchMonthDay_ShouldMatchIfCanNotParseMonthDays_OverflowException()
         {
-            var logger = new Mock<ILogger<TaskServiceApp.Services.Implementation.RecurrenceCreatorService>>().Object;
-            var service = new TaskServiceApp.Services.Implementation.RecurrenceCreatorService(null, null, null, logger, null, null, Mapper);
+            var service = Service();
 
             var result = service.MatchMonthDay(new PlannedRecurrenceEntity
             {

@@ -3,14 +3,14 @@ using DarkDeeds.TaskServiceApp.Entities.Enums;
 using DarkDeeds.TaskServiceApp.Entities.Models;
 using Xunit;
 
-namespace DarkDeeds.TaskServiceApp.Tests.Services.RecurrenceCreatorService
+namespace DarkDeeds.TaskServiceApp.Tests.Services.RecurrenceCreatorServiceTests
 {
     public partial class RecurrenceCreatorServiceTest
     {
         [Fact]
         public void MatchWeekday_ShouldMatchOneWeekday()
         {
-            var service = new TaskServiceApp.Services.Implementation.RecurrenceCreatorService(null, null, null, null, null, null, Mapper);
+            var service = Service();
 
             var result = service.MatchWeekday(new PlannedRecurrenceEntity
             {
@@ -23,7 +23,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.RecurrenceCreatorService
         [Fact]
         public void MatchWeekday_ShouldMatchOneOfTwoWeekdays()
         {
-            var service = new TaskServiceApp.Services.Implementation.RecurrenceCreatorService(null, null, null, null, null, null, Mapper);
+            var service = Service();
 
             var result = service.MatchWeekday(new PlannedRecurrenceEntity
             {
@@ -36,7 +36,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.RecurrenceCreatorService
         [Fact]
         public void MatchWeekday_ShouldNotMatchOneOfWeekdays()
         {
-            var service = new TaskServiceApp.Services.Implementation.RecurrenceCreatorService(null, null, null, null, null, null, Mapper);
+            var service = Service();
 
             var result = service.MatchWeekday(new PlannedRecurrenceEntity
             {
@@ -49,7 +49,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.RecurrenceCreatorService
         [Fact]
         public void MatchWeekday_ShouldMatchIfWeekdayIsNull()
         {
-            var service = new TaskServiceApp.Services.Implementation.RecurrenceCreatorService(null, null, null, null, null, null, Mapper);
+            var service = Service();
 
             var result = service.MatchWeekday(new PlannedRecurrenceEntity
             {

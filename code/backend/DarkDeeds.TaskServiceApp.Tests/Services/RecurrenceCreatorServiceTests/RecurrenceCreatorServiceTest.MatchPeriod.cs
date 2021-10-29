@@ -2,14 +2,14 @@ using System;
 using DarkDeeds.TaskServiceApp.Entities.Models;
 using Xunit;
 
-namespace DarkDeeds.TaskServiceApp.Tests.Services.RecurrenceCreatorService
+namespace DarkDeeds.TaskServiceApp.Tests.Services.RecurrenceCreatorServiceTests
 {
     public partial class RecurrenceCreatorServiceTest
     { 
         [Fact]
-        public void MatchPeriod_ShouldMatchIfWithidPeriod()
+        public void MatchPeriod_ShouldMatchIfWithinPeriod()
         {
-            var service = new TaskServiceApp.Services.Implementation.RecurrenceCreatorService(null, null, null, null, null, null, Mapper);
+            var service = Service();
 
             var result = service.MatchPeriod(new PlannedRecurrenceEntity
             {
@@ -23,7 +23,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.RecurrenceCreatorService
         [Fact]
         public void MatchPeriod_ShouldMatchIfEqualsToStartDate()
         {
-            var service = new TaskServiceApp.Services.Implementation.RecurrenceCreatorService(null, null, null, null, null, null, Mapper);
+            var service = Service();
 
             var result = service.MatchPeriod(new PlannedRecurrenceEntity
             {
@@ -37,7 +37,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.RecurrenceCreatorService
         [Fact]
         public void MatchPeriod_ShouldMatchIfEqualsToEndDate()
         {
-            var service = new TaskServiceApp.Services.Implementation.RecurrenceCreatorService(null, null, null, null, null, null, Mapper);
+            var service = Service();
 
             var result = service.MatchPeriod(new PlannedRecurrenceEntity
             {
@@ -51,7 +51,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.RecurrenceCreatorService
         [Fact]
         public void MatchPeriod_ShouldMatchEvenIfEndDateIsNull()
         {
-            var service = new TaskServiceApp.Services.Implementation.RecurrenceCreatorService(null, null, null, null, null, null, Mapper);
+            var service = Service();
 
             var result = service.MatchPeriod(new PlannedRecurrenceEntity
             {
@@ -64,7 +64,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.RecurrenceCreatorService
         [Fact]
         public void MatchPeriod_ShouldNotMatchIfLessThanStartDate()
         {
-            var service = new TaskServiceApp.Services.Implementation.RecurrenceCreatorService(null, null, null, null, null, null, Mapper);
+            var service = Service();
 
             var result = service.MatchPeriod(new PlannedRecurrenceEntity
             {

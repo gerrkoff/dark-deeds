@@ -2,14 +2,14 @@ using System;
 using DarkDeeds.TaskServiceApp.Entities.Models;
 using Xunit;
 
-namespace DarkDeeds.TaskServiceApp.Tests.Services.RecurrenceCreatorService
+namespace DarkDeeds.TaskServiceApp.Tests.Services.RecurrenceCreatorServiceTests
 {
     public partial class RecurrenceCreatorServiceTest
     {
         [Fact]
         public void MatchNthDay_FirstDayAlwaysCounts()
         {
-            var service = new TaskServiceApp.Services.Implementation.RecurrenceCreatorService(null, null, null, null, null, null, Mapper);
+            var service = Service();
 
             var result = service.MatchNthDay(new PlannedRecurrenceEntity
             {
@@ -23,7 +23,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.RecurrenceCreatorService
         [Fact]
         public void MatchNthDay_ShouldMatchNextDayAfterStartDateWith1Number()
         {
-            var service = new TaskServiceApp.Services.Implementation.RecurrenceCreatorService(null, null, null, null, null, null, Mapper);
+            var service = Service();
 
             var result = service.MatchNthDay(new PlannedRecurrenceEntity
             {
@@ -37,7 +37,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.RecurrenceCreatorService
         [Fact]
         public void MatchNthDay_ShouldNotMatchNextDayAfterStartDateWith2Number()
         {
-            var service = new TaskServiceApp.Services.Implementation.RecurrenceCreatorService(null, null, null, null, null, null, Mapper);
+            var service = Service();
 
             var result = service.MatchNthDay(new PlannedRecurrenceEntity
             {
@@ -49,9 +49,9 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.RecurrenceCreatorService
         }
         
         [Fact]
-        public void MatchNthDay_ShouldMatch2NextDaysAfterStarDatetWith2Number()
+        public void MatchNthDay_ShouldMatch2NextDaysAfterStarDateWith2Number()
         {
-            var service = new TaskServiceApp.Services.Implementation.RecurrenceCreatorService(null, null, null, null, null, null, Mapper);
+            var service = Service();
 
             var result = service.MatchNthDay(new PlannedRecurrenceEntity
             {
@@ -65,7 +65,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.RecurrenceCreatorService
         [Fact]
         public void MatchNthDay_ShouldMatch5NextDaysAfterStartDateWith5Number()
         {
-            var service = new TaskServiceApp.Services.Implementation.RecurrenceCreatorService(null, null, null, null, null, null, Mapper);
+            var service = Service();
 
             var result = service.MatchNthDay(new PlannedRecurrenceEntity
             {
@@ -79,7 +79,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.RecurrenceCreatorService
         [Fact]
         public void MatchNthDay_ShouldNotMatch4NextDayAfterStartDateWith5Number()
         {
-            var service = new TaskServiceApp.Services.Implementation.RecurrenceCreatorService(null, null, null, null, null, null, Mapper);
+            var service = Service();
 
             var result = service.MatchNthDay(new PlannedRecurrenceEntity
             {
@@ -93,7 +93,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.RecurrenceCreatorService
         [Fact]
         public void MatchNthDay_ShouldMatch5NextDayAfterStartDateWith5NumberWithMonthChange()
         {
-            var service = new TaskServiceApp.Services.Implementation.RecurrenceCreatorService(null, null, null, null, null, null, Mapper);
+            var service = Service();
 
             var result = service.MatchNthDay(new PlannedRecurrenceEntity
             {
