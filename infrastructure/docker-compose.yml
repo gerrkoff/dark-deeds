@@ -26,6 +26,9 @@ services:
 
   mongo-db:
     image: mongo:4.4
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=user
+      - MONGO_INITDB_ROOT_PASSWORD=password
     volumes:
       - mongo-db-volume:/data/db
     ports:
@@ -61,7 +64,7 @@ services:
     depends_on:
       - consul
       - auth-service
-      # - task-service
+      - task-service
       - telegram-client
       - web-client
       - web-client-bff
@@ -90,25 +93,25 @@ services:
           cpus: '1'
           memory: 300M
 
-  # task-service:
-  #   build:
-  #     context: ../
-  #     dockerfile: infrastructure/apps/task-service.dockerfile
-  #   ports:
-  #     - 5001:5001
-  #   environment:
-  #     - DD_SERVICE_DISCOVERY_HOST=${IP:-task-service}
-  #     - DD_SERVICE_DISCOVERY_PORT=5001
-  #     - ASPNETCORE_URLS=http://0.0.0.0:5001
-  #   depends_on:
-  #     - consul
-  #     - postgres-db
-  #     - rabbit-mq
-  #   deploy:
-  #     resources:
-  #       limits:
-  #         cpus: '1'
-  #         memory: 300M
+  task-service:
+    build:
+      context: ../
+      dockerfile: infrastructure/apps/task-service.dockerfile
+    ports:
+      - 5001:5001
+    environment:
+      - DD_SERVICE_DISCOVERY_HOST=${IP:-task-service}
+      - DD_SERVICE_DISCOVERY_PORT=5001
+      - ASPNETCORE_URLS=http://0.0.0.0:5001
+    depends_on:
+      - consul
+      - postgres-db
+      - rabbit-mq
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 300M
 
   telegram-client:
     build:

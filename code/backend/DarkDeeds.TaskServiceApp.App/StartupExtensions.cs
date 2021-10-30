@@ -40,7 +40,7 @@ namespace DarkDeeds.TaskServiceApp.App
         public static void AddTaskDatabase(this IServiceCollection services, IConfiguration configuration)
         {
             string connectionString = configuration.GetConnectionString("mongoDb");
-            services.AddScoped<IMongoDbContext>(_ => new MongoDbContext(connectionString));
+            services.AddSingleton<IMongoDbContext>(_ => new MongoDbContext(connectionString));
             services.AddScoped<ITaskRepository, TaskRepository>();
             services.AddScoped<IPlannedRecurrenceRepository, PlannedRecurrenceRepository>();
         }

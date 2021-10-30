@@ -10,6 +10,7 @@ using MongoDB.Driver;
 
 namespace DarkDeeds.TaskServiceApp.Data
 {
+    // TODO! using cursor
     public abstract class Repository<T> : IRepository<T>
         where T: Entity
     {

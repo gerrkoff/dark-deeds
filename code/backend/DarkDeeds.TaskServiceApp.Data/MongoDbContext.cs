@@ -4,19 +4,14 @@ namespace DarkDeeds.TaskServiceApp.Data
 {
     public class MongoDbContext : IMongoDbContext
     {
-        private readonly string _connectionString;
+        private readonly IMongoDatabase _database;
 
         public MongoDbContext(string connectionString)
         {
-            _connectionString = connectionString;
+            var connectionInfo = connectionString.Split(';');
+            _database = new MongoClient(connectionInfo[0]).GetDatabase(connectionInfo[1]);
         }
 
-        public IMongoCollection<T> GetCollection<T>(string tableName)
-        {
-            // TODO! password
-            var connectionInfo = _connectionString.Split(';');
-            var database = new MongoClient($"mongodb://{connectionInfo[0]}").GetDatabase(connectionInfo[1]);
-            return database.GetCollection<T>(tableName);
-        }
+        public IMongoCollection<T> GetCollection<T>(string tableName) => _database.GetCollection<T>(tableName);
     }
 }
