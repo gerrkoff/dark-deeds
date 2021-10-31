@@ -21,7 +21,7 @@ namespace DarkDeeds.TaskServiceApp.Infrastructure.Data
         Task<(bool, T)> TryUpdateVersionAsync(T entity);
         Task<(bool, T)> TryUpdateVersionPropsAsync(T entity, params Expression<Func<T, object>>[] properties);
 
-        Task DeleteAsync(string uid);
-        Task DeleteHardAsync(string uid);
+        Task<bool> DeleteAsync(string uid);
+        Task<bool> DeleteHardAsync(string uid);
     }
 }

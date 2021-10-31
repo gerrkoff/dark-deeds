@@ -87,11 +87,10 @@ namespace DarkDeeds.TaskServiceApp.Services.Implementation
 
             if (taskToSave.Deleted)
             {
-                if (entity == null)
+                var success = await _tasksRepository.DeleteAsync(taskToSave.Uid);
+                if (!success)
                     _logger.LogWarning($"Tried to delete non existing task. TaskUid: {taskToSave.Uid}");
-                else
-                // TODO! return success
-                    await _tasksRepository.DeleteAsync(entity.Uid);
+
                 taskToSave.Version++;
                 return taskToSave;
             }

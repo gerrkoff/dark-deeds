@@ -130,24 +130,28 @@ namespace DarkDeeds.TaskServiceApp.Data
             return (false, current);
         }
 
-        public Task DeleteAsync(string uid)
+        public async Task<bool> DeleteAsync(string uid)
         {
             if (string.IsNullOrWhiteSpace(uid))
                 throw new ArgumentNullException(nameof(uid));
 
             var update = Builders<T>.Update.Set(x => x.IsDeleted, true);
-            return _collection.UpdateOneAsync(x => x.Uid == uid, update, new UpdateOptions
+
+            var result = await _collection.UpdateOneAsync(x => x.Uid == uid, update, new UpdateOptions
             {
                 IsUpsert = false
             });
+
+            return result.ModifiedCount == 1;
         }
 
-        public Task DeleteHardAsync(string uid)
+        public async Task<bool> DeleteHardAsync(string uid)
         {
             if (string.IsNullOrWhiteSpace(uid))
                 throw new ArgumentNullException(nameof(uid));
 
-            return _collection.DeleteOneAsync(x => x.Uid == uid);
+            var result = await _collection.DeleteOneAsync(x => x.Uid == uid);
+            return result.DeletedCount == 1;
         }
     }
 }

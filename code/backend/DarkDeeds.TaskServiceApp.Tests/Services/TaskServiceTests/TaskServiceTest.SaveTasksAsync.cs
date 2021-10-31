@@ -43,10 +43,12 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.TaskServiceTests
         [Fact]
         public async Task SaveTasksAsync_WhenDeletingCallDelete()
         {
-            CreateService(new TaskEntity {UserId = UserId, Uid = Uid});
+            CreateService();
+
+            _repoMock.Setup(x => x.DeleteAsync(Uid)).Returns(Task.FromResult(true));
         
             var items = new[] {new TaskDto {Uid = Uid, Deleted = true}};
-            var result =await _service.SaveTasksAsync(items, UserId);
+            var result = await _service.SaveTasksAsync(items, UserId);
             
             Assert.Collection(result, x =>
             {
@@ -62,13 +64,15 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.TaskServiceTests
         public async Task SaveTasksAsync_IgnoreAlreadyDeletedOnDelete()
         {
             CreateService();
+            
+            _repoMock.Setup(x => x.DeleteAsync(Uid)).Returns(Task.FromResult(false));
         
             var items = new[] {new TaskDto {Uid = Uid, Deleted = true}};
-            
-            var result = (await _service.SaveTasksAsync(items, UserId)).ToList();
+            var result = await _service.SaveTasksAsync(items, UserId);
         
             Assert.Collection(result, _ => { });
             _repoMock.Verify(x => x.GetByIdAsync(Uid));
+            _repoMock.Verify(x => x.DeleteAsync(Uid));
             _repoMock.VerifyNoOtherCalls();
         }
         
