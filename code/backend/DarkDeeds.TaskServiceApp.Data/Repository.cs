@@ -67,19 +67,11 @@ namespace DarkDeeds.TaskServiceApp.Data
         {
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
-
-            var exists = await _collection.CountDocumentsAsync(x => x.Uid == entity.Uid) > 0;
-
-            if (!exists)
-                await _collection.InsertOneAsync(entity);
-            else
-                await _collection.ReplaceOneAsync(x => x.Uid == entity.Uid, entity);
             
-            // TODO!
-            // new ReplaceOptions
-            // {
-            //     IsUpsert = 
-            // }
+            await _collection.ReplaceOneAsync(x => x.Uid == entity.Uid, entity, new ReplaceOptions
+            {
+                IsUpsert = true
+            });
         }
 
         public async Task<(bool, T)> TryUpdateVersionAsync(T entity)
@@ -163,7 +155,10 @@ namespace DarkDeeds.TaskServiceApp.Data
                 throw new ArgumentNullException(nameof(uid));
 
             var update = Builders<T>.Update.Set(x => x.IsDeleted, true);
-            return _collection.UpdateOneAsync(x => x.Uid == uid, update);
+            return _collection.UpdateOneAsync(x => x.Uid == uid, update, new UpdateOptions
+            {
+                IsUpsert = false
+            });
         }
 
         public Task DeleteHardAsync(string uid)
