@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using DarkDeeds.TaskServiceApp.Entities.Models;
 using DarkDeeds.TaskServiceApp.Infrastructure.Data.EntityRepository;
 
