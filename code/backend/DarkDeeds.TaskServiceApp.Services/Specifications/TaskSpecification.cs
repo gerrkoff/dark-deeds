@@ -13,5 +13,11 @@ namespace DarkDeeds.TaskServiceApp.Services.Specifications
                              x.Date >= from);
             return this;
         }
+        
+        public ITaskSpecification FilterDateInterval(DateTime from, DateTime to)
+        {
+            Filters.Add(x => x.Date.HasValue && x.Date >= from && x.Date < to);
+            return this;
+        }
     }
 }

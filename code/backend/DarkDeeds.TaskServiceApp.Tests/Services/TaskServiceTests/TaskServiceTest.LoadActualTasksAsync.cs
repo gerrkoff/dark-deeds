@@ -9,7 +9,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.TaskServiceTests
     public partial class TaskServiceTest
     {
         [Fact]
-        public async Task LoadActualTasksAsync_AdjustDateToUtc()
+        public async Task LoadActualTasksAsync_Positive()
         {
             var userId = "userid";
             var from = new DateTime(2000, 1, 1);
