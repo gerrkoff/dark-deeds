@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -32,7 +31,6 @@ namespace DarkDeeds.TaskServiceApp.Services.Implementation
 
         public async Task<int> SaveAsync(ICollection<PlannedRecurrenceDto> recurrences, string userId)
         {
-            var rnd = new Random();
             string[] ids = recurrences.Select(x => x.Uid).ToArray();
             bool notUserEntities = await _plannedRecurrenceRepository.AnyAsync(x =>
                 !string.Equals(x.UserId, userId) &&
@@ -69,8 +67,9 @@ namespace DarkDeeds.TaskServiceApp.Services.Implementation
                     entity.EveryNthDay = dto.EveryNthDay;
                     entity.EveryWeekday = dto.EveryWeekday;
                     entity.EveryMonthDay = dto.EveryMonthDay;
-                    await _plannedRecurrenceRepository.UpsertAsync(entity);
-                    count++;
+                    var (success, _) = await _plannedRecurrenceRepository.TryUpdateVersionAsync(entity);
+                    if (success)
+                        count++;
                 }
             }
             

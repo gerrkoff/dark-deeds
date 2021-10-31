@@ -18,7 +18,6 @@ namespace DarkDeeds.TaskServiceApp.Infrastructure.Data
 
         // TODO: split on update & insert
         Task UpsertAsync(T entity);
-        // TODO! use
         Task<(bool, T)> TryUpdateVersionAsync(T entity);
         Task<(bool, T)> TryUpdateVersionPropsAsync(T entity, params Expression<Func<T, object>>[] properties);
 

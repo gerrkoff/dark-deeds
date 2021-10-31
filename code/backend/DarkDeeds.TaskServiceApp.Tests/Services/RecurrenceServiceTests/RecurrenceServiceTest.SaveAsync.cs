@@ -61,7 +61,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.RecurrenceServiceTests
         }
         
         [Fact]
-        public async Task SaveAsync_UpdateIfDtoIdIsMoreThan0()
+        public async Task SaveAsync_UpdateIfExists()
         {
             var repoMock = new Mock<IPlannedRecurrenceRepository>();
             repoMock.Setup(x => x.GetByIdAsync("42"))
@@ -82,7 +82,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.RecurrenceServiceTests
                 }
             }, null);
 
-            repoMock.Verify(x => x.UpsertAsync(It.Is<PlannedRecurrenceEntity>(y =>
+            repoMock.Verify(x => x.TryUpdateVersionAsync(It.Is<PlannedRecurrenceEntity>(y =>
                 y.Uid == "42" &&
                 y.Task == "42" &&
                 y.StartDate == new DateTime(2010, 10, 10) &&
@@ -139,7 +139,9 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.RecurrenceServiceTests
                 .Returns(() => Task.FromResult(new PlannedRecurrenceEntity {Uid = "42"}));
             repoMock.Setup(x => x.GetByIdAsync("43"))
                 .Returns(() => Task.FromResult(new PlannedRecurrenceEntity {Uid = "43", Task = "Old"}));
-            var service = new TaskServiceApp.Services.Implementation.RecurrenceService(repoMock.Object, Mapper);
+            repoMock.Setup(x => x.TryUpdateVersionAsync(It.IsAny<PlannedRecurrenceEntity>()))
+                .Returns(() => Task.FromResult<(bool, PlannedRecurrenceEntity)>((true, null)));
+            var service = new RecurrenceService(repoMock.Object, Mapper);
 
             var result = await service.SaveAsync(new[]
             {
