@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using DarkDeeds.TaskServiceApp.Entities.Models.Abstractions;
 using DarkDeeds.TaskServiceApp.Infrastructure.Data;
 using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
+using MongoDB.Driver.Linq;
 
 namespace DarkDeeds.TaskServiceApp.Data
 {
@@ -38,13 +38,13 @@ namespace DarkDeeds.TaskServiceApp.Data
             return await cursor.SingleOrDefaultAsync();
         }
 
-        public Task<IList<T>> GetBySpecAsync(ISpecification<T> spec)
+        public async Task<IList<T>> GetBySpecAsync(ISpecification<T> spec)
         {
             if (spec == null)
                 throw new ArgumentNullException(nameof(spec));
 
-            // TODO! refactor, evaluator
-            return Task.FromResult(spec.Apply(_collection.AsQueryable()).ToList() as IList<T>);
+            var query = spec.Apply(_collection.AsQueryable()) as IMongoQueryable<T>;
+            return await query.ToListAsync();
         }
 
         public async Task<IList<T>> GetListAsync()
