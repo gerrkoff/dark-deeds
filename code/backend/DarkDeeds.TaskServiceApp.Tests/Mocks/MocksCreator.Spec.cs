@@ -15,5 +15,12 @@ namespace DarkDeeds.TaskServiceApp.Tests.Mocks
                 .Returns(taskSpecMock.Object);
             return taskSpecMock;
         }
+        
+        public static Mock<IPlannedRecurrenceSpecification> PlannedRecurrenceSpec()
+        {
+            var plannedRecurrenceSpecMock = new Mock<IPlannedRecurrenceSpecification>();
+            plannedRecurrenceSpecMock.Setup(x => x.FilterUserOwned(It.IsAny<string>())).Returns(plannedRecurrenceSpecMock.Object);
+            return plannedRecurrenceSpecMock;
+        }
     }
 }

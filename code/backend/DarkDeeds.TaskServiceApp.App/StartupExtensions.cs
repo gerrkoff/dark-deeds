@@ -19,7 +19,7 @@ namespace DarkDeeds.TaskServiceApp.App
 {
     public static class StartupExtensions
     {
-        public static void AddTaskServices(this IServiceCollection services, IConfiguration configuration)
+        public static void AddTaskServices(this IServiceCollection services)
         {
             services.AddScoped<ITaskService, TaskService>();
             services.AddScoped<ITaskParserService, TaskParserService>();
@@ -28,6 +28,7 @@ namespace DarkDeeds.TaskServiceApp.App
             services.AddScoped<IRecurrenceService, RecurrenceService>();
             services.AddScoped<INotifierService, NotifierService>();
             services.AddScoped<ITaskSpecification, TaskSpecification>();
+            services.AddScoped<IPlannedRecurrenceSpecification, PlannedRecurrenceSpecification>();
             services.AddScoped<ISpecificationFactory, SpecificationFactory>();
             
         }

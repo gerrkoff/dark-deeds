@@ -14,6 +14,7 @@ namespace DarkDeeds.TaskServiceApp.Infrastructure.Data
         // TODO!
         Task<IList<T>> GetListAsync(); 
 
+        // TODO! spec
         Task<bool> AnyAsync(Expression<Func<T, bool>> predicate);
 
         // TODO: split on update & insert

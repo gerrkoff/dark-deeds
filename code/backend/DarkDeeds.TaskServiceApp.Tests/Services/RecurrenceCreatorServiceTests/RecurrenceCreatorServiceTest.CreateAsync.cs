@@ -20,7 +20,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.RecurrenceCreatorServiceTests
             
             await service.CreateAsync(0, "");
             
-            _plannedRecurrenceRepoMock.Verify(x => x.GetListAsync());
+            _plannedRecurrenceRepoMock.Verify(x => x.GetBySpecAsync(_plannedRecurrenceSpecMock.Object));
             _taskRepoMock.VerifyNoOtherCalls();
             _plannedRecurrenceRepoMock.VerifyNoOtherCalls();
         }
@@ -192,19 +192,14 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.RecurrenceCreatorServiceTests
         }
         
         [Fact]
-        public async Task CreateAsync_IgnorePlannedRecurrencesFromOtherUsers()
+        public async Task CreateAsync_FilterPlannedRecurrencesByUser()
         {
-            _dateServiceMock.SetupGet(x => x.Now).Returns(new DateTime(2019, 9, 3));
-
-            var service = Service(new PlannedRecurrenceEntity
-            {
-                EveryNthDay = 1, StartDate = new DateTime(2019, 9, 3), UserId = "userId",
-                Recurrences = new List<RecurrenceEntity>()
-            });
+            var service = Service();
             
             await service.CreateAsync(0, "userId100500");
             
-            _taskRepoMock.Verify(x => x.UpsertAsync(It.IsAny<TaskEntity>()), Times.Never);
+            _plannedRecurrenceRepoMock.Verify(x => x.GetBySpecAsync(_plannedRecurrenceSpecMock.Object));
+            _plannedRecurrenceSpecMock.Verify(x => x.FilterUserOwned("userId100500"));
         }
         
         [Fact]

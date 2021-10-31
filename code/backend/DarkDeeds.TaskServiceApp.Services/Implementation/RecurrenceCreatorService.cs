@@ -10,6 +10,7 @@ using DarkDeeds.TaskServiceApp.Infrastructure.Services;
 using DarkDeeds.TaskServiceApp.Infrastructure.Services.Dto;
 using DarkDeeds.TaskServiceApp.Models.Dto;
 using DarkDeeds.TaskServiceApp.Services.Interface;
+using DarkDeeds.TaskServiceApp.Services.Specifications;
 using Microsoft.Extensions.Logging;
 
 namespace DarkDeeds.TaskServiceApp.Services.Implementation
@@ -25,6 +26,7 @@ namespace DarkDeeds.TaskServiceApp.Services.Implementation
         private readonly ITaskParserService _taskParserService;
         private readonly INotifierService _notifierService;
         private readonly IMapper _mapper;
+        private readonly ISpecificationFactory _specFactory;
 
         public RecurrenceCreatorService(
             ITaskRepository taskRepository,
@@ -33,7 +35,8 @@ namespace DarkDeeds.TaskServiceApp.Services.Implementation
             ILogger<RecurrenceCreatorService> logger,
             ITaskParserService taskParserService,
             INotifierService notifierService, 
-            IMapper mapper)
+            IMapper mapper,
+            ISpecificationFactory specFactory)
         {
             _taskRepository = taskRepository;
             _plannedRecurrenceRepository = plannedRecurrenceRepository;
@@ -42,15 +45,16 @@ namespace DarkDeeds.TaskServiceApp.Services.Implementation
             _taskParserService = taskParserService;
             _notifierService = notifierService;
             _mapper = mapper;
+            _specFactory = specFactory;
         }
 
         public async Task<int> CreateAsync(int timezoneOffset, string userId)
         {
             var createdRecurrencesCount = 0;
-            var plannedRecurrences = (await _plannedRecurrenceRepository
-                .GetListAsync())
-                .Where(x => string.Equals(x.UserId, userId))
-                .ToList();
+
+            var spec = _specFactory.New<IPlannedRecurrenceSpecification, PlannedRecurrenceEntity>()
+                .FilterUserOwned(userId);
+            var plannedRecurrences = await _plannedRecurrenceRepository.GetBySpecAsync(spec);
 
             foreach (var item in plannedRecurrences)
             {
