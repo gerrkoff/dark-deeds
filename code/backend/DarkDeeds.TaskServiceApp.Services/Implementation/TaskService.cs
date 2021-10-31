@@ -65,6 +65,7 @@ namespace DarkDeeds.TaskServiceApp.Services.Implementation
                     savedTasks.Add(savedTask);
             }
 
+            // TODO! length
             await _notifierService.TaskUpdated(new TaskUpdatedDto
             {
                 Tasks = savedTasks,
@@ -89,6 +90,7 @@ namespace DarkDeeds.TaskServiceApp.Services.Implementation
                 if (entity == null)
                     _logger.LogWarning($"Tried to delete non existing task. TaskUid: {taskToSave.Uid}");
                 else
+                // TODO! return success
                     await _tasksRepository.DeleteAsync(entity.Uid);
                 taskToSave.Version++;
                 return taskToSave;
@@ -101,11 +103,12 @@ namespace DarkDeeds.TaskServiceApp.Services.Implementation
                 entity.Version = 1;
                 await _tasksRepository.UpsertAsync(entity);
             }
-            else if (entity.Version == taskToSave.Version)
+            else
             {
                 entity = _mapper.Map(taskToSave, entity);
-                entity.Version++;
-                await _tasksRepository.UpsertAsync(entity);
+                var (success, _) = await _tasksRepository.TryUpdateVersionAsync(entity);
+                if (!success)
+                    return null;
             }
             
             return _mapper.Map<TaskDto>(entity);

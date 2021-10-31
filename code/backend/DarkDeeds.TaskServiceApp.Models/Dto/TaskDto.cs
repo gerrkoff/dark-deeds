@@ -10,7 +10,6 @@ namespace DarkDeeds.TaskServiceApp.Models.Dto
         public int? Time { get; set; }
         public string Title { get; set; }
         public int Order { get; set; }
-        public int ClientId { get; set; }
         public bool Completed { get; set; }
         public bool IsProbable { get; set; }
         public bool Deleted { get; set; }
