@@ -38,9 +38,9 @@ namespace DarkDeeds.TaskServiceApp.Services.Implementation
         public async Task<int> SaveAsync(ICollection<PlannedRecurrenceDto> recurrences, string userId)
         {
             string[] ids = recurrences.Select(x => x.Uid).ToArray();
-            bool notUserEntities = await _plannedRecurrenceRepository.AnyAsync(x =>
-                !string.Equals(x.UserId, userId) &&
-                ids.Contains(x.Uid));
+            var foreignItemsSpec = _specFactory.New<IPlannedRecurrenceSpecification, PlannedRecurrenceEntity>()
+                .FilterForeignUserOwned(userId, ids);
+            bool notUserEntities = await _plannedRecurrenceRepository.AnyAsync(foreignItemsSpec);
 
             if (notUserEntities)
                 throw ServiceException.InvalidEntity("Recurrence");

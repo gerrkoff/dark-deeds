@@ -1,14 +1,21 @@
 using DarkDeeds.TaskServiceApp.Entities.Models.Abstractions;
+using System.Linq;
 
 namespace DarkDeeds.TaskServiceApp.Services.Specifications
 {
     public abstract class UserOwnedSpecification<TEntity, TSpec> : Specification<TEntity>, IUserOwnedSpecification<TEntity, TSpec>
         where TSpec : class, IUserOwnedSpecification<TEntity, TSpec>
-        where TEntity: IUserOwnedEntity
+        where TEntity: Entity, IUserOwnedEntity
     {
         public TSpec FilterUserOwned(string userId)
         {
             Filters.Add(x => x.UserId == userId);
+            return this as TSpec;
+        }
+        
+        public TSpec FilterForeignUserOwned(string userId, string[] uidList)
+        {
+            Filters.Add(x => uidList.Contains(x.Uid) && x.UserId != userId);
             return this as TSpec;
         }
     }

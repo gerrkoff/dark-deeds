@@ -9,5 +9,6 @@ namespace DarkDeeds.TaskServiceApp.Services.Specifications
     
     {
         TSpec FilterUserOwned(string userId);
+        TSpec FilterForeignUserOwned(string userId, string[] uidList);
     }
 }

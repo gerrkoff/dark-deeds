@@ -47,13 +47,13 @@ namespace DarkDeeds.TaskServiceApp.Data
             return await query.ToListAsync();
         }
 
-        public async Task<bool> AnyAsync(Expression<Func<T, bool>> predicate)
+        public async Task<bool> AnyAsync(ISpecification<T> spec)
         {
-            if (predicate == null)
-                throw new ArgumentNullException(nameof(predicate));
+            if (spec == null)
+                throw new ArgumentNullException(nameof(spec));
 
-            using var cursor = await _collection.FindAsync(predicate);
-            return await cursor.AnyAsync();
+            var query = spec.Apply(_collection.AsQueryable()) as IMongoQueryable<T>;
+            return await query.AnyAsync();
         }
 
         public async Task UpsertAsync(T entity)
