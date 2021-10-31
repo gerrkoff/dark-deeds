@@ -22,7 +22,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.RecurrenceServiceTests
             repoMock.Setup(x => x.AnyAsync(It.IsAny<Expression<Func<PlannedRecurrenceEntity, bool>>>()))
                 .Returns(Task.FromResult(true));
             
-            var service = new RecurrenceService(repoMock.Object, Mapper);
+            var service = new RecurrenceService(repoMock.Object, Mapper, null);
 
             var list = new PlannedRecurrenceDto[] {new() {Uid = "1"}};
             var userId = "userid";
@@ -34,7 +34,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.RecurrenceServiceTests
         public async Task SaveAsync_DeleteIfDtoIsDeleted()
         {
             var repoMock = MocksCreator.RepoRecurrence();
-            var service = new RecurrenceService(repoMock.Object, Mapper);
+            var service = new RecurrenceService(repoMock.Object, Mapper, null);
 
             await service.SaveAsync(new[] {new PlannedRecurrenceDto {Uid = "42", IsDeleted = true}}, null);
 
@@ -47,7 +47,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.RecurrenceServiceTests
         public async Task SaveAsync_CreateNewIfNoSuchUid()
         {
             var repoMock = MocksCreator.RepoRecurrence();
-            var service = new RecurrenceService(repoMock.Object, Mapper);
+            var service = new RecurrenceService(repoMock.Object, Mapper, null);
 
             await service.SaveAsync(new[] {new PlannedRecurrenceDto {Uid = "42", Task = "42"}}, "userid1");
 
@@ -66,7 +66,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.RecurrenceServiceTests
             var repoMock = new Mock<IPlannedRecurrenceRepository>();
             repoMock.Setup(x => x.GetByIdAsync("42"))
                 .Returns(() => Task.FromResult(new PlannedRecurrenceEntity {Uid = "42"}));
-            var service = new RecurrenceService(repoMock.Object, Mapper);
+            var service = new RecurrenceService(repoMock.Object, Mapper, null);
 
             await service.SaveAsync(new[]
             {
@@ -110,7 +110,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.RecurrenceServiceTests
                     EveryMonthDay = "1,2,3",
                     EveryNthDay = 100500
                 }));
-            var service = new RecurrenceService(repoMock.Object, Mapper);
+            var service = new RecurrenceService(repoMock.Object, Mapper, null);
 
             await service.SaveAsync(new[]
             {
@@ -141,7 +141,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.RecurrenceServiceTests
                 .Returns(() => Task.FromResult(new PlannedRecurrenceEntity {Uid = "43", Task = "Old"}));
             repoMock.Setup(x => x.TryUpdateVersionAsync(It.IsAny<PlannedRecurrenceEntity>()))
                 .Returns(() => Task.FromResult<(bool, PlannedRecurrenceEntity)>((true, null)));
-            var service = new RecurrenceService(repoMock.Object, Mapper);
+            var service = new RecurrenceService(repoMock.Object, Mapper, null);
 
             var result = await service.SaveAsync(new[]
             {

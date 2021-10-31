@@ -47,12 +47,6 @@ namespace DarkDeeds.TaskServiceApp.Data
             return await query.ToListAsync();
         }
 
-        public async Task<IList<T>> GetListAsync()
-        {
-            using var cursor = await _collection.FindAsync(x => true);
-            return await cursor.ToListAsync();
-        }
-
         public async Task<bool> AnyAsync(Expression<Func<T, bool>> predicate)
         {
             if (predicate == null)

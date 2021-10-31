@@ -8,6 +8,7 @@ using DarkDeeds.TaskServiceApp.Models.Dto;
 using DarkDeeds.TaskServiceApp.Models.Exceptions;
 using DarkDeeds.TaskServiceApp.Models.Extensions;
 using DarkDeeds.TaskServiceApp.Services.Interface;
+using DarkDeeds.TaskServiceApp.Services.Specifications;
 
 namespace DarkDeeds.TaskServiceApp.Services.Implementation
 {
@@ -15,17 +16,22 @@ namespace DarkDeeds.TaskServiceApp.Services.Implementation
     {
         private readonly IPlannedRecurrenceRepository _plannedRecurrenceRepository;
         private readonly IMapper _mapper;
+        private readonly ISpecificationFactory _specFactory;
 
-        public RecurrenceService(IPlannedRecurrenceRepository plannedRecurrenceRepository, IMapper mapper)
+        public RecurrenceService(IPlannedRecurrenceRepository plannedRecurrenceRepository, IMapper mapper, ISpecificationFactory specFactory)
         {
             _plannedRecurrenceRepository = plannedRecurrenceRepository;
             _mapper = mapper;
+            _specFactory = specFactory;
         }
 
         public async Task<IEnumerable<PlannedRecurrenceDto>> LoadAsync(string userId)
         {
-            var recurrences = (await _plannedRecurrenceRepository.GetListAsync())
-                .Where(x => string.Equals(x.UserId, userId));
+            var spec = _specFactory.New<IPlannedRecurrenceSpecification, PlannedRecurrenceEntity>()
+                .FilterUserOwned(userId);
+
+            var recurrences = await _plannedRecurrenceRepository.GetBySpecAsync(spec);
+
             return _mapper.Map<IList<PlannedRecurrenceDto>>(recurrences).ToUtcDate();
         }
 

@@ -23,7 +23,6 @@ namespace DarkDeeds.TaskServiceApp.Tests.Mocks
         {
             var repoMock = new Mock<TRepository>();
             var result = Task.FromResult(values.ToList() as IList<TEntity>);
-            repoMock.Setup(x => x.GetListAsync()).Returns(result);
             repoMock.Setup(x => x.GetBySpecAsync(It.IsAny<ISpecification<TEntity>>())).Returns(result);
             repoMock.Setup(x => x.GetByIdAsync(It.IsAny<string>())).Returns((string id) =>
             {

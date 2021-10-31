@@ -10,9 +10,7 @@ namespace DarkDeeds.TaskServiceApp.Infrastructure.Data
         where T: Entity
     {
         Task<T> GetByIdAsync(string uid);
-        Task<IList<T>> GetBySpecAsync(ISpecification<T> spec);
-        // TODO!
-        Task<IList<T>> GetListAsync(); 
+        Task<IList<T>> GetBySpecAsync(ISpecification<T> spec); 
 
         // TODO! spec
         Task<bool> AnyAsync(Expression<Func<T, bool>> predicate);
