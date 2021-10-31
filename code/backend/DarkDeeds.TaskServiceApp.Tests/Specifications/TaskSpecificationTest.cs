@@ -20,7 +20,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Specifications
         };
 
         [Fact]
-        public void LoadActualTasksAsync_IncludeNoDate()
+        public void FilterActual_IncludeNoDate()
         {
             var service = new TaskSpecification().FilterActual(new DateTime(2018, 10, 20));
 
@@ -30,7 +30,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Specifications
         }
         
         [Fact]
-        public void LoadActualTasksAsync_IncludeExpiredButCompleted()
+        public void FilterActual_IncludeExpiredButCompleted()
         {
             var service = new TaskSpecification().FilterActual(new DateTime(2018, 10, 20));
 
@@ -40,7 +40,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Specifications
         }
         
         [Fact]
-        public void LoadActualTasksAsync_ExcludeExpiredAndCompleted()
+        public void FilterActual_ExcludeExpiredAndCompleted()
         {
             var service = new TaskSpecification().FilterActual(new DateTime(2018, 10, 20));
 
@@ -50,7 +50,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Specifications
         }
         
         [Fact]
-        public void LoadActualTasksAsync_ExcludeExpiredAdditional()
+        public void FilterActual_ExcludeExpiredAdditional()
         {
             var service = new TaskSpecification().FilterActual(new DateTime(2018, 10, 20));
 
