@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using DarkDeeds.TaskServiceApp.Entities.Models;
 using DarkDeeds.TaskServiceApp.Entities.Models.Abstractions;
@@ -27,6 +29,10 @@ namespace DarkDeeds.TaskServiceApp.Tests.Mocks
             {
                 return Task.FromResult(values.FirstOrDefault(x => x.Uid == id));
             });
+            repoMock.Setup(x =>
+                    x.TryUpdateVersionPropsAsync(It.IsAny<TEntity>(), It.IsAny<Expression<Func<TEntity, object>>[]>()))
+                .Returns(Task.FromResult<(bool, TEntity)>((true, null)));
+            
             return repoMock;
         }
     }

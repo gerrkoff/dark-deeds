@@ -20,9 +20,8 @@ namespace DarkDeeds.TaskServiceApp.Infrastructure.Data
         Task UpsertAsync(T entity);
         // TODO! use
         Task<(bool, T)> TryUpdateVersionAsync(T entity);
-        Task<(bool, T)> TryUpdatePropsAsync(T entity, params Expression<Func<T, object>>[] properties);
-        Task UpdatePropertiesAsync(T entity, params Expression<Func<T, object>>[] properties);
-        
+        Task<(bool, T)> TryUpdateVersionPropsAsync(T entity, params Expression<Func<T, object>>[] properties);
+
         Task DeleteAsync(string uid);
         Task DeleteHardAsync(string uid);
     }

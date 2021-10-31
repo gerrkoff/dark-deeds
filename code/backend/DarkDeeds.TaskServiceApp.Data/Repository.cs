@@ -97,7 +97,7 @@ namespace DarkDeeds.TaskServiceApp.Data
             return (false, current);
         }
 
-        public async Task<(bool, T)> TryUpdatePropsAsync(T entity, params Expression<Func<T, object>>[] properties)
+        public async Task<(bool, T)> TryUpdateVersionPropsAsync(T entity, params Expression<Func<T, object>>[] properties)
         {
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
@@ -128,24 +128,6 @@ namespace DarkDeeds.TaskServiceApp.Data
             entity.Version--;
             var current = await GetByIdAsync(entity.Uid);
             return (false, current);
-        }
-
-        public Task UpdatePropertiesAsync(T entity, params Expression<Func<T, object>>[] properties)
-        {
-            if (entity == null)
-                throw new ArgumentNullException(nameof(entity));
-            if (string.IsNullOrWhiteSpace(entity.Uid))
-                throw new ArgumentNullException(nameof(entity.Uid));
-            
-            var update = Builders<T>.Update.Combine();
-
-            foreach (var property in properties)
-            {
-                var value = property.Compile()(entity);
-                update = update.Set(property, value);
-            }
-
-            return _collection.UpdateOneAsync(x => x.Uid == entity.Uid, update);
         }
 
         public Task DeleteAsync(string uid)

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using DarkDeeds.TaskServiceApp.Entities.Enums;
 using DarkDeeds.TaskServiceApp.Entities.Models;
@@ -60,10 +61,12 @@ namespace DarkDeeds.TaskServiceApp.Tests.Services.RecurrenceCreatorServiceTests
             });
             
             await service.CreateAsync(0, "userId");
-            
-            _plannedRecurrenceRepoMock.Verify(x => x.SaveRecurrences(It.Is<PlannedRecurrenceEntity>(
-                    y => y.Recurrences.Any(z => z.DateTime == now && z.TaskUid == "uid")
-                )));
+
+            _plannedRecurrenceRepoMock.Verify(x => x.TryUpdateVersionPropsAsync(
+                It.Is<PlannedRecurrenceEntity>(
+                    y => y.Recurrences.Any(z => z.DateTime == now && z.TaskUid == "uid")),
+                It.IsAny<Expression<Func<PlannedRecurrenceEntity, object>>[]>()
+            ));
         }
         
         [Fact]

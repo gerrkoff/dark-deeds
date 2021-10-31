@@ -15,7 +15,5 @@ namespace DarkDeeds.TaskServiceApp.Data.EntityRepository
             RegisterDefaultMap<PlannedRecurrenceEntity>();
             RegisterDefaultMap<RecurrenceEntity>();
         }
-
-        public Task SaveRecurrences(PlannedRecurrenceEntity entity) => UpdatePropertiesAsync(entity, x => x.Recurrences);
     }
 }

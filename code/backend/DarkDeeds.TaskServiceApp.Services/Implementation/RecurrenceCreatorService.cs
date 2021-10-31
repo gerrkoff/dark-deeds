@@ -47,35 +47,53 @@ namespace DarkDeeds.TaskServiceApp.Services.Implementation
         public async Task<int> CreateAsync(int timezoneOffset, string userId)
         {
             var createdRecurrencesCount = 0;
-            List<PlannedRecurrenceEntity> plannedRecurrences = (await _plannedRecurrenceRepository
+            var plannedRecurrences = (await _plannedRecurrenceRepository
                 .GetListAsync())
                 .Where(x => string.Equals(x.UserId, userId))
                 .ToList();
 
-            foreach (PlannedRecurrenceEntity plannedRecurrence in plannedRecurrences)
+            foreach (var item in plannedRecurrences)
             {
-                ICollection<DateTime> dates = EvaluateRecurrenceDatesWithinPeriod(plannedRecurrence, timezoneOffset);
+                var plannedRecurrence = item;
+                var dates = EvaluateRecurrenceDatesWithinPeriod(plannedRecurrence, timezoneOffset);
                 foreach (var date in dates)
                 {
-                    bool alreadyExists = plannedRecurrence.Recurrences.Any(x => x.DateTime == date);
+                    var alreadyExists = plannedRecurrence.Recurrences.Any(x => x.DateTime == date);
                     
                     if (alreadyExists)
                         continue;
                     
                     TaskEntity task = CreateTaskFromRecurrence(plannedRecurrence, date);
                     await _taskRepository.UpsertAsync(task);
-                    plannedRecurrence.Recurrences.Add(new RecurrenceEntity
-                    {
-                        DateTime = date,
-                        TaskUid = task.Uid
-                    });
-                    await _plannedRecurrenceRepository.SaveRecurrences(plannedRecurrence);
+                    plannedRecurrence = await SaveRecurrence(plannedRecurrence,
+                        new RecurrenceEntity
+                        {
+                            DateTime = date,
+                            TaskUid = task.Uid
+                        });
                     createdRecurrencesCount++;
                     Notify(task, userId);
                 }
             }
 
             return createdRecurrencesCount;
+        }
+
+        private async Task<PlannedRecurrenceEntity> SaveRecurrence(PlannedRecurrenceEntity entity,
+            RecurrenceEntity recurrence)
+        {
+            bool success;
+            do
+            {
+                entity.Recurrences.Add(recurrence);
+                PlannedRecurrenceEntity currentEntity;
+                (success, currentEntity) = await _plannedRecurrenceRepository
+                    .TryUpdateVersionPropsAsync(entity, x => x.Recurrences);
+                if (!success)
+                    entity = currentEntity;
+            } while (!success);
+
+            return entity;
         }
 
         private void Notify(TaskEntity task, string userId)
