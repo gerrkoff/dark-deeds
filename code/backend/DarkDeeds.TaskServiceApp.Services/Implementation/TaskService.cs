@@ -65,12 +65,12 @@ namespace DarkDeeds.TaskServiceApp.Services.Implementation
                     savedTasks.Add(savedTask);
             }
 
-            // TODO! length
-            await _notifierService.TaskUpdated(new TaskUpdatedDto
-            {
-                Tasks = savedTasks,
-                UserId = userId,
-            });
+            if (savedTasks.Count > 0)
+                await _notifierService.TaskUpdated(new TaskUpdatedDto
+                {
+                    Tasks = savedTasks,
+                    UserId = userId,
+                });
 
             return savedTasks;
         }
