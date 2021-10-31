@@ -11,12 +11,16 @@ namespace DarkDeeds.TaskServiceApp.Infrastructure.Data
     {
         Task<T> GetByIdAsync(string uid);
         Task<IList<T>> GetBySpecAsync(ISpecification<T> spec);
-        Task<IList<T>> GetListAsync();
+        // TODO!
+        Task<IList<T>> GetListAsync(); 
 
         Task<bool> AnyAsync(Expression<Func<T, bool>> predicate);
 
         // TODO: split on update & insert
         Task UpsertAsync(T entity);
+        // TODO! use
+        Task<(bool, T)> TryUpdateVersionAsync(T entity);
+        Task<(bool, T)> TryUpdatePropsAsync(T entity, params Expression<Func<T, object>>[] properties);
         Task UpdatePropertiesAsync(T entity, params Expression<Func<T, object>>[] properties);
         
         Task DeleteAsync(string uid);

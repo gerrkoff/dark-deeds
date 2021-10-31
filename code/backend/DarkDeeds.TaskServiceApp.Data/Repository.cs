@@ -44,6 +44,7 @@ namespace DarkDeeds.TaskServiceApp.Data
             if (spec == null)
                 throw new ArgumentNullException(nameof(spec));
 
+            // TODO! refactor, evaluator
             return Task.FromResult(spec.Apply(_collection.AsQueryable()).ToList() as IList<T>);
         }
 
@@ -73,8 +74,71 @@ namespace DarkDeeds.TaskServiceApp.Data
                 await _collection.InsertOneAsync(entity);
             else
                 await _collection.ReplaceOneAsync(x => x.Uid == entity.Uid, entity);
+            
+            // TODO!
+            // new ReplaceOptions
+            // {
+            //     IsUpsert = 
+            // }
         }
-        
+
+        public async Task<(bool, T)> TryUpdateVersionAsync(T entity)
+        {
+            if (entity == null)
+                throw new ArgumentNullException(nameof(entity));
+
+            var version = entity.Version;
+            entity.Version++;
+
+            var filter = Builders<T>.Filter
+                .Where(x => x.Uid == entity.Uid && x.Version == version);
+
+            var result = await _collection.ReplaceOneAsync(filter, entity, new ReplaceOptions
+            {
+                IsUpsert = false
+            });
+
+            if (result.MatchedCount == 1)
+                return (true, null);
+
+            entity.Version--;
+            var current = await GetByIdAsync(entity.Uid);
+            return (false, current);
+        }
+
+        public async Task<(bool, T)> TryUpdatePropsAsync(T entity, params Expression<Func<T, object>>[] properties)
+        {
+            if (entity == null)
+                throw new ArgumentNullException(nameof(entity));
+            if (string.IsNullOrWhiteSpace(entity.Uid))
+                throw new ArgumentNullException(nameof(entity.Uid));
+            
+            var version = entity.Version;
+            entity.Version++;
+            
+            var filter = Builders<T>.Filter
+                .Where(x => x.Uid == entity.Uid && x.Version == version);
+            var update = Builders<T>.Update.Combine();
+            
+            foreach (var property in properties)
+            {
+                var value = property.Compile()(entity);
+                update = update.Set(property, value);
+            }
+
+            var result = await _collection.UpdateOneAsync(filter, update, new UpdateOptions
+            {
+                IsUpsert = false
+            });
+
+            if (result.MatchedCount == 1)
+                return (true, null);
+
+            entity.Version--;
+            var current = await GetByIdAsync(entity.Uid);
+            return (false, current);
+        }
+
         public Task UpdatePropertiesAsync(T entity, params Expression<Func<T, object>>[] properties)
         {
             if (entity == null)
