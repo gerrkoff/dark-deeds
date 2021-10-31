@@ -10,7 +10,6 @@ using MongoDB.Driver;
 
 namespace DarkDeeds.TaskServiceApp.Data
 {
-    // TODO! using cursor
     public abstract class Repository<T> : IRepository<T>
         where T: Entity
     {
@@ -35,7 +34,7 @@ namespace DarkDeeds.TaskServiceApp.Data
             if (string.IsNullOrWhiteSpace(uid))
                 throw new ArgumentNullException(nameof(uid));
 
-            var cursor = await _collection.FindAsync(x => x.Uid == uid);
+            using var cursor = await _collection.FindAsync(x => x.Uid == uid);
             return await cursor.SingleOrDefaultAsync();
         }
 
@@ -50,7 +49,7 @@ namespace DarkDeeds.TaskServiceApp.Data
 
         public async Task<IList<T>> GetListAsync()
         {
-            var cursor = await _collection.FindAsync(x => true);
+            using var cursor = await _collection.FindAsync(x => true);
             return await cursor.ToListAsync();
         }
 
@@ -59,7 +58,7 @@ namespace DarkDeeds.TaskServiceApp.Data
             if (predicate == null)
                 throw new ArgumentNullException(nameof(predicate));
 
-            var cursor = await _collection.FindAsync(predicate);
+            using var cursor = await _collection.FindAsync(predicate);
             return await cursor.AnyAsync();
         }
 
