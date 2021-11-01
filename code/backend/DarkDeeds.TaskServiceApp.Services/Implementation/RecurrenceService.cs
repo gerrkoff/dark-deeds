@@ -37,13 +37,7 @@ namespace DarkDeeds.TaskServiceApp.Services.Implementation
 
         public async Task<int> SaveAsync(ICollection<PlannedRecurrenceDto> recurrences, string userId)
         {
-            string[] ids = recurrences.Select(x => x.Uid).ToArray();
-            var foreignItemsSpec = _specFactory.New<IPlannedRecurrenceSpecification, PlannedRecurrenceEntity>()
-                .FilterForeignUserOwned(userId, ids);
-            bool notUserEntities = await _plannedRecurrenceRepository.AnyAsync(foreignItemsSpec);
-
-            if (notUserEntities)
-                throw ServiceException.InvalidEntity("Recurrence");
+            await CheckIfUserOwns(recurrences, userId);
 
             int count = 0;
             foreach (var dto in recurrences)
@@ -80,6 +74,17 @@ namespace DarkDeeds.TaskServiceApp.Services.Implementation
             }
             
             return count;
+        }
+
+        private async Task CheckIfUserOwns(ICollection<PlannedRecurrenceDto> recurrences, string userId)
+        {
+            string[] ids = recurrences.Select(x => x.Uid).ToArray();
+            var foreignItemsSpec = _specFactory.New<IPlannedRecurrenceSpecification, PlannedRecurrenceEntity>()
+                .FilterForeignUserOwned(userId, ids);
+            bool notUserEntities = await _plannedRecurrenceRepository.AnyAsync(foreignItemsSpec);
+
+            if (notUserEntities)
+                throw ServiceException.InvalidEntity("Recurrence");
         }
 
         private bool RecurrenceIsChanged(PlannedRecurrenceEntity entity, PlannedRecurrenceDto dto)
