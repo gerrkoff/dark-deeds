@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using DarkDeeds.TaskServiceApp.Entities.Models;
@@ -7,6 +8,7 @@ using Xunit;
 
 namespace DarkDeeds.TaskServiceApp.Tests.Services.TaskServiceTests
 {
+    [SuppressMessage("ReSharper", "ParameterOnlyUsedForPreconditionCheck.Local")]
     public partial class TaskServiceTest
     {
         private const string ForeignUserId = "foreign user";

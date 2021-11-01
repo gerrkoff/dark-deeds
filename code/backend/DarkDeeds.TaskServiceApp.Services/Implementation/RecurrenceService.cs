@@ -42,38 +42,41 @@ namespace DarkDeeds.TaskServiceApp.Services.Implementation
             int count = 0;
             foreach (var dto in recurrences)
             {
-                if (dto.IsDeleted)
-                {
-                    await _plannedRecurrenceRepository.DeleteAsync(dto.Uid);
+                if (await SavePlannedRecurrence(dto, userId))
                     count++;
-                    continue;
-                }
-                
-                PlannedRecurrenceEntity entity = await _plannedRecurrenceRepository.GetByIdAsync(dto.Uid);
-                if (entity == null)
-                {
-                    entity = _mapper.Map<PlannedRecurrenceEntity>(dto);
-                    entity.UserId = userId;
-                    await _plannedRecurrenceRepository.UpsertAsync(entity);
-                    count++;
-                }
-                else
-                {
-                    if (!RecurrenceIsChanged(entity, dto))
-                        continue;
-                    entity.Task = dto.Task;
-                    entity.StartDate = dto.StartDate;
-                    entity.EndDate = dto.EndDate;
-                    entity.EveryNthDay = dto.EveryNthDay;
-                    entity.EveryWeekday = dto.EveryWeekday;
-                    entity.EveryMonthDay = dto.EveryMonthDay;
-                    var (success, _) = await _plannedRecurrenceRepository.TryUpdateVersionAsync(entity);
-                    if (success)
-                        count++;
-                }
             }
             
             return count;
+        }
+
+        private async Task<bool> SavePlannedRecurrence(PlannedRecurrenceDto dto, string userId)
+        {
+            if (dto.IsDeleted)
+            {
+                await _plannedRecurrenceRepository.DeleteAsync(dto.Uid);
+                return true;
+            }
+                
+            PlannedRecurrenceEntity entity = await _plannedRecurrenceRepository.GetByIdAsync(dto.Uid);
+            if (entity == null)
+            {
+                entity = _mapper.Map<PlannedRecurrenceEntity>(dto);
+                entity.UserId = userId;
+                await _plannedRecurrenceRepository.UpsertAsync(entity);
+                return true;
+            }
+
+            if (!RecurrenceIsChanged(entity, dto))
+                return false;
+
+            entity.Task = dto.Task;
+            entity.StartDate = dto.StartDate;
+            entity.EndDate = dto.EndDate;
+            entity.EveryNthDay = dto.EveryNthDay;
+            entity.EveryWeekday = dto.EveryWeekday;
+            entity.EveryMonthDay = dto.EveryMonthDay;
+            var (success, _) = await _plannedRecurrenceRepository.TryUpdateVersionAsync(entity);
+            return success;
         }
 
         private async Task CheckIfUserOwns(ICollection<PlannedRecurrenceDto> recurrences, string userId)

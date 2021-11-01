@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using DarkDeeds.TaskServiceApp.Entities.Models;
 using DarkDeeds.TaskServiceApp.Services.Specifications;
@@ -6,6 +7,7 @@ using Xunit;
 
 namespace DarkDeeds.TaskServiceApp.Tests.Specifications
 {
+    [SuppressMessage("ReSharper", "ParameterOnlyUsedForPreconditionCheck.Local")]
     public class UserOwnedSpecificationTest
     {
         [Fact]
