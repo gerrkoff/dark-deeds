@@ -44,6 +44,10 @@ steps:
 - name: copy results
   commands:
   - eval $COPY_LOAD_TEST_RESULTS_CMD
+  when:
+    status:
+    - success
+    - failure
 
 trigger:
   event:
