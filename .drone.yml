@@ -56,7 +56,7 @@ platform:
 steps:
 - name: exit
   commands:
-  - echo $act
+  - echo "$act"
   - if [ "$act" == 'load' ]; then echo 123; else echo 333; fi
   - if [ "$act" == 'load' ]; then exit 78; else echo continue; fi
 - name: test 2
