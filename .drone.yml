@@ -42,8 +42,10 @@ steps:
   - ./ci/test-load.sh
 
 - name: copy results
+  environment:
+    COPY_LOAD_TEST_RESULTS_CMD:
+      from_secret: copy_load_test_results_cmd
   commands:
-  - echo "$eval $COPY_LOAD_TEST_RESULTS_CMD"
   - eval $COPY_LOAD_TEST_RESULTS_CMD
   when:
     status:
