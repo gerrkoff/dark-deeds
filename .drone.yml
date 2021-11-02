@@ -38,9 +38,27 @@ steps:
   - echo "test $QQQ qqq"
   - env
 
+---
 trigger:
   branch:
   - $QQQ
+  event:
+  - custom
+
+kind: pipeline
+type: exec
+name: load testing test123
+
+platform:
+  os: linux
+  arch: amd64
+
+steps:
+- name: test
+  commands:
+  - echo "test $QQQ qqq"
+
+trigger:
   event:
   - custom
 
