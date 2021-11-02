@@ -38,8 +38,11 @@ steps:
   - if [ "$act" != "load" ]; then exit 78; fi
 
 - name: test
+  environment:
+    DOMAIN:
+      from_secret: staging_domain
   commands:
-  - ./ci/test-load.sh
+  - ./ci/test-load.sh $DOMAIN
 
 - name: copy results
   environment:
