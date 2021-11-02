@@ -126,7 +126,7 @@ steps:
       from_secret: telegram_user_id
 
 depends_on:
-- (custom) build & test
+# - (custom) build & test
 - deploy
 
 trigger:
