@@ -10,6 +10,9 @@ namespace DarkDeeds.LoadTests
 {
     public class GetIndexHtmlTest : BaseTest
     {
+        private const int Rps = 10; // TODO: increase
+        private const int Time = 30;
+        
         [Fact]
         public void Test()
         {
@@ -24,15 +27,15 @@ namespace DarkDeeds.LoadTests
                 });
 
             var scenario = ScenarioBuilder
-                .CreateScenario("get_index_html", step)
+                .CreateScenario("Get Index Html", step)
                 .WithWarmUpDuration(TimeSpan.FromSeconds(5))
                 .WithLoadSimulations(
-                    Simulation.InjectPerSec(100, TimeSpan.FromSeconds(30))
+                    Simulation.InjectPerSec(Rps, TimeSpan.FromSeconds(Time))
                 );
 
             var result = RunScenario(scenario);
 
-            Assert.Equal(3000, result.ScenarioStats[0].OkCount);
+            Assert.Equal(Rps * Time, result.ScenarioStats[0].OkCount);
             Assert.Equal(0, result.ScenarioStats[0].FailCount);
             Assert.True(result.ScenarioStats[0].StepStats[0].Ok.Latency.Percent99 < 500);
         }

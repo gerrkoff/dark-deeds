@@ -1,3 +1,4 @@
+using System;
 using NBomber.Contracts;
 using NBomber.Contracts.Stats;
 using NBomber.CSharp;
@@ -10,8 +11,13 @@ namespace DarkDeeds.LoadTests
     public abstract class BaseTest
     {
         private const string TestSuite = "LoadTests";
-        private const string Domain = "dark-deeds.com";
-        protected readonly string Url = $"https://{Domain}";
+        private static readonly string Domain = Environment.GetEnvironmentVariable("DOMAIN") ?? "";
+        protected static readonly string Url = $"https://{Domain}";
+
+        protected BaseTest()
+        {
+            Assert.NotEmpty(Domain);
+        }
 
         private string GetTestName() => GetType().Name;
 
