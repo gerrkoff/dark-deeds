@@ -26,6 +26,24 @@ trigger:
 ---
 kind: pipeline
 type: exec
+name: load testing test
+
+platform:
+  os: linux
+  arch: amd64
+
+steps:
+- name: test
+  commands:
+  - echo test #./ci/test-load.sh
+
+trigger:
+  event:
+  - custom
+
+---
+kind: pipeline
+type: exec
 name: load testing
 
 platform:
