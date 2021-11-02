@@ -35,7 +35,8 @@ platform:
 steps:
 - name: exit if no load
   commands:
-  - if [ "$act" != "load" ]; then exit 78; else echo continue; fi
+  - if [ "$act" != "load" ]; then exit 78; fi
+
 - name: test
   commands:
   - echo test #./ci/test-load.sh
@@ -58,6 +59,10 @@ platform:
   arch: amd64
 
 steps:
+- name: exit if load
+  commands:
+  - if [ "$act" = "load" ]; then exit 78; fi
+
 - name: docker login
   environment:
     USERNAME:
@@ -108,6 +113,10 @@ type: docker
 name: (custom) notify
 
 steps:
+- name: exit if load
+  commands:
+  - if [ "$act" = "load" ]; then exit 78; fi
+
 - name: telegram
   image: appleboy/drone-telegram
   settings:
@@ -142,6 +151,10 @@ platform:
   arch: amd64
 
 steps:
+- name: exit if load
+  commands:
+  - if [ "$act" = "load" ]; then exit 78; fi
+
 - name: docker login
   environment:
     USERNAME:
@@ -194,6 +207,10 @@ type: docker
 name: (staging) notify
 
 steps:
+- name: exit if load
+  commands:
+  - if [ "$act" = "load" ]; then exit 78; fi
+
 - name: telegram
   image: appleboy/drone-telegram
   settings:
