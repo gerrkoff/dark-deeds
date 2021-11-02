@@ -40,7 +40,7 @@ steps:
 
 trigger:
   branch:
-  - ${QQQ}
+  - add-load-tests
   event:
   - custom
 
