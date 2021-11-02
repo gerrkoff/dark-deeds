@@ -35,7 +35,8 @@ platform:
 steps:
 - name: test
   commands:
-  - echo test #./ci/test-load.sh
+  - env
+  - echo test
 
 trigger:
   event:
@@ -57,7 +58,7 @@ steps:
 
 trigger:
   branch:
-  - ${load}
+  - ${LOAD}
   event:
   - custom
 
