@@ -39,7 +39,11 @@ steps:
 
 - name: test
   commands:
-  - echo test #./ci/test-load.sh
+  - ./ci/test-load.sh
+
+- name: copy results
+  commands:
+  - eval $COPY_LOAD_TEST_RESULTS_CMD
 
 trigger:
   event:
