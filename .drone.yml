@@ -32,6 +32,7 @@ platform:
   os: linux
   arch: amd64
 
+steps:
 - name: test
   commands:
   - ./ci/test-load.sh
