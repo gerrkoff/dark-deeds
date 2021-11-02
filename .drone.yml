@@ -39,6 +39,8 @@ steps:
   - env
 
 trigger:
+  branch:
+  - $QQQ
   event:
   - custom
 
