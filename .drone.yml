@@ -2,28 +2,28 @@
 # ==============================
 # COMMON
 # ==============================
-kind: pipeline
-type: exec
-name: deploy
+# kind: pipeline
+# type: exec
+# name: deploy
 
-platform:
-  os: linux
-  arch: amd64
+# platform:
+#   os: linux
+#   arch: amd64
 
-steps:
-- name: deploy prod
-  environment:
-    DEPLOY_PROD_CMD:
-      from_secret: deploy_prod_cmd
-  commands:
-  - VERSION=$(./ci/version.sh "date -d @")
-  - eval $DEPLOY_PROD_CMD $VERSION
+# steps:
+# - name: deploy prod
+#   environment:
+#     DEPLOY_PROD_CMD:
+#       from_secret: deploy_prod_cmd
+#   commands:
+#   - VERSION=$(./ci/version.sh "date -d @")
+#   - eval $DEPLOY_PROD_CMD $VERSION
 
-trigger:
-  event:
-  - promote
+# trigger:
+#   event:
+#   - promote
 
----
+# ---
 kind: pipeline
 type: exec
 name: load testing test
@@ -35,32 +35,32 @@ platform:
 steps:
 - name: test
   commands:
+  - echo "test $QQQ qqq"
   - env
-  - echo "test $LOAD qqq"
 
 trigger:
   event:
   - custom
 
----
-kind: pipeline
-type: exec
-name: load testing
+# ---
+# kind: pipeline
+# type: exec
+# name: load testing
 
-platform:
-  os: linux
-  arch: amd64
+# platform:
+#   os: linux
+#   arch: amd64
 
-steps:
-- name: test
-  commands:
-  - echo test #./ci/test-load.sh
+# steps:
+# - name: test
+#   commands:
+#   - echo test #./ci/test-load.sh
 
-trigger:
-  branch:
-  - $LOAD
-  event:
-  - custom
+# trigger:
+#   branch:
+#   - $LOAD
+#   event:
+#   - custom
 
 # # ==============================
 # # CUSTOM
