@@ -36,7 +36,7 @@ steps:
 - name: test
   commands:
   - env
-  - echo test $LOAD qqq
+  - echo "test $LOAD qqq"
 
 trigger:
   event:
