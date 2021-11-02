@@ -9,7 +9,7 @@ namespace DarkDeeds.LoadTests
 {
     public class CreateTaskTest : BaseTest
     {
-        private const int Rps = 10;
+        private const int Rps = 5;
         private const int Time = 30;
         
         [Fact]

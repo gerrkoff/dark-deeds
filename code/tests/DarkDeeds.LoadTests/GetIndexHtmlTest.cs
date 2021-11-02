@@ -7,7 +7,7 @@ namespace DarkDeeds.LoadTests
 {
     public class GetIndexHtmlTest : BaseTest
     {
-        private const int Rps = 50;
+        private const int Rps = 75;
         private const int Time = 30;
         
         [Fact]
