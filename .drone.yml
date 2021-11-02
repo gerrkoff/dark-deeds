@@ -38,6 +38,8 @@ steps:
   - echo test #./ci/test-load.sh
 
 trigger:
+  branch:
+  - ${load}
   event:
   - custom
 
