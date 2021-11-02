@@ -2,258 +2,214 @@
 # ==============================
 # COMMON
 # ==============================
-# kind: pipeline
-# type: exec
-# name: deploy
-
-# platform:
-#   os: linux
-#   arch: amd64
-
-# steps:
-# - name: deploy prod
-#   environment:
-#     DEPLOY_PROD_CMD:
-#       from_secret: deploy_prod_cmd
-#   commands:
-#   - VERSION=$(./ci/version.sh "date -d @")
-#   - eval $DEPLOY_PROD_CMD $VERSION
-
-# trigger:
-#   event:
-#   - promote
-
-# ---
 kind: pipeline
 type: exec
-name: load testing test
+name: deploy
 
 platform:
   os: linux
   arch: amd64
 
 steps:
-- name: test
+- name: deploy prod
+  environment:
+    DEPLOY_PROD_CMD:
+      from_secret: deploy_prod_cmd
   commands:
-  - echo "test $QQQ qqq"
-  - env
+  - VERSION=$(./ci/version.sh "date -d @")
+  - eval $DEPLOY_PROD_CMD $VERSION
 
 trigger:
-  branch:
-  - add-load-tests
+  event:
+  - promote
+
+---
+kind: pipeline
+type: exec
+name: load testing
+
+platform:
+  os: linux
+  arch: amd64
+
+steps:
+- name: exit if no load
+  commands:
+  - if [ "$act" != "load" ]; then exit 78; else echo continue; fi
+- name: test
+  commands:
+  - echo test #./ci/test-load.sh
+
+trigger:
+  event:
+  - custom
+
+# ==============================
+# CUSTOM
+# ==============================
+
+---
+kind: pipeline
+type: exec
+name: (custom) build & test
+
+platform:
+  os: linux
+  arch: amd64
+
+steps:
+- name: docker login
+  environment:
+    USERNAME:
+      from_secret: docker_user
+    PASSWORD:
+      from_secret: docker_pass
+  commands:
+  - docker login -u $USERNAME -p $PASSWORD
+
+- name: build
+  commands:
+  - git remote set-url origin git@github.com:gerrkoff/dark-deeds.git
+  - ./ci/build.sh push "date -d @"
+
+- name: docker prune
+  commands:
+  - docker system prune -f
+
+- name: start staging
+  environment:
+    START_STAGING_CMD:
+      from_secret: start_staging_cmd
+  commands:
+  - VERSION=$(./ci/version.sh "date -d @")
+  - eval $START_STAGING_CMD $VERSION
+
+- name: test
+  environment:
+    URL:
+      from_secret: staging_url
+  commands:
+  - ./ci/test-e2e.sh $URL staging
+
+- name: stop staging
+  environment:
+    STOP_STAGING_CMD:
+      from_secret: stop_staging_cmd
+  commands:
+  - eval $STOP_STAGING_CMD
+
+trigger:
   event:
   - custom
 
 ---
 kind: pipeline
+type: docker
+name: (custom) notify
+
+steps:
+- name: telegram
+  image: appleboy/drone-telegram
+  settings:
+    token:
+      from_secret: telegram_bot_token
+    to:
+      from_secret: telegram_user_id
+
+depends_on:
+- (custom) build & test
+- deploy
+
+trigger:
+  status:
+  - success
+  - failure
+  event:
+  - promote
+  - custom
+
+# # ==============================
+# # STAGING – FULL COPY OF CUSTOM WITH ADJUSTED TRIGGER
+# # ==============================
+
+---
+kind: pipeline
 type: exec
-name: load testing test123
+name: (staging) build & test
 
 platform:
   os: linux
   arch: amd64
 
 steps:
-- name: exit
+- name: docker login
+  environment:
+    USERNAME:
+      from_secret: docker_user
+    PASSWORD:
+      from_secret: docker_pass
   commands:
-  - echo "$act"
-  - if [ "$act" = 'load' ]; then echo 123; else echo 333; fi
-  - if [ "$act" = 'load' ]; then exit 78; else echo continue; fi
-- name: test 2
+  - docker login -u $USERNAME -p $PASSWORD
+
+- name: build
   commands:
-  - echo "test $QQQ qqq"
-  - env
+  - git remote set-url origin git@github.com:gerrkoff/dark-deeds.git
+  - ./ci/build.sh push "date -d @"
+
+- name: docker prune
+  commands:
+  - docker system prune -f
+
+- name: start staging
+  environment:
+    START_STAGING_CMD:
+      from_secret: start_staging_cmd
+  commands:
+  - VERSION=$(./ci/version.sh "date -d @")
+  - eval $START_STAGING_CMD $VERSION
+
+- name: test
+  environment:
+    URL:
+      from_secret: staging_url
+  commands:
+  - ./ci/test-e2e.sh $URL staging
+
+- name: stop staging
+  environment:
+    STOP_STAGING_CMD:
+      from_secret: stop_staging_cmd
+  commands:
+  - eval $STOP_STAGING_CMD
 
 trigger:
+  branch:
+  - staging
   event:
-  - custom
+  - push
 
-# ---
-# kind: pipeline
-# type: exec
-# name: load testing
+---
+kind: pipeline
+type: docker
+name: (staging) notify
 
-# platform:
-#   os: linux
-#   arch: amd64
+steps:
+- name: telegram
+  image: appleboy/drone-telegram
+  settings:
+    token:
+      from_secret: telegram_bot_token
+    to:
+      from_secret: telegram_user_id
 
-# steps:
-# - name: test
-#   commands:
-#   - echo test #./ci/test-load.sh
+depends_on:
+- (staging) build & test
 
-# trigger:
-#   branch:
-#   - $LOAD
-#   event:
-#   - custom
-
-# # ==============================
-# # CUSTOM
-# # ==============================
-
-# ---
-# kind: pipeline
-# type: exec
-# name: (custom) build & test
-
-# platform:
-#   os: linux
-#   arch: amd64
-
-# steps:
-# - name: docker login
-#   environment:
-#     USERNAME:
-#       from_secret: docker_user
-#     PASSWORD:
-#       from_secret: docker_pass
-#   commands:
-#   - docker login -u $USERNAME -p $PASSWORD
-
-# - name: build
-#   commands:
-#   - git remote set-url origin git@github.com:gerrkoff/dark-deeds.git
-#   - ./ci/build.sh push "date -d @"
-
-# - name: docker prune
-#   commands:
-#   - docker system prune -f
-
-# - name: start staging
-#   environment:
-#     START_STAGING_CMD:
-#       from_secret: start_staging_cmd
-#   commands:
-#   - VERSION=$(./ci/version.sh "date -d @")
-#   - eval $START_STAGING_CMD $VERSION
-
-# - name: test
-#   environment:
-#     URL:
-#       from_secret: staging_url
-#   commands:
-#   - ./ci/test-e2e.sh $URL staging
-
-# - name: stop staging
-#   environment:
-#     STOP_STAGING_CMD:
-#       from_secret: stop_staging_cmd
-#   commands:
-#   - eval $STOP_STAGING_CMD
-
-# trigger:
-#   event:
-#   - custom
-
-# ---
-# kind: pipeline
-# type: docker
-# name: (custom) notify
-
-# steps:
-# - name: telegram
-#   image: appleboy/drone-telegram
-#   settings:
-#     token:
-#       from_secret: telegram_bot_token
-#     to:
-#       from_secret: telegram_user_id
-
-# depends_on:
-# - (custom) build & test
-# - deploy
-
-# trigger:
-#   status:
-#   - success
-#   - failure
-#   event:
-#   - promote
-#   - custom
-
-# # # ==============================
-# # # STAGING – FULL COPY OF CUSTOM WITH ADJUSTED TRIGGER
-# # # ==============================
-
-# ---
-# kind: pipeline
-# type: exec
-# name: (staging) build & test
-
-# platform:
-#   os: linux
-#   arch: amd64
-
-# steps:
-# - name: docker login
-#   environment:
-#     USERNAME:
-#       from_secret: docker_user
-#     PASSWORD:
-#       from_secret: docker_pass
-#   commands:
-#   - docker login -u $USERNAME -p $PASSWORD
-
-# - name: build
-#   commands:
-#   - git remote set-url origin git@github.com:gerrkoff/dark-deeds.git
-#   - ./ci/build.sh push "date -d @"
-
-# - name: docker prune
-#   commands:
-#   - docker system prune -f
-
-# - name: start staging
-#   environment:
-#     START_STAGING_CMD:
-#       from_secret: start_staging_cmd
-#   commands:
-#   - VERSION=$(./ci/version.sh "date -d @")
-#   - eval $START_STAGING_CMD $VERSION
-
-# - name: test
-#   environment:
-#     URL:
-#       from_secret: staging_url
-#   commands:
-#   - ./ci/test-e2e.sh $URL staging
-
-# - name: stop staging
-#   environment:
-#     STOP_STAGING_CMD:
-#       from_secret: stop_staging_cmd
-#   commands:
-#   - eval $STOP_STAGING_CMD
-
-# trigger:
-#   branch:
-#   - staging
-#   event:
-#   - push
-
-# ---
-# kind: pipeline
-# type: docker
-# name: (staging) notify
-
-# steps:
-# - name: telegram
-#   image: appleboy/drone-telegram
-#   settings:
-#     token:
-#       from_secret: telegram_bot_token
-#     to:
-#       from_secret: telegram_user_id
-
-# depends_on:
-# - (staging) build & test
-
-# trigger:
-#   status:
-#   - success
-#   - failure
-#   branch:
-#   - staging
-#   event:
-#   - push
+trigger:
+  status:
+  - success
+  - failure
+  branch:
+  - staging
+  event:
+  - push
