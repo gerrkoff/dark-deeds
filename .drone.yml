@@ -54,10 +54,13 @@ platform:
   arch: amd64
 
 steps:
-- name: test
+- name: exit
   commands:
-  - exit 78
+  - if [ "$act" == "load" ] then exit 78 fi
+- name: test 2
+  commands:
   - echo "test $QQQ qqq"
+  - env
 
 trigger:
   event:
