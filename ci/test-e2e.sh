@@ -11,7 +11,7 @@ else
 fi
 
 rm -rf ci/results
-docker build -t dd-test-e2e -f ci/apps/e2e-tests.dockerfile . || exit $?
+docker build -t dd-test-e2e -f ci/apps/tests-e2e.dockerfile . || exit $?
 docker run -t --rm \
     -e TZ=America/New_York \
     -e RUN_CONTAINER='true' \

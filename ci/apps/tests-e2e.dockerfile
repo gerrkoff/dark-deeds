@@ -28,4 +28,4 @@ RUN dpkg-reconfigure -f noninteractive tzdata
 COPY code/tests/DarkDeeds.E2eTests/ /app
 WORKDIR /app
 
-ENTRYPOINT ["dotnet", "test", "--results-directory", "artifacts", "--logger:trx;LogFileName=results.trx"]
+ENTRYPOINT ["dotnet", "test", "-c", "Release", "--results-directory", "artifacts", "--logger:trx;LogFileName=results.trx"]

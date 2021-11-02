@@ -68,7 +68,7 @@ steps:
     URL:
       from_secret: staging_url
   commands:
-  - ./ci/test.sh $URL staging
+  - ./ci/test-e2e.sh $URL staging
 
 - name: stop staging
   environment:
@@ -152,7 +152,7 @@ steps:
     URL:
       from_secret: staging_url
   commands:
-  - ./ci/test.sh $URL staging
+  - ./ci/test-e2e.sh $URL staging
 
 - name: stop staging
   environment:
