@@ -36,7 +36,7 @@ steps:
 - name: test
   commands:
   - env
-  - echo test
+  - echo test $LOAD
 
 trigger:
   event:
@@ -58,7 +58,7 @@ steps:
 
 trigger:
   branch:
-  - ${LOAD}
+  - $LOAD
   event:
   - custom
 
