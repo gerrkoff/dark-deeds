@@ -37,6 +37,13 @@ steps:
   commands:
   - if [ "$act" != "load" ]; then exit 78; fi
 
+- name: start staging
+  environment:
+    START_STAGING_CMD:
+      from_secret: start_staging_cmd
+  commands:
+  - eval $START_STAGING_CMD
+
 - name: test
   environment:
     DOMAIN:
@@ -54,6 +61,13 @@ steps:
     status:
     - success
     - failure
+
+- name: stop staging
+  environment:
+    STOP_STAGING_CMD:
+      from_secret: stop_staging_cmd
+  commands:
+  - eval $STOP_STAGING_CMD
 
 trigger:
   event:
