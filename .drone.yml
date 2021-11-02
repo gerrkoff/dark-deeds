@@ -124,6 +124,7 @@ steps:
 depends_on:
 - (custom) build & test
 - deploy
+- load testing
 
 trigger:
   status:
