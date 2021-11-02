@@ -56,7 +56,7 @@ platform:
 steps:
 - name: exit
   commands:
-  - if [ "$act" == "load" ] then exit 78 fi
+  - if [ "$act" == "load" ]; then exit 78 fi
 - name: test 2
   commands:
   - echo "test $QQQ qqq"
