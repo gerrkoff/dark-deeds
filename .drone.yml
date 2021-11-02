@@ -113,10 +113,6 @@ type: docker
 name: (custom) notify
 
 steps:
-- name: exit if load
-  commands:
-  - if [ "$act" = "load" ]; then exit 78; fi
-
 - name: telegram
   image: appleboy/drone-telegram
   settings:
@@ -126,7 +122,7 @@ steps:
       from_secret: telegram_user_id
 
 depends_on:
-# - (custom) build & test
+- (custom) build & test
 - deploy
 
 trigger:
@@ -207,10 +203,6 @@ type: docker
 name: (staging) notify
 
 steps:
-- name: exit if load
-  commands:
-  - if [ "$act" = "load" ]; then exit 78; fi
-
 - name: telegram
   image: appleboy/drone-telegram
   settings:
