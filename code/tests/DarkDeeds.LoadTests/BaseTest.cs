@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Net.Mime;
@@ -20,6 +21,7 @@ namespace DarkDeeds.LoadTests
         private static readonly string Domain = Environment.GetEnvironmentVariable("DOMAIN") ?? "test.dark-deeds.com";
         protected static readonly string Url = $"https://{Domain}";
         private const string Password = "Qwerty!1";
+        private static readonly string DateFolder = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss");
 
         protected BaseTest()
         {
@@ -37,6 +39,8 @@ namespace DarkDeeds.LoadTests
                 .RegisterScenarios(scenarios)
                 .WithTestSuite(TestSuite)
                 .WithTestName(GetTestName())
+                .WithReportFileName(GetTestName())
+                .WithReportFolder(Path.Combine("reports", DateFolder, GetTestName()))
                 .WithWorkerPlugins(pingPlugin)
                 .Run();
         }
