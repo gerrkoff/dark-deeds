@@ -9,15 +9,15 @@ namespace DarkDeeds.LoadTests
 {
     public class CreateTaskTest : BaseTest
     {
-        private const int Rps = 1; // TODO: increase
-        private const int Time = 10;
+        private const int Rps = 10;
+        private const int Time = 30;
         
         [Fact]
         public async Task Test()
         {
             var token = await CreateUserAndObtainToken(GenerateUsername());
 
-            var step = Step.Create("create_task",
+            var step = Step.Create(GetTestName(),
                 HttpClientFactory.Create(),
                 context =>
                 {
@@ -37,7 +37,7 @@ namespace DarkDeeds.LoadTests
                 });
 
             var scenario = ScenarioBuilder
-                .CreateScenario("Create Task", step)
+                .CreateScenario(GetTestName(), step)
                 .WithWarmUpDuration(TimeSpan.FromSeconds(5))
                 .WithLoadSimulations(
                     Simulation.InjectPerSec(Rps, TimeSpan.FromSeconds(Time))
@@ -45,9 +45,7 @@ namespace DarkDeeds.LoadTests
             
             var result = RunScenario(scenario);
             
-            Assert.Equal(Rps * Time, result.ScenarioStats[0].OkCount);
-            Assert.Equal(0, result.ScenarioStats[0].FailCount);
-            Assert.True(result.ScenarioStats[0].StepStats[0].Ok.Latency.Percent99 < 500);
+            VerifyResults(result, Rps * Time);
         }
     }
 }

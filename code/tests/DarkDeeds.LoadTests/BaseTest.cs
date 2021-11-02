@@ -26,7 +26,7 @@ namespace DarkDeeds.LoadTests
             Assert.NotEmpty(Domain);
         }
 
-        private string GetTestName() => GetType().Name;
+        protected string GetTestName() => GetType().Name;
 
         protected NodeStats RunScenario(params Scenario[] scenarios)
         {
@@ -60,6 +60,12 @@ namespace DarkDeeds.LoadTests
             var token = responseBodyParsed.RootElement.GetProperty("token").GetString();
 
             return token;
+        }
+
+        protected void VerifyResults(NodeStats stats, int totalCount)
+        {
+            Assert.True(stats.ScenarioStats[0].OkCount >= 0.99 * totalCount);
+            Assert.True(stats.ScenarioStats[0].StepStats[0].Ok.Latency.Percent99 < 500);
         }
     }
 }
