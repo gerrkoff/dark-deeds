@@ -43,6 +43,7 @@ steps:
 
 - name: copy results
   commands:
+  - echo "$eval $COPY_LOAD_TEST_RESULTS_CMD"
   - eval $COPY_LOAD_TEST_RESULTS_CMD
   when:
     status:
