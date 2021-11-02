@@ -68,6 +68,10 @@ steps:
       from_secret: stop_staging_cmd
   commands:
   - eval $STOP_STAGING_CMD
+  when:
+    status:
+    - success
+    - failure
 
 trigger:
   event:
@@ -130,6 +134,10 @@ steps:
       from_secret: stop_staging_cmd
   commands:
   - eval $STOP_STAGING_CMD
+  when:
+    status:
+    - success
+    - failure
 
 trigger:
   event:
@@ -219,6 +227,10 @@ steps:
       from_secret: stop_staging_cmd
   commands:
   - eval $STOP_STAGING_CMD
+  when:
+    status:
+    - success
+    - failure
 
 trigger:
   branch:
