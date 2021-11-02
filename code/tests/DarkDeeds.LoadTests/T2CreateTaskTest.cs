@@ -1,4 +1,5 @@
 using System;
+using System.Net.Http.Json;
 using System.Threading.Tasks;
 using NBomber.CSharp;
 using NBomber.Plugins.Http.CSharp;
@@ -6,9 +7,9 @@ using Xunit;
 
 namespace DarkDeeds.LoadTests
 {
-    public class LoadTasksTest : BaseTest
+    public class T2CreateTaskTest : BaseTest
     {
-        private const int Rps = 10;
+        private const int Rps = 5;
         private const int Time = 30;
         
         [Fact]
@@ -20,9 +21,17 @@ namespace DarkDeeds.LoadTests
                 HttpClientFactory.Create(),
                 context =>
                 {
-                    var request = Http.CreateRequest("GET", $"{Url}/web/api/tasks?from=2021-10-31T23:00:00.000Z")
+                    var request = Http.CreateRequest("POST", $"{Url}/web/api/tasks")
                         .WithHeader("accept", "application/json")
-                        .WithHeader("authorization", $"Bearer {token}");
+                        .WithHeader("authorization", $"Bearer {token}")
+                        .WithBody(JsonContent.Create(new object[]
+                        {
+                            new
+                            {
+                                title = "create_task_test",
+                                uid = Guid.NewGuid(),
+                            }
+                        }));
             
                     return Http.Send(request, context);
                 });
@@ -35,7 +44,7 @@ namespace DarkDeeds.LoadTests
                 );
             
             var result = RunScenario(scenario);
-
+            
             VerifyResults(result, Rps * Time);
         }
     }

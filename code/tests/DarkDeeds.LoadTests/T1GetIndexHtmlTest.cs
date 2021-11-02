@@ -5,7 +5,7 @@ using Xunit;
 
 namespace DarkDeeds.LoadTests
 {
-    public class GetIndexHtmlTest : BaseTest
+    public class T1GetIndexHtmlTest : BaseTest
     {
         private const int Rps = 75;
         private const int Time = 30;
