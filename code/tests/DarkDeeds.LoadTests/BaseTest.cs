@@ -10,6 +10,7 @@ using NBomber.Contracts.Stats;
 using NBomber.CSharp;
 using NBomber.Plugins.Network.Ping;
 using System.Text.Json;
+using NBomber.Configuration;
 using Xunit;
 
 namespace DarkDeeds.LoadTests
@@ -18,7 +19,7 @@ namespace DarkDeeds.LoadTests
     public abstract class BaseTest
     {
         private const string TestSuite = "LoadTests";
-        private static readonly string Domain = Environment.GetEnvironmentVariable("DOMAIN") ?? "test.dark-deeds.com";
+        private static readonly string Domain = Environment.GetEnvironmentVariable("DOMAIN") ?? "";
         protected static readonly string Url = $"https://{Domain}";
         private const string Password = "Qwerty!1";
         private static readonly string DateFolder = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss");
@@ -39,6 +40,7 @@ namespace DarkDeeds.LoadTests
                 .RegisterScenarios(scenarios)
                 .WithTestSuite(TestSuite)
                 .WithTestName(GetTestName())
+                .WithReportFormats(ReportFormat.Txt, ReportFormat.Html)
                 .WithReportFileName(GetTestName())
                 .WithReportFolder(Path.Combine("reports", DateFolder, GetTestName()))
                 .WithWorkerPlugins(pingPlugin)
