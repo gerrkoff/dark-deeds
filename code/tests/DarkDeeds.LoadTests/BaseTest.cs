@@ -25,8 +25,8 @@ namespace DarkDeeds.LoadTests
         private static readonly string DateFolder = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss");
 
         protected abstract int Rps { get; }
-        protected int Time => 30;
-        protected int RampTime => 10;
+        protected int Time => 60 * 5;
+        protected int RampTime => 30;
         protected int WarmUpTime => 5;
         
         protected int RpsMin => Math.Max(1, (int) (0.8 * Rps));
