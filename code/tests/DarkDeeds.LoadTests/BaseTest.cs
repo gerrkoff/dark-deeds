@@ -81,7 +81,7 @@ namespace DarkDeeds.LoadTests
         {
             var totalCount = stats.ScenarioStats[0].OkCount + stats.ScenarioStats[0].FailCount;
             Assert.InRange(stats.ScenarioStats[0].OkCount, 0.99 * totalCount, totalCount);
-            Assert.InRange(stats.ScenarioStats[0].StepStats[0].Ok.Latency.Percent99, 0, 500);
+            Assert.InRange(stats.ScenarioStats[0].StepStats[0].Ok.Latency.Percent95, 0, 500);
         }
     }
 }

@@ -8,7 +8,7 @@ namespace DarkDeeds.LoadTests
 {
     public class Test3LoadTasks : BaseTest
     {
-        protected override int Rps => 20;
+        protected override int Rps => 25;
         
         [Fact]
         public async Task Test()
