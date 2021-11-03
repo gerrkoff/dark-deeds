@@ -22,7 +22,7 @@ git merge master
 # git commit -m 'bump version' ../DarkDeeds/DarkDeeds.Api/DarkDeeds.Api.csproj
 
 git push
-# git checkout master
+git checkout master
 # git merge staging
 # git push
 
