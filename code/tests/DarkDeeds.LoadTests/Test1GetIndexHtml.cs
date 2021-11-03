@@ -5,14 +5,13 @@ using Xunit;
 
 namespace DarkDeeds.LoadTests
 {
-    public class GetIndexHtmlTest : BaseTest
+    public class Test1GetIndexHtml : BaseTest
     {
-        private const int Rps = 75;
-        private const int Time = 30;
-        
+        protected override int Rps => 50;
+
         [Fact]
         public void Test()
-        {
+        {   
             var step = Step.Create(GetTestName(),
                 HttpClientFactory.Create(),
                 context =>
@@ -25,14 +24,16 @@ namespace DarkDeeds.LoadTests
 
             var scenario = ScenarioBuilder
                 .CreateScenario(GetTestName(), step)
-                .WithWarmUpDuration(TimeSpan.FromSeconds(5))
+                .WithWarmUpDuration(TimeSpan.FromSeconds(WarmUpTime))
                 .WithLoadSimulations(
-                    Simulation.InjectPerSec(Rps, TimeSpan.FromSeconds(Time))
+                    Simulation.RampConstant(RpsWarmUp, TimeSpan.FromSeconds(WarmUpTime)),
+                    Simulation.RampPerSec(RpsMin, TimeSpan.FromSeconds(RampTime)),
+                    Simulation.InjectPerSecRandom(RpsMin, RpsMax, TimeSpan.FromSeconds(Time))
                 );
 
             var result = RunScenario(scenario);
 
-            VerifyResults(result, Rps * Time);
+            VerifyResults(result);
         }
     }
 }

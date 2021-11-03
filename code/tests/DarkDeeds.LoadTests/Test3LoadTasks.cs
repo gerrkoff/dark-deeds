@@ -6,10 +6,9 @@ using Xunit;
 
 namespace DarkDeeds.LoadTests
 {
-    public class LoadTasksTest : BaseTest
+    public class Test3LoadTasks : BaseTest
     {
-        private const int Rps = 10;
-        private const int Time = 30;
+        protected override int Rps => 25;
         
         [Fact]
         public async Task Test()
@@ -31,12 +30,14 @@ namespace DarkDeeds.LoadTests
                 .CreateScenario(GetTestName(), step)
                 .WithWarmUpDuration(TimeSpan.FromSeconds(5))
                 .WithLoadSimulations(
-                    Simulation.InjectPerSec(Rps, TimeSpan.FromSeconds(Time))
+                    Simulation.RampConstant(RpsWarmUp, TimeSpan.FromSeconds(WarmUpTime)),
+                    Simulation.RampPerSec(RpsMin, TimeSpan.FromSeconds(RampTime)),
+                    Simulation.InjectPerSecRandom(RpsMin, RpsMax, TimeSpan.FromSeconds(Time))
                 );
             
             var result = RunScenario(scenario);
 
-            VerifyResults(result, Rps * Time);
+            VerifyResults(result);
         }
     }
 }

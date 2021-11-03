@@ -35,7 +35,7 @@ platform:
 steps:
 - name: exit if no load
   commands:
-  - if [ "$act" != "load" ]; then exit 78; fi
+  - if [ "$DRONE_BUILD_EVENT" != "cron" ] && [ "$act" != "load" ]; then exit 78; fi
 
 - name: start staging
   environment:
@@ -76,6 +76,7 @@ steps:
 trigger:
   event:
   - custom
+  - cron
 
 # ==============================
 # CUSTOM
@@ -169,6 +170,7 @@ trigger:
   event:
   - promote
   - custom
+  - cron
 
 # # ==============================
 # # STAGING – FULL COPY OF CUSTOM WITH ADJUSTED TRIGGER

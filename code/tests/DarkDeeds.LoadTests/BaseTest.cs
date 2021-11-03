@@ -10,6 +10,7 @@ using NBomber.Contracts.Stats;
 using NBomber.CSharp;
 using NBomber.Plugins.Network.Ping;
 using System.Text.Json;
+using NBomber.Configuration;
 using Xunit;
 
 namespace DarkDeeds.LoadTests
@@ -18,10 +19,19 @@ namespace DarkDeeds.LoadTests
     public abstract class BaseTest
     {
         private const string TestSuite = "LoadTests";
-        private static readonly string Domain = Environment.GetEnvironmentVariable("DOMAIN") ?? "test.dark-deeds.com";
+        private static readonly string Domain = Environment.GetEnvironmentVariable("DOMAIN") ?? "";
         protected static readonly string Url = $"https://{Domain}";
         private const string Password = "Qwerty!1";
         private static readonly string DateFolder = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss");
+
+        protected abstract int Rps { get; }
+        protected int Time => 30;
+        protected int RampTime => 10;
+        protected int WarmUpTime => 5;
+        
+        protected int RpsMin => Math.Max(1, (int) (0.8 * Rps));
+        protected int RpsMax => Math.Max(1, (int) (1.2 * Rps));
+        protected int RpsWarmUp => Math.Max(1, (int) (0.1 * Rps));
 
         protected BaseTest()
         {
@@ -39,6 +49,7 @@ namespace DarkDeeds.LoadTests
                 .RegisterScenarios(scenarios)
                 .WithTestSuite(TestSuite)
                 .WithTestName(GetTestName())
+                .WithReportFormats(ReportFormat.Txt, ReportFormat.Html)
                 .WithReportFileName(GetTestName())
                 .WithReportFolder(Path.Combine("reports", DateFolder, GetTestName()))
                 .WithWorkerPlugins(pingPlugin)
@@ -66,10 +77,11 @@ namespace DarkDeeds.LoadTests
             return token;
         }
 
-        protected void VerifyResults(NodeStats stats, int totalCount)
+        protected void VerifyResults(NodeStats stats)
         {
-            Assert.True(stats.ScenarioStats[0].OkCount >= 0.99 * totalCount);
-            Assert.True(stats.ScenarioStats[0].StepStats[0].Ok.Latency.Percent99 < 500);
+            var totalCount = stats.ScenarioStats[0].OkCount + stats.ScenarioStats[0].FailCount;
+            Assert.InRange(stats.ScenarioStats[0].OkCount, 0.99 * totalCount, totalCount);
+            Assert.InRange(stats.ScenarioStats[0].StepStats[0].Ok.Latency.Percent95, 0, 500);
         }
     }
 }
