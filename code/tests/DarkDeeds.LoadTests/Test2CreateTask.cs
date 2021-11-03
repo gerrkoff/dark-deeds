@@ -7,7 +7,7 @@ using Xunit;
 
 namespace DarkDeeds.LoadTests
 {
-    public class T2CreateTaskTest : BaseTest
+    public class Test2CreateTask : BaseTest
     {
         private const int Rps = 5;
         private const int Time = 30;

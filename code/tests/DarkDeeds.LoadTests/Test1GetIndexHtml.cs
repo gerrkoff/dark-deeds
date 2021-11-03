@@ -1,29 +1,25 @@
 using System;
-using System.Threading.Tasks;
 using NBomber.CSharp;
 using NBomber.Plugins.Http.CSharp;
 using Xunit;
 
 namespace DarkDeeds.LoadTests
 {
-    public class T3LoadTasksTest : BaseTest
+    public class Test1GetIndexHtml : BaseTest
     {
-        private const int Rps = 10;
+        private const int Rps = 60;
         private const int Time = 30;
         
         [Fact]
-        public async Task Test()
+        public void Test()
         {
-            var token = await CreateUserAndObtainToken(GenerateUsername());
-
             var step = Step.Create(GetTestName(),
                 HttpClientFactory.Create(),
                 context =>
                 {
-                    var request = Http.CreateRequest("GET", $"{Url}/web/api/tasks?from=2021-10-31T23:00:00.000Z")
-                        .WithHeader("accept", "application/json")
-                        .WithHeader("authorization", $"Bearer {token}");
-            
+                    var request = Http.CreateRequest("GET", Url)
+                        .WithHeader("accept", "text/html");
+
                     return Http.Send(request, context);
                 });
 
@@ -33,7 +29,7 @@ namespace DarkDeeds.LoadTests
                 .WithLoadSimulations(
                     Simulation.InjectPerSec(Rps, TimeSpan.FromSeconds(Time))
                 );
-            
+
             var result = RunScenario(scenario);
 
             VerifyResults(result, Rps * Time);
