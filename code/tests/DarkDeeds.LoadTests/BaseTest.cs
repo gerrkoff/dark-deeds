@@ -66,10 +66,11 @@ namespace DarkDeeds.LoadTests
             return token;
         }
 
-        protected void VerifyResults(NodeStats stats, int totalCount)
+        protected void VerifyResults(NodeStats stats)
         {
-            Assert.True(stats.ScenarioStats[0].OkCount >= 0.99 * totalCount);
-            Assert.True(stats.ScenarioStats[0].StepStats[0].Ok.Latency.Percent99 < 500);
+            var totalCount = stats.ScenarioStats[0].OkCount + stats.ScenarioStats[0].FailCount;
+            Assert.InRange(stats.ScenarioStats[0].OkCount, 0.99 * totalCount, totalCount);
+            Assert.InRange(stats.ScenarioStats[0].StepStats[0].Ok.Latency.Percent99, 0, 500);
         }
     }
 }

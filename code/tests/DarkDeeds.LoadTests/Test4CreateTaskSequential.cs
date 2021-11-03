@@ -1,4 +1,5 @@
 using System;
+using System.Net.Http.Json;
 using System.Threading.Tasks;
 using NBomber.CSharp;
 using NBomber.Plugins.Http.CSharp;
@@ -6,16 +7,10 @@ using Xunit;
 
 namespace DarkDeeds.LoadTests
 {
-    public class Test3LoadTasks : BaseTest
+    public class Test4CreateTaskSequential : BaseTest
     {
-        private const int Rps = 10;
+        private const int Rps = 1;
         private const int Time = 30;
-        private const int RampTime = 10;
-        private const int WarmUpTime = 5;
-        
-        private readonly int _rpsMin = Math.Max(1, (int) (0.8 * Rps));
-        private readonly int _rpsMax = Math.Max(1, (int) (1.2 * Rps));
-        private readonly int _rpsWarmUp = Math.Max(1, (int) (0.1 * Rps));
         
         [Fact]
         public async Task Test()
@@ -26,9 +21,17 @@ namespace DarkDeeds.LoadTests
                 HttpClientFactory.Create(),
                 context =>
                 {
-                    var request = Http.CreateRequest("GET", $"{Url}/web/api/tasks?from=2021-10-31T23:00:00.000Z")
+                    var request = Http.CreateRequest("POST", $"{Url}/web/api/tasks")
                         .WithHeader("accept", "application/json")
-                        .WithHeader("authorization", $"Bearer {token}");
+                        .WithHeader("authorization", $"Bearer {token}")
+                        .WithBody(JsonContent.Create(new object[]
+                        {
+                            new
+                            {
+                                title = "create_task_test",
+                                uid = Guid.NewGuid(),
+                            }
+                        }));
             
                     return Http.Send(request, context);
                 });
@@ -37,14 +40,13 @@ namespace DarkDeeds.LoadTests
                 .CreateScenario(GetTestName(), step)
                 .WithWarmUpDuration(TimeSpan.FromSeconds(5))
                 .WithLoadSimulations(
-                    Simulation.RampConstant(_rpsWarmUp, TimeSpan.FromSeconds(WarmUpTime)),
-                    Simulation.RampPerSec(Rps, TimeSpan.FromSeconds(RampTime)),
-                    Simulation.InjectPerSecRandom(_rpsMin, _rpsMax, TimeSpan.FromSeconds(Time))
+                    Simulation.KeepConstant(Rps, TimeSpan.FromSeconds(Time))
                 );
             
             var result = RunScenario(scenario);
-
+            
             VerifyResults(result);
+            Assert.InRange(result.ScenarioStats[0].StepStats[0].Ok.Latency.MeanMs, 0, 100);
         }
     }
 }
