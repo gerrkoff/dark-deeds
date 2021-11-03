@@ -7,14 +7,7 @@ namespace DarkDeeds.LoadTests
 {
     public class Test1GetIndexHtml : BaseTest
     {
-        private const int Rps = 50;
-        private const int Time = 30;
-        private const int RampTime = 10;
-        private const int WarmUpTime = 5;
-
-        private readonly int _rpsMin = Math.Max(1, (int) (0.8 * Rps));
-        private readonly int _rpsMax = Math.Max(1, (int) (1.2 * Rps));
-        private readonly int _rpsWarmUp = Math.Max(1, (int) (0.1 * Rps));
+        protected override int Rps => 50;
 
         [Fact]
         public void Test()
@@ -33,9 +26,9 @@ namespace DarkDeeds.LoadTests
                 .CreateScenario(GetTestName(), step)
                 .WithWarmUpDuration(TimeSpan.FromSeconds(WarmUpTime))
                 .WithLoadSimulations(
-                    Simulation.RampConstant(_rpsWarmUp, TimeSpan.FromSeconds(WarmUpTime)),
-                    Simulation.RampPerSec(_rpsMin, TimeSpan.FromSeconds(RampTime)),
-                    Simulation.InjectPerSecRandom(_rpsMin, _rpsMax, TimeSpan.FromSeconds(Time))
+                    Simulation.RampConstant(RpsWarmUp, TimeSpan.FromSeconds(WarmUpTime)),
+                    Simulation.RampPerSec(RpsMin, TimeSpan.FromSeconds(RampTime)),
+                    Simulation.InjectPerSecRandom(RpsMin, RpsMax, TimeSpan.FromSeconds(Time))
                 );
 
             var result = RunScenario(scenario);

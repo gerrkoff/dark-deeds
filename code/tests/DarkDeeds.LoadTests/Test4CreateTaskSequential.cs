@@ -9,8 +9,7 @@ namespace DarkDeeds.LoadTests
 {
     public class Test4CreateTaskSequential : BaseTest
     {
-        private const int Rps = 1;
-        private const int Time = 30;
+        protected override int Rps => 1;
         
         [Fact]
         public async Task Test()

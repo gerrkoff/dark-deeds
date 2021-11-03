@@ -24,6 +24,15 @@ namespace DarkDeeds.LoadTests
         private const string Password = "Qwerty!1";
         private static readonly string DateFolder = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss");
 
+        protected abstract int Rps { get; }
+        protected int Time => 30;
+        protected int RampTime => 10;
+        protected int WarmUpTime => 5;
+        
+        protected int RpsMin => Math.Max(1, (int) (0.8 * Rps));
+        protected int RpsMax => Math.Max(1, (int) (1.2 * Rps));
+        protected int RpsWarmUp => Math.Max(1, (int) (0.1 * Rps));
+
         protected BaseTest()
         {
             Assert.NotEmpty(Domain);
