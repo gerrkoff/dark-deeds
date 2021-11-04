@@ -23,6 +23,61 @@ trigger:
   event:
   - promote
 
+---
+kind: pipeline
+type: exec
+name: load testing
+
+platform:
+  os: linux
+  arch: amd64
+
+steps:
+- name: exit if no load
+  commands:
+  - if [ "$DRONE_BUILD_EVENT" != "cron" ] && [ "$act" != "load" ]; then exit 78; fi
+
+- name: start staging
+  environment:
+    START_STAGING_CMD:
+      from_secret: start_staging_cmd
+  commands:
+  - eval $START_STAGING_CMD
+
+- name: test
+  environment:
+    DOMAIN:
+      from_secret: staging_domain
+  commands:
+  - ./ci/test-load.sh $DOMAIN
+
+- name: copy results
+  environment:
+    COPY_LOAD_TEST_RESULTS_CMD:
+      from_secret: copy_load_test_results_cmd
+  commands:
+  - eval $COPY_LOAD_TEST_RESULTS_CMD
+  when:
+    status:
+    - success
+    - failure
+
+- name: stop staging
+  environment:
+    STOP_STAGING_CMD:
+      from_secret: stop_staging_cmd
+  commands:
+  - eval $STOP_STAGING_CMD
+  when:
+    status:
+    - success
+    - failure
+
+trigger:
+  event:
+  - custom
+  - cron
+
 # ==============================
 # CUSTOM
 # ==============================
@@ -37,6 +92,10 @@ platform:
   arch: amd64
 
 steps:
+- name: exit if load
+  commands:
+  - if [ "$act" = "load" ]; then exit 78; fi
+
 - name: docker login
   environment:
     USERNAME:
@@ -68,7 +127,7 @@ steps:
     URL:
       from_secret: staging_url
   commands:
-  - ./ci/test.sh $URL staging
+  - ./ci/test-e2e.sh $URL staging
 
 - name: stop staging
   environment:
@@ -76,6 +135,10 @@ steps:
       from_secret: stop_staging_cmd
   commands:
   - eval $STOP_STAGING_CMD
+  when:
+    status:
+    - success
+    - failure
 
 trigger:
   event:
@@ -98,6 +161,7 @@ steps:
 depends_on:
 - (custom) build & test
 - deploy
+- load testing
 
 trigger:
   status:
@@ -106,6 +170,7 @@ trigger:
   event:
   - promote
   - custom
+  - cron
 
 # # ==============================
 # # STAGING – FULL COPY OF CUSTOM WITH ADJUSTED TRIGGER
@@ -121,6 +186,10 @@ platform:
   arch: amd64
 
 steps:
+- name: exit if load
+  commands:
+  - if [ "$act" = "load" ]; then exit 78; fi
+
 - name: docker login
   environment:
     USERNAME:
@@ -152,7 +221,7 @@ steps:
     URL:
       from_secret: staging_url
   commands:
-  - ./ci/test.sh $URL staging
+  - ./ci/test-e2e.sh $URL staging
 
 - name: stop staging
   environment:
@@ -160,6 +229,10 @@ steps:
       from_secret: stop_staging_cmd
   commands:
   - eval $STOP_STAGING_CMD
+  when:
+    status:
+    - success
+    - failure
 
 trigger:
   branch:
