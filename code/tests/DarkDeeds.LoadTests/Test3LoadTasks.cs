@@ -30,9 +30,10 @@ namespace DarkDeeds.LoadTests
                 .CreateScenario(GetTestName(), step)
                 .WithWarmUpDuration(TimeSpan.FromSeconds(5))
                 .WithLoadSimulations(
-                    Simulation.RampConstant(RpsWarmUp, TimeSpan.FromSeconds(WarmUpTime)),
+                    Simulation.RampPerSec(RpsWarmUp, TimeSpan.FromSeconds(WarmUpTime)),
                     Simulation.RampPerSec(RpsMin, TimeSpan.FromSeconds(RampTime)),
-                    Simulation.InjectPerSecRandom(RpsMin, RpsMax, TimeSpan.FromSeconds(Time))
+                    Simulation.InjectPerSec(Rps, TimeSpan.FromSeconds(Time))
+                    // Simulation.InjectPerSecRandom(RpsMin, RpsMax, TimeSpan.FromSeconds(Time))
                 );
             
             var result = RunScenario(scenario);
