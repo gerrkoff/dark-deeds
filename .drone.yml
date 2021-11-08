@@ -109,6 +109,7 @@ steps:
       from_secret: start_staging_cmd
   commands:
   - VERSION=$(./ci/version.sh "date -d @")
+  - echo "${START_STAGING_CMD//VERSION/$VERSION}"
   - eval "${START_STAGING_CMD//VERSION/$VERSION}"
 
 # - name: test
