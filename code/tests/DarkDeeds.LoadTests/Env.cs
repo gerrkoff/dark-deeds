@@ -12,7 +12,7 @@ namespace DarkDeeds.LoadTests
         public static readonly string Domain = Environment.GetEnvironmentVariable("DOMAIN") ?? "test.dark-deeds.com";
 
         public static readonly int TestTime =
-            int.TryParse(Environment.GetEnvironmentVariable("TEST_TIME"), out int v) ? v : 30;
+            int.TryParse(Environment.GetEnvironmentVariable("TEST_TIME"), out int v) ? v : 60 * 5;
         
         public static readonly int Test1Rps =
             int.TryParse(Environment.GetEnvironmentVariable("TEST1_RPS"), out int v) ? v : 50;
