@@ -17,7 +17,9 @@ steps:
       from_secret: deploy_prod_cmd
   commands:
   - VERSION=$(./ci/version.sh "date -d @")
-  - eval "${DEPLOY_PROD_CMD//VERSION/$VERSION}"
+  - CMD=$(echo "$DEPLOY_PROD_CMD" | sed "s/VERSION/$VERSION/")
+  - eval $CMD
+  
 
 trigger:
   event:
@@ -42,7 +44,8 @@ steps:
     START_STAGING_CMD:
       from_secret: start_staging_cmd
   commands:
-  - eval "${START_STAGING_CMD//VERSION/$VERSION}"
+  - CMD=$(echo "$START_STAGING_CMD" | sed "s/VERSION/$VERSION/")
+  - eval $CMD
 
 - name: test
   environment:
@@ -109,7 +112,8 @@ steps:
       from_secret: start_staging_cmd
   commands:
   - VERSION=$(./ci/version.sh "date -d @")
-  - eval "${START_STAGING_CMD//VERSION/$VERSION}"
+  - CMD=$(echo "$START_STAGING_CMD" | sed "s/VERSION/$VERSION/")
+  - eval $CMD
 
 - name: test
   environment:
@@ -192,7 +196,8 @@ steps:
       from_secret: start_staging_cmd
   commands:
   - VERSION=$(./ci/version.sh "date -d @")
-  - eval "${START_STAGING_CMD//VERSION/$VERSION}"
+  - CMD=$(echo "$START_STAGING_CMD" | sed "s/VERSION/$VERSION/")
+  - eval $CMD
 
 - name: test
   environment:
