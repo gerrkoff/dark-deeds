@@ -7,7 +7,7 @@ namespace DarkDeeds.LoadTests
 {
     public class Test1GetIndexHtml : BaseTest
     {
-        protected override int Rps => 50;
+        protected override int Rps => Env.Test1Rps;
 
         [Fact]
         public void Test()

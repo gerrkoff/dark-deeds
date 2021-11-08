@@ -9,7 +9,7 @@ namespace DarkDeeds.LoadTests
 {
     public class Test2CreateTask : BaseTest
     {
-        protected override int Rps => 5;
+        protected override int Rps => Env.Test2Rps;
         
         [Fact]
         public async Task Test()
