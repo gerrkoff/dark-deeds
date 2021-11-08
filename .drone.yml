@@ -94,14 +94,14 @@ steps:
   commands:
   - docker login -u $USERNAME -p $PASSWORD
 
-- name: build
-  commands:
-  - git remote set-url origin git@github.com:gerrkoff/dark-deeds.git
-  - ./ci/build.sh push "date -d @"
+# - name: build
+#   commands:
+#   - git remote set-url origin git@github.com:gerrkoff/dark-deeds.git
+#   - ./ci/build.sh push "date -d @"
 
-- name: docker prune
-  commands:
-  - docker system prune -f
+# - name: docker prune
+#   commands:
+#   - docker system prune -f
 
 - name: start staging
   environment:
@@ -111,12 +111,12 @@ steps:
   - VERSION=$(./ci/version.sh "date -d @")
   - eval "${START_STAGING_CMD//VERSION/$VERSION}"
 
-- name: test
-  environment:
-    URL:
-      from_secret: staging_url
-  commands:
-  - ./ci/test-e2e.sh $URL staging
+# - name: test
+#   environment:
+#     URL:
+#       from_secret: staging_url
+#   commands:
+#   - ./ci/test-e2e.sh $URL staging
 
 trigger:
   event:
