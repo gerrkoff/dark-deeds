@@ -17,7 +17,9 @@ steps:
       from_secret: deploy_prod_cmd
   commands:
   - VERSION=$(./ci/version.sh "date -d @")
-  - eval "${DEPLOY_PROD_CMD//VERSION/$VERSION}"
+  - CMD=$(echo "$DEPLOY_PROD_CMD" | sed "s/VERSION/$VERSION/")
+  - eval $CMD
+  
 
 trigger:
   event:
@@ -42,7 +44,8 @@ steps:
     START_STAGING_CMD:
       from_secret: start_staging_cmd
   commands:
-  - eval "${START_STAGING_CMD//VERSION/$VERSION}"
+  - CMD=$(echo "$START_STAGING_CMD" | sed "s/VERSION/$VERSION/")
+  - eval $CMD
 
 - name: test
   environment:
@@ -94,14 +97,14 @@ steps:
   commands:
   - docker login -u $USERNAME -p $PASSWORD
 
-# - name: build
-#   commands:
-#   - git remote set-url origin git@github.com:gerrkoff/dark-deeds.git
-#   - ./ci/build.sh push "date -d @"
+- name: build
+  commands:
+  - git remote set-url origin git@github.com:gerrkoff/dark-deeds.git
+  - ./ci/build.sh push "date -d @"
 
-# - name: docker prune
-#   commands:
-#   - docker system prune -f
+- name: docker prune
+  commands:
+  - docker system prune -f
 
 - name: start staging
   environment:
@@ -110,15 +113,14 @@ steps:
   commands:
   - VERSION=$(./ci/version.sh "date -d @")
   - CMD=$(echo "$START_STAGING_CMD" | sed "s/VERSION/$VERSION/")
-  - echo $CMD
   - eval $CMD
 
-# - name: test
-#   environment:
-#     URL:
-#       from_secret: staging_url
-#   commands:
-#   - ./ci/test-e2e.sh $URL staging
+- name: test
+  environment:
+    URL:
+      from_secret: staging_url
+  commands:
+  - ./ci/test-e2e.sh $URL staging
 
 trigger:
   event:
@@ -194,7 +196,8 @@ steps:
       from_secret: start_staging_cmd
   commands:
   - VERSION=$(./ci/version.sh "date -d @")
-  - eval "${START_STAGING_CMD//VERSION/$VERSION}"
+  - CMD=$(echo "$START_STAGING_CMD" | sed "s/VERSION/$VERSION/")
+  - eval $CMD
 
 - name: test
   environment:
