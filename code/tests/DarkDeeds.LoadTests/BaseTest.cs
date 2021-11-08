@@ -19,13 +19,13 @@ namespace DarkDeeds.LoadTests
     public abstract class BaseTest
     {
         private const string TestSuite = "LoadTests";
-        private static readonly string Domain = Environment.GetEnvironmentVariable("DOMAIN") ?? "";
+        private static readonly string Domain = Env.Domain;
         protected static readonly string Url = $"https://{Domain}";
         private const string Password = "Qwerty!1";
         private static readonly string DateFolder = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss");
 
         protected abstract int Rps { get; }
-        protected int Time => 60 * 5;
+        protected int Time => Env.TestTime;
         protected int RampTime => 30;
         protected int WarmUpTime => 5;
         
