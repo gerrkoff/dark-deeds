@@ -28,6 +28,7 @@ namespace DarkDeeds.LoadTests
         protected int Time => Env.TestTime;
         protected int RampTime => 30;
         protected int WarmUpTime => 5;
+        protected int Timeout = 10;
         
         protected int RpsMin => Math.Max(1, (int) (0.8 * Rps));
         protected int RpsMax => Math.Max(1, (int) (1.2 * Rps));

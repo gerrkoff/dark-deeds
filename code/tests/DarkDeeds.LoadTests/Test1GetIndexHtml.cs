@@ -20,7 +20,7 @@ namespace DarkDeeds.LoadTests
                         .WithHeader("accept", "text/html");
 
                     return Http.Send(request, context);
-                });
+                }, timeout: TimeSpan.FromSeconds(Timeout));
 
             var scenario = ScenarioBuilder
                 .CreateScenario(GetTestName(), step)

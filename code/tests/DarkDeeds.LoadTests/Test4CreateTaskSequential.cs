@@ -33,7 +33,7 @@ namespace DarkDeeds.LoadTests
                         }));
             
                     return Http.Send(request, context);
-                });
+                }, timeout: TimeSpan.FromSeconds(Timeout));
 
             var scenario = ScenarioBuilder
                 .CreateScenario(GetTestName(), step)
