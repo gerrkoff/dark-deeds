@@ -17,7 +17,9 @@ steps:
       from_secret: deploy_prod_cmd
   commands:
   - VERSION=$(./ci/version.sh "date -d @")
-  - eval $DEPLOY_PROD_CMD $VERSION
+  - CMD=$(echo "$DEPLOY_PROD_CMD" | sed "s/VERSION/$VERSION/")
+  - eval $CMD
+  
 
 trigger:
   event:
@@ -42,7 +44,8 @@ steps:
     START_STAGING_CMD:
       from_secret: start_staging_cmd
   commands:
-  - eval $START_STAGING_CMD
+  - CMD=$(echo "$START_STAGING_CMD" | sed "s/VERSION/$VERSION/")
+  - eval $CMD
 
 - name: test
   environment:
@@ -57,17 +60,6 @@ steps:
       from_secret: copy_load_test_results_cmd
   commands:
   - eval $COPY_LOAD_TEST_RESULTS_CMD
-  when:
-    status:
-    - success
-    - failure
-
-- name: stop staging
-  environment:
-    STOP_STAGING_CMD:
-      from_secret: stop_staging_cmd
-  commands:
-  - eval $STOP_STAGING_CMD
   when:
     status:
     - success
@@ -120,7 +112,8 @@ steps:
       from_secret: start_staging_cmd
   commands:
   - VERSION=$(./ci/version.sh "date -d @")
-  - eval $START_STAGING_CMD $VERSION
+  - CMD=$(echo "$START_STAGING_CMD" | sed "s/VERSION/$VERSION/")
+  - eval $CMD
 
 - name: test
   environment:
@@ -128,17 +121,6 @@ steps:
       from_secret: staging_url
   commands:
   - ./ci/test-e2e.sh $URL staging
-
-- name: stop staging
-  environment:
-    STOP_STAGING_CMD:
-      from_secret: stop_staging_cmd
-  commands:
-  - eval $STOP_STAGING_CMD
-  when:
-    status:
-    - success
-    - failure
 
 trigger:
   event:
@@ -214,7 +196,8 @@ steps:
       from_secret: start_staging_cmd
   commands:
   - VERSION=$(./ci/version.sh "date -d @")
-  - eval $START_STAGING_CMD $VERSION
+  - CMD=$(echo "$START_STAGING_CMD" | sed "s/VERSION/$VERSION/")
+  - eval $CMD
 
 - name: test
   environment:
@@ -222,17 +205,6 @@ steps:
       from_secret: staging_url
   commands:
   - ./ci/test-e2e.sh $URL staging
-
-- name: stop staging
-  environment:
-    STOP_STAGING_CMD:
-      from_secret: stop_staging_cmd
-  commands:
-  - eval $STOP_STAGING_CMD
-  when:
-    status:
-    - success
-    - failure
 
 trigger:
   branch:
