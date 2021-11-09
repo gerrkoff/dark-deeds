@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using NBomber.CSharp;
 using NBomber.Plugins.Http.CSharp;
 using Xunit;
@@ -10,7 +11,7 @@ namespace DarkDeeds.LoadTests
         protected override int Rps => Env.Test1Rps;
 
         [Fact]
-        public void Test()
+        public async Task Test()
         {   
             var step = Step.Create(GetTestName(),
                 HttpClientFactory.Create(),
@@ -32,7 +33,7 @@ namespace DarkDeeds.LoadTests
                     // Simulation.InjectPerSecRandom(RpsMin, RpsMax, TimeSpan.FromSeconds(Time))
                 );
 
-            var result = RunScenario(scenario);
+            var result = await RunScenario(scenario);
 
             VerifyResults(result);
         }

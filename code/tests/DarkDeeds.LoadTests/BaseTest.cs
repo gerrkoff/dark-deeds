@@ -41,12 +41,12 @@ namespace DarkDeeds.LoadTests
 
         protected string GetTestName() => GetType().Name;
 
-        protected NodeStats RunScenario(params Scenario[] scenarios)
+        protected async Task<NodeStats> RunScenario(params Scenario[] scenarios)
         {
             var pingPluginConfig = PingPluginConfig.CreateDefault(new[] {Domain});
             var pingPlugin = new PingPlugin(pingPluginConfig);
 
-            return NBomberRunner
+            var result = NBomberRunner
                 .RegisterScenarios(scenarios)
                 .WithTestSuite(TestSuite)
                 .WithTestName(GetTestName())
@@ -55,6 +55,10 @@ namespace DarkDeeds.LoadTests
                 .WithReportFolder(Path.Combine("reports", DateFolder, GetTestName()))
                 .WithWorkerPlugins(pingPlugin)
                 .Run();
+
+            await Task.Delay(10000);
+
+            return result;
         }
 
         protected string GenerateUsername() => $"test-{Guid.NewGuid()}";

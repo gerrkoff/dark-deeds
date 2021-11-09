@@ -42,7 +42,7 @@ namespace DarkDeeds.LoadTests
                     Simulation.KeepConstant(Rps, TimeSpan.FromSeconds(Time))
                 );
             
-            var result = RunScenario(scenario);
+            var result = await RunScenario(scenario);
             
             VerifyResults(result);
             Assert.InRange(result.ScenarioStats[0].StepStats[0].Ok.Latency.MeanMs, 0, 100);

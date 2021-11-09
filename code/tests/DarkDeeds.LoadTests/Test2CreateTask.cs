@@ -45,7 +45,7 @@ namespace DarkDeeds.LoadTests
                     // Simulation.InjectPerSecRandom(RpsMin, RpsMax, TimeSpan.FromSeconds(Time))
                 );
             
-            var result = RunScenario(scenario);
+            var result = await RunScenario(scenario);
             
             VerifyResults(result);
         }
