@@ -37,13 +37,17 @@ namespace DarkDeeds.Communication.Amqp.Common
                 UserName = connectionInfo.user,
                 Password = connectionInfo.pass,
             };
+            if (connectionInfo.port.HasValue)
+                factory.Port = connectionInfo.port.Value;
             _connection = factory.CreateConnection();
         }
 
-        private (string host, string user, string pass) GetConnectionInfo()
+        private (string host, int? port, string user, string pass) GetConnectionInfo()
         {
             var values = _configuration.GetConnectionString(Constants.ConnectionStringRmq).Split(";");
-            return (values[0], values[1], values[2]);
+            var hostValues = values[0].Split(':');
+            var port = hostValues.Length > 1 ? (int?) int.Parse(hostValues[1]) : null;
+            return (hostValues[0], port , values[1], values[2]);
         }
 
         public void Dispose()
