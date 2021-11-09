@@ -10,7 +10,7 @@ namespace DarkDeeds.LoadTests
     {
         protected override int Rps => Env.Test3Rps;
         
-        [Fact]
+        [Fact(Skip = "")]
         public async Task Test()
         {
             var token = await CreateUserAndObtainToken(GenerateUsername());
