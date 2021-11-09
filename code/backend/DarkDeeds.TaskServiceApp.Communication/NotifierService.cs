@@ -1,23 +1,36 @@
+using System;
 using System.Threading.Tasks;
 using DarkDeeds.TaskServiceApp.Communication.Publishers;
 using DarkDeeds.TaskServiceApp.Infrastructure.Services;
 using DarkDeeds.TaskServiceApp.Infrastructure.Services.Dto;
+using Microsoft.Extensions.Logging;
 
 namespace DarkDeeds.TaskServiceApp.Communication
 {
     public class NotifierService : INotifierService
     {
         private readonly ITaskUpdatedPublisher _taskUpdatedPublisher;
+        private readonly ILogger<NotifierService> _logger;
 
-        public NotifierService(ITaskUpdatedPublisher taskUpdatedPublisher)
+        public NotifierService(ITaskUpdatedPublisher taskUpdatedPublisher, ILogger<NotifierService> logger)
         {
             _taskUpdatedPublisher = taskUpdatedPublisher;
+            _logger = logger;
         }
 
         public Task TaskUpdated(TaskUpdatedDto updatedTasks)
         {
-            // TODO: change to ICollection
-            _taskUpdatedPublisher.Send(updatedTasks);
+            try
+            {
+                // TODO: change to ICollection
+                _taskUpdatedPublisher.Send(updatedTasks);
+            }
+            catch (Exception e)
+            {
+                // TODO: specify exception?
+                _logger.LogWarning($"Failed to notify about updated tasks. Exception message: {e.Message}", e);
+            }
+
             return Task.CompletedTask;
         }
     }
