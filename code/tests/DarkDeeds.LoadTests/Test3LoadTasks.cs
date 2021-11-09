@@ -31,7 +31,7 @@ namespace DarkDeeds.LoadTests
                 .WithWarmUpDuration(TimeSpan.FromSeconds(5))
                 .WithLoadSimulations(
                     Simulation.RampPerSec(RpsWarmUp, TimeSpan.FromSeconds(WarmUpTime)),
-                    Simulation.RampPerSec(RpsMin, TimeSpan.FromSeconds(RampTime)),
+                    Simulation.RampPerSec(Rps, TimeSpan.FromSeconds(RampTime)),
                     Simulation.InjectPerSec(Rps, TimeSpan.FromSeconds(Time))
                     // Simulation.InjectPerSecRandom(RpsMin, RpsMax, TimeSpan.FromSeconds(Time))
                 );
