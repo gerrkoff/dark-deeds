@@ -9,7 +9,7 @@ namespace DarkDeeds.LoadTests
 {
     public class Test4CreateTaskSequential : BaseTest
     {
-        protected override int Rps => 8;
+        protected override int Rps => 15;
         
         [Fact]
         // [Fact(Skip = "Skip")]
