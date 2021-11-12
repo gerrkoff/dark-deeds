@@ -9,10 +9,10 @@ namespace DarkDeeds.LoadTests
 {
     public class Test4CreateTaskSequential : BaseTest
     {
-        protected override int Rps => 15;
+        protected override int Rps => 2;
         
-        // [Fact]
-        [Fact(Skip = "Skip")]
+        [Fact]
+        // [Fact(Skip = "Skip")]
         public async Task Test()
         {
             var token = await CreateUserAndObtainToken(GenerateUsername());
