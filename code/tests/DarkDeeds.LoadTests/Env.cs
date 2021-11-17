@@ -6,7 +6,7 @@ namespace DarkDeeds.LoadTests
     {
         static Env()
         {
-            Console.WriteLine($"DOMAIN={Domain}\nTEST_TIME={TestTime}\nTEST1_RPS={Test1Rps}\nTEST2_RPS={Test2Rps}\nTEST3_RPS={Test3Rps}");
+            Console.WriteLine($"DOMAIN={Domain}\nTEST_TIME={TestTime}\nTEST1_RPS={Test1Rps}\nTEST2_RPS={Test2Rps}\nTEST3_RPS={Test3Rps}\nTEST4_RPS={Test4Rps}");
         }
         
         public static readonly string Domain = Environment.GetEnvironmentVariable("DOMAIN") ?? "test.dark-deeds.com";
