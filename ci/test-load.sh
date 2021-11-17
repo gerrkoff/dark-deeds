@@ -6,7 +6,8 @@ fi
 
 rm -rf ci/results
 docker build -t dd-test-load -f ci/apps/tests-load.dockerfile . || exit $?
-docker run -t --rm \
+docker rm -f dd-test-load
+docker run -t \
     -e DOMAIN="$1" \
     -e TEST_TIME=$2 \
     -e TEST1_RPS=$3 \
