@@ -20,5 +20,7 @@ namespace DarkDeeds.LoadTests
             int.TryParse(Environment.GetEnvironmentVariable("TEST2_RPS"), out int v) ? v : 20;
         public static readonly int Test3Rps =
             int.TryParse(Environment.GetEnvironmentVariable("TEST3_RPS"), out int v) ? v : 25;
+        public static readonly int Test4Rps =
+            int.TryParse(Environment.GetEnvironmentVariable("TEST4_RPS"), out int v) ? v : 2;
     }
 }

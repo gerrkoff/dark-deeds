@@ -12,6 +12,7 @@ docker run -t --rm \
     -e TEST1_RPS=$3 \
     -e TEST2_RPS=$4 \
     -e TEST3_RPS=$5 \
+    -e TEST4_RPS=$6 \
     -v "$(pwd)"/ci/results:/app/bin/Release/net5.0/reports \
     --name dd-test-load \
     dd-test-load

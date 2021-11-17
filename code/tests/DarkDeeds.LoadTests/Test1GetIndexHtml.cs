@@ -10,9 +10,12 @@ namespace DarkDeeds.LoadTests
     {
         protected override int Rps => Env.Test1Rps;
 
-        [Fact(Skip = "Skip")]
+        [Fact]
         public async Task Test()
-        {   
+        {
+            if (Rps == 0)
+                return;
+            
             var step = Step.Create(GetTestName(),
                 HttpClientFactory.Create(),
                 context =>
