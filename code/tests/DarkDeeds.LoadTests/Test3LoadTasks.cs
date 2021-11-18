@@ -13,6 +13,9 @@ namespace DarkDeeds.LoadTests
         [Fact(Skip = "")]
         public async Task Test()
         {
+            if (Rps == 0)
+                return;
+            
             var token = await CreateUserAndObtainToken(GenerateUsername());
 
             var step = Step.Create(GetTestName(),
@@ -36,7 +39,7 @@ namespace DarkDeeds.LoadTests
                     // Simulation.InjectPerSecRandom(RpsMin, RpsMax, TimeSpan.FromSeconds(Time))
                 );
             
-            var result = RunScenario(scenario);
+            var result = await RunScenario(scenario);
 
             VerifyResults(result);
         }

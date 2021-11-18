@@ -28,7 +28,7 @@ namespace DarkDeeds.LoadTests
         protected int Time => Env.TestTime;
         protected int RampTime => 30;
         protected int WarmUpTime => 5;
-        protected int Timeout = 10;
+        protected int Timeout = 60;
         
         protected int RpsMin => Math.Max(1, (int) (0.8 * Rps));
         protected int RpsMax => Math.Max(1, (int) (1.2 * Rps));
@@ -41,12 +41,12 @@ namespace DarkDeeds.LoadTests
 
         protected string GetTestName() => GetType().Name;
 
-        protected NodeStats RunScenario(params Scenario[] scenarios)
+        protected async Task<NodeStats> RunScenario(params Scenario[] scenarios)
         {
             var pingPluginConfig = PingPluginConfig.CreateDefault(new[] {Domain});
             var pingPlugin = new PingPlugin(pingPluginConfig);
 
-            return NBomberRunner
+            var result = NBomberRunner
                 .RegisterScenarios(scenarios)
                 .WithTestSuite(TestSuite)
                 .WithTestName(GetTestName())
@@ -55,6 +55,10 @@ namespace DarkDeeds.LoadTests
                 .WithReportFolder(Path.Combine("reports", DateFolder, GetTestName()))
                 .WithWorkerPlugins(pingPlugin)
                 .Run();
+
+            await Task.Delay(10000);
+
+            return result;
         }
 
         protected string GenerateUsername() => $"test-{Guid.NewGuid()}";

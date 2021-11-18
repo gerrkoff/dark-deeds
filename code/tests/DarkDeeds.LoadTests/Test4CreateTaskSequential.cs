@@ -9,11 +9,14 @@ namespace DarkDeeds.LoadTests
 {
     public class Test4CreateTaskSequential : BaseTest
     {
-        protected override int Rps => 1;
+        protected override int Rps => Env.Test4Rps;
         
         [Fact]
         public async Task Test()
         {
+            if (Rps == 0)
+                return;
+            
             var token = await CreateUserAndObtainToken(GenerateUsername());
 
             var step = Step.Create(GetTestName(),
@@ -42,7 +45,7 @@ namespace DarkDeeds.LoadTests
                     Simulation.KeepConstant(Rps, TimeSpan.FromSeconds(Time))
                 );
             
-            var result = RunScenario(scenario);
+            var result = await RunScenario(scenario);
             
             VerifyResults(result);
             Assert.InRange(result.ScenarioStats[0].StepStats[0].Ok.Latency.MeanMs, 0, 100);
