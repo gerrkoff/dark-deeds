@@ -10,7 +10,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Content Include="appsettings.Production.json" CopyToOutputDirectory="Always" />
+<!--      <Content Include="appsettings.Production.json" CopyToOutputDirectory="Always" />-->
       <Content Include="appsettings.json" CopyToOutputDirectory="Always" />
     </ItemGroup>
 
