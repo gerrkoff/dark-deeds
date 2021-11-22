@@ -28,7 +28,8 @@ namespace DarkDeeds.TaskServiceApp.Services.Implementation
         public async Task<IEnumerable<PlannedRecurrenceDto>> LoadAsync(string userId)
         {
             var spec = _specFactory.New<IPlannedRecurrenceSpecification, PlannedRecurrenceEntity>()
-                .FilterUserOwned(userId);
+                .FilterUserOwned(userId)
+                .FilterNotDeleted();
 
             var recurrences = await _plannedRecurrenceRepository.GetBySpecAsync(spec);
 

@@ -10,6 +10,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Mocks
         {
             var taskSpecMock = new Mock<ITaskSpecification>();
             taskSpecMock.Setup(x => x.FilterUserOwned(It.IsAny<string>())).Returns(taskSpecMock.Object);
+            taskSpecMock.Setup(x => x.FilterNotDeleted()).Returns(taskSpecMock.Object);
             taskSpecMock.Setup(x => x.FilterActual(It.IsAny<DateTime>())).Returns(taskSpecMock.Object);
             taskSpecMock.Setup(x => x.FilterDateInterval(It.IsAny<DateTime>(), It.IsAny<DateTime>()))
                 .Returns(taskSpecMock.Object);
@@ -20,6 +21,7 @@ namespace DarkDeeds.TaskServiceApp.Tests.Mocks
         {
             var plannedRecurrenceSpecMock = new Mock<IPlannedRecurrenceSpecification>();
             plannedRecurrenceSpecMock.Setup(x => x.FilterUserOwned(It.IsAny<string>())).Returns(plannedRecurrenceSpecMock.Object);
+            plannedRecurrenceSpecMock.Setup(x => x.FilterNotDeleted()).Returns(plannedRecurrenceSpecMock.Object);
             return plannedRecurrenceSpecMock;
         }
     }

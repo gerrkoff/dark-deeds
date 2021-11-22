@@ -3,8 +3,8 @@ using System.Linq;
 
 namespace DarkDeeds.TaskServiceApp.Services.Specifications
 {
-    public abstract class UserOwnedSpecification<TEntity, TSpec> : Specification<TEntity>, IUserOwnedSpecification<TEntity, TSpec>
-        where TSpec : class, IUserOwnedSpecification<TEntity, TSpec>
+    public abstract class UserOwnedSpecification<TEntity, TSpec> : EntitySpecification<TEntity, TSpec>, IUserOwnedSpecification<TEntity, TSpec>
+        where TSpec : class, IEntitySpecification<TEntity, TSpec>, IUserOwnedSpecification<TEntity, TSpec>
         where TEntity: Entity, IUserOwnedEntity
     {
         public TSpec FilterUserOwned(string userId)

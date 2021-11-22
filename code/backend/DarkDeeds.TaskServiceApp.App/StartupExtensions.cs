@@ -30,7 +30,6 @@ namespace DarkDeeds.TaskServiceApp.App
             services.AddScoped<ITaskSpecification, TaskSpecification>();
             services.AddScoped<IPlannedRecurrenceSpecification, PlannedRecurrenceSpecification>();
             services.AddScoped<ISpecificationFactory, SpecificationFactory>();
-            
         }
         
         public static void AddTaskAutoMapper(this IServiceCollection services)

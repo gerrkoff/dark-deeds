@@ -35,7 +35,8 @@ namespace DarkDeeds.TaskServiceApp.Services.Implementation
         {
             var spec = _specFactory.New<ITaskSpecification, TaskEntity>()
                 .FilterUserOwned(userId)
-                .FilterActual(from);
+                .FilterActual(from)
+                .FilterNotDeleted();
 
             var tasks = await _tasksRepository.GetBySpecAsync(spec);
 
@@ -46,7 +47,8 @@ namespace DarkDeeds.TaskServiceApp.Services.Implementation
         {
             var spec = _specFactory.New<ITaskSpecification, TaskEntity>()
                 .FilterUserOwned(userId)
-                .FilterDateInterval(from, to);
+                .FilterDateInterval(from, to)
+                .FilterNotDeleted();
             
             var tasks = await _tasksRepository.GetBySpecAsync(spec);
 

@@ -53,7 +53,8 @@ namespace DarkDeeds.TaskServiceApp.Services.Implementation
             var createdRecurrencesCount = 0;
 
             var spec = _specFactory.New<IPlannedRecurrenceSpecification, PlannedRecurrenceEntity>()
-                .FilterUserOwned(userId);
+                .FilterUserOwned(userId)
+                .FilterNotDeleted();
             var plannedRecurrences = await _plannedRecurrenceRepository.GetBySpecAsync(spec);
 
             foreach (var item in plannedRecurrences)
