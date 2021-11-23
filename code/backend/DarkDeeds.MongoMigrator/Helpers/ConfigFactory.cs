@@ -9,7 +9,7 @@ namespace DarkDeeds.MongoMigrator.Helpers
         {
             return new ConfigurationBuilder()
                 .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
-                .AddJsonFile("appsettings.Production.json")
+                .AddJsonFile("Config/appsettings.Production.json")
                 .Build();
         }
     }

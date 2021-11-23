@@ -10,13 +10,14 @@
     </ItemGroup>
 
     <ItemGroup>
-<!--      <Content Include="appsettings.Production.json" CopyToOutputDirectory="Always" />-->
-      <Content Include="appsettings.json" CopyToOutputDirectory="Always" />
+      <ProjectReference Include="..\DarkDeeds.MongoMigrator.PostgreDal\DarkDeeds.MongoMigrator.PostgreDal.csproj" />
+      <ProjectReference Include="..\DarkDeeds.TaskServiceApp.Data\DarkDeeds.TaskServiceApp.Data.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\DarkDeeds.MongoMigrator.PostgreDal\DarkDeeds.MongoMigrator.PostgreDal.csproj" />
-      <ProjectReference Include="..\DarkDeeds.TaskServiceApp.Data\DarkDeeds.TaskServiceApp.Data.csproj" />
+        <None Include="Config\**"
+              CopyToOutputDirectory="PreserveNewest"
+              LinkBase="Config\" />
     </ItemGroup>
 
 </Project>

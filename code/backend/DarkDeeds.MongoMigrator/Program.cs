@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using DarkDeeds.MongoMigrator.Helpers;
 using DarkDeeds.MongoMigrator.Processors;
 using DarkDeeds.MongoMigrator.RepoFactory;
+using Microsoft.Extensions.Configuration;
 
 namespace DarkDeeds.MongoMigrator
 {
@@ -16,6 +17,10 @@ namespace DarkDeeds.MongoMigrator
             Console.WriteLine();
 
             var config = new ConfigFactory().Get();
+            Console.WriteLine($"from: {config.GetConnectionString("pgDb")}");
+            Console.WriteLine($"to: {config.GetConnectionString("mongoDb")}");
+            Console.WriteLine();
+            
             var (pgTaskRepo, pgPlannedRecurrenceRepo, pgRecurrenceRepo) = new RepoFactoryPg().CreateRepos(config);
             var (mongoTaskRepo, mongoPlannedRecurrenceRepo) = new RepoFactoryMongo().CreateRepos(config);
             var scaleRenderer = new ScaleRenderer();
