@@ -26,6 +26,9 @@ namespace DarkDeeds.MongoMigrator.Helpers
             toRender -= _rendered;
             _rendered += toRender;
             Console.Write(string.Join("", Enumerable.Repeat("#", toRender)));
+
+            if (current == _total)
+                Console.WriteLine();
         }
     }
 }

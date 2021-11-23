@@ -32,8 +32,6 @@ namespace DarkDeeds.MongoMigrator
             Console.WriteLine("syncing tasks...");
             scaleRenderer.Prepare(totalTasks);
             var (tasksCreated, tasksUpdated, tasksWarning) = await new ProcessorTasks(pgTaskRepo, mongoTaskRepo, dryRun, scaleRenderer.RenderProgress).Process();
-            
-            Console.WriteLine();
             Console.WriteLine($"{tasksCreated}\ttasks created");
             Console.WriteLine($"{tasksUpdated}\ttasks updated");
             Console.WriteLine($"{tasksWarning}\ttasks warning");
@@ -43,8 +41,6 @@ namespace DarkDeeds.MongoMigrator
             Console.WriteLine("syncing planned recurrences...");
             scaleRenderer.Prepare(totalPlannedRecurrences);
             var (plannedRecurrencesCreated, plannedRecurrencesUpdated, plannedRecurrencesWarning) = await new ProcessorPlannedRecurrences(pgPlannedRecurrenceRepo, mongoPlannedRecurrenceRepo, dryRun, scaleRenderer.RenderProgress).Process();
-            
-            Console.WriteLine();
             Console.WriteLine($"{plannedRecurrencesCreated}\tplanned recurrences created");
             Console.WriteLine($"{plannedRecurrencesUpdated}\tplanned recurrences updated");
             Console.WriteLine($"{plannedRecurrencesWarning}\tplanned recurrences warning");
@@ -54,8 +50,6 @@ namespace DarkDeeds.MongoMigrator
             Console.WriteLine("syncing recurrences...");
             scaleRenderer.Prepare(totalRecurrences);
             var (recurrencesCreated, recurrencesSkipped, recurrencesWarning) = await new ProcessorRecurrences(pgRecurrenceRepo, mongoPlannedRecurrenceRepo, dryRun, scaleRenderer.RenderProgress).Process();
-            
-            Console.WriteLine();
             Console.WriteLine($"{recurrencesCreated}\trecurrences created");
             Console.WriteLine($"{recurrencesSkipped}\trecurrences skipped");
             Console.WriteLine($"{recurrencesWarning}\trecurrences warning");
