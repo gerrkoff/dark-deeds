@@ -23,10 +23,10 @@ function mapDispatchToProps(dispatch: ThunkDispatch<RecurrencesViewAction | Moda
         loadRecurrences: () => dispatch(loadRecurrences()),
         addRecurrence: () => dispatch(addRecurrence()),
         saveRecurrences: (recurrences: PlannedRecurrence[]) => dispatch(saveRecurrences(recurrences)),
-        changeEdittingRecurrence: (id: number | null) => dispatch(changeEdittingRecurrence(id)),
+        changeEdittingRecurrence: (uid: string | null) => dispatch(changeEdittingRecurrence(uid)),
         changeRecurrence: (recurrence: PlannedRecurrence) => dispatch(changeRecurrence(recurrence)),
         confirmAction: (content: React.ReactNode, action: () => void, header: string) => dispatch(openModalConfirm(content, action, header)),
-        deleteRecurrence: (id: number) => dispatch(deleteRecurrence(id))
+        deleteRecurrence: (uid: string) => dispatch(deleteRecurrence(uid))
     }
 }
 

@@ -1,10 +1,11 @@
 import { IRecurrencesViewState } from '../types'
-import { di, diToken, DateService } from '../../di'
+import { di, diToken, DateService, UtilsService } from '../../di'
 import * as actions from '../constants'
 import { PlannedRecurrence } from '../../models'
 import { objectsEqual, copyArray } from '../..//helpers'
 
 const dateService = di.get<DateService>(diToken.DateService)
+const utilsService = di.get<UtilsService>(diToken.UtilsService)
 
 const inittialState: IRecurrencesViewState = {
     isCreatingRecurrences: false,
@@ -65,11 +66,11 @@ export function recurrencesView(state: IRecurrencesViewState = inittialState, ac
             const addingResult = addRecurrence(state.plannedRecurrences)
             return { ...state,
                 plannedRecurrences: addingResult.recurrences,
-                edittingRecurrenceId: addingResult.id,
+                edittingRecurrenceId: addingResult.uid,
                 hasNotSavedChanges: evalHasNotSavedChanges(addingResult.recurrences)
             }
         case actions.RECURRENCESVIEW_DELETE_RECURRENCE:
-            newRecurrences = deleteRecurrence(state.plannedRecurrences, action.id)
+            newRecurrences = deleteRecurrence(state.plannedRecurrences, action.uid)
             return { ...state,
                 plannedRecurrences: newRecurrences,
                 hasNotSavedChanges: evalHasNotSavedChanges(newRecurrences)
@@ -80,33 +81,31 @@ export function recurrencesView(state: IRecurrencesViewState = inittialState, ac
 
 function changeRecurrence(recurrences: PlannedRecurrence[], recurrence: PlannedRecurrence): PlannedRecurrence[] {
     const newRecurrences = [...recurrences]
-    const recurrenceIndex = newRecurrences.findIndex(x => x.id === recurrence.id)
+    const recurrenceIndex = newRecurrences.findIndex(x => x.uid === recurrence.uid)
     newRecurrences[recurrenceIndex] = { ...recurrence }
     return newRecurrences
 }
 
-function addRecurrence(recurrences: PlannedRecurrence[]): {recurrences: PlannedRecurrence[], id: number} {
+function addRecurrence(recurrences: PlannedRecurrence[]): {recurrences: PlannedRecurrence[], uid: string} {
     const newRecurrences = [...recurrences]
-    const addedRecurrences = recurrences.filter(x => x.id < 0).map(x => x.id)
-    const id = addedRecurrences.length === 0
-        ? -1
-        : Math.min(...addedRecurrences) - 1
-    const addedRecurrence = new PlannedRecurrence(id, '', dateService.today(), null, null, null, null, false)
+    const uid = utilsService.uuidv4()
+    const addedRecurrence = new PlannedRecurrence(uid, '', dateService.today(), null, null, null, null, false, true)
     newRecurrences.push(addedRecurrence)
 
     return {
         recurrences: newRecurrences,
-        id
+        uid
     }
 }
 
-function deleteRecurrence(recurrences: PlannedRecurrence[], id: number): PlannedRecurrence[] {
-    if (id < 0) {
-        return recurrences.filter(x => x.id !== id)
+function deleteRecurrence(recurrences: PlannedRecurrence[], uid: string): PlannedRecurrence[] {
+    const recurrence = recurrences.find(x => x.uid === uid)
+    if (recurrence?.isLocal) {
+        return recurrences.filter(x => x.uid !== uid)
     }
 
     const newRecurrences = [...recurrences]
-    const recurrenceIndex = newRecurrences.findIndex(x => x.id === id)
+    const recurrenceIndex = newRecurrences.findIndex(x => x.uid === uid)
     newRecurrences[recurrenceIndex] = { ...newRecurrences[recurrenceIndex], isDeleted: true }
     return newRecurrences
 }
@@ -118,7 +117,7 @@ function evalHasNotSavedChanges(recurrences: PlannedRecurrence[]): boolean {
     }
 
     for (const recurrence of recurrences) {
-        const lastSaved = lastSavedRecurrencs.find(x => x.id === recurrence.id)
+        const lastSaved = lastSavedRecurrencs.find(x => x.uid === recurrence.uid)
         if (!objectsEqual(lastSaved, recurrence)) {
             return true
         }

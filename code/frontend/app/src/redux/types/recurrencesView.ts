@@ -5,6 +5,6 @@ export interface IRecurrencesViewState {
     isLoadingRecurrences: boolean
     isSavingRecurrences: boolean
     plannedRecurrences: PlannedRecurrence[]
-    edittingRecurrenceId: number | null
+    edittingRecurrenceId: string | null
     hasNotSavedChanges: boolean
 }

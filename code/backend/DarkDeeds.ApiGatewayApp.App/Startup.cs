@@ -15,6 +15,7 @@ namespace DarkDeeds.ApiGatewayApp.App
             Configuration = configuration;
         }
 
+        // ReSharper disable once UnusedAutoPropertyAccessor.Local
         private IConfiguration Configuration { get; }
 
         public void ConfigureServices(IServiceCollection services)

@@ -1,12 +1,11 @@
 ﻿using System;
 using DarkDeeds.TaskServiceApp.Entities.Enums;
-using DarkDeeds.TaskServiceApp.Models.Dto.Base;
 
 namespace DarkDeeds.TaskServiceApp.Models.Dto
 {
-    public class PlannedRecurrenceDto : IDtoWithId
+    public class PlannedRecurrenceDto
     {
-        public int Id { get; set; }
+        public string Uid { get; set; }
         
         public string Task { get; set; }
         

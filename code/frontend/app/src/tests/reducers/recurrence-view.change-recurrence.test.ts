@@ -16,14 +16,14 @@ function createState(
     }
 }
 
-function createRecurrence(id: number, task: string): PlannedRecurrence {
-    return new PlannedRecurrence(id, task, new Date(), null, null, null, null, false)
+function createRecurrence(uid: string, task: string): PlannedRecurrence {
+    return new PlannedRecurrence(uid, task, new Date(), null, null, null, null, false)
 }
 
 test('[RECURRENCESVIEW_CHANGE_RECURRENCE] should return new objects for changed items', () => {
-    const recurrence1 = createRecurrence(1, '')
-    const recurrence2 = createRecurrence(2, '')
-    const recurrence3 = createRecurrence(3, '')
+    const recurrence1 = createRecurrence('1', '')
+    const recurrence2 = createRecurrence('2', '')
+    const recurrence3 = createRecurrence('3', '')
     const recurrences = [recurrence1, recurrence2, recurrence3]
     const state = createState(recurrences)
     recurrence2.task = 'update'
@@ -41,13 +41,15 @@ test('[RECURRENCESVIEW_CHANGE_RECURRENCE] should return new objects for changed 
 
 test('[RECURRENCESVIEW_CHANGE_RECURRENCE] should update task', () => {
     const state = createState([
-        createRecurrence(1, ''), createRecurrence(2, ''), createRecurrence(3, '')
+        createRecurrence('1', ''),
+        createRecurrence('2', ''),
+        createRecurrence('3', '')
     ])
     const action: actions.IChangeRecurrence = {
         type: actions.RECURRENCESVIEW_CHANGE_RECURRENCE,
-        plannedRecurrence: createRecurrence(2, 'updated')
+        plannedRecurrence: createRecurrence('2', 'updated')
     }
     const result = recurrencesViewReducer(state, action)
 
-    expect(result.plannedRecurrences.find(x => x.id === 2)!.task).toBe('updated')
+    expect(result.plannedRecurrences.find(x => x.uid === '2')!.task).toBe('updated')
 })

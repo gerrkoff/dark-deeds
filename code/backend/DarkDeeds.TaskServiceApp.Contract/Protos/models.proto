@@ -4,8 +4,10 @@ option csharp_namespace = "DarkDeeds.TaskServiceApp.Contract";
 
 package taskServiceApp;
 
+// TODO: bool naming
+
 message TaskModel {
-  int32 id = 1;
+  int32 id = 1; // TODO: remove
   int64 date = 2;
   bool dateExist = 3;
   int32 time = 4;
@@ -27,7 +29,6 @@ enum TaskType {
 }
 
 message PlannedRecurrenceModel {
-  int32 id = 1;
   string task = 2;
   int64 startDate = 3;
   int64 endDate = 4;
@@ -37,6 +38,8 @@ message PlannedRecurrenceModel {
   string everyMonthDay = 8;
   RecurrenceWeekday everyWeekday = 9;
   bool everyWeekdayExist = 10;
+  string uid = 11;
+  bool isDeleted = 12;
 }
 
 enum RecurrenceWeekday {

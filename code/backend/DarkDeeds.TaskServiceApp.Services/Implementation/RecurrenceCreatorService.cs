@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using DarkDeeds.TaskServiceApp.EfCoreExtensions;
 using DarkDeeds.TaskServiceApp.Entities.Enums;
 using DarkDeeds.TaskServiceApp.Entities.Models;
-using DarkDeeds.TaskServiceApp.Infrastructure.Data;
+using DarkDeeds.TaskServiceApp.Infrastructure.Data.EntityRepository;
 using DarkDeeds.TaskServiceApp.Infrastructure.Services;
 using DarkDeeds.TaskServiceApp.Infrastructure.Services.Dto;
 using DarkDeeds.TaskServiceApp.Models.Dto;
 using DarkDeeds.TaskServiceApp.Services.Interface;
+using DarkDeeds.TaskServiceApp.Services.Specifications;
 using Microsoft.Extensions.Logging;
 
 namespace DarkDeeds.TaskServiceApp.Services.Implementation
@@ -19,64 +19,86 @@ namespace DarkDeeds.TaskServiceApp.Services.Implementation
     {
         private const int RecurrencePeriodInDays = 14;
         
-        private readonly IRepository<TaskEntity> _taskRepository;
-        private readonly IRepository<PlannedRecurrenceEntity> _plannedRecurrenceRepository;
-        private readonly IRepositoryNonDeletable<RecurrenceEntity> _recurrenceRepository;
+        private readonly ITaskRepository _taskRepository;
+        private readonly IPlannedRecurrenceRepository _plannedRecurrenceRepository;
         private readonly IDateService _dateService;
         private readonly ILogger<RecurrenceCreatorService> _logger;
         private readonly ITaskParserService _taskParserService;
         private readonly INotifierService _notifierService;
         private readonly IMapper _mapper;
+        private readonly ISpecificationFactory _specFactory;
 
         public RecurrenceCreatorService(
-            IRepository<TaskEntity> taskRepository,
-            IRepository<PlannedRecurrenceEntity> plannedRecurrenceRepository,
-            IRepositoryNonDeletable<RecurrenceEntity> recurrenceRepository,
+            ITaskRepository taskRepository,
+            IPlannedRecurrenceRepository plannedRecurrenceRepository,
             IDateService dateService,
             ILogger<RecurrenceCreatorService> logger,
             ITaskParserService taskParserService,
             INotifierService notifierService, 
-            IMapper mapper)
+            IMapper mapper,
+            ISpecificationFactory specFactory)
         {
             _taskRepository = taskRepository;
             _plannedRecurrenceRepository = plannedRecurrenceRepository;
-            _recurrenceRepository = recurrenceRepository;
             _dateService = dateService;
             _logger = logger;
             _taskParserService = taskParserService;
             _notifierService = notifierService;
             _mapper = mapper;
+            _specFactory = specFactory;
         }
 
         public async Task<int> CreateAsync(int timezoneOffset, string userId)
         {
             var createdRecurrencesCount = 0;
-            List<PlannedRecurrenceEntity> plannedRecurrences = await _plannedRecurrenceRepository
-                .GetAll()
-                .Where(x => string.Equals(x.UserId, userId))
-                .ToListSafeAsync();
 
-            foreach (PlannedRecurrenceEntity plannedRecurrence in plannedRecurrences)
+            var spec = _specFactory.New<IPlannedRecurrenceSpecification, PlannedRecurrenceEntity>()
+                .FilterUserOwned(userId)
+                .FilterNotDeleted();
+            var plannedRecurrences = await _plannedRecurrenceRepository.GetBySpecAsync(spec);
+
+            foreach (var item in plannedRecurrences)
             {
-                ICollection<DateTime> dates = EvaluateRecurrenceDatesWithinPeriod(plannedRecurrence, timezoneOffset);
+                var plannedRecurrence = item;
+                var dates = EvaluateRecurrenceDatesWithinPeriod(plannedRecurrence, timezoneOffset);
                 foreach (var date in dates)
                 {
-                    bool alreadyExists = await _recurrenceRepository.GetAll().AnySafeAsync(
-                        x => x.PlannedRecurrenceId == plannedRecurrence.Id && x.DateTime == date);
+                    var alreadyExists = plannedRecurrence.Recurrences.Any(x => x.DateTime == date);
                     
                     if (alreadyExists)
                         continue;
                     
                     TaskEntity task = CreateTaskFromRecurrence(plannedRecurrence, date);
-                    await _taskRepository.SaveAsync(task);
-                    await _recurrenceRepository.SaveAsync(
-                        CreateRecurrenceEntity(plannedRecurrence.Id, task.Id, date));
+                    await _taskRepository.UpsertAsync(task);
+                    plannedRecurrence = await SaveRecurrence(plannedRecurrence,
+                        new RecurrenceEntity
+                        {
+                            DateTime = date,
+                            TaskUid = task.Uid
+                        });
                     createdRecurrencesCount++;
                     Notify(task, userId);
                 }
             }
 
             return createdRecurrencesCount;
+        }
+
+        private async Task<PlannedRecurrenceEntity> SaveRecurrence(PlannedRecurrenceEntity entity,
+            RecurrenceEntity recurrence)
+        {
+            bool success;
+            do
+            {
+                entity.Recurrences.Add(recurrence);
+                PlannedRecurrenceEntity currentEntity;
+                (success, currentEntity) = await _plannedRecurrenceRepository
+                    .TryUpdateVersionPropsAsync(entity, x => x.Recurrences);
+                if (!success)
+                    entity = currentEntity;
+            } while (!success);
+
+            return entity;
         }
 
         private void Notify(TaskEntity task, string userId)
@@ -98,14 +120,6 @@ namespace DarkDeeds.TaskServiceApp.Services.Implementation
             task.Uid = Guid.NewGuid().ToString();
             return task;
         }
-
-        private RecurrenceEntity CreateRecurrenceEntity(int plannedRecurrenceId, int taskId, DateTime date)
-            => new RecurrenceEntity
-            {
-                DateTime = date,
-                PlannedRecurrenceId = plannedRecurrenceId,
-                TaskId = taskId,
-            };
 
         private ICollection<DateTime> EvaluateRecurrenceDatesWithinPeriod(PlannedRecurrenceEntity plannedRecurrence, int timezoneOffset)
         {
@@ -198,7 +212,7 @@ namespace DarkDeeds.TaskServiceApp.Services.Implementation
                 if (e is OverflowException || e is FormatException)
                 {
                     _logger.LogWarning(
-                        $"Can't parse EveryMonthDay for PlannedRecurrenceId = {plannedRecurrence.Id}, Value = '{plannedRecurrence.EveryMonthDay}'");
+                        $"Can't parse EveryMonthDay for PlannedRecurrenceUid = {plannedRecurrence.Uid}, Value = '{plannedRecurrence.EveryMonthDay}'");
                     return true;
                 }
 

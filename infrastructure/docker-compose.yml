@@ -26,6 +26,9 @@ services:
 
   mongo-db:
     image: mongo:4.4
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=user
+      - MONGO_INITDB_ROOT_PASSWORD=password
     volumes:
       - mongo-db-volume:/data/db
     ports:
