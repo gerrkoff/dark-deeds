@@ -19,20 +19,18 @@ namespace DarkDeeds.LoadTests
     public abstract class BaseTest
     {
         private const string TestSuite = "LoadTests";
-        private static readonly string Domain = Env.Domain;
-        protected static readonly string Url = $"https://{Domain}";
         private const string Password = "Qwerty!1";
         private static readonly string DateFolder = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss");
-
-        protected abstract int Rps { get; }
-        protected int Time => Env.TestTime;
-        protected int RampTime => 30;
-        protected int WarmUpTime => 5;
-        protected int Timeout = 60;
+        private static readonly string Domain = Env.Domain;
+        protected static readonly string Url = $"https://{Domain}";
+        protected static readonly Config Config = new();
         
-        protected int RpsMin => Math.Max(1, (int) (0.8 * Rps));
-        protected int RpsMax => Math.Max(1, (int) (1.2 * Rps));
-        protected int RpsWarmUp => Math.Max(1, (int) (0.1 * Rps));
+        protected int Timeout => Config.Timeout;
+        protected int TimeWarmUp => Config.TimeWarmUp;
+        protected int TimeRamp => Config.TimeRamp;
+        protected int TimeTest => Config.TimeTest;
+        protected abstract int RpsTest { get; }
+        protected int RpsWarmUp => Math.Max(1, (int) (0.1 * RpsTest));
 
         protected BaseTest()
         {

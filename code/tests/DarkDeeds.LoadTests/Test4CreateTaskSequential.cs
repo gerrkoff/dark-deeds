@@ -9,12 +9,12 @@ namespace DarkDeeds.LoadTests
 {
     public class Test4CreateTaskSequential : BaseTest
     {
-        protected override int Rps => Env.Test4Rps;
+        protected override int RpsTest => Config.Test4Rps;
         
         [Fact]
         public async Task Test()
         {
-            if (Rps == 0)
+            if (RpsTest == 0)
                 return;
             
             var token = await CreateUserAndObtainToken(GenerateUsername());
@@ -42,7 +42,7 @@ namespace DarkDeeds.LoadTests
                 .CreateScenario(GetTestName(), step)
                 .WithWarmUpDuration(TimeSpan.FromSeconds(5))
                 .WithLoadSimulations(
-                    Simulation.KeepConstant(Rps, TimeSpan.FromSeconds(Time))
+                    Simulation.KeepConstant(RpsTest, TimeSpan.FromSeconds(TimeTest))
                 );
             
             var result = await RunScenario(scenario);
