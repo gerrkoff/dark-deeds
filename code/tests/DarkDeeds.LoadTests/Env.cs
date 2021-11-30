@@ -1,4 +1,5 @@
 using System;
+using Xunit;
 
 namespace DarkDeeds.LoadTests
 {
@@ -6,6 +7,7 @@ namespace DarkDeeds.LoadTests
     {
         static Env()
         {
+            Assert.NotEmpty(Domain);
             Console.WriteLine($"DOMAIN={Domain}");
         }
         

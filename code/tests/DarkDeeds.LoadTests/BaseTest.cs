@@ -10,18 +10,20 @@ using NBomber.Contracts.Stats;
 using NBomber.CSharp;
 using NBomber.Plugins.Network.Ping;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using NBomber.Configuration;
 using Xunit;
 
 namespace DarkDeeds.LoadTests
 {
     [Collection("")]
-    public abstract class BaseTest
+    public abstract class BaseTest : IDisposable
     {
         private const string TestSuite = "LoadTests";
         private const string Password = "Qwerty!1";
         private static readonly string DateFolder = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss");
         private static readonly string Domain = Env.Domain;
+        private readonly StringBuilder _output = new();
         protected static readonly string Url = $"https://{Domain}";
         protected static readonly Config Config = new();
         
@@ -31,11 +33,6 @@ namespace DarkDeeds.LoadTests
         protected int TimeTest => Config.TimeTest;
         protected abstract int RpsTest { get; }
         protected int RpsWarmUp => Math.Max(1, (int) (0.1 * RpsTest));
-
-        protected BaseTest()
-        {
-            Assert.NotEmpty(Domain);
-        }
 
         protected string GetTestName() => GetType().Name;
 
@@ -54,7 +51,7 @@ namespace DarkDeeds.LoadTests
                 .WithWorkerPlugins(pingPlugin)
                 .Run();
 
-            await Task.Delay(10000);
+            await Task.Delay(0);
 
             return result;
         }
@@ -82,9 +79,37 @@ namespace DarkDeeds.LoadTests
 
         protected void VerifyResults(NodeStats stats)
         {
+            try
+            {
+                var totalCount = stats.ScenarioStats[0].OkCount + stats.ScenarioStats[0].FailCount;
+                Assert.InRange(stats.ScenarioStats[0].OkCount, 0.99 * totalCount, totalCount);
+                Assert.InRange(stats.ScenarioStats[0].StepStats[0].Ok.Latency.Percent95, 0, 500);
+                
+                SaveResults(stats, true);
+            }
+            catch (Exception)
+            {
+                SaveResults(stats, false);
+                throw;
+            }
+        }
+
+        private void SaveResults(NodeStats stats, bool success)
+        {
             var totalCount = stats.ScenarioStats[0].OkCount + stats.ScenarioStats[0].FailCount;
-            Assert.InRange(stats.ScenarioStats[0].OkCount, 0.99 * totalCount, totalCount);
-            Assert.InRange(stats.ScenarioStats[0].StepStats[0].Ok.Latency.Percent95, 0, 500);
+            var okPercent = Math.Round(100.0 * stats.ScenarioStats[0].OkCount / totalCount, 2);
+            var rps = Math.Round(stats.ScenarioStats[0].StepStats[0].Ok.Request.RPS, 0);
+            var p95 = Math.Round(stats.ScenarioStats[0].StepStats[0].Ok.Latency.Percent95, 0);
+            var p99 = Math.Round(stats.ScenarioStats[0].StepStats[0].Ok.Latency.Percent99, 0);
+            var name = Regex.Replace(GetTestName(), @"Test\d+", "");
+            var tick = success ? "[X]" : "[ ]";
+            _output.AppendLine($"{tick} {name.PadLeft(20)} ok={okPercent}\trps={rps}\tp95={p95}\tp99={p99}");
+        }
+
+        public void Dispose()
+        {
+            if (_output.Length > 0)
+                File.AppendAllText(Path.Combine("reports", DateFolder, "output.txt"), _output.ToString());
         }
     }
 }
