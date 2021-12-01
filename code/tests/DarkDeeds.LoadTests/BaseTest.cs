@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.IO;
 using System.Net;
 using System.Net.Http;
@@ -103,7 +104,13 @@ namespace DarkDeeds.LoadTests
             var p99 = Math.Round(stats.ScenarioStats[0].StepStats[0].Ok.Latency.Percent99, 0);
             var name = Regex.Replace(GetTestName(), @"Test\d+", "");
             var tick = success ? "[X]" : "[ ]";
-            _output.AppendLine($"{tick} {name.PadLeft(20)} ok={okPercent}\trps={rps}\tp95={p95}\tp99={p99}");
+            _output.Append($"{tick} ");
+            _output.Append($"{name.PadLeft(20)} ");
+            _output.Append($"ok={okPercent.ToString(CultureInfo.InvariantCulture).PadRight(3)} ");
+            _output.Append($"rps={rps.ToString(CultureInfo.InvariantCulture).PadRight(5)} ");
+            _output.Append($"p95={p95.ToString(CultureInfo.InvariantCulture).PadRight(5)} ");
+            _output.Append($"p99={p99.ToString(CultureInfo.InvariantCulture).PadRight(5)}");
+            _output.AppendLine();
         }
 
         public void Dispose()
