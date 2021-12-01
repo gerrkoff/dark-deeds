@@ -103,7 +103,7 @@ namespace DarkDeeds.LoadTests
             var p99 = Math.Round(stats.ScenarioStats[0].StepStats[0].Ok.Latency.Percent99, 0);
             var name = Regex.Replace(GetTestName(), @"Test\d+", "");
             var tick = success ? "[X]" : "[ ]";
-            _output.AppendLine($"{tick} {name.PadLeft(20)} ok={okPercent}\trps={rps}\tp95={p95}\tp99={p99}");
+            _output.AppendLine($"{tick} {name.PadLeft(20)} ok={okPercent.ToString().PadRight(3)} rps={rps.ToString().PadRight(3)} p95={p95.ToString().PadRight(5)} p99={p99.ToString().PadRight(5)}");
         }
 
         public void Dispose()
