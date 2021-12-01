@@ -25,51 +25,6 @@ trigger:
   event:
   - promote
 
----
-kind: pipeline
-type: exec
-name: load testing
-
-platform:
-  os: linux
-  arch: amd64
-
-steps:
-- name: exit if no load
-  commands:
-  - if [ "$DRONE_BUILD_EVENT" != "cron" ] && [ "$act" != "load" ]; then exit 78; fi
-
-- name: start staging
-  environment:
-    START_STAGING_CMD:
-      from_secret: start_staging_cmd
-  commands:
-  - CMD=$(echo "$START_STAGING_CMD" | sed "s/VERSION/$VERSION/")
-  - eval $CMD
-
-- name: test
-  environment:
-    DOMAIN:
-      from_secret: staging_domain
-  commands:
-  - ./ci/test-load.sh $DOMAIN
-
-- name: copy results
-  environment:
-    COPY_LOAD_TEST_RESULTS_CMD:
-      from_secret: copy_load_test_results_cmd
-  commands:
-  - eval $COPY_LOAD_TEST_RESULTS_CMD
-  when:
-    status:
-    - success
-    - failure
-
-trigger:
-  event:
-  - custom
-  - cron
-
 # ==============================
 # CUSTOM
 # ==============================
@@ -84,10 +39,6 @@ platform:
   arch: amd64
 
 steps:
-- name: exit if load
-  commands:
-  - if [ "$act" = "load" ]; then exit 78; fi
-
 - name: docker login
   environment:
     USERNAME:
@@ -101,10 +52,6 @@ steps:
   commands:
   - git remote set-url origin git@github.com:gerrkoff/dark-deeds.git
   - ./ci/build.sh push "date -d @"
-
-- name: docker prune
-  commands:
-  - docker system prune -f
 
 - name: start staging
   environment:
@@ -152,7 +99,6 @@ trigger:
   event:
   - promote
   - custom
-  - cron
 
 # # ==============================
 # # STAGING – FULL COPY OF CUSTOM WITH ADJUSTED TRIGGER
@@ -168,10 +114,6 @@ platform:
   arch: amd64
 
 steps:
-- name: exit if load
-  commands:
-  - if [ "$act" = "load" ]; then exit 78; fi
-
 - name: docker login
   environment:
     USERNAME:
@@ -185,10 +127,6 @@ steps:
   commands:
   - git remote set-url origin git@github.com:gerrkoff/dark-deeds.git
   - ./ci/build.sh push "date -d @"
-
-- name: docker prune
-  commands:
-  - docker system prune -f
 
 - name: start staging
   environment:
