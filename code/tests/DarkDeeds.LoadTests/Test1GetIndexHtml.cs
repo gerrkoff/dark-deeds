@@ -8,12 +8,12 @@ namespace DarkDeeds.LoadTests
 {
     public class Test1GetIndexHtml : BaseTest
     {
-        protected override int Rps => Env.Test1Rps;
+        protected override int RpsTest => Config.Test1Rps;
 
         [Fact]
         public async Task Test()
         {
-            if (Rps == 0)
+            if (RpsTest == 0)
                 return;
             
             var step = Step.Create(GetTestName(),
@@ -28,11 +28,11 @@ namespace DarkDeeds.LoadTests
 
             var scenario = ScenarioBuilder
                 .CreateScenario(GetTestName(), step)
-                .WithWarmUpDuration(TimeSpan.FromSeconds(WarmUpTime))
+                .WithWarmUpDuration(TimeSpan.FromSeconds(TimeWarmUp))
                 .WithLoadSimulations(
-                    Simulation.RampPerSec(RpsWarmUp, TimeSpan.FromSeconds(WarmUpTime)),
-                    Simulation.RampPerSec(Rps, TimeSpan.FromSeconds(RampTime)),
-                    Simulation.InjectPerSec(Rps, TimeSpan.FromSeconds(Time))
+                    Simulation.RampPerSec(RpsWarmUp, TimeSpan.FromSeconds(TimeWarmUp)),
+                    Simulation.RampPerSec(RpsTest, TimeSpan.FromSeconds(TimeRamp)),
+                    Simulation.InjectPerSec(RpsTest, TimeSpan.FromSeconds(TimeTest))
                     // Simulation.InjectPerSecRandom(RpsMin, RpsMax, TimeSpan.FromSeconds(Time))
                 );
 

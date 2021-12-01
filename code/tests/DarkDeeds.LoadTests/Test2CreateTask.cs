@@ -9,12 +9,12 @@ namespace DarkDeeds.LoadTests
 {
     public class Test2CreateTask : BaseTest
     {
-        protected override int Rps => Env.Test2Rps;
+        protected override int RpsTest => Config.Test2Rps;
         
         [Fact(Skip = "")]
         public async Task Test()
         {
-            if (Rps == 0)
+            if (RpsTest == 0)
                 return;
             
             var token = await CreateUserAndObtainToken(GenerateUsername());
@@ -42,9 +42,9 @@ namespace DarkDeeds.LoadTests
                 .CreateScenario(GetTestName(), step)
                 .WithWarmUpDuration(TimeSpan.FromSeconds(5))
                 .WithLoadSimulations(
-                    Simulation.RampPerSec(RpsWarmUp, TimeSpan.FromSeconds(WarmUpTime)),
-                    Simulation.RampPerSec(Rps, TimeSpan.FromSeconds(RampTime)),
-                    Simulation.InjectPerSec(Rps, TimeSpan.FromSeconds(Time))
+                    Simulation.RampPerSec(RpsWarmUp, TimeSpan.FromSeconds(TimeWarmUp)),
+                    Simulation.RampPerSec(RpsTest, TimeSpan.FromSeconds(TimeRamp)),
+                    Simulation.InjectPerSec(RpsTest, TimeSpan.FromSeconds(TimeTest))
                     // Simulation.InjectPerSecRandom(RpsMin, RpsMax, TimeSpan.FromSeconds(Time))
                 );
             
