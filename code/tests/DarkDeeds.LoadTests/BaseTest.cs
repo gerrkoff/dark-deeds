@@ -78,13 +78,14 @@ namespace DarkDeeds.LoadTests
             return token;
         }
 
-        protected void VerifyResults(NodeStats stats)
+        protected void VerifyResults(NodeStats stats, Action additionalChecks = null)
         {
             try
             {
                 var totalCount = stats.ScenarioStats[0].OkCount + stats.ScenarioStats[0].FailCount;
                 Assert.InRange(stats.ScenarioStats[0].OkCount, 0.99 * totalCount, totalCount);
                 Assert.InRange(stats.ScenarioStats[0].StepStats[0].Ok.Latency.Percent95, 0, 500);
+                additionalChecks?.Invoke();
                 
                 SaveResults(stats, true);
             }
@@ -98,7 +99,7 @@ namespace DarkDeeds.LoadTests
         private void SaveResults(NodeStats stats, bool success)
         {
             var totalCount = stats.ScenarioStats[0].OkCount + stats.ScenarioStats[0].FailCount;
-            var okPercent = Math.Round(100.0 * stats.ScenarioStats[0].OkCount / totalCount, 2);
+            var okPercent = Math.Round(100.0 * stats.ScenarioStats[0].OkCount / totalCount, 0);
             var rps = Math.Round(stats.ScenarioStats[0].StepStats[0].Ok.Request.RPS, 0);
             var p95 = Math.Round(stats.ScenarioStats[0].StepStats[0].Ok.Latency.Percent95, 0);
             var p99 = Math.Round(stats.ScenarioStats[0].StepStats[0].Ok.Latency.Percent99, 0);
