@@ -1,3 +1,4 @@
+using DarkDeeds.AppMetrics;
 using DarkDeeds.Authentication.DependencyInjection;
 using DarkDeeds.AuthServiceApp.ContractImpl;
 using DarkDeeds.AuthServiceApp.ContractImpl.Contract;
@@ -26,7 +27,8 @@ namespace DarkDeeds.AuthServiceApp.App
         {
             services.AddDarkDeedsAuth(Configuration);
             services.AddDarkDeedsValidation();
-            services.AddDarkDeedsAppRegistration("auth-service", Configuration);
+            services.AddDarkDeedsAppRegistration("auth-service", Configuration, true);
+            services.AddDarkDeedsAppMetrics(Configuration);
             
             services.AddAuthServiceServices();
             services.AddAuthServiceContractImpl();
@@ -49,6 +51,7 @@ namespace DarkDeeds.AuthServiceApp.App
             }
 
             app.UseRouting();
+            app.UseDarkDeedsAppMetrics();
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>
@@ -59,6 +62,7 @@ namespace DarkDeeds.AuthServiceApp.App
                     endpoints.MapGrpcReflectionService();
                 }
                 endpoints.MapControllers();
+                endpoints.MapDarkDeedsAppMetrics();
             });
         }
     }

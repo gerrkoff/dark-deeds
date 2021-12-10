@@ -9,4 +9,8 @@
         <PackageReference Include="Ocelot.Provider.Consul" Version="17.0.0" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\DarkDeeds.AppMetrics\DarkDeeds.AppMetrics.csproj" />
+    </ItemGroup>
+
 </Project>

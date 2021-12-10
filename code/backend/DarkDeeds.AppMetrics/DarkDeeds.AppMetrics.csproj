@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net5.0</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="prometheus-net.AspNetCore" Version="5.0.2" />
+      <PackageReference Include="prometheus-net.DotNetRuntime" Version="4.2.2" />
+    </ItemGroup>
+
+</Project>

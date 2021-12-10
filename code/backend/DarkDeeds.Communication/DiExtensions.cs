@@ -36,13 +36,13 @@ namespace DarkDeeds.Communication
             services.AddHostedService<TService>();
         }
         
-        public static void AddDarkDeedsAppRegistration(this IServiceCollection services, string appName, IConfiguration configuration)
+        public static void AddDarkDeedsAppRegistration(this IServiceCollection services, string appName, IConfiguration configuration, bool withMetricsPort = false)
         {
             services.AddDarkDeedsServiceDiscovery(configuration);
 
             services.AddTransient<IAddressService, AddressService>();
             services.AddHostedService(x =>
-                ActivatorUtilities.CreateInstance<AppRegistrationService>(x, appName));
+                ActivatorUtilities.CreateInstance<AppRegistrationService>(x, appName, withMetricsPort));
         }
         
         public static void AddDarkDeedsGrpcClientFactory<T>(this IServiceCollection services, string name, IConfiguration configuration)
