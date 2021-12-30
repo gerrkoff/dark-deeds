@@ -46,3 +46,9 @@ services:
     build:
       context: ../
       dockerfile: ci/apps/web-client.dockerfile
+  
+  grafana:
+    image: gerrkoff/dark-deeds-grafana:${BUILD_VERSION}
+    build:
+      context: ../
+      dockerfile: ci/apps/grafana.dockerfile

@@ -42,6 +42,8 @@ namespace DarkDeeds.Communication
             webBuilder.ConfigureKestrel(options =>
             {
                 options.ListenAnyIP(uri.Port, o => o.Protocols = HttpProtocols.Http2);
+                // for metrics
+                options.ListenAnyIP(uri.Port * 10, o => o.Protocols = HttpProtocols.Http1);
             });
         }
     }

@@ -14,16 +14,22 @@ namespace DarkDeeds.Communication.Services.Implementation
     {
         private readonly IConsulClient _consul;
         private readonly ILogger<AppRegistrationService> _logger;
-        private readonly string _appName;
         private readonly IAddressService _addressService;
+        private readonly string _appName;
+        private readonly bool _withMetricsPort;
 
-        public AppRegistrationService(IConsulClient consul, ILogger<AppRegistrationService> logger, string appName, IAddressService addressService) :
+        public AppRegistrationService(IConsulClient consul,
+            ILogger<AppRegistrationService> logger,
+            IAddressService addressService,
+            string appName,
+            bool withMetricsPort) :
             base(logger)
         {
             _consul = consul;
             _logger = logger;
-            _appName = appName;
             _addressService = addressService;
+            _appName = appName;
+            _withMetricsPort = withMetricsPort;
         }
 
         private string _id;
@@ -51,11 +57,37 @@ namespace DarkDeeds.Communication.Services.Implementation
                 }
             };
 
+            AgentServiceRegistration registrationMetrics = null;
+            if (_withMetricsPort)
+                registrationMetrics = new AgentServiceRegistration
+                {
+                    ID = $"{id}-metrics",
+                    Name = _appName,
+                    Address = uri.Host,
+                    Port = uri.Port * 10,
+                    Meta = new Dictionary<string, string> { { "scheme", uri.Scheme } },
+                    Tags = new[] { "metrics" },
+                    Check = new AgentServiceCheck
+                    {
+                        TCP = $"{uri.Host}:{uri.Port}",
+                        Interval = new TimeSpan(0, 0, 10),
+                        Timeout = new TimeSpan(0, 0, 3),
+                        DeregisterCriticalServiceAfter = new TimeSpan(0, 0, 20),
+                    }
+                };
+
             return async cancellationToken =>
             {
                 await _consul.Agent.ServiceRegister(registration, cancellationToken);
                 _logger.LogInformation(
                     $"Register service [{registration.Name}] at [{registration.Address}:{registration.Port}] as [{registration.ID}]");
+
+                if (registrationMetrics == null)
+                    return;
+                
+                await _consul.Agent.ServiceRegister(registrationMetrics, cancellationToken);
+                _logger.LogInformation(
+                    $"Register service metrics [{registration.Name}] at [{registration.Address}:{registration.Port}] as [{registration.ID}]");
             };
         }
     }

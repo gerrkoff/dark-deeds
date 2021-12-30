@@ -1,3 +1,4 @@
+using DarkDeeds.AppMetrics;
 using DarkDeeds.Authentication.DependencyInjection;
 using DarkDeeds.Communication;
 using DarkDeeds.TaskServiceApp.Communication.Publishers;
@@ -24,8 +25,9 @@ namespace DarkDeeds.TaskServiceApp.App
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDarkDeedsAuth(Configuration);
-            services.AddDarkDeedsAppRegistration("task-service", Configuration);
+            services.AddDarkDeedsAppRegistration("task-service", Configuration, true);
             services.AddDarkDeedsAmpqPublisher<ITaskUpdatedPublisher, TaskUpdatedPublisher, TaskUpdatedDto>();
+            services.AddDarkDeedsAppMetrics(Configuration);
             
             services.AddTaskServices();
             services.AddTaskAutoMapper();
@@ -48,6 +50,7 @@ namespace DarkDeeds.TaskServiceApp.App
             }
 
             app.UseRouting();
+            app.UseDarkDeedsAppMetrics();
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>
@@ -60,6 +63,7 @@ namespace DarkDeeds.TaskServiceApp.App
                     endpoints.MapGrpcReflectionService();
                 }
                 endpoints.MapControllers();
+                endpoints.MapDarkDeedsAppMetrics();
             });
         }
     }

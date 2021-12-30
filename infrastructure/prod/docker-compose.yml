@@ -102,6 +102,24 @@ services:
     volumes:
       - mongo-db-volume:/data/db
 
+  prometheus:
+    image: prom/prometheus:v2.32.1
+    volumes:
+      - ./settings/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus-volume:/prometheus
+
+  grafana:
+    image: gerrkoff/dark-deeds-grafana:${BUILD_VERSION}
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=qwerty
+    ports:
+      - 5003:3000
+    volumes:
+      - grafana-volume:/var/lib/grafana
+      - ./settings/grafana.yml:/etc/grafana/provisioning/datasources/grafana.yml:ro
+
 volumes:
   postgres-db-volume:
   mongo-db-volume:
+  grafana-volume:
+  prometheus-volume:

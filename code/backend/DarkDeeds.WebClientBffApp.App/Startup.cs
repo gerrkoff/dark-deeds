@@ -1,3 +1,4 @@
+using DarkDeeds.AppMetrics;
 using DarkDeeds.Authentication.DependencyInjection;
 using DarkDeeds.Communication;
 using DarkDeeds.WebClientBffApp.App.BackgroundServices;
@@ -12,6 +13,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using DarkDeeds.CommonWeb;
 
 namespace DarkDeeds.WebClientBffApp.App
 {
@@ -28,6 +30,7 @@ namespace DarkDeeds.WebClientBffApp.App
         {
             services.AddDarkDeedsAppRegistration("web-client-bff", Configuration);
             services.AddDarkDeedsAuth(Configuration);
+            services.AddDarkDeedsAppMetrics(Configuration);
             services.AddWebClientBffServices();
             services.AddWebClientBffUseCases();
             services.AddWebClientBffCommunications(Configuration);
@@ -41,9 +44,12 @@ namespace DarkDeeds.WebClientBffApp.App
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseRouting();
+            app.UseDarkDeedsAppMetrics();
+            app.UseDarkDeedsExceptionHandler(env.IsProduction());
+            
             if (!env.IsProduction())
             {
-                app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI(c =>
                 {
@@ -57,13 +63,13 @@ namespace DarkDeeds.WebClientBffApp.App
                     .AllowCredentials());
             }
 
-            app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
                 endpoints.MapHub<TaskHub>("/ws/task");
+                endpoints.MapDarkDeedsAppMetrics();
             });
         }
     }

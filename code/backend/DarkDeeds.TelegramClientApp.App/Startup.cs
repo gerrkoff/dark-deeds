@@ -1,4 +1,6 @@
+using DarkDeeds.AppMetrics;
 using DarkDeeds.Authentication.DependencyInjection;
+using DarkDeeds.CommonWeb;
 using DarkDeeds.Communication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -21,6 +23,7 @@ namespace DarkDeeds.TelegramClientApp.App
         {
             services.AddDarkDeedsAuth(Configuration);
             services.AddDarkDeedsAppRegistration("telegram-client", Configuration);
+            services.AddDarkDeedsAppMetrics(Configuration);
 
             services.AddTelegramClientIdentity();
             services.AddTelegramClientCommunications(Configuration);
@@ -31,9 +34,12 @@ namespace DarkDeeds.TelegramClientApp.App
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseRouting();
+            app.UseDarkDeedsAppMetrics();
+            app.UseDarkDeedsExceptionHandler(env.IsProduction());
+
             if (!env.IsProduction())
             {
-                app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI(c =>
                 {
@@ -42,7 +48,6 @@ namespace DarkDeeds.TelegramClientApp.App
                 });
             }
 
-            app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>
@@ -50,6 +55,7 @@ namespace DarkDeeds.TelegramClientApp.App
                 endpoints.MapControllers();
                 endpoints.MapControllerRoute("bot", $"api/bot/{Configuration["Bot"]}",
                     new {controller = "Bot", action = "Process"});
+                endpoints.MapDarkDeedsAppMetrics();
             });
         }
     }
