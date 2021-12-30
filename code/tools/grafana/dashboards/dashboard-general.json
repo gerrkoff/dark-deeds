@@ -22,7 +22,7 @@
     "fiscalYearStartMonth": 0,
     "gnetId": 10427,
     "graphTooltip": 0,
-    "iteration": 1640351567692,
+    "iteration": 1640862607786,
     "links": [],
     "liveNow": false,
     "panels": [
@@ -305,7 +305,7 @@
                         "spanNulls": true,
                         "stacking": {
                             "group": "A",
-                            "mode": "normal"
+                            "mode": "none"
                         },
                         "thresholdsStyle": {
                             "mode": "off"
@@ -1110,6 +1110,6 @@
     "timezone": "",
     "title": "General",
     "uid": "RJ4jYionz",
-    "version": 1,
+    "version": 5,
     "weekStart": ""
 }
