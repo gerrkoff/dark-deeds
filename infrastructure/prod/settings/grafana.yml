@@ -6,4 +6,4 @@ datasources:
   url: 'http://prometheus:9090'
   is_default: true
   version: 1
-  editable: true
+  editable: false
