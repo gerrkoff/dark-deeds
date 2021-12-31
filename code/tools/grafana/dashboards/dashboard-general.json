@@ -22,7 +22,7 @@
     "fiscalYearStartMonth": 0,
     "gnetId": 10427,
     "graphTooltip": 0,
-    "iteration": 1640862607786,
+    "iteration": 1640933539704,
     "links": [],
     "liveNow": false,
     "panels": [
@@ -250,6 +250,8 @@
             "options": {
                 "legend": {
                     "calcs": [
+                        "mean",
+                        "min",
                         "lastNotNull"
                     ],
                     "displayMode": "table",
@@ -311,6 +313,7 @@
                             "mode": "off"
                         }
                     },
+                    "decimals": 2,
                     "mappings": [],
                     "thresholds": {
                         "mode": "absolute",
@@ -335,6 +338,8 @@
             "options": {
                 "legend": {
                     "calcs": [
+                        "mean",
+                        "max",
                         "last"
                     ],
                     "displayMode": "table",
@@ -436,6 +441,8 @@
             "options": {
                 "legend": {
                     "calcs": [
+                        "mean",
+                        "max",
                         "last"
                     ],
                     "displayMode": "table",
@@ -536,6 +543,8 @@
             "options": {
                 "legend": {
                     "calcs": [
+                        "mean",
+                        "max",
                         "last"
                     ],
                     "displayMode": "table",
@@ -636,6 +645,8 @@
             "options": {
                 "legend": {
                     "calcs": [
+                        "mean",
+                        "max",
                         "lastNotNull"
                     ],
                     "displayMode": "table",
@@ -737,6 +748,8 @@
             "options": {
                 "legend": {
                     "calcs": [
+                        "mean",
+                        "max",
                         "last"
                     ],
                     "displayMode": "table",
@@ -799,6 +812,7 @@
                             "mode": "area"
                         }
                     },
+                    "decimals": 2,
                     "mappings": [],
                     "thresholds": {
                         "mode": "absolute",
@@ -835,6 +849,8 @@
             "options": {
                 "legend": {
                     "calcs": [
+                        "mean",
+                        "max",
                         "last"
                     ],
                     "displayMode": "table",
@@ -924,6 +940,8 @@
             "options": {
                 "legend": {
                     "calcs": [
+                        "mean",
+                        "max",
                         "last"
                     ],
                     "displayMode": "table",
@@ -1110,6 +1128,6 @@
     "timezone": "",
     "title": "General",
     "uid": "RJ4jYionz",
-    "version": 5,
+    "version": 1,
     "weekStart": ""
 }
