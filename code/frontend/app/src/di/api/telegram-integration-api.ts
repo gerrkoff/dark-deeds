@@ -11,6 +11,6 @@ export class TelegramIntegrationApi {
     ) {}
 
     public start(timezoneOffset: number): Promise<TelegramStart> {
-        return this.api.get<TelegramStart>(`web/api/telegram/start?timezoneOffset=${timezoneOffset}`)
+        return this.api.post<TelegramStart>(`api/tlgm/start?timezoneOffset=${timezoneOffset}`, null)
     }
 }

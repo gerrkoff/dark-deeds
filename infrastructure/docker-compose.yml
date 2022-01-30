@@ -63,11 +63,10 @@ services:
       - ASPNETCORE_URLS=http://0.0.0.0:5000
     depends_on:
       - consul
+      - backend
       - auth-service
       - task-service
-      - telegram-client
       - web-client
-      - web-client-bff
     deploy:
       resources:
         limits:
@@ -113,14 +112,14 @@ services:
           cpus: '1'
           memory: 300M
 
-  telegram-client:
+  backend:
     build:
       context: ../
-      dockerfile: infrastructure/apps/telegram-client.dockerfile
+      dockerfile: infrastructure/apps/backend.dockerfile
     ports:
       - 5003:5003
     environment:
-      - DD_SERVICE_DISCOVERY_HOST=${IP:-telegram-client}
+      - DD_SERVICE_DISCOVERY_HOST=${IP:-backend}
       - DD_SERVICE_DISCOVERY_PORT=5003
       - ASPNETCORE_URLS=http://0.0.0.0:5003
     depends_on:
@@ -141,26 +140,6 @@ services:
     environment:
       - DD_SERVICE_DISCOVERY_HOST=${IP:-web-client}
       - DD_SERVICE_DISCOVERY_PORT=3000
-    deploy:
-      resources:
-        limits:
-          cpus: '1'
-          memory: 300M
-
-  web-client-bff:
-    build:
-      context: ../
-      dockerfile: infrastructure/apps/web-client-bff.dockerfile
-    ports:
-      - 5004:5004
-    environment:
-      - DD_SERVICE_DISCOVERY_HOST=${IP:-web-client-bff}
-      - DD_SERVICE_DISCOVERY_PORT=5004
-      - ASPNETCORE_URLS=http://0.0.0.0:5004
-    depends_on:
-      - consul
-      - postgres-db
-      - rabbit-mq
     deploy:
       resources:
         limits:

@@ -24,7 +24,7 @@ namespace DarkDeeds.E2eTests
         public async void GetBuildVersionTest()
         {
             using var httpClient = CreateHttpClient();
-            var url = "/web/api/build-info";
+            var url = "/api/be/build-info";
             var result = await httpClient.GetStringAsync(url);
             var version = (string) JObject.Parse(result)["appVersion"];
             _output.WriteLine($"App Version: {version}");

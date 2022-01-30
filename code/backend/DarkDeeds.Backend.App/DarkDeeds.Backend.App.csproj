@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net5.0</TargetFramework>
+    </PropertyGroup>
+    
+    <ItemGroup>
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\DarkDeeds.AppMetrics\DarkDeeds.AppMetrics.csproj" />
+      <ProjectReference Include="..\DarkDeeds.Authentication.DependencyInjection\DarkDeeds.Authentication.DependencyInjection.csproj" />
+      <ProjectReference Include="..\DarkDeeds.CommonWeb\DarkDeeds.CommonWeb.csproj" />
+      <ProjectReference Include="..\DarkDeeds.Common\DarkDeeds.Common.csproj" />
+      <ProjectReference Include="..\DarkDeeds.Communication\DarkDeeds.Communication.csproj" />
+      <ProjectReference Include="..\DarkDeeds.TelegramClientApp.Web\DarkDeeds.TelegramClientApp.Web.csproj" />
+      <ProjectReference Include="..\DarkDeeds.WebClientBffApp.Web\DarkDeeds.WebClientBffApp.Web.csproj" />
+    </ItemGroup>
+
+</Project>

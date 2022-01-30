@@ -25,19 +25,11 @@ services:
       args:
         - BUILD_VERSION=${BUILD_VERSION}
 
-  telegram-client:
-    image: gerrkoff/dark-deeds-telegram-client:${BUILD_VERSION}
+  backend:
+    image: gerrkoff/dark-deeds-backend:${BUILD_VERSION}
     build:
       context: ../
-      dockerfile: ci/apps/telegram-client.dockerfile
-      args:
-        - BUILD_VERSION=${BUILD_VERSION}
-
-  web-client-bff:
-    image: gerrkoff/dark-deeds-web-client-bff:${BUILD_VERSION}
-    build:
-      context: ../
-      dockerfile: ci/apps/web-client-bff.dockerfile
+      dockerfile: ci/apps/backend.dockerfile
       args:
         - BUILD_VERSION=${BUILD_VERSION}
 

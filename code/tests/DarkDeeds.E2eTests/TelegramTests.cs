@@ -32,7 +32,7 @@ namespace DarkDeeds.E2eTests
         private async Task<int> GetTestChatId(string username)
         {
             using var client = CreateHttpClient();
-            var url = $"/telegram/test/GetTestChatIdForUser?username={username}";
+            var url = $"api/test/GetTestChatIdForUser?username={username}";
             var result = await client.PostAsync(url, null!);
             result.EnsureSuccessStatusCode();
             var content = await result.Content.ReadAsStringAsync();
@@ -70,7 +70,7 @@ namespace DarkDeeds.E2eTests
             };
             var serialized = JsonConvert.SerializeObject(payload);
             var content = new StringContent(serialized, Encoding.UTF8, MediaTypeNames.Application.Json);
-            var result = await client.PostAsync("/telegram/api/bot/bot", content);
+            var result = await client.PostAsync("/api/tlgm/bot/bot", content);
 
             result.EnsureSuccessStatusCode();
         }
