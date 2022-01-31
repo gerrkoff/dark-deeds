@@ -44,8 +44,9 @@ export class TaskHubApi {
     ) {
         this.connection.onclose((error?: Error) => {
             if (error !== undefined) {
-                close()
+                console.warn('Hub Connection was closed with error', error)
             }
+            close()
         })
         this.connection.on('update', (tasks, localUpdate) => update(this.dateService.adjustDatesAfterLoading(tasks) as Task[], localUpdate))
         this.connection.on('heartbeat', heartbeat)
