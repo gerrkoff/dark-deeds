@@ -1,5 +1,5 @@
 using AutoMapper;
-using DarkDeeds.Authentication.Models;
+using DarkDeeds.Authentication.Core.Models;
 using DarkDeeds.WebClientBffApp.UseCases.Dto;
 
 namespace DarkDeeds.WebClientBffApp.UseCases.Mapping

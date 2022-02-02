@@ -1,6 +1,6 @@
-﻿using DarkDeeds.Authentication.Models;
+﻿using DarkDeeds.Authentication.Core.Models;
 
-namespace DarkDeeds.Authentication.Services
+namespace DarkDeeds.Authentication.Core.Services
 {
     public interface ITokenService
     {

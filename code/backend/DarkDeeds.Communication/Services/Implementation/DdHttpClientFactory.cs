@@ -1,7 +1,7 @@
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using DarkDeeds.Authentication.Services;
+using DarkDeeds.Authentication.Core.Services;
 using DarkDeeds.Communication.Services.Interface;
 
 namespace DarkDeeds.Communication.Services.Implementation

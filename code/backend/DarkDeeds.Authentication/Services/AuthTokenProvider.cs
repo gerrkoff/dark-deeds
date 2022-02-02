@@ -1,9 +1,9 @@
 using System.Threading.Tasks;
-using DarkDeeds.Authentication.Services;
+using DarkDeeds.Authentication.Core.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 
-namespace DarkDeeds.Authentication.DependencyInjection.Services
+namespace DarkDeeds.Authentication.Services
 {
     class AuthTokenProvider : IAuthTokenProvider
     {

@@ -16,9 +16,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.Common", "DarkDee
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.Communication", "DarkDeeds.Communication\DarkDeeds.Communication.csproj", "{C6896D1B-DC4E-4170-BF82-884CADFF32D5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.Authentication", "DarkDeeds.Authentication\DarkDeeds.Authentication.csproj", "{DC009582-7190-4FCD-9AA3-667A1D8B55B6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.Authentication.Core", "DarkDeeds.Authentication.Core\DarkDeeds.Authentication.Core.csproj", "{DC009582-7190-4FCD-9AA3-667A1D8B55B6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.Authentication.DependencyInjection", "DarkDeeds.Authentication.DependencyInjection\DarkDeeds.Authentication.DependencyInjection.csproj", "{7D799D64-3B71-49DE-8E21-EC83497A7A26}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.Authentication", "DarkDeeds.Authentication\DarkDeeds.Authentication.csproj", "{7D799D64-3B71-49DE-8E21-EC83497A7A26}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2 Services", "2 Services", "{E03FB25D-A5FC-4920-B0B6-23E24F5A3C9F}"
 EndProject

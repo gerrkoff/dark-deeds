@@ -11,7 +11,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\DarkDeeds.Authentication\DarkDeeds.Authentication.csproj" />
+      <ProjectReference Include="..\DarkDeeds.Authentication.Core\DarkDeeds.Authentication.Core.csproj" />
       <ProjectReference Include="..\DarkDeeds.TaskServiceApp.Contract\DarkDeeds.TaskServiceApp.Contract.csproj" />
       <ProjectReference Include="..\DarkDeeds.TaskServiceApp.Services\DarkDeeds.TaskServiceApp.Services.csproj" />
     </ItemGroup>

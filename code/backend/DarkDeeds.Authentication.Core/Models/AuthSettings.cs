@@ -1,4 +1,4 @@
-﻿namespace DarkDeeds.Authentication.Models
+﻿namespace DarkDeeds.Authentication.Core.Models
 {
     public class AuthSettings
     {

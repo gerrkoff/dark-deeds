@@ -1,5 +1,5 @@
 using DarkDeeds.AppMetrics;
-using DarkDeeds.Authentication.DependencyInjection;
+using DarkDeeds.Authentication;
 using DarkDeeds.Communication;
 using DarkDeeds.TaskServiceApp.Communication.Publishers;
 using DarkDeeds.TaskServiceApp.ContractImpl;
