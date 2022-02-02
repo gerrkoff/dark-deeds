@@ -1,32 +1,43 @@
 {
   "Routes": [
     {
-      "DownstreamPathTemplate": "/{path}",
+      "DownstreamPathTemplate": "/api/web/{path}",
       "DownstreamScheme": "http",
-      "UpstreamPathTemplate": "/web/{path}",
+      "UpstreamPathTemplate": "/web/api/{path}",
       "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE", "OPTIONS" ],
-      "ServiceName": "web-client-bff",
+      "ServiceName": "backend",
       "LoadBalancerOptions": {
         "Type": "LeastConnection"
       }
     },
     {
-      "DownstreamPathTemplate": "/ws/{path}",
+      "DownstreamPathTemplate": "/ws/web/{path}",
       "DownstreamScheme": "ws",
       "UpstreamPathTemplate": "/ws/web/{path}",
       "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE", "OPTIONS" ],
-      "ServiceName": "web-client-bff",
+      "ServiceName": "backend",
       "LoadBalancerOptions": {
         "Type": "NoLoadBalancer"
       }
     },
 
     {
-      "DownstreamPathTemplate": "/{path}",
+      "DownstreamPathTemplate": "/api/tlgm/{path}",
       "DownstreamScheme": "http",
-      "UpstreamPathTemplate": "/telegram/{path}",
+      "UpstreamPathTemplate": "/telegram/api/{path}",
       "UpstreamHttpMethod": [ "POST" ],
-      "ServiceName": "telegram-client",
+      "ServiceName": "backend",
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      }
+    },
+
+    {
+      "DownstreamPathTemplate": "/api/{path}",
+      "DownstreamScheme": "http",
+      "UpstreamPathTemplate": "/api/{path}",
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE", "OPTIONS" ],
+      "ServiceName": "backend",
       "LoadBalancerOptions": {
         "Type": "LeastConnection"
       }
