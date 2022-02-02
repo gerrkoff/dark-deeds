@@ -82,7 +82,7 @@ namespace DarkDeeds.E2eTests.Base
             using var client = CreateHttpClient();
             var payload = JsonConvert.SerializeObject(new {username, password = Password});
             var content = new StringContent(payload, Encoding.UTF8, MediaTypeNames.Application.Json);
-            await client.PostAsync("/web/api/account/signup", content);
+            await client.PostAsync("/api/web/account/signup", content);
         }
     }
 }

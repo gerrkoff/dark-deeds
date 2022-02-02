@@ -11,10 +11,10 @@ export class SettingsApi {
     ) {}
 
     public load(): Promise<SettingsServer> {
-        return this.api.get<SettingsServer>('web/api/settings')
+        return this.api.get<SettingsServer>('api/web/settings')
     }
 
     public save(settings: SettingsServer): Promise<void> {
-        return this.api.post('web/api/settings', settings)
+        return this.api.post('api/web/settings', settings)
     }
 }
