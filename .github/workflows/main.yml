@@ -32,7 +32,7 @@ jobs:
     - name: Build BE
       run: |
         dotnet test code/backend/DarkDeeds.ServiceTask.Tests/DarkDeeds.ServiceTask.Tests.csproj
-        dotnet test code/backend/DarkDeeds.TelegramClient.Tests/DarkDeeds.TelegramClientApp.Tests.csproj
+        dotnet test code/backend/DarkDeeds.TelegramClient.Tests/DarkDeeds.TelegramClient.Tests.csproj
         dotnet build code/backend/DarkDeeds.sln
 
   build-e2e-tests:
