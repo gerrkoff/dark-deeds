@@ -2,7 +2,7 @@ using DarkDeeds.AppMetrics;
 using DarkDeeds.Authentication;
 using DarkDeeds.Common.Web;
 using DarkDeeds.Communication;
-using DarkDeeds.TelegramClientApp.Web;
+using DarkDeeds.TelegramClient.Web;
 using DarkDeeds.WebClientBffApp.Web;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
