@@ -5,7 +5,7 @@ WORKDIR /code
 ARG BUILD_VERSION
 
 RUN dotnet test "--logger:trx;LogFileName=results.trx" --results-directory /test-results \
-    /code/backend/DarkDeeds.TelegramClientApp.Tests/DarkDeeds.TelegramClientApp.Tests.csproj
+    /code/backend/DarkDeeds.TelegramClient.Tests/DarkDeeds.TelegramClient.Tests.csproj
 RUN dotnet publish -c Release -o /build --version-suffix ${BUILD_VERSION}  \
     /code/backend/DarkDeeds.Backend.App/DarkDeeds.Backend.App.csproj
 
