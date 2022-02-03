@@ -10,7 +10,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\DarkDeeds.Communication\DarkDeeds.Communication.csproj" />
-      <ProjectReference Include="..\DarkDeeds.TaskServiceApp.Contract\DarkDeeds.TaskServiceApp.Contract.csproj" />
+      <ProjectReference Include="..\DarkDeeds.ServiceTask.Contract\DarkDeeds.ServiceTask.Contract.csproj" />
       <ProjectReference Include="..\DarkDeeds.TelegramClientApp.Infrastructure\DarkDeeds.TelegramClientApp.Infrastructure.csproj" />
     </ItemGroup>
 

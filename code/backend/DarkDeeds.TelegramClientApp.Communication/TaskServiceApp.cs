@@ -6,7 +6,7 @@ using DarkDeeds.Authentication.Core.Models;
 using DarkDeeds.Authentication.Core.Services;
 using DarkDeeds.Communication;
 using DarkDeeds.Communication.Services.Interface;
-using DarkDeeds.TaskServiceApp.Contract;
+using DarkDeeds.ServiceTask.Contract;
 using DarkDeeds.TelegramClientApp.Infrastructure.Communication.TaskServiceApp;
 using DarkDeeds.TelegramClientApp.Infrastructure.Communication.TaskServiceApp.Dto;
 using Grpc.Core;

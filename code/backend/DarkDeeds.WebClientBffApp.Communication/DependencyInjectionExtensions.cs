@@ -1,6 +1,6 @@
 using DarkDeeds.Communication;
 using DarkDeeds.ServiceAuth.Contract;
-using DarkDeeds.TaskServiceApp.Contract;
+using DarkDeeds.ServiceTask.Contract;
 using DarkDeeds.WebClientBffApp.Communication.Apps;
 using DarkDeeds.WebClientBffApp.Communication.Mapping;
 using DarkDeeds.WebClientBffApp.Infrastructure.Communication.AuthServiceApp;
@@ -20,7 +20,7 @@ namespace DarkDeeds.WebClientBffApp.Communication
             
             services.AddDarkDeedsGrpcClientFactory<TaskService.TaskServiceClient>("task-service", configuration);
             services.AddDarkDeedsGrpcClientFactory<RecurrenceService.RecurrenceServiceClient>("task-service", configuration);
-            services.AddScoped<ITaskServiceApp, Apps.TaskServiceApp>();
+            services.AddScoped<ITaskServiceApp, TaskServiceApp>();
             
             services.AddDarkDeedsHttpClientFactory(configuration);
             services.AddScoped<ITelegramClientApp, TelegramClientApp>();

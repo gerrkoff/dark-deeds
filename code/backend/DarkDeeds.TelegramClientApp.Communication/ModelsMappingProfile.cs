@@ -1,6 +1,6 @@
 using System;
 using AutoMapper;
-using DarkDeeds.TaskServiceApp.Contract;
+using DarkDeeds.ServiceTask.Contract;
 using DarkDeeds.TelegramClientApp.Infrastructure.Communication.TaskServiceApp.Dto;
 
 namespace DarkDeeds.TelegramClientApp.Communication

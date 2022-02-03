@@ -2,7 +2,7 @@ FROM mcr.microsoft.com/dotnet/sdk:5.0
 
 COPY code/backend /app/
 
-WORKDIR /app/DarkDeeds.TaskServiceApp.App
+WORKDIR /app/DarkDeeds.ServiceTask.App
 
 RUN dotnet build
 

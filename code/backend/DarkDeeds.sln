@@ -36,7 +36,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.ServiceAuth.Data"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.ServiceAuth.App", "DarkDeeds.ServiceAuth.App\DarkDeeds.ServiceAuth.App.csproj", "{EE3C8CB5-3956-481B-AAD3-1EA366DF501A}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TaskServiceApp", "TaskServiceApp", "{7B40DBCC-247C-482C-A149-789BD9ABC39F}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ServiceTask", "ServiceTask", "{7B40DBCC-247C-482C-A149-789BD9ABC39F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1 Domain", "1 Domain", "{FD8EB563-2230-446A-862A-8A16BD9A48FD}"
 EndProject
@@ -44,23 +44,23 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2 UseCases - gRPC", "2 UseC
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3 Details", "3 Details", "{7848FA73-CD97-485E-B4CD-11D4884A5AD1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.TaskServiceApp.Entities", "DarkDeeds.TaskServiceApp.Entities\DarkDeeds.TaskServiceApp.Entities.csproj", "{ACD587F8-69B8-4BB4-B990-CAA3D501D439}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.ServiceTask.Entities", "DarkDeeds.ServiceTask.Entities\DarkDeeds.ServiceTask.Entities.csproj", "{ACD587F8-69B8-4BB4-B990-CAA3D501D439}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.TaskServiceApp.Infrastructure", "DarkDeeds.TaskServiceApp.Infrastructure\DarkDeeds.TaskServiceApp.Infrastructure.csproj", "{428E2C71-AB67-4B81-903B-C9D1649147A4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.ServiceTask.Infrastructure", "DarkDeeds.ServiceTask.Infrastructure\DarkDeeds.ServiceTask.Infrastructure.csproj", "{428E2C71-AB67-4B81-903B-C9D1649147A4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.TaskServiceApp.Models", "DarkDeeds.TaskServiceApp.Models\DarkDeeds.TaskServiceApp.Models.csproj", "{518E0F61-1919-4DE9-93C4-3FB96BAB4C42}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.ServiceTask.Models", "DarkDeeds.ServiceTask.Models\DarkDeeds.ServiceTask.Models.csproj", "{518E0F61-1919-4DE9-93C4-3FB96BAB4C42}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.TaskServiceApp.Services", "DarkDeeds.TaskServiceApp.Services\DarkDeeds.TaskServiceApp.Services.csproj", "{CB6C9950-CC59-4C55-8C80-8611871242E9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.ServiceTask.Services", "DarkDeeds.ServiceTask.Services\DarkDeeds.ServiceTask.Services.csproj", "{CB6C9950-CC59-4C55-8C80-8611871242E9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.TaskServiceApp.Contract", "DarkDeeds.TaskServiceApp.Contract\DarkDeeds.TaskServiceApp.Contract.csproj", "{A9947536-B1A0-4934-910B-1A57BA740757}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.ServiceTask.Contract", "DarkDeeds.ServiceTask.Contract\DarkDeeds.ServiceTask.Contract.csproj", "{A9947536-B1A0-4934-910B-1A57BA740757}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.TaskServiceApp.ContractImpl", "DarkDeeds.TaskServiceApp.ContractImpl\DarkDeeds.TaskServiceApp.ContractImpl.csproj", "{31B5521B-5C95-49D9-B60A-FCE330B0A299}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.ServiceTask.ContractImpl", "DarkDeeds.ServiceTask.ContractImpl\DarkDeeds.ServiceTask.ContractImpl.csproj", "{31B5521B-5C95-49D9-B60A-FCE330B0A299}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.TaskServiceApp.Data", "DarkDeeds.TaskServiceApp.Data\DarkDeeds.TaskServiceApp.Data.csproj", "{6FDBC315-B322-4DAF-98CA-B2D185A3CD50}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.ServiceTask.Data", "DarkDeeds.ServiceTask.Data\DarkDeeds.ServiceTask.Data.csproj", "{6FDBC315-B322-4DAF-98CA-B2D185A3CD50}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.TaskServiceApp.Tests", "DarkDeeds.TaskServiceApp.Tests\DarkDeeds.TaskServiceApp.Tests.csproj", "{D36A64F8-9C2B-4508-94A7-9E402306A302}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.ServiceTask.Tests", "DarkDeeds.ServiceTask.Tests\DarkDeeds.ServiceTask.Tests.csproj", "{D36A64F8-9C2B-4508-94A7-9E402306A302}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.TaskServiceApp.Communication", "DarkDeeds.TaskServiceApp.Communication\DarkDeeds.TaskServiceApp.Communication.csproj", "{457380C2-FDB5-4E0E-844B-DD8149672A3F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.ServiceTask.Communication", "DarkDeeds.ServiceTask.Communication\DarkDeeds.ServiceTask.Communication.csproj", "{457380C2-FDB5-4E0E-844B-DD8149672A3F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TelegramClient", "TelegramClient", "{F9F5398C-A6E6-4030-976C-6B05C3567D69}"
 EndProject
@@ -82,7 +82,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.TelegramClientApp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.TelegramClientApp.Tests", "DarkDeeds.TelegramClientApp.Tests\DarkDeeds.TelegramClientApp.Tests.csproj", "{A4ABC6FF-E3DB-43BF-98FD-2487A8EEDC12}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.TaskServiceApp.App", "DarkDeeds.TaskServiceApp.App\DarkDeeds.TaskServiceApp.App.csproj", "{362FF211-20AB-40C4-9BA9-12EE95F0FC4D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.ServiceTask.App", "DarkDeeds.ServiceTask.App\DarkDeeds.ServiceTask.App.csproj", "{362FF211-20AB-40C4-9BA9-12EE95F0FC4D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WebClient", "WebClient", "{9594F9B5-6DBE-49D1-9485-BC99F4466CDE}"
 EndProject

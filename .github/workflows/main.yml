@@ -31,7 +31,7 @@ jobs:
         dotnet-version: 5.0.x
     - name: Build BE
       run: |
-        dotnet test code/backend/DarkDeeds.TaskServiceApp.Tests/DarkDeeds.TaskServiceApp.Tests.csproj
+        dotnet test code/backend/DarkDeeds.ServiceTask.Tests/DarkDeeds.ServiceTask.Tests.csproj
         dotnet test code/backend/DarkDeeds.TelegramClientApp.Tests/DarkDeeds.TelegramClientApp.Tests.csproj
         dotnet build code/backend/DarkDeeds.sln
 

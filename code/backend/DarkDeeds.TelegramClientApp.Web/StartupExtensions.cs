@@ -1,5 +1,5 @@
 using DarkDeeds.Communication;
-using DarkDeeds.TaskServiceApp.Contract;
+using DarkDeeds.ServiceTask.Contract;
 using DarkDeeds.TelegramClientApp.Communication;
 using DarkDeeds.TelegramClientApp.Data.Context;
 using DarkDeeds.TelegramClientApp.Entities;
@@ -69,7 +69,7 @@ namespace DarkDeeds.TelegramClientApp.Web
         {
             services.AddDarkDeedsGrpcClientFactory<TaskService.TaskServiceClient>("task-service", configuration);
             services.AddDarkDeedsGrpcClientFactory<ParserService.ParserServiceClient>("task-service", configuration);
-            services.AddScoped<ITaskServiceApp, Communication.TaskServiceApp>();
+            services.AddScoped<ITaskServiceApp, TaskServiceApp>();
             services.AddAutoMapper(typeof(ModelsMappingProfile));
         }
 
