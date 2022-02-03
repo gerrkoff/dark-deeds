@@ -84,7 +84,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.TelegramClient.Te
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.ServiceTask.App", "DarkDeeds.ServiceTask.App\DarkDeeds.ServiceTask.App.csproj", "{362FF211-20AB-40C4-9BA9-12EE95F0FC4D}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WebClient", "WebClient", "{9594F9B5-6DBE-49D1-9485-BC99F4466CDE}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WebClientBff", "WebClientBff", "{9594F9B5-6DBE-49D1-9485-BC99F4466CDE}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1 Entities", "1 Entities", "{6802ED7D-E4FE-4BA2-AA8F-CC659F2D57F7}"
 EndProject
@@ -94,17 +94,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3 UseCases", "3 UseCases", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4 Details", "4 Details", "{4F15F716-2209-43C8-AC54-02AAE2BF05F0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.WebClientBffApp.Entities", "DarkDeeds.WebClientBffApp.Entities\DarkDeeds.WebClientBffApp.Entities.csproj", "{F480BF5A-3A2D-45FB-93B8-9D36BA687404}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.WebClientBff.Entities", "DarkDeeds.WebClientBff.Entities\DarkDeeds.WebClientBff.Entities.csproj", "{F480BF5A-3A2D-45FB-93B8-9D36BA687404}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.WebClientBffApp.Infrastructure", "DarkDeeds.WebClientBffApp.Infrastructure\DarkDeeds.WebClientBffApp.Infrastructure.csproj", "{9DB67B5C-47E5-453F-8A6C-5BC0F5F3BAFE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.WebClientBff.Infrastructure", "DarkDeeds.WebClientBff.Infrastructure\DarkDeeds.WebClientBff.Infrastructure.csproj", "{9DB67B5C-47E5-453F-8A6C-5BC0F5F3BAFE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.WebClientBffApp.Services", "DarkDeeds.WebClientBffApp.Services\DarkDeeds.WebClientBffApp.Services.csproj", "{974BC3E9-9D18-4109-A332-8081908968BA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.WebClientBff.Services", "DarkDeeds.WebClientBff.Services\DarkDeeds.WebClientBff.Services.csproj", "{974BC3E9-9D18-4109-A332-8081908968BA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.WebClientBffApp.UseCases", "DarkDeeds.WebClientBffApp.UseCases\DarkDeeds.WebClientBffApp.UseCases.csproj", "{060CE29F-EC59-4FCF-A988-5DE14C0869C0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.WebClientBff.UseCases", "DarkDeeds.WebClientBff.UseCases\DarkDeeds.WebClientBff.UseCases.csproj", "{060CE29F-EC59-4FCF-A988-5DE14C0869C0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.WebClientBffApp.Communication", "DarkDeeds.WebClientBffApp.Communication\DarkDeeds.WebClientBffApp.Communication.csproj", "{65D5CB1E-3297-4DD8-B239-73C21FDA83D2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.WebClientBff.Communication", "DarkDeeds.WebClientBff.Communication\DarkDeeds.WebClientBff.Communication.csproj", "{65D5CB1E-3297-4DD8-B239-73C21FDA83D2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.WebClientBffApp.Data", "DarkDeeds.WebClientBffApp.Data\DarkDeeds.WebClientBffApp.Data.csproj", "{6E93E08A-AF5B-4108-A165-326538459462}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.WebClientBff.Data", "DarkDeeds.WebClientBff.Data\DarkDeeds.WebClientBff.Data.csproj", "{6E93E08A-AF5B-4108-A165-326538459462}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{FAEFF8E8-5219-48F4-9D63-B935A3065D7A}"
 EndProject
@@ -124,7 +124,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.Backend.App", "Da
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.TelegramClient.Web", "DarkDeeds.TelegramClient.Web\DarkDeeds.TelegramClient.Web.csproj", "{41FDC7EA-9063-4D92-A471-4A1BCAB8BAC5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.WebClientBffApp.Web", "DarkDeeds.WebClientBffApp.Web\DarkDeeds.WebClientBffApp.Web.csproj", "{0AB79B83-DF9C-4F19-83B7-36690ABB9E21}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.WebClientBff.Web", "DarkDeeds.WebClientBff.Web\DarkDeeds.WebClientBff.Web.csproj", "{0AB79B83-DF9C-4F19-83B7-36690ABB9E21}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Apps", "Apps", "{CFF17693-AB71-4F57-8E85-7FA8D3602B47}"
 EndProject
