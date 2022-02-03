@@ -1,5 +1,5 @@
-using DarkDeeds.AuthServiceApp.Contract;
 using DarkDeeds.Communication;
+using DarkDeeds.ServiceAuth.Contract;
 using DarkDeeds.TaskServiceApp.Contract;
 using DarkDeeds.WebClientBffApp.Communication.Apps;
 using DarkDeeds.WebClientBffApp.Communication.Mapping;
@@ -16,7 +16,7 @@ namespace DarkDeeds.WebClientBffApp.Communication
         public static void AddWebClientBffCommunications(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddDarkDeedsGrpcClientFactory<AuthService.AuthServiceClient>("auth-service", configuration);
-            services.AddScoped<IAuthServiceApp, Apps.AuthServiceApp>();
+            services.AddScoped<IAuthServiceApp, AuthServiceApp>();
             
             services.AddDarkDeedsGrpcClientFactory<TaskService.TaskServiceClient>("task-service", configuration);
             services.AddDarkDeedsGrpcClientFactory<RecurrenceService.RecurrenceServiceClient>("task-service", configuration);

@@ -1,5 +1,5 @@
 using AutoMapper;
-using DarkDeeds.AuthServiceApp.Contract;
+using DarkDeeds.ServiceAuth.Contract;
 using DarkDeeds.WebClientBffApp.Infrastructure.Communication.AuthServiceApp.Dto;
 
 namespace DarkDeeds.WebClientBffApp.Communication.Mapping

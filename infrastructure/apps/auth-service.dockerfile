@@ -2,7 +2,7 @@ FROM mcr.microsoft.com/dotnet/sdk:5.0
 
 COPY code/backend /app/
 
-WORKDIR /app/DarkDeeds.AuthServiceApp.App
+WORKDIR /app/DarkDeeds.ServiceAuth.App
 
 RUN dotnet build
 

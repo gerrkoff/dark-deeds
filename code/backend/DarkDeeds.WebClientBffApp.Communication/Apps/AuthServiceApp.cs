@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using AutoMapper;
-using DarkDeeds.AuthServiceApp.Contract;
 using DarkDeeds.Communication.Services.Interface;
+using DarkDeeds.ServiceAuth.Contract;
 using DarkDeeds.WebClientBffApp.Infrastructure.Communication.AuthServiceApp;
 using DarkDeeds.WebClientBffApp.Infrastructure.Communication.AuthServiceApp.Dto;
 

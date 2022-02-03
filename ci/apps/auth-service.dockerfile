@@ -5,7 +5,7 @@ WORKDIR /code
 ARG BUILD_VERSION
 
 RUN dotnet publish -c Release -o /build --version-suffix ${BUILD_VERSION}  \
-    /code/backend/DarkDeeds.AuthServiceApp.App/DarkDeeds.AuthServiceApp.App.csproj
+    /code/backend/DarkDeeds.ServiceAuth.App/DarkDeeds.ServiceAuth.App.csproj
 
 FROM mcr.microsoft.com/dotnet/aspnet:5.0
 
@@ -14,4 +14,4 @@ WORKDIR /app
 
 ENV ASPNETCORE_ENVIRONMENT=Production
 
-ENTRYPOINT ["dotnet", "DarkDeeds.AuthServiceApp.App.dll"]
+ENTRYPOINT ["dotnet", "DarkDeeds.ServiceAuth.App.dll"]
