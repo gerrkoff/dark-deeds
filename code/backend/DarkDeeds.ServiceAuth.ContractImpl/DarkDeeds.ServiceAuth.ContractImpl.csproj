@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.1</TargetFramework>
+        <LangVersion>9</LangVersion>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\DarkDeeds.Common\DarkDeeds.Common.csproj" />
+      <ProjectReference Include="..\DarkDeeds.ServiceAuth.Contract\DarkDeeds.ServiceAuth.Contract.csproj" />
+      <ProjectReference Include="..\DarkDeeds.ServiceAuth.Services\DarkDeeds.ServiceAuth.Services.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="AutoMapper" Version="10.1.1" />
+      <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
+    </ItemGroup>
+
+</Project>

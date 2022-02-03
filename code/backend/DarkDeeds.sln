@@ -2,13 +2,13 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.ApiGateway.App", "DarkDeeds.ApiGateway.App\DarkDeeds.ApiGateway.App.csproj", "{726DD25B-2FCB-4ADA-838D-A5B40D876E12}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ApiGatewayApp", "ApiGatewayApp", "{AC52881E-7538-4172-B3B8-2F57EC7CAA8E}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ApiGateway", "ApiGateway", "{AC52881E-7538-4172-B3B8-2F57EC7CAA8E}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AuthServiceApp", "AuthServiceApp", "{2E7C4CF3-EB8F-4660-A1EF-D64695FFDE02}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ServiceAuth", "ServiceAuth", "{2E7C4CF3-EB8F-4660-A1EF-D64695FFDE02}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1 Entities", "1 Entities", "{C1FA1A6A-11ED-48F4-8629-6EF2F84511CB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.AuthServiceApp.Entities", "DarkDeeds.AuthServiceApp.Entities\DarkDeeds.AuthServiceApp.Entities.csproj", "{72D35FCC-31AE-4D28-9760-FAFB8EB3A846}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.ServiceAuth.Entities", "DarkDeeds.ServiceAuth.Entities\DarkDeeds.ServiceAuth.Entities.csproj", "{72D35FCC-31AE-4D28-9760-FAFB8EB3A846}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Platform", "Platform", "{2360FC78-20CC-4031-8E89-4D291F94E7E1}"
 EndProject
@@ -22,19 +22,19 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.Authentication", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2 Services", "2 Services", "{E03FB25D-A5FC-4920-B0B6-23E24F5A3C9F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.AuthServiceApp.Services", "DarkDeeds.AuthServiceApp.Services\DarkDeeds.AuthServiceApp.Services.csproj", "{D1EA6363-BF52-4EBE-8AE4-A28B40EAA7DD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.ServiceAuth.Services", "DarkDeeds.ServiceAuth.Services\DarkDeeds.ServiceAuth.Services.csproj", "{D1EA6363-BF52-4EBE-8AE4-A28B40EAA7DD}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3 gRPC", "3 gRPC", "{596B6D79-866C-4A62-92CB-94018277DB58}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.AuthServiceApp.Contract", "DarkDeeds.AuthServiceApp.Contract\DarkDeeds.AuthServiceApp.Contract.csproj", "{4A4A97C3-C13F-4226-8B92-7AF180991A5F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.ServiceAuth.Contract", "DarkDeeds.ServiceAuth.Contract\DarkDeeds.ServiceAuth.Contract.csproj", "{4A4A97C3-C13F-4226-8B92-7AF180991A5F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.AuthServiceApp.ContractImpl", "DarkDeeds.AuthServiceApp.ContractImpl\DarkDeeds.AuthServiceApp.ContractImpl.csproj", "{6775017C-B681-4F74-8DF4-D4238AA32BFE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.ServiceAuth.ContractImpl", "DarkDeeds.ServiceAuth.ContractImpl\DarkDeeds.ServiceAuth.ContractImpl.csproj", "{6775017C-B681-4F74-8DF4-D4238AA32BFE}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4 Details", "4 Details", "{D823FEAC-1E0B-43F3-AA68-B32072390D73}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.AuthServiceApp.Data", "DarkDeeds.AuthServiceApp.Data\DarkDeeds.AuthServiceApp.Data.csproj", "{84521DBA-D830-4F53-A08D-960E383AD939}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.ServiceAuth.Data", "DarkDeeds.ServiceAuth.Data\DarkDeeds.ServiceAuth.Data.csproj", "{84521DBA-D830-4F53-A08D-960E383AD939}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.AuthServiceApp.App", "DarkDeeds.AuthServiceApp.App\DarkDeeds.AuthServiceApp.App.csproj", "{EE3C8CB5-3956-481B-AAD3-1EA366DF501A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.ServiceAuth.App", "DarkDeeds.ServiceAuth.App\DarkDeeds.ServiceAuth.App.csproj", "{EE3C8CB5-3956-481B-AAD3-1EA366DF501A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TaskServiceApp", "TaskServiceApp", "{7B40DBCC-247C-482C-A149-789BD9ABC39F}"
 EndProject
@@ -118,7 +118,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.AppMetrics", "Dar
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.Common.Web", "DarkDeeds.Common.Web\DarkDeeds.Common.Web.csproj", "{BFDE6CC0-5731-4DB7-BF7A-17CB20D81EBD}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BackendApp", "BackendApp", "{37AAA0CB-FEB0-45FD-8973-D8BE23447AED}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Backend", "Backend", "{37AAA0CB-FEB0-45FD-8973-D8BE23447AED}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.Backend.App", "DarkDeeds.Backend.App\DarkDeeds.Backend.App.csproj", "{03FCA965-B1C5-499D-8507-B11B977B1CC0}"
 EndProject
