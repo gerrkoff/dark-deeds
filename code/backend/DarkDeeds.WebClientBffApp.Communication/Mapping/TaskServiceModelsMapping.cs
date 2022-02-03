@@ -1,6 +1,6 @@
 using System;
 using AutoMapper;
-using DarkDeeds.TaskServiceApp.Contract;
+using DarkDeeds.ServiceTask.Contract;
 using DarkDeeds.WebClientBffApp.Infrastructure.Communication.TaskServiceApp.Dto;
 using DarkDeeds.WebClientBffApp.Infrastructure.Communication.TaskServiceApp.Enums;
 

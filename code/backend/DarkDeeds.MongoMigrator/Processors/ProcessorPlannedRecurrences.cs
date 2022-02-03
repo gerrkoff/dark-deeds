@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using DarkDeeds.MongoMigrator.PostgreDal.Models;
 using DarkDeeds.MongoMigrator.PostgreDal.Repository;
-using DarkDeeds.TaskServiceApp.Data.EntityRepository;
-using DarkDeeds.TaskServiceApp.Entities.Enums;
+using DarkDeeds.ServiceTask.Data.EntityRepository;
+using DarkDeeds.ServiceTask.Entities.Enums;
 using Microsoft.EntityFrameworkCore;
+using RecurrenceEntity = DarkDeeds.ServiceTask.Entities.Models.RecurrenceEntity;
 
 namespace DarkDeeds.MongoMigrator.Processors
 {
@@ -54,7 +55,7 @@ namespace DarkDeeds.MongoMigrator.Processors
 
         private async Task Upsert(PlannedRecurrenceEntity pgPlannedRecurrence)
         {
-            var mongoPlannedRecurrence = new TaskServiceApp.Entities.Models.PlannedRecurrenceEntity()
+            var mongoPlannedRecurrence = new ServiceTask.Entities.Models.PlannedRecurrenceEntity()
             {
                 Task = pgPlannedRecurrence.Task,
                 StartDate = DateTime.SpecifyKind(pgPlannedRecurrence.StartDate, DateTimeKind.Utc),
@@ -63,7 +64,7 @@ namespace DarkDeeds.MongoMigrator.Processors
                 EveryMonthDay = pgPlannedRecurrence.EveryMonthDay,
                 EveryWeekday = (RecurrenceWeekdayEnum?) (int?) pgPlannedRecurrence.EveryWeekday,
                 UserId = pgPlannedRecurrence.UserId,
-                Recurrences = new List<TaskServiceApp.Entities.Models.RecurrenceEntity>(),
+                Recurrences = new List<RecurrenceEntity>(),
                 Uid = pgPlannedRecurrence.Id.ToString(),
                 IsDeleted = pgPlannedRecurrence.IsDeleted,
                 Version = 1,

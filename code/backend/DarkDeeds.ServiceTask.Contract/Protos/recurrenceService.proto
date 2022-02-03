@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+option csharp_namespace = "DarkDeeds.ServiceTask.Contract";
+
+import "Protos/models.proto";
+
+package taskServiceApp;
+
+service RecurrenceService {
+  rpc CreateTasks (CreateTasksRequest) returns (CreateTasksReply);
+  rpc LoadRecurrences (LoadRecurrencesRequest) returns (LoadRecurrencesReply);
+  rpc SaveRecurrences (SaveRecurrencesRequest) returns (SaveRecurrencesReply);
+}
+
+message CreateTasksRequest {
+  int32 timezoneOffset = 1;
+}
+
+message CreateTasksReply {
+  int32 tasksCreatedCount = 1;
+}
+
+message LoadRecurrencesRequest {
+}
+
+message LoadRecurrencesReply {
+  repeated PlannedRecurrenceModel recurrences = 1;
+}
+
+message SaveRecurrencesRequest {
+  repeated PlannedRecurrenceModel recurrences = 1;
+}
+
+message SaveRecurrencesReply {
+  int32 recurrencesUpdatedCount = 1;
+}

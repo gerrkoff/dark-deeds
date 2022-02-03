@@ -1,5 +1,5 @@
-using DarkDeeds.TaskServiceApp.Data;
-using DarkDeeds.TaskServiceApp.Data.EntityRepository;
+using DarkDeeds.ServiceTask.Data;
+using DarkDeeds.ServiceTask.Data.EntityRepository;
 using Microsoft.Extensions.Configuration;
 
 namespace DarkDeeds.MongoMigrator.RepoFactory

@@ -2,8 +2,8 @@ using System;
 using System.Threading.Tasks;
 using DarkDeeds.MongoMigrator.PostgreDal.Models;
 using DarkDeeds.MongoMigrator.PostgreDal.Repository;
-using DarkDeeds.TaskServiceApp.Data.EntityRepository;
-using DarkDeeds.TaskServiceApp.Entities.Enums;
+using DarkDeeds.ServiceTask.Data.EntityRepository;
+using DarkDeeds.ServiceTask.Entities.Enums;
 using Microsoft.EntityFrameworkCore;
 
 namespace DarkDeeds.MongoMigrator.Processors
@@ -56,7 +56,7 @@ namespace DarkDeeds.MongoMigrator.Processors
 
         private async Task Upsert(TaskEntity pgTask)
         {
-            var mongoTask = new TaskServiceApp.Entities.Models.TaskEntity
+            var mongoTask = new ServiceTask.Entities.Models.TaskEntity
             {
                 Uid = pgTask.Uid,
                 IsDeleted =  pgTask.IsDeleted,

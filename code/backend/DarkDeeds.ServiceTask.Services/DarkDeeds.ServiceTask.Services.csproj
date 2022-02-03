@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.1</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\DarkDeeds.ServiceTask.Entities\DarkDeeds.ServiceTask.Entities.csproj" />
+      <ProjectReference Include="..\DarkDeeds.ServiceTask.Infrastructure\DarkDeeds.ServiceTask.Infrastructure.csproj" />
+      <ProjectReference Include="..\DarkDeeds.ServiceTask.Models\DarkDeeds.ServiceTask.Models.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="5.0.0" />
+    </ItemGroup>
+
+</Project>

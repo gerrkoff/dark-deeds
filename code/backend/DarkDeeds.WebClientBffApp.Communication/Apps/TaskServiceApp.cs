@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using DarkDeeds.Communication.Services.Interface;
-using DarkDeeds.TaskServiceApp.Contract;
+using DarkDeeds.ServiceTask.Contract;
 using DarkDeeds.WebClientBffApp.Infrastructure.Communication.TaskServiceApp;
 using DarkDeeds.WebClientBffApp.Infrastructure.Communication.TaskServiceApp.Dto;
 using Grpc.Core;

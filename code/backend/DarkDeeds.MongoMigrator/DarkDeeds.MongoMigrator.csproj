@@ -11,13 +11,11 @@
 
     <ItemGroup>
       <ProjectReference Include="..\DarkDeeds.MongoMigrator.PostgreDal\DarkDeeds.MongoMigrator.PostgreDal.csproj" />
-      <ProjectReference Include="..\DarkDeeds.TaskServiceApp.Data\DarkDeeds.TaskServiceApp.Data.csproj" />
+      <ProjectReference Include="..\DarkDeeds.ServiceTask.Data\DarkDeeds.ServiceTask.Data.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-        <None Include="Config\**"
-              CopyToOutputDirectory="PreserveNewest"
-              LinkBase="Config\" />
+        <None Include="Config\**" CopyToOutputDirectory="PreserveNewest" LinkBase="Config\" />
     </ItemGroup>
 
 </Project>
