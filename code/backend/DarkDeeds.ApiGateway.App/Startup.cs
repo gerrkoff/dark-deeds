@@ -7,7 +7,7 @@ using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
 using Ocelot.Provider.Consul;
 
-namespace DarkDeeds.ApiGatewayApp.App
+namespace DarkDeeds.ApiGateway.App
 {
     public class Startup
     {

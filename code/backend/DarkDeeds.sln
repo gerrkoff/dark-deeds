@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.ApiGatewayApp.App", "DarkDeeds.ApiGatewayApp.App\DarkDeeds.ApiGatewayApp.App.csproj", "{726DD25B-2FCB-4ADA-838D-A5B40D876E12}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.ApiGateway.App", "DarkDeeds.ApiGateway.App\DarkDeeds.ApiGateway.App.csproj", "{726DD25B-2FCB-4ADA-838D-A5B40D876E12}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ApiGatewayApp", "ApiGatewayApp", "{AC52881E-7538-4172-B3B8-2F57EC7CAA8E}"
 EndProject
@@ -116,7 +116,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.MongoMigrator.Pos
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.AppMetrics", "DarkDeeds.AppMetrics\DarkDeeds.AppMetrics.csproj", "{359508B0-96D1-4EA3-AA10-6274E90FDDA3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.CommonWeb", "DarkDeeds.CommonWeb\DarkDeeds.CommonWeb.csproj", "{BFDE6CC0-5731-4DB7-BF7A-17CB20D81EBD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.Common.Web", "DarkDeeds.Common.Web\DarkDeeds.Common.Web.csproj", "{BFDE6CC0-5731-4DB7-BF7A-17CB20D81EBD}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BackendApp", "BackendApp", "{37AAA0CB-FEB0-45FD-8973-D8BE23447AED}"
 EndProject

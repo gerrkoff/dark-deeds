@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using DarkDeeds.CommonWeb;
+using DarkDeeds.Common.Web;
 using DarkDeeds.TelegramClientApp.Services.Interface;
 using Microsoft.AspNetCore.Mvc;
 

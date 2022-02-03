@@ -1,6 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 
-namespace DarkDeeds.CommonWeb
+namespace DarkDeeds.Common.Web
 {
     public static class StartupExtensions
     {
