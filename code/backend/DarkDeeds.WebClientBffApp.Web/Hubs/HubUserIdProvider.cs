@@ -1,4 +1,4 @@
-using DarkDeeds.Authentication;
+using DarkDeeds.Authentication.Core;
 using Microsoft.AspNetCore.SignalR;
 
 namespace DarkDeeds.WebClientBffApp.Web.Hubs

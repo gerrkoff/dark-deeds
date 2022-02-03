@@ -42,7 +42,8 @@ namespace DarkDeeds.Communication.Amqp.Subscribe
         private IBasicConsumer CreateConsumer(IModel channel, Func<T, Task> handler)
         {
             var consumer = new EventingBasicConsumer(channel);
-            consumer.Received += async (model, eventArgs) =>
+
+            async void OnConsumerOnReceived(object model, BasicDeliverEventArgs eventArgs)
             {
                 var body = eventArgs.Body.ToArray();
                 try
@@ -53,9 +54,11 @@ namespace DarkDeeds.Communication.Amqp.Subscribe
                 catch (Exception e)
                 {
                     // TODO: do we need this global try/catch?
-                    _logger.LogWarning("Failed to process message", e);
+                    _logger.LogWarning("Failed to process message, error: {0}", e);
                 }
-            };
+            }
+
+            consumer.Received += OnConsumerOnReceived;
             return consumer;
         }
 

@@ -10,8 +10,8 @@
 
     <ItemGroup>
       <ProjectReference Include="..\DarkDeeds.AppMetrics\DarkDeeds.AppMetrics.csproj" />
-      <ProjectReference Include="..\DarkDeeds.Authentication.DependencyInjection\DarkDeeds.Authentication.DependencyInjection.csproj" />
-      <ProjectReference Include="..\DarkDeeds.CommonWeb\DarkDeeds.CommonWeb.csproj" />
+      <ProjectReference Include="..\DarkDeeds.Authentication\DarkDeeds.Authentication.csproj" />
+      <ProjectReference Include="..\DarkDeeds.Common.Web\DarkDeeds.Common.Web.csproj" />
       <ProjectReference Include="..\DarkDeeds.Common\DarkDeeds.Common.csproj" />
       <ProjectReference Include="..\DarkDeeds.Communication\DarkDeeds.Communication.csproj" />
       <ProjectReference Include="..\DarkDeeds.TelegramClientApp.Web\DarkDeeds.TelegramClientApp.Web.csproj" />

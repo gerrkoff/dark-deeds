@@ -1,8 +1,8 @@
 using System;
 using System.Security.Claims;
-using DarkDeeds.Authentication.Models;
+using DarkDeeds.Authentication.Core.Models;
 
-namespace DarkDeeds.Authentication
+namespace DarkDeeds.Authentication.Core
 {
     public static class AuthExtensions
     {

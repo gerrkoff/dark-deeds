@@ -1,12 +1,12 @@
 using System.Threading.Tasks;
-using DarkDeeds.Authentication.DependencyInjection.Services;
-using DarkDeeds.Authentication.Models;
+using DarkDeeds.Authentication.Core.Models;
+using DarkDeeds.Authentication.Core.Services;
 using DarkDeeds.Authentication.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace DarkDeeds.Authentication.DependencyInjection
+namespace DarkDeeds.Authentication
 {
     public static class DiExtensions
     {

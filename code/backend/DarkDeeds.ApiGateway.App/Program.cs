@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 
-namespace DarkDeeds.ApiGatewayApp.App
+namespace DarkDeeds.ApiGateway.App
 {
     public static class Program
     {

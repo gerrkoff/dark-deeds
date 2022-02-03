@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
-using DarkDeeds.Authentication;
+using DarkDeeds.Authentication.Core;
 using DarkDeeds.TaskServiceApp.Contract;
 using DarkDeeds.TaskServiceApp.Models.Dto;
 using DarkDeeds.TaskServiceApp.Services.Interface;

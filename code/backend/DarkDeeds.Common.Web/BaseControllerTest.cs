@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DarkDeeds.CommonWeb
+namespace DarkDeeds.Common.Web
 {
     [AllowAnonymous]
     [Route("api/test")]

@@ -26,7 +26,10 @@ namespace DarkDeeds.Common.Multithreading
         private ConcurrentQueue<T> CreateQueue()
         {
             OnQueueCreated();
-            new Task(async () => await ProcessQueue(), TaskCreationOptions.LongRunning).Start();
+
+            async void Action() => await ProcessQueue();
+
+            new Task(Action, TaskCreationOptions.LongRunning).Start();
             return new ConcurrentQueue<T>();
         }
         

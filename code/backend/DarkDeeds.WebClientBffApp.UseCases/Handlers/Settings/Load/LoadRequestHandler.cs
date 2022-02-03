@@ -1,6 +1,6 @@
 using System.Threading;
 using System.Threading.Tasks;
-using DarkDeeds.Authentication;
+using DarkDeeds.Authentication.Core;
 using DarkDeeds.WebClientBffApp.Services.Dto;
 using DarkDeeds.WebClientBffApp.Services.Services.Interface;
 using MediatR;

@@ -1,9 +1,9 @@
 using System;
 using System.Text;
-using DarkDeeds.Authentication.Models;
+using DarkDeeds.Authentication.Core.Models;
 using Microsoft.IdentityModel.Tokens;
 
-namespace DarkDeeds.Authentication.DependencyInjection
+namespace DarkDeeds.Authentication
 {
     public static class TokenValidationParams
     {

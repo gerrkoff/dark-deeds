@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-using DarkDeeds.Authentication.Models;
-using DarkDeeds.Authentication.Services;
+using DarkDeeds.Authentication.Core.Models;
+using DarkDeeds.Authentication.Core.Services;
 using DarkDeeds.AuthServiceApp.Entities;
 using DarkDeeds.AuthServiceApp.Services.Dto;
 using DarkDeeds.AuthServiceApp.Services.Enums;

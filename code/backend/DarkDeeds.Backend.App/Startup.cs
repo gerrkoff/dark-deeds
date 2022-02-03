@@ -1,6 +1,6 @@
 using DarkDeeds.AppMetrics;
-using DarkDeeds.Authentication.DependencyInjection;
-using DarkDeeds.CommonWeb;
+using DarkDeeds.Authentication;
+using DarkDeeds.Common.Web;
 using DarkDeeds.Communication;
 using DarkDeeds.TelegramClientApp.Web;
 using DarkDeeds.WebClientBffApp.Web;
