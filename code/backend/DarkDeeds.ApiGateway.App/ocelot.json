@@ -1,38 +1,6 @@
 {
   "Routes": [
     {
-      "DownstreamPathTemplate": "/api/web/{path}",
-      "DownstreamScheme": "http",
-      "UpstreamPathTemplate": "/web/api/{path}",
-      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE", "OPTIONS" ],
-      "ServiceName": "backend",
-      "LoadBalancerOptions": {
-        "Type": "LeastConnection"
-      }
-    },
-    {
-      "DownstreamPathTemplate": "/ws/web/{path}",
-      "DownstreamScheme": "ws",
-      "UpstreamPathTemplate": "/ws/web/{path}",
-      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE", "OPTIONS" ],
-      "ServiceName": "backend",
-      "LoadBalancerOptions": {
-        "Type": "NoLoadBalancer"
-      }
-    },
-
-    {
-      "DownstreamPathTemplate": "/api/tlgm/{path}",
-      "DownstreamScheme": "http",
-      "UpstreamPathTemplate": "/telegram/api/{path}",
-      "UpstreamHttpMethod": [ "POST" ],
-      "ServiceName": "backend",
-      "LoadBalancerOptions": {
-        "Type": "LeastConnection"
-      }
-    },
-
-    {
       "DownstreamPathTemplate": "/api/{path}",
       "DownstreamScheme": "http",
       "UpstreamPathTemplate": "/api/{path}",
@@ -42,7 +10,16 @@
         "Type": "LeastConnection"
       }
     },
-    
+    {
+      "DownstreamPathTemplate": "/ws/{path}",
+      "DownstreamScheme": "ws",
+      "UpstreamPathTemplate": "/ws/{path}",
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE", "OPTIONS" ],
+      "ServiceName": "backend",
+      "LoadBalancerOptions": {
+        "Type": "NoLoadBalancer"
+      }
+    },
     {
       "DownstreamPathTemplate": "/{path}",
       "DownstreamScheme": "http",
