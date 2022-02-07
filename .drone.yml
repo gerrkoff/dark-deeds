@@ -19,12 +19,12 @@ steps:
   - VERSION=$(./ci/version.sh "date -d @")
   - CMD=$(echo "$DEPLOY_PROD_CMD" | sed "s/VERSION/$VERSION/")
   - eval $CMD
-  
 
 trigger:
   event:
   - promote
 
+---
 kind: pipeline
 type: exec
 name: rollback
