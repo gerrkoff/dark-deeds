@@ -4,11 +4,12 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using DarkDeeds.Backend.Entities;
+using DarkDeeds.Backend.Entities.Entity;
 using Microsoft.EntityFrameworkCore;
 
 namespace DarkDeeds.Backend.Data
 {
-    public class Repository<T> : IRepositoryNonDeletable<T>
+    public class Repository<T> : IRepository<T>
         where T : BaseEntity
     {
         private readonly DbContext _context;
@@ -63,7 +64,7 @@ namespace DarkDeeds.Backend.Data
             await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteHardAsync(int id)
+        public async Task DeleteAsync(int id)
         {
             var entity = Activator.CreateInstance<T>();
             entity.Id = id;			
@@ -72,7 +73,7 @@ namespace DarkDeeds.Backend.Data
             await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteHardAsync(T entity)
+        public async Task DeleteAsync(T entity)
         {
             Entities.Remove(entity);
             await _context.SaveChangesAsync();

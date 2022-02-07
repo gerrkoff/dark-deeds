@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using AutoMapper;
 using DarkDeeds.Backend.Entities;
+using DarkDeeds.Backend.Entities.Entity;
 using DarkDeeds.WebClientBff.Services.Dto;
 using DarkDeeds.WebClientBff.Services.Services.Interface;
 using Microsoft.EntityFrameworkCore;
@@ -9,10 +10,10 @@ namespace DarkDeeds.WebClientBff.Services.Services.Implementation
 {
     public class SettingsService : ISettingsService
     {
-        private readonly IRepositoryNonDeletable<SettingsEntity> _settingsRepository;
+        private readonly IRepository<SettingsEntity> _settingsRepository;
         private readonly IMapper _mapper;
 
-        public SettingsService(IRepositoryNonDeletable<SettingsEntity> settingsRepository, IMapper mapper)
+        public SettingsService(IRepository<SettingsEntity> settingsRepository, IMapper mapper)
         {
             _settingsRepository = settingsRepository;
             _mapper = mapper;

@@ -1,4 +1,4 @@
-using DarkDeeds.Backend.Entities;
+using DarkDeeds.Backend.Entities.Entity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 

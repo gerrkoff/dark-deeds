@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace DarkDeeds.Backend.Entities
+namespace DarkDeeds.Backend.Entities.Entity
 {
     public class SettingsEntity : BaseEntity
     {

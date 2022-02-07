@@ -1,5 +1,6 @@
 using DarkDeeds.Backend.Data.Context;
 using DarkDeeds.Backend.Entities;
+using DarkDeeds.Backend.Entities.Entity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -16,15 +17,8 @@ namespace DarkDeeds.Backend.Data
             services.AddDbContext<BackendDbContext>(options => options.UseNpgsql(connectionString));
             services.AddScoped<DbContext, BackendDbContext>();
             
-            services.AddScoped(typeof(IRepositoryNonDeletable<>), typeof(Repository<>));
-            
-            // IdentityBuilder builder = services.AddIdentityCore<UserEntity>();
-            // builder = new IdentityBuilder(builder.UserType, typeof(IdentityRole), builder.Services);
-            // builder
-            //     .AddDefaultTokenProviders()
-            //     .AddEntityFrameworkStores<BackendDbContext>();
-            // services.AddScoped<UserManager<UserEntity>>();
-            
+            services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+
             services.AddIdentityCore<UserEntity>(options =>
                 {
 #if DEBUG

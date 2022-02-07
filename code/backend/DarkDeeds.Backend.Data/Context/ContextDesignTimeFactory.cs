@@ -11,7 +11,7 @@ namespace DarkDeeds.Backend.Data.Context
         {
             IConfigurationRoot configuration = new ConfigurationBuilder()
                 .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
-                .AddJsonFile("appsettings.Development.json")
+                .AddJsonFile("appsettings.json")
                 .Build();
             string connectionString = configuration.GetConnectionString("appDb");
             var optionsBuilder = new DbContextOptionsBuilder<BackendDbContext>();
