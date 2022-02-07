@@ -32,14 +32,12 @@ namespace DarkDeeds.Communication.Services.Implementation
             _withMetricsPort = withMetricsPort;
         }
 
-        private string _id;
-        private string GetId() => _id ??= Guid.NewGuid().ToString();
-
         protected override Func<CancellationToken, Task> CreateRegisterJob()
         {
-            var id = GetId();
             if (!_addressService.TryGetAddress(out Uri uri))
                 return null;
+            
+            var id = $"{uri.Host}:{uri.Port}";
             
             var registration = new AgentServiceRegistration
             {
@@ -52,8 +50,8 @@ namespace DarkDeeds.Communication.Services.Implementation
                 {
                     TCP = $"{uri.Host}:{uri.Port}",
                     Interval = new TimeSpan(0, 0, 10),
-                    Timeout = new TimeSpan(0, 0, 3),
-                    DeregisterCriticalServiceAfter = new TimeSpan(0, 0, 20),
+                    Timeout = new TimeSpan(0, 0, 5),
+                    DeregisterCriticalServiceAfter = new TimeSpan(24, 0, 0),
                 }
             };
 
