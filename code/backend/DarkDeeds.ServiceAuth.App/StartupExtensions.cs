@@ -1,9 +1,6 @@
 using DarkDeeds.Common.Misc;
 using DarkDeeds.Communication.Interceptors;
-using DarkDeeds.ServiceAuth.Data.Context;
-using DarkDeeds.ServiceAuth.Entities;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
@@ -11,28 +8,7 @@ using Microsoft.OpenApi.Models;
 namespace DarkDeeds.ServiceAuth.App
 {
     public static class StartupExtensions
-    {
-        public static void AddAuthServiceIdentity(this IServiceCollection services)
-        {
-            services.AddIdentityCore<UserEntity>(options =>
-                {
-#if DEBUG
-                    options.Password.RequiredLength = 3;
-#else
-                    options.Password.RequiredLength = 8;
-#endif
-                    options.Password.RequiredUniqueChars = 0;
-                    options.Password.RequireDigit = false;
-                    options.Password.RequireLowercase = false;
-                    options.Password.RequireUppercase = false;
-                    options.Password.RequireNonAlphanumeric = false;
-                })
-                .AddDefaultTokenProviders()
-                .AddEntityFrameworkStores<DarkDeedsAuthContext>()
-                .AddUserManager<UserManager<UserEntity>>();
-            services.AddHttpContextAccessor();
-        }
-        
+    {   
         public static void AddAuthServiceApi(this IServiceCollection services)
         {
             services.AddGrpc(options =>

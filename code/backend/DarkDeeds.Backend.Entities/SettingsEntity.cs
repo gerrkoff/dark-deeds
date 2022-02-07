@@ -1,7 +1,6 @@
 using System.ComponentModel.DataAnnotations;
-using DarkDeeds.WebClientBff.Entities.Base;
 
-namespace DarkDeeds.WebClientBff.Entities
+namespace DarkDeeds.Backend.Entities
 {
     public class SettingsEntity : BaseEntity
     {
@@ -9,5 +8,7 @@ namespace DarkDeeds.WebClientBff.Entities
         
         [Required]
         public string UserId { get; set; }
+        
+        public virtual UserEntity User { get; set; }
     }
 }

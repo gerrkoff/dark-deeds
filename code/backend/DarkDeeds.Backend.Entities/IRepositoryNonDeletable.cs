@@ -2,9 +2,8 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using DarkDeeds.WebClientBff.Entities.Base;
 
-namespace DarkDeeds.WebClientBff.Infrastructure.Data
+namespace DarkDeeds.Backend.Entities
 {
     public interface IRepositoryNonDeletable<T> where T : BaseEntity
     {

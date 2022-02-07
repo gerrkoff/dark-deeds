@@ -1,5 +1,5 @@
 using AutoMapper;
-using DarkDeeds.WebClientBff.Entities;
+using DarkDeeds.Backend.Entities;
 using DarkDeeds.WebClientBff.Services.Dto;
 
 namespace DarkDeeds.WebClientBff.Services.Mapping

@@ -1,17 +1,13 @@
 using DarkDeeds.Communication;
 using DarkDeeds.ServiceTask.Contract;
 using DarkDeeds.TelegramClient.Communication;
-using DarkDeeds.TelegramClient.Data.Context;
-using DarkDeeds.TelegramClient.Entities;
 using DarkDeeds.TelegramClient.Infrastructure.Communication.TaskServiceApp;
 using DarkDeeds.TelegramClient.Services.Implementation;
 using DarkDeeds.TelegramClient.Services.Implementation.CommandProcessor;
 using DarkDeeds.TelegramClient.Services.Interface;
 using DarkDeeds.TelegramClient.Services.Interface.CommandProcessor;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Routing;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -21,27 +17,14 @@ namespace DarkDeeds.TelegramClient.Web
     {
         public static void AddTelegramClient(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddTelegramClientIdentity();
             services.AddTelegramClientServices(configuration);
             services.AddTelegramClientCommunications(configuration);
-            services.AddTelegramClientDatabase(configuration);
         }
         
         public static void MapTelegramClientCustomRoutes(this IEndpointRouteBuilder endpoints, IConfiguration configuration)
         {
             endpoints.MapControllerRoute("bot", $"api/tlgm/bot/{configuration["Bot"]}",
                 new { controller = "Bot", action = "Process" });
-        }
-
-        private static void AddTelegramClientIdentity(this IServiceCollection services)
-        {
-            IdentityBuilder builder = services.AddIdentityCore<UserEntity>();
-            builder = new IdentityBuilder(builder.UserType, typeof(IdentityRole), builder.Services);
-            builder
-                .AddDefaultTokenProviders()
-                .AddEntityFrameworkStores<DarkDeedsTelegramClientContext>();
-            
-            services.AddScoped<UserManager<UserEntity>>();
         }
 
         private static void AddTelegramClientServices(this IServiceCollection services, IConfiguration configuration)
@@ -71,13 +54,6 @@ namespace DarkDeeds.TelegramClient.Web
             services.AddDarkDeedsGrpcClientFactory<ParserService.ParserServiceClient>("task-service", configuration);
             services.AddScoped<ITaskServiceApp, TaskServiceApp>();
             services.AddAutoMapper(typeof(ModelsMappingProfile));
-        }
-
-        private static void AddTelegramClientDatabase(this IServiceCollection services, IConfiguration configuration)
-        {            
-            string connectionString = configuration.GetConnectionString("appDb");
-            services.AddDbContext<DarkDeedsTelegramClientContext>(options => options.UseNpgsql(connectionString));
-            services.AddScoped<DbContext, DarkDeedsTelegramClientContext>();
         }
     }
 }

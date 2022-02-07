@@ -1,7 +1,6 @@
 using System.Threading.Tasks;
 using AutoMapper;
-using DarkDeeds.WebClientBff.Entities;
-using DarkDeeds.WebClientBff.Infrastructure.Data;
+using DarkDeeds.Backend.Entities;
 using DarkDeeds.WebClientBff.Services.Dto;
 using DarkDeeds.WebClientBff.Services.Services.Interface;
 using Microsoft.EntityFrameworkCore;

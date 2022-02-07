@@ -1,6 +1,5 @@
 using DarkDeeds.Communication;
 using DarkDeeds.WebClientBff.Communication;
-using DarkDeeds.WebClientBff.Data;
 using DarkDeeds.WebClientBff.Infrastructure.Services;
 using DarkDeeds.WebClientBff.Services;
 using DarkDeeds.WebClientBff.Services.Dto;
@@ -26,7 +25,6 @@ namespace DarkDeeds.WebClientBff.Web
             services.AddWebClientBffServices();
             services.AddWebClientBffUseCases();
             services.AddWebClientBffCommunications(configuration);
-            services.AddWebClientBffData(configuration);
             services.AddWebClientBffCommonServices();
             services.AddWebClientBffSockets();
             
