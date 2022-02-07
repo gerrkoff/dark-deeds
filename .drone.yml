@@ -19,11 +19,33 @@ steps:
   - VERSION=$(./ci/version.sh "date -d @")
   - CMD=$(echo "$DEPLOY_PROD_CMD" | sed "s/VERSION/$VERSION/")
   - eval $CMD
-  
 
 trigger:
   event:
   - promote
+
+---
+kind: pipeline
+type: exec
+name: rollback
+
+platform:
+  os: linux
+  arch: amd64
+
+steps:
+- name: rollback prod
+  environment:
+    DEPLOY_PROD_CMD:
+      from_secret: deploy_prod_cmd
+  commands:
+  - VERSION=--
+  - CMD=$(echo "$DEPLOY_PROD_CMD" | sed "s/VERSION/$VERSION/")
+  - eval $CMD
+  
+trigger:
+  event:
+  - rollback
 
 # ==============================
 # CUSTOM
@@ -97,6 +119,7 @@ trigger:
   - failure
   event:
   - promote
+  - rollback
   - custom
 
 # # ==============================
