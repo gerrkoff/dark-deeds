@@ -119,6 +119,7 @@ trigger:
   - failure
   event:
   - promote
+  - rollback
   - custom
 
 # # ==============================
