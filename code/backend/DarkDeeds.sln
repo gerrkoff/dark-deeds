@@ -16,17 +16,17 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.Authentication.Co
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.Authentication", "DarkDeeds.Authentication\DarkDeeds.Authentication.csproj", "{7D799D64-3B71-49DE-8E21-EC83497A7A26}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2 Services", "2 Services", "{E03FB25D-A5FC-4920-B0B6-23E24F5A3C9F}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1 Domain", "1 Domain", "{E03FB25D-A5FC-4920-B0B6-23E24F5A3C9F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.ServiceAuth.Services", "DarkDeeds.ServiceAuth.Services\DarkDeeds.ServiceAuth.Services.csproj", "{D1EA6363-BF52-4EBE-8AE4-A28B40EAA7DD}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3 gRPC", "3 gRPC", "{596B6D79-866C-4A62-92CB-94018277DB58}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2 gRPC", "2 gRPC", "{596B6D79-866C-4A62-92CB-94018277DB58}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.ServiceAuth.Contract", "DarkDeeds.ServiceAuth.Contract\DarkDeeds.ServiceAuth.Contract.csproj", "{4A4A97C3-C13F-4226-8B92-7AF180991A5F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.ServiceAuth.ContractImpl", "DarkDeeds.ServiceAuth.ContractImpl\DarkDeeds.ServiceAuth.ContractImpl.csproj", "{6775017C-B681-4F74-8DF4-D4238AA32BFE}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4 Details", "4 Details", "{D823FEAC-1E0B-43F3-AA68-B32072390D73}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3 Details", "3 Details", "{D823FEAC-1E0B-43F3-AA68-B32072390D73}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.ServiceAuth.App", "DarkDeeds.ServiceAuth.App\DarkDeeds.ServiceAuth.App.csproj", "{EE3C8CB5-3956-481B-AAD3-1EA366DF501A}"
 EndProject
@@ -34,7 +34,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ServiceTask", "ServiceTask"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1 Domain", "1 Domain", "{FD8EB563-2230-446A-862A-8A16BD9A48FD}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2 UseCases - gRPC", "2 UseCases - gRPC", "{758093F3-1BD6-4229-8B72-972C2D648912}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2 gRPC", "2 gRPC", "{758093F3-1BD6-4229-8B72-972C2D648912}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3 Details", "3 Details", "{7848FA73-CD97-485E-B4CD-11D4884A5AD1}"
 EndProject
@@ -58,7 +58,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.ServiceTask.Commu
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TelegramClient", "TelegramClient", "{F9F5398C-A6E6-4030-976C-6B05C3567D69}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2 Services", "2 Services", "{DE397D71-4D8D-4BF3-932A-99E16A16ACF8}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1 Domain", "1 Domain", "{DE397D71-4D8D-4BF3-932A-99E16A16ACF8}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3 Details", "3 Details", "{AF981F5A-48BE-4D84-BDA7-6E3E214831DD}"
 EndProject
@@ -74,11 +74,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.ServiceTask.App",
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WebClientBff", "WebClientBff", "{9594F9B5-6DBE-49D1-9485-BC99F4466CDE}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2 Services", "2 Services", "{4982C972-07E5-4F33-BD7A-D6372A163D2C}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1 Domain", "1 Domain", "{4982C972-07E5-4F33-BD7A-D6372A163D2C}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3 UseCases", "3 UseCases", "{CCFCFF42-EF69-4FDF-9405-AC1D98E4B876}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2 UseCases", "2 UseCases", "{CCFCFF42-EF69-4FDF-9405-AC1D98E4B876}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4 Details", "4 Details", "{4F15F716-2209-43C8-AC54-02AAE2BF05F0}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3 Details", "3 Details", "{4F15F716-2209-43C8-AC54-02AAE2BF05F0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.WebClientBff.Infrastructure", "DarkDeeds.WebClientBff.Infrastructure\DarkDeeds.WebClientBff.Infrastructure.csproj", "{9DB67B5C-47E5-453F-8A6C-5BC0F5F3BAFE}"
 EndProject

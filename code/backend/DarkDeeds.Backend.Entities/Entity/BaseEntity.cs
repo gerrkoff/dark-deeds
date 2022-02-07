@@ -1,4 +1,4 @@
-namespace DarkDeeds.Backend.Entities
+namespace DarkDeeds.Backend.Entities.Entity
 {
     public class BaseEntity
     {

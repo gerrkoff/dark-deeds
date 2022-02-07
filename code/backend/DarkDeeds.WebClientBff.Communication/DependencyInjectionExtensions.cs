@@ -5,7 +5,6 @@ using DarkDeeds.WebClientBff.Communication.Apps;
 using DarkDeeds.WebClientBff.Communication.Mapping;
 using DarkDeeds.WebClientBff.Infrastructure.Communication.AuthServiceApp;
 using DarkDeeds.WebClientBff.Infrastructure.Communication.TaskServiceApp;
-using DarkDeeds.WebClientBff.Infrastructure.Communication.TelegramClientApp;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -21,9 +20,6 @@ namespace DarkDeeds.WebClientBff.Communication
             services.AddDarkDeedsGrpcClientFactory<TaskService.TaskServiceClient>("task-service", configuration);
             services.AddDarkDeedsGrpcClientFactory<RecurrenceService.RecurrenceServiceClient>("task-service", configuration);
             services.AddScoped<ITaskServiceApp, TaskServiceApp>();
-            
-            services.AddDarkDeedsHttpClientFactory(configuration);
-            services.AddScoped<ITelegramClientApp, TelegramClientApp>();
 
             services.AddAutoMapper(typeof(AuthServiceModelsMapping));
         }

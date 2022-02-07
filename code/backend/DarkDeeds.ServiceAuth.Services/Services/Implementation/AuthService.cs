@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using DarkDeeds.Authentication.Core.Models;
 using DarkDeeds.Authentication.Core.Services;
-using DarkDeeds.Backend.Entities;
+using DarkDeeds.Backend.Entities.Entity;
 using DarkDeeds.Common.Validation.Services;
 using DarkDeeds.ServiceAuth.Services.Dto;
 using DarkDeeds.ServiceAuth.Services.Enums;

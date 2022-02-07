@@ -29,7 +29,7 @@ namespace DarkDeeds.WebClientBff.Web.Exceptions
 
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
-            info?.AddValue(nameof(Errors), Errors);
+            info.AddValue(nameof(Errors), Errors);
 
             base.GetObjectData(info, context);
         }

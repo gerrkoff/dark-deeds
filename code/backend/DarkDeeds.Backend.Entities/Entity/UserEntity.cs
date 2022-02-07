@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 
-namespace DarkDeeds.Backend.Entities
+namespace DarkDeeds.Backend.Entities.Entity
 {
     public class UserEntity : IdentityUser
     {
