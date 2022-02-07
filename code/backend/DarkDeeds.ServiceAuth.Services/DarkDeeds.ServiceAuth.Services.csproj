@@ -7,11 +7,12 @@
 
     <ItemGroup>
       <ProjectReference Include="..\DarkDeeds.Authentication.Core\DarkDeeds.Authentication.Core.csproj" />
+      <ProjectReference Include="..\DarkDeeds.Backend.Entities\DarkDeeds.Backend.Entities.csproj" />
       <ProjectReference Include="..\DarkDeeds.Common\DarkDeeds.Common.csproj" />
-      <ProjectReference Include="..\DarkDeeds.ServiceAuth.Entities\DarkDeeds.ServiceAuth.Entities.csproj" />
     </ItemGroup>
 
     <ItemGroup>
+      <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="3.1.3" />
       <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
     </ItemGroup>
 

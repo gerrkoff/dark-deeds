@@ -3,21 +3,21 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
 
-namespace DarkDeeds.ServiceAuth.Data.Context
+namespace DarkDeeds.Backend.Data.Context
 {
-    public class DarkDeedsContextDesignTimeFactory : IDesignTimeDbContextFactory<DarkDeedsAuthContext>
+    public class DarkDeedsContextDesignTimeFactory : IDesignTimeDbContextFactory<BackendDbContext>
     {
-        public DarkDeedsAuthContext CreateDbContext(string[] args)
+        public BackendDbContext CreateDbContext(string[] args)
         {
             IConfigurationRoot configuration = new ConfigurationBuilder()
                 .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
                 .AddJsonFile("appsettings.Development.json")
                 .Build();
             string connectionString = configuration.GetConnectionString("appDb");
-            var optionsBuilder = new DbContextOptionsBuilder<DarkDeedsAuthContext>();
+            var optionsBuilder = new DbContextOptionsBuilder<BackendDbContext>();
             optionsBuilder.UseNpgsql(connectionString);
             
-            return new DarkDeedsAuthContext(optionsBuilder.Options);
+            return new BackendDbContext(optionsBuilder.Options);
         }
     }
 }

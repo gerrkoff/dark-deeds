@@ -1,10 +1,10 @@
 using DarkDeeds.AppMetrics;
 using DarkDeeds.Authentication;
+using DarkDeeds.Backend.Data;
 using DarkDeeds.Common.Validation;
 using DarkDeeds.Communication;
 using DarkDeeds.ServiceAuth.ContractImpl;
 using DarkDeeds.ServiceAuth.ContractImpl.Contract;
-using DarkDeeds.ServiceAuth.Data;
 using DarkDeeds.ServiceAuth.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -29,11 +29,9 @@ namespace DarkDeeds.ServiceAuth.App
             services.AddDarkDeedsValidation();
             services.AddDarkDeedsAppRegistration("auth-service", Configuration, true);
             services.AddDarkDeedsAppMetrics(Configuration);
-            
+            services.AddBackendDatabase(Configuration);
             services.AddAuthServiceServices();
             services.AddAuthServiceContractImpl();
-            services.AddAuthServiceIdentity();
-            services.AddAuthServiceDatabase(Configuration);
             services.AddAuthServiceApi();
         }
 

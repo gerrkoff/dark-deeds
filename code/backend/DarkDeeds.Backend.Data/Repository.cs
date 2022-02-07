@@ -3,18 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using DarkDeeds.WebClientBff.Entities.Base;
-using DarkDeeds.WebClientBff.Infrastructure.Data;
+using DarkDeeds.Backend.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace DarkDeeds.WebClientBff.Data.Repository
+namespace DarkDeeds.Backend.Data
 {
-    public class RepositoryNonDeletable<T> : IRepositoryNonDeletable<T>
+    public class Repository<T> : IRepositoryNonDeletable<T>
         where T : BaseEntity
     {
         private readonly DbContext _context;
 
-        public RepositoryNonDeletable(DbContext context)
+        public Repository(DbContext context)
         {
             _context = context;
         }

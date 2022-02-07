@@ -14,10 +14,10 @@
     <ItemGroup>
       <ProjectReference Include="..\DarkDeeds.AppMetrics\DarkDeeds.AppMetrics.csproj" />
       <ProjectReference Include="..\DarkDeeds.Authentication\DarkDeeds.Authentication.csproj" />
+      <ProjectReference Include="..\DarkDeeds.Backend.Data\DarkDeeds.Backend.Data.csproj" />
       <ProjectReference Include="..\DarkDeeds.Common\DarkDeeds.Common.csproj" />
       <ProjectReference Include="..\DarkDeeds.Communication\DarkDeeds.Communication.csproj" />
       <ProjectReference Include="..\DarkDeeds.ServiceAuth.ContractImpl\DarkDeeds.ServiceAuth.ContractImpl.csproj" />
-      <ProjectReference Include="..\DarkDeeds.ServiceAuth.Data\DarkDeeds.ServiceAuth.Data.csproj" />
     </ItemGroup>
 
 </Project>

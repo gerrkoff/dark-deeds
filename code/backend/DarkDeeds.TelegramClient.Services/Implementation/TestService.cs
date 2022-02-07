@@ -1,7 +1,7 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using DarkDeeds.TelegramClient.Entities;
+using DarkDeeds.Backend.Entities;
 using DarkDeeds.TelegramClient.Services.Interface;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;

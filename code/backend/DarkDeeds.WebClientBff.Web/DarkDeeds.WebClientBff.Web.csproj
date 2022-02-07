@@ -10,7 +10,6 @@
 
     <ItemGroup>
       <ProjectReference Include="..\DarkDeeds.WebClientBff.Communication\DarkDeeds.WebClientBff.Communication.csproj" />
-      <ProjectReference Include="..\DarkDeeds.WebClientBff.Data\DarkDeeds.WebClientBff.Data.csproj" />
       <ProjectReference Include="..\DarkDeeds.WebClientBff.Services\DarkDeeds.WebClientBff.Services.csproj" />
       <ProjectReference Include="..\DarkDeeds.WebClientBff.UseCases\DarkDeeds.WebClientBff.UseCases.csproj" />
     </ItemGroup>

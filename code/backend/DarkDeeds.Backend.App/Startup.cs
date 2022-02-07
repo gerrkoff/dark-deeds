@@ -1,5 +1,6 @@
 using DarkDeeds.AppMetrics;
 using DarkDeeds.Authentication;
+using DarkDeeds.Backend.Data;
 using DarkDeeds.Common.Web;
 using DarkDeeds.Communication;
 using DarkDeeds.TelegramClient.Web;
@@ -29,6 +30,7 @@ namespace DarkDeeds.Backend.App
             services.AddDarkDeedsTestControllers();
 
             services.AddBackendApi();
+            services.AddBackendDatabase(Configuration);
             services.AddTelegramClient(Configuration);
             services.AddWebClient(Configuration);
         }
