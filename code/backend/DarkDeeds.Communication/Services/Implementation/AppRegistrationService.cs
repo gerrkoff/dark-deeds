@@ -32,9 +32,6 @@ namespace DarkDeeds.Communication.Services.Implementation
             _withMetricsPort = withMetricsPort;
         }
 
-        private string _id;
-        private string GetId() => _id ??= Guid.NewGuid().ToString();
-
         protected override Func<CancellationToken, Task> CreateRegisterJob()
         {
             if (!_addressService.TryGetAddress(out Uri uri))
