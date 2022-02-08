@@ -22,7 +22,8 @@
     "fiscalYearStartMonth": 0,
     "gnetId": 10427,
     "graphTooltip": 0,
-    "iteration": 1640933539704,
+    "id": 2,
+    "iteration": 1644351949927,
     "links": [],
     "liveNow": false,
     "panels": [
@@ -213,7 +214,6 @@
                     "links": [],
                     "mappings": [],
                     "max": 1,
-                    "min": 0,
                     "thresholds": {
                         "mode": "absolute",
                         "steps": [
@@ -403,7 +403,6 @@
                     },
                     "links": [],
                     "mappings": [],
-                    "max": 1,
                     "min": 0,
                     "thresholds": {
                         "mode": "absolute",
@@ -609,6 +608,7 @@
                     },
                     "links": [],
                     "mappings": [],
+                    "min": 0,
                     "thresholds": {
                         "mode": "absolute",
                         "steps": [
@@ -711,7 +711,6 @@
                         }
                     },
                     "mappings": [],
-                    "max": 0.2,
                     "min": 0,
                     "thresholds": {
                         "mode": "absolute",
@@ -814,6 +813,7 @@
                     },
                     "decimals": 2,
                     "mappings": [],
+                    "min": 0,
                     "thresholds": {
                         "mode": "absolute",
                         "steps": [
@@ -1058,15 +1058,13 @@
                         "api-gateway",
                         "auth-service",
                         "task-service",
-                        "telegram-client",
-                        "web-client-bff"
+                        "backend"
                     ],
                     "value": [
                         "api-gateway",
                         "auth-service",
                         "task-service",
-                        "telegram-client",
-                        "web-client-bff"
+                        "backend"
                     ]
                 },
                 "datasource": {
@@ -1128,6 +1126,6 @@
     "timezone": "",
     "title": "General",
     "uid": "RJ4jYionz",
-    "version": 1,
+    "version": 2,
     "weekStart": ""
 }

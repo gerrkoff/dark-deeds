@@ -23,7 +23,7 @@ namespace DarkDeeds.LoadTests
                 HttpClientFactory.Create(),
                 context =>
                 {
-                    var request = Http.CreateRequest("POST", $"{Url}/web/api/tasks")
+                    var request = Http.CreateRequest("POST", $"{Url}/api/web/tasks")
                         .WithHeader("accept", "application/json")
                         .WithHeader("authorization", $"Bearer {token}")
                         .WithBody(JsonContent.Create(new object[]

@@ -22,7 +22,7 @@ namespace DarkDeeds.LoadTests
                 HttpClientFactory.Create(),
                 context =>
                 {
-                    var request = Http.CreateRequest("GET", $"{Url}/web/api/tasks?from=2021-10-31T23:00:00.000Z")
+                    var request = Http.CreateRequest("GET", $"{Url}/api/web/tasks?from=2021-10-31T23:00:00.000Z")
                         .WithHeader("accept", "application/json")
                         .WithHeader("authorization", $"Bearer {token}");
             
