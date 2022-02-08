@@ -3,7 +3,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace DarkDeeds.MongoMigrator.Helpers
 {
-    public class ConfigFactory
+    class ConfigFactory
     {
         public IConfiguration Get()
         {

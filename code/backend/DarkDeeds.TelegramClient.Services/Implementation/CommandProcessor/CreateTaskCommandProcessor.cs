@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 
 namespace DarkDeeds.TelegramClient.Services.Implementation.CommandProcessor
 {
-    public class CreateTaskCommandProcessor : BaseCommandProcessor<CreateTaskCommand>, ICreateTaskCommandProcessor 
+    class CreateTaskCommandProcessor : BaseCommandProcessor<CreateTaskCommand>, ICreateTaskCommandProcessor 
     {
         private readonly IBotSendMessageService _botSendMessageService;
         private readonly ITelegramService _telegramService;

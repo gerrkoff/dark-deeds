@@ -7,7 +7,7 @@ using MediatR;
 
 namespace DarkDeeds.WebClientBff.UseCases.Handlers.Tasks.Save
 {
-    public class SaveRequestHandler : IRequestHandler<SaveRequestModel, IEnumerable<TaskDto>>
+    class SaveRequestHandler : IRequestHandler<SaveRequestModel, IEnumerable<TaskDto>>
     {
         private readonly ITaskServiceApp _taskServiceApp;
 

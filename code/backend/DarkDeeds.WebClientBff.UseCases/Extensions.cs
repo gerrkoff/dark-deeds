@@ -4,7 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace DarkDeeds.WebClientBff.UseCases
 {
-    public static class DependencyInjectionExtensions
+    public static class Extensions
     {
         public static void AddWebClientBffUseCases(this IServiceCollection services)
         {

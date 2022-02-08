@@ -6,13 +6,13 @@ using DarkDeeds.ServiceTask.Entities.Models;
 using DarkDeeds.ServiceTask.Infrastructure.Data.EntityRepository;
 using DarkDeeds.ServiceTask.Models.Dto;
 using DarkDeeds.ServiceTask.Models.Exceptions;
-using DarkDeeds.ServiceTask.Models.Extensions;
+using DarkDeeds.ServiceTask.Models.DtoExtensions;
 using DarkDeeds.ServiceTask.Services.Interface;
 using DarkDeeds.ServiceTask.Services.Specifications;
 
 namespace DarkDeeds.ServiceTask.Services.Implementation
 {
-    public class RecurrenceService : IRecurrenceService
+    class RecurrenceService : IRecurrenceService
     {
         private readonly IPlannedRecurrenceRepository _plannedRecurrenceRepository;
         private readonly IMapper _mapper;

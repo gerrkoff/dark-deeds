@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace DarkDeeds.MongoMigrator.Helpers
 {
-    public class ScaleRenderer
+    class ScaleRenderer
     {
         private int _rendered;
         private int _total;

@@ -6,7 +6,7 @@ using MediatR;
 
 namespace DarkDeeds.WebClientBff.UseCases.Handlers.Account.SignUp
 {
-    public class SignUpRequestHandler : IRequestHandler<SignUpRequestModel, SignUpResultDto>
+    class SignUpRequestHandler : IRequestHandler<SignUpRequestModel, SignUpResultDto>
     {
         private readonly IAuthServiceApp _authServiceApp;
 

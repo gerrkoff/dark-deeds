@@ -7,14 +7,14 @@ using DarkDeeds.ServiceTask.Infrastructure.Data.EntityRepository;
 using DarkDeeds.ServiceTask.Infrastructure.Services;
 using DarkDeeds.ServiceTask.Infrastructure.Services.Dto;
 using DarkDeeds.ServiceTask.Models.Dto;
-using DarkDeeds.ServiceTask.Models.Extensions;
+using DarkDeeds.ServiceTask.Models.DtoExtensions;
 using DarkDeeds.ServiceTask.Services.Interface;
 using DarkDeeds.ServiceTask.Services.Specifications;
 using Microsoft.Extensions.Logging;
 
 namespace DarkDeeds.ServiceTask.Services.Implementation
 {
-    public class TaskService : ITaskService
+    class TaskService : ITaskService
     {
         private readonly ITaskRepository _tasksRepository;
         private readonly ILogger<TaskService> _logger;

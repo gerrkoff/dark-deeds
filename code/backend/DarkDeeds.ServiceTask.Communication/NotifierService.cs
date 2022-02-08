@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 
 namespace DarkDeeds.ServiceTask.Communication
 {
-    public class NotifierService : INotifierService
+    class NotifierService : INotifierService
     {
         private readonly ITaskUpdatedPublisher _taskUpdatedPublisher;
         private readonly ILogger<NotifierService> _logger;

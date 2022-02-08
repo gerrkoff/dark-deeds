@@ -10,7 +10,7 @@ using Grpc.Core;
 
 namespace DarkDeeds.WebClientBff.Communication.Apps
 {
-    public class TaskServiceApp : ITaskServiceApp
+    class TaskServiceApp : ITaskServiceApp
     {
         private readonly IMapper _mapper;
         private readonly IDdGrpcClientFactory<TaskService.TaskServiceClient> _taskClientFactory;

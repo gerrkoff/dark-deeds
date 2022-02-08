@@ -5,9 +5,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace DarkDeeds.ServiceAuth.Services
 {
-    public static class DependencyInjectionExtensions
+    public static class Extensions
     {   
-        public static void AddAuthServiceServices(this IServiceCollection services)
+        public static void AddAuthServices(this IServiceCollection services)
         {
             services.AddScoped<IAuthService, AuthService>();
             services.AddDarkDeedsValidation();

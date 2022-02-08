@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace DarkDeeds.WebClientBff.UseCases.Handlers.Settings.Save
 {
-    public class SaveRequestHandler : AsyncRequestHandler<SaveRequestModel>
+    class SaveRequestHandler : AsyncRequestHandler<SaveRequestModel>
     {
         private readonly ISettingsService _settingsService;
         private readonly IHttpContextAccessor _httpContextAccessor;

@@ -9,7 +9,7 @@ using PlannedRecurrenceEntity = DarkDeeds.ServiceTask.Entities.Models.PlannedRec
 
 namespace DarkDeeds.MongoMigrator.Processors
 {
-    public class ProcessorRecurrences
+    class ProcessorRecurrences
     {
         private readonly RepositoryNonDeletable<RecurrenceEntity> _pgRecurrences;
         private readonly PlannedRecurrenceRepository _mongoPlannedRecurrences;

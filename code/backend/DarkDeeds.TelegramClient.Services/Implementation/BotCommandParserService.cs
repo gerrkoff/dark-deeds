@@ -6,7 +6,7 @@ using DarkDeeds.TelegramClient.Services.Models.Commands;
 
 namespace DarkDeeds.TelegramClient.Services.Implementation
 {
-    public class BotCommandParserService : IBotCommandParserService
+    class BotCommandParserService : IBotCommandParserService
     {
         const string TodoCommand = "/todo";
         const string StartCommand = "/start";

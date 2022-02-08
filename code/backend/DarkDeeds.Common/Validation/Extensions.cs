@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace DarkDeeds.Common.Validation
 {
-    public static class DiExtensions
+    public static class Extensions
     {
         public static void AddDarkDeedsValidation(this IServiceCollection services)
         {

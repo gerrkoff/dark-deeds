@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace DarkDeeds.WebClientBff.UseCases.Handlers.Account.GetCurrentUser
 {
-    public class GetCurrentUserRequestHandler : IRequestHandler<GetCurrentUserRequestModel, CurrentUserDto>
+    class GetCurrentUserRequestHandler : IRequestHandler<GetCurrentUserRequestModel, CurrentUserDto>
     {
         private readonly IMapper _mapper;
         private readonly IHttpContextAccessor _httpContextAccessor;

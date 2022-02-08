@@ -4,7 +4,7 @@ using DarkDeeds.ServiceAuth.Services.Dto;
 
 namespace DarkDeeds.ServiceAuth.ContractImpl.Mapping
 {
-    public class ModelsMappingProfile : Profile
+    class ModelsMappingProfile : Profile
     {
         public ModelsMappingProfile()
         {

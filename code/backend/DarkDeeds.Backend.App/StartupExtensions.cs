@@ -6,7 +6,7 @@ using Microsoft.OpenApi.Models;
 
 namespace DarkDeeds.Backend.App
 {
-    public static class StartupExtensions
+    static class StartupExtensions
     {
         public static void AddBackendApi(this IServiceCollection services)
         {

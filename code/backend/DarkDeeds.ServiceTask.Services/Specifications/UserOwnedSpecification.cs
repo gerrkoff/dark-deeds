@@ -3,7 +3,7 @@ using DarkDeeds.ServiceTask.Entities.Models.Abstractions;
 
 namespace DarkDeeds.ServiceTask.Services.Specifications
 {
-    public abstract class UserOwnedSpecification<TEntity, TSpec> : EntitySpecification<TEntity, TSpec>, IUserOwnedSpecification<TEntity, TSpec>
+    abstract class UserOwnedSpecification<TEntity, TSpec> : EntitySpecification<TEntity, TSpec>, IUserOwnedSpecification<TEntity, TSpec>
         where TSpec : class, IEntitySpecification<TEntity, TSpec>, IUserOwnedSpecification<TEntity, TSpec>
         where TEntity: Entity, IUserOwnedEntity
     {

@@ -6,7 +6,7 @@ using DarkDeeds.TelegramClient.Services.Models.Commands;
 
 namespace DarkDeeds.TelegramClient.Services.Implementation
 {
-    public class BotProcessMessageService : IBotProcessMessageService
+    class BotProcessMessageService : IBotProcessMessageService
     {
         private readonly IBotSendMessageService _botSendMessageService;
         private readonly IBotCommandParserService _botCommandParserService;

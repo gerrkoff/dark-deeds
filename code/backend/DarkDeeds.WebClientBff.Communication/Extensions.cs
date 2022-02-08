@@ -10,7 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace DarkDeeds.WebClientBff.Communication
 {
-    public static class DependencyInjectionExtensions
+    public static class Extensions
     {
         public static void AddWebClientBffCommunications(this IServiceCollection services, IConfiguration configuration)
         {

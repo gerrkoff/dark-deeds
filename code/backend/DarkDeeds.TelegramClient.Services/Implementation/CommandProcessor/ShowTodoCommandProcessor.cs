@@ -9,7 +9,7 @@ using Microsoft.Extensions.Logging;
 
 namespace DarkDeeds.TelegramClient.Services.Implementation.CommandProcessor
 {
-    public class ShowTodoCommandProcessor : BaseCommandProcessor<ShowTodoCommand>, IShowTodoCommandProcessor
+    class ShowTodoCommandProcessor : BaseCommandProcessor<ShowTodoCommand>, IShowTodoCommandProcessor
     {
         private readonly IBotSendMessageService _botSendMessageService;
         private readonly ITelegramService _telegramService;

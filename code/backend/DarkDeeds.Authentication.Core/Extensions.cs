@@ -4,7 +4,7 @@ using DarkDeeds.Authentication.Core.Models;
 
 namespace DarkDeeds.Authentication.Core
 {
-    public static class AuthExtensions
+    public static class Extensions
     {
         public static AuthToken ToAuthToken(this ClaimsPrincipal principal)
         {

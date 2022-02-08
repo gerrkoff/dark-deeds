@@ -10,7 +10,7 @@ using MongoDB.Driver.Linq;
 
 namespace DarkDeeds.ServiceTask.Data
 {
-    public abstract class Repository<T> : IRepository<T>
+    abstract class Repository<T> : IRepository<T>
         where T: Entity
     {
         private readonly IMongoCollection<T> _collection;

@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace DarkDeeds.WebClientBff.UseCases.Handlers.Settings.Load
 {
-    public class LoadRequestHandler : IRequestHandler<LoadRequestModel, SettingsDto>
+    class LoadRequestHandler : IRequestHandler<LoadRequestModel, SettingsDto>
     {
         private readonly ISettingsService _settingsService;
         private readonly IHttpContextAccessor _httpContextAccessor;

@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace DarkDeeds.ServiceTask.ContractImpl
 {
-    public static class DependencyInjectionExtensions
+    public static class Extensions
     {   
         public static void AddTaskServiceContractImpl(this IServiceCollection services)
         {

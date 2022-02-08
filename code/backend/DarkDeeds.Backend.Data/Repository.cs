@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DarkDeeds.Backend.Data
 {
-    public class Repository<T> : IRepository<T>
+    class Repository<T> : IRepository<T>
         where T : BaseEntity
     {
         private readonly DbContext _context;

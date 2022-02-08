@@ -2,11 +2,17 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace DarkDeeds.Common.Web
 {
-    public static class ApplicationBuilderExtensions
+    public static class Extensions
     {
+        public static void AddDarkDeedsTestControllers(this IServiceCollection services)
+        {
+            services.AddScoped<TestAttribute>();
+        }
+
         public static void UseDarkDeedsExceptionHandler(this IApplicationBuilder app, bool isProduction)
         {
             app.UseExceptionHandler(x =>

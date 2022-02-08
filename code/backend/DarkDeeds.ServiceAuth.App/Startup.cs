@@ -30,8 +30,8 @@ namespace DarkDeeds.ServiceAuth.App
             services.AddDarkDeedsAppRegistration("auth-service", Configuration, true);
             services.AddDarkDeedsAppMetrics(Configuration);
             services.AddBackendDatabase(Configuration);
-            services.AddAuthServiceServices();
-            services.AddAuthServiceContractImpl();
+            services.AddAuthServices();
+            services.AddAuthContractImpl();
             services.AddAuthServiceApi();
         }
 

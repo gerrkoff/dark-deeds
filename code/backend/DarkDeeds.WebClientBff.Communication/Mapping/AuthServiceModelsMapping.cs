@@ -4,7 +4,7 @@ using DarkDeeds.WebClientBff.Infrastructure.Communication.AuthServiceApp.Dto;
 
 namespace DarkDeeds.WebClientBff.Communication.Mapping
 {
-    public class AuthServiceModelsMapping : Profile
+    class AuthServiceModelsMapping : Profile
     {
         public AuthServiceModelsMapping()
         {
