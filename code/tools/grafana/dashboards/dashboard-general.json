@@ -22,7 +22,8 @@
     "fiscalYearStartMonth": 0,
     "gnetId": 10427,
     "graphTooltip": 0,
-    "iteration": 1640933539704,
+    "id": 2,
+    "iteration": 1644350924864,
     "links": [],
     "liveNow": false,
     "panels": [
@@ -1057,16 +1058,14 @@
                     "text": [
                         "api-gateway",
                         "auth-service",
-                        "task-service",
-                        "telegram-client",
-                        "web-client-bff"
+                        "backend",
+                        "task-service"
                     ],
                     "value": [
                         "api-gateway",
                         "auth-service",
-                        "task-service",
-                        "telegram-client",
-                        "web-client-bff"
+                        "backend",
+                        "task-service"
                     ]
                 },
                 "datasource": {
@@ -1128,6 +1127,6 @@
     "timezone": "",
     "title": "General",
     "uid": "RJ4jYionz",
-    "version": 1,
+    "version": 2,
     "weekStart": ""
 }
