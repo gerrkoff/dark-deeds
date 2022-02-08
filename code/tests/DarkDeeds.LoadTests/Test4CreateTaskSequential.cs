@@ -23,7 +23,7 @@ namespace DarkDeeds.LoadTests
                 HttpClientFactory.Create(),
                 context =>
                 {
-                    var request = Http.CreateRequest("POST", $"{Url}/web/api/tasks")
+                    var request = Http.CreateRequest("POST", $"{Url}/api/web/tasks")
                         .WithHeader("accept", "application/json")
                         .WithHeader("authorization", $"Bearer {token}")
                         .WithBody(JsonContent.Create(new object[]
@@ -49,7 +49,7 @@ namespace DarkDeeds.LoadTests
             
             VerifyResults(result, () =>
             {
-                Assert.NotInRange(result.ScenarioStats[0].StepStats[0].Ok.Request.RPS, 0, 13 * RpsTest);       
+                Assert.NotInRange(result.ScenarioStats[0].StepStats[0].Ok.Request.RPS, 0, 7 * RpsTest);       
             });
         }
     }

@@ -23,7 +23,7 @@
     "gnetId": 10427,
     "graphTooltip": 0,
     "id": 2,
-    "iteration": 1644350924864,
+    "iteration": 1644351949927,
     "links": [],
     "liveNow": false,
     "panels": [
@@ -214,7 +214,6 @@
                     "links": [],
                     "mappings": [],
                     "max": 1,
-                    "min": 0,
                     "thresholds": {
                         "mode": "absolute",
                         "steps": [
@@ -404,7 +403,6 @@
                     },
                     "links": [],
                     "mappings": [],
-                    "max": 1,
                     "min": 0,
                     "thresholds": {
                         "mode": "absolute",
@@ -610,6 +608,7 @@
                     },
                     "links": [],
                     "mappings": [],
+                    "min": 0,
                     "thresholds": {
                         "mode": "absolute",
                         "steps": [
@@ -712,7 +711,6 @@
                         }
                     },
                     "mappings": [],
-                    "max": 0.2,
                     "min": 0,
                     "thresholds": {
                         "mode": "absolute",
@@ -815,6 +813,7 @@
                     },
                     "decimals": 2,
                     "mappings": [],
+                    "min": 0,
                     "thresholds": {
                         "mode": "absolute",
                         "steps": [
@@ -1058,14 +1057,14 @@
                     "text": [
                         "api-gateway",
                         "auth-service",
-                        "backend",
-                        "task-service"
+                        "task-service",
+                        "backend"
                     ],
                     "value": [
                         "api-gateway",
                         "auth-service",
-                        "backend",
-                        "task-service"
+                        "task-service",
+                        "backend"
                     ]
                 },
                 "datasource": {

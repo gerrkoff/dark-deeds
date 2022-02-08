@@ -67,7 +67,7 @@ namespace DarkDeeds.LoadTests
             };
             var payload = JsonSerializer.Serialize(new {username, password = Password});
             var content = new StringContent(payload, Encoding.UTF8, MediaTypeNames.Application.Json);
-            var response = await client.PostAsync("/web/api/account/signup", content);
+            var response = await client.PostAsync("/api/web/account/signup", content);
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
