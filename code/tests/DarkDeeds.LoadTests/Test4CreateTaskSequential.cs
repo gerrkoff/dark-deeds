@@ -49,7 +49,7 @@ namespace DarkDeeds.LoadTests
             
             VerifyResults(result, () =>
             {
-                Assert.NotInRange(result.ScenarioStats[0].StepStats[0].Ok.Request.RPS, 0, 7 * RpsTest);       
+                Assert.NotInRange(result.ScenarioStats[0].StepStats[0].Ok.Request.RPS, 0, 5 * RpsTest);       
             });
         }
     }
