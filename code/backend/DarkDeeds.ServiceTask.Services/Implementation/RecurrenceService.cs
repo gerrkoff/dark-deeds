@@ -6,7 +6,7 @@ using DarkDeeds.ServiceTask.Entities.Models;
 using DarkDeeds.ServiceTask.Infrastructure.Data.EntityRepository;
 using DarkDeeds.ServiceTask.Models.Dto;
 using DarkDeeds.ServiceTask.Models.Exceptions;
-using DarkDeeds.ServiceTask.Models.Extensions;
+using DarkDeeds.ServiceTask.Models.DtoExtensions;
 using DarkDeeds.ServiceTask.Services.Interface;
 using DarkDeeds.ServiceTask.Services.Specifications;
 

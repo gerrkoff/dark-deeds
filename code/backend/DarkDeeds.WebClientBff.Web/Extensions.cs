@@ -15,19 +15,17 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace DarkDeeds.WebClientBff.Web
 {
-    public static class StartupExtensions
+    public static class Extensions
     {
         public static void AddWebClient(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddWebClientBffCommonServices();
             services.AddWebClientBffSockets();
-            
             services.AddWebClientBffServices();
             services.AddWebClientBffUseCases();
             services.AddWebClientBffCommunications(configuration);
             services.AddWebClientBffCommonServices();
             services.AddWebClientBffSockets();
-            
             services.AddDarkDeedsAmpqSubscriber<TaskUpdatedSubscriber, TaskUpdatedDto>();
         }
         

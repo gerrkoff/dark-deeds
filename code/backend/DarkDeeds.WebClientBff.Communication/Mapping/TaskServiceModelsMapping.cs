@@ -6,7 +6,7 @@ using DarkDeeds.WebClientBff.Infrastructure.Communication.TaskServiceApp.Enums;
 
 namespace DarkDeeds.WebClientBff.Communication.Mapping
 {
-    public class TaskServiceModelsMapping : Profile
+    class TaskServiceModelsMapping : Profile
     {
         public TaskServiceModelsMapping()
         {

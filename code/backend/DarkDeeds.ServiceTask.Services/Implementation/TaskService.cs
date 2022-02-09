@@ -7,7 +7,7 @@ using DarkDeeds.ServiceTask.Infrastructure.Data.EntityRepository;
 using DarkDeeds.ServiceTask.Infrastructure.Services;
 using DarkDeeds.ServiceTask.Infrastructure.Services.Dto;
 using DarkDeeds.ServiceTask.Models.Dto;
-using DarkDeeds.ServiceTask.Models.Extensions;
+using DarkDeeds.ServiceTask.Models.DtoExtensions;
 using DarkDeeds.ServiceTask.Services.Interface;
 using DarkDeeds.ServiceTask.Services.Specifications;
 using Microsoft.Extensions.Logging;

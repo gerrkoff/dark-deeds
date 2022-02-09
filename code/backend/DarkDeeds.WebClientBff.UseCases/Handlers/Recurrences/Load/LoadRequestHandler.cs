@@ -7,7 +7,7 @@ using MediatR;
 
 namespace DarkDeeds.WebClientBff.UseCases.Handlers.Recurrences.Load
 {
-    public class LoadRequestHandler : IRequestHandler<LoadRequestModel, IEnumerable<PlannedRecurrenceDto>>
+    class LoadRequestHandler : IRequestHandler<LoadRequestModel, IEnumerable<PlannedRecurrenceDto>>
     {
         private readonly ITaskServiceApp _taskServiceApp;
 

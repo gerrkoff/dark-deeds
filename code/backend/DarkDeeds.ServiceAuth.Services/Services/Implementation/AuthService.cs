@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace DarkDeeds.ServiceAuth.Services.Services.Implementation
 {
-    public class AuthService : IAuthService
+    class AuthService : IAuthService
     {
         private readonly UserManager<UserEntity> _userManager;
         private readonly ITokenService _tokenService;

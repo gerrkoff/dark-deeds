@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DarkDeeds.TelegramClient.Services.Implementation
 {
-    public class TestService : ITestService
+    class TestService : ITestService
     {
         private static readonly SemaphoreSlim Semaphore = new SemaphoreSlim(1);
         

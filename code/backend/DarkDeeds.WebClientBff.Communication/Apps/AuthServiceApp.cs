@@ -7,7 +7,7 @@ using DarkDeeds.WebClientBff.Infrastructure.Communication.AuthServiceApp.Dto;
 
 namespace DarkDeeds.WebClientBff.Communication.Apps
 {
-    public class AuthServiceApp : IAuthServiceApp
+    class AuthServiceApp : IAuthServiceApp
     {
         private readonly IMapper _mapper;
         private readonly IDdGrpcClientFactory<AuthService.AuthServiceClient> _clientFactory;

@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DarkDeeds.WebClientBff.Services.Services.Implementation
 {
-    public class SettingsService : ISettingsService
+    class SettingsService : ISettingsService
     {
         private readonly IRepository<SettingsEntity> _settingsRepository;
         private readonly IMapper _mapper;

@@ -7,7 +7,7 @@ using Microsoft.OpenApi.Models;
 
 namespace DarkDeeds.ServiceAuth.App
 {
-    public static class StartupExtensions
+    static class StartupExtensions
     {   
         public static void AddAuthServiceApi(this IServiceCollection services)
         {

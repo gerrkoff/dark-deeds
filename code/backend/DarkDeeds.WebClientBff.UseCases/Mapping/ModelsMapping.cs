@@ -4,7 +4,7 @@ using DarkDeeds.WebClientBff.UseCases.Dto;
 
 namespace DarkDeeds.WebClientBff.UseCases.Mapping
 {
-    public class ModelsMapping : Profile
+    class ModelsMapping : Profile
     {
         public ModelsMapping()
         {

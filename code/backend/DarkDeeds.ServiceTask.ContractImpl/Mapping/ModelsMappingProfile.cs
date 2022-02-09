@@ -6,7 +6,7 @@ using DarkDeeds.ServiceTask.Models.Dto;
 
 namespace DarkDeeds.ServiceTask.ContractImpl.Mapping
 {
-    public class ModelsMappingProfile : Profile
+    class ModelsMappingProfile : Profile
     {
         public ModelsMappingProfile()
         {

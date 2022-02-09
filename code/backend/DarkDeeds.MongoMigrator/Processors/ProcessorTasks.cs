@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DarkDeeds.MongoMigrator.Processors
 {
-    public class ProcessorTasks
+    class ProcessorTasks
     {
         private readonly Repository<TaskEntity> _pgTasks;
         private readonly TaskRepository _mongoTasks;

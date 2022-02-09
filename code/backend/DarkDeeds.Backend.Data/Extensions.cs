@@ -8,7 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace DarkDeeds.Backend.Data
 {
-    public static class DependencyInjectionExtensions
+    public static class Extensions
     {
         public static void AddBackendDatabase(this IServiceCollection services, IConfiguration configuration)
         {            

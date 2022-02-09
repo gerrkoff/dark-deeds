@@ -8,7 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace DarkDeeds.Authentication
 {
-    public static class DiExtensions
+    public static class Extensions
     {
         private const string AuthSection = "Auth";
 

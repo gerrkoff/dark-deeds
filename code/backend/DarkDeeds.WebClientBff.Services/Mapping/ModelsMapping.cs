@@ -4,7 +4,7 @@ using DarkDeeds.WebClientBff.Services.Dto;
 
 namespace DarkDeeds.WebClientBff.Services.Mapping
 {
-    public class ModelsMapping : Profile
+    class ModelsMapping : Profile
     {
         public ModelsMapping()
         {

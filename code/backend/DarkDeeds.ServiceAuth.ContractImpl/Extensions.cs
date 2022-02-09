@@ -3,9 +3,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace DarkDeeds.ServiceAuth.ContractImpl
 {
-    public static class DependencyInjectionExtensions
+    public static class Extensions
     {   
-        public static void AddAuthServiceContractImpl(this IServiceCollection services)
+        public static void AddAuthContractImpl(this IServiceCollection services)
         {
             services.AddAutoMapper(typeof(ModelsMappingProfile));
         }

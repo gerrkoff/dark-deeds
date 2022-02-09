@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DarkDeeds.TelegramClient.Services.Implementation
 {
-    public class TelegramService : ITelegramService
+    class TelegramService : ITelegramService
     {
         private readonly UserManager<UserEntity> _userManager;
 

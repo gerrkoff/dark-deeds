@@ -4,7 +4,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace DarkDeeds.MongoMigrator.RepoFactory
 {
-    public class RepoFactoryMongo
+    class RepoFactoryMongo
     {
         public (TaskRepository, PlannedRecurrenceRepository) CreateRepos(IConfiguration configuration)
         {

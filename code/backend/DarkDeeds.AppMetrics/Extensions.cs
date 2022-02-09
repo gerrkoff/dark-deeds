@@ -6,7 +6,7 @@ using Prometheus;
 
 namespace DarkDeeds.AppMetrics
 {
-    public static class DiExtensions
+    public static class Extensions
     {
         public static void AddDarkDeedsAppMetrics(this IServiceCollection services, IConfiguration configuration)
         {

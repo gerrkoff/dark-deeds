@@ -11,7 +11,7 @@ using Newtonsoft.Json;
 
 namespace DarkDeeds.TelegramClient.Services.Implementation
 {
-    public class BotSendMessageService : IBotSendMessageService
+    class BotSendMessageService : IBotSendMessageService
     {
         private readonly string _apiSendMessage = "https://api.telegram.org/bot{0}/sendMessage";
 
@@ -50,7 +50,7 @@ namespace DarkDeeds.TelegramClient.Services.Implementation
         }
     }
     
-    public class BotSendMessageDebugService : BotSendMessageService
+    class BotSendMessageDebugService : BotSendMessageService
     {
         public BotSendMessageDebugService(string botToken) : base(botToken)
         {

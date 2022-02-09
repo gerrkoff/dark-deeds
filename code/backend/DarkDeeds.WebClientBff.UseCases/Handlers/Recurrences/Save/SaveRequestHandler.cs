@@ -5,7 +5,7 @@ using MediatR;
 
 namespace DarkDeeds.WebClientBff.UseCases.Handlers.Recurrences.Save
 {
-    public class SaveRequestHandler : IRequestHandler<SaveRequestModel, int>
+    class SaveRequestHandler : IRequestHandler<SaveRequestModel, int>
     {
         private readonly ITaskServiceApp _taskServiceApp;
 

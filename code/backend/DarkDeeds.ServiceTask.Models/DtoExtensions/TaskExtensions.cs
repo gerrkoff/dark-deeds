@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using DarkDeeds.ServiceTask.Models.Dto;
 
-namespace DarkDeeds.ServiceTask.Models.Extensions
+namespace DarkDeeds.ServiceTask.Models.DtoExtensions
 {
     public static class TaskExtensions
     {

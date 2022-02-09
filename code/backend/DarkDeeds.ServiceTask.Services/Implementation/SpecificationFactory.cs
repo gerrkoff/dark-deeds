@@ -4,7 +4,7 @@ using DarkDeeds.ServiceTask.Services.Interface;
 
 namespace DarkDeeds.ServiceTask.Services.Implementation
 {
-    public class SpecificationFactory : ISpecificationFactory
+    class SpecificationFactory : ISpecificationFactory
     {
         private readonly IServiceProvider _serviceProvider;
 
