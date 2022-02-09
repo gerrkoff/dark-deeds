@@ -2,7 +2,7 @@ using MongoDB.Driver;
 
 namespace DarkDeeds.ServiceTask.Data
 {
-    class MongoDbContext : IMongoDbContext
+    public class MongoDbContext : IMongoDbContext
     {
         private readonly IMongoDatabase _database;
 

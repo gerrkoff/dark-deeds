@@ -8,7 +8,7 @@ using DarkDeeds.ServiceTask.Services.Interface;
 
 namespace DarkDeeds.ServiceTask.Services.Implementation
 {
-    class TaskParserService : ITaskParserService
+    public class TaskParserService : ITaskParserService
     {
         private readonly IDateService _dateService;
 

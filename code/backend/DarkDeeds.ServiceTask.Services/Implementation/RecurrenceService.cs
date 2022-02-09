@@ -12,7 +12,7 @@ using DarkDeeds.ServiceTask.Services.Specifications;
 
 namespace DarkDeeds.ServiceTask.Services.Implementation
 {
-    class RecurrenceService : IRecurrenceService
+    public class RecurrenceService : IRecurrenceService
     {
         private readonly IPlannedRecurrenceRepository _plannedRecurrenceRepository;
         private readonly IMapper _mapper;

@@ -1,10 +1,7 @@
-using System.Runtime.CompilerServices;
 using DarkDeeds.ServiceTask.Data.EntityRepository;
 using DarkDeeds.ServiceTask.Infrastructure.Data.EntityRepository;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-
-[assembly: InternalsVisibleTo("DarkDeeds.MongoMigrator")]
 
 namespace DarkDeeds.ServiceTask.Data
 {

@@ -6,7 +6,7 @@ using DarkDeeds.ServiceTask.Infrastructure.Data;
 
 namespace DarkDeeds.ServiceTask.Services.Specifications
 {
-    abstract class Specification<T> : ISpecification<T>
+    public abstract class Specification<T> : ISpecification<T>
     {
         protected readonly List<Expression<Func<T, bool>>> Filters =
             new List<Expression<Func<T, bool>>>();

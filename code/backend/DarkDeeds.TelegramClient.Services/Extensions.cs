@@ -1,12 +1,9 @@
-using System.Runtime.CompilerServices;
 using DarkDeeds.TelegramClient.Services.Implementation;
 using DarkDeeds.TelegramClient.Services.Implementation.CommandProcessor;
 using DarkDeeds.TelegramClient.Services.Interface;
 using DarkDeeds.TelegramClient.Services.Interface.CommandProcessor;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-
-[assembly: InternalsVisibleTo("DarkDeeds.TelegramClient.Tests")]
 
 namespace DarkDeeds.TelegramClient.Services
 {

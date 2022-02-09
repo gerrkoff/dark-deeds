@@ -1,10 +1,7 @@
-using System.Runtime.CompilerServices;
 using DarkDeeds.ServiceTask.Services.Implementation;
 using DarkDeeds.ServiceTask.Services.Interface;
 using DarkDeeds.ServiceTask.Services.Specifications;
 using Microsoft.Extensions.DependencyInjection;
-
-[assembly: InternalsVisibleTo("DarkDeeds.ServiceTask.Tests")]
 
 namespace DarkDeeds.ServiceTask.Services
 {

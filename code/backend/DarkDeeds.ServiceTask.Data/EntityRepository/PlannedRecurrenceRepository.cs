@@ -3,7 +3,7 @@ using DarkDeeds.ServiceTask.Infrastructure.Data.EntityRepository;
 
 namespace DarkDeeds.ServiceTask.Data.EntityRepository
 {
-    class PlannedRecurrenceRepository : Repository<PlannedRecurrenceEntity>, IPlannedRecurrenceRepository
+    public class PlannedRecurrenceRepository : Repository<PlannedRecurrenceEntity>, IPlannedRecurrenceRepository
     {
         public PlannedRecurrenceRepository(IMongoDbContext dbContext) : base(dbContext, "plannedRecurrences")
         {

@@ -14,7 +14,7 @@ using Microsoft.Extensions.Logging;
 
 namespace DarkDeeds.ServiceTask.Services.Implementation
 {
-    class TaskService : ITaskService
+    public class TaskService : ITaskService
     {
         private readonly ITaskRepository _tasksRepository;
         private readonly ILogger<TaskService> _logger;

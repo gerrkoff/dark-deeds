@@ -4,7 +4,7 @@ using DarkDeeds.ServiceTask.Entities.Models;
 
 namespace DarkDeeds.ServiceTask.Services.Specifications
 {
-    class TaskSpecification : UserOwnedSpecification<TaskEntity, ITaskSpecification>, ITaskSpecification
+    public class TaskSpecification : UserOwnedSpecification<TaskEntity, ITaskSpecification>, ITaskSpecification
     {
         public ITaskSpecification FilterActual(DateTime from)
         {

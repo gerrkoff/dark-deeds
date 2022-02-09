@@ -15,7 +15,7 @@ using Microsoft.Extensions.Logging;
 
 namespace DarkDeeds.ServiceTask.Services.Implementation
 {
-    class RecurrenceCreatorService : IRecurrenceCreatorService
+    public class RecurrenceCreatorService : IRecurrenceCreatorService
     {
         private const int RecurrencePeriodInDays = 14;
         
