@@ -2,7 +2,7 @@ const express = require('express')
 const rateLimit = require('express-rate-limit');
 const serviceDiscovery = require('./service-discovery')
 
-const limiter = new RateLimit({
+const limiter = rateLimit({
     windowMs: 1000,
     max: 150,
 })
