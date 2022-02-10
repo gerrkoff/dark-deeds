@@ -1,4 +1,4 @@
-import { ConnectedRouter, connectRouter, routerMiddleware } from 'connected-react-router'
+import { ConnectedRouter, routerMiddleware } from 'connected-react-router'
 import { createBrowserHistory } from 'history'
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
@@ -7,7 +7,7 @@ import { applyMiddleware, compose, createStore } from 'redux'
 import thunk from 'redux-thunk'
 
 import { AppRouting } from './components/app'
-import rootReducer from './redux/reducers'
+import createRootReducer from './redux/reducers'
 import { di, diToken, TaskHubApi } from './di'
 // import registerServiceWorker from './registerServiceWorker'
 
@@ -21,7 +21,7 @@ di.get<TaskHubApi>(diToken.TaskHubApi).init()
 
 const history = createBrowserHistory()
 const store = createStore<any, any, any, any>(
-    connectRouter(history)(rootReducer),
+    createRootReducer(history),
     {},
     compose(
         applyMiddleware(
