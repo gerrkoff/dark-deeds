@@ -1,6 +1,6 @@
 {
   "name": "dark-deeds",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "dependencies": {
     "@aspnet/signalr": "^1.1.4",
@@ -10,9 +10,8 @@
     "react-dom": "^16.12.0",
     "react-dragula": "^1.1.17",
     "react-redux": "^5.1.2",
-    "react-router": "^5.1.2",
+    "react-router": "^4.3.1",
     "react-router-dom": "^5.1.2",
-    "react-scripts-ts": "3.1.0",
     "react-toastify": "^4.5.2",
     "redux": "^4.0.4",
     "redux-thunk": "^2.3.0",
@@ -23,12 +22,12 @@
     "tiny-invariant": "^1.0.6"
   },
   "scripts": {
-    "build-css": "node-sass-chokidar src/ -o src/",
+    "build-css": "node-sass src/ -o src/",
     "build-js": "react-scripts-ts build",
     "build-copy": "npx copyfiles \"build/**\" \"../server/build\" -u 1 -e build && echo files copied",
     "build": "npm run build-css && npm run build-js && npm run build-copy",
     "test-ci": "npm run build-css && cross-env CI=true react-scripts-ts test --env=jsdom",
-    "watch-css": "npm run build-css && node-sass-chokidar src/ -o src/ --watch --recursive",
+    "watch-css": "npm run build-css && node-sass src/ -o src/ --watch --recursive",
     "start-js": "cross-env BROWSER=none react-scripts-ts start",
     "start": "npm-run-all -p watch-css start-js",
     "test": "react-scripts-ts test --env=jsdom",
@@ -48,9 +47,10 @@
     "cross-env": "^5.2.1",
     "enzyme": "^3.10.0",
     "enzyme-adapter-react-16": "^1.15.1",
-    "node-sass-chokidar": "^1.4.0",
+    "node-sass": "^6.0.1",
     "npm-run-all": "^4.1.5",
     "react-test-renderer": "^16.12.0",
+    "react-scripts-ts": "3.1.0",
     "tslint-config-standard": "^8.0.1",
     "typescript": "^3.7.2"
   }
