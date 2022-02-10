@@ -1,10 +1,12 @@
-FROM node:12.13.0-alpine
+FROM node:16.13.2-alpine
 
 COPY code/frontend/server/package.json /app/server_deps/
+COPY code/frontend/server/package-lock.json /app/server_deps/
 WORKDIR /app/server_deps
 RUN npm install
 
 COPY code/frontend/app/package.json /app/app_deps/
+COPY code/frontend/app/package-lock.json /app/app_deps/
 WORKDIR /app/app_deps
 RUN npm install
 
