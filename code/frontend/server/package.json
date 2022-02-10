@@ -6,6 +6,7 @@
     },
     "dependencies": {
         "axios": "^0.23.0",
-        "express": "^4.17.1"
+        "express": "^4.17.1",
+        "express-rate-limit": "^6.2.1"
     }
 }
