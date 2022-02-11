@@ -7,8 +7,10 @@ import { general } from './general'
 import { telegramIntegration } from './telegramIntegration'
 import { settings } from './settings'
 import { recurrencesView } from './recurrencesView'
+import { connectRouter } from 'connected-react-router'
 
-const rootReducer = combineReducers({
+const createRootReducer = (history: any) => combineReducers({
+    router: connectRouter(history),
     editTask,
     login,
     modalConfirm,
@@ -19,4 +21,4 @@ const rootReducer = combineReducers({
     recurrencesView
 })
 
-export default rootReducer
+export default createRootReducer

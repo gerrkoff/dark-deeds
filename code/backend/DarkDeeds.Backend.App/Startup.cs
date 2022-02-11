@@ -19,7 +19,7 @@ namespace DarkDeeds.Backend.App
         {
             Configuration = configuration;
         }
-        
+
         private IConfiguration Configuration { get; }
 
         public void ConfigureServices(IServiceCollection services)
@@ -49,11 +49,16 @@ namespace DarkDeeds.Backend.App
                     c.SwaggerEndpoint("/swagger/v1/swagger.json", "DarkDeeds.Backend v1");
                     c.RoutePrefix = string.Empty;
                 });
+                app.UseCors(builder => builder
+                    .SetIsOriginAllowed(origin => origin.EndsWith(":3000"))
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .AllowCredentials());
             }
 
             app.UseAuthentication();
             app.UseAuthorization();
-            
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
