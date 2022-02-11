@@ -1,8 +1,15 @@
 const express = require('express')
+const rateLimit = require('express-rate-limit');
 const serviceDiscovery = require('./service-discovery')
 
-let app = express()
+const limiter = rateLimit({
+    windowMs: 1000,
+    max: 150,
+})
+
+const app = express()
 app.use(express.static(__dirname + '/build'))
+app.use(limiter)
 app.get('/*', (req, res) => {
     res.sendFile(__dirname + "/build/index.html")
 })
