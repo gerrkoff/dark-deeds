@@ -1,11 +1,9 @@
-import { di, diToken, TelegramIntegrationApi, ToastService, DateService } from '../../di'
 import { TelegramStart } from '../../models'
 import * as actions from '../constants'
 import { ThunkDispatch } from '../../helpers'
-
-const telegramIntegrationApi = di.get<TelegramIntegrationApi>(diToken.TelegramIntegrationApi)
-const toastService = di.get<ToastService>(diToken.ToastService)
-const dateService = di.get<DateService>(diToken.DateService)
+import { telegramIntegrationApi } from 'src/di/api/telegram-integration-api'
+import { dateService } from 'src/di/services/date-service'
+import { toastService } from 'src/di/services/toast-service'
 
 export function generateTelegramChatKey() {
     return async(dispatch: ThunkDispatch<actions.TelegramIntegrationAction>) => {

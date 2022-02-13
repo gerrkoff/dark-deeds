@@ -1,14 +1,11 @@
-import { injectable, inject } from 'inversify'
-import { StorageService } from '..'
-import diToken from '../token'
+import { StorageService, storageService } from '../services/storage-service'
 import baseUrl from './base-url'
 
-@injectable()
 export class Api {
     private readonly DEFAULT_ERROR_MESSAGE = 'An error has occured.'
 
     public constructor(
-        @inject(diToken.StorageService) private storageService: StorageService
+        private storageService: StorageService
     ) {}
 
     public get<T>(api: string, params?: Map<string, any>): Promise<T> {
@@ -73,3 +70,5 @@ export class Api {
         }
     }
 }
+
+export const api = new Api(storageService)

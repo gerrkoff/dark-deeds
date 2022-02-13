@@ -1,16 +1,15 @@
-import { injectable, inject } from 'inversify'
-import { Api } from '..'
-import diToken from '../token'
 import { BuildInfo } from '../../models'
+import { Api, api } from './api'
 
-@injectable()
 export class GeneralApi {
 
     public constructor(
-        @inject(diToken.Api) private api: Api
+        private api: Api
     ) {}
 
     public loadBuildInfo(): Promise<BuildInfo> {
         return this.api.get<BuildInfo>('api/be/build-info')
     }
 }
+
+export const generalApi = new GeneralApi(api)

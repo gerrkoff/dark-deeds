@@ -1,18 +1,16 @@
-import { injectable, inject } from 'inversify'
 import * as signalR from '@aspnet/signalr'
-import { DateService, StorageService } from '..'
-import diToken from '../token'
 import baseUrl from './base-url'
 import { Task } from '../../models'
+import { StorageService, storageService } from '../services/storage-service'
+import { DateService, dateService } from '../services/date-service'
 
-@injectable()
 export class TaskHubApi {
 
-    private connection: signalR.HubConnection
+    private connection: signalR.HubConnection | null = null
 
     public constructor(
-        @inject(diToken.StorageService) private storageService: StorageService,
-        @inject(diToken.DateService) private dateService: DateService
+        private storageService: StorageService,
+        private dateService: DateService
     ) {}
 
     public init() {
@@ -26,15 +24,15 @@ export class TaskHubApi {
     }
 
     public hubConnected(): boolean {
-        return this.connection.state === signalR.HubConnectionState.Connected
+        return this.connection!.state === signalR.HubConnectionState.Connected
     }
 
     public hubStart(): Promise<void> {
-        return this.connection.start()
+        return this.connection!.start()
     }
 
     public hubStop(): Promise<void> {
-        return this.connection.stop()
+        return this.connection!.stop()
     }
 
     public hubSubscribe(
@@ -42,19 +40,21 @@ export class TaskHubApi {
         update: (tasks: Task[], localUpdate: boolean) => void,
         heartbeat: () => void
     ) {
-        this.connection.onclose((error?: Error) => {
+        this.connection!.onclose((error?: Error) => {
             if (error !== undefined) {
                 console.warn('Hub Connection was closed with error', error)
             }
             close()
         })
-        this.connection.on('update', (tasks, localUpdate) => update(this.dateService.adjustDatesAfterLoading(tasks) as Task[], localUpdate))
-        this.connection.on('heartbeat', heartbeat)
+        this.connection!.on('update', (tasks, localUpdate) => update(this.dateService.adjustDatesAfterLoading(tasks) as Task[], localUpdate))
+        this.connection!.on('heartbeat', heartbeat)
     }
 
     // TODO: remove
     public saveTasks(tasks: Task[]): Promise<void> {
         const fixedTasks = this.dateService.adjustDatesBeforeSaving(tasks)
-        return this.connection.send('save', fixedTasks)
+        return this.connection!.send('save', fixedTasks)
     }
 }
+
+export const taskHubApi = new TaskHubApi(storageService, dateService)

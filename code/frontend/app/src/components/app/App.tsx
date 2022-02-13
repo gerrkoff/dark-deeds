@@ -23,7 +23,7 @@ export interface IAppProps {
     createRecurrences: () => void
 }
 export class App extends React.PureComponent<IAppProps> {
-    private saveTaskInterval: NodeJS.Timeout
+    private saveTaskInterval: NodeJS.Timeout | null = null
 
     public componentDidMount() {
         this.props.loadTasks()
@@ -35,7 +35,7 @@ export class App extends React.PureComponent<IAppProps> {
 
     public componentWillUnmount() {
         this.props.stopTaskHub()
-        clearInterval(this.saveTaskInterval)
+        clearInterval(this.saveTaskInterval!)
         window.onbeforeunload = null
     }
 

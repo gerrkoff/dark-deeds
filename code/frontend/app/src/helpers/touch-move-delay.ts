@@ -1,7 +1,7 @@
 export class TouchMoveDelay {
     private elem: HTMLElement | undefined
-    private timeout: NodeJS.Timeout
-    private draggable: boolean
+    private timeout: NodeJS.Timeout | null = null
+    private draggable: boolean | null = null
 
     constructor(
         elem: HTMLElement | undefined,
@@ -38,12 +38,12 @@ export class TouchMoveDelay {
     private handleTouchMove = (event: Event) => {
         if (!this.draggable) {
             event.stopPropagation()
-            clearTimeout(this.timeout)
+            clearTimeout(this.timeout!)
         }
     }
 
     private handleTouchEnd = (event: Event) => {
-        clearTimeout(this.timeout)
+        clearTimeout(this.timeout!)
         this.draggable = false
         this.elemReadyCallback(false)
     }

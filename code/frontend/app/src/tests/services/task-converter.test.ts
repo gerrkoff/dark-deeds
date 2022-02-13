@@ -1,4 +1,5 @@
-import { TaskConverter, DateService } from '../../di'
+import { DateService } from 'src/di/services/date-service'
+import { TaskConverter } from 'src/di/services/task-converter'
 import { TaskModel, TaskTypeEnum } from '../../models'
 
 function dt(year: number, month: number, date: number): number {

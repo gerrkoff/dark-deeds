@@ -1,13 +1,10 @@
-import { injectable, inject } from 'inversify'
 import { DayCardModel, OverviewModel, Task } from '../../models'
-import { DateService } from '..'
-import diToken from '../token'
+import { DateService, dateService } from './date-service'
 
-@injectable()
 export class TaskService {
 
     public constructor(
-        @inject(diToken.DateService) private dateService: DateService
+        private dateService: DateService
     ) {}
 
     public evalModel(tasks: Task[], showCompleted: boolean): OverviewModel {
@@ -54,3 +51,5 @@ export class TaskService {
         return taskA.order > taskB.order ? 1 : -1
     }
 }
+
+export const taskService = new TaskService(dateService)

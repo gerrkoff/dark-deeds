@@ -1,4 +1,4 @@
-import { DateService } from '../../di'
+import { DateService } from 'src/di/services/date-service'
 import { Task } from '../../models'
 
 test('[toDateFromSpecialFormat] positive', () => {

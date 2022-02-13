@@ -1,12 +1,15 @@
 import * as React from 'react'
 import { Accordion, AccordionTitleProps } from 'semantic-ui-react'
 import { AddTaskButton } from '../edit-task'
-import { di, diToken, DateService, TaskMoveService, TaskService, LocalSettingsService } from '../../di'
 import { DayCardModel, Task, TaskModel, LocalSettings, OverviewTabEnum } from '../../models'
 import { DragulaWrapper } from '../../helpers'
 import { DaysBlock, NoDateCard } from './'
 
 import '../../styles/overview.css'
+import { dateService } from 'src/di/services/date-service'
+import { taskMoveService } from 'src/di/services/task-move-service'
+import { taskService } from 'src/di/services/task-service'
+import { localSettingsService } from 'src/di/services/local-settings-service'
 
 interface IProps {
     tasks: Task[]
@@ -19,14 +22,14 @@ interface IProps {
     confirmAction?: (content: React.ReactNode, action: () => void, header: string) => void
 }
 export class Overview extends React.PureComponent<IProps> {
-    private dateService = di.get<DateService>(diToken.DateService)
-    private taskMoveService = di.get<TaskMoveService>(diToken.TaskMoveService)
-    private taskService = di.get<TaskService>(diToken.TaskService)
-    private localSettingsService = di.get<LocalSettingsService>(diToken.LocalSettingsService)
+    private dateService = dateService
+    private taskMoveService = taskMoveService
+    private taskService = taskService
+    private localSettingsService = localSettingsService
 
-    private dragula: DragulaWrapper
+    private dragula: DragulaWrapper | null = null
     private settings: LocalSettings
-    private tabMap: OverviewTabEnum[]
+    private tabMap: OverviewTabEnum[] | null = null
 
     constructor(props: IProps) {
         super(props)
@@ -38,11 +41,11 @@ export class Overview extends React.PureComponent<IProps> {
     }
 
     public componentDidUpdate() {
-        this.dragula.updateContainers()
+        this.dragula!.updateContainers()
     }
 
     public componentWillUnmount() {
-        this.dragula.destroy()
+        this.dragula!.destroy()
     }
 
     public render() {
@@ -99,13 +102,13 @@ export class Overview extends React.PureComponent<IProps> {
 
     // TODO: test
     private evalOpenedTabs = (): number[] => {
-        return this.tabMap
+        return this.tabMap!
             .filter(x => this.settings.openedOverviewTabs.some(y => x === y))
-            .map(x => this.tabMap.indexOf(x))
+            .map(x => this.tabMap!.indexOf(x))
     }
 
     private panelClickHandler = (_event: React.MouseEvent<HTMLDivElement>, data: AccordionTitleProps) => {
-        const tab: OverviewTabEnum = this.tabMap[data.index as number]
+        const tab: OverviewTabEnum = this.tabMap![data.index as number]
         if (data.active) {
             this.settings.openedOverviewTabs = this.settings.openedOverviewTabs.filter(x => x !== tab)
         } else {
@@ -129,7 +132,7 @@ export class Overview extends React.PureComponent<IProps> {
     }
 
     private dndHandler = (el: HTMLElement, target: HTMLElement, source: HTMLElement, sibling: HTMLElement) => {
-        this.dragula.cancel()
+        this.dragula!.cancel()
         if (!target || !source) {
             return
         }

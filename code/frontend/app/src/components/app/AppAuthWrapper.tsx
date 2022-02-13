@@ -1,9 +1,9 @@
 import * as React from 'react'
 import { ToastContainer } from 'react-toastify'
 import { Container, Dimmer, Loader } from 'semantic-ui-react'
+import { appearanceService } from 'src/di/services/appearance-service'
 import Login from '../../containers/Login'
 import { App, IAppProps } from './'
-import { di, diToken, AppearanceService } from '../../di'
 
 interface IProps extends IAppProps {
     initialLogginIn: boolean
@@ -12,7 +12,7 @@ interface IProps extends IAppProps {
     loadGeneralInfo: () => void
 }
 export class AppAuthWrapper extends React.PureComponent<IProps> {
-    private appearanceService = di.get<AppearanceService>(diToken.AppearanceService)
+    private appearanceService = appearanceService
 
     public componentDidMount() {
         this.initialAppLoad()

@@ -1,11 +1,9 @@
 import { IRecurrencesViewState } from '../types'
-import { di, diToken, DateService, UtilsService } from '../../di'
 import * as actions from '../constants'
 import { PlannedRecurrence } from '../../models'
 import { objectsEqual, copyArray } from '../..//helpers'
-
-const dateService = di.get<DateService>(diToken.DateService)
-const utilsService = di.get<UtilsService>(diToken.UtilsService)
+import { utilsService } from 'src/di/services/utils-service'
+import { dateService } from 'src/di/services/date-service'
 
 const inittialState: IRecurrencesViewState = {
     isCreatingRecurrences: false,

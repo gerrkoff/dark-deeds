@@ -1,6 +1,3 @@
-import { injectable } from 'inversify'
-
-@injectable()
 export class StorageService {
     private readonly accessTokenKey = 'accessToken'
     private readonly settingsKey = 'settings'
@@ -25,3 +22,5 @@ export class StorageService {
         localStorage.setItem(this.settingsKey, value)
     }
 }
+
+export const storageService = new StorageService()

@@ -1,9 +1,9 @@
 import * as React from 'react'
 import { Segment, Header } from 'semantic-ui-react'
-import { di, diToken, RecurrenceService } from '../../../di'
 import { PlannedRecurrence } from '../../../models'
 import { RecurrenceEdit } from './components/ReccurenceEdit'
 import { ButtonPanel } from './components/ButtonPanel'
+import { recurrenceService } from 'src/di/services/recurrence-service'
 
 interface IProps {
     recurrence: PlannedRecurrence
@@ -13,7 +13,7 @@ interface IProps {
     deleteRecurrence: (recurrence: PlannedRecurrence) => void
 }
 export class RecurrenceItem extends React.PureComponent<IProps> {
-    private recurrenceService = di.get<RecurrenceService>(diToken.RecurrenceService)
+    private recurrenceService = recurrenceService
 
     public render() {
         return (

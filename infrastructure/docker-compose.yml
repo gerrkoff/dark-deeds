@@ -38,7 +38,7 @@ services:
         limits:
           cpus: '1'
           memory: 300M
-      
+
   postgres-db:
     image: postgres:13.0-alpine
     environment:
@@ -66,7 +66,7 @@ services:
       - backend
       - auth-service
       - task-service
-      - web-client
+      # - web-client
     deploy:
       resources:
         limits:
@@ -131,21 +131,21 @@ services:
           cpus: '1'
           memory: 300M
 
-  web-client:
-    build:
-      context: ../
-      dockerfile: infrastructure/apps/web-client.dockerfile
-    ports:
-      - 3000:3000
-    environment:
-      - DD_SERVICE_DISCOVERY_HOST=${IP:-web-client}
-      - DD_SERVICE_DISCOVERY_PORT=3000
-    deploy:
-      resources:
-        limits:
-          cpus: '1'
-          memory: 300M
-  
+  # web-client:
+  #   build:
+  #     context: ../
+  #     dockerfile: infrastructure/apps/web-client.dockerfile
+  #   ports:
+  #     - 3000:3000
+  #   environment:
+  #     - DD_SERVICE_DISCOVERY_HOST=${IP:-web-client}
+  #     - DD_SERVICE_DISCOVERY_PORT=3000
+  #   deploy:
+  #     resources:
+  #       limits:
+  #         cpus: '1'
+  #         memory: 300M
+
   prometheus:
     image: prom/prometheus:v2.32.1
     ports:

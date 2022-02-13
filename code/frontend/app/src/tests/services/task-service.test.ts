@@ -1,4 +1,5 @@
-import { DateService, TaskService } from '../../di'
+import { DateService } from 'src/di/services/date-service'
+import { TaskService } from 'src/di/services/task-service'
 import { Task, TaskTypeEnum } from '../../models'
 
 function task(year: number, month: number, date: number, uid: string = '0', order: number = 0, timeType: TaskTypeEnum = TaskTypeEnum.Simple, hours: number = 0, minutes: number = 0): Task {

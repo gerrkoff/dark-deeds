@@ -17,7 +17,7 @@ interface IState {
 }
 export class TaskItem extends React.PureComponent<IProps, IState> {
     private elem: HTMLSpanElement | undefined
-    private touchMoveDelay: TouchMoveDelay
+    private touchMoveDelay: TouchMoveDelay | null = null
 
     constructor(props: IProps) {
         super(props)
@@ -33,7 +33,7 @@ export class TaskItem extends React.PureComponent<IProps, IState> {
     }
 
     public componentWillUnmount() {
-        this.touchMoveDelay.destroy()
+        this.touchMoveDelay && this.touchMoveDelay.destroy()
     }
 
     public render() {

@@ -8,7 +8,7 @@ interface IProps {
     plannedRecurrences: PlannedRecurrence[]
     edittingRecurrenceId: string | null
     addRecurrence: () => void
-    changeEdittingRecurrence: (uid: string) => void
+    changeEdittingRecurrence: (uid: string | null) => void
     changeRecurrence: (recurrence: PlannedRecurrence) => void
     deleteRecurrence: (recurrence: PlannedRecurrence) => void
 }

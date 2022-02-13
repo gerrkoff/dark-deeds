@@ -1,7 +1,5 @@
-import { injectable } from 'inversify'
 import { IDateable } from '../../models'
 
-@injectable()
 export class DateService {
     public readonly dateInputFormat = 'M/D/YYYY'
     public readonly daysLong = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
@@ -105,3 +103,5 @@ export class DateService {
         return fixed
     }
 }
+
+export const dateService = new DateService()

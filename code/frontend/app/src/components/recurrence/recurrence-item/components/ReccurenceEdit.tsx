@@ -1,10 +1,10 @@
 import * as React from 'react'
 import { DropdownItemProps, Form } from 'semantic-ui-react'
 import { DateInput } from '../../../common'
-import { di, diToken, DateService } from '../../../../di'
 import { PlannedRecurrence, RecurrenceWeekdayEnum, recurrenceWeekdayEnumValues } from '../../../../models'
 import { enumExpand, enumReduce } from '../../../../helpers'
 import { ButtonPanel } from './ButtonPanel'
+import { dateService } from 'src/di/services/date-service'
 
 interface IProps {
     recurrence: PlannedRecurrence
@@ -13,7 +13,7 @@ interface IProps {
     delete: () => void
 }
 export class RecurrenceEdit extends React.PureComponent<IProps> {
-    private dateService = di.get<DateService>(diToken.DateService)
+    private dateService = dateService
 
     public render() {
         return (

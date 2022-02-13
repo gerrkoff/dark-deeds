@@ -1,9 +1,7 @@
-import { di, diToken, GeneralApi } from '../../di'
 import { BuildInfo } from '../../models'
 import * as actions from '../constants'
 import { ThunkDispatch } from '../../helpers'
-
-const generalApi = di.get<GeneralApi>(diToken.GeneralApi)
+import { generalApi } from 'src/di/api/general-api'
 
 export function loadGeneralInfo() {
     return async(dispatch: ThunkDispatch<actions.GeneralAction>) => {

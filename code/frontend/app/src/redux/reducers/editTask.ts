@@ -1,8 +1,6 @@
-import { di, diToken, TaskConverter } from '../../di'
 import { IEditTaskState } from '../types'
 import * as actions from '../constants'
-
-const taskConverter = di.get<TaskConverter>(diToken.TaskConverter)
+import { taskConverter } from 'src/di/services/task-converter'
 
 const inittialState: IEditTaskState = {
     uid: null,

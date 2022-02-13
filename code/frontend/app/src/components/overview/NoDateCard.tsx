@@ -1,10 +1,10 @@
 import * as React from 'react'
 import { List, Segment } from 'semantic-ui-react'
 import { Task, TaskModel } from '../../models'
-import { di, diToken, TaskService } from '../../di'
 import { TaskItem } from './'
 
 import '../../styles/no-date-card.css'
+import { taskService } from 'src/di/services/task-service'
 
 interface IProps {
     tasks: Task[]
@@ -13,7 +13,7 @@ interface IProps {
     confirmAction?: (content: React.ReactNode, action: () => void, header: string) => void
 }
 export class NoDateCard extends React.PureComponent<IProps> {
-    private taskService = di.get<TaskService>(diToken.TaskService)
+    private taskService = taskService
 
     public render() {
         const tasks = this.props.tasks.sort(this.taskService.sorting)

@@ -1,4 +1,3 @@
-import { injectable } from 'inversify'
 import { toast, ToastOptions } from 'react-toastify'
 
 const defaultOptions: ToastOptions = {
@@ -9,7 +8,6 @@ const defaultOptions: ToastOptions = {
     draggable: true
 }
 
-@injectable()
 export class ToastService {
     public readonly types = toast.TYPE
 
@@ -65,3 +63,5 @@ export class ToastService {
         return toast.isActive(toastId as any)
     }
 }
+
+export const toastService = new ToastService()
