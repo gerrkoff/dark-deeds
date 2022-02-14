@@ -4,11 +4,15 @@ import { PlannedRecurrence } from '../../models'
 import * as actions from '../../redux/constants'
 
 jest.mock('src/di/services/date-service', () => {
-    return ({
+    const mock = {
         dateService: {
-            today: jest.fn().mockImplementation(() => new Date(2010, 10, 10))
+            today: jest.fn().mockImplementation(() => {
+                return new Date(2010, 10, 10)
+            })
         },
-    })
+    }
+
+    return mock
 })
 
 function createState(
