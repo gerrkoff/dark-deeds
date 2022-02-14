@@ -18,21 +18,6 @@
     "semantic-ui-css": "^2.4.1",
     "semantic-ui-react": "^0.88.1"
   },
-  "scripts": {
-    "build-css": "cross-env CI=true node-sass src/ -o src/",
-    "build-js": "cross-env CI=true react-scripts build",
-    "build-copy": "npx copyfiles \"build/**\" \"../server/build\" -u 1 -e build && echo files copied",
-    "build": "npm run build-css && npm run build-js && npm run build-copy",
-    "test-ci": "cross-env CI=true react-scripts test --env=jsdom",
-    "start-css": "node-sass src/ -o src/ --watch --recursive",
-    "start-js": "cross-env BROWSER=none react-scripts start",
-    "start": "npm-run-all -p start-css start-js",
-    "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject",
-    "lint": "eslint . -c .eslintrc.js --ext .js,.jsx,.ts,.tsx",
-    "lint:fix": "npm run lint -- --fix",
-    "postinstall": "semantic-ui-css-patch"
-  },
   "devDependencies": {
     "@types/enzyme": "^3.10.3",
     "@types/enzyme-adapter-react-16": "^1.0.5",
@@ -53,6 +38,27 @@
     "react-scripts": "^5.0.0",
     "react-test-renderer": "^16.12.0",
     "typescript": "^4.5.5"
+  },
+  "scripts": {
+    "build-css": "cross-env CI=true node-sass src/ -o src/",
+    "build-js": "cross-env CI=true react-scripts build",
+    "build-copy": "npx copyfiles \"build/**\" \"../server/build\" -u 1 -e build && echo files copied",
+    "build": "npm run build-css && npm run build-js && npm run build-copy",
+    "test-ci": "cross-env CI=true react-scripts test --env=jsdom",
+    "start-css": "node-sass src/ -o src/ --watch --recursive",
+    "start-js": "cross-env BROWSER=none react-scripts start",
+    "start": "npm-run-all -p start-css start-js",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject",
+    "lint": "eslint . -c .eslintrc.js --ext .js,.jsx,.ts,.tsx",
+    "lint:fix": "npm run lint -- --fix",
+    "format": "prettier --write \"**/*.+(js|jsx|json|yml|yaml|css|md|ts|tsx)\"",
+    "postinstall": "semantic-ui-css-patch"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run lint && npm run format"
+    }
   },
   "browserslist": {
     "production": [
