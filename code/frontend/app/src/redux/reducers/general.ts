@@ -1,5 +1,5 @@
-import { IGeneralState } from '../types'
-import * as actions from '../constants'
+import { IGeneralState } from 'redux/types'
+import * as actions from 'redux/constants'
 
 const inittialState: IGeneralState = {
     appVersion: '',

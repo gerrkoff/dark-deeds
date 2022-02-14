@@ -1,5 +1,5 @@
-import { StorageService, storageService } from '../services/storage-service'
-import baseUrl from './base-url'
+import { StorageService, storageService } from 'di/services/storage-service'
+import baseUrl from 'di/api/base-url'
 
 export class Api {
     private readonly DEFAULT_ERROR_MESSAGE = 'An error has occured.'

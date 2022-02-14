@@ -1,6 +1,6 @@
-import { SigninResultEnum, SignupResultEnum } from '../../models'
-import { ILoginState } from '../types'
-import * as actions from '../constants'
+import { SigninResultEnum, SignupResultEnum } from 'models'
+import * as actions from 'redux/constants'
+import { ILoginState } from 'redux/types'
 
 const initialState: ILoginState = {
     formSignin: true,

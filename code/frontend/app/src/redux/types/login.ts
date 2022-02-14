@@ -1,4 +1,4 @@
-import { SigninResultEnum, SignupResultEnum } from '../../models'
+import { SigninResultEnum, SignupResultEnum } from 'models'
 
 export interface ILoginState {
     processing: boolean

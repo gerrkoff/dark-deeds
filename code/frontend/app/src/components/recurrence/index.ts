@@ -1,1 +1,1 @@
-export * from './ReccurencesView'
+export * from 'components/recurrence/ReccurencesView'

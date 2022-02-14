@@ -1,9 +1,14 @@
 import * as React from 'react'
 import { Segment } from 'semantic-ui-react'
-import { SettingsServer, SettingsClient } from '../../models'
-import { UserInfo, BuildInfo, TelegramIntegration, UserSettings } from './'
-import { ISettings } from '../../redux/types'
-import '../../styles/settings.css'
+import { SettingsServer, SettingsClient } from 'models'
+import { ISettings } from 'redux/types'
+import 'styles/settings.css'
+import {
+    BuildInfo,
+    TelegramIntegration,
+    UserInfo,
+    UserSettings,
+} from 'components/settings'
 
 interface IProps {
     username: string

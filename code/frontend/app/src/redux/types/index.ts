@@ -1,11 +1,11 @@
-import { ITasksState } from './tasks'
-import { IEditTaskState } from './editTask'
-import { IModalConfirmState } from './modalConfirm'
-import { ILoginState } from './login'
-import { IGeneralState } from './general'
-import { ITelegramIntegration } from './telegramIntegration'
-import { ISettings } from './settings'
-import { IRecurrencesViewState } from './recurrencesView'
+import { ITasksState } from 'redux/types/tasks'
+import { IEditTaskState } from 'redux/types/editTask'
+import { IModalConfirmState } from 'redux/types/modalConfirm'
+import { ILoginState } from 'redux/types/login'
+import { IGeneralState } from 'redux/types/general'
+import { ITelegramIntegration } from 'redux/types/telegramIntegration'
+import { ISettings } from 'redux/types/settings'
+import { IRecurrencesViewState } from 'redux/types/recurrencesView'
 
 export interface IAppState {
     router: any
@@ -19,11 +19,11 @@ export interface IAppState {
     recurrencesView: IRecurrencesViewState
 }
 
-export * from './tasks'
-export * from './editTask'
-export * from './modalConfirm'
-export * from './login'
-export * from './general'
-export * from './telegramIntegration'
-export * from './settings'
-export * from './recurrencesView'
+export * from 'redux/types/tasks'
+export * from 'redux/types/editTask'
+export * from 'redux/types/modalConfirm'
+export * from 'redux/types/login'
+export * from 'redux/types/general'
+export * from 'redux/types/telegramIntegration'
+export * from 'redux/types/settings'
+export * from 'redux/types/recurrencesView'

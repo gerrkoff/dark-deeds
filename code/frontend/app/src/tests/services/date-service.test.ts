@@ -1,5 +1,5 @@
-import { DateService } from 'src/di/services/date-service'
-import { Task } from '../../models'
+import { DateService } from 'di/services/date-service'
+import { Task } from 'models'
 
 test('[toDateFromSpecialFormat] positive', () => {
     const service = new DateService()

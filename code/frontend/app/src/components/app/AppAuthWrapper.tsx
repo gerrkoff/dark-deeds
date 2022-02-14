@@ -1,9 +1,9 @@
 import * as React from 'react'
 import { ToastContainer } from 'react-toastify'
 import { Container, Dimmer, Loader } from 'semantic-ui-react'
-import { appearanceService } from 'src/di/services/appearance-service'
-import Login from '../../containers/Login'
-import { App, IAppProps } from './'
+import { appearanceService } from 'di/services/appearance-service'
+import Login from 'containers/Login'
+import { App, IAppProps } from 'components/app'
 
 interface IProps extends IAppProps {
     initialLogginIn: boolean

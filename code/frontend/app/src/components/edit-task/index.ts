@@ -1,2 +1,2 @@
-export * from './AddTaskButton'
-export * from './EditTaskModal'
+export * from 'components/edit-task/AddTaskButton'
+export * from 'components/edit-task/EditTaskModal'

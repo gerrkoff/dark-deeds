@@ -1,13 +1,14 @@
 import { combineReducers } from 'redux'
-import { editTask } from './editTask'
-import { login } from './login'
-import { modalConfirm } from './modalConfirm'
-import { tasks } from './tasks'
-import { general } from './general'
-import { telegramIntegration } from './telegramIntegration'
-import { settings } from './settings'
-import { recurrencesView } from './recurrencesView'
+
 import { connectRouter } from 'connected-react-router'
+import { editTask } from 'redux/reducers/editTask'
+import { login } from 'redux/reducers/login'
+import { modalConfirm } from 'redux/reducers/modalConfirm'
+import { tasks } from 'redux/reducers/tasks'
+import { general } from 'redux/reducers/general'
+import { telegramIntegration } from 'redux/reducers/telegramIntegration'
+import { settings } from 'redux/reducers/settings'
+import { recurrencesView } from 'redux/reducers/recurrencesView'
 
 const createRootReducer = (history: any) =>
     combineReducers({

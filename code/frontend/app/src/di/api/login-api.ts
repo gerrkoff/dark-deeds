@@ -1,5 +1,5 @@
-import { CurrentUserInfo, SigninResult, SignupResult } from '../../models'
-import { Api, api } from './api'
+import { CurrentUserInfo, SigninResult, SignupResult } from 'models'
+import { Api, api } from 'di/api/api'
 
 export class LoginApi {
     public constructor(private api: Api) {}

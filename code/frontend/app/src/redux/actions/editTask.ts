@@ -1,6 +1,6 @@
-import { TaskModel } from '../../models'
-import * as actions from '../constants'
-import { ThunkDispatch } from '../../helpers'
+import { TaskModel } from 'models'
+import * as actions from 'redux/constants'
+import { ThunkDispatch } from 'helpers'
 
 export function openEditTaskModal(
     open: boolean,

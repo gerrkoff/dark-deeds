@@ -1,6 +1,6 @@
-import { IEditTaskState } from '../types'
-import * as actions from '../constants'
-import { taskConverter } from 'src/di/services/task-converter'
+import * as actions from 'redux/constants'
+import { taskConverter } from 'di/services/task-converter'
+import { IEditTaskState } from 'redux/types'
 
 const inittialState: IEditTaskState = {
     uid: null,

@@ -1,8 +1,8 @@
 import * as signalR from '@aspnet/signalr'
-import baseUrl from './base-url'
-import { Task } from '../../models'
-import { StorageService, storageService } from '../services/storage-service'
-import { DateService, dateService } from '../services/date-service'
+import baseUrl from 'di/api/base-url'
+import { Task } from 'models'
+import { StorageService, storageService } from 'di/services/storage-service'
+import { DateService, dateService } from 'di/services/date-service'
 
 export class TaskHubApi {
     private connection: signalR.HubConnection | null = null

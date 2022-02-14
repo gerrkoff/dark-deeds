@@ -1,4 +1,4 @@
-import { Task, TaskLoadingStateEnum } from '../../models'
+import { Task, TaskLoadingStateEnum } from 'models'
 
 export interface ITasksState {
     loadingState: TaskLoadingStateEnum

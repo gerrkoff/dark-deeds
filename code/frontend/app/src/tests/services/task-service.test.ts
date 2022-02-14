@@ -1,6 +1,6 @@
-import { DateService } from 'src/di/services/date-service'
-import { TaskService } from 'src/di/services/task-service'
-import { Task, TaskTypeEnum } from '../../models'
+import { DateService } from 'di/services/date-service'
+import { TaskService } from 'di/services/task-service'
+import { Task, TaskTypeEnum } from 'models'
 
 function task(
     year: number,

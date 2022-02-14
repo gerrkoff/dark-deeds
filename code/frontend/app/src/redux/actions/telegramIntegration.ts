@@ -1,9 +1,9 @@
-import { TelegramStart } from '../../models'
-import * as actions from '../constants'
-import { ThunkDispatch } from '../../helpers'
-import { telegramIntegrationApi } from 'src/di/api/telegram-integration-api'
-import { dateService } from 'src/di/services/date-service'
-import { toastService } from 'src/di/services/toast-service'
+import { TelegramStart } from 'models'
+import * as actions from 'redux/constants'
+import { ThunkDispatch } from 'helpers'
+import { telegramIntegrationApi } from 'di/api/telegram-integration-api'
+import { dateService } from 'di/services/date-service'
+import { toastService } from 'di/services/toast-service'
 
 export function generateTelegramChatKey() {
     return async (

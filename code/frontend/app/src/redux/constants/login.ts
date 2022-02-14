@@ -1,4 +1,4 @@
-import { SigninResultEnum, SignupResultEnum } from '../../models'
+import { SigninResultEnum, SignupResultEnum } from 'models'
 
 export const LOGIN_PROCESSING = 'LOGIN_PROCESSING'
 export interface ILoginProcessing {

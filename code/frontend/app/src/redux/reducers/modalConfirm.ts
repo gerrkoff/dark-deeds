@@ -1,5 +1,5 @@
-import { IModalConfirmState } from '../types'
-import * as actions from '../constants'
+import * as actions from 'redux/constants'
+import { IModalConfirmState } from 'redux/types'
 
 const inittialState: IModalConfirmState = {
     action: () => console.log(),

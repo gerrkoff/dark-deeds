@@ -1,4 +1,4 @@
-import { PlannedRecurrence } from '../../models'
+import { PlannedRecurrence } from 'models'
 
 export const RECURRENCESVIEW_CREATING_RECURRENCES_PROCESSING =
     'RECURRENCESVIEW_CREATING_RECURRENCES_PROCESSING'

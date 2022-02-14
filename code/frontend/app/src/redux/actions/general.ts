@@ -1,7 +1,7 @@
-import { BuildInfo } from '../../models'
-import * as actions from '../constants'
-import { ThunkDispatch } from '../../helpers'
-import { generalApi } from 'src/di/api/general-api'
+import { BuildInfo } from 'models'
+import * as actions from 'redux/constants'
+import { ThunkDispatch } from 'helpers'
+import { generalApi } from 'di/api/general-api'
 
 export function loadGeneralInfo() {
     return async (dispatch: ThunkDispatch<actions.GeneralAction>) => {

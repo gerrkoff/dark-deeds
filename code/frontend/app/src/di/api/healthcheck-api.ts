@@ -1,4 +1,4 @@
-import { Api, api } from './api'
+import { Api, api } from 'di/api/api'
 
 export class HealthCheckApi {
     public constructor(private api: Api) {}

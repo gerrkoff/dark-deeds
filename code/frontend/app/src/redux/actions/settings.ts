@@ -1,10 +1,10 @@
-import { SettingsServer, SettingsClient } from '../../models'
-import * as actions from '../constants'
-import { ThunkDispatch } from '../../helpers'
-import { settingsApi } from 'src/di/api/settings-api'
-import { toastService } from 'src/di/services/toast-service'
-import { localSettingsService } from 'src/di/services/local-settings-service'
-import { appearanceService } from 'src/di/services/appearance-service'
+import * as actions from 'redux/constants'
+import { settingsApi } from 'di/api/settings-api'
+import { toastService } from 'di/services/toast-service'
+import { localSettingsService } from 'di/services/local-settings-service'
+import { appearanceService } from 'di/services/appearance-service'
+import { SettingsClient, SettingsServer } from 'models'
+import { ThunkDispatch } from 'helpers'
 
 export function saveServerSettings(settings: SettingsServer) {
     return async (dispatch: ThunkDispatch<actions.SettingsAction>) => {

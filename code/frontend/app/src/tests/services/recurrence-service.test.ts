@@ -1,6 +1,6 @@
-import { DateService } from 'src/di/services/date-service'
-import { RecurrenceService } from 'src/di/services/recurrence-service'
-import { PlannedRecurrence, RecurrenceWeekdayEnum } from '../../models'
+import { DateService } from 'di/services/date-service'
+import { RecurrenceService } from 'di/services/recurrence-service'
+import { PlannedRecurrence, RecurrenceWeekdayEnum } from 'models'
 
 function createService(date?: Date): RecurrenceService {
     if (date === undefined) {

@@ -1,5 +1,5 @@
-import { ITelegramIntegration } from '../types'
-import * as actions from '../constants'
+import { ITelegramIntegration } from 'redux/types'
+import * as actions from 'redux/constants'
 
 const inittialState: ITelegramIntegration = {
     startUrl: '',

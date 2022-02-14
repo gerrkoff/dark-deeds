@@ -1,9 +1,9 @@
-import { IRecurrencesViewState } from '../types'
-import * as actions from '../constants'
-import { PlannedRecurrence } from '../../models'
-import { objectsEqual, copyArray } from '../../helpers'
-import { utilsService } from 'src/di/services/utils-service'
-import { dateService } from 'src/di/services/date-service'
+import { IRecurrencesViewState } from 'redux/types'
+import * as actions from 'redux/constants'
+import { PlannedRecurrence } from 'models'
+import { objectsEqual, copyArray } from 'helpers'
+import { utilsService } from 'di/services/utils-service'
+import { dateService } from 'di/services/date-service'
 
 const inittialState: IRecurrencesViewState = {
     isCreatingRecurrences: false,

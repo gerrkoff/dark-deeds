@@ -1,9 +1,9 @@
-import * as actions from '../constants'
-import { PlannedRecurrence } from '../../models'
-import { ThunkDispatch } from '../../helpers'
-import { recurrencesApi } from 'src/di/api/recurrences-api'
-import { dateService } from 'src/di/services/date-service'
-import { toastService } from 'src/di/services/toast-service'
+import * as actions from 'redux/constants'
+import { PlannedRecurrence } from 'models'
+import { ThunkDispatch } from 'helpers'
+import { recurrencesApi } from 'di/api/recurrences-api'
+import { dateService } from 'di/services/date-service'
+import { toastService } from 'di/services/toast-service'
 
 export function createRecurrences() {
     return async (dispatch: ThunkDispatch<actions.RecurrencesViewAction>) => {

@@ -1,7 +1,7 @@
-import { Task, TaskTypeEnum } from '../../models'
-import { SetExtended } from '../../helpers'
-import { DateService, dateService } from './date-service'
-import { TaskService, taskService } from './task-service'
+import { Task, TaskTypeEnum } from 'models'
+import { SetExtended } from 'helpers'
+import { dateService, DateService } from 'di/services/date-service'
+import { taskService, TaskService } from 'di/services/task-service'
 
 export class TaskMoveService {
     public constructor(

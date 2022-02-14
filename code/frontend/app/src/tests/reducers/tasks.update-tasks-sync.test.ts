@@ -1,7 +1,7 @@
-import { tasks as taskReducer } from '../../redux/reducers/tasks'
-import { ITasksState } from '../../redux/types'
-import { Task, TaskLoadingStateEnum } from '../../models'
-import * as actions from '../../redux/constants'
+import { tasks as taskReducer } from 'redux/reducers/tasks'
+import { ITasksState } from 'redux/types'
+import { Task, TaskLoadingStateEnum } from 'models'
+import * as actions from 'redux/constants'
 
 function createState(
     tasks: Task[] = [],

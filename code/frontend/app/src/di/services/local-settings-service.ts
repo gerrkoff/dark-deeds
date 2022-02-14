@@ -1,5 +1,5 @@
-import { LocalSettings } from '../../models'
-import { StorageService, storageService } from './storage-service'
+import { StorageService, storageService } from 'di/services/storage-service'
+import { LocalSettings } from 'models'
 
 export class LocalSettingsService {
     private settingsInitialized = false

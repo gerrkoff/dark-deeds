@@ -1,8 +1,8 @@
 import * as React from 'react'
 import { Button, Icon, Input, Label, Modal } from 'semantic-ui-react'
-import { keyConstants } from 'src/di/services/key-constants'
-import { taskConverter } from 'src/di/services/task-converter'
-import { TaskModel } from '../../models'
+import { keyConstants } from 'di/services/key-constants'
+import { taskConverter } from 'di/services/task-converter'
+import { TaskModel } from 'models'
 
 interface IProps {
     open: boolean

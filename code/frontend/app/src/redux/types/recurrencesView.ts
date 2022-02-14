@@ -1,4 +1,4 @@
-import { PlannedRecurrence } from '../../models'
+import { PlannedRecurrence } from 'models'
 
 export interface IRecurrencesViewState {
     isCreatingRecurrences: boolean

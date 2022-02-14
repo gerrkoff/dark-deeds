@@ -1,8 +1,8 @@
-import { Task, TaskModel, TaskLoadingStateEnum } from '../../models'
-import { ITasksState } from '../types'
-import * as actions from '../constants'
-import { dateService } from 'src/di/services/date-service'
-import { utilsService } from 'src/di/services/utils-service'
+import { Task, TaskModel, TaskLoadingStateEnum } from 'models'
+import { ITasksState } from 'redux/types'
+import * as actions from 'redux/constants'
+import { dateService } from 'di/services/date-service'
+import { utilsService } from 'di/services/utils-service'
 
 const inittialState: ITasksState = {
     loadingState: TaskLoadingStateEnum.Loading,

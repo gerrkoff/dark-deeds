@@ -1,5 +1,5 @@
-import { TaskModel, TaskTypeEnum, Time } from '../../models'
-import { DateService, dateService } from './date-service'
+import { DateService, dateService } from 'di/services/date-service'
+import { TaskModel, TaskTypeEnum, Time } from 'models'
 
 export class TaskConverter {
     public constructor(private dateService: DateService) {}
