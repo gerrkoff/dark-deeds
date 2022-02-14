@@ -1,6 +1,7 @@
+import 'styles/add-task-button.css'
+
 import * as React from 'react'
 import { Button } from 'semantic-ui-react'
-import 'styles/add-task-button.css'
 
 interface IProps {
     openModal: () => void

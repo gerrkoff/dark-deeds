@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Label, Icon } from 'semantic-ui-react'
+import { Icon,Label } from 'semantic-ui-react'
 
 interface IProps {
     isEditing: boolean

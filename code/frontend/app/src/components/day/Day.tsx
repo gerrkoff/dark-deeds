@@ -1,5 +1,5 @@
-import * as React from 'react'
 import { dateService } from 'di/services/date-service'
+import * as React from 'react'
 
 interface IProps {
     match: {

@@ -1,8 +1,8 @@
 import * as signalR from '@microsoft/signalr'
 import baseUrl from 'di/api/base-url'
-import { Task } from 'models'
-import { StorageService, storageService } from 'di/services/storage-service'
 import { DateService, dateService } from 'di/services/date-service'
+import { StorageService, storageService } from 'di/services/storage-service'
+import { Task } from 'models'
 
 export class TaskHubApi {
     private connection: signalR.HubConnection | null = null

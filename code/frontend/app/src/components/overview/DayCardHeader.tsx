@@ -1,10 +1,10 @@
+import 'styles/day-card-header.css'
+
+import { MenuPopup } from 'components/overview'
+import { dateService } from 'di/services/date-service'
+import { TaskModel } from 'models'
 import * as React from 'react'
 import { Icon, MenuItemProps } from 'semantic-ui-react'
-
-import 'styles/day-card-header.css'
-import { dateService } from 'di/services/date-service'
-import { MenuPopup } from 'components/overview'
-import { TaskModel } from 'models'
 
 interface IProps {
     date: Date

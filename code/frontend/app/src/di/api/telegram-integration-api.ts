@@ -1,5 +1,5 @@
-import { TelegramStart } from 'models'
 import { Api, api } from 'di/api/api'
+import { TelegramStart } from 'models'
 
 export class TelegramIntegrationApi {
     public constructor(private api: Api) {}

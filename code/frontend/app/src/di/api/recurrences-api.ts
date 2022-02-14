@@ -1,6 +1,6 @@
-import { PlannedRecurrence } from 'models'
-import { DateService, dateService } from 'di/services/date-service'
 import { Api, api } from 'di/api/api'
+import { DateService, dateService } from 'di/services/date-service'
+import { PlannedRecurrence } from 'models'
 
 export class RecurrencesApi {
     public constructor(private api: Api, private dateService: DateService) {}

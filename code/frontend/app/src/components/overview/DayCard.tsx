@@ -1,10 +1,10 @@
-import * as React from 'react'
-import { List, Segment } from 'semantic-ui-react'
-
 import 'styles/day-card.css'
+
+import { DayCardHeader, TaskItem } from 'components/overview'
 import { taskService } from 'di/services/task-service'
 import { DayCardModel, Task, TaskModel, TaskTypeEnum } from 'models'
-import { DayCardHeader, TaskItem } from 'components/overview'
+import * as React from 'react'
+import { List, Segment } from 'semantic-ui-react'
 
 interface IProps {
     day: DayCardModel

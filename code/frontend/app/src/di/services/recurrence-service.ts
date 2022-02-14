@@ -1,8 +1,8 @@
-import { dateService, DateService } from 'di/services/date-service'
+import { DateService,dateService } from 'di/services/date-service'
 import {
     PlannedRecurrence,
-    RecurrenceWeekdayEnum,
     PlannedRecurrencePrint,
+    RecurrenceWeekdayEnum,
 } from 'models'
 
 export class RecurrenceService {

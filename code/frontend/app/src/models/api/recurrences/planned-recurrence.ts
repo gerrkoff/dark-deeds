@@ -1,4 +1,4 @@
-import { RecurrenceWeekdayEnum, IDateable } from 'models'
+import { IDateable,RecurrenceWeekdayEnum } from 'models'
 
 export class PlannedRecurrence implements IDateable {
     constructor(

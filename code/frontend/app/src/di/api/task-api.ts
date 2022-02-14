@@ -1,6 +1,6 @@
-import { Task } from 'models'
-import { DateService, dateService } from 'di/services/date-service'
 import { Api, api } from 'di/api/api'
+import { DateService, dateService } from 'di/services/date-service'
+import { Task } from 'models'
 
 export class TaskApi {
     public constructor(private api: Api, private dateService: DateService) {}

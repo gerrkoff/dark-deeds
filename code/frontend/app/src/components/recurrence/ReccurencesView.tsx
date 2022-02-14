@@ -1,10 +1,10 @@
-import * as React from 'react'
-import { Grid } from 'semantic-ui-react'
-import { PlannedRecurrence } from 'models'
-
 import 'styles/recurrences-view.css'
+
 import { RecurrenceList } from 'components/recurrence/ReccurenceList'
 import { RecurrencesSidePanel } from 'components/recurrence/ReccurencesSidePanel'
+import { PlannedRecurrence } from 'models'
+import * as React from 'react'
+import { Grid } from 'semantic-ui-react'
 
 interface IProps {
     isCreatingRecurrences: boolean

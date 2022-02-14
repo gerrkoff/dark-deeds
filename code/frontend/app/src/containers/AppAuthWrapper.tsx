@@ -1,21 +1,21 @@
-import { push, RouterAction } from 'connected-react-router'
-import { connect } from 'react-redux'
 import { AppAuthWrapper } from 'components/app'
+import { push, RouterAction } from 'connected-react-router'
+import { ThunkDispatch } from 'helpers'
 import { Task, TaskLoadingStateEnum } from 'models'
+import { connect } from 'react-redux'
 import {
+    createRecurrences,
     initialLoadTasks,
-    openEditTaskModal,
     initialLogin,
     loadGeneralInfo,
-    taskSave,
+    loadSettings,
+    openEditTaskModal,
     taskHubStart,
     taskHubStop,
-    loadSettings,
-    createRecurrences,
+    taskSave,
 } from 'redux/actions'
+import { EditTaskAction,RecurrencesViewAction } from 'redux/constants'
 import { IAppState } from 'redux/types'
-import { ThunkDispatch } from 'helpers'
-import { RecurrencesViewAction, EditTaskAction } from 'redux/constants'
 
 function mapStateToProps({ router, tasks, login }: IAppState) {
     return {

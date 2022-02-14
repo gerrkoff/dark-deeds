@@ -1,12 +1,12 @@
-import { Dispatch } from 'redux'
 import { push as navigateTo, RouterAction } from 'connected-react-router'
-import { SigninResultEnum, SignupResultEnum } from 'models'
-import * as actions from 'redux/constants'
-import { ThunkDispatch } from 'helpers'
-import { changeAllTasks } from 'redux/actions/tasks'
+import { loginApi } from 'di/api/login-api'
 import { storageService } from 'di/services/storage-service'
 import { toastService } from 'di/services/toast-service'
-import { loginApi } from 'di/api/login-api'
+import { ThunkDispatch } from 'helpers'
+import { SigninResultEnum, SignupResultEnum } from 'models'
+import { Dispatch } from 'redux'
+import { changeAllTasks } from 'redux/actions/tasks'
+import * as actions from 'redux/constants'
 
 export function initialLogin() {
     return async (dispatch: ThunkDispatch<actions.LoginAction>) => {

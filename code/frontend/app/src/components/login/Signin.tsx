@@ -1,8 +1,8 @@
+import 'styles/login.css'
+
 import { SigninResultEnum } from 'models'
 import * as React from 'react'
 import { Form, Message } from 'semantic-ui-react'
-
-import 'styles/login.css'
 
 interface IProps {
     processing: boolean

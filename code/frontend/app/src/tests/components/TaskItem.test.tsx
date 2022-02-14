@@ -1,7 +1,7 @@
-import * as enzyme from 'enzyme'
-import * as React from 'react'
 import { TaskItem } from 'components/overview/'
+import * as enzyme from 'enzyme'
 import { Task, TaskTypeEnum } from 'models'
+import * as React from 'react'
 
 test('renders no time', () => {
     const model = new Task(
