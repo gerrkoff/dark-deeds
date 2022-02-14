@@ -49,9 +49,9 @@ export class DaysBlock extends React.PureComponent<IProps> {
 
         return (
             <div data-test-id={this.props.testId}>
-                {blocks.map((x) => (
+                {blocks.map(x => (
                     <div className="days-block" key={x[0].date.getTime()}>
-                        {x.map((y) => (
+                        {x.map(y => (
                             <div
                                 className="days-block-item"
                                 key={y.date.getTime()}

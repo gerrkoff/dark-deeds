@@ -109,7 +109,7 @@ export class TaskItem extends React.PureComponent<IProps, IState> {
         text += task.title
 
         return (
-            <span ref={(elem) => (this.elem = elem!)} className={className}>
+            <span ref={elem => (this.elem = elem!)} className={className}>
                 {text}
             </span>
         )

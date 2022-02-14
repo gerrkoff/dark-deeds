@@ -1,13 +1,13 @@
 // TODO: test
 export function enumReduce<T extends number>(values: T[]): T {
     let value = 0
-    values.forEach((x) => (value |= x))
+    values.forEach(x => (value |= x))
     return value as T
 }
 
 // TODO: test
 export function enumExpand<T extends number>(value: T, values: T[]): T[] {
-    return values.filter((x) => value & x)
+    return values.filter(x => value & x)
 }
 
 // TODO: test
@@ -27,5 +27,5 @@ export function objectsEqual<T>(x: T, y: T): boolean {
 
 // TODO: test
 export function copyArray<T>(array: T[]): T[] {
-    return array.map((x) => ({ ...x }))
+    return array.map(x => ({ ...x }))
 }

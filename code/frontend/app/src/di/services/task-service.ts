@@ -5,9 +5,7 @@ export class TaskService {
     public constructor(private dateService: DateService) {}
 
     public evalModel(tasks: Task[], showCompleted: boolean): OverviewModel {
-        tasks = tasks.filter(
-            (x) => (showCompleted || !x.completed) && !x.deleted
-        )
+        tasks = tasks.filter(x => (showCompleted || !x.completed) && !x.deleted)
 
         const model = new OverviewModel()
         const currentStart = this.dateService.monday(this.dateService.today())
@@ -23,7 +21,7 @@ export class TaskService {
             model.current.push(day)
         }
 
-        tasks.forEach((task) => {
+        tasks.forEach(task => {
             if (task.date === null) {
                 model.noDate.push(task)
                 return
@@ -36,9 +34,7 @@ export class TaskService {
                     ? model.future
                     : model.current
 
-            let day = days.find(
-                (x) => x.date.getTime() === task.date!.getTime()
-            )
+            let day = days.find(x => x.date.getTime() === task.date!.getTime())
 
             if (day === undefined) {
                 day = new DayCardModel(task.date)

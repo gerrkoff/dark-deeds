@@ -40,7 +40,7 @@ export class MenuPopup extends React.PureComponent<IProps, IState> {
     private renderMenu() {
         const adjustedProps = [...this.props.menuItemProps]
 
-        adjustedProps.forEach((x) => {
+        adjustedProps.forEach(x => {
             if (x.onClick) {
                 x.onClick = this.injectClosing(x.onClick)
             }
@@ -48,7 +48,7 @@ export class MenuPopup extends React.PureComponent<IProps, IState> {
 
         return (
             <Menu size="mini" vertical>
-                {this.props.menuItemProps.map((x) => (
+                {this.props.menuItemProps.map(x => (
                     <Menu.Item {...x} key={x.name} />
                 ))}
             </Menu>

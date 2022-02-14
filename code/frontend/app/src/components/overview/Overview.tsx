@@ -147,9 +147,9 @@ export class Overview extends React.PureComponent<IProps> {
 
     // TODO: test
     private evalOpenedTabs = (): number[] => {
-        return this.tabMap!.filter((x) =>
-            this.settings.openedOverviewTabs.some((y) => x === y)
-        ).map((x) => this.tabMap!.indexOf(x))
+        return this.tabMap!.filter(x =>
+            this.settings.openedOverviewTabs.some(y => x === y)
+        ).map(x => this.tabMap!.indexOf(x))
     }
 
     private panelClickHandler = (
@@ -159,7 +159,7 @@ export class Overview extends React.PureComponent<IProps> {
         const tab: OverviewTabEnum = this.tabMap![data.index as number]
         if (data.active) {
             this.settings.openedOverviewTabs =
-                this.settings.openedOverviewTabs.filter((x) => x !== tab)
+                this.settings.openedOverviewTabs.filter(x => x !== tab)
         } else {
             this.settings.openedOverviewTabs.push(tab)
         }

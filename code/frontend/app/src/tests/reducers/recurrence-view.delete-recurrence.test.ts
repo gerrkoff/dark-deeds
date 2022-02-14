@@ -63,9 +63,9 @@ test('[RECURRENCESVIEW_DELETE_RECURRENCE] [id greater than 0] should update isDe
     }
     const result = recurrencesViewReducer(state, action)
 
-    expect(
-        result.plannedRecurrences.find((x) => x.uid === '2')!.isDeleted
-    ).toBe(true)
+    expect(result.plannedRecurrences.find(x => x.uid === '2')!.isDeleted).toBe(
+        true
+    )
 })
 
 test('[RECURRENCESVIEW_DELETE_RECURRENCE] [id less than 0] should return new objects for changed items', () => {

@@ -60,7 +60,7 @@ test('[RECURRENCESVIEW_CHANGE_RECURRENCE] should update task', () => {
     }
     const result = recurrencesViewReducer(state, action)
 
-    expect(result.plannedRecurrences.find((x) => x.uid === '2')!.task).toBe(
+    expect(result.plannedRecurrences.find(x => x.uid === '2')!.task).toBe(
         'updated'
     )
 })

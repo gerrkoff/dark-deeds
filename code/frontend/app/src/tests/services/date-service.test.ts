@@ -49,8 +49,8 @@ test('[adjustDatesAfterLoading] positive', () => {
     const result = service.adjustDatesAfterLoading(arr) as Task[]
 
     expect(result).not.toBe(arr)
-    expect(result.find((x) => x.uid === '1')!.date).toBeNull()
-    expect(result.find((x) => x.uid === '2')!.date!.getTime()).toBe(
+    expect(result.find(x => x.uid === '1')!.date).toBeNull()
+    expect(result.find(x => x.uid === '2')!.date!.getTime()).toBe(
         new Date(2018, 10, 14, 18).getTime()
     )
 })

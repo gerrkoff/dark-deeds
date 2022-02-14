@@ -138,7 +138,7 @@ class StringConvertingResult {
 
     public extractFlags(text: string): string {
         const flags = text.split(' ').reverse()[0]
-        flags.split('').forEach((x) => {
+        flags.split('').forEach(x => {
             if (x === '!') {
                 this.type = TaskTypeEnum.Additional
             } else if (x === '?') {

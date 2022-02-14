@@ -77,17 +77,17 @@ function recreateStateWithNewTasks(
     return {
         ...state,
         tasks: newTasks,
-        changed: newTasks.some((x) => x.changed),
+        changed: newTasks.some(x => x.changed),
     }
 }
 
 function updateTasksSync(localTasks: Task[], updatedTasks: Task[]): Task[] {
     const newTasks = updatedTasks
-        .filter((x) => !localTasks.some((y) => y.uid === x.uid))
-        .map((x) => ({ ...x }))
+        .filter(x => !localTasks.some(y => y.uid === x.uid))
+        .map(x => ({ ...x }))
 
     for (const localTask of localTasks) {
-        const updatedTask = updatedTasks.find((x) => x.uid === localTask.uid)
+        const updatedTask = updatedTasks.find(x => x.uid === localTask.uid)
 
         if (
             updatedTask === undefined ||
@@ -107,7 +107,7 @@ function changeTask(
     uid: string | null,
     localTasks: Task[]
 ): Task[] {
-    const taskIndex = localTasks.findIndex((x) => x.uid === uid)
+    const taskIndex = localTasks.findIndex(x => x.uid === uid)
 
     if (taskIndex > -1) {
         const newTasks = [...localTasks]
@@ -124,8 +124,8 @@ function changeTask(
 
 function addTask(model: TaskModel, localTasks: Task[]): Task[] {
     const sameDayTaskOrders = localTasks
-        .filter((x) => dateService.equal(x.date, model.date))
-        .map((x) => x.order)
+        .filter(x => dateService.equal(x.date, model.date))
+        .map(x => x.order)
     const maxOrder =
         sameDayTaskOrders.length === 0 ? 0 : Math.max(...sameDayTaskOrders)
 
@@ -148,7 +148,7 @@ function changeTaskStatus(
     completed?: boolean,
     deleted?: boolean
 ) {
-    const taskIndex = localTasks.findIndex((x) => x.uid === uid)
+    const taskIndex = localTasks.findIndex(x => x.uid === uid)
 
     if (taskIndex < 0 || (completed !== undefined && deleted !== undefined)) {
         return localTasks

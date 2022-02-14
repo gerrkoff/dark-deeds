@@ -87,7 +87,7 @@ function changeRecurrence(
 ): PlannedRecurrence[] {
     const newRecurrences = [...recurrences]
     const recurrenceIndex = newRecurrences.findIndex(
-        (x) => x.uid === recurrence.uid
+        x => x.uid === recurrence.uid
     )
     newRecurrences[recurrenceIndex] = { ...recurrence }
     return newRecurrences
@@ -122,13 +122,13 @@ function deleteRecurrence(
     recurrences: PlannedRecurrence[],
     uid: string
 ): PlannedRecurrence[] {
-    const recurrence = recurrences.find((x) => x.uid === uid)
+    const recurrence = recurrences.find(x => x.uid === uid)
     if (recurrence?.isLocal) {
-        return recurrences.filter((x) => x.uid !== uid)
+        return recurrences.filter(x => x.uid !== uid)
     }
 
     const newRecurrences = [...recurrences]
-    const recurrenceIndex = newRecurrences.findIndex((x) => x.uid === uid)
+    const recurrenceIndex = newRecurrences.findIndex(x => x.uid === uid)
     newRecurrences[recurrenceIndex] = {
         ...newRecurrences[recurrenceIndex],
         isDeleted: true,
@@ -144,7 +144,7 @@ function evalHasNotSavedChanges(recurrences: PlannedRecurrence[]): boolean {
 
     for (const recurrence of recurrences) {
         const lastSaved = lastSavedRecurrencs.find(
-            (x) => x.uid === recurrence.uid
+            x => x.uid === recurrence.uid
         )
         if (!objectsEqual(lastSaved, recurrence)) {
             return true

@@ -27,25 +27,25 @@ function d(year: number, month: number, date: number): Date {
 }
 
 function expectOrder(tasks: Task[], taskId: string, order: number) {
-    expect(tasks.find((x) => x.uid === taskId)!.order).toBe(order)
+    expect(tasks.find(x => x.uid === taskId)!.order).toBe(order)
 }
 
 function expectTime(tasks: Task[], taskId: string, time: number | null) {
-    expect(tasks.find((x) => x.uid === taskId)!.time).toBe(time)
+    expect(tasks.find(x => x.uid === taskId)!.time).toBe(time)
 }
 
 function expectDate(tasks: Task[], taskId: string, date: Date | null) {
     if (date === null) {
-        expect(tasks.find((x) => x.uid === taskId)!.date).toBeNull()
+        expect(tasks.find(x => x.uid === taskId)!.date).toBeNull()
     } else {
-        expect(tasks.find((x) => x.uid === taskId)!.date!.getTime()).toBe(
+        expect(tasks.find(x => x.uid === taskId)!.date!.getTime()).toBe(
             date.getTime()
         )
     }
 }
 
 function expectChanged(tasks: Task[], taskId: string, changed: boolean) {
-    expect(tasks.find((x) => x.uid === taskId)!.changed).toBe(changed)
+    expect(tasks.find(x => x.uid === taskId)!.changed).toBe(changed)
 }
 
 test('positive', () => {

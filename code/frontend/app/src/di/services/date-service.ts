@@ -54,8 +54,8 @@ export class DateService {
     }
 
     public adjustDatesAfterLoading(dateables: IDateable[]): IDateable[] {
-        const fixed = dateables.map((x) => ({ ...x }))
-        fixed.forEach((x) => {
+        const fixed = dateables.map(x => ({ ...x }))
+        fixed.forEach(x => {
             if (x.date) {
                 x.date = this.fixAfterServer(x.date)
             }
@@ -70,8 +70,8 @@ export class DateService {
     }
 
     public adjustDatesBeforeSaving(dateables: IDateable[]): IDateable[] {
-        const fixed = dateables.map((x) => ({ ...x }))
-        fixed.forEach((x) => {
+        const fixed = dateables.map(x => ({ ...x }))
+        fixed.forEach(x => {
             if (x.date) {
                 x.date = this.fixBeforeServer(x.date)
             }

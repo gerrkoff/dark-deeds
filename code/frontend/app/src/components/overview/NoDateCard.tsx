@@ -32,7 +32,7 @@ export class NoDateCard extends React.PureComponent<IProps> {
                     className="no-date-card-tasks-view fixed-list dragula-container"
                     data-id={0}
                 >
-                    {tasks.map((x) => (
+                    {tasks.map(x => (
                         <List.Item key={x.uid} data-id={x.uid}>
                             <TaskItem
                                 task={x}

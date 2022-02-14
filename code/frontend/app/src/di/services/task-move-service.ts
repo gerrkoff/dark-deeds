@@ -16,14 +16,14 @@ export class TaskMoveService {
         sourceDate: number,
         nextSiblingId: string | null
     ): Task[] {
-        const task = tasks.find((x) => x.uid === taskId)
+        const task = tasks.find(x => x.uid === taskId)
 
         if (task === undefined) {
             return tasks
         }
 
         const filteredTasks = tasks.filter(
-            (x) => x.type !== TaskTypeEnum.Additional
+            x => x.type !== TaskTypeEnum.Additional
         )
 
         const changedTasks = SetExtended.create<string>()
@@ -68,7 +68,7 @@ export class TaskMoveService {
     ): string[] {
         const targetTasks = tasks
             .filter(
-                (x) =>
+                x =>
                     x.uid !== task.uid &&
                     this.dateService.toNumber(x.date) === targetDate
             )
@@ -77,7 +77,7 @@ export class TaskMoveService {
         const movedTaskTargetIndex =
             nextSiblingId === null
                 ? null
-                : targetTasks.findIndex((x) => x.uid === nextSiblingId)
+                : targetTasks.findIndex(x => x.uid === nextSiblingId)
 
         if (movedTaskTargetIndex === null) {
             targetTasks.push(task)
@@ -95,7 +95,7 @@ export class TaskMoveService {
         sourceDate: number
     ): string[] {
         const sourceTasks = tasks
-            .filter((x) => this.dateService.toNumber(x.date) === sourceDate)
+            .filter(x => this.dateService.toNumber(x.date) === sourceDate)
             .sort(this.taskService.sorting)
         return this.adjustTasksOrder(sourceTasks)
     }

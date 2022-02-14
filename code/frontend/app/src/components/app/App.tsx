@@ -63,7 +63,7 @@ export class App extends React.PureComponent<IAppProps> {
 
     private saveTasksIfChanged = () => {
         if (this.props.tasksChanged && !this.props.tasksSaving) {
-            this.props.saveTasks(this.props.tasks.filter((x) => x.changed))
+            this.props.saveTasks(this.props.tasks.filter(x => x.changed))
         }
     }
 

@@ -172,7 +172,7 @@ export class RecurrenceEdit extends React.PureComponent<IProps> {
         if (monthday === null) {
             return []
         }
-        return monthday.split(',').map((x) => Number.parseInt(x, 10))
+        return monthday.split(',').map(x => Number.parseInt(x, 10))
     }
 
     private handleTaskChange = (value: string) => {

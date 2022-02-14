@@ -139,7 +139,7 @@ export class RecurrenceService {
     }
 
     private printWeekDays(weekdayList: number[]): string {
-        const days = weekdayList.map((x) => this.dateService.daysLong[x])
+        const days = weekdayList.map(x => this.dateService.daysLong[x])
         const daysString = days.join(', ')
         return `${daysString}`
     }

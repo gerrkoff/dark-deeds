@@ -86,5 +86,5 @@ export class Shortcuts extends React.PureComponent<IProps> {
     }
 
     private check = (code: string, values: string[]): boolean =>
-        values.some((x) => x === code)
+        values.some(x => x === code)
 }
