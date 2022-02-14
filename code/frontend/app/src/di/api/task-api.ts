@@ -3,14 +3,12 @@ import { DateService, dateService } from '../services/date-service'
 import { Api, api } from './api'
 
 export class TaskApi {
-
-    public constructor(
-        private api: Api,
-        private dateService: DateService
-    ) {}
+    public constructor(private api: Api, private dateService: DateService) {}
 
     public async loadTasks(): Promise<Task[]> {
-        const monday = this.dateService.monday(this.dateService.today()).toISOString()
+        const monday = this.dateService
+            .monday(this.dateService.today())
+            .toISOString()
         const params = new Map<string, any>([['from', monday]])
         const result = await this.api.get<Task[]>('api/web/tasks', params)
         return this.dateService.adjustDatesAfterLoading(result) as Task[]

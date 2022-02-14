@@ -32,11 +32,11 @@ export class AppAuthWrapper extends React.PureComponent<IProps> {
 
     private renderContent = () => {
         if (this.props.initialLogginIn) {
-            return (<React.Fragment />)
+            return <React.Fragment />
         }
 
         if (this.props.userAuthenticated) {
-            return (<App {...this.props} />)
+            return <App {...this.props} />
         } else {
             return (
                 <Container>

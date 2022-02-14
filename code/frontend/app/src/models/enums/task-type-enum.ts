@@ -1,3 +1,4 @@
 export enum TaskTypeEnum {
-    Simple, Additional
+    Simple,
+    Additional,
 }

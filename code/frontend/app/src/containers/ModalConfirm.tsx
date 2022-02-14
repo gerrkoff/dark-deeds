@@ -11,13 +11,13 @@ function mapStateToProps({ modalConfirm }: IAppState) {
         content: modalConfirm.content,
         header: modalConfirm.header,
         headerIcon: modalConfirm.headerIcon,
-        open: modalConfirm.open
+        open: modalConfirm.open,
     }
 }
 
 function mapDispatchToProps(dispatch: ThunkDispatch<ModalConfirmAction>) {
     return {
-        close: () => dispatch(closeModalConfirm())
+        close: () => dispatch(closeModalConfirm()),
     }
 }
 

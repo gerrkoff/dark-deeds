@@ -1,5 +1,3 @@
 export class TelegramStart {
-    constructor(
-        public url: string
-    ) {}
+    constructor(public url: string) {}
 }

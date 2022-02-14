@@ -19,35 +19,47 @@ export class DayCardHeader extends React.PureComponent<IProps, IState> {
     constructor(props: IProps) {
         super(props)
         this.state = {
-            menuPopupOpen: false
+            menuPopupOpen: false,
         }
     }
 
     public render() {
         const menuItemProps = new Array<MenuItemProps>()
         menuItemProps.push({
-            content: <span><Icon data-test-id='add-task-to-day-button' name='plus' />Add</span>,
+            content: (
+                <span>
+                    <Icon data-test-id="add-task-to-day-button" name="plus" />
+                    Add
+                </span>
+            ),
             disabled: !this.props.openTaskModal,
             name: 'add',
-            onClick: this.handleAdd
+            onClick: this.handleAdd,
         })
         menuItemProps.push({
-            content: <span><Icon name='list ul' />View</span>,
+            content: (
+                <span>
+                    <Icon name="list ul" />
+                    View
+                </span>
+            ),
             disabled: true,
-            name: 'view'
+            name: 'view',
         })
 
         return (
             <MenuPopup
                 content={this.renderContent()}
                 changeVisibility={this.handleMenuChangeVisibility}
-                menuItemProps={menuItemProps} />
+                menuItemProps={menuItemProps}
+            />
         )
     }
 
     private renderContent = () => {
-        const className = 'day-card-header'
-            + (this.state.menuPopupOpen ? ' day-card-header-selected' : '')
+        const className =
+            'day-card-header' +
+            (this.state.menuPopupOpen ? ' day-card-header-selected' : '')
         return (
             <span className={className}>
                 {this.dateService.toLabel(this.props.date)}

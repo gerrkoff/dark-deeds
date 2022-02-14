@@ -5,7 +5,7 @@ const defaultOptions: ToastOptions = {
     closeButton: false,
     autoClose: 5000,
     closeOnClick: true,
-    draggable: true
+    draggable: true,
 }
 
 export class ToastService {
@@ -15,7 +15,7 @@ export class ToastService {
         return toast.success(msg, {
             className: 'toast-success',
             ...defaultOptions,
-            ...options
+            ...options,
         })
     }
 
@@ -23,7 +23,7 @@ export class ToastService {
         return toast.error(msg, {
             className: 'toast-error',
             ...defaultOptions,
-            ...options
+            ...options,
         })
     }
 
@@ -31,7 +31,7 @@ export class ToastService {
         return toast.warn(msg, {
             className: 'toast-warn',
             ...defaultOptions,
-            ...options
+            ...options,
         })
     }
 
@@ -39,7 +39,7 @@ export class ToastService {
         return toast.info(msg, {
             className: 'toast-info',
             ...defaultOptions,
-            ...options
+            ...options,
         })
     }
 
@@ -51,11 +51,15 @@ export class ToastService {
         toast.dismiss(toastId as any)
     }
 
-    public update(toastId: number | string, msg: string, options: ToastOptions = {}) {
+    public update(
+        toastId: number | string,
+        msg: string,
+        options: ToastOptions = {}
+    ) {
         toast.update(toastId as any, {
             render: msg,
             ...defaultOptions,
-            ...options
+            ...options,
         })
     }
 

@@ -47,13 +47,21 @@ test('renders days and blocks in one row', () => {
 test('renders days sorted', () => {
     const days = [
         new DayCardModel(new Date(2019, 6, 6)),
-        new DayCardModel(new Date(2019, 5, 5))
+        new DayCardModel(new Date(2019, 5, 5)),
     ]
 
     const component = enzyme.shallow(<DaysBlock days={days} />)
 
     // tslint:disable-next-line no-unnecessary-type-assertion
-    expect((component.find('DayCard').at(0).prop('day') as DayCardModel).date.getTime()).toBe(new Date(2019, 5, 5).getTime())
+    expect(
+        (
+            component.find('DayCard').at(0).prop('day') as DayCardModel
+        ).date.getTime()
+    ).toBe(new Date(2019, 5, 5).getTime())
     // tslint:disable-next-line no-unnecessary-type-assertion
-    expect((component.find('DayCard').at(1).prop('day') as DayCardModel).date.getTime()).toBe(new Date(2019, 6, 6).getTime())
+    expect(
+        (
+            component.find('DayCard').at(1).prop('day') as DayCardModel
+        ).date.getTime()
+    ).toBe(new Date(2019, 6, 6).getTime())
 })

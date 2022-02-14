@@ -2,10 +2,7 @@ import { TaskModel, TaskTypeEnum, Time } from '../../models'
 import { DateService, dateService } from './date-service'
 
 export class TaskConverter {
-
-    public constructor(
-        private dateService: DateService
-    ) {}
+    public constructor(private dateService: DateService) {}
 
     public convertStringToModel(text: string): TaskModel {
         const result = new StringConvertingResult(this.dateService.today())
@@ -51,7 +48,9 @@ export class TaskConverter {
             if (new Date().getFullYear() !== model.date.getFullYear()) {
                 s += model.date.getFullYear().toString()
             }
-            s += `${this.str2digits(model.date.getMonth() + 1)}${this.str2digits(model.date.getDate())}`
+            s += `${this.str2digits(
+                model.date.getMonth() + 1
+            )}${this.str2digits(model.date.getDate())}`
 
             if (model.time !== null) {
                 const time = new Time(model.time)
@@ -121,7 +120,8 @@ class StringConvertingResult {
 
     public extractWeekShift(text: string): string {
         const shift = parseInt(text[1], undefined)
-        this.day = this.now.getDate() + (1 + 7 - this.now.getDay()) % 7 + shift - 1
+        this.day =
+            this.now.getDate() + ((1 + 7 - this.now.getDay()) % 7) + shift - 1
         this.month = this.now.getMonth() + 1
         return text.slice(2)
     }
@@ -138,7 +138,7 @@ class StringConvertingResult {
 
     public extractFlags(text: string): string {
         const flags = text.split(' ').reverse()[0]
-        flags.split('').forEach(x => {
+        flags.split('').forEach((x) => {
             if (x === '!') {
                 this.type = TaskTypeEnum.Additional
             } else if (x === '?') {
@@ -158,11 +158,13 @@ class StringConvertingResult {
 
     public getModel(text: string): TaskModel {
         return {
-            date: this.hasDate ? new Date(this.year, this.month - 1, this.day) : null,
+            date: this.hasDate
+                ? new Date(this.year, this.month - 1, this.day)
+                : null,
             type: this.type,
             title: text,
             isProbable: this.isProbable,
-            time: this.hasTime ? this.hour * 60 + this.minute : null
+            time: this.hasTime ? this.hour * 60 + this.minute : null,
         }
     }
 }

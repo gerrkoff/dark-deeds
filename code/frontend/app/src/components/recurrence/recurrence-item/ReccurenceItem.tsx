@@ -18,13 +18,12 @@ export class RecurrenceItem extends React.PureComponent<IProps> {
     public render() {
         return (
             <Segment
-                inverted raised padded
-                className='recurrences-view-recurrence-item'>
-
-                { this.props.isEditting
-                    ? this.renderEdit()
-                    : this.renderPrint()
-                }
+                inverted
+                raised
+                padded
+                className="recurrences-view-recurrence-item"
+            >
+                {this.props.isEditting ? this.renderEdit() : this.renderPrint()}
             </Segment>
         )
     }
@@ -33,13 +32,20 @@ export class RecurrenceItem extends React.PureComponent<IProps> {
         const print = this.recurrenceService.print(this.props.recurrence)
         return (
             <React.Fragment>
-                <Header as='h5'>{ print.task }</Header>
-                <span>{ print.repeatative }</span>
-                <span className='recurrences-view-recurrence-item-borders'>{ print.borders }</span>
+                <Header as="h5">{print.task}</Header>
+                <span>{print.repeatative}</span>
+                <span className="recurrences-view-recurrence-item-borders">
+                    {print.borders}
+                </span>
                 <ButtonPanel
                     isEditing={false}
-                    onChangeEditing={() => this.props.changeEdittingRecurrence(this.props.recurrence.uid)}
-                    onDelete={this.handleDelete} />
+                    onChangeEditing={() =>
+                        this.props.changeEdittingRecurrence(
+                            this.props.recurrence.uid
+                        )
+                    }
+                    onDelete={this.handleDelete}
+                />
             </React.Fragment>
         )
     }
@@ -50,9 +56,11 @@ export class RecurrenceItem extends React.PureComponent<IProps> {
                 recurrence={this.props.recurrence}
                 stopEditing={() => this.props.changeEdittingRecurrence(null)}
                 delete={this.handleDelete}
-                changeRecurrence={this.props.changeRecurrence} />
+                changeRecurrence={this.props.changeRecurrence}
+            />
         )
     }
 
-    private handleDelete = () => this.props.deleteRecurrence(this.props.recurrence)
+    private handleDelete = () =>
+        this.props.deleteRecurrence(this.props.recurrence)
 }

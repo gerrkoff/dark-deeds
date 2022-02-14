@@ -20,6 +20,6 @@ export interface IEditTaskSetModel {
 }
 
 export type EditTaskAction =
-    IEditTaskModalOpen |
-    IEditTaskModel |
-    IEditTaskSetModel
+    | IEditTaskModalOpen
+    | IEditTaskModel
+    | IEditTaskSetModel

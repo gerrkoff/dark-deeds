@@ -1,3 +1,5 @@
 export enum TaskLoadingStateEnum {
-    Loading, Loaded, LoadingFailed
+    Loading,
+    Loaded,
+    LoadingFailed,
 }

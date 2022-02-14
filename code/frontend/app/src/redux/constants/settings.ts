@@ -33,9 +33,9 @@ export interface ISettingsClientChange {
 }
 
 export type SettingsAction =
-    ISettingsServerLoadProcessing |
-    ISettingsServerLoadFinish |
-    ISettingsServerSaveProcessing |
-    ISettingsServerSaveFinish |
-    ISettingsServerChange |
-    ISettingsClientChange
+    | ISettingsServerLoadProcessing
+    | ISettingsServerLoadFinish
+    | ISettingsServerSaveProcessing
+    | ISettingsServerSaveFinish
+    | ISettingsServerChange
+    | ISettingsClientChange

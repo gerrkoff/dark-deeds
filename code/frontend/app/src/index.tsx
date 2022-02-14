@@ -23,12 +23,7 @@ const history = createBrowserHistory()
 const store = createStore<any, any, any, any>(
     createRootReducer(history),
     {},
-    compose(
-        applyMiddleware(
-          routerMiddleware(history),
-          thunk
-        )
-    )
+    compose(applyMiddleware(routerMiddleware(history), thunk))
 )
 
 ReactDOM.render(

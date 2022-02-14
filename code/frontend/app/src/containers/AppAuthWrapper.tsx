@@ -2,7 +2,17 @@ import { push, RouterAction } from 'connected-react-router'
 import { connect } from 'react-redux'
 import { AppAuthWrapper } from '../components/app'
 import { Task, TaskLoadingStateEnum } from '../models'
-import { initialLoadTasks, openEditTaskModal, initialLogin, loadGeneralInfo, taskSave, taskHubStart, taskHubStop, loadSettings, createRecurrences } from '../redux/actions'
+import {
+    initialLoadTasks,
+    openEditTaskModal,
+    initialLogin,
+    loadGeneralInfo,
+    taskSave,
+    taskHubStart,
+    taskHubStop,
+    loadSettings,
+    createRecurrences,
+} from '../redux/actions'
 import { IAppState } from '../redux/types'
 import { ThunkDispatch } from '../helpers'
 import { RecurrencesViewAction, EditTaskAction } from '../redux/constants'
@@ -15,11 +25,15 @@ function mapStateToProps({ router, tasks, login }: IAppState) {
         tasksSaving: tasks.saving,
         tasksChanged: tasks.changed,
         initialLogginIn: login.initialLogginIn,
-        userAuthenticated: login.userAuthenticated
+        userAuthenticated: login.userAuthenticated,
     }
 }
 
-function mapDispatchToProps(dispatch: ThunkDispatch<RecurrencesViewAction | EditTaskAction | RouterAction>) {
+function mapDispatchToProps(
+    dispatch: ThunkDispatch<
+        RecurrencesViewAction | EditTaskAction | RouterAction
+    >
+) {
     return {
         loadTasks: () => dispatch(initialLoadTasks()),
         navigateTo: (path: string) => dispatch(push(path)),
@@ -30,7 +44,7 @@ function mapDispatchToProps(dispatch: ThunkDispatch<RecurrencesViewAction | Edit
         startTaskHub: () => dispatch(taskHubStart()),
         stopTaskHub: () => dispatch(taskHubStop()),
         loadSettings: () => dispatch(loadSettings()),
-        createRecurrences: () => dispatch(createRecurrences())
+        createRecurrences: () => dispatch(createRecurrences()),
     }
 }
 

@@ -9,7 +9,7 @@ export class SettingsDivider extends React.PureComponent<IProps> {
     public render() {
         return (
             <Divider horizontal>
-                <Header as='h5' className='settings-divider'>
+                <Header as="h5" className="settings-divider">
                     <Icon name={this.props.icon as any} />
                     {this.props.label}
                 </Header>

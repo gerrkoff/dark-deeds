@@ -5,16 +5,37 @@ export class DragulaWrapper {
     private drake: any
     private scrollable: boolean = true
 
-    constructor(dndHandler: (el: HTMLElement, target: HTMLElement, source: HTMLElement, sibling: HTMLElement) => void) {
+    constructor(
+        dndHandler: (
+            el: HTMLElement,
+            target: HTMLElement,
+            source: HTMLElement,
+            sibling: HTMLElement
+        ) => void
+    ) {
         this.drake = dragula()
-            .on('drag', (el: HTMLElement) => this.handleDraggingChanged(true, el))
-            .on('dragend', (el: HTMLElement) => this.handleDraggingChanged(false, el))
-            .on('drop', (el: HTMLElement, target: HTMLElement, source: HTMLElement, sibling: HTMLElement) => {
+            .on('drag', (el: HTMLElement) =>
+                this.handleDraggingChanged(true, el)
+            )
+            .on('dragend', (el: HTMLElement) =>
                 this.handleDraggingChanged(false, el)
-                dndHandler(el, target, source, sibling)
-            })
+            )
+            .on(
+                'drop',
+                (
+                    el: HTMLElement,
+                    target: HTMLElement,
+                    source: HTMLElement,
+                    sibling: HTMLElement
+                ) => {
+                    this.handleDraggingChanged(false, el)
+                    dndHandler(el, target, source, sibling)
+                }
+            )
 
-        document.addEventListener('touchmove', this.touchMoveHandler, { passive: false })
+        document.addEventListener('touchmove', this.touchMoveHandler, {
+            passive: false,
+        })
         this.updateContainers()
     }
 
@@ -24,7 +45,9 @@ export class DragulaWrapper {
     }
 
     public updateContainers = () => {
-        this.drake.containers = [].slice.call(document.querySelectorAll('div.dragula-container'))
+        this.drake.containers = [].slice.call(
+            document.querySelectorAll('div.dragula-container')
+        )
     }
 
     public cancel = () => {
@@ -37,7 +60,10 @@ export class DragulaWrapper {
         }
     }
 
-    private handleDraggingChanged = (draggingStarted: boolean, el: HTMLElement | null) => {
+    private handleDraggingChanged = (
+        draggingStarted: boolean,
+        el: HTMLElement | null
+    ) => {
         const taskSelectedClass = 'task-item-selected'
         if (draggingStarted) {
             this.scrollable = false

@@ -1,3 +1,6 @@
 export enum OverviewTabEnum {
-    NoDate, Expired, Current, Future
+    NoDate,
+    Expired,
+    Current,
+    Future,
 }

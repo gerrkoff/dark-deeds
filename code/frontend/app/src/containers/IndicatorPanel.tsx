@@ -7,13 +7,12 @@ function mapStateToProps({ tasks }: IAppState) {
     return {
         saving: tasks.changed,
         connecting: tasks.hubReconnecting,
-        heartbeatLastTime: tasks.hubHeartbeatLastTime
+        heartbeatLastTime: tasks.hubHeartbeatLastTime,
     }
 }
 
 function mapDispatchToProps(dispatch: ThunkDispatch<any>) {
-    return {
-    }
+    return {}
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(IndicatorPanel)

@@ -81,16 +81,16 @@ export interface ITasksHubHeartbeat {
 }
 
 export type TasksAction =
-    ITasksLoading |
-    ITasksLoadingSuccess |
-    ITasksLoadingFailed |
-    ITasksChangeAllTasks |
-    ITasksChangeTask |
-    ITasksChangeTaskStatus |
-    ITasksSaving |
-    ITasksSavingFinish |
-    ITasksUpdateTasks |
-    ITasksHubReconnecting |
-    ITasksHubReconnected |
-    ITasksHubHeartbeat |
-    ITasksUpdateTasksSync
+    | ITasksLoading
+    | ITasksLoadingSuccess
+    | ITasksLoadingFailed
+    | ITasksChangeAllTasks
+    | ITasksChangeTask
+    | ITasksChangeTaskStatus
+    | ITasksSaving
+    | ITasksSavingFinish
+    | ITasksUpdateTasks
+    | ITasksHubReconnecting
+    | ITasksHubReconnected
+    | ITasksHubHeartbeat
+    | ITasksUpdateTasksSync

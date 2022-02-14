@@ -37,9 +37,9 @@ export interface ILoginSwitchForm {
 }
 
 export type LoginAction =
-    ILoginProcessing |
-    ILoginSigninFinish |
-    ILoginSignupFinish |
-    ILoginInitialLogginIn |
-    ILoginCurrentUser |
-    ILoginSwitchForm
+    | ILoginProcessing
+    | ILoginSigninFinish
+    | ILoginSignupFinish
+    | ILoginInitialLogginIn
+    | ILoginCurrentUser
+    | ILoginSwitchForm

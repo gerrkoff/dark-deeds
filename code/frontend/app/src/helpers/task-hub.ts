@@ -4,7 +4,6 @@ import { taskHubApi } from 'src/di/api/task-hub-api'
 import { utilsService } from 'src/di/services/utils-service'
 
 export class TaskHub {
-
     private _ready: boolean = false
     private _eventEmitter: EventEmitter = new EventEmitter()
     private _reconnectEventName = 'reconnect'
@@ -16,26 +15,22 @@ export class TaskHub {
         updateCallback: (tasks: Task[], localUpdate: boolean) => void,
         heartbeatCallback: () => void
     ) {
-        this.taskHubApi.hubSubscribe(
-            this.reconnect,
-            updateCallback,
-            () => {
-                console.log('[task-hub] heartbeat')
-                heartbeatCallback()
-            }
-        )
+        this.taskHubApi.hubSubscribe(this.reconnect, updateCallback, () => {
+            console.log('[task-hub] heartbeat')
+            heartbeatCallback()
+        })
     }
 
     get ready(): boolean {
         return this._ready
     }
 
-    public start = async(): Promise<void> => {
+    public start = async (): Promise<void> => {
         this._ready = false
         await this.connect()
     }
 
-    public stop = async(): Promise<void> => {
+    public stop = async (): Promise<void> => {
         this._ready = false
         await this.taskHubApi.hubStop()
     }
@@ -52,23 +47,25 @@ export class TaskHub {
         this._eventEmitter.off(this._reconnectEventName, handler)
     }
 
-    private reconnect = async(): Promise<void> => {
+    private reconnect = async (): Promise<void> => {
         this._ready = false
         this._eventEmitter.emit(this._reconnectEventName, true)
         await this.connect()
         this._eventEmitter.emit(this._reconnectEventName, false)
     }
 
-    private connect = async(): Promise<void> => {
+    private connect = async (): Promise<void> => {
         let attemptCount = 1
         while (true) {
             try {
                 await this.taskHubApi.hubStart()
                 this._ready = true
                 return
-            // tslint:disable-next-line:no-empty
+                // tslint:disable-next-line:no-empty
             } catch (error) {}
-            await this.utilsService.delay(this.evalConnectRetryDelay(++attemptCount))
+            await this.utilsService.delay(
+                this.evalConnectRetryDelay(++attemptCount)
+            )
         }
     }
 

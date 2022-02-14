@@ -9,11 +9,24 @@ function createState(
     saving: boolean = false,
     changed: boolean = false,
     hubReconnecting: boolean = false
-    ): ITasksState {
-    return { loadingState, saving, tasks, changed, hubReconnecting, hubHeartbeatLastTime: new Date() }
+): ITasksState {
+    return {
+        loadingState,
+        saving,
+        tasks,
+        changed,
+        hubReconnecting,
+        hubHeartbeatLastTime: new Date(),
+    }
 }
 
-function createTask(uid: string = '1', title: string = '', version: number = 0, changed: boolean = false, deleted: boolean = false): Task {
+function createTask(
+    uid: string = '1',
+    title: string = '',
+    version: number = 0,
+    changed: boolean = false,
+    deleted: boolean = false
+): Task {
     const task = new Task(uid, title)
     task.version = version
     task.changed = changed
@@ -25,7 +38,7 @@ test('[TASKS_UPDATE_TASKS_SYNC] add new tasks if there are not local', () => {
     const state = createState()
     const action: actions.ITasksUpdateTasksSync = {
         type: actions.TASKS_UPDATE_TASKS_SYNC,
-        tasks: [createTask('1', '1'), createTask('2', '2')]
+        tasks: [createTask('1', '1'), createTask('2', '2')],
     }
     const result = taskReducer(state, action)
 
@@ -41,7 +54,7 @@ test('[TASKS_UPDATE_TASKS_SYNC] keep locally created tasks', () => {
     const state = createState([localTask])
     const action: actions.ITasksUpdateTasksSync = {
         type: actions.TASKS_UPDATE_TASKS_SYNC,
-        tasks: []
+        tasks: [],
     }
     const result = taskReducer(state, action)
 
@@ -54,7 +67,7 @@ test('[TASKS_UPDATE_TASKS_SYNC] keep local task if updated version equal or lowe
     const state = createState([localTask])
     const action: actions.ITasksUpdateTasksSync = {
         type: actions.TASKS_UPDATE_TASKS_SYNC,
-        tasks: [createTask('1', 'www', 9)]
+        tasks: [createTask('1', 'www', 9)],
     }
     const result = taskReducer(state, action)
 
@@ -67,7 +80,7 @@ test('[TASKS_UPDATE_TASKS_SYNC] update local task if updated version higher, cha
     const state = createState([createTask('1', 'qqq', 10, true)])
     const action: actions.ITasksUpdateTasksSync = {
         type: actions.TASKS_UPDATE_TASKS_SYNC,
-        tasks: [createTask('1', 'www', 11)]
+        tasks: [createTask('1', 'www', 11)],
     }
     const result = taskReducer(state, action)
 
@@ -81,7 +94,7 @@ test('[TASKS_UPDATE_TASKS_SYNC] remove local task if deleted', () => {
     const state = createState([createTask('1')])
     const action: actions.ITasksUpdateTasksSync = {
         type: actions.TASKS_UPDATE_TASKS_SYNC,
-        tasks: [createTask('1', 'www', 5, false, true)]
+        tasks: [createTask('1', 'www', 5, false, true)],
     }
     const result = taskReducer(state, action)
 

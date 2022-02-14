@@ -19,7 +19,12 @@ interface IState {
 export class Signup extends React.PureComponent<IProps, IState> {
     constructor(props: IProps) {
         super(props)
-        this.state = { username: '', password: '', passwordConfirm: '', passwordConfirmIncorrect: false }
+        this.state = {
+            username: '',
+            password: '',
+            passwordConfirm: '',
+            passwordConfirmIncorrect: false,
+        }
     }
 
     public render() {
@@ -28,45 +33,66 @@ export class Signup extends React.PureComponent<IProps, IState> {
         return (
             <React.Fragment>
                 <Popup
-                    trigger={<Form.Input
-                        label='Username'
-                        placeholder='Username'
-                        value={this.state.username}
-                        onChange={(e: any) => this.handleInput('username', e.target.value)}
-                    />}
-                    content='Your username must contain only digits and letters'
-                    on='focus'
-                    position='bottom right' />
+                    trigger={
+                        <Form.Input
+                            label="Username"
+                            placeholder="Username"
+                            value={this.state.username}
+                            onChange={(e: any) =>
+                                this.handleInput('username', e.target.value)
+                            }
+                        />
+                    }
+                    content="Your username must contain only digits and letters"
+                    on="focus"
+                    position="bottom right"
+                />
                 <Popup
-                    trigger={<Form.Input
-                        label='Password'
-                        placeholder='Password'
-                        type='password'
-                        value={this.state.password}
-                        onChange={(e: any) => this.handleInput('password', e.target.value)}
-                    />}
-                    content='Your password must have more than 6 characters and contain at least one lowercase letter, one uppercase letter, one numeric digit, and one special character'
-                    on='focus'
-                    position='bottom right' />
+                    trigger={
+                        <Form.Input
+                            label="Password"
+                            placeholder="Password"
+                            type="password"
+                            value={this.state.password}
+                            onChange={(e: any) =>
+                                this.handleInput('password', e.target.value)
+                            }
+                        />
+                    }
+                    content="Your password must have more than 6 characters and contain at least one lowercase letter, one uppercase letter, one numeric digit, and one special character"
+                    on="focus"
+                    position="bottom right"
+                />
                 <Form.Input
-                    label='Confirm password'
-                    placeholder='Confirm password'
-                    type='password'
+                    label="Confirm password"
+                    placeholder="Confirm password"
+                    type="password"
                     value={this.state.passwordConfirm}
                     error={this.state.passwordConfirmIncorrect}
-                    onChange={(e: any) => this.handleInput('passwordConfirm', e.target.value)} />
-                <Message negative
+                    onChange={(e: any) =>
+                        this.handleInput('passwordConfirm', e.target.value)
+                    }
+                />
+                <Message
+                    negative
                     content={inputErrorText}
-                    hidden={!showErrorCredMsg} />
+                    hidden={!showErrorCredMsg}
+                />
                 <Form.Button
                     onClick={this.handleSubmit}
                     loading={this.props.processing}
-                    className='submit-btn'
+                    className="submit-btn"
                     disabled={this.state.passwordConfirmIncorrect}
-                    primary>
+                    primary
+                >
                     Sign up
                 </Form.Button>
-                <span>Already have an account?&nbsp;<a href='' onClick={this.handleSwitchForm}>Sign in here.</a></span>
+                <span>
+                    Already have an account?&nbsp;
+                    <a href="" onClick={this.handleSwitchForm}>
+                        Sign in here.
+                    </a>
+                </span>
             </React.Fragment>
         )
     }
@@ -83,7 +109,10 @@ export class Signup extends React.PureComponent<IProps, IState> {
                 break
             case 'passwordConfirm':
                 passwordConfirmIncorrect = this.state.password !== value
-                this.setState({ passwordConfirm: value, passwordConfirmIncorrect })
+                this.setState({
+                    passwordConfirm: value,
+                    passwordConfirmIncorrect,
+                })
                 break
         }
     }
