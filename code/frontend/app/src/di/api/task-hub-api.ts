@@ -1,4 +1,4 @@
-import * as signalR from '@aspnet/signalr'
+import * as signalR from '@microsoft/signalr'
 import baseUrl from 'di/api/base-url'
 import { Task } from 'models'
 import { StorageService, storageService } from 'di/services/storage-service'
