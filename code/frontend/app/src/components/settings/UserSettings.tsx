@@ -1,12 +1,8 @@
 import * as React from 'react'
 import { Button, Checkbox, Form, Radio } from 'semantic-ui-react'
-import {
-    SettingsServer,
-    SettingsClient,
-    AppearanceThemeEnum,
-} from '../../models'
-import { SettingsDivider } from './'
-import { ISettings } from '../../redux/types'
+import { SettingsServer, SettingsClient, AppearanceThemeEnum } from 'models'
+import { ISettings } from 'redux/types'
+import { SettingsDivider } from 'components/settings'
 
 interface IProps {
     settings: ISettings

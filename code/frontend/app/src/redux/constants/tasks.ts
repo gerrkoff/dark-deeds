@@ -1,4 +1,4 @@
-import { Task, TaskModel } from '../../models'
+import { Task, TaskModel } from 'models'
 
 /*
         CHANGE  means change tasks localy

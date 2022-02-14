@@ -1,7 +1,7 @@
 import * as enzyme from 'enzyme'
 import * as React from 'react'
-import { DayCard } from '../../components/overview/'
-import { DayCardModel, Task, TaskTypeEnum } from '../../models'
+import { DayCard } from 'components/overview/'
+import { DayCardModel, Task, TaskTypeEnum } from 'models'
 
 test('renders tasks', () => {
     const tasks = []

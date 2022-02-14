@@ -1,5 +1,5 @@
 import { connect } from 'react-redux'
-import { RecurrencesView } from '../components/recurrence'
+import { RecurrencesView } from 'components/recurrence'
 import {
     createRecurrences,
     loadRecurrences,
@@ -9,11 +9,11 @@ import {
     changeRecurrence,
     openModalConfirm,
     deleteRecurrence,
-} from '../redux/actions'
-import { IAppState } from '../redux/types'
-import { PlannedRecurrence } from '../models'
-import { ThunkDispatch } from '../helpers'
-import { RecurrencesViewAction, ModalConfirmAction } from '../redux/constants'
+} from 'redux/actions'
+import { IAppState } from 'redux/types'
+import { PlannedRecurrence } from 'models'
+import { ThunkDispatch } from 'helpers'
+import { RecurrencesViewAction, ModalConfirmAction } from 'redux/constants'
 
 function mapStateToProps({ recurrencesView }: IAppState) {
     return {

@@ -1,14 +1,14 @@
 import { connect } from 'react-redux'
-import { EditTaskModal } from '../components/edit-task'
-import { TaskModel } from '../models'
+import { EditTaskModal } from 'components/edit-task'
+import { TaskModel } from 'models'
 import {
     changeEditTaskModel,
     changeTask,
     openEditTaskModal,
-} from '../redux/actions'
-import { IAppState } from '../redux/types'
-import { ThunkDispatch } from '../helpers'
-import { EditTaskAction, TasksAction } from '../redux/constants'
+} from 'redux/actions'
+import { IAppState } from 'redux/types'
+import { ThunkDispatch } from 'helpers'
+import { EditTaskAction, TasksAction } from 'redux/constants'
 
 function mapStateToProps({ editTask }: IAppState) {
     return {

@@ -1,9 +1,9 @@
+import { dateService, DateService } from 'di/services/date-service'
 import {
     PlannedRecurrence,
     RecurrenceWeekdayEnum,
     PlannedRecurrencePrint,
-} from '../../models'
-import { DateService, dateService } from './date-service'
+} from 'models'
 
 export class RecurrenceService {
     public constructor(private dateService: DateService) {}

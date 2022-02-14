@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { Icon, Menu } from 'semantic-ui-react'
-import '../../styles/toolbar.css'
+import 'styles/toolbar.css'
 
 interface IProps {
     path: string

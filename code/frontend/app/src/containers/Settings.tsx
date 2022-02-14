@@ -1,16 +1,16 @@
 import { connect } from 'react-redux'
-import { Settings } from '../components/settings'
-import { SettingsServer, SettingsClient } from '../models'
+import { Settings } from 'components/settings'
+import { SettingsServer, SettingsClient } from 'models'
 import {
     signout,
     generateTelegramChatKey,
     saveServerSettings,
     changeServerSettings,
     changeClientSettings,
-} from '../redux/actions'
-import { IAppState } from '../redux/types'
-import { ThunkDispatch } from '../helpers'
-import { TelegramIntegrationAction, SettingsAction } from '../redux/constants'
+} from 'redux/actions'
+import { IAppState } from 'redux/types'
+import { ThunkDispatch } from 'helpers'
+import { TelegramIntegrationAction, SettingsAction } from 'redux/constants'
 
 function mapStateToProps({
     login,

@@ -1,3 +1,3 @@
-export * from './Login'
-export * from './Signin'
-export * from './Signup'
+export * from 'components/login/Login'
+export * from 'components/login/Signin'
+export * from 'components/login/Signup'

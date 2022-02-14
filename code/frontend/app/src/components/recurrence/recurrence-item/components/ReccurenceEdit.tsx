@@ -1,14 +1,14 @@
 import * as React from 'react'
 import { DropdownItemProps, Form } from 'semantic-ui-react'
-import { DateInput } from '../../../common'
 import {
     PlannedRecurrence,
     RecurrenceWeekdayEnum,
     recurrenceWeekdayEnumValues,
-} from '../../../../models'
-import { enumExpand, enumReduce } from '../../../../helpers'
-import { ButtonPanel } from './ButtonPanel'
-import { dateService } from 'src/di/services/date-service'
+} from 'models'
+import { enumExpand, enumReduce } from 'helpers'
+import { dateService } from 'di/services/date-service'
+import { DateInput } from 'components/common'
+import { ButtonPanel } from 'components/recurrence/recurrence-item/components/ButtonPanel'
 
 interface IProps {
     recurrence: PlannedRecurrence

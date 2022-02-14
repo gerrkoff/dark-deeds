@@ -1,4 +1,4 @@
-import { TaskModel } from '../../models'
+import { TaskModel } from 'models'
 
 export const EDITTASK_MODALOPEN = 'EDITTASK_MODALOPEN'
 export interface IEditTaskModalOpen {

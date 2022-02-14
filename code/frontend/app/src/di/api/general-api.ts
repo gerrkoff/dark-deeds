@@ -1,5 +1,5 @@
-import { BuildInfo } from '../../models'
-import { Api, api } from './api'
+import { BuildInfo } from 'models'
+import { Api, api } from 'di/api/api'
 
 export class GeneralApi {
     public constructor(private api: Api) {}

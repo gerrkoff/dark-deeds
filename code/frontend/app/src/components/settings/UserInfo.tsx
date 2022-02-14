@@ -1,6 +1,6 @@
+import { SettingsDivider } from 'components/settings'
 import * as React from 'react'
 import { Button } from 'semantic-ui-react'
-import { SettingsDivider } from './'
 
 interface IProps {
     username: string

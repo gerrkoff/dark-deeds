@@ -1,10 +1,10 @@
 import * as React from 'react'
 import { Container, Dimmer, Loader } from 'semantic-ui-react'
-import EditTaskModal from '../../containers/EditTaskModal'
-import ModalConfirm from '../../containers/ModalConfirm'
-import IndicatorPanel from '../../containers/IndicatorPanel'
-import { Task } from '../../models'
-import { Shortcuts, Toolbar } from './'
+import EditTaskModal from 'containers/EditTaskModal'
+import ModalConfirm from 'containers/ModalConfirm'
+import { Shortcuts, Toolbar } from 'components/app'
+import IndicatorPanel from 'containers/IndicatorPanel'
+import { Task } from 'models'
 
 export interface IAppProps {
     appLoading: boolean

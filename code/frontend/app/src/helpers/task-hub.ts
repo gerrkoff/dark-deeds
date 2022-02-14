@@ -1,7 +1,7 @@
-import { Task } from '../models'
+import { Task } from 'models'
 import { EventEmitter } from 'events'
-import { taskHubApi } from 'src/di/api/task-hub-api'
-import { utilsService } from 'src/di/services/utils-service'
+import { taskHubApi } from 'di/api/task-hub-api'
+import { utilsService } from 'di/services/utils-service'
 
 export class TaskHub {
     private _ready: boolean = false

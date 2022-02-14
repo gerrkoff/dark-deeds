@@ -1,11 +1,11 @@
+import { NotFound } from 'components/app'
+import { Day } from 'components/day'
+import AppAuthWrapper from 'containers/AppAuthWrapper'
+import Overview from 'containers/Overview'
+import RecurrencesView from 'containers/RecurrencesView'
+import Settings from 'containers/Settings'
 import * as React from 'react'
 import { Route, Switch } from 'react-router-dom'
-import AppAuthWrapper from '../../containers/AppAuthWrapper'
-import Overview from '../../containers/Overview'
-import Settings from '../../containers/Settings'
-import RecurrencesView from '../../containers/RecurrencesView'
-import { Day } from '../day'
-import { NotFound } from './'
 
 export class AppRouting extends React.PureComponent {
     public render() {

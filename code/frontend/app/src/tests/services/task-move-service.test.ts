@@ -1,8 +1,5 @@
-import {
-    taskMoveService,
-    TaskMoveService,
-} from 'src/di/services/task-move-service'
-import { Task, TaskTypeEnum } from '../../models'
+import { taskMoveService, TaskMoveService } from 'di/services/task-move-service'
+import { Task, TaskTypeEnum } from 'models'
 
 function createService(): TaskMoveService {
     // integration tests

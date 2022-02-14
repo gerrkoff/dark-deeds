@@ -1,9 +1,9 @@
 import * as React from 'react'
 import { Segment, Header } from 'semantic-ui-react'
-import { PlannedRecurrence } from '../../../models'
-import { RecurrenceEdit } from './components/ReccurenceEdit'
-import { ButtonPanel } from './components/ButtonPanel'
-import { recurrenceService } from 'src/di/services/recurrence-service'
+import { PlannedRecurrence } from 'models'
+import { recurrenceService } from 'di/services/recurrence-service'
+import { ButtonPanel } from 'components/recurrence/recurrence-item/components/ButtonPanel'
+import { RecurrenceEdit } from 'components/recurrence/recurrence-item/components/ReccurenceEdit'
 
 interface IProps {
     recurrence: PlannedRecurrence

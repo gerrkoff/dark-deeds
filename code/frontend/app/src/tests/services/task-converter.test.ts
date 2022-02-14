@@ -1,6 +1,6 @@
-import { DateService } from 'src/di/services/date-service'
-import { TaskConverter } from 'src/di/services/task-converter'
-import { TaskModel, TaskTypeEnum } from '../../models'
+import { DateService } from 'di/services/date-service'
+import { TaskConverter } from 'di/services/task-converter'
+import { TaskModel, TaskTypeEnum } from 'models'
 
 function dt(year: number, month: number, date: number): number {
     return new Date(year, month, date).getTime()

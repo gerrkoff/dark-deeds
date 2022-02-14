@@ -1,7 +1,7 @@
 import { connect } from 'react-redux'
-import { IAppState } from '../redux/types'
-import { IndicatorPanel } from '../components/indicator-panel'
-import { ThunkDispatch } from '../helpers'
+import { IAppState } from 'redux/types'
+import { IndicatorPanel } from 'components/indicator-panel'
+import { ThunkDispatch } from 'helpers'
 
 function mapStateToProps({ tasks }: IAppState) {
     return {

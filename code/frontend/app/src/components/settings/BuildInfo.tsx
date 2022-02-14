@@ -1,5 +1,5 @@
+import { SettingsDivider } from 'components/settings'
 import * as React from 'react'
-import { SettingsDivider } from './'
 
 interface IProps {
     appVersion: string

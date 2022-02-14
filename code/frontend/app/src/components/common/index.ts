@@ -1,2 +1,2 @@
-export * from './ModalConfirm'
-export * from './DateInput'
+export * from 'components/common/ModalConfirm'
+export * from 'components/common/DateInput'

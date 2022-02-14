@@ -1,4 +1,4 @@
-import { IDateable } from '../../models'
+import { IDateable } from 'models'
 
 export class DateService {
     public readonly dateInputFormat = 'M/D/YYYY'

@@ -1,9 +1,9 @@
-import { Task, TaskModel } from '../../models'
-import { TaskHub, ThunkDispatch } from '../../helpers'
-import * as actions from '../constants'
-import { utilsService } from 'src/di/services/utils-service'
-import { toastService } from 'src/di/services/toast-service'
-import { taskApi } from 'src/di/api/task-api'
+import { Task, TaskModel } from 'models'
+import { TaskHub, ThunkDispatch } from 'helpers'
+import * as actions from 'redux/constants'
+import { utilsService } from 'di/services/utils-service'
+import { toastService } from 'di/services/toast-service'
+import { taskApi } from 'di/api/task-api'
 
 // TODO: refactor it
 

@@ -1,4 +1,4 @@
-import { TaskModel, TaskTypeEnum } from '../..'
+import { TaskModel, TaskTypeEnum } from 'models'
 
 export class Task implements TaskModel {
     constructor(

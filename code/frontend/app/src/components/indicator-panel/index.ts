@@ -1,1 +1,1 @@
-export * from './IndicatorPanel'
+export * from 'components/indicator-panel/IndicatorPanel'

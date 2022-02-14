@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { Menu, MenuItemProps, Popup } from 'semantic-ui-react'
-import '../../styles/menu-popup.css'
+import 'styles/menu-popup.css'
 
 interface IProps {
     content: React.ReactNode

@@ -1,10 +1,10 @@
-import { recurrencesView as recurrencesViewReducer } from '../../redux/reducers/recurrencesView'
-import { IRecurrencesViewState } from '../../redux/types'
-import { PlannedRecurrence } from '../../models'
-import * as actions from '../../redux/constants'
-import { dateService } from 'src/di/services/date-service'
+import { recurrencesView as recurrencesViewReducer } from 'redux/reducers/recurrencesView'
+import { IRecurrencesViewState } from 'redux/types'
+import { PlannedRecurrence } from 'models'
+import * as actions from 'redux/constants'
+import { dateService } from 'di/services/date-service'
 
-jest.mock('src/di/services/date-service')
+jest.mock('di/services/date-service')
 dateService.today = () => new Date(2010, 10, 10)
 
 function createState(

@@ -1,4 +1,4 @@
-import { UtilsService } from 'src/di/services/utils-service'
+import { UtilsService } from 'di/services/utils-service'
 
 test('[delay] positive', async () => {
     const actions = ['act1']

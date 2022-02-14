@@ -1,21 +1,21 @@
 import * as React from 'react'
 import { Accordion, AccordionTitleProps } from 'semantic-ui-react'
-import { AddTaskButton } from '../edit-task'
+import { AddTaskButton } from 'components/edit-task'
 import {
     DayCardModel,
     Task,
     TaskModel,
     LocalSettings,
     OverviewTabEnum,
-} from '../../models'
-import { DragulaWrapper } from '../../helpers'
-import { DaysBlock, NoDateCard } from './'
+} from 'models'
+import { DragulaWrapper } from 'helpers'
+import { DaysBlock, NoDateCard } from 'components/overview'
 
-import '../../styles/overview.css'
-import { dateService } from 'src/di/services/date-service'
-import { taskMoveService } from 'src/di/services/task-move-service'
-import { taskService } from 'src/di/services/task-service'
-import { localSettingsService } from 'src/di/services/local-settings-service'
+import 'styles/overview.css'
+import { dateService } from 'di/services/date-service'
+import { taskMoveService } from 'di/services/task-move-service'
+import { taskService } from 'di/services/task-service'
+import { localSettingsService } from 'di/services/local-settings-service'
 
 interface IProps {
     tasks: Task[]

@@ -1,6 +1,6 @@
-import { ISettings } from '../types'
-import * as actions from '../constants'
-import { AppearanceThemeEnum } from 'src/models'
+import * as actions from 'redux/constants'
+import { AppearanceThemeEnum } from 'models'
+import { ISettings } from 'redux/types'
 
 const inittialState: ISettings = {
     saveProcessing: false,

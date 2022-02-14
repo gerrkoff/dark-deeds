@@ -1,5 +1,5 @@
-import { SettingsServer } from '../../models'
-import { Api, api } from './api'
+import { SettingsServer } from 'models'
+import { Api, api } from 'di/api/api'
 
 export class SettingsApi {
     public constructor(private api: Api) {}

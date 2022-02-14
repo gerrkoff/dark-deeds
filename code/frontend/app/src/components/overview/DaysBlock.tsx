@@ -1,8 +1,8 @@
+import { DayCard } from 'components/overview'
+import { DayCardModel, TaskModel } from 'models'
 import * as React from 'react'
-import { DayCardModel, TaskModel } from '../../models'
-import { DayCard } from './'
 
-import '../../styles/days-block.css'
+import 'styles/days-block.css'
 
 interface IProps {
     days: DayCardModel[]

@@ -1,1 +1,1 @@
-export * from './Day'
+export * from 'components/day/Day'

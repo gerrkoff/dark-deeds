@@ -1,4 +1,4 @@
-import { SettingsServer, SettingsClient } from '../../models'
+import { SettingsServer, SettingsClient } from 'models'
 
 export const SETTINGS_SERVER_LOAD_PROCESSING = 'SETTINGS_SERVER_LOAD_PROCESSING'
 export interface ISettingsServerLoadProcessing {

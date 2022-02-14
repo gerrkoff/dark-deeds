@@ -1,5 +1,5 @@
-import { DayCardModel, OverviewModel, Task } from '../../models'
-import { DateService, dateService } from './date-service'
+import { dateService, DateService } from 'di/services/date-service'
+import { DayCardModel, OverviewModel, Task } from 'models'
 
 export class TaskService {
     public constructor(private dateService: DateService) {}

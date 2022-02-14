@@ -1,8 +1,8 @@
-import { AppearanceThemeEnum } from '../../models'
 import {
-    LocalSettingsService,
     localSettingsService,
-} from './local-settings-service'
+    LocalSettingsService,
+} from 'di/services/local-settings-service'
+import { AppearanceThemeEnum } from 'models'
 
 export class AppearanceService {
     public constructor(private localSettingsService: LocalSettingsService) {}
