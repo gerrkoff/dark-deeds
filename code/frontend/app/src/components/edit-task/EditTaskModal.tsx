@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { Button, Icon, Input, Label, Modal } from 'semantic-ui-react'
-import { di, diToken, KeyConstants, TaskConverter } from '../../di'
+import { keyConstants } from 'src/di/services/key-constants'
+import { taskConverter } from 'src/di/services/task-converter'
 import { TaskModel } from '../../models'
 
 interface IProps {
@@ -15,8 +16,8 @@ interface IState {
     invalidTitle: boolean
 }
 export class EditTaskModal extends React.PureComponent<IProps, IState> {
-    private keyConstants = di.get<KeyConstants>(diToken.KeyConstants)
-    private taskConverter = di.get<TaskConverter>(diToken.TaskConverter)
+    private keyConstants = keyConstants
+    private taskConverter = taskConverter
 
     constructor(props: IProps) {
         super(props)

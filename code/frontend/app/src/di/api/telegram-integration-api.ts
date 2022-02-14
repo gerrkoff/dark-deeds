@@ -1,16 +1,15 @@
-import { injectable, inject } from 'inversify'
-import { Api } from '..'
-import diToken from '../token'
 import { TelegramStart } from '../../models'
+import { Api, api } from './api'
 
-@injectable()
 export class TelegramIntegrationApi {
 
     public constructor(
-        @inject(diToken.Api) private api: Api
+        private api: Api
     ) {}
 
     public start(timezoneOffset: number): Promise<TelegramStart> {
         return this.api.post<TelegramStart>(`api/tlgm/start?timezoneOffset=${timezoneOffset}`, null)
     }
 }
+
+export const telegramIntegrationApi = new TelegramIntegrationApi(api)

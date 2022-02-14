@@ -1,11 +1,9 @@
-import { di, diToken, ToastService, UtilsService, TaskApi } from '../../di'
 import { Task, TaskModel } from '../../models'
 import { TaskHub, ThunkDispatch } from '../../helpers'
 import * as actions from '../constants'
-
-const utilsService = di.get<UtilsService>(diToken.UtilsService)
-const toastService = di.get<ToastService>(diToken.ToastService)
-const taskApi = di.get<TaskApi>(diToken.TaskApi)
+import { utilsService } from 'src/di/services/utils-service'
+import { toastService } from 'src/di/services/toast-service'
+import { taskApi } from 'src/di/api/task-api'
 
 // TODO: refactor it
 

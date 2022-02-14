@@ -1,15 +1,12 @@
-import { injectable, inject } from 'inversify'
 import { LocalSettings } from '../../models'
-import { StorageService } from '..'
-import diToken from '../token'
+import { StorageService, storageService } from './storage-service'
 
-@injectable()
 export class LocalSettingsService {
     private settingsInitialized = false
-    private settings: LocalSettings
+    private settings: LocalSettings | null = null
 
     public constructor(
-        @inject(diToken.StorageService) private storageService: StorageService
+        private storageService: StorageService
     ) {}
 
     public load(): LocalSettings {
@@ -20,7 +17,7 @@ export class LocalSettingsService {
                 ? new LocalSettings()
                 : { ...(new LocalSettings()), ...JSON.parse(settingsSerialized) }
         }
-        return this.settings
+        return this.settings!
     }
 
     public save() {
@@ -28,3 +25,5 @@ export class LocalSettingsService {
         this.storageService.saveSettings(settingsSerialized)
     }
 }
+
+export const localSettingsService = new LocalSettingsService(storageService)

@@ -1,13 +1,10 @@
-import { injectable, inject } from 'inversify'
 import { PlannedRecurrence, RecurrenceWeekdayEnum, PlannedRecurrencePrint } from '../../models'
-import { DateService } from '..'
-import diToken from '../token'
+import { DateService, dateService } from './date-service'
 
-@injectable()
 export class RecurrenceService {
 
     public constructor(
-        @inject(diToken.DateService) private dateService: DateService
+        private dateService: DateService
     ) {}
 
     public print(recurrence: PlannedRecurrence): PlannedRecurrencePrint {
@@ -162,3 +159,5 @@ export class RecurrenceService {
         return list
     }
 }
+
+export const recurrenceService = new RecurrenceService(dateService)

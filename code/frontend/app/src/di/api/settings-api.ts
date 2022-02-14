@@ -1,13 +1,10 @@
-import { injectable, inject } from 'inversify'
-import { Api } from '..'
-import diToken from '../token'
 import { SettingsServer } from '../../models'
+import { Api, api } from './api'
 
-@injectable()
 export class SettingsApi {
 
     public constructor(
-        @inject(diToken.Api) private api: Api
+        private api: Api
     ) {}
 
     public load(): Promise<SettingsServer> {
@@ -18,3 +15,5 @@ export class SettingsApi {
         return this.api.post('api/web/settings', settings)
     }
 }
+
+export const settingsApi = new SettingsApi(api)

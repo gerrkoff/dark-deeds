@@ -1,9 +1,9 @@
-import { di, diToken, TaskMoveService } from '../../di'
+import { taskMoveService, TaskMoveService } from 'src/di/services/task-move-service'
 import { Task, TaskTypeEnum } from '../../models'
 
 function createService(): TaskMoveService {
     // integration tests
-    return di.get<TaskMoveService>(diToken.TaskMoveService)
+    return taskMoveService
 }
 
 function task(taskId: string, taskDate: Date | null, taskOrder: number, type: TaskTypeEnum = TaskTypeEnum.Simple, time: number | null = null): Task {

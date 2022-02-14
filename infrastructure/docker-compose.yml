@@ -38,7 +38,7 @@ services:
         limits:
           cpus: '1'
           memory: 300M
-      
+
   postgres-db:
     image: postgres:13.0-alpine
     environment:
@@ -145,7 +145,7 @@ services:
         limits:
           cpus: '1'
           memory: 300M
-  
+
   prometheus:
     image: prom/prometheus:v2.32.1
     ports:

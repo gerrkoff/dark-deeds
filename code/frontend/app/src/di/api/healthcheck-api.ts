@@ -1,12 +1,9 @@
-import { injectable, inject } from 'inversify'
-import { Api } from '..'
-import diToken from '../token'
+import { Api, api } from './api'
 
-@injectable()
 export class HealthCheckApi {
 
     public constructor(
-        @inject(diToken.Api) private api: Api
+        private api: Api
     ) {}
 
     public check(): Promise<string> {
@@ -16,3 +13,5 @@ export class HealthCheckApi {
         // Unhealthy
     }
 }
+
+export const healthCheckApi = new HealthCheckApi(api)

@@ -1,12 +1,9 @@
-import { injectable, inject } from 'inversify'
 import { AppearanceThemeEnum } from '../../models'
-import { LocalSettingsService } from '..'
-import diToken from '../token'
+import { LocalSettingsService, localSettingsService } from './local-settings-service'
 
-@injectable()
 export class AppearanceService {
     public constructor(
-        @inject(diToken.LocalSettingsService) private localSettingsService: LocalSettingsService
+        private localSettingsService: LocalSettingsService
     ) {}
 
     public initTheme() {
@@ -83,3 +80,5 @@ export class AppearanceService {
         }
     }
 }
+
+export const appearanceService = new AppearanceService(localSettingsService)

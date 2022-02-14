@@ -1,10 +1,10 @@
 import * as React from 'react'
 import { Icon, MenuItemProps } from 'semantic-ui-react'
-import { di, diToken, DateService } from '../../di'
 import { TaskModel } from '../../models'
 import { MenuPopup } from './'
 
 import '../../styles/day-card-header.css'
+import { dateService } from 'src/di/services/date-service'
 
 interface IProps {
     date: Date
@@ -14,7 +14,7 @@ interface IState {
     menuPopupOpen: boolean
 }
 export class DayCardHeader extends React.PureComponent<IProps, IState> {
-    private dateService = di.get<DateService>(diToken.DateService)
+    private dateService = dateService
 
     constructor(props: IProps) {
         super(props)

@@ -1,6 +1,3 @@
-import { injectable } from 'inversify'
-
-@injectable()
 export class KeyConstants {
     public readonly CMD_LEFT = 'MetaLeft'
     public readonly CMD_RIGHT = 'MetaRight'
@@ -10,3 +7,5 @@ export class KeyConstants {
     public readonly N = 'KeyN'
     public readonly R = 'KeyR'
 }
+
+export const keyConstants = new KeyConstants()

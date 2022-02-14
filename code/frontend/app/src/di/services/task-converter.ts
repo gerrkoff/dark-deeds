@@ -1,13 +1,10 @@
-import { injectable, inject } from 'inversify'
 import { TaskModel, TaskTypeEnum, Time } from '../../models'
-import { DateService } from '..'
-import diToken from '../token'
+import { DateService, dateService } from './date-service'
 
-@injectable()
 export class TaskConverter {
 
     public constructor(
-        @inject(diToken.DateService) private dateService: DateService
+        private dateService: DateService
     ) {}
 
     public convertStringToModel(text: string): TaskModel {
@@ -40,7 +37,7 @@ export class TaskConverter {
 
         text = text.trimLeft()
 
-        if (/\s[\?!]+$/.test(text)) {
+        if (/\s[?!]+$/.test(text)) {
             text = result.extractFlags(text)
         }
 
@@ -169,3 +166,5 @@ class StringConvertingResult {
         }
     }
 }
+
+export const taskConverter = new TaskConverter(dateService)

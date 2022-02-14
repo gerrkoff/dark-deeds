@@ -1,12 +1,10 @@
-import { di, diToken, SettingsApi, ToastService, LocalSettingsService, AppearanceService } from '../../di'
 import { SettingsServer, SettingsClient } from '../../models'
 import * as actions from '../constants'
 import { ThunkDispatch } from '../../helpers'
-
-const settingsApi = di.get<SettingsApi>(diToken.SettingsApi)
-const toastService = di.get<ToastService>(diToken.ToastService)
-const localSettingsService = di.get<LocalSettingsService>(diToken.LocalSettingsService)
-const appearanceService = di.get<AppearanceService>(diToken.AppearanceService)
+import { settingsApi } from 'src/di/api/settings-api'
+import { toastService } from 'src/di/services/toast-service'
+import { localSettingsService } from 'src/di/services/local-settings-service'
+import { appearanceService } from 'src/di/services/appearance-service'
 
 export function saveServerSettings(settings: SettingsServer) {
     return async(dispatch: ThunkDispatch<actions.SettingsAction>) => {

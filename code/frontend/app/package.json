@@ -5,7 +5,6 @@
   "dependencies": {
     "@aspnet/signalr": "^1.1.4",
     "connected-react-router": "^6.9.2",
-    "inversify": "^5.0.1",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
     "react-dragula": "^1.1.17",
@@ -21,16 +20,18 @@
     "semantic-ui-react": "^0.88.1"
   },
   "scripts": {
-    "build-css": "node-sass src/ -o src/",
-    "build-js": "react-scripts-ts build",
+    "build-css": "cross-env CI=true node-sass src/ -o src/",
+    "build-js": "cross-env CI=true react-scripts build",
     "build-copy": "npx copyfiles \"build/**\" \"../server/build\" -u 1 -e build && echo files copied",
     "build": "npm run build-css && npm run build-js && npm run build-copy",
-    "test-ci": "npm run build-css && cross-env CI=true react-scripts-ts test --env=jsdom",
-    "watch-css": "npm run build-css && node-sass src/ -o src/ --watch --recursive",
-    "start-js": "cross-env BROWSER=none react-scripts-ts start",
-    "start": "npm-run-all -p watch-css start-js",
-    "test": "react-scripts-ts test --env=jsdom",
-    "eject": "react-scripts-ts eject"
+    "test-ci": "cross-env CI=true react-scripts test --env=jsdom",
+    "start-css": "node-sass src/ -o src/ --watch --recursive",
+    "start-js": "cross-env BROWSER=none react-scripts start",
+    "start": "npm-run-all -p start-css start-js",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject",
+    "lint": "eslint . -c .eslintrc.js --ext .js,.jsx,.ts,.tsx",
+    "lint:fix": "npm run lint -- --fix"
   },
   "devDependencies": {
     "@types/enzyme": "^3.10.3",
@@ -48,9 +49,21 @@
     "enzyme-adapter-react-16": "^1.15.1",
     "node-sass": "^6.0.1",
     "npm-run-all": "^4.1.5",
-    "react-scripts-ts": "3.1.0",
+    "react-scripts": "^4.0.3",
     "react-test-renderer": "^16.12.0",
     "tslint-config-standard": "^8.0.1",
-    "typescript": "^3.7.2"
+    "typescript": "^3.9.10"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }

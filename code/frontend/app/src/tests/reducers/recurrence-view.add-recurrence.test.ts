@@ -1,11 +1,11 @@
-import { di, diToken } from '../../di'
-const dateServiceMock: any = {}
-di.rebind(diToken.DateService).toConstantValue(dateServiceMock)
-
 import { recurrencesView as recurrencesViewReducer } from '../../redux/reducers/recurrencesView'
 import { IRecurrencesViewState } from '../../redux/types'
 import { PlannedRecurrence } from '../../models'
 import * as actions from '../../redux/constants'
+import { dateService } from 'src/di/services/date-service'
+
+jest.mock('src/di/services/date-service')
+dateService.today = () => new Date(2010, 10, 10)
 
 function createState(
     plannedRecurrences: PlannedRecurrence[] = []
@@ -24,12 +24,7 @@ function createRecurrence(uid: string): PlannedRecurrence {
     return new PlannedRecurrence(uid, '', new Date(), null, null, null, null, false)
 }
 
-function setup() {
-    dateServiceMock.today = jest.fn().mockImplementation(() => new Date(2010, 10, 10))
-}
-
 test('[RECURRENCESVIEW_ADD_RECURRENCE] should return new objects for changed items', () => {
-    setup()
     const recurrence1 = createRecurrence('1')
     const recurrence2 = createRecurrence('2')
     const recurrence3 = createRecurrence('3')
@@ -47,7 +42,6 @@ test('[RECURRENCESVIEW_ADD_RECURRENCE] should return new objects for changed ite
 })
 
 test('[RECURRENCESVIEW_CHANGE_RECURRENCE] should create new recurrence with default data', () => {
-    setup()
     const state = createState([createRecurrence('1')])
     const action: actions.IAddRecurrence = {
         type: actions.RECURRENCESVIEW_ADD_RECURRENCE
@@ -61,7 +55,6 @@ test('[RECURRENCESVIEW_CHANGE_RECURRENCE] should create new recurrence with defa
 })
 
 test('[RECURRENCESVIEW_CHANGE_RECURRENCE] should create recurrence with some id', () => {
-    setup()
     const state = createState([createRecurrence('1')])
     const action: actions.IAddRecurrence = {
         type: actions.RECURRENCESVIEW_ADD_RECURRENCE

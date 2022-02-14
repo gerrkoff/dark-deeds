@@ -16,8 +16,8 @@ jobs:
         cd code/frontend/app
         npm install
         npm rebuild node-sass
-        npm run test-ci
         npm run build
+        npm run test-ci
         cd ../server
         npm install
 

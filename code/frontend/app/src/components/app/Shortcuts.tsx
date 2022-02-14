@@ -1,13 +1,14 @@
 import * as React from 'react'
-import { di, diToken, KeyConstants, ToastService } from '../../di'
+import { keyConstants } from 'src/di/services/key-constants'
+import { toastService } from 'src/di/services/toast-service'
 
 interface IProps {
     openEditTask: () => void
     createRecurrences: () => void
 }
 export class Shortcuts extends React.PureComponent<IProps> {
-    private keyConstants = di.get<KeyConstants>(diToken.KeyConstants)
-    private toastService = di.get<ToastService>(diToken.ToastService)
+    private keyConstants = keyConstants
+    private toastService = toastService
 
     private isCmdDownL: boolean = false
     private isCmdDownR: boolean = false
