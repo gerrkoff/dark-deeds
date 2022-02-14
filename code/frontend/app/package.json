@@ -45,7 +45,7 @@
     "build-js": "cross-env CI=true react-scripts build",
     "build-copy": "npx copyfiles \"build/**\" \"../server/build\" -u 1 -e build && echo files copied",
     "build": "npm run build-css && npm run build-js && npm run build-copy",
-    "test-ci": "cross-env CI=true react-scripts test --env=jsdom",
+    "test-ci": "npm run fmt:check && cross-env CI=true react-scripts test --env=jsdom",
     "start-css": "node-sass src/ -o src/ --watch --recursive",
     "start-js": "cross-env BROWSER=none react-scripts start",
     "start": "npm-run-all -p start-css start-js",
@@ -53,7 +53,8 @@
     "eject": "react-scripts eject",
     "lint": "eslint . -c .eslintrc.js --ext .js,.jsx,.ts,.tsx",
     "lint:fix": "npm run lint -- --fix",
-    "format": "prettier --write \"**/*.+(js|jsx|json|yml|yaml|css|md|ts|tsx)\"",
+    "fmt": "prettier --write \"**/*.+(js|jsx|json|yml|yaml|css|md|ts|tsx)\"",
+    "fmt:check": "prettier --check \"**/*.+(js|jsx|json|yml|yaml|css|md|ts|tsx)\"",
     "postinstall": "semantic-ui-css-patch"
   },
   "browserslist": {
