@@ -1,5 +1,4 @@
 export class SetExtended<T> extends Set<T> {
-
     public static create<Tin>(values?: Tin[]): SetExtended<Tin> {
         const instance = new Set(values)
         // tslint:disable-next-line:no-string-literal

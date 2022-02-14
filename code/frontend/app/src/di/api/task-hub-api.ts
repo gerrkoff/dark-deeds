@@ -5,7 +5,6 @@ import { StorageService, storageService } from '../services/storage-service'
 import { DateService, dateService } from '../services/date-service'
 
 export class TaskHubApi {
-
     private connection: signalR.HubConnection | null = null
 
     public constructor(
@@ -16,7 +15,8 @@ export class TaskHubApi {
     public init() {
         this.connection = new signalR.HubConnectionBuilder()
             .withUrl(baseUrl + 'ws/web/task', {
-                accessTokenFactory: () => this.storageService.loadAccessToken() as string
+                accessTokenFactory: () =>
+                    this.storageService.loadAccessToken() as string,
             })
             // TODO: different levels in prod
             .configureLogging(signalR.LogLevel.Information)
@@ -46,7 +46,12 @@ export class TaskHubApi {
             }
             close()
         })
-        this.connection!.on('update', (tasks, localUpdate) => update(this.dateService.adjustDatesAfterLoading(tasks) as Task[], localUpdate))
+        this.connection!.on('update', (tasks, localUpdate) =>
+            update(
+                this.dateService.adjustDatesAfterLoading(tasks) as Task[],
+                localUpdate
+            )
+        )
         this.connection!.on('heartbeat', heartbeat)
     }
 

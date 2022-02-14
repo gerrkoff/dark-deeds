@@ -32,28 +32,53 @@ export class EditTaskModal extends React.PureComponent<IProps, IState> {
 
     public render() {
         return (
-            <Modal basic size='small' open={this.props.open} onClose={this.props.closeModal}>
-                <Modal.Header><Icon name='sticky note outline' />{this.props.uid === null ? 'New task' : 'Edit task'}</Modal.Header>
+            <Modal
+                basic
+                size="small"
+                open={this.props.open}
+                onClose={this.props.closeModal}
+            >
+                <Modal.Header>
+                    <Icon name="sticky note outline" />
+                    {this.props.uid === null ? 'New task' : 'Edit task'}
+                </Modal.Header>
                 <Modal.Content>
-                    <Input focus fluid
-                        data-test-id='edit-task-input'
-                        placeholder='1231 2359 December 31, 23:59 ...'
+                    <Input
+                        focus
+                        fluid
+                        data-test-id="edit-task-input"
+                        placeholder="1231 2359 December 31, 23:59 ..."
                         value={this.props.model}
-                        onChange={(_event, data) => this.handleTaskModelChange(data.value)}
+                        onChange={(_event, data) =>
+                            this.handleTaskModelChange(data.value)
+                        }
                         onKeyUp={this.handleInputKeyUp}
-                        id='taskAdd_titleInput' />
-                    {
-                        this.state.invalidTitle
-                            ? <Label color='red' pointing>Please enter non-empty title</Label>
-                            : <React.Fragment />
-                    }
+                        id="taskAdd_titleInput"
+                    />
+                    {this.state.invalidTitle ? (
+                        <Label color="red" pointing>
+                            Please enter non-empty title
+                        </Label>
+                    ) : (
+                        <React.Fragment />
+                    )}
                 </Modal.Content>
                 <Modal.Actions>
-                    <Button basic color='red' inverted onClick={this.props.closeModal}>
-                        <Icon name='remove' /> Cancel
+                    <Button
+                        basic
+                        color="red"
+                        inverted
+                        onClick={this.props.closeModal}
+                    >
+                        <Icon name="remove" /> Cancel
                     </Button>
-                    <Button color='green' data-test-id='save-task-button' inverted onClick={this.handleSave}>
-                        <Icon name='checkmark' /> Save
+                    <Button
+                        color="green"
+                        data-test-id="save-task-button"
+                        inverted
+                        onClick={this.handleSave}
+                    >
+                        <Icon name="checkmark" /> Save
                     </Button>
                 </Modal.Actions>
             </Modal>
@@ -71,7 +96,9 @@ export class EditTaskModal extends React.PureComponent<IProps, IState> {
             return
         }
 
-        const taskModel = this.taskConverter.convertStringToModel(this.props.model)
+        const taskModel = this.taskConverter.convertStringToModel(
+            this.props.model
+        )
 
         if (taskModel.title.length === 0) {
             this.setState({ invalidTitle: true })

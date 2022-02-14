@@ -6,26 +6,37 @@ const inittialState: IModalConfirmState = {
     content: '',
     header: '',
     headerIcon: '',
-    open: false
+    open: false,
 }
 
-export function modalConfirm(state: IModalConfirmState = inittialState, action: actions.ModalConfirmAction): IModalConfirmState {
+export function modalConfirm(
+    state: IModalConfirmState = inittialState,
+    action: actions.ModalConfirmAction
+): IModalConfirmState {
     switch (action.type) {
         case actions.MODALCONFIRM_OPEN:
-            return { ...state,
+            return {
+                ...state,
                 action: action.action,
                 content: action.content,
-                header: action.header === undefined ? 'Confirm action' : action.header,
-                headerIcon: action.headerIcon === undefined ? 'question' : action.headerIcon,
-                open: true
+                header:
+                    action.header === undefined
+                        ? 'Confirm action'
+                        : action.header,
+                headerIcon:
+                    action.headerIcon === undefined
+                        ? 'question'
+                        : action.headerIcon,
+                open: true,
             }
         case actions.MODALCONFIRM_CLOSE:
-            return { ...state,
+            return {
+                ...state,
                 action: () => console.log(),
                 content: '',
                 header: '',
                 headerIcon: '',
-                open: false
+                open: false,
             }
     }
     return state

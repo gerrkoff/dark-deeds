@@ -5,19 +5,32 @@ import * as actions from '../../redux/constants'
 
 function createState(
     plannedRecurrences: PlannedRecurrence[] = []
-    ): IRecurrencesViewState {
+): IRecurrencesViewState {
     return {
         isCreatingRecurrences: false,
         isLoadingRecurrences: false,
         isSavingRecurrences: false,
         plannedRecurrences,
         edittingRecurrenceId: null,
-        hasNotSavedChanges: false
+        hasNotSavedChanges: false,
     }
 }
 
-function createRecurrence(uid: string, isLocal: boolean = false): PlannedRecurrence {
-    return new PlannedRecurrence(uid, '', new Date(), null, null, null, null, false, isLocal)
+function createRecurrence(
+    uid: string,
+    isLocal: boolean = false
+): PlannedRecurrence {
+    return new PlannedRecurrence(
+        uid,
+        '',
+        new Date(),
+        null,
+        null,
+        null,
+        null,
+        false,
+        isLocal
+    )
 }
 
 test('[RECURRENCESVIEW_DELETE_RECURRENCE] [id greater than 0] should return new objects for changed items', () => {
@@ -28,7 +41,7 @@ test('[RECURRENCESVIEW_DELETE_RECURRENCE] [id greater than 0] should return new 
     const state = createState(recurrences)
     const action: actions.IDeleteRecurrence = {
         type: actions.RECURRENCESVIEW_DELETE_RECURRENCE,
-        uid: '2'
+        uid: '2',
     }
     const result = recurrencesViewReducer(state, action)
 
@@ -42,15 +55,17 @@ test('[RECURRENCESVIEW_DELETE_RECURRENCE] [id greater than 0] should update isDe
     const state = createState([
         createRecurrence('1'),
         createRecurrence('2'),
-        createRecurrence('3')
+        createRecurrence('3'),
     ])
     const action: actions.IDeleteRecurrence = {
         type: actions.RECURRENCESVIEW_DELETE_RECURRENCE,
-        uid: '2'
+        uid: '2',
     }
     const result = recurrencesViewReducer(state, action)
 
-    expect(result.plannedRecurrences.find(x => x.uid === '2')!.isDeleted).toBe(true)
+    expect(result.plannedRecurrences.find(x => x.uid === '2')!.isDeleted).toBe(
+        true
+    )
 })
 
 test('[RECURRENCESVIEW_DELETE_RECURRENCE] [id less than 0] should return new objects for changed items', () => {
@@ -61,7 +76,7 @@ test('[RECURRENCESVIEW_DELETE_RECURRENCE] [id less than 0] should return new obj
     const state = createState(recurrences)
     const action: actions.IDeleteRecurrence = {
         type: actions.RECURRENCESVIEW_DELETE_RECURRENCE,
-        uid: '-2'
+        uid: '-2',
     }
     const result = recurrencesViewReducer(state, action)
 
@@ -74,11 +89,11 @@ test('[RECURRENCESVIEW_DELETE_RECURRENCE] [id less than 0] should delete item', 
     const state = createState([
         createRecurrence('1'),
         createRecurrence('-2', true),
-        createRecurrence('3')
+        createRecurrence('3'),
     ])
     const action: actions.IDeleteRecurrence = {
         type: actions.RECURRENCESVIEW_DELETE_RECURRENCE,
-        uid: '-2'
+        uid: '-2',
     }
     const result = recurrencesViewReducer(state, action)
 

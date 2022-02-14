@@ -3,10 +3,7 @@
     "baseUrl": ".",
     "module": "esnext",
     "target": "es6",
-    "lib": [
-      "esnext",
-      "dom"
-    ],
+    "lib": ["esnext", "dom"],
     "sourceMap": true,
     "allowJs": true,
     "jsx": "react",
@@ -38,7 +35,5 @@
     "webpack",
     "jest"
   ],
-  "include": [
-    "src"
-  ]
+  "include": ["src"]
 }

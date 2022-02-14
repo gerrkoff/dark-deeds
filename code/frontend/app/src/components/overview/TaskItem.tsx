@@ -8,8 +8,16 @@ import '../../styles/task-item.css'
 
 interface IProps {
     task: Task
-    changeTaskStatus?: (uid: string, completed?: boolean, deleted?: boolean) => void
-    confirmAction?: (content: React.ReactNode, action: () => void, header: string) => void
+    changeTaskStatus?: (
+        uid: string,
+        completed?: boolean,
+        deleted?: boolean
+    ) => void
+    confirmAction?: (
+        content: React.ReactNode,
+        action: () => void,
+        header: string
+    ) => void
     openTaskModal?: (model: TaskModel, uid: string | null) => void
 }
 interface IState {
@@ -22,13 +30,17 @@ export class TaskItem extends React.PureComponent<IProps, IState> {
     constructor(props: IProps) {
         super(props)
         this.state = {
-            selected: false
+            selected: false,
         }
     }
 
     public componentDidMount() {
         if (this.elem !== undefined && this.elem.parentElement !== null) {
-            this.touchMoveDelay = new TouchMoveDelay(this.elem.parentElement, 500, this.setItemSelected)
+            this.touchMoveDelay = new TouchMoveDelay(
+                this.elem.parentElement,
+                500,
+                this.setItemSelected
+            )
         }
     }
 
@@ -39,39 +51,56 @@ export class TaskItem extends React.PureComponent<IProps, IState> {
     public render() {
         const menuItemProps = new Array<MenuItemProps>()
         menuItemProps.push({
-            content: <span><Icon name='check' />{this.props.task.completed ? 'Undo complete' : 'Complete'}</span>,
+            content: (
+                <span>
+                    <Icon name="check" />
+                    {this.props.task.completed ? 'Undo complete' : 'Complete'}
+                </span>
+            ),
             disabled: !this.props.changeTaskStatus,
             name: 'complete',
-            onClick: this.handleComplete
+            onClick: this.handleComplete,
         })
         menuItemProps.push({
-            content: <span><Icon name='pencil' />Edit</span>,
+            content: (
+                <span>
+                    <Icon name="pencil" />
+                    Edit
+                </span>
+            ),
             disabled: !this.props.openTaskModal,
             name: 'edit',
-            onClick: this.handleEdit
+            onClick: this.handleEdit,
         })
         menuItemProps.push({
             color: 'red',
-            content: <span><Icon data-test-id='delete-task-button' name='delete' />Delete</span>,
+            content: (
+                <span>
+                    <Icon data-test-id="delete-task-button" name="delete" />
+                    Delete
+                </span>
+            ),
             disabled: !this.props.changeTaskStatus,
             name: 'delete',
-            onClick: this.handleDeleteConfirm
+            onClick: this.handleDeleteConfirm,
         })
 
         return (
             <MenuPopup
                 content={this.renderContent()}
                 changeVisibility={this.setItemSelected}
-                menuItemProps={menuItemProps} />
+                menuItemProps={menuItemProps}
+            />
         )
     }
 
     private renderContent = (): React.ReactNode => {
         const task = this.props.task
-        const className = 'task-item'
-            + (task.completed ? ' task-item-completed' : '')
-            + (task.isProbable ? ' task-item-probable' : '')
-            + (this.state.selected ? ' task-item-selected' : '')
+        const className =
+            'task-item' +
+            (task.completed ? ' task-item-completed' : '') +
+            (task.isProbable ? ' task-item-probable' : '') +
+            (this.state.selected ? ' task-item-selected' : '')
         let text = ''
         if (task.time !== null) {
             const time = new Time(task.time)
@@ -80,19 +109,28 @@ export class TaskItem extends React.PureComponent<IProps, IState> {
         text += task.title
 
         return (
-            <span ref={elem => this.elem = elem!} className={className}>{text}</span>
+            <span ref={elem => (this.elem = elem!)} className={className}>
+                {text}
+            </span>
         )
     }
 
     private handleComplete = () => {
         if (this.props.changeTaskStatus) {
-            this.props.changeTaskStatus(this.props.task.uid, !this.props.task.completed)
+            this.props.changeTaskStatus(
+                this.props.task.uid,
+                !this.props.task.completed
+            )
         }
     }
 
     private handleDeleteConfirm = () => {
         if (this.props.confirmAction) {
-            this.props.confirmAction(this.props.task.title, this.handleDelete, 'Delete task')
+            this.props.confirmAction(
+                this.props.task.title,
+                this.handleDelete,
+                'Delete task'
+            )
         }
     }
 

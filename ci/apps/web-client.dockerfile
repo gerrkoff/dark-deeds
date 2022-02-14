@@ -1,6 +1,7 @@
 FROM node:16.13.2-alpine as builder
 
-COPY code/ /code/
+COPY code/frontend/ /code/frontend/
+COPY .editorconfig /code/frontend/.editorconfig
 WORKDIR /code/frontend/app
 RUN npm install
 RUN npm run build

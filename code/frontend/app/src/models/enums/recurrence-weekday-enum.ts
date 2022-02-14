@@ -6,7 +6,7 @@ export enum RecurrenceWeekdayEnum {
     Thursday = 8,
     Friday = 16,
     Saturday = 32,
-    Sunday = 64
+    Sunday = 64,
 }
 
 const recurrenceWeekdayEnumValues = [
@@ -16,7 +16,7 @@ const recurrenceWeekdayEnumValues = [
     RecurrenceWeekdayEnum.Thursday,
     RecurrenceWeekdayEnum.Friday,
     RecurrenceWeekdayEnum.Saturday,
-    RecurrenceWeekdayEnum.Sunday
+    RecurrenceWeekdayEnum.Sunday,
 ]
 
 export { recurrenceWeekdayEnumValues }

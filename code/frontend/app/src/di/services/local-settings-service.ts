@@ -5,17 +5,19 @@ export class LocalSettingsService {
     private settingsInitialized = false
     private settings: LocalSettings | null = null
 
-    public constructor(
-        private storageService: StorageService
-    ) {}
+    public constructor(private storageService: StorageService) {}
 
     public load(): LocalSettings {
         if (!this.settingsInitialized) {
             this.settingsInitialized = true
             const settingsSerialized = this.storageService.loadSettings()
-            this.settings = settingsSerialized === null
-                ? new LocalSettings()
-                : { ...(new LocalSettings()), ...JSON.parse(settingsSerialized) }
+            this.settings =
+                settingsSerialized === null
+                    ? new LocalSettings()
+                    : {
+                          ...new LocalSettings(),
+                          ...JSON.parse(settingsSerialized),
+                      }
         }
         return this.settings!
     }

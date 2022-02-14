@@ -24,14 +24,23 @@ export class Shortcuts extends React.PureComponent<IProps> {
     }
 
     public render() {
-        return (<React.Fragment />)
+        return <React.Fragment />
     }
 
     private handleGlobalKeyDown = (e: KeyboardEvent) => {
-        if (this.check(e.code, [this.keyConstants.ENTER]) && (this.isCmdDownL || this.isCmdDownR)) {
+        if (
+            this.check(e.code, [this.keyConstants.ENTER]) &&
+            (this.isCmdDownL || this.isCmdDownR)
+        ) {
             this.props.openEditTask()
         }
-        if (this.check(e.code, [this.keyConstants.ENTER, this.keyConstants.N]) && e.ctrlKey) {
+        if (
+            this.check(e.code, [
+                this.keyConstants.ENTER,
+                this.keyConstants.N,
+            ]) &&
+            e.ctrlKey
+        ) {
             this.props.openEditTask()
         }
         if (this.check(e.code, [this.keyConstants.R]) && e.ctrlKey) {
@@ -39,22 +48,43 @@ export class Shortcuts extends React.PureComponent<IProps> {
             this.props.createRecurrences()
         }
 
-        if (this.check(e.code, [this.keyConstants.CMD_LEFT, this.keyConstants.CMD_LEFT_FIREFOX])) {
+        if (
+            this.check(e.code, [
+                this.keyConstants.CMD_LEFT,
+                this.keyConstants.CMD_LEFT_FIREFOX,
+            ])
+        ) {
             this.isCmdDownL = true
         }
-        if (this.check(e.code, [this.keyConstants.CMD_RIGHT, this.keyConstants.CMD_RIGHT_FIREFOX])) {
+        if (
+            this.check(e.code, [
+                this.keyConstants.CMD_RIGHT,
+                this.keyConstants.CMD_RIGHT_FIREFOX,
+            ])
+        ) {
             this.isCmdDownR = true
         }
     }
 
     private handleGlobalKeyUp = (e: KeyboardEvent) => {
-        if (this.check(e.code, [this.keyConstants.CMD_LEFT, this.keyConstants.CMD_LEFT_FIREFOX])) {
+        if (
+            this.check(e.code, [
+                this.keyConstants.CMD_LEFT,
+                this.keyConstants.CMD_LEFT_FIREFOX,
+            ])
+        ) {
             this.isCmdDownL = false
         }
-        if (this.check(e.code, [this.keyConstants.CMD_RIGHT, this.keyConstants.CMD_RIGHT_FIREFOX])) {
+        if (
+            this.check(e.code, [
+                this.keyConstants.CMD_RIGHT,
+                this.keyConstants.CMD_RIGHT_FIREFOX,
+            ])
+        ) {
             this.isCmdDownR = false
         }
     }
 
-    private check = (code: string, values: string[]): boolean => values.some(x => x === code)
+    private check = (code: string, values: string[]): boolean =>
+        values.some(x => x === code)
 }

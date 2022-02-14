@@ -9,7 +9,7 @@ import { toastService } from 'src/di/services/toast-service'
 import { loginApi } from 'src/di/api/login-api'
 
 export function initialLogin() {
-    return async(dispatch: ThunkDispatch<actions.LoginAction>) => {
+    return async (dispatch: ThunkDispatch<actions.LoginAction>) => {
         const token = storageService.loadAccessToken()
         if (token === null || token === '') {
             return
@@ -27,7 +27,7 @@ export function initialLogin() {
 }
 
 export function signin(username: string, password: string) {
-    return async(dispatch: ThunkDispatch<actions.LoginAction>) => {
+    return async (dispatch: ThunkDispatch<actions.LoginAction>) => {
         dispatch(processing())
 
         let result: SigninResultEnum
@@ -49,7 +49,7 @@ export function signin(username: string, password: string) {
 }
 
 export function signup(username: string, password: string) {
-    return async(dispatch: ThunkDispatch<actions.LoginAction>) => {
+    return async (dispatch: ThunkDispatch<actions.LoginAction>) => {
         dispatch(processing())
 
         let result: SignupResultEnum
@@ -71,7 +71,11 @@ export function signup(username: string, password: string) {
 }
 
 export function signout() {
-    return async(dispatch: ThunkDispatch<actions.LoginAction | RouterAction | actions.TasksAction>) => {
+    return async (
+        dispatch: ThunkDispatch<
+            actions.LoginAction | RouterAction | actions.TasksAction
+        >
+    ) => {
         dispatch(changeAllTasks([]))
         storageService.clearAccessToken()
         dispatch(navigateTo('/'))
@@ -87,7 +91,9 @@ function processing(): actions.ILoginProcessing {
     return { type: actions.LOGIN_PROCESSING }
 }
 
-function setInitialLogginIn(initialLogginIn: boolean): actions.ILoginInitialLogginIn {
+function setInitialLogginIn(
+    initialLogginIn: boolean
+): actions.ILoginInitialLogginIn {
     return { type: actions.LOGIN_INITIAL_LOGGING_IN, initialLogginIn }
 }
 
@@ -99,11 +105,19 @@ function signupResult(result: SignupResultEnum): actions.ILoginSignupFinish {
     return { type: actions.LOGIN_SIGNUP_FINISH, result }
 }
 
-function currentUser(userAuthenticated: boolean, userName?: string): actions.ILoginCurrentUser {
+function currentUser(
+    userAuthenticated: boolean,
+    userName?: string
+): actions.ILoginCurrentUser {
     return { type: actions.LOGIN_CURRENT_USER, userAuthenticated, userName }
 }
 
 async function loadCurrentUser(dispatch: Dispatch<actions.LoginAction>) {
     const currentUserResult = await loginApi.current()
-    dispatch(currentUser(currentUserResult.userAuthenticated, currentUserResult.username))
+    dispatch(
+        currentUser(
+            currentUserResult.userAuthenticated,
+            currentUserResult.username
+        )
+    )
 }

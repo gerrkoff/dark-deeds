@@ -18,11 +18,15 @@ test('renders tasks', () => {
 
 test('renders expired days', () => {
     const model = new DayCardModel(new Date(2018, 9, 10))
-    let component = enzyme.shallow(<DayCard day={model} expiredDate={new Date(2018, 9, 11)} />)
+    let component = enzyme.shallow(
+        <DayCard day={model} expiredDate={new Date(2018, 9, 11)} />
+    )
 
     expect(component.find('.day-card-expired').length).toBe(1)
 
-    component = enzyme.shallow(<DayCard day={model} expiredDate={new Date(2018, 9, 10)} />)
+    component = enzyme.shallow(
+        <DayCard day={model} expiredDate={new Date(2018, 9, 10)} />
+    )
 
     expect(component.find('.day-card-expired').length).toBe(0)
 })
@@ -48,7 +52,18 @@ test('renders all day tasks as separate list with all-day-item classes', () => {
         tasks.push(new Task(i.toString(), '', new Date()))
     }
     for (let i = 1; i < 3; i++) {
-        tasks.push(new Task((i + 5).toString(), '', new Date(), 0, false, false, false, TaskTypeEnum.Additional))
+        tasks.push(
+            new Task(
+                (i + 5).toString(),
+                '',
+                new Date(),
+                0,
+                false,
+                false,
+                false,
+                TaskTypeEnum.Additional
+            )
+        )
     }
     const model = new DayCardModel(new Date(), tasks)
     const component = enzyme.shallow(<DayCard day={model} />)

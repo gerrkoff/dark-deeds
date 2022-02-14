@@ -1,10 +1,7 @@
 import { Api, api } from './api'
 
 export class HealthCheckApi {
-
-    public constructor(
-        private api: Api
-    ) {}
+    public constructor(private api: Api) {}
 
     public check(): Promise<string> {
         return this.api.get<string>('healthcheck')

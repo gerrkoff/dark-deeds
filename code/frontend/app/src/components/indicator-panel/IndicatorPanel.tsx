@@ -14,7 +14,10 @@ export class IndicatorPanel extends React.PureComponent<IProps> {
 
     constructor(props: IProps) {
         super(props)
-        this.checkIfDisconnectedInterval = setInterval(this.checkIfDisconnected, 5 * 1000)
+        this.checkIfDisconnectedInterval = setInterval(
+            this.checkIfDisconnected,
+            5 * 1000
+        )
     }
 
     public componentWillUnmount() {
@@ -24,10 +27,26 @@ export class IndicatorPanel extends React.PureComponent<IProps> {
     public render() {
         this.disconnected = this.evalDisconnected()
         return (
-            <div className='indicator-panel'>
-                {this.props.connecting ? <Icon name='globe' className='indicator-panel-process' /> : ''}
-                {this.props.saving ? <Icon name='save' className='indicator-panel-process' data-test-id='saving-indicator' /> : ''}
-                {!this.props.connecting && this.disconnected ? <Icon name='globe' className='indicator-panel-error' /> : ''}
+            <div className="indicator-panel">
+                {this.props.connecting ? (
+                    <Icon name="globe" className="indicator-panel-process" />
+                ) : (
+                    ''
+                )}
+                {this.props.saving ? (
+                    <Icon
+                        name="save"
+                        className="indicator-panel-process"
+                        data-test-id="saving-indicator"
+                    />
+                ) : (
+                    ''
+                )}
+                {!this.props.connecting && this.disconnected ? (
+                    <Icon name="globe" className="indicator-panel-error" />
+                ) : (
+                    ''
+                )}
             </div>
         )
     }
@@ -39,6 +58,9 @@ export class IndicatorPanel extends React.PureComponent<IProps> {
     }
 
     private evalDisconnected = (): boolean => {
-        return new Date().valueOf() - this.props.heartbeatLastTime.valueOf() > 65 * 1000
+        return (
+            new Date().valueOf() - this.props.heartbeatLastTime.valueOf() >
+            65 * 1000
+        )
     }
 }

@@ -9,11 +9,13 @@ export class AddTaskButton extends React.PureComponent<IProps> {
     public render() {
         return (
             <Button
-                primary circular
-                data-test-id='add-task-button'
-                icon='plus'
-                id='add-task-button'
-                onClick={this.props.openModal} />
+                primary
+                circular
+                data-test-id="add-task-button"
+                icon="plus"
+                id="add-task-button"
+                onClick={this.props.openModal}
+            />
         )
     }
 }

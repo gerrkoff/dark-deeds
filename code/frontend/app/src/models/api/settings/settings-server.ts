@@ -1,5 +1,3 @@
 export class SettingsServer {
-    constructor(
-        public showCompleted: boolean
-    ) {}
+    constructor(public showCompleted: boolean) {}
 }

@@ -1,3 +1,7 @@
 export enum SignupResultEnum {
-    Unknown, Success, UsernameAlreadyExists, PasswordInsecure, InvalidUsername
+    Unknown,
+    Success,
+    UsernameAlreadyExists,
+    PasswordInsecure,
+    InvalidUsername,
 }

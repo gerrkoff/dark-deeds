@@ -4,34 +4,50 @@ import { DateService, dateService } from './date-service'
 import { TaskService, taskService } from './task-service'
 
 export class TaskMoveService {
-
     public constructor(
         private dateService: DateService,
-        private taskService: TaskService,
+        private taskService: TaskService
     ) {}
 
-    public moveTask(tasks: Task[], taskId: string, targetDate: number, sourceDate: number, nextSiblingId: string | null): Task[] {
+    public moveTask(
+        tasks: Task[],
+        taskId: string,
+        targetDate: number,
+        sourceDate: number,
+        nextSiblingId: string | null
+    ): Task[] {
         const task = tasks.find(x => x.uid === taskId)
 
         if (task === undefined) {
             return tasks
         }
 
-        const filteredTasks = tasks.filter(x => x.type !== TaskTypeEnum.Additional)
+        const filteredTasks = tasks.filter(
+            x => x.type !== TaskTypeEnum.Additional
+        )
 
         const changedTasks = SetExtended.create<string>()
 
         changedTasks.add(this.changeTaskDate(task, targetDate))
-        changedTasks.addRange(this.changeTargetTasksOrder(filteredTasks, targetDate, task, nextSiblingId))
+        changedTasks.addRange(
+            this.changeTargetTasksOrder(
+                filteredTasks,
+                targetDate,
+                task,
+                nextSiblingId
+            )
+        )
         if (targetDate !== sourceDate) {
-            changedTasks.addRange(this.changeSourceTasksOrder(filteredTasks, sourceDate))
+            changedTasks.addRange(
+                this.changeSourceTasksOrder(filteredTasks, sourceDate)
+            )
         }
 
         for (let i = 0; i < tasks.length; i++) {
             if (changedTasks.has(tasks[i].uid)) {
                 tasks[i] = {
                     ...tasks[i],
-                    changed: true
+                    changed: true,
                 }
             }
         }
@@ -44,16 +60,24 @@ export class TaskMoveService {
         return task.uid
     }
 
-    private changeTargetTasksOrder(tasks: Task[], targetDate: number, task: Task, nextSiblingId: string | null): string[] {
+    private changeTargetTasksOrder(
+        tasks: Task[],
+        targetDate: number,
+        task: Task,
+        nextSiblingId: string | null
+    ): string[] {
         const targetTasks = tasks
-                .filter(x =>
+            .filter(
+                x =>
                     x.uid !== task.uid &&
-                    this.dateService.toNumber(x.date) === targetDate)
-                .sort(this.taskService.sorting)
+                    this.dateService.toNumber(x.date) === targetDate
+            )
+            .sort(this.taskService.sorting)
 
-        const movedTaskTargetIndex = nextSiblingId === null
-            ? null
-            : targetTasks.findIndex(x => x.uid === nextSiblingId)
+        const movedTaskTargetIndex =
+            nextSiblingId === null
+                ? null
+                : targetTasks.findIndex(x => x.uid === nextSiblingId)
 
         if (movedTaskTargetIndex === null) {
             targetTasks.push(task)
@@ -66,8 +90,13 @@ export class TaskMoveService {
         return this.adjustTasksOrder(targetTasks)
     }
 
-    private changeSourceTasksOrder(tasks: Task[], sourceDate: number): string[] {
-        const sourceTasks = tasks.filter(x => this.dateService.toNumber(x.date) === sourceDate).sort(this.taskService.sorting)
+    private changeSourceTasksOrder(
+        tasks: Task[],
+        sourceDate: number
+    ): string[] {
+        const sourceTasks = tasks
+            .filter(x => this.dateService.toNumber(x.date) === sourceDate)
+            .sort(this.taskService.sorting)
         return this.adjustTasksOrder(sourceTasks)
     }
 

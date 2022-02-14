@@ -1,7 +1,11 @@
 import * as React from 'react'
 import { DropdownItemProps, Form } from 'semantic-ui-react'
 import { DateInput } from '../../../common'
-import { PlannedRecurrence, RecurrenceWeekdayEnum, recurrenceWeekdayEnumValues } from '../../../../models'
+import {
+    PlannedRecurrence,
+    RecurrenceWeekdayEnum,
+    recurrenceWeekdayEnumValues,
+} from '../../../../models'
 import { enumExpand, enumReduce } from '../../../../helpers'
 import { ButtonPanel } from './ButtonPanel'
 import { dateService } from 'src/di/services/date-service'
@@ -18,65 +22,101 @@ export class RecurrenceEdit extends React.PureComponent<IProps> {
     public render() {
         return (
             <React.Fragment>
-                <Form
-                    className='recurrences-view-recurrence-item-form'>
-
+                <Form className="recurrences-view-recurrence-item-form">
                     <Form.Group>
                         <Form.Input
-                            label='Task...'
-                            placeholder='Task'
+                            label="Task..."
+                            placeholder="Task"
                             value={this.props.recurrence.task}
-                            onChange={(_, data) => this.handleTaskChange(data.value)} />
+                            onChange={(_, data) =>
+                                this.handleTaskChange(data.value)
+                            }
+                        />
                     </Form.Group>
                     <Form.Group>
                         <Form.Dropdown
-                            multiple selection
-                            data-test-id='create-recurrence-form-weekdays'
-                            label='Repeats...'
-                            placeholder='Every day of week'
+                            multiple
+                            selection
+                            data-test-id="create-recurrence-form-weekdays"
+                            label="Repeats..."
+                            placeholder="Every day of week"
                             options={weekdayOptions}
-                            value={this.parseWeekday(this.props.recurrence.everyWeekday)}
-                            onChange={(_, data) => this.handleWeekdayChange(data.value as RecurrenceWeekdayEnum[])} />
+                            value={this.parseWeekday(
+                                this.props.recurrence.everyWeekday
+                            )}
+                            onChange={(_, data) =>
+                                this.handleWeekdayChange(
+                                    data.value as RecurrenceWeekdayEnum[]
+                                )
+                            }
+                        />
                         <Form.Dropdown
-                            multiple selection
-                            placeholder='Every date of month'
+                            multiple
+                            selection
+                            placeholder="Every date of month"
                             options={monthdayOptions}
-                            value={this.parseMonthday(this.props.recurrence.everyMonthDay)}
-                            onChange={(_, data) => this.handleMonthdayChange(data.value as number[])} />
+                            value={this.parseMonthday(
+                                this.props.recurrence.everyMonthDay
+                            )}
+                            onChange={(_, data) =>
+                                this.handleMonthdayChange(
+                                    data.value as number[]
+                                )
+                            }
+                        />
                         <Form.Input
-                            placeholder='Every nth day'
-                            type='number'
-                            value={this.props.recurrence.everyNthDay === null ? '' : this.props.recurrence.everyNthDay}
-                            onChange={(_, data) => this.handleNthDayChange(data.value)} />
+                            placeholder="Every nth day"
+                            type="number"
+                            value={
+                                this.props.recurrence.everyNthDay === null
+                                    ? ''
+                                    : this.props.recurrence.everyNthDay
+                            }
+                            onChange={(_, data) =>
+                                this.handleNthDayChange(data.value)
+                            }
+                        />
                     </Form.Group>
                     <Form.Group>
                         <Form.Field>
                             <label>Within...</label>
                             <DateInput
-                                closable hideMobileKeyboard readonly
-                                placeholder='From'
-                                name='startDate'
+                                closable
+                                hideMobileKeyboard
+                                readonly
+                                placeholder="From"
+                                name="startDate"
                                 icon={false}
                                 dateFormat={this.dateService.dateInputFormat}
-                                value={this.parseDate(this.props.recurrence.startDate)}
-                                onChange={this.handleDateChange} />
+                                value={this.parseDate(
+                                    this.props.recurrence.startDate
+                                )}
+                                onChange={this.handleDateChange}
+                            />
                         </Form.Field>
                         <Form.Field>
                             <DateInput
-                                closable hideMobileKeyboard readonly clearable
-                                placeholder='Untill'
-                                name='endDate'
+                                closable
+                                hideMobileKeyboard
+                                readonly
+                                clearable
+                                placeholder="Untill"
+                                name="endDate"
                                 icon={false}
                                 dateFormat={this.dateService.dateInputFormat}
-                                value={this.parseDate(this.props.recurrence.endDate)}
-                                onChange={this.handleDateChange} />
+                                value={this.parseDate(
+                                    this.props.recurrence.endDate
+                                )}
+                                onChange={this.handleDateChange}
+                            />
                         </Form.Field>
                     </Form.Group>
                 </Form>
                 <ButtonPanel
                     isEditing={true}
                     onChangeEditing={this.props.stopEditing}
-                    onDelete={this.props.delete} />
+                    onDelete={this.props.delete}
+                />
             </React.Fragment>
         )
     }
@@ -89,21 +129,26 @@ export class RecurrenceEdit extends React.PureComponent<IProps> {
         return this.dateService.toDateString(date)
     }
 
-    private handleDateChange = (_: any, event: { name: string, value: string }) => {
+    private handleDateChange = (
+        _: any,
+        event: { name: string; value: string }
+    ) => {
         if (event.name !== 'startDate' && event.name !== 'endDate') {
             return
         }
 
-        const date = event.value === ''
-            ? null
-            : new Date(Date.parse(event.value))
+        const date =
+            event.value === '' ? null : new Date(Date.parse(event.value))
         if (event.name === 'startDate' && date !== null) {
             this.props.recurrence.startDate = date
         } else {
             this.props.recurrence.endDate = date
         }
 
-        if (this.props.recurrence.endDate !== null && this.props.recurrence.startDate > this.props.recurrence.endDate) {
+        if (
+            this.props.recurrence.endDate !== null &&
+            this.props.recurrence.startDate > this.props.recurrence.endDate
+        ) {
             if (event.name === 'startDate') {
                 this.props.recurrence.endDate = new Date(date!)
             } else {
@@ -114,7 +159,9 @@ export class RecurrenceEdit extends React.PureComponent<IProps> {
         this.props.changeRecurrence(this.props.recurrence)
     }
 
-    private parseWeekday = (weekday: RecurrenceWeekdayEnum | null): RecurrenceWeekdayEnum[] => {
+    private parseWeekday = (
+        weekday: RecurrenceWeekdayEnum | null
+    ): RecurrenceWeekdayEnum[] => {
         if (weekday === null) {
             return []
         }
@@ -134,23 +181,20 @@ export class RecurrenceEdit extends React.PureComponent<IProps> {
     }
 
     private handleWeekdayChange = (values: RecurrenceWeekdayEnum[]) => {
-        this.props.recurrence.everyWeekday = values.length === 0
-            ? null
-            : enumReduce(values)
+        this.props.recurrence.everyWeekday =
+            values.length === 0 ? null : enumReduce(values)
         this.props.changeRecurrence(this.props.recurrence)
     }
 
     private handleMonthdayChange = (values: number[]) => {
-        this.props.recurrence.everyMonthDay = values.length === 0
-            ? null
-            : values.join(',')
+        this.props.recurrence.everyMonthDay =
+            values.length === 0 ? null : values.join(',')
         this.props.changeRecurrence(this.props.recurrence)
     }
 
     private handleNthDayChange = (value: string) => {
-        this.props.recurrence.everyNthDay = value.length === 0
-            ? null
-            : Number.parseInt(value, 10)
+        this.props.recurrence.everyNthDay =
+            value.length === 0 ? null : Number.parseInt(value, 10)
         this.props.changeRecurrence(this.props.recurrence)
     }
 }
@@ -162,7 +206,7 @@ const weekdayOptions: DropdownItemProps[] = [
     { key: '4', text: 'Thursday', value: RecurrenceWeekdayEnum.Thursday },
     { key: '5', text: 'Friday', value: RecurrenceWeekdayEnum.Friday },
     { key: '6', text: 'Saturday', value: RecurrenceWeekdayEnum.Saturday },
-    { key: '7', text: 'Sunday', value: RecurrenceWeekdayEnum.Sunday }
+    { key: '7', text: 'Sunday', value: RecurrenceWeekdayEnum.Sunday },
 ]
 
 const monthdayOptions: DropdownItemProps[] = []
@@ -170,6 +214,6 @@ for (let i = 1; i <= 31; i++) {
     monthdayOptions.push({
         key: `${i}`,
         text: `${i}`,
-        value: i
+        value: i,
     })
 }

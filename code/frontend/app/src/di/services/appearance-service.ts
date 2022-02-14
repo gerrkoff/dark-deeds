@@ -1,10 +1,11 @@
 import { AppearanceThemeEnum } from '../../models'
-import { LocalSettingsService, localSettingsService } from './local-settings-service'
+import {
+    LocalSettingsService,
+    localSettingsService,
+} from './local-settings-service'
 
 export class AppearanceService {
-    public constructor(
-        private localSettingsService: LocalSettingsService
-    ) {}
+    public constructor(private localSettingsService: LocalSettingsService) {}
 
     public initTheme() {
         const theme = this.localSettingsService.load().appearanceTheme

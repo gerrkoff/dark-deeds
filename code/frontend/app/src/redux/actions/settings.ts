@@ -7,7 +7,7 @@ import { localSettingsService } from 'src/di/services/local-settings-service'
 import { appearanceService } from 'src/di/services/appearance-service'
 
 export function saveServerSettings(settings: SettingsServer) {
-    return async(dispatch: ThunkDispatch<actions.SettingsAction>) => {
+    return async (dispatch: ThunkDispatch<actions.SettingsAction>) => {
         dispatch({ type: actions.SETTINGS_SERVER_SAVE_PROCESSING })
 
         try {
@@ -20,15 +20,18 @@ export function saveServerSettings(settings: SettingsServer) {
 }
 
 export function loadSettings() {
-    return async(dispatch: ThunkDispatch<actions.SettingsAction>) => {
+    return async (dispatch: ThunkDispatch<actions.SettingsAction>) => {
         const localSettings = localSettingsService.load()
-        dispatch({ type: actions.SETTINGS_CLIENT_CHANGE, settings: localSettings })
+        dispatch({
+            type: actions.SETTINGS_CLIENT_CHANGE,
+            settings: localSettings,
+        })
         await dispatch(loadServerSettings())
     }
 }
 
 export function loadServerSettings() {
-    return async(dispatch: ThunkDispatch<actions.SettingsAction>) => {
+    return async (dispatch: ThunkDispatch<actions.SettingsAction>) => {
         dispatch({ type: actions.SETTINGS_SERVER_LOAD_PROCESSING })
 
         try {
@@ -41,11 +44,15 @@ export function loadServerSettings() {
     }
 }
 
-export function changeServerSettings(settings: SettingsServer): actions.ISettingsServerChange {
+export function changeServerSettings(
+    settings: SettingsServer
+): actions.ISettingsServerChange {
     return { type: actions.SETTINGS_SERVER_CHANGE, settings }
 }
 
-export function changeClientSettings(settings: SettingsClient): actions.ISettingsClientChange {
+export function changeClientSettings(
+    settings: SettingsClient
+): actions.ISettingsClientChange {
     appearanceService.applyTheme(settings.appearanceTheme)
     const localSettings = localSettingsService.load()
     localSettings.appearanceTheme = settings.appearanceTheme

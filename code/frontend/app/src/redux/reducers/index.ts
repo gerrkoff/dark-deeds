@@ -9,16 +9,17 @@ import { settings } from './settings'
 import { recurrencesView } from './recurrencesView'
 import { connectRouter } from 'connected-react-router'
 
-const createRootReducer = (history: any) => combineReducers({
-    router: connectRouter(history),
-    editTask,
-    login,
-    modalConfirm,
-    tasks,
-    general,
-    telegramIntegration,
-    settings,
-    recurrencesView
-})
+const createRootReducer = (history: any) =>
+    combineReducers({
+        router: connectRouter(history),
+        editTask,
+        login,
+        modalConfirm,
+        tasks,
+        general,
+        telegramIntegration,
+        settings,
+        recurrencesView,
+    })
 
 export default createRootReducer

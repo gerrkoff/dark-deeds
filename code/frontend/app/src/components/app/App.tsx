@@ -42,15 +42,19 @@ export class App extends React.PureComponent<IAppProps> {
     public render() {
         return (
             <React.Fragment>
-                <Toolbar path={this.props.path} navigateTo={this.props.navigateTo} />
-                <Container>
-                    {this.props.children}
-                </Container>
+                <Toolbar
+                    path={this.props.path}
+                    navigateTo={this.props.navigateTo}
+                />
+                <Container>{this.props.children}</Container>
                 <EditTaskModal />
                 <Dimmer active={this.props.appLoading}>
                     <Loader />
                 </Dimmer>
-                <Shortcuts openEditTask={this.props.openEditTask} createRecurrences={this.props.createRecurrences} />
+                <Shortcuts
+                    openEditTask={this.props.openEditTask}
+                    createRecurrences={this.props.createRecurrences}
+                />
                 <ModalConfirm />
                 <IndicatorPanel />
             </React.Fragment>

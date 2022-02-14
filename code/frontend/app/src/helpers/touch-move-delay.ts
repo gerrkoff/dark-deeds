@@ -6,14 +6,16 @@ export class TouchMoveDelay {
     constructor(
         elem: HTMLElement | undefined,
         private delay: number,
-        private elemReadyCallback: (ready: boolean) => void) {
-
+        private elemReadyCallback: (ready: boolean) => void
+    ) {
         this.elem = elem
         if (this.elem === undefined) {
             return
         }
         this.elem.addEventListener('touchstart', this.handleTouchStart)
-        this.elem.addEventListener('touchmove', this.handleTouchMove, { passive: true })
+        this.elem.addEventListener('touchmove', this.handleTouchMove, {
+            passive: true,
+        })
         this.elem.addEventListener('touchend', this.handleTouchEnd)
         this.elem.addEventListener('touchcancel', this.handleTouchEnd)
     }

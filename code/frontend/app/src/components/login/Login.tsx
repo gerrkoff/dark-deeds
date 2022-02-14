@@ -17,12 +17,28 @@ interface IProps {
 export class Login extends React.PureComponent<IProps> {
     public render() {
         return (
-            <Segment data-test-id='login-component' id='login-container' inverted raised>
+            <Segment
+                data-test-id="login-component"
+                id="login-container"
+                inverted
+                raised
+            >
                 <Form>
-                    {this.props.formSignin
-                        ? <Signin processing={this.props.processing} signinResult={this.props.signinResult} signin={this.props.signin} switchForm={this.props.switchForm} />
-                        : <Signup processing={this.props.processing} signupResult={this.props.signupResult} signup={this.props.signup} switchForm={this.props.switchForm} />
-                    }
+                    {this.props.formSignin ? (
+                        <Signin
+                            processing={this.props.processing}
+                            signinResult={this.props.signinResult}
+                            signin={this.props.signin}
+                            switchForm={this.props.switchForm}
+                        />
+                    ) : (
+                        <Signup
+                            processing={this.props.processing}
+                            signupResult={this.props.signupResult}
+                            signup={this.props.signup}
+                            switchForm={this.props.switchForm}
+                        />
+                    )}
                 </Form>
             </Segment>
         )

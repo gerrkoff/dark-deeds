@@ -1,3 +1,5 @@
 export enum SigninResultEnum {
-    Unknown, Success, WrongUsernamePassword
+    Unknown,
+    Success,
+    WrongUsernamePassword,
 }

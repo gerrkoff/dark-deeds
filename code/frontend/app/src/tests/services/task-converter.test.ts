@@ -11,7 +11,7 @@ function serviceWithToday(date?: Date): TaskConverter {
         date = new Date(2019, 0, 1)
     }
     const dateServiceMock = {
-        today: jest.fn().mockImplementation(() => date)
+        today: jest.fn().mockImplementation(() => date),
     }
     return new TaskConverter(dateServiceMock as unknown as DateService)
 }
@@ -249,66 +249,77 @@ test('[convertModelToString] no date', () => {
 
 test('[convertModelToString] date & no time', () => {
     const service = serviceWithToday()
-    const result = service.convertModelToString(new TaskModel('Test!',
-        new Date(new Date().getFullYear(), 11, 11)
-    ))
+    const result = service.convertModelToString(
+        new TaskModel('Test!', new Date(new Date().getFullYear(), 11, 11))
+    )
     expect(result).toBe('1211 Test!')
 })
 
 test('[convertModelToString] date & time', () => {
     const service = serviceWithToday()
-    const result = service.convertModelToString(new TaskModel('Test!',
-        new Date(new Date().getFullYear(), 11, 11),
-        TaskTypeEnum.Simple,
-        false,
-        1439
-    ))
+    const result = service.convertModelToString(
+        new TaskModel(
+            'Test!',
+            new Date(new Date().getFullYear(), 11, 11),
+            TaskTypeEnum.Simple,
+            false,
+            1439
+        )
+    )
     expect(result).toBe('1211 2359 Test!')
 })
 
 test('[convertModelToString] date & time less ten', () => {
     const service = serviceWithToday()
-    const result = service.convertModelToString(new TaskModel('Test!',
-        new Date(new Date().getFullYear(), 0, 1),
-        TaskTypeEnum.Simple,
-        false,
-        61
-    ))
+    const result = service.convertModelToString(
+        new TaskModel(
+            'Test!',
+            new Date(new Date().getFullYear(), 0, 1),
+            TaskTypeEnum.Simple,
+            false,
+            61
+        )
+    )
     expect(result).toBe('0101 0101 Test!')
 })
 
 test('[convertModelToString] is probable', () => {
     const service = serviceWithToday()
-    const result = service.convertModelToString(new TaskModel('Test!',
-        null,
-        TaskTypeEnum.Simple,
-        true
-    ))
+    const result = service.convertModelToString(
+        new TaskModel('Test!', null, TaskTypeEnum.Simple, true)
+    )
     expect(result).toBe('Test! ?')
 })
 
 test('[convertModelToString] additional', () => {
     const service = serviceWithToday()
-    const result = service.convertModelToString(new TaskModel('Test!',
-        new Date(new Date().getFullYear(), 0, 1),
-        TaskTypeEnum.Additional
-    ))
+    const result = service.convertModelToString(
+        new TaskModel(
+            'Test!',
+            new Date(new Date().getFullYear(), 0, 1),
+            TaskTypeEnum.Additional
+        )
+    )
     expect(result).toBe('0101 Test! !')
 })
 
 test('[convertModelToString] additional and probable', () => {
     const service = serviceWithToday()
-    const result = service.convertModelToString(new TaskModel('Test!',
-        new Date(new Date().getFullYear(), 0, 1),
-        TaskTypeEnum.Additional, true
-    ))
+    const result = service.convertModelToString(
+        new TaskModel(
+            'Test!',
+            new Date(new Date().getFullYear(), 0, 1),
+            TaskTypeEnum.Additional,
+            true
+        )
+    )
     expect(result).toBe('0101 Test! ?!')
 })
 
 test('[convertModelToString] date with year', () => {
     const service = serviceWithToday()
-    const result = service.convertModelToString(new TaskModel('Test!',
-        new Date(2016, 11, 11)
-    ))
+    const result = service.convertModelToString(
+        new TaskModel('Test!', new Date(2016, 11, 11))
+    )
     expect(result).toBe('20161211 Test!')
 })

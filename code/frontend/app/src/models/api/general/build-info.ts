@@ -1,5 +1,3 @@
 export class BuildInfo {
-    constructor(
-        public appVersion: string
-    ) {}
+    constructor(public appVersion: string) {}
 }

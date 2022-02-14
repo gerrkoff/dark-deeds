@@ -1,3 +1,7 @@
 export enum AppearanceThemeEnum {
-    Dark, Light, Vk, Dolls, Nature
+    Dark,
+    Light,
+    Vk,
+    Dolls,
+    Nature,
 }
