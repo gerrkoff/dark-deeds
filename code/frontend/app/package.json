@@ -19,6 +19,7 @@
     "semantic-ui-react": "^0.88.1"
   },
   "devDependencies": {
+    "@semantic-ui-react/css-patch": "^1.0.0",
     "@types/enzyme": "^3.10.3",
     "@types/enzyme-adapter-react-16": "^1.0.5",
     "@types/jest": "^23.3.14",
@@ -28,13 +29,14 @@
     "@types/react-redux": "^7.1.22",
     "@types/react-router": "^5.1.2",
     "@types/react-router-dom": "^5.1.2",
-    "@semantic-ui-react/css-patch": "^1.0.0",
     "copyfiles": "2.1.0",
     "cross-env": "^5.2.1",
     "enzyme": "^3.10.0",
     "enzyme-adapter-react-16": "^1.15.1",
+    "husky": "^7.0.4",
     "node-sass": "^7.0.1",
     "npm-run-all": "^4.1.5",
+    "prettier": "^2.5.1",
     "react-scripts": "^5.0.0",
     "react-test-renderer": "^16.12.0",
     "typescript": "^4.5.5"
