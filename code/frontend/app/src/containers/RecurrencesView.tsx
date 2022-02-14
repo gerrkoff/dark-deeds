@@ -12,7 +12,7 @@ import {
     openModalConfirm,
     saveRecurrences,
 } from 'redux/actions'
-import { ModalConfirmAction,RecurrencesViewAction } from 'redux/constants'
+import { ModalConfirmAction, RecurrencesViewAction } from 'redux/constants'
 import { IAppState } from 'redux/types'
 
 function mapStateToProps({ recurrencesView }: IAppState) {

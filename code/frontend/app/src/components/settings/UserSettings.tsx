@@ -1,5 +1,5 @@
 import { SettingsDivider } from 'components/settings'
-import { AppearanceThemeEnum,SettingsClient, SettingsServer } from 'models'
+import { AppearanceThemeEnum, SettingsClient, SettingsServer } from 'models'
 import * as React from 'react'
 import { ISettings } from 'redux/types'
 import { Button, Checkbox, Form, Radio } from 'semantic-ui-react'

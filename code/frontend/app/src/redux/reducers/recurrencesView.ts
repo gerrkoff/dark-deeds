@@ -1,6 +1,6 @@
 import { dateService } from 'di/services/date-service'
 import { utilsService } from 'di/services/utils-service'
-import { copyArray,objectsEqual } from 'helpers'
+import { copyArray, objectsEqual } from 'helpers'
 import { PlannedRecurrence } from 'models'
 import * as actions from 'redux/constants'
 import { IRecurrencesViewState } from 'redux/types'

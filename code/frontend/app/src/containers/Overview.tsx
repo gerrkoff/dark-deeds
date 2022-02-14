@@ -1,6 +1,6 @@
 import { Overview } from 'components/overview'
 import { ThunkDispatch } from 'helpers'
-import { Task, TaskLoadingStateEnum,TaskModel } from 'models'
+import { Task, TaskLoadingStateEnum, TaskModel } from 'models'
 import { connect } from 'react-redux'
 import {
     changeAllTasks,

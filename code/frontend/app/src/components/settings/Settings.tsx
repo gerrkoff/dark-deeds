@@ -6,7 +6,7 @@ import {
     UserInfo,
     UserSettings,
 } from 'components/settings'
-import { SettingsClient,SettingsServer } from 'models'
+import { SettingsClient, SettingsServer } from 'models'
 import * as React from 'react'
 import { ISettings } from 'redux/types'
 import { Segment } from 'semantic-ui-react'

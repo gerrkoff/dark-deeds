@@ -14,7 +14,7 @@ import {
     taskHubStop,
     taskSave,
 } from 'redux/actions'
-import { EditTaskAction,RecurrencesViewAction } from 'redux/constants'
+import { EditTaskAction, RecurrencesViewAction } from 'redux/constants'
 import { IAppState } from 'redux/types'
 
 function mapStateToProps({ router, tasks, login }: IAppState) {

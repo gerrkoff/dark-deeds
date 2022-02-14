@@ -1,7 +1,7 @@
 import { RecurrenceItem } from 'components/recurrence/recurrence-item/ReccurenceItem'
 import { PlannedRecurrence } from 'models'
 import * as React from 'react'
-import { Button, Header, Icon, Placeholder,Segment } from 'semantic-ui-react'
+import { Button, Header, Icon, Placeholder, Segment } from 'semantic-ui-react'
 
 interface IProps {
     isLoadingRecurrences: boolean

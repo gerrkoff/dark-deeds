@@ -3,7 +3,7 @@ import { RecurrenceEdit } from 'components/recurrence/recurrence-item/components
 import { recurrenceService } from 'di/services/recurrence-service'
 import { PlannedRecurrence } from 'models'
 import * as React from 'react'
-import { Header,Segment } from 'semantic-ui-react'
+import { Header, Segment } from 'semantic-ui-react'
 
 interface IProps {
     recurrence: PlannedRecurrence

@@ -1,5 +1,5 @@
-import { DateService,dateService } from 'di/services/date-service'
-import { TaskService,taskService } from 'di/services/task-service'
+import { DateService, dateService } from 'di/services/date-service'
+import { TaskService, taskService } from 'di/services/task-service'
 import { SetExtended } from 'helpers'
 import { Task, TaskTypeEnum } from 'models'
 

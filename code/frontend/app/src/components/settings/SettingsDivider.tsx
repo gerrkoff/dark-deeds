@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Divider, Header,Icon } from 'semantic-ui-react'
+import { Divider, Header, Icon } from 'semantic-ui-react'
 
 interface IProps {
     label: string

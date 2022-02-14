@@ -1,4 +1,4 @@
-import { AppearanceThemeEnum,OverviewTabEnum } from 'models'
+import { AppearanceThemeEnum, OverviewTabEnum } from 'models'
 
 export class LocalSettings {
     constructor(
