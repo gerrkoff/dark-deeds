@@ -1,15 +1,15 @@
 @media (min-width: 1400px) {
-    .ui.container {
-        width: 1350px;
-    }
+  .ui.container {
+    width: 1350px;
+  }
 
-    #day-card {
-        min-width: 180px;
-    }
+  #day-card#day-card {
+    min-width: 180px;
+  }
 }
 
 @media (max-width: 1399px) {
-    .days-block:not(:last-child) {
-        margin-bottom: 1rem;
-    }
+  .days-block:not(:last-child) {
+    margin-bottom: 1rem;
+  }
 }

@@ -1,40 +1,40 @@
 @import 'shared/fonts.scss';
 
 .task-item {
-    font-size: $font-small;
-    cursor: pointer;
-    width: 100%;
-    display: inline-block;
-    padding-left: 0.5rem;
-    padding-top: 0.1rem;
-    padding-bottom: 0.1rem;
-    color: var(--clr-text-primary);
+  font-size: $font-small;
+  cursor: pointer;
+  width: 100%;
+  display: inline-block;
+  padding-left: 0.5rem;
+  padding-top: 0.1rem;
+  padding-bottom: 0.1rem;
+  color: var(--clr-text-primary);
 
-    /* NO SELECT */
-    -webkit-touch-callout: none; /* iOS Safari */
-      -webkit-user-select: none; /* Safari */
-       -khtml-user-select: none; /* Konqueror HTML */
-         -moz-user-select: none; /* Firefox */
-          -ms-user-select: none; /* Internet Explorer/Edge */
-              user-select: none; /* Non-prefixed version, currently
+  /* NO SELECT */
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none; /* Non-prefixed version, currently
                                     supported by Chrome and Opera */
 }
 
 .bulleted .task-item {
-    margin-left: -0.5rem;
+  margin-left: -0.5rem;
 }
 
 .task-item-selected {
-    border-radius: 2px;
-    background: var(--clr-base);
-    color: var(--clr-text-primary) !important;
+  border-radius: 2px;
+  background: var(--clr-base);
+  color: var(--clr-text-primary) !important;
 }
 
 .task-item-completed {
-    text-decoration: line-through;
-    color: var(--clr-text-secondary);
+  text-decoration: line-through;
+  color: var(--clr-text-secondary);
 }
 
 .task-item-probable {
-    font-style: italic;
+  font-style: italic;
 }

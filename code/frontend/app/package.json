@@ -55,8 +55,8 @@
     "eject": "react-scripts eject",
     "lint": "eslint . -c .eslintrc.js --ext .js,.jsx,.ts,.tsx",
     "lint:fix": "npm run lint -- --fix",
-    "fmt": "prettier --write \"**/*.+(js|jsx|json|yml|yaml|sass|md|ts|tsx)\"",
-    "fmt:check": "prettier --check \"**/*.+(js|jsx|json|yml|yaml|sass|md|ts|tsx)\"",
+    "fmt": "prettier --write \"**/*.+(js|jsx|json|yml|yaml|scss|md|ts|tsx)\"",
+    "fmt:check": "prettier --check \"**/*.+(js|jsx|json|yml|yaml|scss|md|ts|tsx)\"",
     "postinstall": "semantic-ui-css-patch"
   },
   "browserslist": {
