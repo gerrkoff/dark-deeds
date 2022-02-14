@@ -27,7 +27,8 @@
     "strict": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "noEmit": true
+    "noEmit": true,
+    "noFallthroughCasesInSwitch": true
   },
   "exclude": [
     "node_modules",
@@ -35,7 +36,7 @@
     "scripts",
     "acceptance-tests",
     "webpack",
-    "jest",
+    "jest"
   ],
   "include": [
     "src"

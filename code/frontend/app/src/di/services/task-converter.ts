@@ -37,7 +37,7 @@ export class TaskConverter {
 
         text = text.trimLeft()
 
-        if (/\s[\?!]+$/.test(text)) {
+        if (/\s[?!]+$/.test(text)) {
             text = result.extractFlags(text)
         }
 
