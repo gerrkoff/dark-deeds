@@ -9,6 +9,9 @@ module.exports = {
                 patterns: ['.*'],
             },
         ],
+        'simple-import-sort/imports': 'error',
+        'simple-import-sort/exports': 'error',
     },
     ignorePatterns: ['build/*'],
+    plugins: ['simple-import-sort'],
 }
