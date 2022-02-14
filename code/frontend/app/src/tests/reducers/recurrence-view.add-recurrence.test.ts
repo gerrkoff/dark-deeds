@@ -2,18 +2,10 @@ import { recurrencesView as recurrencesViewReducer } from '../../redux/reducers/
 import { IRecurrencesViewState } from '../../redux/types'
 import { PlannedRecurrence } from '../../models'
 import * as actions from '../../redux/constants'
+import { dateService } from 'src/di/services/date-service'
 
-jest.mock('src/di/services/date-service', () => {
-    const mock = {
-        dateService: {
-            today: jest.fn().mockImplementation(() => {
-                return new Date(2010, 10, 10)
-            })
-        },
-    }
-
-    return mock
-})
+jest.mock('src/di/services/date-service')
+dateService.today = () => new Date(2010, 10, 10)
 
 function createState(
     plannedRecurrences: PlannedRecurrence[] = []
@@ -49,23 +41,20 @@ test('[RECURRENCESVIEW_ADD_RECURRENCE] should return new objects for changed ite
     expect(result.plannedRecurrences[2]).toBe(recurrence3)
 })
 
-// TODO: fix
-// test('[RECURRENCESVIEW_CHANGE_RECURRENCE] should create new recurrence with default data', () => {
-//     // setup()
-//     const state = createState([createRecurrence('1')])
-//     const action: actions.IAddRecurrence = {
-//         type: actions.RECURRENCESVIEW_ADD_RECURRENCE
-//     }
-//     const result = recurrencesViewReducer(state, action)
+test('[RECURRENCESVIEW_CHANGE_RECURRENCE] should create new recurrence with default data', () => {
+    const state = createState([createRecurrence('1')])
+    const action: actions.IAddRecurrence = {
+        type: actions.RECURRENCESVIEW_ADD_RECURRENCE
+    }
+    const result = recurrencesViewReducer(state, action)
 
-//     expect(result.plannedRecurrences.length).toBe(2)
-//     expect(result.plannedRecurrences[1].task).toBe('')
-//     expect(result.plannedRecurrences[1].isDeleted).toBe(false)
-//     expect(result.plannedRecurrences[1].startDate.getTime()).toBe(new Date(2010, 10, 10).getTime())
-// })
+    expect(result.plannedRecurrences.length).toBe(2)
+    expect(result.plannedRecurrences[1].task).toBe('')
+    expect(result.plannedRecurrences[1].isDeleted).toBe(false)
+    expect(result.plannedRecurrences[1].startDate.getTime()).toBe(new Date(2010, 10, 10).getTime())
+})
 
 test('[RECURRENCESVIEW_CHANGE_RECURRENCE] should create recurrence with some id', () => {
-    // setup()
     const state = createState([createRecurrence('1')])
     const action: actions.IAddRecurrence = {
         type: actions.RECURRENCESVIEW_ADD_RECURRENCE

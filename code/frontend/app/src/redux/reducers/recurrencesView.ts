@@ -1,7 +1,7 @@
 import { IRecurrencesViewState } from '../types'
 import * as actions from '../constants'
 import { PlannedRecurrence } from '../../models'
-import { objectsEqual, copyArray } from '../..//helpers'
+import { objectsEqual, copyArray } from '../../helpers'
 import { utilsService } from 'src/di/services/utils-service'
 import { dateService } from 'src/di/services/date-service'
 
