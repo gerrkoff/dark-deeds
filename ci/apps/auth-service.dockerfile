@@ -1,6 +1,7 @@
 FROM mcr.microsoft.com/dotnet/sdk:5.0 AS builder
 
-COPY code/ /code/
+COPY code/backend/ /code/backend/
+COPY .editorconfig /code/backend/.editorconfig
 WORKDIR /code
 ARG BUILD_VERSION
 
