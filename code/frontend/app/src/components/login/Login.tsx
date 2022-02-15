@@ -1,9 +1,9 @@
+import 'styles/login.css'
+
 import { Signin, Signup } from 'components/login'
 import { SigninResultEnum, SignupResultEnum } from 'models'
 import * as React from 'react'
 import { Form, Segment } from 'semantic-ui-react'
-
-import 'styles/login.css'
 
 interface IProps {
     processing: boolean

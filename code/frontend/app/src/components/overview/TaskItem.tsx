@@ -1,10 +1,10 @@
+import 'styles/task-item.css'
+
+import { MenuPopup } from 'components/overview'
+import { TouchMoveDelay } from 'helpers'
+import { Task, TaskModel, Time } from 'models'
 import * as React from 'react'
 import { Icon, MenuItemProps } from 'semantic-ui-react'
-import { Task, TaskModel, Time } from 'models'
-import { TouchMoveDelay } from 'helpers'
-
-import 'styles/task-item.css'
-import { MenuPopup } from 'components/overview'
 
 interface IProps {
     task: Task

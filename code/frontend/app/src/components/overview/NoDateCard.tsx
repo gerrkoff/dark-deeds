@@ -1,10 +1,10 @@
-import * as React from 'react'
-import { List, Segment } from 'semantic-ui-react'
-
 import 'styles/no-date-card.css'
+
+import { TaskItem } from 'components/overview'
 import { taskService } from 'di/services/task-service'
 import { Task, TaskModel } from 'models'
-import { TaskItem } from 'components/overview'
+import * as React from 'react'
+import { List, Segment } from 'semantic-ui-react'
 
 interface IProps {
     tasks: Task[]

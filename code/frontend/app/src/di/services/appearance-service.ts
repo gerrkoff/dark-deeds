@@ -1,6 +1,6 @@
 import {
-    localSettingsService,
     LocalSettingsService,
+    localSettingsService,
 } from 'di/services/local-settings-service'
 import { AppearanceThemeEnum } from 'models'
 

@@ -1,15 +1,15 @@
 .menu-popup {
-    border: none !important;
-    padding: 0 !important;
+  border: none !important;
+  padding: 0 !important;
 }
 
 .menu-popup::before {
-    background: #fff !important;
-    box-shadow: none !important;
+  background: #fff !important;
+  box-shadow: none !important;
 }
 
 .menu-popup .menu {
-    border: none !important;
-    position: relative;
-    z-index: 10;
+  border: none !important;
+  position: relative;
+  z-index: 10;
 }

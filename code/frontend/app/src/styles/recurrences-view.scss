@@ -1,77 +1,77 @@
-
 @import 'shared/fonts.scss';
 
 #recurrences-view {
+  .recurrences-view-recurrence-list {
+    margin-top: 1rem;
 
-    .recurrences-view-recurrence-list {
-        margin-top: 1rem;
+    @media (max-width: 767px) {
+      margin-top: -1rem;
+    }
+  }
 
-        @media (max-width: 767px) {
-            margin-top: -1rem;
-        }
+  .recurrences-view-recurrence-item {
+    font-size: $font-less-normal;
+
+    .recurrences-view-recurrence-item-borders {
+      color: var(--clr-text-secondary);
+      padding-left: 1rem;
     }
 
-    .recurrences-view-recurrence-item {
-        font-size: $font-less-normal;
+    .recurrences-view-recurrence-item-form {
+      .fields {
+        align-items: flex-end;
+      }
 
-        .recurrences-view-recurrence-item-borders {
-            color: var(--clr-text-secondary);
-            padding-left: 1rem;
+      @media (max-width: 767px) {
+        .field {
+          padding-top: 0.3rem;
+          padding-bottom: 0.3rem;
+          width: 100%;
         }
 
-        .recurrences-view-recurrence-item-form  {
-            .fields {
-                align-items: flex-end;
-            }
-
-            @media (max-width: 767px) {
-                .field {
-                    padding-top: 0.3rem;
-                    padding-bottom: 0.3rem;
-                    width: 100%;
-                }
-
-                margin-bottom: 1.25rem;
-            }
-            @media (min-width: 768px) {
-                .field, [role='option'], .label {
-                    font-size: $font-small;
-                }
-            }
+        margin-bottom: 1.25rem;
+      }
+      @media (min-width: 768px) {
+        .field,
+        [role='option'],
+        .label {
+          font-size: $font-small;
         }
-
-        .recurrences-view-recurrence-item-btn {
-            cursor: pointer;
-            background-color: rgb(224, 225, 226);
-
-            i {
-                margin: 0;
-                min-width: 1rem;
-            }
-        }
+      }
     }
 
-    .recurrences-view-empty-state {
-        font-size: $font-less-normal;
+    .recurrences-view-recurrence-item-btn {
+      cursor: pointer;
+      background-color: rgb(224, 225, 226);
+
+      i {
+        margin: 0;
+        min-width: 1rem;
+      }
+    }
+  }
+
+  .recurrences-view-empty-state {
+    font-size: $font-less-normal;
+  }
+
+  .recurrences-view-side-panel {
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+
+    button {
+      min-width: 100%;
     }
 
-    .recurrences-view-side-panel {
-        width: 100%;
-        margin-left: 0;
-        margin-right: 0;
+    @media (max-width: 767px), (min-width: 992px) {
+      .recurrences-view-side-panel-group-1 button {
+        min-width: 8rem;
+      }
 
-        button {
-            min-width: 100%;
-        }
-
-        @media (max-width: 767px), (min-width: 992px) {
-            .recurrences-view-side-panel-group-1 button {
-                min-width: 8rem;
-            }
-
-            .recurrences-view-side-panel-group-2 button {
-                min-width: 12rem;
-            }
-        }
+      .recurrences-view-side-panel-group-2 button {
+        min-width: 12rem;
+      }
     }
+  }
 }

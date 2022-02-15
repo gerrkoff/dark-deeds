@@ -1,6 +1,6 @@
-import * as React from 'react'
 import { keyConstants } from 'di/services/key-constants'
 import { toastService } from 'di/services/toast-service'
+import * as React from 'react'
 
 interface IProps {
     openEditTask: () => void

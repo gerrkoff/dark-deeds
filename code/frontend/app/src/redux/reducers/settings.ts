@@ -1,5 +1,5 @@
-import * as actions from 'redux/constants'
 import { AppearanceThemeEnum } from 'models'
+import * as actions from 'redux/constants'
 import { ISettings } from 'redux/types'
 
 const inittialState: ISettings = {

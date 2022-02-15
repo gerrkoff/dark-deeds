@@ -1,19 +1,19 @@
-import { connect } from 'react-redux'
 import { RecurrencesView } from 'components/recurrence'
+import { ThunkDispatch } from 'helpers'
+import { PlannedRecurrence } from 'models'
+import { connect } from 'react-redux'
 import {
-    createRecurrences,
-    loadRecurrences,
     addRecurrence,
-    saveRecurrences,
     changeEdittingRecurrence,
     changeRecurrence,
-    openModalConfirm,
+    createRecurrences,
     deleteRecurrence,
+    loadRecurrences,
+    openModalConfirm,
+    saveRecurrences,
 } from 'redux/actions'
+import { ModalConfirmAction, RecurrencesViewAction } from 'redux/constants'
 import { IAppState } from 'redux/types'
-import { PlannedRecurrence } from 'models'
-import { ThunkDispatch } from 'helpers'
-import { RecurrencesViewAction, ModalConfirmAction } from 'redux/constants'
 
 function mapStateToProps({ recurrencesView }: IAppState) {
     return {

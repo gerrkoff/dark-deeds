@@ -1,7 +1,7 @@
-import { recurrencesView as recurrencesViewReducer } from 'redux/reducers/recurrencesView'
-import { IRecurrencesViewState } from 'redux/types'
 import { PlannedRecurrence } from 'models'
 import * as actions from 'redux/constants'
+import { recurrencesView as recurrencesViewReducer } from 'redux/reducers/recurrencesView'
+import { IRecurrencesViewState } from 'redux/types'
 
 function createState(
     plannedRecurrences: PlannedRecurrence[] = []

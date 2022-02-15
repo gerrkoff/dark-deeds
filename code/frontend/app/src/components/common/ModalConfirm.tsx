@@ -1,6 +1,7 @@
+import 'styles/menu-popup.css'
+
 import * as React from 'react'
 import { Button, Header, Icon, Modal } from 'semantic-ui-react'
-import 'styles/menu-popup.css'
 
 interface IProps {
     action: () => void

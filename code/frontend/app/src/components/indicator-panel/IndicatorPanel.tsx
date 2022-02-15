@@ -1,7 +1,7 @@
+import 'styles/indicator-panel.css'
+
 import * as React from 'react'
 import { Icon } from 'semantic-ui-react'
-
-import 'styles/indicator-panel.css'
 
 interface IProps {
     saving: boolean

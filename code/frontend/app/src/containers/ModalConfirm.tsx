@@ -1,9 +1,9 @@
-import { connect } from 'react-redux'
 import { ModalConfirm } from 'components/common'
-import { closeModalConfirm } from 'redux/actions'
-import { IAppState } from 'redux/types'
 import { ThunkDispatch } from 'helpers'
+import { connect } from 'react-redux'
+import { closeModalConfirm } from 'redux/actions'
 import { ModalConfirmAction } from 'redux/constants'
+import { IAppState } from 'redux/types'
 
 function mapStateToProps({ modalConfirm }: IAppState) {
     return {

@@ -1,21 +1,21 @@
-import { connect } from 'react-redux'
 import { Overview } from 'components/overview'
-import { Task, TaskModel, TaskLoadingStateEnum } from 'models'
+import { ThunkDispatch } from 'helpers'
+import { Task, TaskLoadingStateEnum, TaskModel } from 'models'
+import { connect } from 'react-redux'
 import {
     changeAllTasks,
-    openEditTaskWithModel,
-    openEditTaskModal,
-    openModalConfirm,
     changeTaskStatus,
+    openEditTaskModal,
+    openEditTaskWithModel,
+    openModalConfirm,
 } from 'redux/actions'
-import { IAppState } from 'redux/types'
-import { ThunkDispatch } from 'helpers'
 import {
-    RecurrencesViewAction,
-    ModalConfirmAction,
     EditTaskAction,
+    ModalConfirmAction,
+    RecurrencesViewAction,
     TasksAction,
 } from 'redux/constants'
+import { IAppState } from 'redux/types'
 
 function mapStateToProps({ tasks, settings }: IAppState) {
     return {

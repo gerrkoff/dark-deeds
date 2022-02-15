@@ -1,9 +1,9 @@
-import { connect } from 'react-redux'
 import { Login } from 'components/login'
-import { signin, signup, switchForm } from 'redux/actions'
-import { IAppState } from 'redux/types'
 import { ThunkDispatch } from 'helpers'
+import { connect } from 'react-redux'
+import { signin, signup, switchForm } from 'redux/actions'
 import { LoginAction } from 'redux/constants'
+import { IAppState } from 'redux/types'
 
 function mapStateToProps({ login }: IAppState) {
     return {

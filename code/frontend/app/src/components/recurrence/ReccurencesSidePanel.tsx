@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Button, Menu, Icon } from 'semantic-ui-react'
+import { Button, Icon, Menu } from 'semantic-ui-react'
 
 interface IProps {
     noRecurrencesCreated: boolean

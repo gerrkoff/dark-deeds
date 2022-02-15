@@ -1,7 +1,7 @@
-import * as enzyme from 'enzyme'
-import * as React from 'react'
-import { DayCardModel } from 'models'
 import { DaysBlock } from 'components/overview/'
+import * as enzyme from 'enzyme'
+import { DayCardModel } from 'models'
+import * as React from 'react'
 
 test('renders days and blocks', () => {
     const days = []
