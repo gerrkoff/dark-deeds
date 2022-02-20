@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using DarkDeeds.WebClientBff.Infrastructure.Communication.TaskServiceApp;
-using DarkDeeds.WebClientBff.Infrastructure.Communication.TaskServiceApp.Dto;
+using DarkDeeds.ServiceTask.Consumers;
+using DarkDeeds.ServiceTask.Dto;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 
@@ -16,7 +16,7 @@ namespace DarkDeeds.WebClientBff.Web.Hubs
         {
             _taskServiceApp = taskServiceApp;
         }
-        
+
         // TODO: remove
         public async Task Save(ICollection<TaskDto> tasks)
         {

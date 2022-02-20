@@ -1,4 +1,4 @@
-using DarkDeeds.ServiceTask.Entities.Models;
+using DarkDeeds.ServiceTask.Entities;
 
 namespace DarkDeeds.ServiceTask.Infrastructure.Data.EntityRepository
 {

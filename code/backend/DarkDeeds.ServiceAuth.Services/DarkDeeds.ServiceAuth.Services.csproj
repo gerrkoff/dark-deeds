@@ -9,6 +9,7 @@
       <ProjectReference Include="..\DarkDeeds.Authentication.Core\DarkDeeds.Authentication.Core.csproj" />
       <ProjectReference Include="..\DarkDeeds.Backend.Entities\DarkDeeds.Backend.Entities.csproj" />
       <ProjectReference Include="..\DarkDeeds.Common\DarkDeeds.Common.csproj" />
+      <ProjectReference Include="..\DarkDeeds.ServiceAuth.Dto\DarkDeeds.ServiceAuth.Dto.csproj" />
     </ItemGroup>
 
     <ItemGroup>

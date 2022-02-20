@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using DarkDeeds.ServiceTask.Entities.Enums;
-using DarkDeeds.ServiceTask.Models.Dto;
+using DarkDeeds.ServiceTask.Dto;
+using DarkDeeds.ServiceTask.Enums;
 using DarkDeeds.ServiceTask.Services.Interface;
 
 namespace DarkDeeds.ServiceTask.Services.Implementation
@@ -22,12 +22,12 @@ namespace DarkDeeds.ServiceTask.Services.Implementation
             var taskDto = new TaskDto();
             int year = 0, month = 0, day = 0, dayAdjustment = 0;
             bool withDate = false;
-            
-            if (!ignoreDate) 
+
+            if (!ignoreDate)
                 task = ParseDate(task, out year, out month, out day, out withDate, out dayAdjustment);
             task = ParseTime(task, out int hour, out int minutes, out bool withTime);
             task = ParseFlags(task, out bool isProbable, out TaskTypeEnum type);
-            
+
             taskDto.Title = task;
             taskDto.Type = type;
             taskDto.IsProbable = isProbable;
@@ -35,14 +35,14 @@ namespace DarkDeeds.ServiceTask.Services.Implementation
                 taskDto.Date = CreateDateTime(year, month, day, dayAdjustment);
             if (withTime)
                 taskDto.Time = hour * 60 + minutes;
-                
+
             return taskDto;
         }
 
         private string ParseFlags(string task, out bool isProbable, out TaskTypeEnum type)
         {
             var flagsRx = new Regex(@"\s[\?!]+$");
-            
+
             isProbable = false;
             type = TaskTypeEnum.Simple;
 
@@ -125,14 +125,14 @@ namespace DarkDeeds.ServiceTask.Services.Implementation
                 day = _dateService.Today.Day;
                 withDate = true;
             }
-            
+
             if (!string.IsNullOrEmpty(date))
             {
                 month = int.Parse(date.Substring(0, 2));
                 day = int.Parse(date.Substring(2, 2));
                 withDate = true;
             }
-            
+
             return task;
         }
 
@@ -180,7 +180,7 @@ namespace DarkDeeds.ServiceTask.Services.Implementation
         {
             int hour = time / 60;
             int minute = time % 60;
-            return $"{hour:D2}:{minute:D2}";  
-        } 
+            return $"{hour:D2}:{minute:D2}";
+        }
     }
 }

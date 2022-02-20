@@ -1,6 +1,6 @@
 using System;
 using System.Threading.Tasks;
-using DarkDeeds.TelegramClient.Infrastructure.Communication.TaskServiceApp;
+using DarkDeeds.ServiceTask.Consumers;
 using DarkDeeds.TelegramClient.Services.Interface;
 using DarkDeeds.TelegramClient.Services.Models.Commands;
 
@@ -26,7 +26,7 @@ namespace DarkDeeds.TelegramClient.Services.Implementation
         {
             if (CheckAndTrimCommand(StartCommand, command, out var args))
                 return new StartCommand(args);
-            
+
             if (CheckAndTrimCommand(TodoCommand, command, out args))
             {
                 int timeAdjustment = await _telegramService.GetUserTimeAdjustment(chatId);
@@ -39,7 +39,7 @@ namespace DarkDeeds.TelegramClient.Services.Implementation
 
             return null;
         }
-        
+
         private bool CheckAndTrimCommand(string command, string text, out string args)
         {
             args = string.Empty;

@@ -3,6 +3,8 @@ using DarkDeeds.Authentication;
 using DarkDeeds.Backend.Data;
 using DarkDeeds.Common.Web;
 using DarkDeeds.Communication;
+using DarkDeeds.ServiceAuth.Consumers.Impl;
+using DarkDeeds.ServiceTask.Consumers.Impl;
 using DarkDeeds.TelegramClient.Web;
 using DarkDeeds.WebClientBff.Web;
 using Microsoft.AspNetCore.Builder;
@@ -33,6 +35,8 @@ namespace DarkDeeds.Backend.App
             services.AddBackendDatabase(Configuration);
             services.AddTelegramClient(Configuration);
             services.AddWebClient(Configuration);
+            services.AddTaskServiceApp(Configuration);
+            services.AddAuthServiceApp(Configuration);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

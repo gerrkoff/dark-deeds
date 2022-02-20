@@ -1,6 +1,6 @@
 using System;
-using DarkDeeds.ServiceTask.Entities.Enums;
-using DarkDeeds.ServiceTask.Entities.Models;
+using DarkDeeds.ServiceTask.Entities;
+using DarkDeeds.ServiceTask.Enums;
 
 namespace DarkDeeds.ServiceTask.Services.Specifications
 {
@@ -13,7 +13,7 @@ namespace DarkDeeds.ServiceTask.Services.Specifications
                              x.Date >= from);
             return this;
         }
-        
+
         public ITaskSpecification FilterDateInterval(DateTime from, DateTime to)
         {
             Filters.Add(x => x.Date.HasValue && x.Date >= from && x.Date < to);

@@ -4,9 +4,9 @@ using System.Threading.Tasks;
 using DarkDeeds.MongoMigrator.PostgreDal.Models;
 using DarkDeeds.MongoMigrator.PostgreDal.Repository;
 using DarkDeeds.ServiceTask.Data.EntityRepository;
-using DarkDeeds.ServiceTask.Entities.Enums;
+using DarkDeeds.ServiceTask.Enums;
 using Microsoft.EntityFrameworkCore;
-using RecurrenceEntity = DarkDeeds.ServiceTask.Entities.Models.RecurrenceEntity;
+using RecurrenceEntity = DarkDeeds.ServiceTask.Entities.RecurrenceEntity;
 
 namespace DarkDeeds.MongoMigrator.Processors
 {
@@ -24,7 +24,7 @@ namespace DarkDeeds.MongoMigrator.Processors
             _dryRun = dryRun;
             _progressNotifier = progressNotifier;
         }
-        
+
         public async Task<(int, int, int)> Process()
         {
             var total = 0;
@@ -43,7 +43,7 @@ namespace DarkDeeds.MongoMigrator.Processors
                     if (mongoPlannedRecurrence.UserId != pgPlannedRecurrence.UserId)
                         warning++;
                 }
-                
+
                 if (!_dryRun)
                     await Upsert(pgPlannedRecurrence);
 
@@ -55,7 +55,7 @@ namespace DarkDeeds.MongoMigrator.Processors
 
         private async Task Upsert(PlannedRecurrenceEntity pgPlannedRecurrence)
         {
-            var mongoPlannedRecurrence = new ServiceTask.Entities.Models.PlannedRecurrenceEntity()
+            var mongoPlannedRecurrence = new ServiceTask.Entities.PlannedRecurrenceEntity()
             {
                 Task = pgPlannedRecurrence.Task,
                 StartDate = DateTime.SpecifyKind(pgPlannedRecurrence.StartDate, DateTimeKind.Utc),

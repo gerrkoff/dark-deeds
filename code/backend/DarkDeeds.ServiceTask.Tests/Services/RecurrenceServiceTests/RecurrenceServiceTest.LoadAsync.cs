@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using DarkDeeds.ServiceTask.Entities.Models;
+using DarkDeeds.ServiceTask.Entities;
 using DarkDeeds.ServiceTask.Services.Implementation;
 using DarkDeeds.ServiceTask.Services.Interface;
 using DarkDeeds.ServiceTask.Services.Specifications;
@@ -21,7 +21,7 @@ namespace DarkDeeds.ServiceTask.Tests.Services.RecurrenceServiceTests
             _specFactoryMock.Setup(x => x.New<IPlannedRecurrenceSpecification, PlannedRecurrenceEntity>())
                 .Returns(_plannedRecurrenceSpecMock.Object);
         }
-        
+
         [Fact]
         public async Task LoadActualTasksAsync_Positive()
         {
@@ -32,11 +32,11 @@ namespace DarkDeeds.ServiceTask.Tests.Services.RecurrenceServiceTests
                 StartDate = new DateTime(1, DateTimeKind.Unspecified),
                 EndDate = new DateTime(1, DateTimeKind.Unspecified)
             });
-            
+
             var service = new RecurrenceService(repoMock.Object, Mapper, _specFactoryMock.Object);
 
             var result = (await service.LoadAsync(userId)).ToList();
-            
+
             Assert.Equal(DateTimeKind.Utc, result[0].StartDate.Kind);
             Assert.Equal(DateTimeKind.Utc, result[0].EndDate!.Value.Kind);
             _plannedRecurrenceSpecMock.Verify(x => x.FilterUserOwned(userId));

@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
-using DarkDeeds.TelegramClient.Infrastructure.Communication.TaskServiceApp;
-using DarkDeeds.TelegramClient.Infrastructure.Communication.TaskServiceApp.Dto;
+using DarkDeeds.ServiceTask.Consumers;
+using DarkDeeds.ServiceTask.Dto;
 using DarkDeeds.TelegramClient.Services.Implementation;
 using DarkDeeds.TelegramClient.Services.Interface;
 using DarkDeeds.TelegramClient.Services.Models.Commands;
@@ -26,7 +26,7 @@ namespace DarkDeeds.TelegramClient.Tests.Services
             Assert.IsType<CreateTaskCommand>(result);
             Assert.Same(task, ((CreateTaskCommand) result).Task);
         }
-        
+
         [Fact]
         public async Task ProcessMessage_ShowTodo()
         {
@@ -42,7 +42,7 @@ namespace DarkDeeds.TelegramClient.Tests.Services
             Assert.Equal(new DateTime(2010, 10, 10), ((ShowTodoCommand) result).From);
             Assert.Equal(new DateTime(2010, 10, 11), ((ShowTodoCommand) result).To);
         }
-        
+
         [Fact]
         public async Task ProcessMessage_Start()
         {

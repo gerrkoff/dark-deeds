@@ -1,4 +1,4 @@
-using DarkDeeds.TelegramClient.Infrastructure.Communication.TaskServiceApp.Dto;
+using DarkDeeds.ServiceTask.Dto;
 
 namespace DarkDeeds.TelegramClient.Services.Models.Commands
 {

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using DarkDeeds.TelegramClient.Infrastructure.Communication.TaskServiceApp;
-using DarkDeeds.TelegramClient.Infrastructure.Communication.TaskServiceApp.Dto;
+using DarkDeeds.ServiceTask.Consumers;
+using DarkDeeds.ServiceTask.Dto;
 using DarkDeeds.TelegramClient.Services.Interface;
 using DarkDeeds.TelegramClient.Services.Interface.CommandProcessor;
 using DarkDeeds.TelegramClient.Services.Models.Commands;
@@ -29,7 +29,7 @@ namespace DarkDeeds.TelegramClient.Services.Implementation.CommandProcessor
         protected override async Task ProcessCoreAsync(ShowTodoCommand command)
         {
             string userId = await _telegramService.GetUserId(command.UserChatId);
-            IEnumerable<TaskDto> tasks = await _taskServiceApp.LoadTasksByDateAsync(userId, command.From, command.To);
+            IEnumerable<TaskDto> tasks = await _taskServiceApp.LoadTasksByDateAsync(command.From, command.To, userId);
             ICollection<string> tasksAsString = await _taskServiceApp.PrintTasks(tasks);
             string text = tasksAsString.Count == 0
                 ? "No tasks"

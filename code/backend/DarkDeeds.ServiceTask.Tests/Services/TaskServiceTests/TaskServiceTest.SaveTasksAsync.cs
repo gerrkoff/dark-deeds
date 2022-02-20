@@ -1,8 +1,8 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
-using DarkDeeds.ServiceTask.Entities.Models;
-using DarkDeeds.ServiceTask.Models.Dto;
+using DarkDeeds.ServiceTask.Dto;
+using DarkDeeds.ServiceTask.Entities;
 using Moq;
 using Xunit;
 
@@ -27,31 +27,31 @@ namespace DarkDeeds.ServiceTask.Tests.Services.TaskServiceTests
 
             Assert.Equal(2, result.Count);
         }
-        
+
         [Fact]
         public async Task SaveTasksAsync_IgnoreForeignTasks()
         {
             CreateService(new TaskEntity {Uid = Uid, UserId = ForeignUserId});
-        
+
             var items = new[] {new TaskDto {Uid = Uid}};
-            
+
             var result = (await _service.SaveTasksAsync(items, UserId)).ToList();
-        
+
             Assert.Empty(result);
             _repoMock.Verify(x => x.GetByIdAsync(Uid));
             _repoMock.VerifyNoOtherCalls();
         }
-        
+
         [Fact]
         public async Task SaveTasksAsync_WhenDeletingCallDelete()
         {
             CreateService();
 
             _repoMock.Setup(x => x.DeleteAsync(Uid)).Returns(Task.FromResult(true));
-        
+
             var items = new[] {new TaskDto {Uid = Uid, Deleted = true}};
             var result = await _service.SaveTasksAsync(items, UserId);
-            
+
             Assert.Collection(result, x =>
             {
                 Assert.Equal(Uid, x.Uid);
@@ -61,23 +61,23 @@ namespace DarkDeeds.ServiceTask.Tests.Services.TaskServiceTests
             _repoMock.Verify(x => x.DeleteAsync(Uid));
             _repoMock.VerifyNoOtherCalls();
         }
-        
+
         [Fact]
         public async Task SaveTasksAsync_IgnoreAlreadyDeletedOnDelete()
         {
             CreateService();
-            
+
             _repoMock.Setup(x => x.DeleteAsync(Uid)).Returns(Task.FromResult(false));
-        
+
             var items = new[] {new TaskDto {Uid = Uid, Deleted = true}};
             var result = await _service.SaveTasksAsync(items, UserId);
-        
+
             Assert.Collection(result, _ => { });
             _repoMock.Verify(x => x.GetByIdAsync(Uid));
             _repoMock.Verify(x => x.DeleteAsync(Uid));
             _repoMock.VerifyNoOtherCalls();
         }
-        
+
         [Fact]
         public async Task SaveTasksAsync_WhenUpdatingCallTryUpdateVersion()
         {
@@ -85,10 +85,10 @@ namespace DarkDeeds.ServiceTask.Tests.Services.TaskServiceTests
 
             _repoMock.Setup(x => x.TryUpdateVersionAsync(It.IsAny<TaskEntity>()))
                 .Returns(Task.FromResult<(bool, TaskEntity)>((true, null)));
-        
+
             var items = new[] {new TaskDto {Uid = Uid, Title = TitleNew, Version = 100500}};
             var result = await _service.SaveTasksAsync(items, UserId);
-            
+
             Assert.Collection(result, x =>
             {
                 Assert.Equal(Uid, x.Uid);
@@ -107,13 +107,13 @@ namespace DarkDeeds.ServiceTask.Tests.Services.TaskServiceTests
         public async Task SaveTasksAsync_ReturnNullIfVersionMismatch()
         {
             CreateService(new TaskEntity {Uid = Uid, UserId = UserId, Version = 10, Title = TitleOld});
-            
+
             _repoMock.Setup(x => x.TryUpdateVersionAsync(It.IsAny<TaskEntity>()))
                 .Returns(Task.FromResult<(bool, TaskEntity)>((false, null)));
-        
+
             var items = new[] {new TaskDto {Uid = Uid, Version = 9, Title = TitleNew}};
             var result = (await _service.SaveTasksAsync(items, UserId)).ToList();
-            
+
             Assert.Empty(result);
             _repoMock.Verify(x => x.GetByIdAsync(Uid));
             _repoMock.Verify(x => x.TryUpdateVersionAsync(
@@ -128,10 +128,10 @@ namespace DarkDeeds.ServiceTask.Tests.Services.TaskServiceTests
         public async Task SaveTasksAsync_WhenCreatingCallUpsert()
         {
             CreateService();
-        
+
             var items = new[] {new TaskDto {Uid = Uid, Title = TitleNew}};
             var result = (await _service.SaveTasksAsync(items, UserId)).ToList();
-            
+
             Assert.Collection(result, x =>
             {
                 Assert.Equal(TitleNew, x.Title);

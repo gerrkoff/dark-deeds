@@ -15,6 +15,8 @@
       <ProjectReference Include="..\DarkDeeds.Common.Web\DarkDeeds.Common.Web.csproj" />
       <ProjectReference Include="..\DarkDeeds.Common\DarkDeeds.Common.csproj" />
       <ProjectReference Include="..\DarkDeeds.Communication\DarkDeeds.Communication.csproj" />
+      <ProjectReference Include="..\DarkDeeds.ServiceAuth.Consumers.Impl\DarkDeeds.ServiceAuth.Consumers.Impl.csproj" />
+      <ProjectReference Include="..\DarkDeeds.ServiceTask.Consumers.Impl\DarkDeeds.ServiceTask.Consumers.Impl.csproj" />
       <ProjectReference Include="..\DarkDeeds.TelegramClient.Web\DarkDeeds.TelegramClient.Web.csproj" />
       <ProjectReference Include="..\DarkDeeds.WebClientBff.Web\DarkDeeds.WebClientBff.Web.csproj" />
     </ItemGroup>

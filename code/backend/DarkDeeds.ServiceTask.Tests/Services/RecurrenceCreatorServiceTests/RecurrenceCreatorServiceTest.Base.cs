@@ -1,7 +1,7 @@
-using DarkDeeds.ServiceTask.Entities.Models;
+using DarkDeeds.ServiceTask.Dto;
+using DarkDeeds.ServiceTask.Entities;
 using DarkDeeds.ServiceTask.Infrastructure.Data.EntityRepository;
 using DarkDeeds.ServiceTask.Infrastructure.Services;
-using DarkDeeds.ServiceTask.Models.Dto;
 using DarkDeeds.ServiceTask.Services.Implementation;
 using DarkDeeds.ServiceTask.Services.Interface;
 using DarkDeeds.ServiceTask.Services.Specifications;
@@ -27,7 +27,7 @@ namespace DarkDeeds.ServiceTask.Tests.Services.RecurrenceCreatorServiceTests
             _plannedRecurrenceSpecMock = MocksCreator.PlannedRecurrenceSpec();
             _specFactoryMock = new Mock<ISpecificationFactory>();
             _specFactoryMock.Setup(x => x.New<IPlannedRecurrenceSpecification, PlannedRecurrenceEntity>()).Returns(_plannedRecurrenceSpecMock.Object);
-            
+
             _plannedRecurrenceRepoMock = MocksCreator.RepoRecurrence(values);
             _taskParserServiceMock.Setup(x => x.ParseTask(It.IsAny<string>(), It.IsAny<bool>())).Returns(new TaskDto {Title = "Task"});
             return new(

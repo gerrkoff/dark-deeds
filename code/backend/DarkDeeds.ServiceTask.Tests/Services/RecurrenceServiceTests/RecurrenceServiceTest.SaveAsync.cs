@@ -1,10 +1,10 @@
 using System;
 using System.Threading.Tasks;
-using DarkDeeds.ServiceTask.Entities.Enums;
-using DarkDeeds.ServiceTask.Entities.Models;
+using DarkDeeds.ServiceTask.Dto;
+using DarkDeeds.ServiceTask.Entities;
+using DarkDeeds.ServiceTask.Enums;
 using DarkDeeds.ServiceTask.Infrastructure.Data.EntityRepository;
-using DarkDeeds.ServiceTask.Models.Dto;
-using DarkDeeds.ServiceTask.Models.Exceptions;
+using DarkDeeds.ServiceTask.Services.Exceptions;
 using DarkDeeds.ServiceTask.Services.Implementation;
 using DarkDeeds.ServiceTask.Services.Specifications;
 using DarkDeeds.ServiceTask.Tests.Mocks;
@@ -21,7 +21,7 @@ namespace DarkDeeds.ServiceTask.Tests.Services.RecurrenceServiceTests
             var repoMock = MocksCreator.RepoRecurrence(new PlannedRecurrenceEntity {UserId = "other", Uid = "1"});
             repoMock.Setup(x => x.AnyAsync(It.IsAny<IPlannedRecurrenceSpecification>()))
                 .Returns(Task.FromResult(true));
-            
+
             var service = new RecurrenceService(repoMock.Object, Mapper, _specFactoryMock.Object);
 
             var list = new PlannedRecurrenceDto[] {new() {Uid = "1"}};
@@ -29,7 +29,7 @@ namespace DarkDeeds.ServiceTask.Tests.Services.RecurrenceServiceTests
 
             await Assert.ThrowsAsync<ServiceException>(() => service.SaveAsync(list, userId));
         }
-        
+
         [Fact]
         public async Task SaveAsync_DeleteIfDtoIsDeleted()
         {
@@ -42,7 +42,7 @@ namespace DarkDeeds.ServiceTask.Tests.Services.RecurrenceServiceTests
             repoMock.Verify(x => x.AnyAsync(It.IsAny<IPlannedRecurrenceSpecification>()));
             repoMock.VerifyNoOtherCalls();
         }
-        
+
         [Fact]
         public async Task SaveAsync_CreateNewIfNoSuchUid()
         {
@@ -59,7 +59,7 @@ namespace DarkDeeds.ServiceTask.Tests.Services.RecurrenceServiceTests
             repoMock.Verify(x => x.GetByIdAsync("42"));
             repoMock.VerifyNoOtherCalls();
         }
-        
+
         [Fact]
         public async Task SaveAsync_UpdateIfExists()
         {
@@ -94,7 +94,7 @@ namespace DarkDeeds.ServiceTask.Tests.Services.RecurrenceServiceTests
             repoMock.Verify(x => x.AnyAsync(It.IsAny<IPlannedRecurrenceSpecification>()));
             repoMock.VerifyNoOtherCalls();
         }
-        
+
         [Fact]
         public async Task SaveAsync_DoNotUpdateIfNoChanges()
         {
@@ -125,12 +125,12 @@ namespace DarkDeeds.ServiceTask.Tests.Services.RecurrenceServiceTests
                     EveryNthDay = 100500
                 }
             }, null);
-            
+
             repoMock.Verify(x => x.GetByIdAsync("42"));
             repoMock.Verify(x => x.AnyAsync(It.IsAny<IPlannedRecurrenceSpecification>()));
             repoMock.VerifyNoOtherCalls();
         }
-        
+
         [Fact]
         public async Task SaveAsync_ReturnUpdatedCount()
         {

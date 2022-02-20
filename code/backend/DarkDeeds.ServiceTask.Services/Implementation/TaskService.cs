@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
-using DarkDeeds.ServiceTask.Entities.Models;
+using DarkDeeds.ServiceTask.Dto;
+using DarkDeeds.ServiceTask.Entities;
 using DarkDeeds.ServiceTask.Infrastructure.Data.EntityRepository;
 using DarkDeeds.ServiceTask.Infrastructure.Services;
 using DarkDeeds.ServiceTask.Infrastructure.Services.Dto;
-using DarkDeeds.ServiceTask.Models.Dto;
-using DarkDeeds.ServiceTask.Models.DtoExtensions;
+using DarkDeeds.ServiceTask.Services.DtoExtensions;
 using DarkDeeds.ServiceTask.Services.Interface;
 using DarkDeeds.ServiceTask.Services.Specifications;
 using Microsoft.Extensions.Logging;
@@ -21,7 +21,7 @@ namespace DarkDeeds.ServiceTask.Services.Implementation
         private readonly IMapper _mapper;
         private readonly INotifierService _notifierService;
         private readonly ISpecificationFactory _specFactory;
-        
+
         public TaskService(ITaskRepository tasksRepository, ILogger<TaskService> logger, IMapper mapper, INotifierService notifierService, ISpecificationFactory specFactory)
         {
             _tasksRepository = tasksRepository;
@@ -30,7 +30,7 @@ namespace DarkDeeds.ServiceTask.Services.Implementation
             _notifierService = notifierService;
             _specFactory = specFactory;
         }
-        
+
         public async Task<IEnumerable<TaskDto>> LoadActualTasksAsync(string userId, DateTime from)
         {
             var spec = _specFactory.New<ITaskSpecification, TaskEntity>()
@@ -49,7 +49,7 @@ namespace DarkDeeds.ServiceTask.Services.Implementation
                 .FilterUserOwned(userId)
                 .FilterDateInterval(from, to)
                 .FilterNotDeleted();
-            
+
             var tasks = await _tasksRepository.GetBySpecAsync(spec);
 
             return _mapper.Map<IList<TaskDto>>(tasks).ToUtcDate();
@@ -77,7 +77,7 @@ namespace DarkDeeds.ServiceTask.Services.Implementation
         }
 
         private async Task<TaskDto> SaveTaskByUidAsync(TaskDto taskToSave, string userId)
-        {   
+        {
             var entity = await _tasksRepository.GetByIdAsync(taskToSave.Uid);
 
             if (entity != null && !string.Equals(entity.UserId, userId))
@@ -110,7 +110,7 @@ namespace DarkDeeds.ServiceTask.Services.Implementation
                 if (!success)
                     return null;
             }
-            
+
             return _mapper.Map<TaskDto>(entity);
         }
     }

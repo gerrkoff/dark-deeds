@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using DarkDeeds.ServiceTask.Entities.Models;
+using DarkDeeds.ServiceTask.Entities;
 using Xunit;
 
 namespace DarkDeeds.ServiceTask.Tests.Services.TaskServiceTests
@@ -14,7 +14,7 @@ namespace DarkDeeds.ServiceTask.Tests.Services.TaskServiceTests
             var userId = "userid";
             var from = new DateTime(2018, 10, 20);
             var to = new DateTime(2018, 10, 26);
-            
+
             CreateService(new TaskEntity {Date = new DateTime(2018, 10, 10)});
 
             var result = (await _service.LoadTasksByDateAsync(userId, from, to)).ToList();

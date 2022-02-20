@@ -1,4 +1,4 @@
-using DarkDeeds.ServiceTask.Entities.Models.Abstractions;
+using DarkDeeds.ServiceTask.Entities.Abstractions;
 using DarkDeeds.ServiceTask.Infrastructure.Data;
 
 namespace DarkDeeds.ServiceTask.Services.Specifications

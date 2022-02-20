@@ -1,6 +1,6 @@
 using System;
 using System.Threading.Tasks;
-using DarkDeeds.TelegramClient.Infrastructure.Communication.TaskServiceApp;
+using DarkDeeds.ServiceTask.Consumers;
 using DarkDeeds.TelegramClient.Services.Interface;
 using DarkDeeds.TelegramClient.Services.Interface.CommandProcessor;
 using DarkDeeds.TelegramClient.Services.Models.Commands;
@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 
 namespace DarkDeeds.TelegramClient.Services.Implementation.CommandProcessor
 {
-    public class CreateTaskCommandProcessor : BaseCommandProcessor<CreateTaskCommand>, ICreateTaskCommandProcessor 
+    public class CreateTaskCommandProcessor : BaseCommandProcessor<CreateTaskCommand>, ICreateTaskCommandProcessor
     {
         private readonly IBotSendMessageService _botSendMessageService;
         private readonly ITelegramService _telegramService;

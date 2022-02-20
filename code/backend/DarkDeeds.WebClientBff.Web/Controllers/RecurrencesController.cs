@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using DarkDeeds.WebClientBff.Infrastructure.Communication.TaskServiceApp.Dto;
+using DarkDeeds.ServiceTask.Dto;
 using DarkDeeds.WebClientBff.UseCases.Handlers.Recurrences.Create;
 using DarkDeeds.WebClientBff.UseCases.Handlers.Recurrences.Load;
 using DarkDeeds.WebClientBff.UseCases.Handlers.Recurrences.Save;
@@ -24,13 +24,13 @@ namespace DarkDeeds.WebClientBff.Web.Controllers
         {
             return _mediator.Send(new CreateRequestModel(timezoneOffset));
         }
-        
+
         [HttpGet]
         public Task<IEnumerable<PlannedRecurrenceDto>> Get()
         {
             return _mediator.Send(new LoadRequestModel());
         }
-        
+
         [HttpPost]
         public Task<int> Post([FromBody] ICollection<PlannedRecurrenceDto> recurrences)
         {

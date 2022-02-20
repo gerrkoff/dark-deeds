@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using DarkDeeds.ServiceTask.Contract;
-using DarkDeeds.ServiceTask.Models.Dto;
+using DarkDeeds.ServiceTask.Dto;
 using DarkDeeds.ServiceTask.Services.Interface;
 using Grpc.Core;
 

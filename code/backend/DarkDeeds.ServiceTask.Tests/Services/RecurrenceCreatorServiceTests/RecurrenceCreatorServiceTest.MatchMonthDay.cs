@@ -1,11 +1,11 @@
 using System;
-using DarkDeeds.ServiceTask.Entities.Models;
+using DarkDeeds.ServiceTask.Entities;
 using Xunit;
 
 namespace DarkDeeds.ServiceTask.Tests.Services.RecurrenceCreatorServiceTests
 {
     public partial class RecurrenceCreatorServiceTest
-    { 
+    {
         [Fact]
         public void MatchMonthDay_ShouldMatchIfEmpty()
         {
@@ -15,7 +15,7 @@ namespace DarkDeeds.ServiceTask.Tests.Services.RecurrenceCreatorServiceTests
 
             Assert.True(result);
         }
-        
+
         [Fact]
         public void MatchMonthDay_ShouldMatchOneDate()
         {
@@ -28,7 +28,7 @@ namespace DarkDeeds.ServiceTask.Tests.Services.RecurrenceCreatorServiceTests
 
             Assert.True(result);
         }
-        
+
         [Fact]
         public void MatchMonthDay_ShouldMatchOneOfSeveralDates()
         {
@@ -41,7 +41,7 @@ namespace DarkDeeds.ServiceTask.Tests.Services.RecurrenceCreatorServiceTests
 
             Assert.True(result);
         }
-        
+
         [Fact]
         public void MatchMonthDay_CountBigDateAsLastDayOfMonth()
         {
@@ -54,7 +54,7 @@ namespace DarkDeeds.ServiceTask.Tests.Services.RecurrenceCreatorServiceTests
 
             Assert.True(result);
         }
-        
+
         [Fact]
         public void MatchMonthDay_ShouldNotMatchAnyDateInList()
         {
@@ -67,7 +67,7 @@ namespace DarkDeeds.ServiceTask.Tests.Services.RecurrenceCreatorServiceTests
 
             Assert.False(result);
         }
-        
+
         [Fact]
         public void MatchMonthDay_ShouldMatchIfCanNotParseMonthDays_FormatException()
         {
@@ -80,7 +80,7 @@ namespace DarkDeeds.ServiceTask.Tests.Services.RecurrenceCreatorServiceTests
 
             Assert.True(result);
         }
-        
+
         [Fact]
         public void MatchMonthDay_ShouldMatchIfCanNotParseMonthDays_OverflowException()
         {

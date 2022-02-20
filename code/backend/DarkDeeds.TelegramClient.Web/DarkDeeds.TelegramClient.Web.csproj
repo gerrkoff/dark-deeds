@@ -9,14 +9,9 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\DarkDeeds.Authentication.Core\DarkDeeds.Authentication.Core.csproj" />
       <ProjectReference Include="..\DarkDeeds.Common.Web\DarkDeeds.Common.Web.csproj" />
-      <ProjectReference Include="..\DarkDeeds.Communication\DarkDeeds.Communication.csproj" />
-      <ProjectReference Include="..\DarkDeeds.TelegramClient.Communication\DarkDeeds.TelegramClient.Communication.csproj" />
       <ProjectReference Include="..\DarkDeeds.TelegramClient.Services\DarkDeeds.TelegramClient.Services.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
     </ItemGroup>
 
 </Project>

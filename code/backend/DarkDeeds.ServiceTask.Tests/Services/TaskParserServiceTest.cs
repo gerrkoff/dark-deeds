@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
-using DarkDeeds.ServiceTask.Entities.Enums;
-using DarkDeeds.ServiceTask.Models.Dto;
+using DarkDeeds.ServiceTask.Dto;
+using DarkDeeds.ServiceTask.Enums;
 using DarkDeeds.ServiceTask.Services.Implementation;
 using DarkDeeds.ServiceTask.Services.Interface;
 using Moq;
@@ -12,9 +12,9 @@ namespace DarkDeeds.ServiceTask.Tests.Services
     public class TaskParserServiceTest : BaseTest
     {
         #region Parse tasks - mirrored FE tests
-        
-        // These tests should be synced with FE TaskConverter.convertStringToModel tests 
-        
+
+        // These tests should be synced with FE TaskConverter.convertStringToModel tests
+
         // #1
         [Fact]
         public void ParseTask_ReturnTaskWithNoDateAndNoTime()
@@ -22,13 +22,13 @@ namespace DarkDeeds.ServiceTask.Tests.Services
             var service = new TaskParserService(dateServiceMock());
 
             var result = service.ParseTask("Test!");
-            
+
             Assert.Equal("Test!", result.Title);
             Assert.Equal(TaskTypeEnum.Simple, result.Type);
             Assert.Null(result.Date);
             Assert.Null(result.Time);
         }
-        
+
         // #2
         [Fact]
         public void ParseTask_ReturnTaskWithDateAndNoTime()
@@ -42,7 +42,7 @@ namespace DarkDeeds.ServiceTask.Tests.Services
             Assert.Equal(new DateTime(2019, 12, 31, 0, 0, 0),  result.Date);
             Assert.Null(result.Time);
         }
-        
+
         // #3
         [Fact]
         public void ParseTask_ReturnTaskWithDateAndNoTime_NotWorkingWithoutSpace()
@@ -50,13 +50,13 @@ namespace DarkDeeds.ServiceTask.Tests.Services
             var service = new TaskParserService(dateServiceMock());
 
             var result = service.ParseTask("0101Test!!!");
-            
+
             Assert.Equal("0101Test!!!", result.Title);
             Assert.Equal(TaskTypeEnum.Simple, result.Type);
             Assert.Null(result.Date);
             Assert.Null(result.Time);
         }
-        
+
         // #4
         [Fact]
         public void ParseTask_ReturnTaskWithDateAndTime()
@@ -64,13 +64,13 @@ namespace DarkDeeds.ServiceTask.Tests.Services
             var service = new TaskParserService(dateServiceMock());
 
             var result = service.ParseTask("1231 2359 Test!");
-            
+
             Assert.Equal("Test!", result.Title);
             Assert.Equal(TaskTypeEnum.Simple, result.Type);
             Assert.Equal(new DateTime(2019, 12, 31, 0, 0, 0),  result.Date);
             Assert.Equal(1439, result.Time);
         }
-        
+
         // #5
         [Fact]
         public void ParseTask_ReturnTaskWithDateAndTime_NotWorkingWithoutSpace()
@@ -78,13 +78,13 @@ namespace DarkDeeds.ServiceTask.Tests.Services
             var service = new TaskParserService(dateServiceMock());
 
             var result = service.ParseTask("0101 0101Test!!!");
-            
+
             Assert.Equal("0101Test!!!", result.Title);
             Assert.Equal(TaskTypeEnum.Simple, result.Type);
             Assert.Equal(new DateTime(2019, 1, 1, 0, 0, 0),  result.Date);
             Assert.Null(result.Time);
         }
-        
+
         // #6
         [Fact]
         public void ParseTask_ReturnTaskWithDateAndNoTimeWithYear()
@@ -92,13 +92,13 @@ namespace DarkDeeds.ServiceTask.Tests.Services
             var service = new TaskParserService(dateServiceMock());
 
             var result = service.ParseTask("20170101 Test");
-            
+
             Assert.Equal("Test", result.Title);
             Assert.Equal(TaskTypeEnum.Simple, result.Type);
             Assert.Equal(new DateTime(2017, 1, 1, 0, 0, 0),  result.Date);
             Assert.Null(result.Time);
         }
-        
+
         // #7
         [Fact]
         public void ParseTask_ReturnProbableTask()
@@ -106,13 +106,13 @@ namespace DarkDeeds.ServiceTask.Tests.Services
             var service = new TaskParserService(dateServiceMock());
 
             var result = service.ParseTask("Test! ?");
-            
+
             Assert.Equal("Test!", result.Title);
             Assert.True(result.IsProbable);
             Assert.Null(result.Date);
             Assert.Null(result.Time);
         }
-        
+
         // #8
         [Fact]
         public void ParseTask_ReturnAdditionalTaskWithDate()
@@ -120,13 +120,13 @@ namespace DarkDeeds.ServiceTask.Tests.Services
             var service = new TaskParserService(dateServiceMock());
 
             var result = service.ParseTask("0220 Test !");
-            
+
             Assert.Equal("Test", result.Title);
             Assert.Equal(TaskTypeEnum.Additional, result.Type);
             Assert.Equal(new DateTime(2019, 2, 20, 0, 0, 0),  result.Date);
             Assert.Null(result.Time);
         }
-        
+
         // #9
         [Fact]
         public void ParseTask_ReturnAdditionalTaskWithDateAndTime()
@@ -134,13 +134,13 @@ namespace DarkDeeds.ServiceTask.Tests.Services
             var service = new TaskParserService(dateServiceMock());
 
             var result = service.ParseTask("20150220 2359 Test !");
-            
+
             Assert.Equal("Test", result.Title);
             Assert.Equal(TaskTypeEnum.Additional, result.Type);
             Assert.Equal(new DateTime(2015, 2, 20, 0, 0, 0),  result.Date);
             Assert.Equal(1439, result.Time);
         }
-        
+
         // #10
         [Fact]
         public void ParseTask_AdditionalAndProbable()
@@ -148,14 +148,14 @@ namespace DarkDeeds.ServiceTask.Tests.Services
             var service = new TaskParserService(dateServiceMock());
 
             var result = service.ParseTask("Test !?");
-            
+
             Assert.Equal("Test", result.Title);
             Assert.Equal(TaskTypeEnum.Additional, result.Type);
             Assert.True(result.IsProbable);
             Assert.Null(result.Date);
             Assert.Null(result.Time);
         }
-        
+
         // #10.1
         [Fact]
         public void ParseTask_ProbableAndAdditional()
@@ -163,14 +163,14 @@ namespace DarkDeeds.ServiceTask.Tests.Services
             var service = new TaskParserService(dateServiceMock());
 
             var result = service.ParseTask("Test ?!");
-            
+
             Assert.Equal("Test", result.Title);
             Assert.Equal(TaskTypeEnum.Additional, result.Type);
             Assert.True(result.IsProbable);
             Assert.Null(result.Date);
             Assert.Null(result.Time);
         }
-        
+
         // #11
         [Fact]
         public void ParseTask_ReturnTodayTaskThroughExclamationMark()
@@ -178,13 +178,13 @@ namespace DarkDeeds.ServiceTask.Tests.Services
             var service = new TaskParserService(dateServiceMock());
 
             var result = service.ParseTask("! Test");
-            
+
             Assert.Equal("Test", result.Title);
             Assert.Equal(TaskTypeEnum.Simple, result.Type);
             Assert.Equal(new DateTime(2019, 1, 1, 0, 0, 0),  result.Date);
             Assert.Null(result.Time);
         }
-        
+
         // #12
         [Fact]
         public void ParseTask_ReturnTomorrowTaskThroughExclamationMark()
@@ -192,13 +192,13 @@ namespace DarkDeeds.ServiceTask.Tests.Services
             var service = new TaskParserService(dateServiceMock());
 
             var result = service.ParseTask("!! Test");
-            
+
             Assert.Equal("Test", result.Title);
             Assert.Equal(TaskTypeEnum.Simple, result.Type);
             Assert.Equal(new DateTime(2019, 1, 2, 0, 0, 0),  result.Date);
             Assert.Null(result.Time);
         }
-        
+
         // #13
         [Fact]
         public void ParseTask_ReturnDayAfterAfterTomorrowTaskThroughExclamationMark()
@@ -206,13 +206,13 @@ namespace DarkDeeds.ServiceTask.Tests.Services
             var service = new TaskParserService(dateServiceMock());
 
             var result = service.ParseTask("!!!! Test");
-            
+
             Assert.Equal("Test", result.Title);
             Assert.Equal(TaskTypeEnum.Simple, result.Type);
             Assert.Equal(new DateTime(2019, 1, 4, 0, 0, 0),  result.Date);
             Assert.Null(result.Time);
         }
-        
+
         // #14
         [Fact]
         public void ParseTask_ReturnDayAfterTomorrowNextMonthTaskThroughExclamationMark()
@@ -220,13 +220,13 @@ namespace DarkDeeds.ServiceTask.Tests.Services
             var service = new TaskParserService(dateServiceMock(2019, 1, 31));
 
             var result = service.ParseTask("!!! Test");
-            
+
             Assert.Equal("Test", result.Title);
             Assert.Equal(TaskTypeEnum.Simple, result.Type);
             Assert.Equal(new DateTime(2019, 2, 2, 0, 0, 0),  result.Date);
             Assert.Null(result.Time);
         }
-        
+
         // #15
         [Fact]
         public void ParseTask_ReturnNextMondayTaskThroughExclamationMark()
@@ -234,13 +234,13 @@ namespace DarkDeeds.ServiceTask.Tests.Services
             var service = new TaskParserService(dateServiceMock(2019, 7,28));
 
             var result = service.ParseTask("!1 Test");
-            
+
             Assert.Equal("Test", result.Title);
             Assert.Equal(TaskTypeEnum.Simple, result.Type);
             Assert.Equal(new DateTime(2019, 7, 29, 0, 0, 0),  result.Date);
             Assert.Null(result.Time);
         }
-        
+
         // #16
         [Fact]
         public void ParseTask_ReturnNextWednesdayTaskThroughExclamationMark()
@@ -248,13 +248,13 @@ namespace DarkDeeds.ServiceTask.Tests.Services
             var service = new TaskParserService(dateServiceMock(2019, 7, 28));
 
             var result = service.ParseTask("!3 Test");
-            
+
             Assert.Equal("Test", result.Title);
             Assert.Equal(TaskTypeEnum.Simple, result.Type);
             Assert.Equal(new DateTime(2019, 7, 31, 0, 0, 0),  result.Date);
             Assert.Null(result.Time);
         }
-        
+
         // #17
         [Fact]
         public void ParseTask_ReturnNextFridayTaskThroughExclamationMark()
@@ -262,13 +262,13 @@ namespace DarkDeeds.ServiceTask.Tests.Services
             var service = new TaskParserService(dateServiceMock(2019, 7, 28));
 
             var result = service.ParseTask("!5 Test");
-            
+
             Assert.Equal("Test", result.Title);
             Assert.Equal(TaskTypeEnum.Simple, result.Type);
             Assert.Equal(new DateTime(2019, 8, 2, 0, 0, 0),  result.Date);
             Assert.Null(result.Time);
         }
-        
+
         // #18
         [Fact]
         public void ParseTask_ExclamationMark11IsNotWeekShiftPattern()
@@ -276,10 +276,10 @@ namespace DarkDeeds.ServiceTask.Tests.Services
             var service = new TaskParserService(dateServiceMock());
 
             var result = service.ParseTask("!11 Test");
-            
+
             Assert.Equal("!11 Test", result.Title);
         }
-        
+
         // #19
         [Fact]
         public void ParseTask_DateWithExclamation()
@@ -287,30 +287,30 @@ namespace DarkDeeds.ServiceTask.Tests.Services
             var service = new TaskParserService(dateServiceMock());
 
             var result = service.ParseTask("1231! Test");
-            
+
             Assert.Equal("1231! Test", result.Title);
             Assert.Equal(TaskTypeEnum.Simple, result.Type);
             Assert.Null(result.Date);
             Assert.Null(result.Time);
         }
-        
+
         #endregion
-        
+
         #region Other TaskParserService tests
-        
+
         [Fact]
         public void ParseTask_IgnoreDateTaskWithTime()
         {
             var service = new TaskParserService(dateServiceMock());
 
             var result = service.ParseTask("1010 Test!", ignoreDate: true);
-            
+
             Assert.Equal("Test!", result.Title);
             Assert.Equal(TaskTypeEnum.Simple, result.Type);
             Assert.Null(result.Date);
             Assert.Equal(610, result.Time);
         }
-        
+
         [Fact]
         public void PrintTasks_ReturnTitle()
         {
@@ -323,7 +323,7 @@ namespace DarkDeeds.ServiceTask.Tests.Services
 
             Assert.Equal("Task text", result.Single());
         }
-        
+
         [Fact]
         public void PrintTasks_ReturnTime()
         {
@@ -338,9 +338,9 @@ namespace DarkDeeds.ServiceTask.Tests.Services
 
             Assert.Equal("17:40 Task", result.Single());
         }
-        
+
         #endregion
-        
+
         #region Helpers
 
         private IDateService dateServiceMock(int year = 2019, int month = 1, int date = 1)
@@ -349,7 +349,7 @@ namespace DarkDeeds.ServiceTask.Tests.Services
             mock.SetupGet(x => x.Today).Returns(new DateTime(year, month, date));
             return mock.Object;
         }
-        
+
         #endregion
     }
 }

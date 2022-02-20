@@ -12,7 +12,6 @@
 
     <ItemGroup>
       <ProjectReference Include="..\DarkDeeds.Backend.Entities\DarkDeeds.Backend.Entities.csproj" />
-      <ProjectReference Include="..\DarkDeeds.WebClientBff.Infrastructure\DarkDeeds.WebClientBff.Infrastructure.csproj" />
     </ItemGroup>
 
 </Project>
