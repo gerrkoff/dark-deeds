@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using DarkDeeds.WebClientBff.Infrastructure.Communication.AuthServiceApp.Dto;
+using DarkDeeds.ServiceAuth.Dto.Dto;
 using DarkDeeds.WebClientBff.UseCases.Dto;
 using DarkDeeds.WebClientBff.UseCases.Handlers.Account.GetCurrentUser;
 using DarkDeeds.WebClientBff.UseCases.Handlers.Account.SignIn;

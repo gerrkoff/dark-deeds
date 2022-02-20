@@ -1,6 +1,6 @@
 using AutoMapper;
 using DarkDeeds.ServiceAuth.Contract;
-using DarkDeeds.ServiceAuth.Services.Dto;
+using DarkDeeds.ServiceAuth.Dto.Dto;
 
 namespace DarkDeeds.ServiceAuth.ContractImpl.Mapping
 {
@@ -12,7 +12,7 @@ namespace DarkDeeds.ServiceAuth.ContractImpl.Mapping
             CreateMap<SignInResultDto, SignInReply>()
                 .ForMember(x => x.Token,
                     e => e.MapFrom(x => x.Token ?? string.Empty));
-            
+
             CreateMap<SignUpRequest, SignUpInfoDto>();
             CreateMap<SignUpResultDto, SignUpReply>()
                 .ForMember(x => x.Token,

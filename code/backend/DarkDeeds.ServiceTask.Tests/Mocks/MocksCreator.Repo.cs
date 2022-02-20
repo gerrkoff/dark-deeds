@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using DarkDeeds.ServiceTask.Entities.Models;
-using DarkDeeds.ServiceTask.Entities.Models.Abstractions;
+using DarkDeeds.ServiceTask.Entities;
+using DarkDeeds.ServiceTask.Entities.Abstractions;
 using DarkDeeds.ServiceTask.Infrastructure.Data;
 using DarkDeeds.ServiceTask.Infrastructure.Data.EntityRepository;
 using Moq;
@@ -19,7 +19,7 @@ namespace DarkDeeds.ServiceTask.Tests.Mocks
 
         private static Mock<TRepository> Repo<TRepository, TEntity>(params TEntity[] values)
             where TEntity: Entity
-            where TRepository: class, IRepository<TEntity> 
+            where TRepository: class, IRepository<TEntity>
         {
             var repoMock = new Mock<TRepository>();
             var result = Task.FromResult(values.ToList() as IList<TEntity>);
@@ -31,7 +31,7 @@ namespace DarkDeeds.ServiceTask.Tests.Mocks
             repoMock.Setup(x =>
                     x.TryUpdateVersionPropsAsync(It.IsAny<TEntity>(), It.IsAny<Expression<Func<TEntity, object>>[]>()))
                 .Returns(Task.FromResult<(bool, TEntity)>((true, null)));
-            
+
             return repoMock;
         }
     }

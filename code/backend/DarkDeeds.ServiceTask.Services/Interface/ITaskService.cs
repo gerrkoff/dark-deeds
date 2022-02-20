@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using DarkDeeds.ServiceTask.Models.Dto;
+using DarkDeeds.ServiceTask.Dto;
 
 namespace DarkDeeds.ServiceTask.Services.Interface
 {
@@ -26,7 +26,7 @@ namespace DarkDeeds.ServiceTask.Services.Interface
         /// <param name="to">Period end, not included, UTC expected</param>
         /// <returns>Tasks</returns>
         Task<IEnumerable<TaskDto>> LoadTasksByDateAsync(string userId, DateTime from, DateTime to);
-        
+
         Task<IEnumerable<TaskDto>> SaveTasksAsync(ICollection<TaskDto> tasks, string userId);
     }
 }

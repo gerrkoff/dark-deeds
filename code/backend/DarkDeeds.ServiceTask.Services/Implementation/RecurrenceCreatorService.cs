@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using DarkDeeds.ServiceTask.Entities.Enums;
-using DarkDeeds.ServiceTask.Entities.Models;
+using DarkDeeds.ServiceTask.Dto;
+using DarkDeeds.ServiceTask.Entities;
+using DarkDeeds.ServiceTask.Enums;
 using DarkDeeds.ServiceTask.Infrastructure.Data.EntityRepository;
 using DarkDeeds.ServiceTask.Infrastructure.Services;
 using DarkDeeds.ServiceTask.Infrastructure.Services.Dto;
-using DarkDeeds.ServiceTask.Models.Dto;
 using DarkDeeds.ServiceTask.Services.Interface;
 using DarkDeeds.ServiceTask.Services.Specifications;
 using Microsoft.Extensions.Logging;
@@ -18,7 +18,7 @@ namespace DarkDeeds.ServiceTask.Services.Implementation
     public class RecurrenceCreatorService : IRecurrenceCreatorService
     {
         private const int RecurrencePeriodInDays = 14;
-        
+
         private readonly ITaskRepository _taskRepository;
         private readonly IPlannedRecurrenceRepository _plannedRecurrenceRepository;
         private readonly IDateService _dateService;
@@ -34,7 +34,7 @@ namespace DarkDeeds.ServiceTask.Services.Implementation
             IDateService dateService,
             ILogger<RecurrenceCreatorService> logger,
             ITaskParserService taskParserService,
-            INotifierService notifierService, 
+            INotifierService notifierService,
             IMapper mapper,
             ISpecificationFactory specFactory)
         {
@@ -64,10 +64,10 @@ namespace DarkDeeds.ServiceTask.Services.Implementation
                 foreach (var date in dates)
                 {
                     var alreadyExists = plannedRecurrence.Recurrences.Any(x => x.DateTime == date);
-                    
+
                     if (alreadyExists)
                         continue;
-                    
+
                     TaskEntity task = CreateTaskFromRecurrence(plannedRecurrence, date);
                     await _taskRepository.UpsertAsync(task);
                     plannedRecurrence = await SaveRecurrence(plannedRecurrence,
@@ -133,7 +133,7 @@ namespace DarkDeeds.ServiceTask.Services.Implementation
                     !MatchNthDay(plannedRecurrence, i) ||
                     !MatchMonthDay(plannedRecurrence, i))
                     continue;
-                
+
                 dates.Add(i);
             }
 
@@ -156,7 +156,7 @@ namespace DarkDeeds.ServiceTask.Services.Implementation
             var endDate = startDate
                 .AddDays(RecurrencePeriodInDays - currentDayOfWeekFixed + 1)
                 .Date;
-            
+
             return (startDate, endDate);
         }
 
@@ -174,12 +174,12 @@ namespace DarkDeeds.ServiceTask.Services.Implementation
             TimeSpan dayCount = plannedRecurrence.StartDate.Date - date.Date;
             return dayCount.Days % plannedRecurrence.EveryNthDay == 0;
         }
-        
+
         public bool MatchWeekday(PlannedRecurrenceEntity plannedRecurrence, DateTime date)
         {
             if (!plannedRecurrence.EveryWeekday.HasValue)
                 return true;
-            
+
             RecurrenceWeekdayEnum weekday;
             switch (date.DayOfWeek)
             {
@@ -193,10 +193,10 @@ namespace DarkDeeds.ServiceTask.Services.Implementation
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-            
+
             return plannedRecurrence.EveryWeekday.Value.HasFlag(weekday);
         }
-        
+
         public bool MatchMonthDay(PlannedRecurrenceEntity plannedRecurrence, DateTime date)
         {
             if (string.IsNullOrEmpty(plannedRecurrence.EveryMonthDay))
@@ -220,7 +220,7 @@ namespace DarkDeeds.ServiceTask.Services.Implementation
             }
 
             int lastDay = DateTime.DaysInMonth(date.Year, date.Month);
-            
+
 
             if (dayList.Any(x => x > lastDay))
                 dayList.Add(lastDay);

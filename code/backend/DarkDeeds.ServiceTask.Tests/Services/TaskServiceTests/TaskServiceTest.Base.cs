@@ -1,4 +1,4 @@
-using DarkDeeds.ServiceTask.Entities.Models;
+using DarkDeeds.ServiceTask.Entities;
 using DarkDeeds.ServiceTask.Infrastructure.Data.EntityRepository;
 using DarkDeeds.ServiceTask.Infrastructure.Services;
 using DarkDeeds.ServiceTask.Services.Implementation;
@@ -28,7 +28,7 @@ namespace DarkDeeds.ServiceTask.Tests.Services.TaskServiceTests
             _specFactoryMock = new Mock<ISpecificationFactory>();
             _specFactoryMock.Setup(x => x.New<ITaskSpecification, TaskEntity>()).Returns(_taskSpecMock.Object);
             _service = new TaskService(
-                _repoMock.Object, 
+                _repoMock.Object,
                 _loggerMock.Object,
                 Mapper,
                 _notifierServiceMock.Object,

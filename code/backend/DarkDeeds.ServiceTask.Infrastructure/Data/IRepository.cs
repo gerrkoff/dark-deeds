@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using DarkDeeds.ServiceTask.Entities.Models.Abstractions;
+using DarkDeeds.ServiceTask.Entities.Abstractions;
 
 namespace DarkDeeds.ServiceTask.Infrastructure.Data
 {

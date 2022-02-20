@@ -1,6 +1,6 @@
 using System.Threading;
 using System.Threading.Tasks;
-using DarkDeeds.WebClientBff.Infrastructure.Communication.TaskServiceApp;
+using DarkDeeds.ServiceTask.Consumers;
 using MediatR;
 
 namespace DarkDeeds.WebClientBff.UseCases.Handlers.Recurrences.Create

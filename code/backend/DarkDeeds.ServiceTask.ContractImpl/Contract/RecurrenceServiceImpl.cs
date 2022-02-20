@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using DarkDeeds.Authentication.Core;
 using DarkDeeds.ServiceTask.Contract;
-using DarkDeeds.ServiceTask.Models.Dto;
+using DarkDeeds.ServiceTask.Dto;
 using DarkDeeds.ServiceTask.Services.Interface;
 using Grpc.Core;
 using Microsoft.AspNetCore.Authorization;

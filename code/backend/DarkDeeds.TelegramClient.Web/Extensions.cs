@@ -1,4 +1,3 @@
-using DarkDeeds.TelegramClient.Communication;
 using DarkDeeds.TelegramClient.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
@@ -12,9 +11,8 @@ namespace DarkDeeds.TelegramClient.Web
         public static void AddTelegramClient(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddTelegramClientServices(configuration);
-            services.AddTelegramClientCommunications(configuration);
         }
-        
+
         public static void MapTelegramClientCustomRoutes(this IEndpointRouteBuilder endpoints, IConfiguration configuration)
         {
             endpoints.MapControllerRoute("bot", $"api/tlgm/bot/{configuration["Bot"]}",

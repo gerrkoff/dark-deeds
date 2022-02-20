@@ -1,13 +1,12 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using DarkDeeds.WebClientBff.Infrastructure.Communication.TaskServiceApp.Dto;
-using DarkDeeds.WebClientBff.Infrastructure.Services;
+using DarkDeeds.ServiceTask.Dto;
 using DarkDeeds.WebClientBff.Web.Hubs;
 using Microsoft.AspNetCore.SignalR;
 
 namespace DarkDeeds.WebClientBff.Web.Services
 {
-    public class NotifierService : INotifierService
+    public class NotifierService
     {
         private readonly IHubContext<TaskHub> _hubContext;
 
@@ -15,11 +14,11 @@ namespace DarkDeeds.WebClientBff.Web.Services
         {
             _hubContext = hubContext;
         }
-        
+
         public async Task TaskUpdated(IEnumerable<TaskDto> updatedTasks, string userId)
-        {   
+        {
             await _hubContext.Clients.User(userId)
                 .SendAsync("update", updatedTasks, false);
-        }        
+        }
     }
 }

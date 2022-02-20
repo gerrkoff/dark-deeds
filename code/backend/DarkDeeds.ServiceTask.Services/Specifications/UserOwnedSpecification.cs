@@ -1,5 +1,5 @@
 using System.Linq;
-using DarkDeeds.ServiceTask.Entities.Models.Abstractions;
+using DarkDeeds.ServiceTask.Entities.Abstractions;
 
 namespace DarkDeeds.ServiceTask.Services.Specifications
 {

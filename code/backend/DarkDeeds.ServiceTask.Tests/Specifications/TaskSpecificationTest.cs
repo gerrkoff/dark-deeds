@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using DarkDeeds.ServiceTask.Entities.Enums;
-using DarkDeeds.ServiceTask.Entities.Models;
+using DarkDeeds.ServiceTask.Entities;
+using DarkDeeds.ServiceTask.Enums;
 using DarkDeeds.ServiceTask.Services.Specifications;
 using Xunit;
 
@@ -30,37 +30,37 @@ namespace DarkDeeds.ServiceTask.Tests.Specifications
 
             Assert.Contains(result, x => x.Uid == "4");
         }
-        
+
         [Fact]
         public void FilterActual_IncludeExpiredButCompleted()
         {
             var service = new TaskSpecification().FilterActual(new DateTime(2018, 10, 20));
 
             var result = service.Apply(Collection().AsQueryable()).ToList();
-        
+
             Assert.Contains(result, x => x.Uid == "2");
         }
-        
+
         [Fact]
         public void FilterActual_ExcludeExpiredAndCompleted()
         {
             var service = new TaskSpecification().FilterActual(new DateTime(2018, 10, 20));
 
             var result = service.Apply(Collection().AsQueryable()).ToList();
-        
+
             Assert.DoesNotContain(result, x => x.Uid == "1");
         }
-        
+
         [Fact]
         public void FilterActual_ExcludeExpiredAdditional()
         {
             var service = new TaskSpecification().FilterActual(new DateTime(2018, 10, 20));
 
             var result = service.Apply(Collection().AsQueryable()).ToList();
-        
+
             Assert.DoesNotContain(result, x => x.Uid == "11");
         }
-        
+
         [Fact]
         public void FilterDateInterval_ExcludeNoDate()
         {
@@ -72,16 +72,16 @@ namespace DarkDeeds.ServiceTask.Tests.Specifications
 
             Assert.DoesNotContain(result, x => x.Uid == "4");
         }
-        
+
         [Fact]
         public void FilterDateInterval_IncludeOnlyTasksFromPeriod()
         {
             var service = new TaskSpecification().FilterDateInterval(
                 new DateTime(2018, 10, 20),
                 new DateTime(2018, 10, 26));
-            
+
             var result = service.Apply(Collection().AsQueryable()).ToList();
-        
+
             Assert.Contains(result, x => x.Uid == "3"); // FROM border is included
             Assert.Contains(result, x => x.Uid == "5");
             Assert.DoesNotContain(result, x => x.Uid == "1");

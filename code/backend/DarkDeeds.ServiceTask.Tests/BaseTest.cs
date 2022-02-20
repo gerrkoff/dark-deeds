@@ -1,5 +1,5 @@
 using AutoMapper;
-using DarkDeeds.ServiceTask.Models.Mapping;
+using DarkDeeds.ServiceTask.Services.Mapping;
 
 namespace DarkDeeds.ServiceTask.Tests
 {

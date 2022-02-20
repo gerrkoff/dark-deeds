@@ -1,12 +1,13 @@
 using DarkDeeds.ServiceTask.Services.Implementation;
 using DarkDeeds.ServiceTask.Services.Interface;
+using DarkDeeds.ServiceTask.Services.Mapping;
 using DarkDeeds.ServiceTask.Services.Specifications;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DarkDeeds.ServiceTask.Services
 {
     public static class Extensions
-    {   
+    {
         public static void AddTaskServices(this IServiceCollection services)
         {
             services.AddScoped<ITaskService, TaskService>();
@@ -17,6 +18,8 @@ namespace DarkDeeds.ServiceTask.Services
             services.AddScoped<ITaskSpecification, TaskSpecification>();
             services.AddScoped<IPlannedRecurrenceSpecification, PlannedRecurrenceSpecification>();
             services.AddScoped<ISpecificationFactory, SpecificationFactory>();
+
+            services.AddAutoMapper(typeof(ModelsMappingProfile));
         }
     }
 }

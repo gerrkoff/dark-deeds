@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using DarkDeeds.ServiceTask.Entities.Enums;
-using DarkDeeds.ServiceTask.Entities.Models;
+using DarkDeeds.ServiceTask.Entities;
+using DarkDeeds.ServiceTask.Enums;
 using DarkDeeds.ServiceTask.Infrastructure.Services.Dto;
 using Moq;
 using Xunit;
@@ -15,16 +15,16 @@ namespace DarkDeeds.ServiceTask.Tests.Services.RecurrenceCreatorServiceTests
     {
         [Fact]
         public async Task CreateAsync_DoNothingIfNoNonDeletedRecurrences()
-        {   
+        {
             var service = Service();
-            
+
             await service.CreateAsync(0, "");
-            
+
             _plannedRecurrenceRepoMock.Verify(x => x.GetBySpecAsync(_plannedRecurrenceSpecMock.Object));
             _taskRepoMock.VerifyNoOtherCalls();
             _plannedRecurrenceRepoMock.VerifyNoOtherCalls();
         }
-        
+
         [Fact]
         public async Task CreateAsync_CreateTaskForRecurrence()
         {
@@ -36,14 +36,14 @@ namespace DarkDeeds.ServiceTask.Tests.Services.RecurrenceCreatorServiceTests
                 Task = "Task", EveryNthDay = 1, StartDate = someDate, UserId = "userId",
                 Recurrences = new List<RecurrenceEntity>()
             });
-            
+
             await service.CreateAsync(0, "userId");
-            
+
             _taskRepoMock.Verify(x => x.UpsertAsync(It.Is<TaskEntity>(
                 y => y.Title == "Task" && y.UserId == "userId" && y.Date == someDate && y.Uid != null
                 )));
         }
-        
+
         [Fact]
         public async Task CreateAsync_CreateRecurrenceTaskForRecurrence()
         {
@@ -53,13 +53,13 @@ namespace DarkDeeds.ServiceTask.Tests.Services.RecurrenceCreatorServiceTests
                 .Returns(Task.CompletedTask)
                 .Callback<TaskEntity>(x => x.Uid = "uid");
             _dateServiceMock.SetupGet(x => x.Now).Returns(now);
-            
+
             var service = Service(new PlannedRecurrenceEntity
             {
                 Task = "Task", EveryNthDay = 1, StartDate = now, UserId = "userId",
                 Recurrences = new List<RecurrenceEntity>()
             });
-            
+
             await service.CreateAsync(0, "userId");
 
             _plannedRecurrenceRepoMock.Verify(x => x.TryUpdateVersionPropsAsync(
@@ -68,7 +68,7 @@ namespace DarkDeeds.ServiceTask.Tests.Services.RecurrenceCreatorServiceTests
                 It.IsAny<Expression<Func<PlannedRecurrenceEntity, object>>[]>()
             ));
         }
-        
+
         [Fact]
         public async Task CreateAsync_CreateEntitiesExpectedNumberOfTimes()
         {
@@ -79,12 +79,12 @@ namespace DarkDeeds.ServiceTask.Tests.Services.RecurrenceCreatorServiceTests
                 EveryNthDay = 1, StartDate = new DateTime(2019, 9, 3), UserId = "userId",
                 Recurrences = new List<RecurrenceEntity>()
             });
-            
+
             await service.CreateAsync(0, "userId");
-            
+
             _taskRepoMock.Verify(x => x.UpsertAsync(It.IsAny<TaskEntity>()), Times.Exactly(13));
         }
-        
+
         [Fact]
         public async Task CreateAsync_SimpleTestWeekday()
         {
@@ -96,9 +96,9 @@ namespace DarkDeeds.ServiceTask.Tests.Services.RecurrenceCreatorServiceTests
                 EveryWeekday = RecurrenceWeekdayEnum.Monday | RecurrenceWeekdayEnum.Wednesday, UserId = "userId",
                 Recurrences = new List<RecurrenceEntity>()
             });
-            
+
             await service.CreateAsync(0, "userId");
-            
+
             _taskRepoMock.Verify(x => x.UpsertAsync(It.Is<TaskEntity>(
                 y => y.Date == new DateTime(2019, 9, 9)
             )));
@@ -107,7 +107,7 @@ namespace DarkDeeds.ServiceTask.Tests.Services.RecurrenceCreatorServiceTests
             )));
             _taskRepoMock.VerifyNoOtherCalls();
         }
-        
+
         [Fact]
         public async Task CreateAsync_SimpleTestMonthDay()
         {
@@ -118,7 +118,7 @@ namespace DarkDeeds.ServiceTask.Tests.Services.RecurrenceCreatorServiceTests
                 StartDate = new DateTime(2019, 9, 6), EveryMonthDay = "9,11", UserId = "userId",
                 Recurrences = new List<RecurrenceEntity>()
             });
-            
+
             await service.CreateAsync(0, "userId");
 
             _taskRepoMock.Verify(x => x.UpsertAsync(It.Is<TaskEntity>(
@@ -129,7 +129,7 @@ namespace DarkDeeds.ServiceTask.Tests.Services.RecurrenceCreatorServiceTests
             )));
             _taskRepoMock.VerifyNoOtherCalls();
         }
-        
+
         [Fact]
         public async Task CreateAsync_SimpleTestNthDay()
         {
@@ -140,9 +140,9 @@ namespace DarkDeeds.ServiceTask.Tests.Services.RecurrenceCreatorServiceTests
                 StartDate = new DateTime(2019, 9, 6), EveryNthDay = 6, UserId = "userId",
                 Recurrences = new List<RecurrenceEntity>()
             });
-            
+
             await service.CreateAsync(0, "userId");
-            
+
             _taskRepoMock.Verify(x => x.UpsertAsync(It.Is<TaskEntity>(
                 y => y.Date == new DateTime(2019, 9, 6)
             )));
@@ -151,7 +151,7 @@ namespace DarkDeeds.ServiceTask.Tests.Services.RecurrenceCreatorServiceTests
             )));
             _taskRepoMock.VerifyNoOtherCalls();
         }
-        
+
         [Fact]
         public async Task CreateAsync_WeekdayAndMonthDayAndNthDayAtTheSameTime()
         {
@@ -163,15 +163,15 @@ namespace DarkDeeds.ServiceTask.Tests.Services.RecurrenceCreatorServiceTests
                 EveryWeekday = RecurrenceWeekdayEnum.Thursday | RecurrenceWeekdayEnum.Wednesday, UserId = "userId",
                 Recurrences = new List<RecurrenceEntity>()
             });
-            
+
             await service.CreateAsync(0, "userId");
-            
+
             _taskRepoMock.Verify(x => x.UpsertAsync(It.Is<TaskEntity>(
                 y => y.Date == new DateTime(2019, 9, 12)
             )));
             _taskRepoMock.VerifyNoOtherCalls();
         }
-        
+
         [Fact]
         public async Task CreateAsync_IgnoreAlreadyExistingRecurrences()
         {
@@ -185,23 +185,23 @@ namespace DarkDeeds.ServiceTask.Tests.Services.RecurrenceCreatorServiceTests
                     new() {DateTime = new DateTime(2019, 9, 3)}
                 }
             });
-            
+
             await service.CreateAsync(0, "userId");
-            
+
             _taskRepoMock.Verify(x => x.UpsertAsync(It.IsAny<TaskEntity>()), Times.Exactly(12));
         }
-        
+
         [Fact]
         public async Task CreateAsync_FilterPlannedRecurrencesByUser()
         {
             var service = Service();
-            
+
             await service.CreateAsync(0, "userId100500");
-            
+
             _plannedRecurrenceRepoMock.Verify(x => x.GetBySpecAsync(_plannedRecurrenceSpecMock.Object));
             _plannedRecurrenceSpecMock.Verify(x => x.FilterUserOwned("userId100500"));
         }
-        
+
         [Fact]
         public async Task CreateAsync_NoRepeats()
         {
@@ -211,24 +211,24 @@ namespace DarkDeeds.ServiceTask.Tests.Services.RecurrenceCreatorServiceTests
             {
                 StartDate = new DateTime(2019, 9, 6), UserId = "userId", Recurrences = new List<RecurrenceEntity>()
             });
-            
+
             await service.CreateAsync(0, "userId");
-            
+
             _taskRepoMock.Verify(x => x.UpsertAsync(It.IsAny<TaskEntity>()), Times.Never);
         }
-        
+
         [Fact]
         public async Task CreateAsync_NotifyAboutCreatedTasks()
         {
             _dateServiceMock.SetupGet(x => x.Now).Returns(new DateTime(2019, 9, 6));
-            
+
 
             var service = Service(new PlannedRecurrenceEntity
             {
                 StartDate = new DateTime(2019, 9, 6), EveryMonthDay = "6", UserId = "userId",
                 Recurrences = new List<RecurrenceEntity>()
             });
-            
+
             await service.CreateAsync(0, "userId");
 
             _notifierServiceMock.Verify(x => x.TaskUpdated(

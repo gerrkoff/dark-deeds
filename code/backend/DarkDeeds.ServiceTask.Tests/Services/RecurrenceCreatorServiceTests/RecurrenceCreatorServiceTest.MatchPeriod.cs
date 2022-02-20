@@ -1,11 +1,11 @@
 using System;
-using DarkDeeds.ServiceTask.Entities.Models;
+using DarkDeeds.ServiceTask.Entities;
 using Xunit;
 
 namespace DarkDeeds.ServiceTask.Tests.Services.RecurrenceCreatorServiceTests
 {
     public partial class RecurrenceCreatorServiceTest
-    { 
+    {
         [Fact]
         public void MatchPeriod_ShouldMatchIfWithinPeriod()
         {
@@ -19,7 +19,7 @@ namespace DarkDeeds.ServiceTask.Tests.Services.RecurrenceCreatorServiceTests
 
             Assert.True(result);
         }
-        
+
         [Fact]
         public void MatchPeriod_ShouldMatchIfEqualsToStartDate()
         {
@@ -33,7 +33,7 @@ namespace DarkDeeds.ServiceTask.Tests.Services.RecurrenceCreatorServiceTests
 
             Assert.True(result);
         }
-        
+
         [Fact]
         public void MatchPeriod_ShouldMatchIfEqualsToEndDate()
         {
@@ -47,7 +47,7 @@ namespace DarkDeeds.ServiceTask.Tests.Services.RecurrenceCreatorServiceTests
 
             Assert.True(result);
         }
-        
+
         [Fact]
         public void MatchPeriod_ShouldMatchEvenIfEndDateIsNull()
         {
@@ -60,7 +60,7 @@ namespace DarkDeeds.ServiceTask.Tests.Services.RecurrenceCreatorServiceTests
 
             Assert.True(result);
         }
-        
+
         [Fact]
         public void MatchPeriod_ShouldNotMatchIfLessThanStartDate()
         {

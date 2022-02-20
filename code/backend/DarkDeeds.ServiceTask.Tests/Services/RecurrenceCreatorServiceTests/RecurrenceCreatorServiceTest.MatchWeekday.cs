@@ -1,6 +1,6 @@
 using System;
-using DarkDeeds.ServiceTask.Entities.Enums;
-using DarkDeeds.ServiceTask.Entities.Models;
+using DarkDeeds.ServiceTask.Entities;
+using DarkDeeds.ServiceTask.Enums;
 using Xunit;
 
 namespace DarkDeeds.ServiceTask.Tests.Services.RecurrenceCreatorServiceTests
@@ -19,7 +19,7 @@ namespace DarkDeeds.ServiceTask.Tests.Services.RecurrenceCreatorServiceTests
 
             Assert.True(result);
         }
-        
+
         [Fact]
         public void MatchWeekday_ShouldMatchOneOfTwoWeekdays()
         {
@@ -32,7 +32,7 @@ namespace DarkDeeds.ServiceTask.Tests.Services.RecurrenceCreatorServiceTests
 
             Assert.True(result);
         }
-        
+
         [Fact]
         public void MatchWeekday_ShouldNotMatchOneOfWeekdays()
         {
@@ -45,7 +45,7 @@ namespace DarkDeeds.ServiceTask.Tests.Services.RecurrenceCreatorServiceTests
 
             Assert.False(result);
         }
-        
+
         [Fact]
         public void MatchWeekday_ShouldMatchIfWeekdayIsNull()
         {

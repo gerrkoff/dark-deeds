@@ -1,8 +1,8 @@
 using System.Threading.Tasks;
 using AutoMapper;
 using DarkDeeds.ServiceAuth.Contract;
-using DarkDeeds.ServiceAuth.Services.Dto;
-using DarkDeeds.ServiceAuth.Services.Services.Interface;
+using DarkDeeds.ServiceAuth.Dto.Dto;
+using DarkDeeds.ServiceAuth.Services;
 using Grpc.Core;
 
 namespace DarkDeeds.ServiceAuth.ContractImpl.Contract
@@ -24,7 +24,7 @@ namespace DarkDeeds.ServiceAuth.ContractImpl.Contract
             SignInResultDto result = await _authService.SignInAsync(signInInfo);
             return _mapper.Map<SignInReply>(result);
         }
-        
+
         public override async Task<SignUpReply> SignUp(SignUpRequest request, ServerCallContext context)
         {
             var signUpInfoDto = _mapper.Map<SignUpInfoDto>(request);

@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using DarkDeeds.WebClientBff.Infrastructure.Communication.TaskServiceApp.Dto;
+using DarkDeeds.ServiceTask.Dto;
 using MediatR;
 
 namespace DarkDeeds.WebClientBff.UseCases.Handlers.Recurrences.Save

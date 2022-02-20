@@ -1,5 +1,5 @@
 using System;
-using DarkDeeds.ServiceTask.Entities.Models;
+using DarkDeeds.ServiceTask.Entities;
 using Xunit;
 
 namespace DarkDeeds.ServiceTask.Tests.Services.RecurrenceCreatorServiceTests
@@ -19,7 +19,7 @@ namespace DarkDeeds.ServiceTask.Tests.Services.RecurrenceCreatorServiceTests
 
             Assert.True(result);
         }
-        
+
         [Fact]
         public void MatchNthDay_ShouldMatchNextDayAfterStartDateWith1Number()
         {
@@ -33,7 +33,7 @@ namespace DarkDeeds.ServiceTask.Tests.Services.RecurrenceCreatorServiceTests
 
             Assert.True(result);
         }
-        
+
         [Fact]
         public void MatchNthDay_ShouldNotMatchNextDayAfterStartDateWith2Number()
         {
@@ -47,7 +47,7 @@ namespace DarkDeeds.ServiceTask.Tests.Services.RecurrenceCreatorServiceTests
 
             Assert.False(result);
         }
-        
+
         [Fact]
         public void MatchNthDay_ShouldMatch2NextDaysAfterStarDateWith2Number()
         {
@@ -61,7 +61,7 @@ namespace DarkDeeds.ServiceTask.Tests.Services.RecurrenceCreatorServiceTests
 
             Assert.True(result);
         }
-        
+
         [Fact]
         public void MatchNthDay_ShouldMatch5NextDaysAfterStartDateWith5Number()
         {
@@ -75,7 +75,7 @@ namespace DarkDeeds.ServiceTask.Tests.Services.RecurrenceCreatorServiceTests
 
             Assert.True(result);
         }
-        
+
         [Fact]
         public void MatchNthDay_ShouldNotMatch4NextDayAfterStartDateWith5Number()
         {
@@ -89,7 +89,7 @@ namespace DarkDeeds.ServiceTask.Tests.Services.RecurrenceCreatorServiceTests
 
             Assert.False(result);
         }
-        
+
         [Fact]
         public void MatchNthDay_ShouldMatch5NextDayAfterStartDateWith5NumberWithMonthChange()
         {

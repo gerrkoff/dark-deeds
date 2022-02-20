@@ -6,7 +6,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\DarkDeeds.Common\DarkDeeds.Common.csproj" />
       <ProjectReference Include="..\DarkDeeds.ServiceAuth.Contract\DarkDeeds.ServiceAuth.Contract.csproj" />
       <ProjectReference Include="..\DarkDeeds.ServiceAuth.Services\DarkDeeds.ServiceAuth.Services.csproj" />
     </ItemGroup>

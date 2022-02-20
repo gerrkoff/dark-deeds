@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
-using DarkDeeds.WebClientBff.Infrastructure.Communication.TaskServiceApp.Dto;
+using DarkDeeds.ServiceTask.Dto;
 using DarkDeeds.WebClientBff.UseCases.Handlers.Tasks.LoadActual;
 using DarkDeeds.WebClientBff.UseCases.Handlers.Tasks.Save;
 using MediatR;
@@ -24,7 +24,7 @@ namespace DarkDeeds.WebClientBff.Web.Controllers
         {
             return _mediator.Send(new LoadActualRequestModel(from));
         }
-        
+
         // TODO: use separate dto?
         [HttpPost]
         public Task<IEnumerable<TaskDto>> Post([FromBody] ICollection<TaskDto> tasks)

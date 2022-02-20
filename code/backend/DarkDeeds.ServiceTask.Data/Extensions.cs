@@ -6,7 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 namespace DarkDeeds.ServiceTask.Data
 {
     public static class Extensions
-    {   
+    {
         public static void AddTaskDatabase(this IServiceCollection services, IConfiguration configuration)
         {
             string connectionString = configuration.GetConnectionString("mongoDb");

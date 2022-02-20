@@ -15,7 +15,8 @@
 
     <ItemGroup>
       <ProjectReference Include="..\DarkDeeds.Authentication.Core\DarkDeeds.Authentication.Core.csproj" />
-      <ProjectReference Include="..\DarkDeeds.WebClientBff.Infrastructure\DarkDeeds.WebClientBff.Infrastructure.csproj" />
+      <ProjectReference Include="..\DarkDeeds.ServiceAuth.Consumers\DarkDeeds.ServiceAuth.Consumers.csproj" />
+      <ProjectReference Include="..\DarkDeeds.ServiceTask.Consumers\DarkDeeds.ServiceTask.Consumers.csproj" />
       <ProjectReference Include="..\DarkDeeds.WebClientBff.Services\DarkDeeds.WebClientBff.Services.csproj" />
     </ItemGroup>
 

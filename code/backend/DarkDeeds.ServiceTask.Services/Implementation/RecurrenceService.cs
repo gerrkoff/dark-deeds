@@ -2,11 +2,11 @@
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using DarkDeeds.ServiceTask.Entities.Models;
+using DarkDeeds.ServiceTask.Dto;
+using DarkDeeds.ServiceTask.Entities;
 using DarkDeeds.ServiceTask.Infrastructure.Data.EntityRepository;
-using DarkDeeds.ServiceTask.Models.Dto;
-using DarkDeeds.ServiceTask.Models.Exceptions;
-using DarkDeeds.ServiceTask.Models.DtoExtensions;
+using DarkDeeds.ServiceTask.Services.DtoExtensions;
+using DarkDeeds.ServiceTask.Services.Exceptions;
 using DarkDeeds.ServiceTask.Services.Interface;
 using DarkDeeds.ServiceTask.Services.Specifications;
 
@@ -46,7 +46,7 @@ namespace DarkDeeds.ServiceTask.Services.Implementation
                 if (await SavePlannedRecurrence(dto, userId))
                     count++;
             }
-            
+
             return count;
         }
 
@@ -57,7 +57,7 @@ namespace DarkDeeds.ServiceTask.Services.Implementation
                 await _plannedRecurrenceRepository.DeleteAsync(dto.Uid);
                 return true;
             }
-                
+
             PlannedRecurrenceEntity entity = await _plannedRecurrenceRepository.GetByIdAsync(dto.Uid);
             if (entity == null)
             {

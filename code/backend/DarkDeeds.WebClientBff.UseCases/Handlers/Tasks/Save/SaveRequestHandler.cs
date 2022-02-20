@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using DarkDeeds.WebClientBff.Infrastructure.Communication.TaskServiceApp;
-using DarkDeeds.WebClientBff.Infrastructure.Communication.TaskServiceApp.Dto;
+using DarkDeeds.ServiceTask.Consumers;
+using DarkDeeds.ServiceTask.Dto;
 using MediatR;
 
 namespace DarkDeeds.WebClientBff.UseCases.Handlers.Tasks.Save

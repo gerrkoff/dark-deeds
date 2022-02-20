@@ -1,8 +1,8 @@
 using System;
 using AutoMapper;
 using DarkDeeds.ServiceTask.Contract;
-using DarkDeeds.ServiceTask.Entities.Enums;
-using DarkDeeds.ServiceTask.Models.Dto;
+using DarkDeeds.ServiceTask.Dto;
+using DarkDeeds.ServiceTask.Enums;
 
 namespace DarkDeeds.ServiceTask.ContractImpl.Mapping
 {
@@ -31,7 +31,7 @@ namespace DarkDeeds.ServiceTask.ContractImpl.Mapping
                     e.MapFrom(x => x.TimeExist ? (int?) x.Time : null))
                 .ForMember(x => x.IsProbable,
                     e => e.MapFrom(x => x.Probable));
-            
+
             CreateMap<PlannedRecurrenceDto, PlannedRecurrenceModel>()
                 .ForMember(x => x.EndDate, e =>
                     e.MapFrom(x => x.EndDate.HasValue ? x.EndDate.Value.Ticks : 0))
@@ -51,7 +51,7 @@ namespace DarkDeeds.ServiceTask.ContractImpl.Mapping
                     e.MapFrom(x => x.EveryMonthDay ?? string.Empty))
                 .ForMember(x => x.Uid, e =>
                     e.MapFrom(x => x.Uid ?? string.Empty));
-            
+
             CreateMap<PlannedRecurrenceModel, PlannedRecurrenceDto>()
                 .ForMember(x => x.EndDate, e =>
                     e.MapFrom(x => x.EndDateExist ? (DateTime?) new DateTime(x.EndDate, DateTimeKind.Utc) : null))

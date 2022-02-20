@@ -1,7 +1,7 @@
 using System.Threading;
 using System.Threading.Tasks;
-using DarkDeeds.WebClientBff.Infrastructure.Communication.AuthServiceApp;
-using DarkDeeds.WebClientBff.Infrastructure.Communication.AuthServiceApp.Dto;
+using DarkDeeds.ServiceAuth.Consumers;
+using DarkDeeds.ServiceAuth.Dto.Dto;
 using MediatR;
 
 namespace DarkDeeds.WebClientBff.UseCases.Handlers.Account.SignIn

@@ -5,7 +5,6 @@ using DarkDeeds.ServiceTask.Communication;
 using DarkDeeds.ServiceTask.ContractImpl;
 using DarkDeeds.ServiceTask.ContractImpl.Contract;
 using DarkDeeds.ServiceTask.Data;
-using DarkDeeds.ServiceTask.Models;
 using DarkDeeds.ServiceTask.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -29,10 +28,9 @@ namespace DarkDeeds.ServiceTask.App
             services.AddDarkDeedsAuth(Configuration);
             services.AddDarkDeedsAppRegistration("task-service", Configuration, true);
             services.AddDarkDeedsAppMetrics(Configuration);
-            
+
             services.AddTaskServices();
             services.AddTaskCommunication();
-            services.AddTaskAutoMapper();
             services.AddTaskDatabase(Configuration);
             services.AddTaskServiceContractImpl();
             services.AddTaskServiceApi();
