@@ -10,6 +10,7 @@ services:
     depends_on:
       - consul
       - backend
+      - backend-2
       - auth-service
       - task-service
       - web-client
@@ -70,26 +71,6 @@ services:
         limits:
           cpus: '1'
           memory: 300M
-
-  # api-gateway:
-  #   build:
-  #     context: ../
-  #     dockerfile: infrastructure/apps/api-gateway.dockerfile
-  #   ports:
-  #     - 5000:5000
-  #   environment:
-  #     - ASPNETCORE_URLS=http://0.0.0.0:5000
-  #   depends_on:
-  #     - consul
-  #     - backend
-  #     - auth-service
-  #     - task-service
-  #     - web-client
-  #   deploy:
-  #     resources:
-  #       limits:
-  #         cpus: '1'
-  #         memory: 300M
 
   auth-service:
     build:

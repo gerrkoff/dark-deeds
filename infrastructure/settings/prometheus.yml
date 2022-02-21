@@ -21,9 +21,6 @@ scrape_configs:
           - "auth-service"
         tags:
           - "metrics"
-  - job_name: "api-gateway"
-    static_configs:
-      - targets: ["api-gateway:5000"]
 # consul
 # rabbitmq
 # mongo
