@@ -2,30 +2,25 @@ global:
   scrape_interval: 15s
 
 scrape_configs:
-  - job_name: 'task-service'
+  - job_name: "backend"
     consul_sd_configs:
-    - server: 'consul:8500'
-      services:
-        - 'task-service'
-      tags:
-        - 'metrics'
-  - job_name: 'web-client-bff'
+      - server: "consul:8500"
+        services:
+          - "backend"
+  - job_name: "task-service"
     consul_sd_configs:
-    - server: 'consul:8500'
-      services:
-        - 'web-client-bff'
-  - job_name: 'telegram-client'
+      - server: "consul:8500"
+        services:
+          - "task-service"
+        tags:
+          - "metrics"
+  - job_name: "auth-service"
     consul_sd_configs:
-    - server: 'consul:8500'
-      services:
-        - 'telegram-client'
-  - job_name: 'auth-service'
-    consul_sd_configs:
-    - server: 'consul:8500'
-      services:
-        - 'auth-service'
-      tags:
-        - 'metrics'
-  - job_name: 'api-gateway'
+      - server: "consul:8500"
+        services:
+          - "auth-service"
+        tags:
+          - "metrics"
+  - job_name: "api-gateway"
     static_configs:
-    - targets: ['api-gateway:5000']
+      - targets: ["api-gateway:5000"]
