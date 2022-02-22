@@ -1,3 +1,4 @@
+using DarkDeeds.Common;
 using Microsoft.Extensions.Configuration;
 using RabbitMQ.Client;
 
@@ -44,7 +45,7 @@ namespace DarkDeeds.Communication.Amqp.Common
 
         private (string host, int? port, string user, string pass) GetConnectionInfo()
         {
-            var values = _configuration.GetConnectionString(Constants.ConnectionStringRmq).Split(";");
+            var values = _configuration.GetConnectionString(EnvConstants.ConnectionStringRmq).Split(";");
             var hostValues = values[0].Split(':');
             var port = hostValues.Length > 1 ? (int?) int.Parse(hostValues[1]) : null;
             return (hostValues[0], port , values[1], values[2]);

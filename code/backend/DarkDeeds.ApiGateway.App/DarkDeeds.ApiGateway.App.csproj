@@ -11,6 +11,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\DarkDeeds.AppMetrics\DarkDeeds.AppMetrics.csproj" />
+      <ProjectReference Include="..\DarkDeeds.Common.Web\DarkDeeds.Common.Web.csproj" />
     </ItemGroup>
 
 </Project>

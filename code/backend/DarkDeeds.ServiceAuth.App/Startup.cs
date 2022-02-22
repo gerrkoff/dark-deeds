@@ -2,6 +2,7 @@ using DarkDeeds.AppMetrics;
 using DarkDeeds.Authentication;
 using DarkDeeds.Backend.Data;
 using DarkDeeds.Common.Validation;
+using DarkDeeds.Common.Web;
 using DarkDeeds.Communication;
 using DarkDeeds.ServiceAuth.ContractImpl;
 using DarkDeeds.ServiceAuth.ContractImpl.Contract;
@@ -16,6 +17,8 @@ namespace DarkDeeds.ServiceAuth.App
 {
     public class Startup
     {
+        public const string App = "auth-service";
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -27,7 +30,7 @@ namespace DarkDeeds.ServiceAuth.App
         {
             services.AddDarkDeedsAuth(Configuration);
             services.AddDarkDeedsValidation();
-            services.AddDarkDeedsAppRegistration("auth-service", Configuration, true);
+            services.AddDarkDeedsAppRegistration(App, Configuration, true);
             services.AddDarkDeedsAppMetrics(Configuration);
             services.AddBackendDatabase(Configuration);
             services.AddAuthServices();
@@ -37,6 +40,7 @@ namespace DarkDeeds.ServiceAuth.App
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseRequestLogging();
             if (!env.IsProduction())
             {
                 app.UseDeveloperExceptionPage();

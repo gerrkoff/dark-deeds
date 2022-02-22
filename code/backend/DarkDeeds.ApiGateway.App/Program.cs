@@ -1,4 +1,5 @@
 using System.IO;
+using DarkDeeds.Common.Web;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
@@ -9,7 +10,7 @@ namespace DarkDeeds.ApiGateway.App
     {
         public static void Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            Logging.SafeRunHost(() => CreateHostBuilder(args).Build().Run());
         }
 
         private static IHostBuilder CreateHostBuilder(string[] args) =>
@@ -26,6 +27,7 @@ namespace DarkDeeds.ApiGateway.App
                         .AddJsonFile($"ocelot.{hostingContext.HostingEnvironment.EnvironmentName}.json", true, true)
                         .AddEnvironmentVariables();
                 })
+                .UseLogging(Startup.App)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();

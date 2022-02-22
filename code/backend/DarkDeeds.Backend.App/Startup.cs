@@ -17,6 +17,8 @@ namespace DarkDeeds.Backend.App
 {
     public class Startup
     {
+        public const string App = "backend";
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -27,7 +29,7 @@ namespace DarkDeeds.Backend.App
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDarkDeedsAuth(Configuration);
-            services.AddDarkDeedsAppRegistration("backend", Configuration);
+            services.AddDarkDeedsAppRegistration(App, Configuration);
             services.AddDarkDeedsAppMetrics(Configuration);
             services.AddDarkDeedsTestControllers();
 
@@ -41,6 +43,7 @@ namespace DarkDeeds.Backend.App
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseRequestLogging();
             app.UseRouting();
             app.UseDarkDeedsAppMetrics();
             app.UseDarkDeedsExceptionHandler(env.IsProduction());

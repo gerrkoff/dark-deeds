@@ -73,7 +73,7 @@ services:
       - 5002:15672
     volumes:
       - ./settings/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
-      
+
   postgres-db:
     image: postgres:13.0-alpine
     environment:
@@ -105,8 +105,17 @@ services:
       - grafana-volume:/var/lib/grafana
       - ./settings/grafana.yml:/etc/grafana/provisioning/datasources/grafana.yml:ro
 
+  loki:
+    image: grafana/loki:2.4.2
+    ports:
+      - 3100:3100
+    volumes:
+      - loki-volume:/loki
+    # command: -config.file=/etc/loki/local-config.yaml
+
 volumes:
   postgres-db-volume:
   mongo-db-volume:
   grafana-volume:
   prometheus-volume:
+  loki-volume:

@@ -1,5 +1,6 @@
 using DarkDeeds.AppMetrics;
 using DarkDeeds.Authentication;
+using DarkDeeds.Common.Web;
 using DarkDeeds.Communication;
 using DarkDeeds.ServiceTask.Communication;
 using DarkDeeds.ServiceTask.ContractImpl;
@@ -16,6 +17,7 @@ namespace DarkDeeds.ServiceTask.App
 {
     public class Startup
     {
+        public const string App = "task-service";
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -26,7 +28,7 @@ namespace DarkDeeds.ServiceTask.App
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDarkDeedsAuth(Configuration);
-            services.AddDarkDeedsAppRegistration("task-service", Configuration, true);
+            services.AddDarkDeedsAppRegistration(App, Configuration, true);
             services.AddDarkDeedsAppMetrics(Configuration);
 
             services.AddTaskServices();
@@ -38,6 +40,7 @@ namespace DarkDeeds.ServiceTask.App
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseRequestLogging();
             if (!env.IsProduction())
             {
                 app.UseDeveloperExceptionPage();
