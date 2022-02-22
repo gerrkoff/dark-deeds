@@ -1,0 +1,40 @@
+{{- $backend_services := service "backend" -}}
+
+upstream backend {
+    least_conn;
+
+    {{- if $backend_services -}}
+        {{- range $backend_services }}
+            server {{ .Address }}:{{ .Port }};
+        {{- end }}
+    {{- else }}
+        server localhost;
+    {{- end }}
+}
+
+upstream backendws {
+    ip_hash;
+
+    {{- if $backend_services -}}
+        {{- range $backend_services }}
+            server {{ .Address }}:{{ .Port }};
+        {{- end }}
+    {{- else }}
+        server localhost;
+    {{- end }}
+}
+
+
+{{- $webclient_services := service "web-client" -}}
+
+upstream webclient {
+    least_conn;
+
+    {{- if $webclient_services -}}
+        {{- range $webclient_services }}
+            server {{ .Address }}:{{ .Port }};
+        {{- end }}
+    {{- else }}
+        server localhost;
+    {{- end }}
+}

@@ -1,12 +1,14 @@
 version: '3'
 
 services:
-  border:
+  nginx:
     build:
       context: ../
-      dockerfile: infrastructure/apps/border.dockerfile
+      dockerfile: infrastructure/apps/nginx.dockerfile
     ports:
       - 5000:80
+    volumes:
+      - nginx-consul-volume:/var/nginx-consul
     depends_on:
       - consul
       - backend
@@ -21,9 +23,13 @@ services:
           memory: 300M
 
   consul:
-    image: consul:1.10
+    build:
+      context: ../
+      dockerfile: infrastructure/apps/consul.dockerfile
     ports:
       - 8500:8500
+    volumes:
+      - nginx-consul-volume:/var/nginx-consul
     deploy:
       resources:
         limits:
@@ -189,3 +195,4 @@ volumes:
   mongo-db-volume:
   prometheus-volume:
   grafana-volume:
+  nginx-consul-volume:
