@@ -15,6 +15,7 @@ namespace DarkDeeds.Common.Web
     // https://grafana.com/docs/loki/latest/operations/storage/retention/
     // TODO: fix issue with Parent/Span Ids
     // https://github.com/dotnet/runtime/issues/41072
+    // TODO: loki dashboard
     public static class Logging
     {
         private const string Empty = "---";
