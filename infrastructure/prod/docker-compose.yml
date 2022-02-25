@@ -76,6 +76,8 @@ services:
 
   postgres-db:
     image: postgres:13.0-alpine
+    ports:
+      - 5432:5432
     environment:
       - POSTGRES_PASSWORD=password
     volumes:
@@ -83,6 +85,8 @@ services:
 
   mongo-db:
     image: mongo:4.4
+    ports:
+      - 27017:27017
     environment:
       - MONGO_INITDB_ROOT_USERNAME=user
       - MONGO_INITDB_ROOT_PASSWORD=password
@@ -97,21 +101,18 @@ services:
 
   grafana:
     image: gerrkoff/dark-deeds-grafana:${BUILD_VERSION}
-    environment:
-      - GF_SECURITY_ADMIN_PASSWORD=qwerty
     ports:
       - 5003:3000
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=qwerty
     volumes:
       - grafana-volume:/var/lib/grafana
       - ./settings/grafana.yml:/etc/grafana/provisioning/datasources/grafana.yml:ro
 
   loki:
     image: grafana/loki:2.4.2
-    ports:
-      - 3100:3100
     volumes:
       - loki-volume:/loki
-    # command: -config.file=/etc/loki/local-config.yaml
 
 volumes:
   postgres-db-volume:

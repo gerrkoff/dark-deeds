@@ -1,0 +1,2 @@
+loki
+{app=~".+", RequestPath!~"/metrics|/ws/web/task/negotiate", TraceId=~".*", level=~".*", host=~".*", env=~".*"}
