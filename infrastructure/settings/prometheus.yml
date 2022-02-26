@@ -22,8 +22,10 @@ scrape_configs:
         services:
           - "backend"
   - job_name: "api-gateway"
-    static_configs:
-      - targets: ["api-gateway:5000"]
+    consul_sd_configs:
+      - server: "consul:8500"
+        services:
+          - "api-gateway"
 # consul
 # rabbitmq
 # mongo

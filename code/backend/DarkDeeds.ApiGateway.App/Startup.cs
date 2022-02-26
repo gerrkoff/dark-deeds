@@ -1,5 +1,6 @@
 using DarkDeeds.AppMetrics;
 using DarkDeeds.Common.Web;
+using DarkDeeds.Communication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -26,6 +27,7 @@ namespace DarkDeeds.ApiGateway.App
             services.AddOcelot()
                 .AddConsul();
             services.AddDarkDeedsAppMetrics(Configuration);
+            services.AddDarkDeedsAppRegistration(App, Configuration);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

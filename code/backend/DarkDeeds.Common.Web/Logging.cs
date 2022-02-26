@@ -13,6 +13,7 @@ namespace DarkDeeds.Common.Web
     // TODO: loki retention policy
     // https://grafana.com/docs/loki/latest/configuration/
     // https://grafana.com/docs/loki/latest/operations/storage/retention/
+    // TODO: deploy on staging
     // TODO: fix issue with Parent/Span Ids
     // https://github.com/dotnet/runtime/issues/41072
     public static class Logging
@@ -62,7 +63,7 @@ namespace DarkDeeds.Common.Web
                         new List<LokiLabel>
                         {
                             new() { Key = "app", Value = app },
-                            new() { Key = "host", Value = $"{serviceDiscoveryHost}:{serviceDiscoveryPort}" },
+                            new() { Key = "instance", Value = $"{serviceDiscoveryHost}:{serviceDiscoveryPort}" },
                             new() { Key = "env", Value = environment },
                         },
                         createLevelLabel: true);

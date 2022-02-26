@@ -60,6 +60,8 @@ services:
     ports:
       - 5000:5000
     environment:
+      - DD_SERVICE_DISCOVERY_HOST=${IP:-api-gateway}
+      - DD_SERVICE_DISCOVERY_PORT=5000
       - ASPNETCORE_URLS=http://0.0.0.0:5000
     depends_on:
       - consul
@@ -131,6 +133,25 @@ services:
           cpus: '1'
           memory: 300M
 
+  backend-2:
+    build:
+      context: ../
+      dockerfile: infrastructure/apps/backend.dockerfile
+    ports:
+      - 5055:5055
+    environment:
+      - DD_SERVICE_DISCOVERY_HOST=${IP:-backend-2}
+      - DD_SERVICE_DISCOVERY_PORT=5055
+      - ASPNETCORE_URLS=http://0.0.0.0:5055
+    depends_on:
+      - consul
+      - postgres-db
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 300M
+
   web-client:
     build:
       context: ../
@@ -172,7 +193,8 @@ services:
       - 3100:3100
     volumes:
       - loki-volume:/loki
-    # command: -config.file=/etc/loki/local-config.yaml
+      # - ./settings/grafana.yml:/etc/loki/local-config.yaml
+    # command: -config.file=/etc/loki/local-config.yaml -print-config-stderr
 
 volumes:
   postgres-db-volume:

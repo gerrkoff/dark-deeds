@@ -8,7 +8,8 @@
   "ConnectionStrings": {
     "appDb": "Host=postgres-db;Port=5432;Database=dark-deeds;Username=postgres;Password=password;",
     "rabbitMq": "rabbit-mq;guest;guest",
-    "consul": "http://consul:8500"
+    "consul": "http://consul:8500",
+    "loki": "http://loki:3100"
   },
   "Bot": "bot",
   "EnableTestHandlers": "true",

@@ -21,7 +21,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "iteration": 1645779575335,
+  "iteration": 1645903703816,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -54,7 +54,7 @@
             "type": "loki",
             "uid": "P8E80F9AEF21F6940"
           },
-          "expr": "{app=~\"$app\", TraceId=~\"$traceId\", RequestPath=~\"$include\", level=~\"$level\", host=~\"$host\", env=~\"$env\"}",
+          "expr": "{app=~\"$app\", TraceId=~\"$traceId\", RequestPath=~\"$include\", level=~\"$level\", instance=~\"$instance\", env=~\"$env\"}",
           "refId": "A"
         }
       ],
@@ -127,7 +127,7 @@
         "hide": 0,
         "includeAll": true,
         "multi": true,
-        "name": "host",
+        "name": "instance",
         "options": [],
         "query": "label_values(host)",
         "refresh": 1,
@@ -224,6 +224,6 @@
   "timezone": "",
   "title": "Logs",
   "uid": "1nT3dyB7k",
-  "version": 2,
+  "version": 3,
   "weekStart": ""
 }

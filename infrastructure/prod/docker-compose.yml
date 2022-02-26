@@ -6,6 +6,8 @@ services:
     ports:
       - 5000:5000
     environment:
+      - DD_SERVICE_DISCOVERY_HOST=${IP:-api-gateway}
+      - DD_SERVICE_DISCOVERY_PORT=5000
       - ASPNETCORE_URLS=http://0.0.0.0:5000
     volumes:
       - ./settings/api-gateway-ocelot.json:/app/ocelot.Production.json
@@ -113,6 +115,8 @@ services:
     image: grafana/loki:2.4.2
     volumes:
       - loki-volume:/loki
+      # - ./settings/grafana.yml:/etc/loki/local-config.yaml
+    # command: -config.file=/etc/loki/local-config.yaml
 
 volumes:
   postgres-db-volume:

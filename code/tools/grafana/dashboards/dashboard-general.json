@@ -22,7 +22,7 @@
   "fiscalYearStartMonth": 0,
   "gnetId": 10427,
   "graphTooltip": 0,
-  "iteration": 1645900666183,
+  "iteration": 1645958296379,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -37,14 +37,21 @@
                   "color": "red",
                   "index": 0,
                   "text": "down"
-                },
-                "1": {
-                  "color": "green",
-                  "index": 1,
-                  "text": "up"
                 }
               },
               "type": "value"
+            },
+            {
+              "options": {
+                "from": 0,
+                "result": {
+                  "color": "green",
+                  "index": 1,
+                  "text": "up"
+                },
+                "to": 99999
+              },
+              "type": "range"
             }
           ],
           "thresholds": {
@@ -61,8 +68,8 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 2,
-        "w": 24,
+        "h": 7,
+        "w": 8,
         "x": 0,
         "y": 0
       },
@@ -73,7 +80,88 @@
         "colorMode": "background",
         "graphMode": "none",
         "justifyMode": "auto",
-        "orientation": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "8.3.3",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "exemplar": true,
+          "expr": "sum(up) by (job)",
+          "format": "time_series",
+          "interval": "",
+          "intervalFactor": 1,
+          "legendFormat": "{{job}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Apps",
+      "type": "stat"
+    },
+    {
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "mappings": [
+            {
+              "options": {
+                "0": {
+                  "color": "red",
+                  "index": 0,
+                  "text": "down"
+                }
+              },
+              "type": "value"
+            },
+            {
+              "options": {
+                "from": 0,
+                "result": {
+                  "color": "green",
+                  "index": 1,
+                  "text": "up"
+                },
+                "to": 99999
+              },
+              "type": "range"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 8,
+        "x": 8,
+        "y": 0
+      },
+      "id": 100,
+      "interval": "",
+      "links": [],
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
         "reduceOptions": {
           "calcs": ["lastNotNull"],
           "fields": "",
@@ -93,11 +181,11 @@
           "format": "time_series",
           "interval": "",
           "intervalFactor": 1,
-          "legendFormat": "{{job}}",
+          "legendFormat": "{{job}} | {{instance}}",
           "refId": "A"
         }
       ],
-      "title": "Status",
+      "title": "Instances",
       "type": "stat"
     },
     {
@@ -109,7 +197,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
+                "color": "transparent",
                 "value": null
               }
             ]
@@ -119,10 +207,10 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 2,
-        "w": 24,
-        "x": 0,
-        "y": 2
+        "h": 7,
+        "w": 8,
+        "x": 16,
+        "y": 0
       },
       "id": 93,
       "interval": "",
@@ -131,7 +219,7 @@
         "colorMode": "background",
         "graphMode": "none",
         "justifyMode": "auto",
-        "orientation": "auto",
+        "orientation": "horizontal",
         "reduceOptions": {
           "calcs": ["lastNotNull"],
           "fields": "",
@@ -151,7 +239,7 @@
           "format": "time_series",
           "interval": "",
           "intervalFactor": 1,
-          "legendFormat": "{{job}}",
+          "legendFormat": "{{job}} | {{instance}}",
           "refId": "A"
         }
       ],
@@ -164,7 +252,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 4
+        "y": 7
       },
       "id": 92,
       "panels": [],
@@ -238,7 +326,7 @@
         "h": 12,
         "w": 6,
         "x": 0,
-        "y": 5
+        "y": 8
       },
       "id": 33,
       "links": [],
@@ -260,7 +348,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "exemplar": true,
-          "expr": "(\n  sum(rate(http_request_duration_seconds_bucket{le=\"0.256\", job=~\"$jobs\", code!~\"101|5.*\"}[$interval])) by (job)\n+\n  sum(rate(http_request_duration_seconds_bucket{le=\"1.024\", job=~\"$jobs\", code!~\"101|5.*\"}[$interval])) by (job)\n)  \n/ 2 / sum(rate(http_request_duration_seconds_count{job=~\"$jobs\", code!~\"101\"}[$interval])) by (job)",
+          "expr": "(\n  sum(rate(http_request_duration_seconds_bucket{le=\"0.256\", job=~\"$jobs\", code!~\"101|5.*\", instance=~\"$instance.{0,1}\"}[$interval])) by (job)\n+\n  sum(rate(http_request_duration_seconds_bucket{le=\"1.024\", job=~\"$jobs\", code!~\"101|5.*\", instance=~\"$instance.{0,1}\"}[$interval])) by (job)\n)  \n/ 2 / sum(rate(http_request_duration_seconds_count{job=~\"$jobs\", code!~\"101\", instance=~\"$instance.{0,1}\"}[$interval])) by (job)",
           "hide": false,
           "interval": "",
           "legendFormat": "{{job}}",
@@ -323,7 +411,7 @@
         "h": 12,
         "w": 6,
         "x": 6,
-        "y": 5
+        "y": 8
       },
       "id": 26,
       "options": {
@@ -344,7 +432,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "exemplar": true,
-          "expr": "sum(rate(http_requests_received_total{code!~\"101\", job=~\"$jobs\"}[$interval])) by (job)",
+          "expr": "sum(rate(http_requests_received_total{code!~\"101\", job=~\"$jobs\", instance=~\"$instance.{0,1}\"}[$interval])) by (job)",
           "interval": "",
           "legendFormat": "{{job}}",
           "refId": "B"
@@ -420,7 +508,7 @@
         "h": 12,
         "w": 6,
         "x": 12,
-        "y": 5
+        "y": 8
       },
       "id": 95,
       "links": [],
@@ -442,7 +530,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "exemplar": true,
-          "expr": "sum(rate(process_cpu_seconds_total{job=~\"$jobs\"}[$__rate_interval])) by (job)",
+          "expr": "sum(rate(process_cpu_seconds_total{job=~\"$jobs\", instance=~\"$instance.{0,1}\"}[$__rate_interval])) by (job)",
           "hide": false,
           "interval": "",
           "legendFormat": "{{job}}",
@@ -518,7 +606,7 @@
         "h": 12,
         "w": 6,
         "x": 18,
-        "y": 5
+        "y": 8
       },
       "id": 94,
       "links": [],
@@ -540,7 +628,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "exemplar": true,
-          "expr": "sum(process_working_set_bytes{job=~\"$jobs\"}) by (job)",
+          "expr": "sum(process_working_set_bytes{job=~\"$jobs\", instance=~\"$instance.{0,1}\"}) by (job)",
           "hide": false,
           "interval": "",
           "legendFormat": "{{job}}",
@@ -617,7 +705,7 @@
         "h": 12,
         "w": 6,
         "x": 0,
-        "y": 17
+        "y": 20
       },
       "id": 36,
       "links": [],
@@ -639,7 +727,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "exemplar": false,
-          "expr": "histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket{job=~\"$jobs\", code!=\"101\"}[$interval])) by (le, job))",
+          "expr": "histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket{job=~\"$jobs\", code!=\"101\", instance=~\"$instance.{0,1}\"}[$interval])) by (le, job))",
           "format": "time_series",
           "hide": false,
           "interval": "",
@@ -716,7 +804,7 @@
         "h": 12,
         "w": 6,
         "x": 6,
-        "y": 17
+        "y": 20
       },
       "id": 47,
       "options": {
@@ -737,7 +825,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "exemplar": false,
-          "expr": "sum(rate(http_requests_received_total{code=~\"5.*\", job=~\"$jobs\"}[$interval])) by (job)\n/\nsum(rate(http_requests_received_total{code=~\"2.*|3.*|4.*|5.*\", job=~\"$jobs\"}[$interval])) by (job)",
+          "expr": "sum(rate(http_requests_received_total{code=~\"5.*\", job=~\"$jobs\", instance=~\"$instance.{0,1}\"}[$interval])) by (job)\n/\nsum(rate(http_requests_received_total{code=~\"2.*|3.*|4.*|5.*\", job=~\"$jobs\", instance=~\"$instance.{0,1}\"}[$interval])) by (job)",
           "format": "time_series",
           "hide": false,
           "interval": "",
@@ -814,7 +902,7 @@
         "h": 12,
         "w": 6,
         "x": 12,
-        "y": 17
+        "y": 20
       },
       "id": 46,
       "options": {
@@ -835,7 +923,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "exemplar": false,
-          "expr": "sum(rate(dotnet_threadpool_queue_length_sum{job=~\"$jobs\"}[$interval])) by (job) / sum(rate(dotnet_threadpool_queue_length_count{job=~\"$jobs\"}[$interval])) by (job)",
+          "expr": "sum(rate(dotnet_threadpool_queue_length_sum{job=~\"$jobs\", instance=~\"$instance.{0,1}\"}[$interval])) by (job) / sum(rate(dotnet_threadpool_queue_length_count{job=~\"$jobs\", instance=~\"$instance.{0,1}\"}[$interval])) by (job)",
           "format": "heatmap",
           "hide": false,
           "interval": "",
@@ -901,7 +989,7 @@
         "h": 12,
         "w": 6,
         "x": 18,
-        "y": 17
+        "y": 20
       },
       "id": 54,
       "options": {
@@ -922,7 +1010,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "exemplar": false,
-          "expr": "sum(increase(dotnet_gc_collection_count_total{job=~\"$jobs\"}[$__rate_interval])) by (job)",
+          "expr": "sum(increase(dotnet_gc_collection_count_total{job=~\"$jobs\", instance=~\"$instance.{0,1}\"}[$__rate_interval])) by (job)",
           "format": "time_series",
           "hide": false,
           "interval": "",
@@ -939,7 +1027,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 29
+        "y": 32
       },
       "id": 99,
       "panels": [],
@@ -955,7 +1043,7 @@
         "h": 11,
         "w": 24,
         "x": 0,
-        "y": 30
+        "y": 33
       },
       "id": 97,
       "options": {
@@ -974,7 +1062,7 @@
             "type": "loki",
             "uid": "P8E80F9AEF21F6940"
           },
-          "expr": "{app=~\"$jobs\", host=~\"$host\", env=~\"$env\"}",
+          "expr": "{app=~\"$jobs\", instance=~\"$instance\", RequestPath!~\"/metrics\"}",
           "refId": "A"
         }
       ],
@@ -1064,9 +1152,9 @@
       },
       {
         "current": {
-          "selected": true,
-          "text": ["api-gateway", "auth-service", "backend", "task-service"],
-          "value": ["api-gateway", "auth-service", "backend", "task-service"]
+          "selected": false,
+          "text": ["All"],
+          "value": ["$__all"]
         },
         "datasource": {
           "type": "prometheus",
@@ -1074,7 +1162,7 @@
         },
         "definition": "label_values(job)",
         "hide": 0,
-        "includeAll": false,
+        "includeAll": true,
         "label": "app",
         "multi": true,
         "name": "jobs",
@@ -1095,57 +1183,24 @@
       {
         "current": {
           "selected": true,
-          "text": [
-            "---:---",
-            "auth-service:5002",
-            "backend:5003",
-            "task-service:5001"
-          ],
-          "value": [
-            "---:---",
-            "auth-service:5002",
-            "backend:5003",
-            "task-service:5001"
-          ]
+          "text": ["All"],
+          "value": ["$__all"]
         },
         "datasource": {
           "type": "loki",
           "uid": "P8E80F9AEF21F6940"
         },
-        "definition": "label_values(host)",
+        "definition": "label_values(instance)",
         "hide": 0,
-        "includeAll": false,
+        "includeAll": true,
         "multi": true,
-        "name": "host",
+        "name": "instance",
         "options": [],
-        "query": "label_values(host)",
+        "query": "label_values(instance)",
         "refresh": 1,
-        "regex": "",
+        "regex": ".*",
         "skipUrlSync": false,
-        "sort": 0,
-        "type": "query"
-      },
-      {
-        "current": {
-          "selected": true,
-          "text": ["Staging"],
-          "value": ["Staging"]
-        },
-        "datasource": {
-          "type": "loki",
-          "uid": "P8E80F9AEF21F6940"
-        },
-        "definition": "label_values(env)",
-        "hide": 0,
-        "includeAll": false,
-        "multi": true,
-        "name": "env",
-        "options": [],
-        "query": "label_values(env)",
-        "refresh": 1,
-        "regex": "",
-        "skipUrlSync": false,
-        "sort": 0,
+        "sort": 1,
         "type": "query"
       }
     ]
@@ -1173,6 +1228,6 @@
   "timezone": "",
   "title": "General",
   "uid": "RJ4jYionz",
-  "version": 3,
+  "version": 2,
   "weekStart": ""
 }
