@@ -11,18 +11,18 @@ platform:
   arch: amd64
 
 steps:
-- name: deploy prod
-  environment:
-    DEPLOY_PROD_CMD:
-      from_secret: deploy_prod_cmd
-  commands:
-  - VERSION=$(./ci/version.sh "date -d @")
-  - CMD=$(echo "$DEPLOY_PROD_CMD" | sed "s/VERSION/$VERSION/")
-  - eval $CMD
+  - name: deploy prod
+    environment:
+      DEPLOY_PROD_CMD:
+        from_secret: deploy_prod_cmd
+    commands:
+      - VERSION=$(./ci/version.sh "date -d @")
+      - CMD=$(echo "$DEPLOY_PROD_CMD" | sed "s/VERSION/$VERSION/g")
+      - eval $CMD
 
 trigger:
   event:
-  - promote
+    - promote
 
 ---
 kind: pipeline
@@ -34,18 +34,18 @@ platform:
   arch: amd64
 
 steps:
-- name: rollback prod
-  environment:
-    DEPLOY_PROD_CMD:
-      from_secret: deploy_prod_cmd
-  commands:
-  - VERSION=--
-  - CMD=$(echo "$DEPLOY_PROD_CMD" | sed "s/VERSION/$VERSION/")
-  - eval $CMD
-  
+  - name: rollback prod
+    environment:
+      DEPLOY_PROD_CMD:
+        from_secret: deploy_prod_cmd
+    commands:
+      - VERSION=--
+      - CMD=$(echo "$DEPLOY_PROD_CMD" | sed "s/VERSION/$VERSION/g")
+      - eval $CMD
+
 trigger:
   event:
-  - rollback
+    - rollback
 
 # ==============================
 # CUSTOM
@@ -61,39 +61,39 @@ platform:
   arch: amd64
 
 steps:
-- name: docker login
-  environment:
-    USERNAME:
-      from_secret: docker_user
-    PASSWORD:
-      from_secret: docker_pass
-  commands:
-  - docker login -u $USERNAME -p $PASSWORD
+  - name: docker login
+    environment:
+      USERNAME:
+        from_secret: docker_user
+      PASSWORD:
+        from_secret: docker_pass
+    commands:
+      - docker login -u $USERNAME -p $PASSWORD
 
-- name: build
-  commands:
-  - git remote set-url origin git@github.com:gerrkoff/dark-deeds.git
-  - ./ci/build.sh push "date -d @"
+  - name: build
+    commands:
+      - git remote set-url origin git@github.com:gerrkoff/dark-deeds.git
+      - ./ci/build.sh push "date -d @"
 
-- name: start staging
-  environment:
-    START_STAGING_CMD:
-      from_secret: start_staging_cmd
-  commands:
-  - VERSION=$(./ci/version.sh "date -d @")
-  - CMD=$(echo "$START_STAGING_CMD" | sed "s/VERSION/$VERSION/")
-  - eval $CMD
+  - name: start staging
+    environment:
+      START_STAGING_CMD:
+        from_secret: start_staging_cmd
+    commands:
+      - VERSION=$(./ci/version.sh "date -d @")
+      - CMD=$(echo "$START_STAGING_CMD" | sed "s/VERSION/$VERSION/g")
+      - eval $CMD
 
-- name: test
-  environment:
-    URL:
-      from_secret: staging_url
-  commands:
-  - ./ci/test-e2e.sh $URL staging
+  - name: test
+    environment:
+      URL:
+        from_secret: staging_url
+    commands:
+      - ./ci/test-e2e.sh $URL staging
 
 trigger:
   event:
-  - custom
+    - custom
 
 ---
 kind: pipeline
@@ -101,26 +101,26 @@ type: docker
 name: (custom) notify
 
 steps:
-- name: telegram
-  image: appleboy/drone-telegram
-  settings:
-    token:
-      from_secret: telegram_bot_token
-    to:
-      from_secret: telegram_user_id
+  - name: telegram
+    image: appleboy/drone-telegram
+    settings:
+      token:
+        from_secret: telegram_bot_token
+      to:
+        from_secret: telegram_user_id
 
 depends_on:
-- (custom) build & test
-- deploy
+  - (custom) build & test
+  - deploy
 
 trigger:
   status:
-  - success
-  - failure
+    - success
+    - failure
   event:
-  - promote
-  - rollback
-  - custom
+    - promote
+    - rollback
+    - custom
 
 # # ==============================
 # # STAGING – FULL COPY OF CUSTOM WITH ADJUSTED TRIGGER
@@ -136,41 +136,41 @@ platform:
   arch: amd64
 
 steps:
-- name: docker login
-  environment:
-    USERNAME:
-      from_secret: docker_user
-    PASSWORD:
-      from_secret: docker_pass
-  commands:
-  - docker login -u $USERNAME -p $PASSWORD
+  - name: docker login
+    environment:
+      USERNAME:
+        from_secret: docker_user
+      PASSWORD:
+        from_secret: docker_pass
+    commands:
+      - docker login -u $USERNAME -p $PASSWORD
 
-- name: build
-  commands:
-  - git remote set-url origin git@github.com:gerrkoff/dark-deeds.git
-  - ./ci/build.sh push "date -d @"
+  - name: build
+    commands:
+      - git remote set-url origin git@github.com:gerrkoff/dark-deeds.git
+      - ./ci/build.sh push "date -d @"
 
-- name: start staging
-  environment:
-    START_STAGING_CMD:
-      from_secret: start_staging_cmd
-  commands:
-  - VERSION=$(./ci/version.sh "date -d @")
-  - CMD=$(echo "$START_STAGING_CMD" | sed "s/VERSION/$VERSION/")
-  - eval $CMD
+  - name: start staging
+    environment:
+      START_STAGING_CMD:
+        from_secret: start_staging_cmd
+    commands:
+      - VERSION=$(./ci/version.sh "date -d @")
+      - CMD=$(echo "$START_STAGING_CMD" | sed "s/VERSION/$VERSION/g")
+      - eval $CMD
 
-- name: test
-  environment:
-    URL:
-      from_secret: staging_url
-  commands:
-  - ./ci/test-e2e.sh $URL staging
+  - name: test
+    environment:
+      URL:
+        from_secret: staging_url
+    commands:
+      - ./ci/test-e2e.sh $URL staging
 
 trigger:
   branch:
-  - staging
+    - staging
   event:
-  - push
+    - push
 
 ---
 kind: pipeline
@@ -178,22 +178,22 @@ type: docker
 name: (staging) notify
 
 steps:
-- name: telegram
-  image: appleboy/drone-telegram
-  settings:
-    token:
-      from_secret: telegram_bot_token
-    to:
-      from_secret: telegram_user_id
+  - name: telegram
+    image: appleboy/drone-telegram
+    settings:
+      token:
+        from_secret: telegram_bot_token
+      to:
+        from_secret: telegram_user_id
 
 depends_on:
-- (staging) build & test
+  - (staging) build & test
 
 trigger:
   status:
-  - success
-  - failure
+    - success
+    - failure
   branch:
-  - staging
+    - staging
   event:
-  - push
+    - push
