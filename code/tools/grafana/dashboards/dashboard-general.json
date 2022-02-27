@@ -22,7 +22,7 @@
   "fiscalYearStartMonth": 0,
   "gnetId": 10427,
   "graphTooltip": 0,
-  "iteration": 1645960311969,
+  "iteration": 1646001884204,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -1062,7 +1062,7 @@
             "type": "loki",
             "uid": "P8E80F9AEF21F6940"
           },
-          "expr": "{app=~\"$jobs\", instance=~\"$instance\", RequestPath!~\"/metrics\"}",
+          "expr": "{app=~\"$jobs\", instance=~\"$instance\"} | json | RequestPath!~\"/metrics\"",
           "refId": "A"
         }
       ],
@@ -1228,6 +1228,6 @@
   "timezone": "",
   "title": "General",
   "uid": "RJ4jYionz",
-  "version": 15,
+  "version": 1,
   "weekStart": ""
 }

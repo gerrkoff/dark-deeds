@@ -6,13 +6,11 @@ using Microsoft.Extensions.Hosting;
 using Serilog;
 using Serilog.Enrichers.Span;
 using Serilog.Events;
+using Serilog.Formatting.Compact;
 using Serilog.Sinks.Grafana.Loki;
 
 namespace DarkDeeds.Common.Web
 {
-    // TODO: loki retention policy
-    // https://grafana.com/docs/loki/latest/configuration/
-    // https://grafana.com/docs/loki/latest/operations/storage/retention/
     // TODO: fix issue with Parent/Span Ids
     // https://github.com/dotnet/runtime/issues/41072
     public static class Logging
@@ -63,9 +61,11 @@ namespace DarkDeeds.Common.Web
                         {
                             new() { Key = "app", Value = app },
                             new() { Key = "instance", Value = $"{serviceDiscoveryHost}:{serviceDiscoveryPort}" },
-                            new() { Key = "env", Value = environment },
                         },
-                        createLevelLabel: true);
+                        LokiLabelFiltrationMode.Include,
+                        new string[] { },
+                        textFormatter: new LokiJsonTextFormatter()
+                    );
             });
 
         public static void UseRequestLogging(this IApplicationBuilder app)
