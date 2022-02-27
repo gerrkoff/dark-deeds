@@ -6,6 +6,8 @@ services:
     ports:
       - 5000:5000
     environment:
+      - DD_SERVICE_DISCOVERY_HOST=${IP:-api-gateway}
+      - DD_SERVICE_DISCOVERY_PORT=5000
       - ASPNETCORE_URLS=http://0.0.0.0:5000
     volumes:
       - ./settings/api-gateway-ocelot.json:/app/ocelot.Production.json
@@ -73,9 +75,11 @@ services:
       - 5002:15672
     volumes:
       - ./settings/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
-      
+
   postgres-db:
     image: postgres:13.0-alpine
+    ports:
+      - 5432:5432
     environment:
       - POSTGRES_PASSWORD=password
     volumes:
@@ -83,6 +87,8 @@ services:
 
   mongo-db:
     image: mongo:4.4
+    ports:
+      - 27017:27017
     environment:
       - MONGO_INITDB_ROOT_USERNAME=user
       - MONGO_INITDB_ROOT_PASSWORD=password
@@ -97,16 +103,24 @@ services:
 
   grafana:
     image: gerrkoff/dark-deeds-grafana:${BUILD_VERSION}
-    environment:
-      - GF_SECURITY_ADMIN_PASSWORD=qwerty
     ports:
       - 5003:3000
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=qwerty
     volumes:
       - grafana-volume:/var/lib/grafana
       - ./settings/grafana.yml:/etc/grafana/provisioning/datasources/grafana.yml:ro
+
+  loki:
+    image: grafana/loki:2.4.2
+    volumes:
+      - loki-volume:/loki
+      # - ./settings/grafana.yml:/etc/loki/local-config.yaml
+    # command: -config.file=/etc/loki/local-config.yaml
 
 volumes:
   postgres-db-volume:
   mongo-db-volume:
   grafana-volume:
   prometheus-volume:
+  loki-volume:

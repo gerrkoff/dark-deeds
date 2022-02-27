@@ -1,0 +1,229 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": "-- Grafana --",
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "target": {
+          "limit": 100,
+          "matchAny": false,
+          "tags": [],
+          "type": "dashboard"
+        },
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "iteration": 1645903703816,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "P8E80F9AEF21F6940"
+      },
+      "gridPos": {
+        "h": 18,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 2,
+      "options": {
+        "dedupStrategy": "none",
+        "enableLogDetails": true,
+        "prettifyLogMessage": false,
+        "showCommonLabels": false,
+        "showLabels": false,
+        "showTime": false,
+        "sortOrder": "Descending",
+        "wrapLogMessage": false
+      },
+      "pluginVersion": "8.3.3",
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "expr": "{app=~\"$app\", TraceId=~\"$traceId\", RequestPath=~\"$include\", level=~\"$level\", instance=~\"$instance\", env=~\"$env\"}",
+          "refId": "A"
+        }
+      ],
+      "title": "Logs",
+      "type": "logs"
+    }
+  ],
+  "schemaVersion": 34,
+  "style": "dark",
+  "tags": [],
+  "templating": {
+    "list": [
+      {
+        "current": {
+          "selected": true,
+          "text": ["All"],
+          "value": ["$__all"]
+        },
+        "datasource": {
+          "type": "loki",
+          "uid": "P8E80F9AEF21F6940"
+        },
+        "definition": "label_values(app)",
+        "hide": 0,
+        "includeAll": true,
+        "multi": true,
+        "name": "app",
+        "options": [],
+        "query": "label_values(app)",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "current": {
+          "selected": true,
+          "text": ["All"],
+          "value": ["$__all"]
+        },
+        "datasource": {
+          "type": "loki",
+          "uid": "P8E80F9AEF21F6940"
+        },
+        "definition": "label_values(level)",
+        "hide": 0,
+        "includeAll": true,
+        "multi": true,
+        "name": "level",
+        "options": [],
+        "query": "label_values(level)",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "current": {
+          "selected": true,
+          "text": ["All"],
+          "value": ["$__all"]
+        },
+        "datasource": {
+          "type": "loki",
+          "uid": "P8E80F9AEF21F6940"
+        },
+        "definition": "label_values(host)",
+        "hide": 0,
+        "includeAll": true,
+        "multi": true,
+        "name": "instance",
+        "options": [],
+        "query": "label_values(host)",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "current": {
+          "selected": true,
+          "text": ["All"],
+          "value": ["$__all"]
+        },
+        "datasource": {
+          "type": "loki",
+          "uid": "P8E80F9AEF21F6940"
+        },
+        "definition": "label_values(env)",
+        "hide": 0,
+        "includeAll": true,
+        "multi": true,
+        "name": "env",
+        "options": [],
+        "query": "label_values(env)",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": ".*",
+          "value": ".*"
+        },
+        "hide": 0,
+        "label": "trace id",
+        "name": "traceId",
+        "options": [
+          {
+            "selected": true,
+            "text": ".*",
+            "value": ".*"
+          }
+        ],
+        "query": ".*",
+        "skipUrlSync": false,
+        "type": "textbox"
+      },
+      {
+        "current": {
+          "selected": true,
+          "text": ["All"],
+          "value": ["$__all"]
+        },
+        "datasource": {
+          "type": "loki",
+          "uid": "P8E80F9AEF21F6940"
+        },
+        "definition": "label_values(RequestPath)",
+        "hide": 0,
+        "includeAll": true,
+        "label": "",
+        "multi": true,
+        "name": "include",
+        "options": [],
+        "query": "label_values(RequestPath)",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "datasource": {
+          "type": "loki",
+          "uid": "P8E80F9AEF21F6940"
+        },
+        "filters": [],
+        "hide": 0,
+        "name": "filter",
+        "skipUrlSync": false,
+        "type": "adhoc"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-24h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "",
+  "title": "Logs",
+  "uid": "1nT3dyB7k",
+  "version": 3,
+  "weekStart": ""
+}

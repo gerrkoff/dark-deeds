@@ -8,7 +8,7 @@ using Prometheus.DotNetRuntime;
 
 namespace DarkDeeds.AppMetrics
 {
-    public class AppMetricsBackgroundService : IHostedService
+    class AppMetricsBackgroundService : IHostedService
     {
         private readonly ILogger<AppMetricsBackgroundService> _logger;
         private readonly MetricsSettings _options;
@@ -28,7 +28,7 @@ namespace DarkDeeds.AppMetrics
             if (!_options.Enabled)
                 return Task.CompletedTask;
 
-            _logger.LogInformation("Configuring prometheus-net.DotNetRuntime");
+            _logger.LogDebug("Configuring prometheus-net.DotNetRuntime");
 
             var builder = DotNetRuntimeStatsBuilder.Default();
 
@@ -51,7 +51,7 @@ namespace DarkDeeds.AppMetrics
                 builder.WithDebuggingMetrics(true);
             }
 
-            _logger.LogInformation("Starting prometheus-net.DotNetRuntime");
+            _logger.LogDebug("Starting prometheus-net.DotNetRuntime");
 
             _metrics = builder.StartCollecting();
 

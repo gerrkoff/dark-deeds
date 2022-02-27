@@ -1,9 +1,18 @@
 datasources:
-- name: 'Prometheus'
-  type: 'prometheus'
-  access: 'proxy'
-  org_id: 1
-  url: 'http://prometheus:9090'
-  is_default: true
-  version: 1
-  editable: false
+  - name: "Prometheus"
+    type: "prometheus"
+    access: "proxy"
+    org_id: 1
+    url: "http://prometheus:9090"
+    is_default: true
+    version: 1
+    editable: false
+
+  - name: "Loki"
+    type: "loki"
+    access: "proxy"
+    org_id: 1
+    url: "http://loki:3100"
+    is_default: false
+    version: 1
+    editable: false

@@ -1,5 +1,6 @@
 using System;
 using Consul;
+using DarkDeeds.Common;
 using DarkDeeds.Communication.Amqp.Common;
 using DarkDeeds.Communication.Amqp.Publish;
 using DarkDeeds.Communication.Amqp.Subscribe;
@@ -66,7 +67,7 @@ namespace DarkDeeds.Communication
 
         private static void AddDarkDeedsServiceDiscovery(this IServiceCollection services, IConfiguration configuration)
         {
-            var serviceDiscoveryConsul = configuration?.GetConnectionString(Constants.ConnectionStringConsul) ??
+            var serviceDiscoveryConsul = configuration?.GetConnectionString(EnvConstants.ConnectionStringConsul) ??
                                          "http://localhost:8500";
 
             services.TryAddSingleton<IConsulClient>(_ =>

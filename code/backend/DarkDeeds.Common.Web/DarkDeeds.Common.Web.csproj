@@ -8,4 +8,14 @@
         <FrameworkReference Include="Microsoft.AspNetCore.App" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="Serilog.AspNetCore" Version="5.0.0" />
+      <PackageReference Include="Serilog.Enrichers.Span" Version="2.2.0" />
+      <PackageReference Include="Serilog.Sinks.Grafana.Loki" Version="7.1.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\DarkDeeds.Common\DarkDeeds.Common.csproj" />
+    </ItemGroup>
+
 </Project>

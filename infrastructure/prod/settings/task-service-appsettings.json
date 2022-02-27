@@ -8,6 +8,7 @@
   "ConnectionStrings": {
     "mongoDb": "mongodb://user:password@mongo-db:27017;dark-deeds-task-service;",
     "rabbitMq": "rabbit-mq;guest;guest;",
-    "consul": "http://consul:8500"
+    "consul": "http://consul:8500",
+    "loki": "http://loki:3100"
   }
 }

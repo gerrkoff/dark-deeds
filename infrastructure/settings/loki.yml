@@ -1,0 +1,6 @@
+limits_config:
+  retention_period: 744h
+  retention_stream:
+    - selector: '{level="info"}'
+      priority: 1
+      period: 168h

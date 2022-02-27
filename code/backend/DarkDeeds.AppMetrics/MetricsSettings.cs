@@ -1,6 +1,6 @@
 namespace DarkDeeds.AppMetrics
 {
-    public class MetricsSettings
+    class MetricsSettings
     {
         public bool Enabled { get; set; } = true;
         public bool Verbose { get; set; }

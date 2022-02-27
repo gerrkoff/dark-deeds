@@ -1,4 +1,6 @@
 using DarkDeeds.AppMetrics;
+using DarkDeeds.Common.Web;
+using DarkDeeds.Communication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -11,6 +13,7 @@ namespace DarkDeeds.ApiGateway.App
 {
     public class Startup
     {
+        public const string App = "api-gateway";
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -24,10 +27,12 @@ namespace DarkDeeds.ApiGateway.App
             services.AddOcelot()
                 .AddConsul();
             services.AddDarkDeedsAppMetrics(Configuration);
+            services.AddDarkDeedsAppRegistration(App, Configuration);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseRequestLogging();
             app.UseWebSockets();
             app.UseDarkDeedsAppMetrics();
             app.UseDarkDeedsAppMetricsServer();
