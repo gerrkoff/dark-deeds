@@ -6,7 +6,6 @@ using Microsoft.Extensions.Hosting;
 using Serilog;
 using Serilog.Enrichers.Span;
 using Serilog.Events;
-using Serilog.Formatting.Compact;
 using Serilog.Sinks.Grafana.Loki;
 
 namespace DarkDeeds.Common.Web
@@ -51,8 +50,6 @@ namespace DarkDeeds.Common.Web
                 var lokiConnectionString = context.Configuration.GetConnectionString(EnvConstants.ConnectionStringLoki);
                 var serviceDiscoveryHost = Environment.GetEnvironmentVariable(EnvConstants.ServiceDiscoveryHost) ?? Empty;
                 var serviceDiscoveryPort = Environment.GetEnvironmentVariable(EnvConstants.ServiceDiscoveryPort) ?? Empty;
-                var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? Empty;
-
 
                 if (!string.IsNullOrWhiteSpace(lokiConnectionString))
                     configuration.WriteTo.GrafanaLoki(
