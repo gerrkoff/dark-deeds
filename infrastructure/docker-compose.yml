@@ -133,25 +133,6 @@ services:
           cpus: '1'
           memory: 300M
 
-  backend-2:
-    build:
-      context: ../
-      dockerfile: infrastructure/apps/backend.dockerfile
-    ports:
-      - 5055:5055
-    environment:
-      - DD_SERVICE_DISCOVERY_HOST=${IP:-backend-2}
-      - DD_SERVICE_DISCOVERY_PORT=5055
-      - ASPNETCORE_URLS=http://0.0.0.0:5055
-    depends_on:
-      - consul
-      - postgres-db
-    deploy:
-      resources:
-        limits:
-          cpus: '1'
-          memory: 300M
-
   web-client:
     build:
       context: ../
