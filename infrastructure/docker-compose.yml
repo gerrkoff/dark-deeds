@@ -174,8 +174,8 @@ services:
       - 3100:3100
     volumes:
       - loki-volume:/loki
-      # - ./settings/grafana.yml:/etc/loki/local-config.yaml
-    # command: -config.file=/etc/loki/local-config.yaml -print-config-stderr
+      - ./settings/loki.yml:/etc/loki/config.yaml
+    command: -print-config-stderr -config.file=/etc/loki/config.yaml
 
 volumes:
   postgres-db-volume:

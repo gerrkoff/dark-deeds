@@ -10,9 +10,6 @@ using Serilog.Sinks.Grafana.Loki;
 
 namespace DarkDeeds.Common.Web
 {
-    // TODO: loki retention policy
-    // https://grafana.com/docs/loki/latest/configuration/
-    // https://grafana.com/docs/loki/latest/operations/storage/retention/
     // TODO: fix issue with Parent/Span Ids
     // https://github.com/dotnet/runtime/issues/41072
     public static class Logging
@@ -53,8 +50,6 @@ namespace DarkDeeds.Common.Web
                 var lokiConnectionString = context.Configuration.GetConnectionString(EnvConstants.ConnectionStringLoki);
                 var serviceDiscoveryHost = Environment.GetEnvironmentVariable(EnvConstants.ServiceDiscoveryHost) ?? Empty;
                 var serviceDiscoveryPort = Environment.GetEnvironmentVariable(EnvConstants.ServiceDiscoveryPort) ?? Empty;
-                var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? Empty;
-
 
                 if (!string.IsNullOrWhiteSpace(lokiConnectionString))
                     configuration.WriteTo.GrafanaLoki(
@@ -63,9 +58,11 @@ namespace DarkDeeds.Common.Web
                         {
                             new() { Key = "app", Value = app },
                             new() { Key = "instance", Value = $"{serviceDiscoveryHost}:{serviceDiscoveryPort}" },
-                            new() { Key = "env", Value = environment },
                         },
-                        createLevelLabel: true);
+                        LokiLabelFiltrationMode.Include,
+                        new string[] { },
+                        textFormatter: new LokiJsonTextFormatter()
+                    );
             });
 
         public static void UseRequestLogging(this IApplicationBuilder app)
