@@ -28,11 +28,13 @@ namespace DarkDeeds.ApiGateway.App
                 .AddConsul();
             services.AddDarkDeedsAppMetrics(Configuration);
             services.AddDarkDeedsAppRegistration(App, Configuration);
+            services.AddHealthChecks();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             app.UseRequestLogging();
+            app.UseHealthChecks("/healthcheck");
             app.UseWebSockets();
             app.UseDarkDeedsAppMetrics();
             app.UseDarkDeedsAppMetricsServer();

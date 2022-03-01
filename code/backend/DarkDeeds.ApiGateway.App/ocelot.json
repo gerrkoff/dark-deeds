@@ -24,7 +24,7 @@
       "DownstreamPathTemplate": "/{path}",
       "DownstreamScheme": "http",
       "UpstreamPathTemplate": "/{path}",
-      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamHttpMethod": [ "GET", "HEAD" ],
       "ServiceName": "web-client",
       "LoadBalancerOptions": {
         "Type": "LeastConnection"
