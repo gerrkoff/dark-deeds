@@ -174,7 +174,7 @@ services:
       - 3100:3100
     volumes:
       - loki-volume:/loki
-      - ./settings/loki.yml:/etc/loki/config.yaml
+      - ./settings/loki.yml:/etc/loki/config.yaml:ro
     command: -print-config-stderr -config.file=/etc/loki/config.yaml
 
 volumes:
