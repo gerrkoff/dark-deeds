@@ -115,7 +115,7 @@ services:
     image: grafana/loki:2.4.2
     volumes:
       - loki-volume:/loki
-      - ./settings/loki.yml:/etc/loki/config.yaml
+      - ./settings/loki.yml:/etc/loki/config.yaml:ro
     command: -print-config-stderr -config.file=/etc/loki/config.yaml
 
 volumes:
