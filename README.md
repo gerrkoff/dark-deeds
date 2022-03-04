@@ -4,7 +4,7 @@
 [![GitHub last commit](https://img.shields.io/github/last-commit/gerrkoff/dark-deeds.svg)](https://github.com/gerrkoff/dark-deeds/commits/master)
 [![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/gerrkoff/dark-deeds)](https://github.com/gerrkoff/dark-deeds/tags)
 
-Single-Page App on **React & Redux** consuming **ASP.NET Core** services over **PostgreSQL & Mongo** database
+Single-Page App on **React & Redux** consuming **ASP.NET Core** services over **PostgreSQL & MongoDB** database
 
 ## Hands-on experience
 
@@ -30,18 +30,19 @@ ag<--LB/ws-->be
 
 be--LB/grpc-->as
 be-->pg
-be-.sub.->rmq
+be--sub-->rmq
 be--LB/grpc-->ts
+
+ag--LB/http-->fe
 
 as-->pg
 
-ts-.pub.->rmq
+ts--pub-->rmq
 ts-->mongo
 
 nginx-.->consul
 ag-.->consul
 be-.->consul
-ag--LB/http-->fe
 
 u((user))
 nginx([reverse proxy])
