@@ -4,7 +4,7 @@
       "DownstreamPathTemplate": "/api/{path}",
       "DownstreamScheme": "http",
       "UpstreamPathTemplate": "/api/{path}",
-      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE", "OPTIONS" ],
+      "UpstreamHttpMethod": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
       "ServiceName": "backend",
       "LoadBalancerOptions": {
         "Type": "LeastConnection"
@@ -14,7 +14,7 @@
       "DownstreamPathTemplate": "/ws/{path}",
       "DownstreamScheme": "ws",
       "UpstreamPathTemplate": "/ws/{path}",
-      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE", "OPTIONS" ],
+      "UpstreamHttpMethod": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
       "ServiceName": "backend",
       "LoadBalancerOptions": {
         "Type": "IpHashLoadBalancer"
@@ -24,7 +24,7 @@
       "DownstreamPathTemplate": "/{path}",
       "DownstreamScheme": "http",
       "UpstreamPathTemplate": "/{path}",
-      "UpstreamHttpMethod": [ "GET", "HEAD" ],
+      "UpstreamHttpMethod": ["GET", "HEAD", "OPTIONS"],
       "ServiceName": "web-client",
       "LoadBalancerOptions": {
         "Type": "LeastConnection"
