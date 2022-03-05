@@ -20,16 +20,18 @@ ingester:
 schema_config:
   configs:
     - schema: v11
-      store: boltdb
+      store: boltdb-shipper
       object_store: filesystem
       index:
         prefix: index_
         period: 24h
 
 storage_config:
-  boltdb:
-    directory: /loki/index
-
+  boltdb_shipper:
+    active_index_directory: /loki/boltdb-shipper-active
+    cache_location: /loki/boltdb-shipper-cache
+    cache_ttl: 24h # Can be increased for faster performance over longer query periods, uses more disk space
+    shared_store: filesystem
   filesystem:
     directory: /loki/chunks
 
