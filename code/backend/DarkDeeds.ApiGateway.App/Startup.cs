@@ -1,3 +1,4 @@
+using System;
 using DarkDeeds.AppMetrics;
 using DarkDeeds.Common.Web;
 using DarkDeeds.Communication;
@@ -5,15 +6,17 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Ocelot.Configuration;
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
 using Ocelot.Provider.Consul;
+using Ocelot.ServiceDiscovery.Providers;
 
 namespace DarkDeeds.ApiGateway.App
 {
     public class Startup
     {
-        public const string App = "api-gateway";
+        internal const string App = "api-gateway";
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -24,7 +27,13 @@ namespace DarkDeeds.ApiGateway.App
 
         public void ConfigureServices(IServiceCollection services)
         {
+            IpHashLoadBalancer IpHashLoadBalancer(IServiceProvider serviceProvider,
+                DownstreamRoute _,
+                IServiceDiscoveryProvider serviceDiscoveryProvider
+            ) => new(serviceDiscoveryProvider.Get);
+
             services.AddOcelot()
+                .AddCustomLoadBalancer(IpHashLoadBalancer)
                 .AddConsul();
             services.AddDarkDeedsAppMetrics(Configuration);
             services.AddDarkDeedsAppRegistration(App, Configuration);

@@ -45,6 +45,8 @@ namespace DarkDeeds.Common.Web
                     .ReadFrom.Services(services)
                     .Enrich.WithSpan()
                     .Enrich.FromLogContext()
+                    .Enrich.WithClientIp()
+                    .Enrich.WithClientAgent()
                     .WriteTo.Console();
 
                 var lokiConnectionString = context.Configuration.GetConnectionString(EnvConstants.ConnectionStringLoki);
