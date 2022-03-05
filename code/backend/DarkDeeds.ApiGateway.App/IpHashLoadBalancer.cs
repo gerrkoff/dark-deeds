@@ -22,10 +22,10 @@ namespace DarkDeeds.ApiGateway.App
             var services = await _services();
 
             var ip = httpContext.Connection.RemoteIpAddress?.ToString() ?? string.Empty;
-            var hash = ip.GetHashCode();
-            var serviceIndex = hash % services.Count;
+            var hash = Math.Abs(ip.GetHashCode());
+            var index = hash % services.Count;
 
-            var next = services[serviceIndex];
+            var next = services[index];
             return new OkResponse<ServiceHostAndPort>(next.HostAndPort);
         }
 

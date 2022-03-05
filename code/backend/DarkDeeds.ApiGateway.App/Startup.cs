@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Ocelot.Configuration;
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
@@ -47,7 +46,6 @@ namespace DarkDeeds.ApiGateway.App
             app.UseHealthChecks("/healthcheck");
             app.UseWebSockets();
             app.UseDarkDeedsAppMetrics();
-            app.UseDarkDeedsExceptionHandler(env.IsProduction());
             app.UseDarkDeedsAppMetricsServer();
             app.UseOcelot().Wait();
         }
