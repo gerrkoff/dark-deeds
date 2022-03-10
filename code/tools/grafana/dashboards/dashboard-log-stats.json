@@ -1,0 +1,332 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": "-- Grafana --",
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "target": {
+          "limit": 100,
+          "matchAny": false,
+          "tags": [],
+          "type": "dashboard"
+        },
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "gnetId": 10427,
+  "graphTooltip": 0,
+  "id": 4,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "P8E80F9AEF21F6940"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "continuous-GrYlRd"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 32,
+        "w": 8,
+        "x": 0,
+        "y": 0
+      },
+      "id": 102,
+      "options": {
+        "displayMode": "gradient",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true
+      },
+      "pluginVersion": "8.3.3",
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "expr": "sum by (RequestPath) (count_over_time({app=~\"api-gateway\"} | json [$__range]))",
+          "instant": false,
+          "legendFormat": "{{RequestPath}}",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Request",
+      "transformations": [],
+      "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "P8E80F9AEF21F6940"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "continuous-GrYlRd"
+          },
+          "mappings": [],
+          "noValue": "[Empty]",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 32,
+        "w": 8,
+        "x": 8,
+        "y": 0
+      },
+      "id": 107,
+      "options": {
+        "displayMode": "gradient",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true
+      },
+      "pluginVersion": "8.3.3",
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "expr": "sum by (ClientAgent) (count_over_time({app=~\"api-gateway\"} | json [$__range]))",
+          "instant": false,
+          "legendFormat": "{{ClientAgent}}",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Agent",
+      "transformations": [],
+      "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "P8E80F9AEF21F6940"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "continuous-GrYlRd"
+          },
+          "mappings": [],
+          "noValue": "[Empty]",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 32,
+        "w": 8,
+        "x": 16,
+        "y": 0
+      },
+      "id": 108,
+      "options": {
+        "displayMode": "gradient",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true
+      },
+      "pluginVersion": "8.3.3",
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "expr": "sum by (ClientIp) (count_over_time({app=~\"api-gateway\"} | json [$__range]))",
+          "instant": false,
+          "legendFormat": "{{ClientIp}}",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "IP",
+      "transformations": [],
+      "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "P8E80F9AEF21F6940"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "continuous-GrYlRd"
+          },
+          "mappings": [],
+          "noValue": "[Empty]",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 8,
+        "x": 0,
+        "y": 32
+      },
+      "id": 103,
+      "options": {
+        "displayMode": "gradient",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "/^Message \\(count\\)$/",
+          "values": true
+        },
+        "showUnfilled": true,
+        "text": {}
+      },
+      "pluginVersion": "8.3.3",
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "expr": "{app=~\"api-gateway\"}",
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "title": "Agent (BU)",
+      "transformations": [
+        {
+          "id": "extractFields",
+          "options": {
+            "format": "json",
+            "replace": true,
+            "source": "line"
+          }
+        },
+        {
+          "id": "groupBy",
+          "options": {
+            "fields": {
+              "ClientAgent": {
+                "aggregations": [],
+                "operation": "groupby"
+              },
+              "Message": {
+                "aggregations": ["count"],
+                "operation": "aggregate"
+              }
+            }
+          }
+        },
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": {},
+            "sort": [
+              {
+                "desc": true,
+                "field": "Message (count)"
+              }
+            ]
+          }
+        }
+      ],
+      "type": "bargauge"
+    }
+  ],
+  "refresh": "",
+  "schemaVersion": 34,
+  "style": "dark",
+  "tags": [],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-3h",
+    "to": "now"
+  },
+  "timepicker": {
+    "refresh_intervals": [
+      "5s",
+      "10s",
+      "15s",
+      "30s",
+      "1m",
+      "5m",
+      "15m",
+      "30m",
+      "1h",
+      "2h",
+      "1d"
+    ],
+    "time_options": ["5m", "15m", "1h", "6h", "12h", "24h", "2d", "7d", "30d"]
+  },
+  "timezone": "",
+  "title": "Log Stats",
+  "uid": "k1psfCL7z",
+  "version": 7,
+  "weekStart": ""
+}
