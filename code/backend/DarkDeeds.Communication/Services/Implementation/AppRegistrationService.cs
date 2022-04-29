@@ -36,9 +36,9 @@ namespace DarkDeeds.Communication.Services.Implementation
         {
             if (!_addressService.TryGetAddress(out Uri uri))
                 return null;
-            
+
             var id = $"{uri.Host}:{uri.Port}";
-            
+
             var registration = new AgentServiceRegistration
             {
                 ID = id,
@@ -70,7 +70,7 @@ namespace DarkDeeds.Communication.Services.Implementation
                         TCP = $"{uri.Host}:{uri.Port}",
                         Interval = new TimeSpan(0, 0, 10),
                         Timeout = new TimeSpan(0, 0, 3),
-                        DeregisterCriticalServiceAfter = new TimeSpan(0, 0, 20),
+                        DeregisterCriticalServiceAfter = new TimeSpan(24, 0, 0),
                     }
                 };
 
@@ -82,7 +82,7 @@ namespace DarkDeeds.Communication.Services.Implementation
 
                 if (registrationMetrics == null)
                     return;
-                
+
                 await _consul.Agent.ServiceRegister(registrationMetrics, cancellationToken);
                 _logger.LogInformation(
                     $"Register service metrics [{registration.Name}] at [{registration.Address}:{registration.Port}] as [{registration.ID}]");
