@@ -25,7 +25,7 @@ function createPayload(address, port) {
             tcp: `${address}:${port}`,
             interval: '10s',
             timeout: '3s',
-            deregisterCriticalServiceAfter: '20s',
+            deregisterCriticalServiceAfter: '24h',
         }
     }
 }
