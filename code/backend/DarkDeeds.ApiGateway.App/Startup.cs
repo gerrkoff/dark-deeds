@@ -17,7 +17,7 @@ namespace DarkDeeds.ApiGateway.App
     public class Startup
     {
         internal const string App = "api-gateway";
-        public Startup(IConfiguration configuration)
+        11public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
