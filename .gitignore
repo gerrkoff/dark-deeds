@@ -11,3 +11,4 @@ CI/artifacts/
 node_modules
 build
 ci/results
+*.sln.DotSettings.user

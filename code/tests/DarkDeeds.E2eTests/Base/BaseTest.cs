@@ -34,7 +34,7 @@ namespace DarkDeeds.E2eTests.Base
             driver.Navigate().GoToUrl(Url);
             return driver;
         }
-        
+
         protected virtual async Task Test(Func<RemoteWebDriver, Task> action)
         {
             using var driver = CreateDriver();
@@ -55,7 +55,7 @@ namespace DarkDeeds.E2eTests.Base
         {
             return $"{text} {Random.Next()}";
         }
-        
+
         protected async Task CreateUserAndLogin(RemoteWebDriver driver, string username)
         {
             await CreateUser(username);

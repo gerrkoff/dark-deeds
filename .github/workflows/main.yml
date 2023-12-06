@@ -42,7 +42,7 @@ jobs:
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 5.0.x
+        dotnet-version: 8.0.x
     - name: Build E2E Tests
       run: |
         dotnet build code/tests/DarkDeeds.E2eTests/DarkDeeds.E2eTests.sln
