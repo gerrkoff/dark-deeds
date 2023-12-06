@@ -1,4 +1,4 @@
-FROM node:16.13.2-alpine
+FROM node:21.4-alpine
 
 COPY code/frontend/server/package.json /app/server_deps/
 COPY code/frontend/server/package-lock.json /app/server_deps/

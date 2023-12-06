@@ -1,4 +1,4 @@
-FROM node:16.13.2-alpine as builder
+FROM node:21.4-alpine as builder
 
 COPY code/frontend/ /code/frontend/
 COPY .editorconfig /code/frontend/.editorconfig
@@ -7,7 +7,7 @@ RUN npm install
 RUN npm run build
 RUN npm run test-ci
 
-FROM node:16.13.2-alpine
+FROM node:21.4-alpine
 
 COPY --from=builder /code/frontend/server/ /app/
 WORKDIR /app

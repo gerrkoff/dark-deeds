@@ -1,6 +1,5 @@
 using System;
-using System.Linq;
-using System.Net.NetworkInformation;
+using System.Net;
 using System.Net.Sockets;
 using DarkDeeds.Common;
 using DarkDeeds.Communication.Services.Interface;
@@ -32,7 +31,7 @@ namespace DarkDeeds.Communication.Services.Implementation
             {
                 uri = new Uri(developmentUrl);
                 if (string.Equals(uri.Host, "0.0.0.0"))
-                    uri = new Uri($"{uri.Scheme}://{GetLocalIPv4()}:{uri.Port}");
+                    uri = new Uri($"{uri.Scheme}://{GetLocalIpAddress()}:{uri.Port}");
 
                 _logger.LogInformation($"Fallback to development url {uri}");
                 return true;
@@ -43,22 +42,41 @@ namespace DarkDeeds.Communication.Services.Implementation
             return false;
         }
 
-        private string GetLocalIPv4()
+        private static string GetLocalIpAddress()
         {
-            string output = "";
-            foreach (NetworkInterface item in NetworkInterface.GetAllNetworkInterfaces()
-                .Where(x => x.NetworkInterfaceType == NetworkInterfaceType.Ethernet)
-                .Where(x => x.OperationalStatus == OperationalStatus.Up))
+            var host = Dns.GetHostEntry(Dns.GetHostName());
+            foreach (var ip in host.AddressList)
             {
-                foreach (UnicastIPAddressInformation ip in item.GetIPProperties()
-                    .UnicastAddresses
-                    .Where(x => x.Address.AddressFamily == AddressFamily.InterNetwork))
+                if (ip.AddressFamily == AddressFamily.InterNetwork)
                 {
-                    output = ip.Address.ToString();
+                    var ipStr = ip.ToString();
+
+                    if (ipStr.StartsWith("192.168."))
+                        return ipStr;
                 }
             }
 
-            return output;
+            throw new Exception("No network adapters with an IPv4 address in the system!");
         }
+
+        // TODO: remove
+        // private string GetLocalIPv4()
+        // {
+        //     string output = "";
+        //     var q = NetworkInterface.GetAllNetworkInterfaces();
+        //     foreach (NetworkInterface item in NetworkInterface.GetAllNetworkInterfaces()
+        //         .Where(x => x.NetworkInterfaceType == NetworkInterfaceType.Ethernet)
+        //         .Where(x => x.OperationalStatus == OperationalStatus.Up))
+        //     {
+        //         foreach (UnicastIPAddressInformation ip in item.GetIPProperties()
+        //             .UnicastAddresses
+        //             .Where(x => x.Address.AddressFamily == AddressFamily.InterNetwork))
+        //         {
+        //             output = ip.Address.ToString();
+        //         }
+        //     }
+        //
+        //     return output;
+        // }
     }
 }
