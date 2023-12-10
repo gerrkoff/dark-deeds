@@ -16,7 +16,7 @@ namespace DarkDeeds.WebClientBff.Web.Exceptions
 		{
 			Errors = new List<ModelError> { new(message) };
 		}
-        
+
         public ModelValidationException(ModelStateDictionary modeState) : base("Model validation exception")
         {
             var errors = new List<ModelError>();
@@ -25,13 +25,6 @@ namespace DarkDeeds.WebClientBff.Web.Exceptions
                 errors.AddRange(modelStateEntry.Errors);
             }
             Errors = errors;
-        }
-
-        public override void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            info.AddValue(nameof(Errors), Errors);
-
-            base.GetObjectData(info, context);
         }
 
         public override IDictionary Data => Errors.ToDictionary(x => x.ErrorMessage);
