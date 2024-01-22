@@ -13,7 +13,7 @@
     <ItemGroup>
       <ProjectReference Include="..\DarkDeeds.Authentication.Core\DarkDeeds.Authentication.Core.csproj" />
       <ProjectReference Include="..\DarkDeeds.ServiceTask.Contract\DarkDeeds.ServiceTask.Contract.csproj" />
-      <ProjectReference Include="..\DarkDeeds.ServiceTask.Services\DarkDeeds.ServiceTask.Services.csproj" />
+      <ProjectReference Include="..\DD.TaskService.Domain\DD.TaskService.Domain.csproj" />
     </ItemGroup>
 
 </Project>

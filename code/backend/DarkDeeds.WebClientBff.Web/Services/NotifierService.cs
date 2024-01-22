@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using DarkDeeds.ServiceTask.Dto;
 using DarkDeeds.WebClientBff.Web.Hubs;
+using DD.TaskService.Domain.Dto;
 using Microsoft.AspNetCore.SignalR;
 
 namespace DarkDeeds.WebClientBff.Web.Services

@@ -23,7 +23,6 @@
     <ProjectReference Include="..\DarkDeeds.ServiceTask.Communication\DarkDeeds.ServiceTask.Communication.csproj"/>
     <ProjectReference Include="..\DarkDeeds.ServiceTask.ContractImpl\DarkDeeds.ServiceTask.ContractImpl.csproj"/>
     <ProjectReference Include="..\DarkDeeds.ServiceTask.Data\DarkDeeds.ServiceTask.Data.csproj"/>
-    <ProjectReference Include="..\DarkDeeds.ServiceTask.Services\DarkDeeds.ServiceTask.Services.csproj"/>
   </ItemGroup>
 
 </Project>

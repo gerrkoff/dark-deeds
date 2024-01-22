@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using DarkDeeds.ServiceTask.Consumers;
-using DarkDeeds.ServiceTask.Dto;
+using DD.TaskService.Domain.Dto;
 using MediatR;
 
 namespace DarkDeeds.WebClientBff.UseCases.Handlers.Tasks.LoadActual

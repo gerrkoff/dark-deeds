@@ -1,62 +1,61 @@
 using System;
-using DarkDeeds.ServiceTask.Entities;
-using DarkDeeds.ServiceTask.Enums;
+using DD.TaskService.Domain.Entities;
+using DD.TaskService.Domain.Entities.Enums;
 using Xunit;
 
-namespace DarkDeeds.ServiceTask.Tests.Services.RecurrenceCreatorServiceTests
+namespace DarkDeeds.ServiceTask.Tests.Services.RecurrenceCreatorServiceTests;
+
+public partial class RecurrenceCreatorServiceTest
 {
-    public partial class RecurrenceCreatorServiceTest
+    [Fact]
+    public void MatchWeekday_ShouldMatchOneWeekday()
     {
-        [Fact]
-        public void MatchWeekday_ShouldMatchOneWeekday()
+        var service = Service();
+
+        var result = service.MatchWeekday(new PlannedRecurrenceEntity
         {
-            var service = Service();
+            EveryWeekday = RecurrenceWeekdayEnum.Monday
+        }, new DateTime(2019, 9, 2));
 
-            var result = service.MatchWeekday(new PlannedRecurrenceEntity
-            {
-                EveryWeekday = RecurrenceWeekdayEnum.Monday
-            }, new DateTime(2019, 9, 2));
+        Assert.True(result);
+    }
 
-            Assert.True(result);
-        }
+    [Fact]
+    public void MatchWeekday_ShouldMatchOneOfTwoWeekdays()
+    {
+        var service = Service();
 
-        [Fact]
-        public void MatchWeekday_ShouldMatchOneOfTwoWeekdays()
+        var result = service.MatchWeekday(new PlannedRecurrenceEntity
         {
-            var service = Service();
+            EveryWeekday = RecurrenceWeekdayEnum.Monday | RecurrenceWeekdayEnum.Friday
+        }, new DateTime(2019, 9, 6));
 
-            var result = service.MatchWeekday(new PlannedRecurrenceEntity
-            {
-                EveryWeekday = RecurrenceWeekdayEnum.Monday | RecurrenceWeekdayEnum.Friday
-            }, new DateTime(2019, 9, 6));
+        Assert.True(result);
+    }
 
-            Assert.True(result);
-        }
+    [Fact]
+    public void MatchWeekday_ShouldNotMatchOneOfWeekdays()
+    {
+        var service = Service();
 
-        [Fact]
-        public void MatchWeekday_ShouldNotMatchOneOfWeekdays()
+        var result = service.MatchWeekday(new PlannedRecurrenceEntity
         {
-            var service = Service();
+            EveryWeekday = RecurrenceWeekdayEnum.Monday | RecurrenceWeekdayEnum.Friday
+        }, new DateTime(2019, 9, 5));
 
-            var result = service.MatchWeekday(new PlannedRecurrenceEntity
-            {
-                EveryWeekday = RecurrenceWeekdayEnum.Monday | RecurrenceWeekdayEnum.Friday
-            }, new DateTime(2019, 9, 5));
+        Assert.False(result);
+    }
 
-            Assert.False(result);
-        }
+    [Fact]
+    public void MatchWeekday_ShouldMatchIfWeekdayIsNull()
+    {
+        var service = Service();
 
-        [Fact]
-        public void MatchWeekday_ShouldMatchIfWeekdayIsNull()
+        var result = service.MatchWeekday(new PlannedRecurrenceEntity
         {
-            var service = Service();
+            EveryWeekday = null
+        }, new DateTime());
 
-            var result = service.MatchWeekday(new PlannedRecurrenceEntity
-            {
-                EveryWeekday = null
-            }, new DateTime());
-
-            Assert.True(result);
-        }
+        Assert.True(result);
     }
 }

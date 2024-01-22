@@ -1,46 +1,44 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using DarkDeeds.ServiceTask.Entities;
-using DarkDeeds.ServiceTask.Services.Implementation;
-using DarkDeeds.ServiceTask.Services.Interface;
-using DarkDeeds.ServiceTask.Services.Specifications;
 using DarkDeeds.ServiceTask.Tests.Mocks;
+using DD.TaskService.Domain.Entities;
+using DD.TaskService.Domain.Services;
+using DD.TaskService.Domain.Specifications;
 using Moq;
 using Xunit;
 
-namespace DarkDeeds.ServiceTask.Tests.Services.RecurrenceServiceTests
+namespace DarkDeeds.ServiceTask.Tests.Services.RecurrenceServiceTests;
+
+public partial class RecurrenceServiceTest
 {
-    public partial class RecurrenceServiceTest
+    private readonly Mock<ISpecificationFactory> _specFactoryMock = new();
+    private readonly Mock<IPlannedRecurrenceSpecification> _plannedRecurrenceSpecMock = MocksCreator.PlannedRecurrenceSpec();
+
+    public RecurrenceServiceTest()
     {
-        private readonly Mock<ISpecificationFactory> _specFactoryMock = new();
-        private readonly Mock<IPlannedRecurrenceSpecification> _plannedRecurrenceSpecMock = MocksCreator.PlannedRecurrenceSpec();
+        _specFactoryMock.Setup(x => x.New<IPlannedRecurrenceSpecification, PlannedRecurrenceEntity>())
+            .Returns(_plannedRecurrenceSpecMock.Object);
+    }
 
-        public RecurrenceServiceTest()
+    [Fact]
+    public async Task LoadActualTasksAsync_Positive()
+    {
+        var userId = "userid";
+
+        var repoMock = MocksCreator.RepoRecurrence(new PlannedRecurrenceEntity
         {
-            _specFactoryMock.Setup(x => x.New<IPlannedRecurrenceSpecification, PlannedRecurrenceEntity>())
-                .Returns(_plannedRecurrenceSpecMock.Object);
-        }
+            StartDate = new DateTime(1, DateTimeKind.Unspecified),
+            EndDate = new DateTime(1, DateTimeKind.Unspecified)
+        });
 
-        [Fact]
-        public async Task LoadActualTasksAsync_Positive()
-        {
-            var userId = "userid";
+        var service = new RecurrenceService(repoMock.Object, Mapper, _specFactoryMock.Object);
 
-            var repoMock = MocksCreator.RepoRecurrence(new PlannedRecurrenceEntity
-            {
-                StartDate = new DateTime(1, DateTimeKind.Unspecified),
-                EndDate = new DateTime(1, DateTimeKind.Unspecified)
-            });
+        var result = (await service.LoadAsync(userId)).ToList();
 
-            var service = new RecurrenceService(repoMock.Object, Mapper, _specFactoryMock.Object);
-
-            var result = (await service.LoadAsync(userId)).ToList();
-
-            Assert.Equal(DateTimeKind.Utc, result[0].StartDate.Kind);
-            Assert.Equal(DateTimeKind.Utc, result[0].EndDate!.Value.Kind);
-            _plannedRecurrenceSpecMock.Verify(x => x.FilterUserOwned(userId));
-            repoMock.Verify(x => x.GetBySpecAsync(_plannedRecurrenceSpecMock.Object));
-        }
+        Assert.Equal(DateTimeKind.Utc, result[0].StartDate.Kind);
+        Assert.Equal(DateTimeKind.Utc, result[0].EndDate!.Value.Kind);
+        _plannedRecurrenceSpecMock.Verify(x => x.FilterUserOwned(userId));
+        repoMock.Verify(x => x.GetBySpecAsync(_plannedRecurrenceSpecMock.Object));
     }
 }

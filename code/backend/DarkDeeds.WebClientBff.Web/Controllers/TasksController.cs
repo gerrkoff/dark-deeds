@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
-using DarkDeeds.ServiceTask.Dto;
 using DarkDeeds.WebClientBff.UseCases.Handlers.Tasks.LoadActual;
 using DarkDeeds.WebClientBff.UseCases.Handlers.Tasks.Save;
+using DD.TaskService.Domain.Dto;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 

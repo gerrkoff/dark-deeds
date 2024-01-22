@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using DarkDeeds.ServiceTask.Dto;
+using DD.TaskService.Domain.Dto;
 
 namespace DarkDeeds.WebClientBff.Web.Models
 {

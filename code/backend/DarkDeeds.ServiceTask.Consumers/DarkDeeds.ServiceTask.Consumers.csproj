@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DarkDeeds.ServiceTask.Dto\DarkDeeds.ServiceTask.Dto.csproj"/>
+    <ProjectReference Include="..\DD.TaskService.Domain\DD.TaskService.Domain.csproj" />
   </ItemGroup>
 
 </Project>

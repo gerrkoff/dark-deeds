@@ -1,10 +1,10 @@
 using System;
 using System.Threading.Tasks;
 using DarkDeeds.ServiceTask.Consumers;
-using DarkDeeds.ServiceTask.Dto;
 using DarkDeeds.TelegramClient.Services.Implementation;
 using DarkDeeds.TelegramClient.Services.Interface;
 using DarkDeeds.TelegramClient.Services.Models.Commands;
+using DD.TaskService.Domain.Dto;
 using Moq;
 using Xunit;
 

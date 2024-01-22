@@ -1,21 +1,20 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using DarkDeeds.ServiceTask.Dto;
+using DD.TaskService.Domain.Dto;
 
-namespace DarkDeeds.ServiceTask.Consumers
+namespace DarkDeeds.ServiceTask.Consumers;
+
+public interface ITaskServiceApp
 {
-    public interface ITaskServiceApp
-    {
-        Task<IEnumerable<TaskDto>> LoadActualTasksAsync(DateTime from, string userId = null);
-        Task<IEnumerable<TaskDto>> LoadTasksByDateAsync(DateTime from, DateTime to, string userId = null);
-        Task<IEnumerable<TaskDto>> SaveTasksAsync(ICollection<TaskDto> tasks, string userId = null);
+    Task<IEnumerable<TaskDto>> LoadActualTasksAsync(DateTime from, string userId = null);
+    Task<IEnumerable<TaskDto>> LoadTasksByDateAsync(DateTime from, DateTime to, string userId = null);
+    Task<IEnumerable<TaskDto>> SaveTasksAsync(ICollection<TaskDto> tasks, string userId = null);
 
-        Task<int> CreateRecurrencesAsync(int timezoneOffset);
-        Task<IEnumerable<PlannedRecurrenceDto>> LoadRecurrencesAsync();
-        Task<int> SaveRecurrencesAsync(ICollection<PlannedRecurrenceDto> recurrences);
+    Task<int> CreateRecurrencesAsync(int timezoneOffset);
+    Task<IEnumerable<PlannedRecurrenceDto>> LoadRecurrencesAsync();
+    Task<int> SaveRecurrencesAsync(ICollection<PlannedRecurrenceDto> recurrences);
 
-        Task<TaskDto> ParseTask(string text);
-        Task<ICollection<string>> PrintTasks(IEnumerable<TaskDto> tasks);
-    }
+    Task<TaskDto> ParseTask(string text);
+    Task<ICollection<string>> PrintTasks(IEnumerable<TaskDto> tasks);
 }

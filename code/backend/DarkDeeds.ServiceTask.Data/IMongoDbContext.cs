@@ -1,9 +1,8 @@
 using MongoDB.Driver;
 
-namespace DarkDeeds.ServiceTask.Data
+namespace DarkDeeds.ServiceTask.Data;
+
+public interface IMongoDbContext
 {
-    public interface IMongoDbContext
-    {
-        IMongoCollection<T> GetCollection<T>(string tableName);
-    }
+    IMongoCollection<T> GetCollection<T>(string tableName);
 }

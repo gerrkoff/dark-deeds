@@ -2,71 +2,70 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using DarkDeeds.ServiceTask.Consumers;
-using DarkDeeds.ServiceTask.Dto;
 using DarkDeeds.TelegramClient.Services.Implementation.CommandProcessor;
 using DarkDeeds.TelegramClient.Services.Interface;
 using DarkDeeds.TelegramClient.Services.Models.Commands;
+using DD.TaskService.Domain.Dto;
 using Moq;
 using Xunit;
 
-namespace DarkDeeds.TelegramClient.Tests.Services.CommandProcessor
+namespace DarkDeeds.TelegramClient.Tests.Services.CommandProcessor;
+
+public class ShowTodoCommandProcessorTest
 {
-    public class ShowTodoCommandProcessorTest
+    [Fact]
+    public async Task ProcessAsync()
     {
-        [Fact]
-        public async Task ProcessAsync()
+        var (telegramMock, taskServiceMock, sendMessageMock) = SetupMocks(new[]{"tasks"}, 100);
+
+        var service = new ShowTodoCommandProcessor(
+            sendMessageMock.Object,
+            telegramMock.Object,
+            null,
+            taskServiceMock.Object);
+
+        await service.ProcessAsync(new ShowTodoCommand(string.Empty, new DateTime(), 0)
         {
-            var (telegramMock, taskServiceMock, sendMessageMock) = SetupMocks(new[]{"tasks"}, 100);
+            UserChatId = 100
+        });
 
-            var service = new ShowTodoCommandProcessor(
-                sendMessageMock.Object,
-                telegramMock.Object,
-                null,
-                taskServiceMock.Object);
+        sendMessageMock.Verify(x => x.SendTextAsync(100, "tasks"));
+    }
 
-            await service.ProcessAsync(new ShowTodoCommand(string.Empty, new DateTime(), 0)
-            {
-                UserChatId = 100
-            });
+    [Fact]
+    public async Task ProcessAsync_NoTasks()
+    {
+        var (telegramMock, taskServiceMock, sendMessageMock) = SetupMocks(new string[0], 100);
 
-            sendMessageMock.Verify(x => x.SendTextAsync(100, "tasks"));
-        }
+        var service = new ShowTodoCommandProcessor(
+            sendMessageMock.Object,
+            telegramMock.Object,
+            null,
+            taskServiceMock.Object);
 
-        [Fact]
-        public async Task ProcessAsync_NoTasks()
+        await service.ProcessAsync(new ShowTodoCommand(string.Empty, new DateTime(), 0)
         {
-            var (telegramMock, taskServiceMock, sendMessageMock) = SetupMocks(new string[0], 100);
+            UserChatId = 100
+        });
 
-            var service = new ShowTodoCommandProcessor(
-                sendMessageMock.Object,
-                telegramMock.Object,
-                null,
-                taskServiceMock.Object);
+        sendMessageMock.Verify(x => x.SendTextAsync(100, "No tasks"));
+    }
 
-            await service.ProcessAsync(new ShowTodoCommand(string.Empty, new DateTime(), 0)
-            {
-                UserChatId = 100
-            });
+    private (Mock<ITelegramService>, Mock<ITaskServiceApp>, Mock<IBotSendMessageService>)
+        SetupMocks(ICollection<string> tasksAsString, int chatId)
+    {
+        var tasks = new TaskDto[0];
 
-            sendMessageMock.Verify(x => x.SendTextAsync(100, "No tasks"));
-        }
+        var telegramMock = new Mock<ITelegramService>();
+        telegramMock.Setup(x => x.GetUserId(chatId))
+            .Returns(Task.FromResult("userid"));
 
-        private (Mock<ITelegramService>, Mock<ITaskServiceApp>, Mock<IBotSendMessageService>)
-            SetupMocks(ICollection<string> tasksAsString, int chatId)
-        {
-            var tasks = new TaskDto[0];
+        var taskServiceMock = new Mock<ITaskServiceApp>();
+        taskServiceMock.Setup(x => x.PrintTasks(tasks))
+            .Returns(Task.FromResult(tasksAsString));
 
-            var telegramMock = new Mock<ITelegramService>();
-            telegramMock.Setup(x => x.GetUserId(chatId))
-                .Returns(Task.FromResult("userid"));
+        var sendMessageMock = new Mock<IBotSendMessageService>();
 
-            var taskServiceMock = new Mock<ITaskServiceApp>();
-            taskServiceMock.Setup(x => x.PrintTasks(tasks))
-                .Returns(Task.FromResult(tasksAsString));
-
-            var sendMessageMock = new Mock<IBotSendMessageService>();
-
-            return (telegramMock, taskServiceMock, sendMessageMock);
-        }
+        return (telegramMock, taskServiceMock, sendMessageMock);
     }
 }

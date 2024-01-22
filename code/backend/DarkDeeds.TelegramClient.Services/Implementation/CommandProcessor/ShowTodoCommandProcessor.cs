@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using DarkDeeds.ServiceTask.Consumers;
-using DarkDeeds.ServiceTask.Dto;
 using DarkDeeds.TelegramClient.Services.Interface;
 using DarkDeeds.TelegramClient.Services.Interface.CommandProcessor;
 using DarkDeeds.TelegramClient.Services.Models.Commands;
+using DD.TaskService.Domain.Dto;
 using Microsoft.Extensions.Logging;
 
 namespace DarkDeeds.TelegramClient.Services.Implementation.CommandProcessor

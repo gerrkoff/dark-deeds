@@ -1,16 +1,15 @@
 using System.Collections.Generic;
-using DarkDeeds.ServiceTask.Dto;
+using DD.TaskService.Domain.Dto;
 using MediatR;
 
-namespace DarkDeeds.WebClientBff.UseCases.Handlers.Recurrences.Save
-{
-    public class SaveRequestModel : IRequest<int>
-    {
-        public SaveRequestModel(ICollection<PlannedRecurrenceDto> recurrences)
-        {
-            Recurrences = recurrences;
-        }
+namespace DarkDeeds.WebClientBff.UseCases.Handlers.Recurrences.Save;
 
-        public ICollection<PlannedRecurrenceDto> Recurrences { get; }
+public class SaveRequestModel : IRequest<int>
+{
+    public SaveRequestModel(ICollection<PlannedRecurrenceDto> recurrences)
+    {
+        Recurrences = recurrences;
     }
+
+    public ICollection<PlannedRecurrenceDto> Recurrences { get; }
 }

@@ -1,77 +1,76 @@
 using System;
-using DarkDeeds.ServiceTask.Entities;
+using DD.TaskService.Domain.Entities;
 using Xunit;
 
-namespace DarkDeeds.ServiceTask.Tests.Services.RecurrenceCreatorServiceTests
+namespace DarkDeeds.ServiceTask.Tests.Services.RecurrenceCreatorServiceTests;
+
+public partial class RecurrenceCreatorServiceTest
 {
-    public partial class RecurrenceCreatorServiceTest
+    [Fact]
+    public void MatchPeriod_ShouldMatchIfWithinPeriod()
     {
-        [Fact]
-        public void MatchPeriod_ShouldMatchIfWithinPeriod()
+        var service = Service();
+
+        var result = service.MatchPeriod(new PlannedRecurrenceEntity
         {
-            var service = Service();
+            StartDate = new DateTime(2019, 9, 4),
+            EndDate =  new DateTime(2019, 9, 6)
+        }, new DateTime(2019, 9, 5));
 
-            var result = service.MatchPeriod(new PlannedRecurrenceEntity
-            {
-                StartDate = new DateTime(2019, 9, 4),
-                EndDate =  new DateTime(2019, 9, 6)
-            }, new DateTime(2019, 9, 5));
+        Assert.True(result);
+    }
 
-            Assert.True(result);
-        }
+    [Fact]
+    public void MatchPeriod_ShouldMatchIfEqualsToStartDate()
+    {
+        var service = Service();
 
-        [Fact]
-        public void MatchPeriod_ShouldMatchIfEqualsToStartDate()
+        var result = service.MatchPeriod(new PlannedRecurrenceEntity
         {
-            var service = Service();
+            StartDate = new DateTime(2019, 9, 4),
+            EndDate =  new DateTime(2019, 9, 6)
+        }, new DateTime(2019, 9, 4));
 
-            var result = service.MatchPeriod(new PlannedRecurrenceEntity
-            {
-                StartDate = new DateTime(2019, 9, 4),
-                EndDate =  new DateTime(2019, 9, 6)
-            }, new DateTime(2019, 9, 4));
+        Assert.True(result);
+    }
 
-            Assert.True(result);
-        }
+    [Fact]
+    public void MatchPeriod_ShouldMatchIfEqualsToEndDate()
+    {
+        var service = Service();
 
-        [Fact]
-        public void MatchPeriod_ShouldMatchIfEqualsToEndDate()
+        var result = service.MatchPeriod(new PlannedRecurrenceEntity
         {
-            var service = Service();
+            StartDate = new DateTime(2019, 9, 4),
+            EndDate =  new DateTime(2019, 9, 6)
+        }, new DateTime(2019, 9, 6));
 
-            var result = service.MatchPeriod(new PlannedRecurrenceEntity
-            {
-                StartDate = new DateTime(2019, 9, 4),
-                EndDate =  new DateTime(2019, 9, 6)
-            }, new DateTime(2019, 9, 6));
+        Assert.True(result);
+    }
 
-            Assert.True(result);
-        }
+    [Fact]
+    public void MatchPeriod_ShouldMatchEvenIfEndDateIsNull()
+    {
+        var service = Service();
 
-        [Fact]
-        public void MatchPeriod_ShouldMatchEvenIfEndDateIsNull()
+        var result = service.MatchPeriod(new PlannedRecurrenceEntity
         {
-            var service = Service();
+            StartDate = new DateTime(2019, 9, 4)
+        }, new DateTime(2019, 12, 31));
 
-            var result = service.MatchPeriod(new PlannedRecurrenceEntity
-            {
-                StartDate = new DateTime(2019, 9, 4)
-            }, new DateTime(2019, 12, 31));
+        Assert.True(result);
+    }
 
-            Assert.True(result);
-        }
+    [Fact]
+    public void MatchPeriod_ShouldNotMatchIfLessThanStartDate()
+    {
+        var service = Service();
 
-        [Fact]
-        public void MatchPeriod_ShouldNotMatchIfLessThanStartDate()
+        var result = service.MatchPeriod(new PlannedRecurrenceEntity
         {
-            var service = Service();
+            StartDate = new DateTime(2019, 9, 4)
+        }, new DateTime(2019, 9, 3));
 
-            var result = service.MatchPeriod(new PlannedRecurrenceEntity
-            {
-                StartDate = new DateTime(2019, 9, 4)
-            }, new DateTime(2019, 9, 3));
-
-            Assert.False(result);
-        }
+        Assert.False(result);
     }
 }

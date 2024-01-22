@@ -1,19 +1,18 @@
-using DarkDeeds.ServiceTask.Dto;
+using DD.TaskService.Domain.Dto;
 
-namespace DarkDeeds.TelegramClient.Services.Models.Commands
+namespace DarkDeeds.TelegramClient.Services.Models.Commands;
+
+public class CreateTaskCommand : BotCommand
 {
-    public class CreateTaskCommand : BotCommand
+    public TaskDto Task { get; }
+
+    public CreateTaskCommand(TaskDto task)
     {
-        public TaskDto Task { get; }
+        Task = task;
+    }
 
-        public CreateTaskCommand(TaskDto task)
-        {
-            Task = task;
-        }
-
-        public override string ToString()
-        {
-            return $"{nameof(CreateTaskCommand)} {base.ToString()}";
-        }
+    public override string ToString()
+    {
+        return $"{nameof(CreateTaskCommand)} {base.ToString()}";
     }
 }

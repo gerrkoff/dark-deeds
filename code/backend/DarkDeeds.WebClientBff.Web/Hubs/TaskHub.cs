@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using DarkDeeds.ServiceTask.Consumers;
-using DarkDeeds.ServiceTask.Dto;
+using DD.TaskService.Domain.Dto;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 

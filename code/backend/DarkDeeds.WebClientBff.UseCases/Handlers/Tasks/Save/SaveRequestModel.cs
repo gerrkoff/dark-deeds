@@ -1,16 +1,15 @@
 using System.Collections.Generic;
-using DarkDeeds.ServiceTask.Dto;
+using DD.TaskService.Domain.Dto;
 using MediatR;
 
-namespace DarkDeeds.WebClientBff.UseCases.Handlers.Tasks.Save
-{
-    public class SaveRequestModel : IRequest<IEnumerable<TaskDto>>
-    {
-        public SaveRequestModel(ICollection<TaskDto> tasks)
-        {
-            Tasks = tasks;
-        }
+namespace DarkDeeds.WebClientBff.UseCases.Handlers.Tasks.Save;
 
-        public ICollection<TaskDto> Tasks { get; }
+public class SaveRequestModel : IRequest<IEnumerable<TaskDto>>
+{
+    public SaveRequestModel(ICollection<TaskDto> tasks)
+    {
+        Tasks = tasks;
     }
+
+    public ICollection<TaskDto> Tasks { get; }
 }

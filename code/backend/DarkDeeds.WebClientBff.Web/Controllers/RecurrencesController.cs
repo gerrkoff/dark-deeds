@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using DarkDeeds.ServiceTask.Dto;
 using DarkDeeds.WebClientBff.UseCases.Handlers.Recurrences.Create;
 using DarkDeeds.WebClientBff.UseCases.Handlers.Recurrences.Load;
 using DarkDeeds.WebClientBff.UseCases.Handlers.Recurrences.Save;
+using DD.TaskService.Domain.Dto;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 

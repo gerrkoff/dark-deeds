@@ -1,9 +1,8 @@
-using DarkDeeds.ServiceTask.Infrastructure.Services.Dto;
+using DD.TaskService.Domain.Dto;
 
-namespace DarkDeeds.ServiceTask.Communication.Publishers
+namespace DarkDeeds.ServiceTask.Communication.Publishers;
+
+interface ITaskUpdatedPublisher
 {
-    interface ITaskUpdatedPublisher
-    {
-        void Send(TaskUpdatedDto updatedTasks);
-    }
+    void Send(TaskUpdatedDto updatedTasks);
 }

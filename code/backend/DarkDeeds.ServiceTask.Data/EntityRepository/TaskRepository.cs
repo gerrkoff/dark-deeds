@@ -1,17 +1,16 @@
-using DarkDeeds.ServiceTask.Entities;
-using DarkDeeds.ServiceTask.Infrastructure.Data.EntityRepository;
+using DD.TaskService.Domain.Entities;
+using DD.TaskService.Domain.Infrastructure.EntityRepository;
 
-namespace DarkDeeds.ServiceTask.Data.EntityRepository
+namespace DarkDeeds.ServiceTask.Data.EntityRepository;
+
+public class TaskRepository : Repository<TaskEntity>, ITaskRepository
 {
-    public class TaskRepository : Repository<TaskEntity>, ITaskRepository
+    public TaskRepository(IMongoDbContext dbContext) : base(dbContext, "tasks")
     {
-        public TaskRepository(IMongoDbContext dbContext) : base(dbContext, "tasks")
-        {
-        }
+    }
 
-        static TaskRepository()
-        {
-            RegisterDefaultMap<TaskEntity>();
-        }
+    static TaskRepository()
+    {
+        RegisterDefaultMap<TaskEntity>();
     }
 }

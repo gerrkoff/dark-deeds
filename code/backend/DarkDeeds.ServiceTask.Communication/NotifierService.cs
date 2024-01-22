@@ -1,37 +1,36 @@
 using System;
 using System.Threading.Tasks;
 using DarkDeeds.ServiceTask.Communication.Publishers;
-using DarkDeeds.ServiceTask.Infrastructure.Services;
-using DarkDeeds.ServiceTask.Infrastructure.Services.Dto;
+using DD.TaskService.Domain.Dto;
+using DD.TaskService.Domain.Infrastructure;
 using Microsoft.Extensions.Logging;
 
-namespace DarkDeeds.ServiceTask.Communication
+namespace DarkDeeds.ServiceTask.Communication;
+
+class NotifierService : INotifierService
 {
-    class NotifierService : INotifierService
+    private readonly ITaskUpdatedPublisher _taskUpdatedPublisher;
+    private readonly ILogger<NotifierService> _logger;
+
+    public NotifierService(ITaskUpdatedPublisher taskUpdatedPublisher, ILogger<NotifierService> logger)
     {
-        private readonly ITaskUpdatedPublisher _taskUpdatedPublisher;
-        private readonly ILogger<NotifierService> _logger;
+        _taskUpdatedPublisher = taskUpdatedPublisher;
+        _logger = logger;
+    }
 
-        public NotifierService(ITaskUpdatedPublisher taskUpdatedPublisher, ILogger<NotifierService> logger)
+    public Task TaskUpdated(TaskUpdatedDto updatedTasks)
+    {
+        try
         {
-            _taskUpdatedPublisher = taskUpdatedPublisher;
-            _logger = logger;
+            // TODO: change to ICollection
+            _taskUpdatedPublisher.Send(updatedTasks);
+        }
+        catch (Exception e)
+        {
+            // TODO: specify exception?
+            _logger.LogWarning($"Failed to notify about updated tasks. Exception message: {e.Message}", e);
         }
 
-        public Task TaskUpdated(TaskUpdatedDto updatedTasks)
-        {
-            try
-            {
-                // TODO: change to ICollection
-                _taskUpdatedPublisher.Send(updatedTasks);
-            }
-            catch (Exception e)
-            {
-                // TODO: specify exception?
-                _logger.LogWarning($"Failed to notify about updated tasks. Exception message: {e.Message}", e);
-            }
-
-            return Task.CompletedTask;
-        }
+        return Task.CompletedTask;
     }
 }
