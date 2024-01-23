@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
 docker-compose \
-    -f infrastructure/docker-compose.yml \
-    -p dd \
-    logs -f $1
+  -f infrastructure/docker-compose.yml \
+  -p dd \
+  logs -f $1
