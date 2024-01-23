@@ -106,6 +106,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkDeeds.ServiceAuth.Consu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DD.TaskService.Domain", "DD.TaskService.Domain\DD.TaskService.Domain.csproj", "{F1F64604-1D74-41BE-B46F-3F74F5AFB945}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TelegramClient", "TelegramClient", "{849340E3-1AC6-42D9-92F7-B3FD96EA155F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SharedBAD", "SharedBAD", "{E90D4970-9857-444A-A075-1E5E93A85DB8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
