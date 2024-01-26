@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
-using DarkDeeds.TelegramClient.Services.Dto;
-using DarkDeeds.TelegramClient.Services.Interface;
+using DD.TelegramClient.Domain.Dto;
+using DD.TelegramClient.Domain.Implementation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,7 +10,7 @@ namespace DarkDeeds.TelegramClient.Web.Controllers
     public class BotController : ControllerBase
     {
         private readonly IBotProcessMessageService _botProcessMessageService;
-        
+
         public BotController(IBotProcessMessageService botProcessMessageService)
         {
             _botProcessMessageService = botProcessMessageService;

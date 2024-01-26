@@ -12,7 +12,6 @@
   <ItemGroup>
     <ProjectReference Include="..\DarkDeeds.ServiceTask.Consumers\DarkDeeds.ServiceTask.Consumers.csproj"/>
     <ProjectReference Include="..\DarkDeeds.Communication\DarkDeeds.Communication.csproj"/>
-    <ProjectReference Include="..\DarkDeeds.ServiceTask.Contract\DarkDeeds.ServiceTask.Contract.csproj"/>
   </ItemGroup>
 
 </Project>

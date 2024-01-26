@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 using DarkDeeds.Common.Web;
-using DarkDeeds.TelegramClient.Services.Interface;
+using DD.TelegramClient.Domain.Implementation;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DarkDeeds.TelegramClient.Web.Controllers

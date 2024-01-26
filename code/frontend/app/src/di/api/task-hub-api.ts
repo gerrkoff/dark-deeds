@@ -14,7 +14,7 @@ export class TaskHubApi {
 
     public init() {
         this.connection = new signalR.HubConnectionBuilder()
-            .withUrl(baseUrl + 'ws/web/task', {
+            .withUrl(baseUrl + 'ws/task/task', {
                 accessTokenFactory: () =>
                     this.storageService.loadAccessToken() as string,
             })

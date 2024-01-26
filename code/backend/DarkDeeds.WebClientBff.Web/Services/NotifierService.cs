@@ -4,21 +4,13 @@ using DarkDeeds.WebClientBff.Web.Hubs;
 using DD.TaskService.Domain.Dto;
 using Microsoft.AspNetCore.SignalR;
 
-namespace DarkDeeds.WebClientBff.Web.Services
+namespace DarkDeeds.WebClientBff.Web.Services;
+
+public class NotifierService(IHubContext<TaskHub> hubContext)
 {
-    public class NotifierService
+    public async Task TaskUpdated(IEnumerable<TaskDto> updatedTasks, string userId)
     {
-        private readonly IHubContext<TaskHub> _hubContext;
-
-        public NotifierService(IHubContext<TaskHub> hubContext)
-        {
-            _hubContext = hubContext;
-        }
-
-        public async Task TaskUpdated(IEnumerable<TaskDto> updatedTasks, string userId)
-        {
-            await _hubContext.Clients.User(userId)
-                .SendAsync("update", updatedTasks, false);
-        }
+        await hubContext.Clients.User(userId)
+            .SendAsync("update", updatedTasks, false);
     }
 }

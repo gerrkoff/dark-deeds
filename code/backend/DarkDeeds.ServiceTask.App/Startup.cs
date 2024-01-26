@@ -5,7 +5,7 @@ using DarkDeeds.Communication;
 using DarkDeeds.ServiceTask.Communication;
 using DarkDeeds.ServiceTask.ContractImpl;
 using DarkDeeds.ServiceTask.ContractImpl.Contract;
-using DarkDeeds.ServiceTask.Data;
+using DD.ServiceTask.Details.Data;
 using DD.TaskService.Domain;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;

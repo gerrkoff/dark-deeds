@@ -1,43 +1,45 @@
 ﻿using System.Threading.Tasks;
+using AutoMapper;
+using DarkDeeds.Authentication.Core;
+using DarkDeeds.ServiceAuth.Consumers;
 using DarkDeeds.ServiceAuth.Dto.Dto;
 using DarkDeeds.WebClientBff.UseCases.Dto;
-using DarkDeeds.WebClientBff.UseCases.Handlers.Account.GetCurrentUser;
-using DarkDeeds.WebClientBff.UseCases.Handlers.Account.SignIn;
-using DarkDeeds.WebClientBff.UseCases.Handlers.Account.SignUp;
-using MediatR;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DarkDeeds.WebClientBff.Web.Controllers
+namespace DarkDeeds.WebClientBff.Web.Controllers;
+
+[AllowAnonymous]
+public class AccountController(
+    IAuthServiceApp authServiceApp,
+    IHttpContextAccessor httpContextAccessor,
+    IMapper mapper) : BaseController
 {
-    [AllowAnonymous]
-    public class AccountController : BaseController
+    [HttpPost(nameof(SignUp))]
+    public Task<SignUpResultDto> SignUp(SignUpInfoDto signUpInfo)
     {
-        private readonly IMediator _mediator;
+        Validate();
+        return authServiceApp.SignUpAsync(signUpInfo);
+    }
 
-        public AccountController(IMediator mediator)
-        {
-            _mediator = mediator;
-        }
+    [HttpPost(nameof(SignIn))]
+    public Task<SignInResultDto> SignIn(SignInInfoDto signInInfo)
+    {
+        Validate();
+        return authServiceApp.SignInAsync(signInInfo);
+    }
 
-        [HttpPost(nameof(SignUp))]
-        public Task<SignUpResultDto> SignUp(SignUpInfoDto signUpInfo)
-        {
-            Validate();
-            return _mediator.Send(new SignUpRequestModel(signUpInfo));
-        }
+    // TODO: move to auth service
+    [HttpGet]
+    public Task<CurrentUserDto> Current()
+    {
+        var user = httpContextAccessor.HttpContext.User;
 
-        [HttpPost(nameof(SignIn))]
-        public Task<SignInResultDto> SignIn(SignInInfoDto signInInfo)
-        {
-            Validate();
-            return _mediator.Send(new SignInRequestModel(signInInfo));
-        }
+        var currentUser = user.Identity != null && user.Identity.IsAuthenticated
+            ? mapper.Map<CurrentUserDto>(user.ToAuthToken())
+            : new CurrentUserDto();
 
-        [HttpGet]
-        public Task<CurrentUserDto> Current()
-        {
-            return _mediator.Send(new GetCurrentUserRequestModel());
-        }
+        return Task.FromResult(currentUser);
     }
 }

@@ -7,14 +7,14 @@ export class RecurrencesApi {
 
     public createRecurrences(timezoneOffset: number): Promise<number> {
         return this.api.post<number>(
-            `api/web/recurrences/create?timezoneOffset=${timezoneOffset}`,
+            `api/task/recurrences/create?timezoneOffset=${timezoneOffset}`,
             null
         )
     }
 
     public async loadRecurrences(): Promise<PlannedRecurrence[]> {
         const result = await this.api.get<PlannedRecurrence[]>(
-            'api/web/recurrences'
+            'api/task/recurrences'
         )
         return this.dateService.adjustDatesAfterLoading(
             result
@@ -24,7 +24,7 @@ export class RecurrencesApi {
     public saveRecurrences(recurrences: PlannedRecurrence[]): Promise<number> {
         const fixedRecurrences =
             this.dateService.adjustDatesBeforeSaving(recurrences)
-        return this.api.post<number>('api/web/recurrences', fixedRecurrences)
+        return this.api.post<number>('api/task/recurrences', fixedRecurrences)
     }
 }
 

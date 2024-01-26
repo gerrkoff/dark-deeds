@@ -21,8 +21,7 @@
     <ProjectReference Include="..\DarkDeeds.Common\DarkDeeds.Common.csproj"/>
     <ProjectReference Include="..\DarkDeeds.Communication\DarkDeeds.Communication.csproj"/>
     <ProjectReference Include="..\DarkDeeds.ServiceTask.Communication\DarkDeeds.ServiceTask.Communication.csproj"/>
-    <ProjectReference Include="..\DarkDeeds.ServiceTask.ContractImpl\DarkDeeds.ServiceTask.ContractImpl.csproj"/>
-    <ProjectReference Include="..\DarkDeeds.ServiceTask.Data\DarkDeeds.ServiceTask.Data.csproj"/>
+    <ProjectReference Include="..\DD.ServiceTask.Details.Data\DD.ServiceTask.Details.Data.csproj" />
   </ItemGroup>
 
 </Project>

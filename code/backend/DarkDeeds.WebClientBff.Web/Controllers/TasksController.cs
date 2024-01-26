@@ -2,34 +2,24 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
-using DarkDeeds.WebClientBff.UseCases.Handlers.Tasks.LoadActual;
-using DarkDeeds.WebClientBff.UseCases.Handlers.Tasks.Save;
+using DarkDeeds.ServiceTask.Consumers;
 using DD.TaskService.Domain.Dto;
-using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DarkDeeds.WebClientBff.Web.Controllers
+namespace DarkDeeds.WebClientBff.Web.Controllers;
+
+public class TasksController(ITaskServiceApp taskServiceApp) : BaseController
 {
-    public class TasksController : BaseController
+    [HttpGet]
+    public Task<IEnumerable<TaskDto>> Get([Required] DateTime from)
     {
-        private readonly IMediator _mediator;
+        return taskServiceApp.LoadActualTasksAsync(from);
+    }
 
-        public TasksController(IMediator mediator)
-        {
-            _mediator = mediator;
-        }
-
-        [HttpGet]
-        public Task<IEnumerable<TaskDto>> Get([Required] DateTime from)
-        {
-            return _mediator.Send(new LoadActualRequestModel(from));
-        }
-
-        // TODO: use separate dto?
-        [HttpPost]
-        public Task<IEnumerable<TaskDto>> Post([FromBody] ICollection<TaskDto> tasks)
-        {
-            return _mediator.Send(new SaveRequestModel(tasks));
-        }
+    // TODO: use separate dto?
+    [HttpPost]
+    public Task<IEnumerable<TaskDto>> Post([FromBody] ICollection<TaskDto> tasks)
+    {
+        return taskServiceApp.SaveTasksAsync(tasks);
     }
 }

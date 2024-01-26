@@ -11,7 +11,7 @@
     <ItemGroup>
       <ProjectReference Include="..\DarkDeeds.Authentication.Core\DarkDeeds.Authentication.Core.csproj" />
       <ProjectReference Include="..\DarkDeeds.Common.Web\DarkDeeds.Common.Web.csproj" />
-      <ProjectReference Include="..\DarkDeeds.TelegramClient.Services\DarkDeeds.TelegramClient.Services.csproj" />
+      <ProjectReference Include="..\DD.TelegramClient.Domain\DD.TelegramClient.Domain.csproj" />
     </ItemGroup>
 
 </Project>

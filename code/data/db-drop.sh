@@ -1,2 +1,2 @@
 dotnet ef database drop \
-    -p code/backend/DD.Data/DD.Data.csproj
+    -p code/backend/DD.Shared.Data/DD.Shared.Data.csproj

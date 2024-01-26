@@ -1,29 +1,6 @@
 version: '3'
 
 services:
-  consul:
-    image: consul:1.10
-    ports:
-      - 8500:8500
-    deploy:
-      resources:
-        limits:
-          cpus: '1'
-          memory: 300M
-
-  rabbit-mq:
-    image: rabbitmq:3-management-alpine
-    ports:
-      - 5672:5672
-      - 15672:15672
-    volumes:
-      - ./settings/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
-    deploy:
-      resources:
-        limits:
-          cpus: '1'
-          memory: 300M
-
   mongo-db:
     image: mongo:4.4
     environment:
@@ -53,79 +30,17 @@ services:
           cpus: '1'
           memory: 300M
 
-  api-gateway:
-    build:
-      context: ../
-      dockerfile: infrastructure/apps/api-gateway.dockerfile
-    ports:
-      - 5000:5000
-    environment:
-      - DD_SERVICE_DISCOVERY_HOST=${IP:-api-gateway}
-      - DD_SERVICE_DISCOVERY_PORT=5000
-      - ASPNETCORE_URLS=http://0.0.0.0:5000
-    depends_on:
-      - consul
-      - backend
-      - auth-service
-      - task-service
-      - web-client
-    deploy:
-      resources:
-        limits:
-          cpus: '1'
-          memory: 300M
-
-  auth-service:
-    build:
-      context: ../
-      dockerfile: infrastructure/apps/auth-service.dockerfile
-    ports:
-      - 5002:5002
-    environment:
-      - DD_SERVICE_DISCOVERY_HOST=${IP:-auth-service}
-      - DD_SERVICE_DISCOVERY_PORT=5002
-      - ASPNETCORE_URLS=http://0.0.0.0:5002
-    depends_on:
-      - consul
-      - postgres-db
-    deploy:
-      resources:
-        limits:
-          cpus: '1'
-          memory: 300M
-
-  task-service:
-    build:
-      context: ../
-      dockerfile: infrastructure/apps/task-service.dockerfile
-    ports:
-      - 5001:5001
-    environment:
-      - DD_SERVICE_DISCOVERY_HOST=${IP:-task-service}
-      - DD_SERVICE_DISCOVERY_PORT=5001
-      - ASPNETCORE_URLS=http://0.0.0.0:5001
-    depends_on:
-      - consul
-      - postgres-db
-      - rabbit-mq
-    deploy:
-      resources:
-        limits:
-          cpus: '1'
-          memory: 300M
-
   backend:
     build:
       context: ../
       dockerfile: infrastructure/apps/backend.dockerfile
     ports:
-      - 5003:5003
+      - 5000:5000
     environment:
       - DD_SERVICE_DISCOVERY_HOST=${IP:-backend}
-      - DD_SERVICE_DISCOVERY_PORT=5003
-      - ASPNETCORE_URLS=http://0.0.0.0:5003
+      - DD_SERVICE_DISCOVERY_PORT=5000
+      - ASPNETCORE_URLS=http://0.0.0.0:5000
     depends_on:
-      - consul
       - postgres-db
     deploy:
       resources:
@@ -148,39 +63,6 @@ services:
           cpus: '1'
           memory: 300M
 
-  prometheus:
-    image: prom/prometheus:v2.32.1
-    ports:
-      - 9090:9090
-    volumes:
-      - ./settings/prometheus.yml:/etc/prometheus/prometheus.yml:ro
-      - prometheus-volume:/prometheus
-
-  grafana:
-    build:
-      context: ../
-      dockerfile: infrastructure/apps/grafana.dockerfile
-    environment:
-      - GF_SECURITY_ADMIN_PASSWORD=qwerty
-    ports:
-      - 3001:3000
-    volumes:
-      - grafana-volume:/var/lib/grafana
-      - ./settings/grafana.yml:/etc/grafana/provisioning/datasources/grafana.yml:ro
-
-  loki:
-    image: grafana/loki:2.4.2
-    ports:
-      - 3100:3100
-    volumes:
-      - loki-volume:/loki
-      - ./settings/loki.yml:/etc/loki/config.yaml:ro
-    command: -print-config-stderr -config.file=/etc/loki/config.yaml
-
 volumes:
   postgres-db-volume:
   mongo-db-volume:
-  prometheus-volume:
-  grafana-volume:
-  loki-volume:
-

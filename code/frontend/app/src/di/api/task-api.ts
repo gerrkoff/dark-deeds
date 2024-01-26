@@ -10,13 +10,13 @@ export class TaskApi {
             .monday(this.dateService.today())
             .toISOString()
         const params = new Map<string, any>([['from', monday]])
-        const result = await this.api.get<Task[]>('api/web/tasks', params)
+        const result = await this.api.get<Task[]>('api/task/tasks', params)
         return this.dateService.adjustDatesAfterLoading(result) as Task[]
     }
 
     public async saveTasks(tasks: Task[]): Promise<Task[]> {
         const fixedTasks = this.dateService.adjustDatesBeforeSaving(tasks)
-        const result = await this.api.post<Task[]>('api/web/tasks', fixedTasks)
+        const result = await this.api.post<Task[]>('api/task/tasks', fixedTasks)
         return this.dateService.adjustDatesAfterLoading(result) as Task[]
     }
 }

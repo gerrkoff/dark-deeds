@@ -3,27 +3,19 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Hosting;
 
-namespace DarkDeeds.WebClientBff.Web.BackgroundServices
+namespace DarkDeeds.WebClientBff.Web.BackgroundServices;
+
+public class HubHeartbeat<T>(IHubContext<T> hubContext) : BackgroundService
+    where T : Hub
 {
-    public class HubHeartbeat<T> : BackgroundService
-        where T: Hub
+    private const int HeartbeatTimer = 60 * 1000;
+
+    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        private const int HeartbeatTimer = 60 * 1000;
-        
-        private readonly IHubContext<T> _hubContext;
-
-        public HubHeartbeat(IHubContext<T> hubContext)
+        while (!stoppingToken.IsCancellationRequested)
         {
-            _hubContext = hubContext;
-        }
-
-        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
-        {
-            while (!stoppingToken.IsCancellationRequested)
-            {
-                await _hubContext.Clients.All.SendAsync("heartbeat", stoppingToken);
-                await Task.Delay(HeartbeatTimer, stoppingToken);
-            }
+            await hubContext.Clients.All.SendAsync("heartbeat", stoppingToken);
+            await Task.Delay(HeartbeatTimer, stoppingToken);
         }
     }
 }

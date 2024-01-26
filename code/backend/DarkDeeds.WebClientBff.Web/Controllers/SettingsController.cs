@@ -1,31 +1,25 @@
 ﻿using System.Threading.Tasks;
-using DarkDeeds.WebClientBff.Services.Dto;
-using DarkDeeds.WebClientBff.UseCases.Handlers.Settings.Load;
-using DarkDeeds.WebClientBff.UseCases.Handlers.Settings.Save;
-using MediatR;
+using DarkDeeds.Authentication.Core;
+using DD.WebClientBff.Domain.Dto;
+using DD.WebClientBff.Domain.Services;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DarkDeeds.WebClientBff.Web.Controllers
+namespace DarkDeeds.WebClientBff.Web.Controllers;
+
+public class SettingsController(
+    ISettingsService settingsService,
+    IHttpContextAccessor httpContextAccessor) : BaseController
 {
-    public class SettingsController : BaseController
+    [HttpGet]
+    public Task<SettingsDto> Get()
     {
-        private readonly IMediator _mediator;
+        return settingsService.LoadAsync(httpContextAccessor.HttpContext.User.ToAuthToken().UserId);
+    }
 
-        public SettingsController(IMediator mediator)
-        {
-            _mediator = mediator;
-        }
-
-        [HttpGet]
-        public Task<SettingsDto> Get()
-        {
-            return _mediator.Send(new LoadRequestModel());
-        }
-        
-        [HttpPost]
-        public Task Post([FromBody] SettingsDto settings)
-        {
-            return _mediator.Send(new SaveRequestModel(settings));
-        }
+    [HttpPost]
+    public Task Post([FromBody] SettingsDto settings)
+    {
+        return settingsService.SaveAsync(settings, httpContextAccessor.HttpContext.User.ToAuthToken().UserId);
     }
 }

@@ -20,7 +20,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\DarkDeeds.TelegramClient.Services\DarkDeeds.TelegramClient.Services.csproj" />
+      <ProjectReference Include="..\DD.TelegramClient.Domain\DD.TelegramClient.Domain.csproj" />
     </ItemGroup>
 
 </Project>

@@ -1,4 +1,4 @@
-using DarkDeeds.TelegramClient.Services;
+using DD.TelegramClient.Domain;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
