@@ -16,9 +16,7 @@ public class BaseTest
 {
     private static readonly bool RunContainer = bool.Parse(Environment.GetEnvironmentVariable("RUN_CONTAINER") ?? "false");
     private static readonly string ArtifactsPath = Environment.GetEnvironmentVariable("ARTIFACTS_PATH") ?? "artifacts";
-    protected static readonly string Url = Environment.GetEnvironmentVariable("URL") ?? "http://localhost:3000";
-    // TODO: remove this
-    protected static readonly string ApiUrl = Environment.GetEnvironmentVariable("URL") ?? "http://localhost:5000";
+    protected static readonly string Url = Environment.GetEnvironmentVariable("URL") ?? "http://localhost:5000";
     private static readonly Random Random = new();
 
     private RemoteWebDriver CreateDriver()
@@ -75,7 +73,7 @@ public class BaseTest
 
         return new HttpClient(handler)
         {
-            BaseAddress = new Uri(ApiUrl)
+            BaseAddress = new Uri(Url)
         };
     }
 

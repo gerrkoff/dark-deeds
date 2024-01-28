@@ -38,7 +38,7 @@ namespace DD.ServiceTask.Details
 
         private static void AddTaskServiceData(this IServiceCollection services, IConfiguration configuration)
         {
-            string connectionString = configuration.GetConnectionString("mongoDb");
+            string connectionString = configuration.GetConnectionString("tasksDb");
             services.AddSingleton<IMongoDbContext>(_ => new MongoDbContext(connectionString));
             services.AddScoped<ITaskRepository, TaskRepository>();
             services.AddScoped<IPlannedRecurrenceRepository, PlannedRecurrenceRepository>();
