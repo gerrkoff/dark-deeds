@@ -11,6 +11,6 @@ public class HomeController : ControllerBase
     [HttpGet]
     public BuildInfoDto BuildInfo()
     {
-        return new(typeof(Startup), null);
+        return new(typeof(Startup));
     }
 }

@@ -1,3 +1,4 @@
+using DD.App.Dto;
 using DD.ServiceAuth.Details;
 using DD.ServiceTask.Details;
 using DD.Shared.Auth;
@@ -7,25 +8,19 @@ using DD.TelegramClient.Details;
 using DD.WebClientBff.Details;
 using GerrKoff.Monitoring;
 using GerrKoff.Monitoring.Misc;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.OpenApi.Models;
 
 namespace DD.App;
 
 public class Startup(IConfiguration configuration)
 {
-    public const string App = "backend";
-
     private IConfiguration Configuration { get; } = configuration;
 
     public void ConfigureServices(IServiceCollection services)
     {
-        services.AddHttpContextAccessor();
-
-        services.AddDdAuthentication(Configuration);
-        services.AddDdSharedWeb();
-        services.AddDdSharedData(Configuration);
-
-        services.AddAppApi();
-
+        // monitoring
         services.AddLoggingWeb();
         services.AddMetricsWeb(Configuration, Program.Meta);
 
@@ -37,6 +32,29 @@ public class Startup(IConfiguration configuration)
 
         // shared
         services.AddSharedAuth();
+        services.AddDdSharedWeb();
+        services.AddDdSharedData(Configuration);
+
+        services.AddDdAuthentication(Configuration);
+
+        services.AddHttpContextAccessor();
+        services.AddControllers(options =>
+        {
+            var authRequired = new AuthorizationPolicyBuilder()
+                .RequireAuthenticatedUser()
+                .Build();
+            options.Filters.Add(new AuthorizeFilter(authRequired));
+        });
+
+        var buildInfo = new BuildInfoDto(typeof(Startup));
+        services.AddSwaggerGen(c =>
+        {
+            c.SwaggerDoc("v1", new OpenApiInfo
+            {
+                Title = "DarkDeeds.Backend",
+                Version = buildInfo.AppVersion
+            });
+        });
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
