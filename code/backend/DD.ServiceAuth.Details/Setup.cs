@@ -21,7 +21,7 @@ public static class Setup
         services.AddAutoMapper(typeof(ModelsMapping));
     }
 
-    public static void AddDarkDeedsAuthentication(this IServiceCollection services, IConfiguration configuration)
+    public static void AddDdAuthentication(this IServiceCollection services, IConfiguration configuration)
     {
         services.Configure<AuthSettings>(options => configuration.GetSection("Auth").Bind(options));
 

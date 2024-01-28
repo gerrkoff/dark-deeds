@@ -10,7 +10,7 @@ namespace DD.Shared.Data;
 
 public static class Setup
 {
-    public static void AddBackendDatabase(this IServiceCollection services, IConfiguration configuration)
+    public static void AddDdSharedData(this IServiceCollection services, IConfiguration configuration)
     {
         string connectionString = configuration.GetConnectionString("appDb");
 

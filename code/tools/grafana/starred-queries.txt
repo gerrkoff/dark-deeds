@@ -1,2 +1,0 @@
-loki
-{app=~".+", instance=~".*"} | json | RequestPath!~"/metrics|/ws/web/task/negotiate"

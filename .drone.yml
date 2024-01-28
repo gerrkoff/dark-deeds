@@ -73,7 +73,7 @@ steps:
   - name: build
     commands:
       - git remote set-url origin git@github.com:gerrkoff/dark-deeds.git
-      - ./ci/build.sh push "date -d @"
+      - ./ci/publish.sh "date -d @"
 
   - name: start staging
     environment:
@@ -148,7 +148,7 @@ steps:
   - name: build
     commands:
       - git remote set-url origin git@github.com:gerrkoff/dark-deeds.git
-      - ./ci/build.sh push "date -d @"
+      - ./ci/publish.sh "date -d @"
 
   - name: start staging
     environment:

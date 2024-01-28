@@ -2,7 +2,6 @@
 .idea
 bin/
 obj/
-wwwroot/
 *ocelot.Development.json
 *appsettings.Development.json
 *appsettings.Staging.json

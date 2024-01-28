@@ -4,7 +4,7 @@ namespace DD.Shared.Web;
 
 public static class Setup
 {
-    public static void AddDarkDeedsTestControllers(this IServiceCollection services)
+    public static void AddDdSharedWeb(this IServiceCollection services)
     {
         services.AddScoped<TestAttribute>();
         services.AddScoped<IUserAuth, UserAuth>();

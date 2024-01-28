@@ -8,7 +8,7 @@ namespace DD.App;
 
 static class StartupExtensions
 {
-    public static void AddBackendApi(this IServiceCollection services)
+    public static void AddAppApi(this IServiceCollection services)
     {
         services.AddControllers(options =>
         {
