@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export BUILD_VERSION=$(./scripts/version.sh "$1")
+export BUILD_VERSION=$(./ci/version.sh "$1")
 echo BUILD_VERSION=$BUILD_VERSION
 
 ./ci/build.sh
