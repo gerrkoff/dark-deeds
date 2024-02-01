@@ -25,6 +25,5 @@ COPY --from=builder-fe /code/frontend/build /app/wwwroot/
 WORKDIR /app
 
 ENV ASPNETCORE_ENVIRONMENT=Production
-ENV GERRKOFF_MONITORING_ENV=prod
 
 ENTRYPOINT ["dotnet", "DD.App.dll"]
