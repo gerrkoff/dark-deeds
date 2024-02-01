@@ -4,6 +4,8 @@ if [ $# -le 0 ]; then
   exit 1
 fi
 
+echo "----------- Testing load..."
+
 SETTINGS_VOLUME=''
 if [ "$2" != "" ]; then
   SETTINGS_VOLUME="-v $(pwd)/$2:/app/appsettings.json:ro"
@@ -17,3 +19,5 @@ docker run -t --rm \
   $SETTINGS_VOLUME \
   --name dd-test-load \
   dd-test-load
+
+echo "----------- Test load completed"

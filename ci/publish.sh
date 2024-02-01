@@ -1,5 +1,7 @@
 #!/bin/bash
 
+echo "----------- Publishing..."
+
 export BUILD_VERSION=$(./ci/version.sh "$1")
 echo BUILD_VERSION=$BUILD_VERSION
 
@@ -7,4 +9,6 @@ echo BUILD_VERSION=$BUILD_VERSION
 
 docker push \
   gerrkoff/dark-deeds:latest \
-  gerrkoff/translations-history:$BUILD_VERSION || exit $?
+  gerrkoff/dark-deeds:$BUILD_VERSION || exit $?
+
+echo "----------- Publish completed"

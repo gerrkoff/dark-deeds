@@ -4,6 +4,8 @@ if [ $# -le 0 ]; then
   exit 1
 fi
 
+echo "----------- Testing e2e..."
+
 if [ "$2" = "staging" ]; then
   RUN_STAGING="true"
 else
@@ -21,3 +23,5 @@ docker run -t --rm \
   -v "$(pwd)"/ci/results:/app/artifacts \
   --name dd-test-e2e \
   dd-test-e2e
+
+echo "----------- Test e2e completed"
