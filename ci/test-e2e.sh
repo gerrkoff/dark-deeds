@@ -22,6 +22,6 @@ docker run -t --rm \
   -e URL="$1" \
   -v "$(pwd)"/ci/results:/app/artifacts \
   --name dd-test-e2e \
-  dd-test-e2e
+  dd-test-e2e || exit $?
 
 echo "----------- Test e2e completed"

@@ -18,6 +18,6 @@ docker run -t --rm \
   -v "$(pwd)"/ci/results:/app/bin/Release/net8.0/reports \
   $SETTINGS_VOLUME \
   --name dd-test-load \
-  dd-test-load
+  dd-test-load || exit $?
 
 echo "----------- Test load completed"
