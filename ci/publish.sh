@@ -1,6 +1,6 @@
 #!/bin/bash
 
-./ci/build.sh
+./ci/build.sh "$1"
 
 echo "----------- Publishing..."
 
