@@ -2,6 +2,7 @@
 using System.Security.Claims;
 using System.Text;
 using DD.Shared.Auth;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
@@ -14,23 +15,29 @@ public interface ITokenService
 
 class TokenService(
     IOptions<AuthSettings> authSettings,
-    IAuthTokenConverter authTokenConverter)
+    IAuthTokenConverter authTokenConverter,
+    ILogger<TokenService> logger)
     : ITokenService
 {
     private readonly AuthSettings _authSettings = authSettings.Value;
 
     public string Serialize(AuthToken authToken)
     {
+        logger.LogInformation("Auth settings key: {AuthSettingsKey}", _authSettings.Key);
+
         ClaimsIdentity identity = authTokenConverter.ToIdentity(authToken);
 
         var now = DateTime.UtcNow;
+        var keyBytes = Encoding.ASCII.GetBytes(_authSettings.Key);
+        var symmetricSecurityKey = new SymmetricSecurityKey(keyBytes);
         var jwt = new JwtSecurityToken(
             _authSettings.Issuer,
             _authSettings.Audience,
             notBefore: now,
             claims: identity.Claims,
             expires: now.Add(TimeSpan.FromMinutes(_authSettings.Lifetime)),
-            signingCredentials: new SigningCredentials(new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_authSettings.Key)), SecurityAlgorithms.HmacSha256));
+            signingCredentials: new SigningCredentials(symmetricSecurityKey, SecurityAlgorithms.HmacSha256)
+        );
 
         string encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
 
