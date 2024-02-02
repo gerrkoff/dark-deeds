@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 BRANCH=$(git rev-parse --abbrev-ref HEAD | sed "s/\./-/g" | sed "s/\//-/g" | sed "s/_/-/g" )
 COMMIT_TIME=$(git show -s --format=%ct)

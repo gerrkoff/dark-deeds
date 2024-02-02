@@ -1,56 +1,50 @@
-using System;
 using System.Threading.Tasks;
 using DarkDeeds.E2eTests.Base;
 using DarkDeeds.E2eTests.Common;
-using OpenQA.Selenium.Remote;
 using Xunit;
 
-namespace DarkDeeds.E2eTests
+namespace DarkDeeds.E2eTests;
+
+public class MultiUserTests : BaseTest
 {
-    public class MultiUserTests : BaseTest
+    [Fact]
+    public Task ForeignTasksTest()
     {
-        [Fact]
-        public Task ForeignTasksTest()
+        string taskText = RandomizeText("task");
+        return Test(async driver =>
         {
-            string taskText = RandomizeText("task");
-            return Test(async driver =>
-            {
-                await CreateUserAndLogin(driver);
+            await CreateUserAndLogin(driver);
 
-                driver.CreateTaskViaAddButton(taskText);
-                driver.WaitUntilSavingFinished();
-                
-                driver.NavigateToSettings();
-                driver.GetSignOutButton().Click();
-                
-                await CreateUserAndLogin(driver);
-                driver.WaitUntilTaskDisappeared(taskText);
-            });
-        }
+            driver.CreateTaskViaAddButton(taskText);
+            driver.WaitUntilSavingFinished();
 
-        [Fact]
-        public Task ForeignPushNotificationsTest()
+            driver.NavigateToSettings();
+            driver.GetSignOutButton().Click();
+
+            await CreateUserAndLogin(driver);
+            driver.WaitUntilTaskDisappeared(taskText);
+        });
+    }
+
+    [Fact]
+    public Task ForeignPushNotificationsTest()
+    {
+        string taskText = RandomizeText("task");
+        return Test(async driver =>
         {
-            string taskText = RandomizeText("task");
-            return Test(async driver =>
-            {
-                await CreateUserAndLogin(driver);
-                
-                driver.OpenNewTab(Url);
-                driver.NavigateToSettings();
-                driver.GetSignOutButton().Click();
-                await CreateUserAndLogin(driver);
+            await CreateUserAndLogin(driver);
 
-                driver.CreateTaskViaAddButton(taskText);
-                driver.WaitUntilSavingFinished();
-                
-                driver.SwitchToTab(0);
+            driver.OpenNewTab(Url);
+            driver.NavigateToSettings();
+            driver.GetSignOutButton().Click();
+            await CreateUserAndLogin(driver);
 
-                driver.WaitUntilTaskDisappeared(taskText);
-            });
-        }
+            driver.CreateTaskViaAddButton(taskText);
+            driver.WaitUntilSavingFinished();
 
-        private Task CreateUserAndLogin(RemoteWebDriver driver) =>
-            CreateUserAndLogin(driver, Guid.NewGuid().ToString());
+            driver.SwitchToTab(0);
+
+            driver.WaitUntilTaskDisappeared(taskText);
+        });
     }
 }

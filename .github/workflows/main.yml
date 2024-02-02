@@ -13,12 +13,10 @@ jobs:
         node-version: 21.x
     - name: Build FE
       run: |
-        cd code/frontend/app
+        cd code/frontend
         npm install
         npm run build
         npm run test-ci
-        cd ../server
-        npm install
 
   build-be:
     runs-on: ubuntu-latest
@@ -30,9 +28,8 @@ jobs:
         dotnet-version: 8.0.x
     - name: Build BE
       run: |
-        dotnet test code/backend/DarkDeeds.ServiceTask.Tests/DarkDeeds.ServiceTask.Tests.csproj
-        dotnet test code/backend/DarkDeeds.TelegramClient.Tests/DarkDeeds.TelegramClient.Tests.csproj
         dotnet build code/backend/DarkDeeds.sln
+        dotnet test code/backend/DarkDeeds.sln
 
   build-e2e-tests:
     runs-on: ubuntu-latest
