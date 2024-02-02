@@ -38,6 +38,7 @@ public class Startup(IConfiguration configuration)
         services.AddDdAuthentication(Configuration);
 
         services.AddHttpContextAccessor();
+        services.AddHealthChecks();
         services.AddControllers(options =>
         {
             var authRequired = new AuthorizationPolicyBuilder()
@@ -78,6 +79,7 @@ public class Startup(IConfiguration configuration)
                 .AllowCredentials());
         }
 
+        app.UseHealthChecks("/healthcheck");
         app.UseRouting();
         app.UseAuthentication();
         app.UseAuthorization();
