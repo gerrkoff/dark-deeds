@@ -10,20 +10,20 @@ namespace DarkDeeds.LoadTests
     public class Test2CreateTask : BaseTest
     {
         protected override int RpsTest => Config.Test2Rps;
-        
+
         [Fact(Skip = "")]
         public async Task Test()
         {
             if (RpsTest == 0)
                 return;
-            
+
             var token = await CreateUserAndObtainToken(GenerateUsername());
 
             var step = Step.Create(GetTestName(),
                 HttpClientFactory.Create(),
                 context =>
                 {
-                    var request = Http.CreateRequest("POST", $"{Url}/api/web/tasks")
+                    var request = Http.CreateRequest("POST", $"{Url}/api/task/tasks")
                         .WithHeader("accept", "application/json")
                         .WithHeader("authorization", $"Bearer {token}")
                         .WithBody(JsonContent.Create(new object[]
@@ -34,7 +34,7 @@ namespace DarkDeeds.LoadTests
                                 uid = Guid.NewGuid(),
                             }
                         }));
-            
+
                     return Http.Send(request, context);
                 }, timeout: TimeSpan.FromSeconds(Timeout));
 
@@ -47,9 +47,9 @@ namespace DarkDeeds.LoadTests
                     Simulation.InjectPerSec(RpsTest, TimeSpan.FromSeconds(TimeTest))
                     // Simulation.InjectPerSecRandom(RpsMin, RpsMax, TimeSpan.FromSeconds(Time))
                 );
-            
+
             var result = await RunScenario(scenario);
-            
+
             VerifyResults(result);
         }
     }

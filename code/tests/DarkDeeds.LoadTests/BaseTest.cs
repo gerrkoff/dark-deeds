@@ -17,7 +17,7 @@ using Xunit;
 
 namespace DarkDeeds.LoadTests
 {
-    [Collection("")]
+    [Collection("Performance Tests")]
     public abstract class BaseTest : IDisposable
     {
         private const string TestSuite = "LoadTests";
@@ -27,7 +27,7 @@ namespace DarkDeeds.LoadTests
         private readonly StringBuilder _output = new();
         protected static readonly string Url = $"https://{Domain}";
         protected static readonly Config Config = new();
-        
+
         protected int Timeout => Config.Timeout;
         protected int TimeWarmUp => Config.TimeWarmUp;
         protected int TimeRamp => Config.TimeRamp;
@@ -58,7 +58,7 @@ namespace DarkDeeds.LoadTests
         }
 
         protected string GenerateUsername() => $"test-{Guid.NewGuid()}";
-        
+
         protected async Task<string> CreateUserAndObtainToken(string username)
         {
             using var client = new HttpClient
@@ -86,7 +86,7 @@ namespace DarkDeeds.LoadTests
                 Assert.InRange(stats.ScenarioStats[0].OkCount, 0.99 * totalCount, totalCount);
                 Assert.InRange(stats.ScenarioStats[0].StepStats[0].Ok.Latency.Percent95, 0, 500);
                 additionalChecks?.Invoke();
-                
+
                 SaveResults(stats, true);
             }
             catch (Exception)
