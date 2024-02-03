@@ -61,13 +61,11 @@ namespace DarkDeeds.LoadTests
 
         protected async Task<string> CreateUserAndObtainToken(string username)
         {
-            using var client = new HttpClient
-            {
-                BaseAddress = new Uri(Url)
-            };
+            using var client = new HttpClient();
+            client.BaseAddress = new Uri(Url);
             var payload = JsonSerializer.Serialize(new {username, password = Password});
             var content = new StringContent(payload, Encoding.UTF8, MediaTypeNames.Application.Json);
-            var response = await client.PostAsync("/api/web/account/signup", content);
+            var response = await client.PostAsync("/api/auth/account/signup", content);
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
