@@ -15,9 +15,23 @@ class TelegramService(IRepository<TelegramUserEntity> telegramUserRepository) : 
 {
     public async Task<string> GenerateKey(string userId, int timeAdjustment)
     {
-        var user = telegramUserRepository.GetAll().Single(x => x.UserId == userId);
-        user.TelegramChatKey = Guid.NewGuid().ToString();
-        user.TelegramTimeAdjustment = timeAdjustment;
+        var user = telegramUserRepository.GetAll().FirstOrDefault(x => x.UserId == userId);
+
+        if (user == null)
+        {
+            user = new TelegramUserEntity
+            {
+                UserId = userId,
+                TelegramChatKey = Guid.NewGuid().ToString(),
+                TelegramTimeAdjustment = timeAdjustment,
+            };
+        }
+        else
+        {
+            user.TelegramChatKey = Guid.NewGuid().ToString();
+            user.TelegramTimeAdjustment = timeAdjustment;
+        }
+
         await telegramUserRepository.SaveAsync(user);
 
         return user.TelegramChatKey;
