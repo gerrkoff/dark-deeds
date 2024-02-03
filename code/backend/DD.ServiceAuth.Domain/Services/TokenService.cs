@@ -23,8 +23,6 @@ class TokenService(
 
     public string Serialize(AuthToken authToken)
     {
-        logger.LogInformation("Auth settings key: {AuthSettingsKey}", _authSettings.Key);
-
         ClaimsIdentity identity = authTokenConverter.ToIdentity(authToken);
 
         var now = DateTime.UtcNow;
