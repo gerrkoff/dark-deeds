@@ -43,11 +43,17 @@ namespace DarkDeeds.LoadTests
                 .WithWarmUpDuration(TimeSpan.FromSeconds(5))
                 .WithLoadSimulations(
                     Simulation.KeepConstant(RpsTest, TimeSpan.FromSeconds(TimeTest))
-                );
+                )
+                .WithClean(async context =>
+                {
+                    context.Logger.Information("Cool down");
+                    await Task.Delay(Config.Cooldown * 1000);
+                    context.Logger.Information("Move on");
+                });
 
             var result = await RunScenario(scenario);
 
-            await VerifyResults(result, () =>
+            VerifyResults(result, () =>
             {
                 Assert.NotInRange(result.ScenarioStats[0].StepStats[0].Ok.Request.RPS, 0, 5 * RpsTest);
             });
