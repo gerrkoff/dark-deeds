@@ -49,13 +49,7 @@ namespace DarkDeeds.LoadTests
                 .WithWarmUpDuration(TimeSpan.FromSeconds(TimeWarmUp))
                 .WithLoadSimulations(
                     Simulation.KeepConstant(RpsTest, TimeSpan.FromSeconds(TimeTest))
-                )
-                .WithClean(async context =>
-                {
-                    context.Logger.Information("Cool down");
-                    await Task.Delay(Config.Cooldown * 1000);
-                    context.Logger.Information("Move on");
-                });
+                );
 
             var result = await RunScenario(scenario);
 

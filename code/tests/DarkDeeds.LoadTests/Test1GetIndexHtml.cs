@@ -34,13 +34,7 @@ namespace DarkDeeds.LoadTests
                     Simulation.RampPerSec(RpsTest, TimeSpan.FromSeconds(TimeRamp)),
                     Simulation.InjectPerSec(RpsTest, TimeSpan.FromSeconds(TimeTest))
                     // Simulation.InjectPerSecRandom(RpsMin, RpsMax, TimeSpan.FromSeconds(Time))
-                )
-                .WithClean(async context =>
-                {
-                    context.Logger.Information("Cool down");
-                    await Task.Delay(Config.Cooldown * 1000);
-                    context.Logger.Information("Move on");
-                });
+                );
 
             var result = await RunScenario(scenario);
 

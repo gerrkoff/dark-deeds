@@ -64,6 +64,9 @@ public class Startup(IConfiguration configuration)
         app.UseRequestLogging();
         app.UseMetrics();
         app.UseUnhandledExceptionHandler(env);
+        // TODO: check
+        app.UseForwardedHeaders(new ForwardedHeadersOptions { ForwardedHeaders = ForwardedHeaders.All });
+        app.UseHsts();
 
         if (!env.IsProduction())
         {
@@ -80,9 +83,7 @@ public class Startup(IConfiguration configuration)
                 .AllowCredentials());
         }
 
-        app.UseForwardedHeaders(new ForwardedHeadersOptions { ForwardedHeaders = ForwardedHeaders.All });
         app.UseHealthChecks("/healthcheck");
-        app.UseHsts();
         app.UseRouting();
         app.UseAuthentication();
         app.UseAuthorization();
