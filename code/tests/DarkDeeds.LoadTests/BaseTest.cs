@@ -76,7 +76,7 @@ namespace DarkDeeds.LoadTests
             return token;
         }
 
-        protected void VerifyResults(NodeStats stats, Action additionalChecks = null)
+        protected async Task VerifyResults(NodeStats stats, Action additionalChecks = null)
         {
             try
             {
@@ -91,6 +91,10 @@ namespace DarkDeeds.LoadTests
             {
                 SaveResults(stats, false);
                 throw;
+            }
+            finally
+            {
+                await Task.Delay(60_000);
             }
         }
 

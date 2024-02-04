@@ -47,7 +47,7 @@ namespace DarkDeeds.LoadTests
 
             var result = await RunScenario(scenario);
 
-            VerifyResults(result, () =>
+            await VerifyResults(result, () =>
             {
                 Assert.NotInRange(result.ScenarioStats[0].StepStats[0].Ok.Request.RPS, 0, 5 * RpsTest);
             });

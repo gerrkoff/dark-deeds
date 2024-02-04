@@ -50,7 +50,7 @@ namespace DarkDeeds.LoadTests
 
             var result = await RunScenario(scenario);
 
-            VerifyResults(result);
+            await VerifyResults(result);
         }
     }
 }

@@ -15,7 +15,7 @@ namespace DarkDeeds.LoadTests
         {
             if (RpsTest == 0)
                 return;
-            
+
             var step = Step.Create(GetTestName(),
                 HttpClientFactory.Create(),
                 context =>
@@ -38,7 +38,7 @@ namespace DarkDeeds.LoadTests
 
             var result = await RunScenario(scenario);
 
-            VerifyResults(result);
+            await VerifyResults(result);
         }
     }
 }
