@@ -12,8 +12,11 @@ using NBomber.CSharp;
 using NBomber.Plugins.Network.Ping;
 using System.Text.Json;
 using System.Text.RegularExpressions;
-using NBomber.Configuration;
 using Xunit;
+
+// check cooling down
+// check connections with api
+// adjust rps
 
 namespace DarkDeeds.LoadTests
 {

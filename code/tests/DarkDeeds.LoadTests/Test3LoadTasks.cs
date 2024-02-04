@@ -10,13 +10,13 @@ namespace DarkDeeds.LoadTests
     {
         protected override int RpsTest => Config.Test3Rps;
 
-        [Fact(Skip = "")]
+        [Fact]
         public async Task Test()
         {
             if (RpsTest == 0)
                 return;
 
-            var token = await CreateUserAndObtainToken(GenerateUsername());
+            var token = string.Empty;
 
             var step = Step.Create(GetTestName(),
                 HttpClientFactory.Create(),
@@ -31,6 +31,12 @@ namespace DarkDeeds.LoadTests
 
             var scenario = ScenarioBuilder
                 .CreateScenario(GetTestName(), step)
+                .WithInit(async context =>
+                {
+                    context.Logger.Information("Create user and obtain token");
+                    token = await CreateUserAndObtainToken(GenerateUsername());
+                    context.Logger.Information("Token obtained");
+                })
                 .WithWarmUpDuration(TimeSpan.FromSeconds(5))
                 .WithLoadSimulations(
                     Simulation.RampPerSec(RpsWarmUp, TimeSpan.FromSeconds(TimeWarmUp)),
