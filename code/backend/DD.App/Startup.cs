@@ -9,6 +9,7 @@ using DD.WebClientBff.Details;
 using GerrKoff.Monitoring;
 using GerrKoff.Monitoring.Misc;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.OpenApi.Models;
 
@@ -79,7 +80,9 @@ public class Startup(IConfiguration configuration)
                 .AllowCredentials());
         }
 
+        app.UseForwardedHeaders(new ForwardedHeadersOptions { ForwardedHeaders = ForwardedHeaders.All });
         app.UseHealthChecks("/healthcheck");
+        app.UseHsts();
         app.UseRouting();
         app.UseAuthentication();
         app.UseAuthorization();
