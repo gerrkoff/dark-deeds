@@ -13,7 +13,7 @@ namespace DarkDeeds.LoadTests
             _settings = JsonSerializer.Deserialize<Settings>(json);
         }
 
-        public int Cooldown => 0;
+        public int Cooldown => 60;
         public int Timeout => 60;
         public int TimeWarmUp => 5;
         public int TimeRamp => _settings.TimeRamp;

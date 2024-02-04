@@ -46,7 +46,7 @@ namespace DarkDeeds.LoadTests
                     token = await CreateUserAndObtainToken(GenerateUsername());
                     context.Logger.Information("Token obtained");
                 })
-                .WithWarmUpDuration(TimeSpan.FromSeconds(5))
+                .WithWarmUpDuration(TimeSpan.FromSeconds(TimeWarmUp))
                 .WithLoadSimulations(
                     Simulation.RampPerSec(RpsWarmUp, TimeSpan.FromSeconds(TimeWarmUp)),
                     Simulation.RampPerSec(RpsTest, TimeSpan.FromSeconds(TimeRamp)),
