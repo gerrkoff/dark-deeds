@@ -83,14 +83,13 @@ public class Startup(IConfiguration configuration)
         app.UseRouting();
         app.UseAuthentication();
         app.UseAuthorization();
-        app.UseDefaultFiles();
-        app.UseStaticFiles();
-
         app.UseEndpoints(endpoints =>
         {
             endpoints.MapControllers();
             endpoints.MapTelegramClientCustomRoutes(Configuration);
             endpoints.MapTaskServiceCustomRoutes();
         });
+        app.UseDefaultFiles();
+        app.UseStaticFiles();
     }
 }
