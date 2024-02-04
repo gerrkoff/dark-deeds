@@ -94,7 +94,7 @@ namespace DarkDeeds.LoadTests
             }
             finally
             {
-                await Task.Delay(60_000);
+                await Task.Delay(Config.Cooldown * 1000);
             }
         }
 
