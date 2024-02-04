@@ -28,7 +28,7 @@ namespace DarkDeeds.LoadTests
         private static readonly string DateFolder = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss");
         private static readonly string Domain = Env.Domain;
         private readonly StringBuilder _output = new();
-        protected static readonly string Url = $"https://{Domain}";
+        protected static readonly string Url = $"http://{Domain}";
         protected static readonly Config Config = new();
 
         protected int Timeout => Config.Timeout;
@@ -42,7 +42,7 @@ namespace DarkDeeds.LoadTests
 
         protected async Task<NodeStats> RunScenario(params Scenario[] scenarios)
         {
-            var pingPluginConfig = PingPluginConfig.CreateDefault(new[] {Domain});
+            var pingPluginConfig = PingPluginConfig.CreateDefault([Domain]);
             var pingPlugin = new PingPlugin(pingPluginConfig);
 
             var result = NBomberRunner
