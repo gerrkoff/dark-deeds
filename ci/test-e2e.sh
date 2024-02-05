@@ -4,6 +4,7 @@ if [ $# -le 0 ]; then
   exit 1
 fi
 
+echo
 echo "----------- Testing e2e..."
 
 if [ "$2" = "staging" ]; then
@@ -24,4 +25,5 @@ docker run -t --rm \
   --name dd-test-e2e \
   dd-test-e2e || exit $?
 
+echo
 echo "----------- Test e2e completed"

@@ -5,52 +5,57 @@ using NBomber.CSharp;
 using NBomber.Plugins.Http.CSharp;
 using Xunit;
 
-namespace DarkDeeds.LoadTests
+namespace DarkDeeds.LoadTests;
+
+public class Test4CreateTaskSequential : BaseTest
 {
-    public class Test4CreateTaskSequential : BaseTest
+    protected override int RpsTest => Config.Test4Rps;
+
+    [Fact]
+    public async Task Test()
     {
-        protected override int RpsTest => Config.Test4Rps;
-        
-        [Fact]
-        public async Task Test()
-        {
-            if (RpsTest == 0)
-                return;
-            
-            var token = await CreateUserAndObtainToken(GenerateUsername());
+        if (RpsTest == 0)
+            return;
 
-            var step = Step.Create(GetTestName(),
-                HttpClientFactory.Create(),
-                context =>
-                {
-                    var request = Http.CreateRequest("POST", $"{Url}/api/web/tasks")
-                        .WithHeader("accept", "application/json")
-                        .WithHeader("authorization", $"Bearer {token}")
-                        .WithBody(JsonContent.Create(new object[]
-                        {
-                            new
-                            {
-                                title = "create_task_test",
-                                uid = Guid.NewGuid(),
-                            }
-                        }));
-            
-                    return Http.Send(request, context);
-                }, timeout: TimeSpan.FromSeconds(Timeout));
+        var token = string.Empty;
 
-            var scenario = ScenarioBuilder
-                .CreateScenario(GetTestName(), step)
-                .WithWarmUpDuration(TimeSpan.FromSeconds(5))
-                .WithLoadSimulations(
-                    Simulation.KeepConstant(RpsTest, TimeSpan.FromSeconds(TimeTest))
-                );
-            
-            var result = await RunScenario(scenario);
-            
-            VerifyResults(result, () =>
+        var step = Step.Create(GetTestName(),
+            HttpClientFactory.Create(),
+            context =>
             {
-                Assert.NotInRange(result.ScenarioStats[0].StepStats[0].Ok.Request.RPS, 0, 5 * RpsTest);       
-            });
-        }
+                var request = Http.CreateRequest("POST", $"{Url}/api/task/tasks")
+                    .WithHeader("accept", "application/json")
+                    .WithHeader("authorization", $"Bearer {token}")
+                    .WithBody(JsonContent.Create(new object[]
+                    {
+                        new
+                        {
+                            title = "create_task_test",
+                            uid = Guid.NewGuid(),
+                        }
+                    }));
+
+                return Http.Send(request, context);
+            }, timeout: TimeSpan.FromSeconds(Timeout));
+
+        var scenario = ScenarioBuilder
+            .CreateScenario(GetTestName(), step)
+            .WithInit(async context =>
+            {
+                context.Logger.Information("Create user and obtain token");
+                token = await CreateUserAndObtainToken(GenerateUsername());
+                context.Logger.Information("Token obtained");
+            })
+            .WithWarmUpDuration(TimeSpan.FromSeconds(TimeWarmUp))
+            .WithLoadSimulations(
+                Simulation.KeepConstant(RpsTest, TimeSpan.FromSeconds(TimeTest))
+            );
+
+        var result = await RunScenario(scenario);
+
+        VerifyResults(result, () =>
+        {
+            Assert.NotInRange(result.ScenarioStats[0].StepStats[0].Ok.Request.RPS, 0, 5 * RpsTest);
+        });
     }
 }

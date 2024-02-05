@@ -1,5 +1,6 @@
 #!/bin/bash
 
+echo
 echo "----------- Building..."
 
 export BUILD_VERSION=$(./ci/version.sh "$1")
@@ -12,4 +13,5 @@ docker build \
     -f ./ci/apps/app.dockerfile \
     . || exit $?
 
+echo
 echo "----------- Build completed"

@@ -9,6 +9,7 @@ using DD.WebClientBff.Details;
 using GerrKoff.Monitoring;
 using GerrKoff.Monitoring.Misc;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.OpenApi.Models;
 
@@ -63,6 +64,9 @@ public class Startup(IConfiguration configuration)
         app.UseRequestLogging();
         app.UseMetrics();
         app.UseUnhandledExceptionHandler(env);
+        // TODO: check
+        app.UseForwardedHeaders(new ForwardedHeadersOptions { ForwardedHeaders = ForwardedHeaders.All });
+        app.UseHsts();
 
         if (!env.IsProduction())
         {
@@ -83,14 +87,13 @@ public class Startup(IConfiguration configuration)
         app.UseRouting();
         app.UseAuthentication();
         app.UseAuthorization();
-        app.UseDefaultFiles();
-        app.UseStaticFiles();
-
         app.UseEndpoints(endpoints =>
         {
             endpoints.MapControllers();
             endpoints.MapTelegramClientCustomRoutes(Configuration);
             endpoints.MapTaskServiceCustomRoutes();
         });
+        app.UseDefaultFiles();
+        app.UseStaticFiles();
     }
 }

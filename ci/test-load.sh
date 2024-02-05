@@ -4,6 +4,7 @@ if [ $# -le 0 ]; then
   exit 1
 fi
 
+echo
 echo "----------- Testing load..."
 
 SETTINGS_VOLUME=''
@@ -20,4 +21,5 @@ docker run -t --rm \
   --name dd-test-load \
   dd-test-load || exit $?
 
+echo
 echo "----------- Test load completed"
