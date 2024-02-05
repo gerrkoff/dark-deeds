@@ -24,7 +24,7 @@ public abstract class BaseTest : IDisposable
     private static readonly string DateFolder = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss");
     private static readonly string Domain = Env.Domain;
     private readonly StringBuilder _output = new();
-    protected static readonly string Url = $"http://{Domain}";
+    protected static readonly string Url = $"https://{Domain}";
     protected static readonly Config Config = new();
 
     protected int Timeout => Config.Timeout;
