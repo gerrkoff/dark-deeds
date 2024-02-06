@@ -35,57 +35,47 @@ class AuthService(
 
     public async Task<SignUpResultDto> SignUpAsync(SignUpInfoDto signUpInfo)
     {
-        var result = new SignUpResultDto();
-
         var user = new UserEntity { UserName = signUpInfo.Username, DisplayName = signUpInfo.Username };
         IdentityResult createUserResult = await userManager.CreateAsync(user, signUpInfo.Password);
 
         if (createUserResult.Succeeded)
-        {
-            result.Result = SignUpResultEnum.Success;
-            result.Token = tokenService.Serialize(ToAuthToken(user));
-        }
-        else if (createUserResult.Errors.Any(x => string.Equals(x.Code, DuplicateUserNameCode)))
-        {
-            result.Result = SignUpResultEnum.UsernameAlreadyExists;
-        }
-        else if (createUserResult.Errors.Any(x => string.Equals(x.Code, InvalidUsernameCode)))
-        {
-            result.Result = SignUpResultEnum.InvalidUsername;
-        }
-        else if (createUserResult.Errors.Any(x => PasswordErrorCodes.Contains(x.Code)))
-        {
-            result.Result = SignUpResultEnum.PasswordInsecure;
-        }
-        else
-        {
-            result.Result = SignUpResultEnum.Unknown;
-        }
+            return new SignUpResultDto
+            {
+                Result = SignUpResultEnum.Success,
+                Token = tokenService.Serialize(ToAuthToken(user))
+            };
 
-        return result;
+        if (createUserResult.Errors.Any(x => string.Equals(x.Code, DuplicateUserNameCode)))
+            return new SignUpResultDto { Result = SignUpResultEnum.UsernameAlreadyExists };
+
+        if (createUserResult.Errors.Any(x => string.Equals(x.Code, InvalidUsernameCode)))
+            return new SignUpResultDto { Result = SignUpResultEnum.InvalidUsername };
+
+        if (createUserResult.Errors.Any(x => PasswordErrorCodes.Contains(x.Code)))
+            return new SignUpResultDto { Result = SignUpResultEnum.PasswordInsecure };
+
+        return new SignUpResultDto{ Result = SignUpResultEnum.Unknown };
     }
 
     public async Task<SignInResultDto> SignInAsync(SignInInfoDto signInInfo)
     {
-        var result = new SignInResultDto();
-
-        UserEntity user = await userManager.FindByNameAsync(signInInfo.Username);
+        var user = await userManager.FindByNameAsync(signInInfo.Username);
 
         if (user == null)
         {
-            result.Result = SignInResultEnum.WrongUsernamePassword;
-        }
-        else if (!await userManager.CheckPasswordAsync(user, signInInfo.Password))
-        {
-            result.Result = SignInResultEnum.WrongUsernamePassword;
-        }
-        else
-        {
-            result.Result = SignInResultEnum.Success;
-            result.Token = tokenService.Serialize(ToAuthToken(user));
+            return new SignInResultDto { Result = SignInResultEnum.WrongUsernamePassword };
         }
 
-        return result;
+        if (!await userManager.CheckPasswordAsync(user, signInInfo.Password))
+        {
+            return new SignInResultDto { Result = SignInResultEnum.WrongUsernamePassword };
+        }
+
+        return new SignInResultDto
+        {
+            Result = SignInResultEnum.Success,
+            Token = tokenService.Serialize(ToAuthToken(user))
+        };
     }
 
     public async Task<string> GetUserIdAsync(string username)
@@ -101,7 +91,7 @@ class AuthService(
     private AuthToken ToAuthToken(UserEntity user) => new()
     {
         UserId = user.Id,
-        Username = user.UserName,
+        Username = user.UserName ?? string.Empty,
         DisplayName = user.DisplayName,
     };
 }

@@ -25,12 +25,16 @@ public static class Setup
     {
         services.Configure<AuthSettings>(options => configuration.GetSection("Auth").Bind(options));
 
-        AuthSettings authSettings = configuration.GetSection("Auth").Get<AuthSettings>();
+        var authSettings = configuration.GetSection("Auth").Get<AuthSettings>();
+
+        if (authSettings is null || string.IsNullOrEmpty(authSettings.Issuer) || string.IsNullOrEmpty(authSettings.Audience) || string.IsNullOrEmpty(authSettings.Key))
+            throw new InvalidOperationException("Auth settings are not configured");
+
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
             {
                 options.RequireHttpsMetadata = false;
-                options.TokenValidationParameters = new()
+                options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuer = true,
                     ValidIssuer = authSettings.Issuer,

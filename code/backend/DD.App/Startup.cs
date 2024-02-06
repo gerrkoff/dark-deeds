@@ -64,7 +64,6 @@ public class Startup(IConfiguration configuration)
         app.UseRequestLogging();
         app.UseMetrics();
         app.UseUnhandledExceptionHandler(env);
-        // TODO: check
         app.UseForwardedHeaders(new ForwardedHeadersOptions { ForwardedHeaders = ForwardedHeaders.All });
         app.UseHsts();
 
