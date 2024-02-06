@@ -66,18 +66,21 @@ public class RecurrenceCreatorService(
     private async Task<PlannedRecurrenceEntity> SaveRecurrence(PlannedRecurrenceEntity entity,
         RecurrenceEntity recurrence)
     {
+        var entityToSave = entity;
         bool success;
         do
         {
             entity.Recurrences.Add(recurrence);
-            PlannedRecurrenceEntity currentEntity;
-            (success, currentEntity) = await plannedRecurrenceRepository
-                .TryUpdateVersionPropsAsync(entity, x => x.Recurrences);
+            (success, var currentEntity) = await plannedRecurrenceRepository
+                .TryUpdateVersionPropsAsync(entityToSave, x => x.Recurrences);
             if (!success)
-                entity = currentEntity;
-        } while (!success);
+                entityToSave = currentEntity;
+        } while (!success && entityToSave != null);
 
-        return entity;
+        if (entityToSave == null)
+            throw new InvalidOperationException("Can't save recurrence");
+
+        return entityToSave;
     }
 
     private void Notify(TaskEntity task, string userId)

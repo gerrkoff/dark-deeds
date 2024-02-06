@@ -9,5 +9,5 @@ public interface IRepository<T> where T : BaseEntity
     Task SavePropertiesAsync(T entity, params Expression<Func<T, object>>[] properties);
     Task DeleteAsync(int id);
     Task DeleteAsync(T entity);
-    Task<T> GetByIdAsync(int id);
+    Task<T?> GetByIdAsync(int id);
 }

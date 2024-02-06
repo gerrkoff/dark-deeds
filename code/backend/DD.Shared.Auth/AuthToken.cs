@@ -2,8 +2,8 @@
 
 public class AuthToken
 {
-    public string UserId { get; set; }
-    public string Username { get; set; }
-    public string DisplayName { get; set; }
-    public DateTime? Expires { get; set; }
+    public string UserId { get; init; } = string.Empty;
+    public string Username { get; init; } = string.Empty;
+    public string DisplayName { get; init; } = string.Empty;
+    public DateTime? Expires { get; init; }
 }

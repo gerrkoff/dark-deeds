@@ -34,7 +34,7 @@ public partial class RecurrenceServiceTest : BaseTest
         var repoMock = MocksCreator.RepoRecurrence();
         var service = new RecurrenceService(repoMock.Object, Mapper, _specFactoryMock.Object);
 
-        await service.SaveAsync(new[] {new PlannedRecurrenceDto {Uid = "42", IsDeleted = true}}, null);
+        await service.SaveAsync(new[] {new PlannedRecurrenceDto {Uid = "42", IsDeleted = true}}, string.Empty);
 
         repoMock.Verify(x => x.DeleteAsync("42"));
         repoMock.Verify(x => x.AnyAsync(It.IsAny<IPlannedRecurrenceSpecification>()));
@@ -63,7 +63,7 @@ public partial class RecurrenceServiceTest : BaseTest
     {
         var repoMock = new Mock<IPlannedRecurrenceRepository>();
         repoMock.Setup(x => x.GetByIdAsync("42"))
-            .Returns(() => Task.FromResult(new PlannedRecurrenceEntity {Uid = "42"}));
+            .Returns(() => Task.FromResult<PlannedRecurrenceEntity?>(new PlannedRecurrenceEntity { Uid = "42" }));
         var service = new RecurrenceService(repoMock.Object, Mapper, _specFactoryMock.Object);
 
         await service.SaveAsync(new[]
@@ -78,7 +78,7 @@ public partial class RecurrenceServiceTest : BaseTest
                 EveryMonthDay = "1,2,3",
                 EveryNthDay = 100500
             }
-        }, null);
+        }, string.Empty);
 
         repoMock.Verify(x => x.TryUpdateVersionAsync(It.Is<PlannedRecurrenceEntity>(y =>
             y.Uid == "42" &&
@@ -98,7 +98,7 @@ public partial class RecurrenceServiceTest : BaseTest
     {
         var repoMock = new Mock<IPlannedRecurrenceRepository>();
         repoMock.Setup(x => x.GetByIdAsync("42"))
-            .Returns(() => Task.FromResult(new PlannedRecurrenceEntity
+            .Returns(() => Task.FromResult<PlannedRecurrenceEntity?>(new PlannedRecurrenceEntity
             {
                 Uid = "42",
                 Task = "42",
@@ -122,7 +122,7 @@ public partial class RecurrenceServiceTest : BaseTest
                 EveryMonthDay = "1,2,3",
                 EveryNthDay = 100500
             }
-        }, null);
+        }, string.Empty);
 
         repoMock.Verify(x => x.GetByIdAsync("42"));
         repoMock.Verify(x => x.AnyAsync(It.IsAny<IPlannedRecurrenceSpecification>()));
@@ -134,18 +134,18 @@ public partial class RecurrenceServiceTest : BaseTest
     {
         var repoMock = new Mock<IPlannedRecurrenceRepository>();
         repoMock.Setup(x => x.GetByIdAsync("42"))
-            .Returns(() => Task.FromResult(new PlannedRecurrenceEntity {Uid = "42"}));
+            .Returns(() => Task.FromResult<PlannedRecurrenceEntity?>(new PlannedRecurrenceEntity {Uid = "42"}));
         repoMock.Setup(x => x.GetByIdAsync("43"))
-            .Returns(() => Task.FromResult(new PlannedRecurrenceEntity {Uid = "43", Task = "Old"}));
+            .Returns(() => Task.FromResult<PlannedRecurrenceEntity?>(new PlannedRecurrenceEntity {Uid = "43", Task = "Old"}));
         repoMock.Setup(x => x.TryUpdateVersionAsync(It.IsAny<PlannedRecurrenceEntity>()))
-            .Returns(() => Task.FromResult<(bool, PlannedRecurrenceEntity)>((true, null)));
+            .Returns(() => Task.FromResult<(bool, PlannedRecurrenceEntity?)>((true, null)));
         var service = new RecurrenceService(repoMock.Object, Mapper, _specFactoryMock.Object);
 
         var result = await service.SaveAsync(new[]
         {
             new PlannedRecurrenceDto {Uid = "42"},
             new PlannedRecurrenceDto {Uid = "43", Task = "New"},
-        }, null);
+        }, string.Empty);
 
         Assert.Equal(1, result);
     }

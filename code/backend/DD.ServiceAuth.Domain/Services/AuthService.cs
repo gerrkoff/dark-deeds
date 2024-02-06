@@ -88,10 +88,10 @@ class AuthService(
         return user.Id;
     }
 
-    private AuthToken ToAuthToken(UserEntity user) => new()
+    private static AuthToken ToAuthToken(UserEntity user) => new()
     {
         UserId = user.Id,
         Username = user.UserName ?? string.Empty,
-        DisplayName = user.DisplayName,
+        DisplayName = user.DisplayName ?? string.Empty,
     };
 }

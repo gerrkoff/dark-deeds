@@ -36,7 +36,7 @@ public partial class RecurrenceCreatorServiceTest
         await service.CreateAsync(0, "userId");
 
         _taskRepoMock.Verify(x => x.UpsertAsync(It.Is<TaskEntity>(
-            y => y.Title == "Task" && y.UserId == "userId" && y.Date == someDate && y.Uid != null
+            y => y.Title == "Task" && y.UserId == "userId" && y.Date == someDate
         )));
     }
 

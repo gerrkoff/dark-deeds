@@ -32,14 +32,14 @@ class Repository<T>(DbContext context) : IRepository<T>
 
     public async Task SavePropertiesAsync(T entity, params Expression<Func<T, object>>[] properties)
     {
-        if (entity.Id == 0)
+        if (entity.Id == 0 || properties.Length == 0)
         {
             return;
         }
 
         Entities.Attach(entity);
 
-        IList<string> propertiesToSave = properties
+        IList<string?> propertiesToSave = properties
             .Select(x => context.Entry(entity).Property(x))
             .Select(x => x.Metadata.GetFieldName())
             .ToList();
@@ -67,7 +67,7 @@ class Repository<T>(DbContext context) : IRepository<T>
         await context.SaveChangesAsync();
     }
 
-    public Task<T> GetByIdAsync(int id)
+    public Task<T?> GetByIdAsync(int id)
     {
         return Entities.FindAsync(id).AsTask();
     }

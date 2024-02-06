@@ -11,6 +11,11 @@ class SpecificationFactory(IServiceProvider serviceProvider) : ISpecificationFac
 {
     public TSpec New<TSpec, TEntity>() where TSpec : ISpecification<TEntity>
     {
-        return (TSpec) serviceProvider.GetService(typeof(TSpec));
+        var spec = serviceProvider.GetService(typeof(TSpec));
+
+        if (spec is null)
+            throw new InvalidOperationException($"Specification of type {typeof(TSpec).Name} not found");
+
+        return (TSpec) spec;
     }
 }

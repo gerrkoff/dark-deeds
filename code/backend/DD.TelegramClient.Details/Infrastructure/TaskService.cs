@@ -12,14 +12,14 @@ public class TaskServiceApp(
     IMapper mapper)
     : ITaskServiceApp
 {
-    public async Task<IEnumerable<TaskDtoTelegramClient>> LoadTasksByDateAsync(DateTime from, DateTime to, string userId = null)
+    public async Task<IEnumerable<TaskDtoTelegramClient>> LoadTasksByDateAsync(DateTime from, DateTime to, string userId)
     {
         var response = await taskService.LoadTasksByDateAsync(userId, from, to);
         var result = mapper.Map<IEnumerable<TaskDtoTelegramClient>>(response);
         return result;
     }
 
-    public async Task<IEnumerable<TaskDtoTelegramClient>> SaveTasksAsync(ICollection<TaskDtoTelegramClient> tasks, string userId = null)
+    public async Task<IEnumerable<TaskDtoTelegramClient>> SaveTasksAsync(ICollection<TaskDtoTelegramClient> tasks, string userId)
     {
         var payload = mapper.Map<ICollection<TaskDtoTaskService>>(tasks);
         var response = await taskService.SaveTasksAsync(payload, userId);

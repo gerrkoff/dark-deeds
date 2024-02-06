@@ -4,9 +4,9 @@ namespace DD.ServiceTask.Domain.Dto;
 
 public class PlannedRecurrenceDto
 {
-    public string Uid { get; set; }
+    public string Uid { get; set; } = string.Empty;
 
-    public string Task { get; set; }
+    public string Task { get; set; } = string.Empty;
 
     public DateTime StartDate { get; set; }
 

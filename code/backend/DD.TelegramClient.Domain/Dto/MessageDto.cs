@@ -8,14 +8,14 @@ public class MessageDto
     public int MessageId { get; set; }
 
     [JsonPropertyName("from")]
-    public UserDto From { get; set; }
+    public UserDto? From { get; set; }
 
     [JsonPropertyName("date")]
     public int Date { get; set; }
 
     [JsonPropertyName("chat")]
-    public ChatDto Chat { get; set; }
+    public ChatDto? Chat { get; set; }
 
     [JsonPropertyName("text")]
-    public string Text { get; set; }
+    public string? Text { get; set; }
 }

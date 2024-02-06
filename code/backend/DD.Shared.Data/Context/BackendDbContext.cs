@@ -12,8 +12,8 @@ class BackendDbContext : IdentityDbContext<UserEntity>
     {
     }
 
-    public DbSet<SettingsEntity> Settings { get; set; }
-    public DbSet<TelegramUserEntity> TelegramUsers { get; set; }
+    public DbSet<SettingsEntity> Settings { get; init; } = null!;
+    public DbSet<TelegramUserEntity> TelegramUsers { get; init; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

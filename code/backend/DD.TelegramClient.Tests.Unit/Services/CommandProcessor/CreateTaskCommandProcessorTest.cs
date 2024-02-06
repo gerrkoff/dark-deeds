@@ -3,6 +3,7 @@ using DD.TelegramClient.Domain.Implementation.CommandProcessor;
 using DD.TelegramClient.Domain.Infrastructure;
 using DD.TelegramClient.Domain.Infrastructure.Dto;
 using DD.TelegramClient.Domain.Models.Commands;
+using Microsoft.Extensions.Logging;
 using Moq;
 using Xunit;
 
@@ -18,13 +19,13 @@ public class CreateTaskCommandProcessorTest
             Title = "Task",
         };
         var tasks = new TaskDto[0];
-        var (telegramMock, taskServiceMock, sendMessageMock) = SetupMocks(task, tasks, 100);
+        var (telegramMock, taskServiceMock, sendMessageMock, loggerMock) = SetupMocks(task, tasks, 100);
 
         var service = new CreateTaskCommandProcessor(
             sendMessageMock.Object,
             telegramMock.Object,
             taskServiceMock.Object,
-            null);
+            loggerMock.Object);
 
         await service.ProcessAsync(new CreateTaskCommand(task)
         {
@@ -34,15 +35,12 @@ public class CreateTaskCommandProcessorTest
 
         sendMessageMock.Verify(x => x.SendTextAsync(100, "Task created"));
         taskServiceMock.Verify(x => x.SaveTasksAsync(
-            It.Is<ICollection<TaskDto>>(y => y.Any(e =>
-                e.Title == "Task" &&
-                e.Uid != null
-            )),
+            It.Is<ICollection<TaskDto>>(y => y.Any(e => e.Title == "Task")),
             "userid"
         ));
     }
 
-    private (Mock<ITelegramService>, Mock<ITaskServiceApp>, Mock<IBotSendMessageService>)
+    private (Mock<ITelegramService>, Mock<ITaskServiceApp>, Mock<IBotSendMessageService>, Mock<ILogger<BaseCommandProcessor<BotCommand>>>)
         SetupMocks(TaskDto task, TaskDto[] tasks, int chatId)
     {
         var telegramMock = new Mock<ITelegramService>();
@@ -55,6 +53,8 @@ public class CreateTaskCommandProcessorTest
 
         var sendMessageMock = new Mock<IBotSendMessageService>();
 
-        return (telegramMock, taskServiceMock, sendMessageMock);
+        var loggerMock = new Mock<ILogger<BaseCommandProcessor<BotCommand>>>();
+
+        return (telegramMock, taskServiceMock, sendMessageMock, loggerMock);
     }
 }

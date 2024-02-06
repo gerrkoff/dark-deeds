@@ -18,10 +18,10 @@ public partial class TaskServiceTest
     [Fact]
     public async Task SaveTasksAsync_ReturnTasksBack()
     {
-        CreateService();
+        var service = CreateService();
 
         var items = new[] {new TaskDto {Id = 1000}, new TaskDto {Id = 2000}};
-        var result = (await _service.SaveTasksAsync(items, string.Empty)).ToList();
+        var result = (await service.SaveTasksAsync(items, string.Empty)).ToList();
 
         Assert.Equal(2, result.Count);
     }
@@ -29,11 +29,11 @@ public partial class TaskServiceTest
     [Fact]
     public async Task SaveTasksAsync_IgnoreForeignTasks()
     {
-        CreateService(new TaskEntity {Uid = Uid, UserId = ForeignUserId});
+        var service = CreateService(new TaskEntity {Uid = Uid, UserId = ForeignUserId});
 
         var items = new[] {new TaskDto {Uid = Uid}};
 
-        var result = (await _service.SaveTasksAsync(items, UserId)).ToList();
+        var result = (await service.SaveTasksAsync(items, UserId)).ToList();
 
         Assert.Empty(result);
         _repoMock.Verify(x => x.GetByIdAsync(Uid));
@@ -43,12 +43,12 @@ public partial class TaskServiceTest
     [Fact]
     public async Task SaveTasksAsync_WhenDeletingCallDelete()
     {
-        CreateService();
+        var service = CreateService();
 
         _repoMock.Setup(x => x.DeleteAsync(Uid)).Returns(Task.FromResult(true));
 
         var items = new[] {new TaskDto {Uid = Uid, Deleted = true}};
-        var result = await _service.SaveTasksAsync(items, UserId);
+        var result = await service.SaveTasksAsync(items, UserId);
 
         Assert.Collection(result, x =>
         {
@@ -63,12 +63,12 @@ public partial class TaskServiceTest
     [Fact]
     public async Task SaveTasksAsync_IgnoreAlreadyDeletedOnDelete()
     {
-        CreateService();
+        var service = CreateService();
 
         _repoMock.Setup(x => x.DeleteAsync(Uid)).Returns(Task.FromResult(false));
 
         var items = new[] {new TaskDto {Uid = Uid, Deleted = true}};
-        var result = await _service.SaveTasksAsync(items, UserId);
+        var result = await service.SaveTasksAsync(items, UserId);
 
         Assert.Collection(result, _ => { });
         _repoMock.Verify(x => x.GetByIdAsync(Uid));
@@ -79,13 +79,13 @@ public partial class TaskServiceTest
     [Fact]
     public async Task SaveTasksAsync_WhenUpdatingCallTryUpdateVersion()
     {
-        CreateService(new TaskEntity {UserId = UserId, Title = TitleOld, Version = 100500, Uid = Uid});
+        var service = CreateService(new TaskEntity {UserId = UserId, Title = TitleOld, Version = 100500, Uid = Uid});
 
         _repoMock.Setup(x => x.TryUpdateVersionAsync(It.IsAny<TaskEntity>()))
-            .Returns(Task.FromResult<(bool, TaskEntity)>((true, null)));
+            .Returns(Task.FromResult<(bool, TaskEntity?)>((true, null)));
 
         var items = new[] {new TaskDto {Uid = Uid, Title = TitleNew, Version = 100500}};
-        var result = await _service.SaveTasksAsync(items, UserId);
+        var result = await service.SaveTasksAsync(items, UserId);
 
         Assert.Collection(result, x =>
         {
@@ -104,13 +104,13 @@ public partial class TaskServiceTest
     [Fact]
     public async Task SaveTasksAsync_ReturnNullIfVersionMismatch()
     {
-        CreateService(new TaskEntity {Uid = Uid, UserId = UserId, Version = 10, Title = TitleOld});
+        var service = CreateService(new TaskEntity {Uid = Uid, UserId = UserId, Version = 10, Title = TitleOld});
 
         _repoMock.Setup(x => x.TryUpdateVersionAsync(It.IsAny<TaskEntity>()))
-            .Returns(Task.FromResult<(bool, TaskEntity)>((false, null)));
+            .Returns(Task.FromResult<(bool, TaskEntity?)>((false, null)));
 
         var items = new[] {new TaskDto {Uid = Uid, Version = 9, Title = TitleNew}};
-        var result = (await _service.SaveTasksAsync(items, UserId)).ToList();
+        var result = (await service.SaveTasksAsync(items, UserId)).ToList();
 
         Assert.Empty(result);
         _repoMock.Verify(x => x.GetByIdAsync(Uid));
@@ -125,10 +125,10 @@ public partial class TaskServiceTest
     [Fact]
     public async Task SaveTasksAsync_WhenCreatingCallUpsert()
     {
-        CreateService();
+        var service = CreateService();
 
         var items = new[] {new TaskDto {Uid = Uid, Title = TitleNew}};
-        var result = (await _service.SaveTasksAsync(items, UserId)).ToList();
+        var result = (await service.SaveTasksAsync(items, UserId)).ToList();
 
         Assert.Collection(result, x =>
         {

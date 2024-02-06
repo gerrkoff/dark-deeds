@@ -8,5 +8,5 @@ public class UpdateDto
     public int UpdateId { get; set; }
 
     [JsonPropertyName("message")]
-    public MessageDto Message { get; set; }
+    public MessageDto? Message { get; set; }
 }

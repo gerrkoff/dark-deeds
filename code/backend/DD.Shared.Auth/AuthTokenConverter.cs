@@ -27,18 +27,17 @@ class AuthTokenConverter : IAuthTokenConverter
 
     public AuthToken FromPrincipal(ClaimsPrincipal principal)
     {
-        var identity = (ClaimsIdentity) principal.Identity;
+        var identity = (ClaimsIdentity?) principal.Identity;
+
+        var expiration = identity?.FindFirst("exp")?.Value;
 
         var user = new AuthToken
         {
-            Username = identity.FindFirst(ClaimsIdentity.DefaultNameClaimType).Value,
-            UserId = identity.FindFirst(ClaimTypes.Sid).Value,
-            DisplayName = identity.FindFirst(ClaimTypes.GivenName).Value
+            Username = identity?.FindFirst(ClaimsIdentity.DefaultNameClaimType)?.Value ?? string.Empty,
+            UserId = identity?.FindFirst(ClaimTypes.Sid)?.Value ?? string.Empty,
+            DisplayName = identity?.FindFirst(ClaimTypes.GivenName)?.Value ?? string.Empty,
+            Expires = !string.IsNullOrWhiteSpace(expiration) ? UnixTimeStampToDateTime(double.Parse(expiration)) : null,
         };
-
-        string expiration = identity.FindFirst("exp")?.Value;
-        if (!string.IsNullOrWhiteSpace(expiration))
-            user.Expires = UnixTimeStampToDateTime(double.Parse(expiration));
 
         return user;
     }

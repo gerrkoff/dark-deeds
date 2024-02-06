@@ -53,7 +53,7 @@ public class RecurrenceService(
             return true;
         }
 
-        PlannedRecurrenceEntity entity = await plannedRecurrenceRepository.GetByIdAsync(dto.Uid);
+        var entity = await plannedRecurrenceRepository.GetByIdAsync(dto.Uid);
         if (entity == null)
         {
             entity = mapper.Map<PlannedRecurrenceEntity>(dto);
@@ -70,7 +70,7 @@ public class RecurrenceService(
         entity.EndDate = dto.EndDate;
         entity.EveryNthDay = dto.EveryNthDay;
         entity.EveryWeekday = dto.EveryWeekday;
-        entity.EveryMonthDay = dto.EveryMonthDay;
+        entity.EveryMonthDay = dto.EveryMonthDay ?? string.Empty;
         var (success, _) = await plannedRecurrenceRepository.TryUpdateVersionAsync(entity);
         return success;
     }
@@ -93,6 +93,6 @@ public class RecurrenceService(
                entity.EndDate != dto.EndDate ||
                entity.EveryNthDay != dto.EveryNthDay ||
                entity.EveryWeekday != dto.EveryWeekday ||
-               !string.Equals(entity.EveryMonthDay, dto.EveryMonthDay);
+               !string.Equals(entity.EveryMonthDay, dto.EveryMonthDay ?? string.Empty);
     }
 }

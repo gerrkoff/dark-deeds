@@ -22,7 +22,7 @@ abstract class Repository<T>(IMongoDbContext dbContext, string tableName) : IRep
         });
     }
 
-    public async Task<T> GetByIdAsync(string uid)
+    public async Task<T?> GetByIdAsync(string uid)
     {
         if (string.IsNullOrWhiteSpace(uid))
             throw new ArgumentNullException(nameof(uid));
@@ -60,7 +60,7 @@ abstract class Repository<T>(IMongoDbContext dbContext, string tableName) : IRep
         });
     }
 
-    public async Task<(bool, T)> TryUpdateVersionAsync(T entity)
+    public async Task<(bool, T?)> TryUpdateVersionAsync(T entity)
     {
         if (entity == null)
             throw new ArgumentNullException(nameof(entity));
@@ -84,7 +84,7 @@ abstract class Repository<T>(IMongoDbContext dbContext, string tableName) : IRep
         return (false, current);
     }
 
-    public async Task<(bool, T)> TryUpdateVersionPropsAsync(T entity, params Expression<Func<T, object>>[] properties)
+    public async Task<(bool, T?)> TryUpdateVersionPropsAsync(T entity, params Expression<Func<T, object>>[] properties)
     {
         if (entity == null)
             throw new ArgumentNullException(nameof(entity));

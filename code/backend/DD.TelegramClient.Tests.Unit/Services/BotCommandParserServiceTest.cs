@@ -16,12 +16,14 @@ public class BotCommandParserServiceTest
         var telegramMock = new Mock<ITelegramService>();
         var taskParserMock = new Mock<ITaskServiceApp>();
         taskParserMock.Setup(x => x.ParseTask("Some task")).Returns(Task.FromResult(task));
-        var service = new BotCommandParserService(telegramMock.Object, null, taskParserMock.Object);
+        var dateServiceMock = new Mock<IDateService>();
+        var service = new BotCommandParserService(telegramMock.Object, dateServiceMock.Object, taskParserMock.Object);
 
         var result = await service.ParseCommand("Some task", 100500);
 
+        Assert.NotNull(result);
         Assert.IsType<CreateTaskCommand>(result);
-        Assert.Same(task, ((CreateTaskCommand) result).Task);
+        Assert.Same(task, ((CreateTaskCommand) result!).Task);
     }
 
     [Fact]
@@ -31,23 +33,29 @@ public class BotCommandParserServiceTest
         dateServiceMock.SetupGet(x => x.Now).Returns(new DateTime(2010, 10, 10));
         var telegramMock = new Mock<ITelegramService>();
         telegramMock.Setup(x => x.GetUserTimeAdjustment(100500)).Returns(Task.FromResult(100));
-        var service = new BotCommandParserService(telegramMock.Object, dateServiceMock.Object, null);
+        var taskServiceAppMock = new Mock<ITaskServiceApp>();
+        var service = new BotCommandParserService(telegramMock.Object, dateServiceMock.Object, taskServiceAppMock.Object);
 
         var result = await service.ParseCommand("/todo", 100500);
 
+        Assert.NotNull(result);
         Assert.IsType<ShowTodoCommand>(result);
-        Assert.Equal(new DateTime(2010, 10, 10), ((ShowTodoCommand) result).From);
+        Assert.Equal(new DateTime(2010, 10, 10), ((ShowTodoCommand) result!).From);
         Assert.Equal(new DateTime(2010, 10, 11), ((ShowTodoCommand) result).To);
     }
 
     [Fact]
     public async Task ProcessMessage_Start()
     {
-        var service = new BotCommandParserService(null, null, null);
+        var dateServiceMock = new Mock<IDateService>();
+        var telegramServiceMock = new Mock<ITelegramService>();
+        var taskServiceAppMock = new Mock<ITaskServiceApp>();
+        var service = new BotCommandParserService(telegramServiceMock.Object, dateServiceMock.Object, taskServiceAppMock.Object);
 
         var result = await service.ParseCommand("/start SomeChatKey", 0);
 
+        Assert.NotNull(result);
         Assert.IsType<StartCommand>(result);
-        Assert.Equal("SomeChatKey", ((StartCommand) result).UserChatKey);
+        Assert.Equal("SomeChatKey", ((StartCommand) result!).UserChatKey);
     }
 }

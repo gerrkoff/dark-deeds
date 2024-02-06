@@ -18,13 +18,15 @@ namespace DD.TelegramClient.Domain
             services.AddScoped<IBotProcessMessageService, BotProcessMessageService>();
             services.AddScoped<ITestService, TestService>();
 
+            var botToken = configuration["Bot"] ?? throw new InvalidOperationException("Bot token is not set");
+
             if (bool.TryParse(configuration["EnableTelegramIntegration"], out bool v) && v)
             {
-                services.AddScoped<IBotSendMessageService>(_ => new BotSendMessageService(configuration["Bot"]));
+                services.AddScoped<IBotSendMessageService>(_ => new BotSendMessageService(botToken));
             }
             else
             {
-                services.AddScoped<IBotSendMessageService>(_ => new BotSendMessageDebugService(configuration["Bot"]));
+                services.AddScoped<IBotSendMessageService>(_ => new BotSendMessageDebugService(botToken));
             }
         }
     }

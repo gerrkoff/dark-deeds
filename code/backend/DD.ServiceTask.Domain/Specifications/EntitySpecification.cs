@@ -17,6 +17,6 @@ public abstract class EntitySpecification<TEntity, TSpec> : Specification<TEntit
     public TSpec FilterNotDeleted()
     {
         Filters.Add(x => !x.IsDeleted);
-        return this as TSpec;
+        return (this as TSpec)!;
     }
 }

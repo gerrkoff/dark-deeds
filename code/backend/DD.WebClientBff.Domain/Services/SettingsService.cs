@@ -18,7 +18,7 @@ class SettingsService(
 {
     public async Task SaveAsync(SettingsDto settings, string userId)
     {
-        SettingsEntity entity = await FindUserSettings(userId);
+        var entity = await FindUserSettings(userId);
 
         if (entity == null)
         {
@@ -35,7 +35,7 @@ class SettingsService(
 
     public async Task<SettingsDto> LoadAsync(string userId)
     {
-        SettingsEntity entity = await FindUserSettings(userId);
+        var entity = await FindUserSettings(userId);
 
         if (entity == null)
             return new SettingsDto();
@@ -43,7 +43,7 @@ class SettingsService(
         return mapper.Map<SettingsDto>(entity);
     }
 
-    private Task<SettingsEntity> FindUserSettings(string userId)
+    private Task<SettingsEntity?> FindUserSettings(string userId)
     {
         var result = settingsRepository.GetAll().FirstOrDefault(x => string.Equals(x.UserId, userId));
         return Task.FromResult(result);

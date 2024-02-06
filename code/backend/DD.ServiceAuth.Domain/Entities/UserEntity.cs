@@ -4,5 +4,5 @@ namespace DD.ServiceAuth.Domain.Entities;
 
 public class UserEntity : IdentityUser
 {
-    public string DisplayName { get; set; }
+    public string? DisplayName { get; init; }
 }
