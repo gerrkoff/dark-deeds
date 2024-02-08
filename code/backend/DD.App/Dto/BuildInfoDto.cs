@@ -15,6 +15,6 @@ public class BuildInfoDto
     {
         return type.Assembly
             .GetCustomAttribute<AssemblyInformationalVersionAttribute>()
-            .InformationalVersion;
+            ?.InformationalVersion ?? "unknown";
     }
 }

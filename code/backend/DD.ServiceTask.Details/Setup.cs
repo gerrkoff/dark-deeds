@@ -38,7 +38,11 @@ namespace DD.ServiceTask.Details
 
         private static void AddTaskServiceData(this IServiceCollection services, IConfiguration configuration)
         {
-            string connectionString = configuration.GetConnectionString("tasksDb");
+            var connectionString = configuration.GetConnectionString("tasksDb");
+
+            if (connectionString == null)
+                throw new InvalidOperationException("Connection string for tasksDb is not found");
+
             services.AddSingleton<IMongoDbContext>(_ => new MongoDbContext(connectionString));
             services.AddScoped<ITaskRepository, TaskRepository>();
             services.AddScoped<IPlannedRecurrenceRepository, PlannedRecurrenceRepository>();

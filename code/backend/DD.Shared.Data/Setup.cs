@@ -12,7 +12,7 @@ public static class Setup
 {
     public static void AddDdSharedData(this IServiceCollection services, IConfiguration configuration)
     {
-        string connectionString = configuration.GetConnectionString("sharedDb");
+        var connectionString = configuration.GetConnectionString("sharedDb");
 
         services.AddDbContext<BackendDbContext>(options => options.UseNpgsql(connectionString));
         services.AddScoped<DbContext, BackendDbContext>();

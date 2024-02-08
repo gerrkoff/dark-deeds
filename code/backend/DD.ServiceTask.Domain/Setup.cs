@@ -9,7 +9,7 @@ namespace DD.ServiceTask.Domain
     {
         public static void AddTaskServiceDomain(this IServiceCollection services)
         {
-            services.AddScoped<ITaskService, Services.TaskService>();
+            services.AddScoped<ITaskService, TaskService>();
             services.AddScoped<ITaskParserService, TaskParserService>();
             services.AddScoped<IRecurrenceCreatorService, RecurrenceCreatorService>();
             services.AddScoped<IDateService, DateService>();

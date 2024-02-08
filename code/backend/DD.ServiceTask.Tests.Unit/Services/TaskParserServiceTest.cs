@@ -16,7 +16,7 @@ public class TaskParserServiceTest : BaseTest
     [Fact]
     public void ParseTask_ReturnTaskWithNoDateAndNoTime()
     {
-        var service = new TaskParserService(dateServiceMock());
+        var service = new TaskParserService(DateServiceMock());
 
         var result = service.ParseTask("Test!");
 
@@ -30,7 +30,7 @@ public class TaskParserServiceTest : BaseTest
     [Fact]
     public void ParseTask_ReturnTaskWithDateAndNoTime()
     {
-        var service = new TaskParserService(dateServiceMock());
+        var service = new TaskParserService(DateServiceMock());
 
         var result = service.ParseTask("1231 Test!");
 
@@ -44,7 +44,7 @@ public class TaskParserServiceTest : BaseTest
     [Fact]
     public void ParseTask_ReturnTaskWithDateAndNoTime_NotWorkingWithoutSpace()
     {
-        var service = new TaskParserService(dateServiceMock());
+        var service = new TaskParserService(DateServiceMock());
 
         var result = service.ParseTask("0101Test!!!");
 
@@ -58,7 +58,7 @@ public class TaskParserServiceTest : BaseTest
     [Fact]
     public void ParseTask_ReturnTaskWithDateAndTime()
     {
-        var service = new TaskParserService(dateServiceMock());
+        var service = new TaskParserService(DateServiceMock());
 
         var result = service.ParseTask("1231 2359 Test!");
 
@@ -72,7 +72,7 @@ public class TaskParserServiceTest : BaseTest
     [Fact]
     public void ParseTask_ReturnTaskWithDateAndTime_NotWorkingWithoutSpace()
     {
-        var service = new TaskParserService(dateServiceMock());
+        var service = new TaskParserService(DateServiceMock());
 
         var result = service.ParseTask("0101 0101Test!!!");
 
@@ -86,7 +86,7 @@ public class TaskParserServiceTest : BaseTest
     [Fact]
     public void ParseTask_ReturnTaskWithDateAndNoTimeWithYear()
     {
-        var service = new TaskParserService(dateServiceMock());
+        var service = new TaskParserService(DateServiceMock());
 
         var result = service.ParseTask("20170101 Test");
 
@@ -100,7 +100,7 @@ public class TaskParserServiceTest : BaseTest
     [Fact]
     public void ParseTask_ReturnProbableTask()
     {
-        var service = new TaskParserService(dateServiceMock());
+        var service = new TaskParserService(DateServiceMock());
 
         var result = service.ParseTask("Test! ?");
 
@@ -114,7 +114,7 @@ public class TaskParserServiceTest : BaseTest
     [Fact]
     public void ParseTask_ReturnAdditionalTaskWithDate()
     {
-        var service = new TaskParserService(dateServiceMock());
+        var service = new TaskParserService(DateServiceMock());
 
         var result = service.ParseTask("0220 Test !");
 
@@ -128,7 +128,7 @@ public class TaskParserServiceTest : BaseTest
     [Fact]
     public void ParseTask_ReturnAdditionalTaskWithDateAndTime()
     {
-        var service = new TaskParserService(dateServiceMock());
+        var service = new TaskParserService(DateServiceMock());
 
         var result = service.ParseTask("20150220 2359 Test !");
 
@@ -142,7 +142,7 @@ public class TaskParserServiceTest : BaseTest
     [Fact]
     public void ParseTask_AdditionalAndProbable()
     {
-        var service = new TaskParserService(dateServiceMock());
+        var service = new TaskParserService(DateServiceMock());
 
         var result = service.ParseTask("Test !?");
 
@@ -157,7 +157,7 @@ public class TaskParserServiceTest : BaseTest
     [Fact]
     public void ParseTask_ProbableAndAdditional()
     {
-        var service = new TaskParserService(dateServiceMock());
+        var service = new TaskParserService(DateServiceMock());
 
         var result = service.ParseTask("Test ?!");
 
@@ -172,7 +172,7 @@ public class TaskParserServiceTest : BaseTest
     [Fact]
     public void ParseTask_ReturnTodayTaskThroughExclamationMark()
     {
-        var service = new TaskParserService(dateServiceMock());
+        var service = new TaskParserService(DateServiceMock());
 
         var result = service.ParseTask("! Test");
 
@@ -186,7 +186,7 @@ public class TaskParserServiceTest : BaseTest
     [Fact]
     public void ParseTask_ReturnTomorrowTaskThroughExclamationMark()
     {
-        var service = new TaskParserService(dateServiceMock());
+        var service = new TaskParserService(DateServiceMock());
 
         var result = service.ParseTask("!! Test");
 
@@ -200,7 +200,7 @@ public class TaskParserServiceTest : BaseTest
     [Fact]
     public void ParseTask_ReturnDayAfterAfterTomorrowTaskThroughExclamationMark()
     {
-        var service = new TaskParserService(dateServiceMock());
+        var service = new TaskParserService(DateServiceMock());
 
         var result = service.ParseTask("!!!! Test");
 
@@ -214,7 +214,7 @@ public class TaskParserServiceTest : BaseTest
     [Fact]
     public void ParseTask_ReturnDayAfterTomorrowNextMonthTaskThroughExclamationMark()
     {
-        var service = new TaskParserService(dateServiceMock(2019, 1, 31));
+        var service = new TaskParserService(DateServiceMock(2019, 1, 31));
 
         var result = service.ParseTask("!!! Test");
 
@@ -228,7 +228,7 @@ public class TaskParserServiceTest : BaseTest
     [Fact]
     public void ParseTask_ReturnNextMondayTaskThroughExclamationMark()
     {
-        var service = new TaskParserService(dateServiceMock(2019, 7,28));
+        var service = new TaskParserService(DateServiceMock(2019, 7,28));
 
         var result = service.ParseTask("!1 Test");
 
@@ -242,7 +242,7 @@ public class TaskParserServiceTest : BaseTest
     [Fact]
     public void ParseTask_ReturnNextWednesdayTaskThroughExclamationMark()
     {
-        var service = new TaskParserService(dateServiceMock(2019, 7, 28));
+        var service = new TaskParserService(DateServiceMock(2019, 7, 28));
 
         var result = service.ParseTask("!3 Test");
 
@@ -256,7 +256,7 @@ public class TaskParserServiceTest : BaseTest
     [Fact]
     public void ParseTask_ReturnNextFridayTaskThroughExclamationMark()
     {
-        var service = new TaskParserService(dateServiceMock(2019, 7, 28));
+        var service = new TaskParserService(DateServiceMock(2019, 7, 28));
 
         var result = service.ParseTask("!5 Test");
 
@@ -270,7 +270,7 @@ public class TaskParserServiceTest : BaseTest
     [Fact]
     public void ParseTask_ExclamationMark11IsNotWeekShiftPattern()
     {
-        var service = new TaskParserService(dateServiceMock());
+        var service = new TaskParserService(DateServiceMock());
 
         var result = service.ParseTask("!11 Test");
 
@@ -281,7 +281,7 @@ public class TaskParserServiceTest : BaseTest
     [Fact]
     public void ParseTask_DateWithExclamation()
     {
-        var service = new TaskParserService(dateServiceMock());
+        var service = new TaskParserService(DateServiceMock());
 
         var result = service.ParseTask("1231! Test");
 
@@ -298,7 +298,7 @@ public class TaskParserServiceTest : BaseTest
     [Fact]
     public void ParseTask_IgnoreDateTaskWithTime()
     {
-        var service = new TaskParserService(dateServiceMock());
+        var service = new TaskParserService(DateServiceMock());
 
         var result = service.ParseTask("1010 Test!", ignoreDate: true);
 
@@ -311,7 +311,7 @@ public class TaskParserServiceTest : BaseTest
     [Fact]
     public void PrintTasks_ReturnTitle()
     {
-        var service = new TaskParserService(dateServiceMock());
+        var service = new TaskParserService(DateServiceMock());
 
         var result = service.PrintTasks(new[] {new TaskDto
         {
@@ -324,7 +324,7 @@ public class TaskParserServiceTest : BaseTest
     [Fact]
     public void PrintTasks_ReturnTime()
     {
-        var service = new TaskParserService(dateServiceMock());
+        var service = new TaskParserService(DateServiceMock());
 
         var result = service.PrintTasks(new[] {new TaskDto
         {
@@ -340,7 +340,7 @@ public class TaskParserServiceTest : BaseTest
 
     #region Helpers
 
-    private IDateService dateServiceMock(int year = 2019, int month = 1, int date = 1)
+    private IDateService DateServiceMock(int year = 2019, int month = 1, int date = 1)
     {
         var mock = new Mock<IDateService>();
         mock.SetupGet(x => x.Today).Returns(new DateTime(year, month, date));

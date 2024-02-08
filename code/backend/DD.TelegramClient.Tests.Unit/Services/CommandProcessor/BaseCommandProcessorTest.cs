@@ -14,6 +14,7 @@ public class BaseCommandProcessorTest
     class BaseCommandProcessorImplementation(
         IBotSendMessageService botSendMessageService,
         ILogger<BaseCommandProcessor<BotCommand>> logger,
+        // ReSharper disable once ParameterOnlyUsedForPreconditionCheck.Local
         bool throwException)
         : BaseCommandProcessor<BotCommandImplementation>(botSendMessageService, logger)
     {
@@ -28,7 +29,9 @@ public class BaseCommandProcessorTest
     [Fact]
     public async Task ProcessAsync_ProcessSuccess()
     {
-        var service = new BaseCommandProcessorImplementation(null, null, false);
+        var botSendMessageServiceMock = new Mock<IBotSendMessageService>();
+        var loggerMock = new Mock<ILogger<BaseCommandProcessor<BotCommand>>>();
+        var service = new BaseCommandProcessorImplementation(botSendMessageServiceMock.Object, loggerMock.Object, false);
 
         await service.ProcessAsync(new BotCommandImplementation());
     }

@@ -2,6 +2,6 @@ namespace DD.ServiceTask.Domain.Dto;
 
 public class TaskUpdatedDto
 {
-    public ICollection<TaskDto> Tasks { get; set; }
-    public string UserId { get; set; }
+    public ICollection<TaskDto> Tasks { get; set; } = new List<TaskDto>();
+    public string UserId { get; set; } = string.Empty;
 }

@@ -8,6 +8,6 @@ public class SendMessageDto
     public int ChatId { get; set; }
 
     [JsonPropertyName("text")]
-    public string Text { get; set; }
+    public string? Text { get; set; }
 
 }

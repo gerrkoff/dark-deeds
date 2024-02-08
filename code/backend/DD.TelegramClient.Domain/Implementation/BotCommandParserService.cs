@@ -5,7 +5,7 @@ namespace DD.TelegramClient.Domain.Implementation;
 
 public interface IBotCommandParserService
 {
-    Task<BotCommand> ParseCommand(string command, int chatId);
+    Task<BotCommand?> ParseCommand(string command, int chatId);
 }
 
 public class BotCommandParserService(
@@ -17,7 +17,7 @@ public class BotCommandParserService(
     const string TodoCommand = "/todo";
     const string StartCommand = "/start";
 
-    public async Task<BotCommand> ParseCommand(string command, int chatId)
+    public async Task<BotCommand?> ParseCommand(string command, int chatId)
     {
         if (CheckAndTrimCommand(StartCommand, command, out var args))
             return new StartCommand(args);

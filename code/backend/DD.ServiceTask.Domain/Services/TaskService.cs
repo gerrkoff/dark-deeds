@@ -87,7 +87,7 @@ public class TaskService(
         return savedTasks;
     }
 
-    private async Task<TaskDto> SaveTaskByUidAsync(TaskDto taskToSave, string userId)
+    private async Task<TaskDto?> SaveTaskByUidAsync(TaskDto taskToSave, string userId)
     {
         var entity = await tasksRepository.GetByIdAsync(taskToSave.Uid);
 

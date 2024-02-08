@@ -12,7 +12,6 @@ namespace DD.ServiceAuth.Details.Web.Controllers;
 [Route("api/auth/[controller]")]
 public class AccountController(
     IUserAuth userAuth,
-    IValidator validator,
     IAuthService authService,
     IMapper mapper)
     : ControllerBase
@@ -20,14 +19,12 @@ public class AccountController(
     [HttpPost(nameof(SignUp))]
     public Task<SignUpResultDto> SignUp(SignUpInfoDto signUpInfo)
     {
-        validator.Validate(ModelState);
         return authService.SignUpAsync(signUpInfo);
     }
 
     [HttpPost(nameof(SignIn))]
     public Task<SignInResultDto> SignIn(SignInInfoDto signInInfo)
     {
-        validator.Validate(ModelState);
         return authService.SignInAsync(signInInfo);
     }
 

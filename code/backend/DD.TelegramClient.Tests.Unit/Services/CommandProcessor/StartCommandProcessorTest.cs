@@ -1,6 +1,7 @@
 using DD.TelegramClient.Domain.Implementation;
 using DD.TelegramClient.Domain.Implementation.CommandProcessor;
 using DD.TelegramClient.Domain.Models.Commands;
+using Microsoft.Extensions.Logging;
 using Moq;
 using Xunit;
 
@@ -13,8 +14,9 @@ public class StartCommandProcessorTest
     {
         var telegramMock = new Mock<ITelegramService>();
         var sendMessageMock = new Mock<IBotSendMessageService>();
+        var loggerMock = new Mock<ILogger<BaseCommandProcessor<BotCommand>>>();
 
-        var service = new StartCommandProcessor(sendMessageMock.Object, telegramMock.Object, null);
+        var service = new StartCommandProcessor(sendMessageMock.Object, telegramMock.Object, loggerMock.Object);
 
         await service.ProcessAsync(new StartCommand("key")
         {

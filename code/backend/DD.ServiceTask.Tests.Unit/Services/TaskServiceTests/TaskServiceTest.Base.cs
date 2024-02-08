@@ -11,14 +11,13 @@ namespace DD.ServiceTask.Tests.Unit.Services.TaskServiceTests;
 
 public partial class TaskServiceTest : BaseTest
 {
-    private Mock<ITaskRepository> _repoMock;
-    private Mock<ILogger<TaskService>> _loggerMock;
-    private TaskService _service;
-    private Mock<INotifierService> _notifierServiceMock;
-    private Mock<ISpecificationFactory> _specFactoryMock;
-    private Mock<ITaskSpecification> _taskSpecMock;
+    private Mock<ITaskRepository> _repoMock = new();
+    private Mock<ILogger<TaskService>> _loggerMock = new();
+    private Mock<INotifierService> _notifierServiceMock = new();
+    private Mock<ISpecificationFactory> _specFactoryMock = new();
+    private Mock<ITaskSpecification> _taskSpecMock = new();
 
-    private void CreateService(params TaskEntity[] values)
+    private TaskService CreateService(params TaskEntity[] values)
     {
         _repoMock = MocksCreator.RepoTask(values);
         _loggerMock = new Mock<ILogger<TaskService>>();
@@ -26,7 +25,7 @@ public partial class TaskServiceTest : BaseTest
         _taskSpecMock = MocksCreator.TaskSpec();
         _specFactoryMock = new Mock<ISpecificationFactory>();
         _specFactoryMock.Setup(x => x.New<ITaskSpecification, TaskEntity>()).Returns(_taskSpecMock.Object);
-        _service = new TaskService(
+        return new TaskService(
             _repoMock.Object,
             _loggerMock.Object,
             Mapper,

@@ -4,6 +4,6 @@ namespace DD.ServiceAuth.Domain.Dto;
 
 public class SignUpResultDto
 {
-    public string Token { get; set; }
-    public SignUpResultEnum Result { get; set; }
+    public string Token { get; init; } = string.Empty;
+    public SignUpResultEnum Result { get; init; }
 }

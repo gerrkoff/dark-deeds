@@ -12,7 +12,7 @@ class DarkDeedsContextDesignTimeFactory : IDesignTimeDbContextFactory<BackendDbC
             .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
             .AddJsonFile("design-time-connection.json")
             .Build();
-        string connectionString = configuration.GetConnectionString("sharedDb");
+        var connectionString = configuration.GetConnectionString("sharedDb");
         var optionsBuilder = new DbContextOptionsBuilder<BackendDbContext>();
         optionsBuilder.UseNpgsql(connectionString);
 

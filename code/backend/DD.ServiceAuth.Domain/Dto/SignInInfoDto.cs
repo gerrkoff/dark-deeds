@@ -1,12 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace DD.ServiceAuth.Domain.Dto;
+﻿namespace DD.ServiceAuth.Domain.Dto;
 
 public class SignInInfoDto
 {
-    [Required]
-    public string Username { get; set; }
+    public string Username { get; init; } = string.Empty;
 
-    [Required]
-    public string Password { get; set; }
+    public string Password { get; init; } = string.Empty;
 }

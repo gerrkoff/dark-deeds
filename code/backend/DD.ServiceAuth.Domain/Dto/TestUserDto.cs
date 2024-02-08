@@ -2,7 +2,7 @@ namespace DD.ServiceAuth.Domain.Dto;
 
 public class TestUserDto
 {
-    public string UserId { get; set; }
-    public string Username { get; set; }
-    public string Password { get; set; }
+    public string UserId { get; init; } = string.Empty;
+    public string Username { get; init; } = string.Empty;
+    public string Password { get; init; } = string.Empty;
 }

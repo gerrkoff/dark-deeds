@@ -19,10 +19,10 @@ public class BotProcessMessageService(
 {
     public async Task ProcessMessageAsync(UpdateDto update)
     {
-        string text = update.Message.Text.Trim();
-        int userChatId = update.Message.Chat.Id;
+        string text = update.Message?.Text?.Trim() ?? string.Empty;
+        int userChatId = update.Message?.Chat?.Id ?? throw new ArgumentNullException(nameof(userChatId));
 
-        BotCommand command = await botCommandParserService.ParseCommand(text, userChatId);
+        var command = await botCommandParserService.ParseCommand(text, userChatId);
         if (command != null)
             command.UserChatId = userChatId;
 

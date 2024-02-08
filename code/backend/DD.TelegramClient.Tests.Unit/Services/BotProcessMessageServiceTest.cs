@@ -1,6 +1,7 @@
 using DD.TelegramClient.Domain.Dto;
 using DD.TelegramClient.Domain.Implementation;
 using DD.TelegramClient.Domain.Implementation.CommandProcessor;
+using DD.TelegramClient.Domain.Infrastructure.Dto;
 using DD.TelegramClient.Domain.Models.Commands;
 using Moq;
 using Xunit;
@@ -21,7 +22,7 @@ public class BotProcessMessageServiceTest
         }
     };
 
-    private Mock<IBotCommandParserService> createCommandParserMock(BotCommand command)
+    private Mock<IBotCommandParserService> CreateCommandParserMock(BotCommand? command)
     {
         var commandParserMock = new Mock<IBotCommandParserService>();
         commandParserMock.Setup(x => x.ParseCommand(It.IsAny<string>(), It.IsAny<int>()))
@@ -32,14 +33,17 @@ public class BotProcessMessageServiceTest
     [Fact]
     public async Task BotProcessMessageServiceTest_SendUnknownCommand()
     {
-        var commandParserMock = createCommandParserMock(null);
+        var showTodoCommandProcessorMock = new Mock<IShowTodoCommandProcessor>();
+        var createTaskCommandProcessorMock = new Mock<ICreateTaskCommandProcessor>();
+        var startCommandProcessorMock = new Mock<IStartCommandProcessor>();
+        var commandParserMock = CreateCommandParserMock(null);
         var sendMsgMock = new Mock<IBotSendMessageService>();
         var service = new BotProcessMessageService(
             sendMsgMock.Object,
             commandParserMock.Object,
-            null,
-            null,
-            null);
+            showTodoCommandProcessorMock.Object,
+            createTaskCommandProcessorMock.Object,
+            startCommandProcessorMock.Object);
 
         await service.ProcessMessageAsync(UpdateEmpty);
 
@@ -51,14 +55,17 @@ public class BotProcessMessageServiceTest
     public async Task BotProcessMessageServiceTest_RunShowTodoCommand()
     {
         var command = new ShowTodoCommand("", new DateTime(), 0);
-        var commandParserMock = createCommandParserMock(command);
+        var commandParserMock = CreateCommandParserMock(command);
         var commandMock = new Mock<IShowTodoCommandProcessor>();
+        var botSendMessageServiceMock = new Mock<IBotSendMessageService>();
+        var createTaskCommandProcessorMock = new Mock<ICreateTaskCommandProcessor>();
+        var startCommandProcessorMock = new Mock<IStartCommandProcessor>();
         var service = new BotProcessMessageService(
-            null,
+            botSendMessageServiceMock.Object,
             commandParserMock.Object,
             commandMock.Object,
-            null,
-            null);
+            createTaskCommandProcessorMock.Object,
+            startCommandProcessorMock.Object);
 
         await service.ProcessMessageAsync(UpdateEmpty);
 
@@ -69,15 +76,19 @@ public class BotProcessMessageServiceTest
     [Fact]
     public async Task BotProcessMessageServiceTest_RunCreateTaskCommand()
     {
-        var command = new CreateTaskCommand(null);
-        var commandParserMock = createCommandParserMock(command);
+        var task = new TaskDto();
+        var command = new CreateTaskCommand(task);
+        var commandParserMock = CreateCommandParserMock(command);
         var commandMock = new Mock<ICreateTaskCommandProcessor>();
+        var botSendMessageServiceMock = new Mock<IBotSendMessageService>();
+        var startCommandProcessorMock = new Mock<IStartCommandProcessor>();
+        var showTodoCommandProcessorMock = new Mock<IShowTodoCommandProcessor>();
         var service = new BotProcessMessageService(
-            null,
+            botSendMessageServiceMock.Object,
             commandParserMock.Object,
-            null,
+            showTodoCommandProcessorMock.Object,
             commandMock.Object,
-            null);
+            startCommandProcessorMock.Object);
 
         await service.ProcessMessageAsync(UpdateEmpty);
 
@@ -89,13 +100,16 @@ public class BotProcessMessageServiceTest
     public async Task BotProcessMessageServiceTest_RunStartCommand()
     {
         var command = new StartCommand(string.Empty);
-        var commandParserMock = createCommandParserMock(command);
+        var commandParserMock = CreateCommandParserMock(command);
         var commandMock = new Mock<IStartCommandProcessor>();
+        var botSendMessageServiceMock = new Mock<IBotSendMessageService>();
+        var showTodoCommandProcessorMock = new Mock<IShowTodoCommandProcessor>();
+        var createTaskCommandProcessorMock = new Mock<ICreateTaskCommandProcessor>();
         var service = new BotProcessMessageService(
-            null,
+            botSendMessageServiceMock.Object,
             commandParserMock.Object,
-            null,
-            null,
+            showTodoCommandProcessorMock.Object,
+            createTaskCommandProcessorMock.Object,
             commandMock.Object);
 
         await service.ProcessMessageAsync(UpdateEmpty);

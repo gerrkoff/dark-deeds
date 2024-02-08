@@ -27,7 +27,7 @@ public static partial class MocksCreator
         });
         repoMock.Setup(x =>
                 x.TryUpdateVersionPropsAsync(It.IsAny<TEntity>(), It.IsAny<Expression<Func<TEntity, object>>[]>()))
-            .Returns(Task.FromResult<(bool, TEntity)>((true, null)));
+            .Returns(Task.FromResult<(bool, TEntity?)>((true, null)));
 
         return repoMock;
     }

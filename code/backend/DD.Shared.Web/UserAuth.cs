@@ -18,7 +18,7 @@ class UserAuth(
 {
     public bool IsAuthenticated()
     {
-        return httpContextAccessor.HttpContext.User.Identity.IsAuthenticated;
+        return httpContextAccessor.HttpContext?.User.Identity?.IsAuthenticated ?? false;
     }
 
     public string UserId()
@@ -28,6 +28,9 @@ class UserAuth(
 
     public AuthToken AuthToken()
     {
+        if (httpContextAccessor.HttpContext is null)
+            throw new ArgumentNullException(nameof(httpContextAccessor.HttpContext));
+
         return authTokenConverter.FromPrincipal(httpContextAccessor.HttpContext.User);
     }
 }
