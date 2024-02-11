@@ -1,5 +1,4 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 using System.Text;
 using DD.Shared.Auth;
 using Microsoft.Extensions.Options;
@@ -12,7 +11,7 @@ public interface ITokenService
     string Serialize(AuthToken authToken);
 }
 
-class TokenService(
+internal sealed class TokenService(
     IOptions<AuthSettings> authSettings,
     IAuthTokenConverter authTokenConverter)
     : ITokenService
@@ -21,7 +20,7 @@ class TokenService(
 
     public string Serialize(AuthToken authToken)
     {
-        ClaimsIdentity identity = authTokenConverter.ToIdentity(authToken);
+        var identity = authTokenConverter.ToIdentity(authToken);
 
         var now = DateTime.UtcNow;
         var keyBytes = Encoding.ASCII.GetBytes(_authSettings.Key ?? string.Empty);
@@ -35,7 +34,7 @@ class TokenService(
             signingCredentials: new SigningCredentials(symmetricSecurityKey, SecurityAlgorithms.HmacSha256)
         );
 
-        string encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
+        var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
 
         return encodedJwt;
     }

@@ -4,7 +4,7 @@ using TaskDtoTaskService = DD.ServiceTask.Domain.Dto.TaskDto;
 
 namespace DD.TelegramClient.Details.Infrastructure;
 
-class ModelsMapping : Profile
+internal sealed class ModelsMapping : Profile
 {
     public ModelsMapping()
     {

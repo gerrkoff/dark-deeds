@@ -4,7 +4,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace DD.Shared.Web;
 
-class TestAttribute(IConfiguration configuration) : ActionFilterAttribute
+internal sealed class TestAttribute(IConfiguration configuration) : ActionFilterAttribute
 {
     public override void OnActionExecuting(ActionExecutingContext context)
     {

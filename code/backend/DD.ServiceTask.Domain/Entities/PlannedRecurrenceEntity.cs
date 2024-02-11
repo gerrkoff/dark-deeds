@@ -10,7 +10,7 @@ public class PlannedRecurrenceEntity : Entity, IUserOwnedEntity
     public DateTime? EndDate { get; set; }
     public int? EveryNthDay { get; set; }
     public string EveryMonthDay { get; set; } = string.Empty;
-    public RecurrenceWeekdayEnum? EveryWeekday { get; set; }
+    public RecurrenceWeekday? EveryWeekday { get; set; }
     public string UserId { get; set; } = string.Empty;
-    public List<RecurrenceEntity> Recurrences { get; set; } = new();
+    public List<RecurrenceEntity> Recurrences { get; set; } = [];
 }

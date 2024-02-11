@@ -8,7 +8,7 @@ public interface ITestService
     Task<TestUserDto> CreateTestUserAsync();
 }
 
-class TestService(IAuthService authService) : ITestService
+internal sealed class TestService(IAuthService authService) : ITestService
 {
     public async Task<TestUserDto> CreateTestUserAsync()
     {
@@ -20,7 +20,7 @@ class TestService(IAuthService authService) : ITestService
 
         var result = await authService.SignUpAsync(signUpInfo);
 
-        if (result.Result != SignUpResultEnum.Success)
+        if (result.Result != SignUpResult.Success)
             throw new InvalidOperationException();
 
         var userId = await authService.GetUserIdAsync(signUpInfo.Username);

@@ -7,7 +7,7 @@ public interface IValidator
     void Validate(ModelStateDictionary modelState);
 }
 
-class Validator : IValidator
+internal sealed class Validator : IValidator
 {
     public void Validate(ModelStateDictionary modelState)
     {

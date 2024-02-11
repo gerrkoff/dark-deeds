@@ -18,8 +18,9 @@ public class CreateTaskCommandProcessorTest
         {
             Title = "Task",
         };
-        var tasks = new TaskDto[0];
-        var (telegramMock, taskServiceMock, sendMessageMock, loggerMock) = SetupMocks(task, tasks, 100);
+        TaskDto[] tasks = [];
+        var (telegramMock, taskServiceMock, sendMessageMock, loggerMock) =
+            SetupMocks(task, tasks, 100);
 
         var service = new CreateTaskCommandProcessor(
             sendMessageMock.Object,
@@ -40,7 +41,7 @@ public class CreateTaskCommandProcessorTest
         ));
     }
 
-    private (Mock<ITelegramService>, Mock<ITaskServiceApp>, Mock<IBotSendMessageService>, Mock<ILogger<BaseCommandProcessor<BotCommand>>>)
+    private static (Mock<ITelegramService>, Mock<ITaskServiceApp>, Mock<IBotSendMessageService>, Mock<ILogger<BaseCommandProcessor<BotCommand>>>)
         SetupMocks(TaskDto task, TaskDto[] tasks, int chatId)
     {
         var telegramMock = new Mock<ITelegramService>();
@@ -49,7 +50,7 @@ public class CreateTaskCommandProcessorTest
 
         var taskServiceMock = new Mock<ITaskServiceApp>();
         taskServiceMock.Setup(x => x.SaveTasksAsync(It.Is<ICollection<TaskDto>>(v => v.Contains(task)), "userid"))
-            .Returns(Task.FromResult((IEnumerable<TaskDto>) tasks));
+            .Returns(Task.FromResult((IEnumerable<TaskDto>)tasks));
 
         var sendMessageMock = new Mock<IBotSendMessageService>();
 

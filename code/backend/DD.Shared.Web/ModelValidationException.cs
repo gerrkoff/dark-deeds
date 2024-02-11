@@ -16,7 +16,7 @@ public class ModelValidationException : Exception
     public ModelValidationException(ModelStateDictionary modeState) : base("Model validation exception")
     {
         var errors = new List<ModelError>();
-        foreach (ModelStateEntry modelStateEntry in modeState.Values)
+        foreach (var modelStateEntry in modeState.Values)
         {
             errors.AddRange(modelStateEntry.Errors);
         }

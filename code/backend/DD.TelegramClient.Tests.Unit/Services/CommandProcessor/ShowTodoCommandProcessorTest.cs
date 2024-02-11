@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using DD.TelegramClient.Domain.Implementation;
 using DD.TelegramClient.Domain.Implementation.CommandProcessor;
 using DD.TelegramClient.Domain.Infrastructure;
@@ -9,12 +10,15 @@ using Xunit;
 
 namespace DD.TelegramClient.Tests.Unit.Services.CommandProcessor;
 
+[SuppressMessage("Naming", "CA1707:Identifiers should not contain underscores")]
 public class ShowTodoCommandProcessorTest
 {
     [Fact]
     public async Task ProcessAsync()
     {
-        var (telegramMock, taskServiceMock, sendMessageMock, loggerMock) = SetupMocks(new[]{"tasks"}, 100);
+        var (telegramMock, taskServiceMock, sendMessageMock, loggerMock) =
+            SetupMocks(new[] { "tasks" }, 100);
+
 
         var service = new ShowTodoCommandProcessor(
             sendMessageMock.Object,
@@ -33,7 +37,8 @@ public class ShowTodoCommandProcessorTest
     [Fact]
     public async Task ProcessAsync_NoTasks()
     {
-        var (telegramMock, taskServiceMock, sendMessageMock, loggerMock) = SetupMocks(new string[0], 100);
+        var (telegramMock, taskServiceMock, sendMessageMock, loggerMock) =
+            SetupMocks(Array.Empty<string>(), 100);
 
         var service = new ShowTodoCommandProcessor(
             sendMessageMock.Object,
@@ -49,10 +54,10 @@ public class ShowTodoCommandProcessorTest
         sendMessageMock.Verify(x => x.SendTextAsync(100, "No tasks"));
     }
 
-    private (Mock<ITelegramService>, Mock<ITaskServiceApp>, Mock<IBotSendMessageService>, Mock<ILogger<BaseCommandProcessor<BotCommand>>>)
+    private static (Mock<ITelegramService>, Mock<ITaskServiceApp>, Mock<IBotSendMessageService>, Mock<ILogger<BaseCommandProcessor<BotCommand>>>)
         SetupMocks(ICollection<string> tasksAsString, int chatId)
     {
-        var tasks = new TaskDto[0];
+        TaskDto[] tasks = [];
 
         var telegramMock = new Mock<ITelegramService>();
         telegramMock.Setup(x => x.GetUserId(chatId))

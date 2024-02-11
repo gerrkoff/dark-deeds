@@ -1,4 +1,5 @@
 using DD.ServiceTask.Domain.Entities;
+using DD.ServiceTask.Domain.Services;
 using Xunit;
 
 namespace DD.ServiceTask.Tests.Unit.Services.RecurrenceCreatorServiceTests;
@@ -8,9 +9,7 @@ public partial class RecurrenceCreatorServiceTest
     [Fact]
     public void MatchNthDay_FirstDayAlwaysCounts()
     {
-        var service = Service();
-
-        var result = service.MatchNthDay(new PlannedRecurrenceEntity
+        var result = RecurrenceCreatorService.MatchNthDay(new PlannedRecurrenceEntity
         {
             StartDate = new DateTime(2019, 9, 4),
             EveryNthDay = 1000,
@@ -22,9 +21,7 @@ public partial class RecurrenceCreatorServiceTest
     [Fact]
     public void MatchNthDay_ShouldMatchNextDayAfterStartDateWith1Number()
     {
-        var service = Service();
-
-        var result = service.MatchNthDay(new PlannedRecurrenceEntity
+        var result = RecurrenceCreatorService.MatchNthDay(new PlannedRecurrenceEntity
         {
             StartDate = new DateTime(2019, 9, 4),
             EveryNthDay = 1,
@@ -36,9 +33,7 @@ public partial class RecurrenceCreatorServiceTest
     [Fact]
     public void MatchNthDay_ShouldNotMatchNextDayAfterStartDateWith2Number()
     {
-        var service = Service();
-
-        var result = service.MatchNthDay(new PlannedRecurrenceEntity
+        var result = RecurrenceCreatorService.MatchNthDay(new PlannedRecurrenceEntity
         {
             StartDate = new DateTime(2019, 9, 4),
             EveryNthDay = 2,
@@ -50,9 +45,7 @@ public partial class RecurrenceCreatorServiceTest
     [Fact]
     public void MatchNthDay_ShouldMatch2NextDaysAfterStarDateWith2Number()
     {
-        var service = Service();
-
-        var result = service.MatchNthDay(new PlannedRecurrenceEntity
+        var result = RecurrenceCreatorService.MatchNthDay(new PlannedRecurrenceEntity
         {
             StartDate = new DateTime(2019, 9, 4),
             EveryNthDay = 2,
@@ -64,9 +57,7 @@ public partial class RecurrenceCreatorServiceTest
     [Fact]
     public void MatchNthDay_ShouldMatch5NextDaysAfterStartDateWith5Number()
     {
-        var service = Service();
-
-        var result = service.MatchNthDay(new PlannedRecurrenceEntity
+        var result = RecurrenceCreatorService.MatchNthDay(new PlannedRecurrenceEntity
         {
             StartDate = new DateTime(2019, 9, 4),
             EveryNthDay = 5,
@@ -78,9 +69,7 @@ public partial class RecurrenceCreatorServiceTest
     [Fact]
     public void MatchNthDay_ShouldNotMatch4NextDayAfterStartDateWith5Number()
     {
-        var service = Service();
-
-        var result = service.MatchNthDay(new PlannedRecurrenceEntity
+        var result = RecurrenceCreatorService.MatchNthDay(new PlannedRecurrenceEntity
         {
             StartDate = new DateTime(2019, 9, 4),
             EveryNthDay = 4,
@@ -92,9 +81,7 @@ public partial class RecurrenceCreatorServiceTest
     [Fact]
     public void MatchNthDay_ShouldMatch5NextDayAfterStartDateWith5NumberWithMonthChange()
     {
-        var service = Service();
-
-        var result = service.MatchNthDay(new PlannedRecurrenceEntity
+        var result = RecurrenceCreatorService.MatchNthDay(new PlannedRecurrenceEntity
         {
             StartDate = new DateTime(2019, 9, 27),
             EveryNthDay = 4,

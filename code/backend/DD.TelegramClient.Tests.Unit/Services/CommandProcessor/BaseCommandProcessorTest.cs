@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using DD.TelegramClient.Domain.Implementation;
 using DD.TelegramClient.Domain.Implementation.CommandProcessor;
 using DD.TelegramClient.Domain.Models.Commands;
@@ -7,11 +8,12 @@ using Xunit;
 
 namespace DD.TelegramClient.Tests.Unit.Services.CommandProcessor;
 
+[SuppressMessage("Naming", "CA1707:Identifiers should not contain underscores")]
 public class BaseCommandProcessorTest
 {
-    class BotCommandImplementation : BotCommand;
+    private sealed class BotCommandImplementation : BotCommand;
 
-    class BaseCommandProcessorImplementation(
+    private sealed class BaseCommandProcessorImplementation(
         IBotSendMessageService botSendMessageService,
         ILogger<BaseCommandProcessor<BotCommand>> logger,
         // ReSharper disable once ParameterOnlyUsedForPreconditionCheck.Local
@@ -20,9 +22,9 @@ public class BaseCommandProcessorTest
     {
         protected override Task ProcessCoreAsync(BotCommandImplementation command)
         {
-            if (throwException)
-                throw new Exception();
-            return Task.CompletedTask;
+            return throwException
+                ? throw new InvalidOperationException()
+                : Task.CompletedTask;
         }
     }
 

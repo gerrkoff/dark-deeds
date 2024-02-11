@@ -8,7 +8,7 @@ public interface ITestService
     Task<int> GetTestChatIdForUser(string userId);
 }
 
-class TestService(IRepository<TelegramUserEntity> telegramUserRepository) : ITestService
+internal sealed class TestService(IRepository<TelegramUserEntity> telegramUserRepository) : ITestService
 {
     private static readonly SemaphoreSlim Semaphore = new(1);
 

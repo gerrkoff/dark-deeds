@@ -11,7 +11,7 @@ public interface IUserAuth
     AuthToken AuthToken();
 }
 
-class UserAuth(
+internal sealed class UserAuth(
     IHttpContextAccessor httpContextAccessor,
     IAuthTokenConverter authTokenConverter)
     : IUserAuth
@@ -28,9 +28,8 @@ class UserAuth(
 
     public AuthToken AuthToken()
     {
-        if (httpContextAccessor.HttpContext is null)
-            throw new ArgumentNullException(nameof(httpContextAccessor.HttpContext));
-
-        return authTokenConverter.FromPrincipal(httpContextAccessor.HttpContext.User);
+        return httpContextAccessor.HttpContext is null
+            ? throw new ArgumentNullException(nameof(httpContextAccessor.HttpContext))
+            : authTokenConverter.FromPrincipal(httpContextAccessor.HttpContext.User);
     }
 }

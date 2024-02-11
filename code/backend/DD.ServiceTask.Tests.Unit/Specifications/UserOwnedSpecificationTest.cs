@@ -6,6 +6,7 @@ using Xunit;
 namespace DD.ServiceTask.Tests.Unit.Specifications;
 
 [SuppressMessage("ReSharper", "ParameterOnlyUsedForPreconditionCheck.Local")]
+[SuppressMessage("Naming", "CA1707:Identifiers should not contain underscores")]
 public class UserOwnedSpecificationTest
 {
     [Fact]
@@ -33,7 +34,7 @@ public class UserOwnedSpecificationTest
             new() {UserId = "userid2", Uid = "uid2"}
         };
 
-        var service = new TaskSpecification().FilterForeignUserOwned("userid1", new[] {"uid1", "uid2"});
+        var service = new TaskSpecification().FilterForeignUserOwned("userid1", ["uid1", "uid2"]);
 
         var result = service.Apply(collection.AsQueryable()).ToList();
 

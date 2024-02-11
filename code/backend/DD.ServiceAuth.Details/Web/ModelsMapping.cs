@@ -3,7 +3,7 @@ using DD.Shared.Auth;
 
 namespace DD.ServiceAuth.Details.Web;
 
-class ModelsMapping : Profile
+internal sealed class ModelsMapping : Profile
 {
     public ModelsMapping()
     {

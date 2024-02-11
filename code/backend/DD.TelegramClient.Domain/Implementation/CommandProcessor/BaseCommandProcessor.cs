@@ -16,7 +16,7 @@ public abstract class BaseCommandProcessor<T>(
         }
         catch
         {
-            logger.LogWarning("Command processing failed. Command: " + command);
+            Log.FailedToProcessCommand(logger, command);
             await botSendMessageService.SendFailedAsync(command.UserChatId);
         }
     }

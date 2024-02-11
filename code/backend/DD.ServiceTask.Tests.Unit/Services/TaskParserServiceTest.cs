@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using DD.ServiceTask.Domain.Dto;
 using DD.ServiceTask.Domain.Entities.Enums;
 using DD.ServiceTask.Domain.Services;
@@ -6,6 +7,7 @@ using Xunit;
 
 namespace DD.ServiceTask.Tests.Unit.Services;
 
+[SuppressMessage("Naming", "CA1707:Identifiers should not contain underscores")]
 public class TaskParserServiceTest : BaseTest
 {
     #region Parse tasks - mirrored FE tests
@@ -21,7 +23,7 @@ public class TaskParserServiceTest : BaseTest
         var result = service.ParseTask("Test!");
 
         Assert.Equal("Test!", result.Title);
-        Assert.Equal(TaskTypeEnum.Simple, result.Type);
+        Assert.Equal(TaskType.Simple, result.Type);
         Assert.Null(result.Date);
         Assert.Null(result.Time);
     }
@@ -35,8 +37,8 @@ public class TaskParserServiceTest : BaseTest
         var result = service.ParseTask("1231 Test!");
 
         Assert.Equal("Test!", result.Title);
-        Assert.Equal(TaskTypeEnum.Simple, result.Type);
-        Assert.Equal(new DateTime(2019, 12, 31, 0, 0, 0),  result.Date);
+        Assert.Equal(TaskType.Simple, result.Type);
+        Assert.Equal(new DateTime(2019, 12, 31, 0, 0, 0), result.Date);
         Assert.Null(result.Time);
     }
 
@@ -49,7 +51,7 @@ public class TaskParserServiceTest : BaseTest
         var result = service.ParseTask("0101Test!!!");
 
         Assert.Equal("0101Test!!!", result.Title);
-        Assert.Equal(TaskTypeEnum.Simple, result.Type);
+        Assert.Equal(TaskType.Simple, result.Type);
         Assert.Null(result.Date);
         Assert.Null(result.Time);
     }
@@ -63,8 +65,8 @@ public class TaskParserServiceTest : BaseTest
         var result = service.ParseTask("1231 2359 Test!");
 
         Assert.Equal("Test!", result.Title);
-        Assert.Equal(TaskTypeEnum.Simple, result.Type);
-        Assert.Equal(new DateTime(2019, 12, 31, 0, 0, 0),  result.Date);
+        Assert.Equal(TaskType.Simple, result.Type);
+        Assert.Equal(new DateTime(2019, 12, 31, 0, 0, 0), result.Date);
         Assert.Equal(1439, result.Time);
     }
 
@@ -77,8 +79,8 @@ public class TaskParserServiceTest : BaseTest
         var result = service.ParseTask("0101 0101Test!!!");
 
         Assert.Equal("0101Test!!!", result.Title);
-        Assert.Equal(TaskTypeEnum.Simple, result.Type);
-        Assert.Equal(new DateTime(2019, 1, 1, 0, 0, 0),  result.Date);
+        Assert.Equal(TaskType.Simple, result.Type);
+        Assert.Equal(new DateTime(2019, 1, 1, 0, 0, 0), result.Date);
         Assert.Null(result.Time);
     }
 
@@ -91,8 +93,8 @@ public class TaskParserServiceTest : BaseTest
         var result = service.ParseTask("20170101 Test");
 
         Assert.Equal("Test", result.Title);
-        Assert.Equal(TaskTypeEnum.Simple, result.Type);
-        Assert.Equal(new DateTime(2017, 1, 1, 0, 0, 0),  result.Date);
+        Assert.Equal(TaskType.Simple, result.Type);
+        Assert.Equal(new DateTime(2017, 1, 1, 0, 0, 0), result.Date);
         Assert.Null(result.Time);
     }
 
@@ -119,8 +121,8 @@ public class TaskParserServiceTest : BaseTest
         var result = service.ParseTask("0220 Test !");
 
         Assert.Equal("Test", result.Title);
-        Assert.Equal(TaskTypeEnum.Additional, result.Type);
-        Assert.Equal(new DateTime(2019, 2, 20, 0, 0, 0),  result.Date);
+        Assert.Equal(TaskType.Additional, result.Type);
+        Assert.Equal(new DateTime(2019, 2, 20, 0, 0, 0), result.Date);
         Assert.Null(result.Time);
     }
 
@@ -133,8 +135,8 @@ public class TaskParserServiceTest : BaseTest
         var result = service.ParseTask("20150220 2359 Test !");
 
         Assert.Equal("Test", result.Title);
-        Assert.Equal(TaskTypeEnum.Additional, result.Type);
-        Assert.Equal(new DateTime(2015, 2, 20, 0, 0, 0),  result.Date);
+        Assert.Equal(TaskType.Additional, result.Type);
+        Assert.Equal(new DateTime(2015, 2, 20, 0, 0, 0), result.Date);
         Assert.Equal(1439, result.Time);
     }
 
@@ -147,7 +149,7 @@ public class TaskParserServiceTest : BaseTest
         var result = service.ParseTask("Test !?");
 
         Assert.Equal("Test", result.Title);
-        Assert.Equal(TaskTypeEnum.Additional, result.Type);
+        Assert.Equal(TaskType.Additional, result.Type);
         Assert.True(result.IsProbable);
         Assert.Null(result.Date);
         Assert.Null(result.Time);
@@ -162,7 +164,7 @@ public class TaskParserServiceTest : BaseTest
         var result = service.ParseTask("Test ?!");
 
         Assert.Equal("Test", result.Title);
-        Assert.Equal(TaskTypeEnum.Additional, result.Type);
+        Assert.Equal(TaskType.Additional, result.Type);
         Assert.True(result.IsProbable);
         Assert.Null(result.Date);
         Assert.Null(result.Time);
@@ -177,8 +179,8 @@ public class TaskParserServiceTest : BaseTest
         var result = service.ParseTask("! Test");
 
         Assert.Equal("Test", result.Title);
-        Assert.Equal(TaskTypeEnum.Simple, result.Type);
-        Assert.Equal(new DateTime(2019, 1, 1, 0, 0, 0),  result.Date);
+        Assert.Equal(TaskType.Simple, result.Type);
+        Assert.Equal(new DateTime(2019, 1, 1, 0, 0, 0), result.Date);
         Assert.Null(result.Time);
     }
 
@@ -191,8 +193,8 @@ public class TaskParserServiceTest : BaseTest
         var result = service.ParseTask("!! Test");
 
         Assert.Equal("Test", result.Title);
-        Assert.Equal(TaskTypeEnum.Simple, result.Type);
-        Assert.Equal(new DateTime(2019, 1, 2, 0, 0, 0),  result.Date);
+        Assert.Equal(TaskType.Simple, result.Type);
+        Assert.Equal(new DateTime(2019, 1, 2, 0, 0, 0), result.Date);
         Assert.Null(result.Time);
     }
 
@@ -205,8 +207,8 @@ public class TaskParserServiceTest : BaseTest
         var result = service.ParseTask("!!!! Test");
 
         Assert.Equal("Test", result.Title);
-        Assert.Equal(TaskTypeEnum.Simple, result.Type);
-        Assert.Equal(new DateTime(2019, 1, 4, 0, 0, 0),  result.Date);
+        Assert.Equal(TaskType.Simple, result.Type);
+        Assert.Equal(new DateTime(2019, 1, 4, 0, 0, 0), result.Date);
         Assert.Null(result.Time);
     }
 
@@ -219,8 +221,8 @@ public class TaskParserServiceTest : BaseTest
         var result = service.ParseTask("!!! Test");
 
         Assert.Equal("Test", result.Title);
-        Assert.Equal(TaskTypeEnum.Simple, result.Type);
-        Assert.Equal(new DateTime(2019, 2, 2, 0, 0, 0),  result.Date);
+        Assert.Equal(TaskType.Simple, result.Type);
+        Assert.Equal(new DateTime(2019, 2, 2, 0, 0, 0), result.Date);
         Assert.Null(result.Time);
     }
 
@@ -228,13 +230,13 @@ public class TaskParserServiceTest : BaseTest
     [Fact]
     public void ParseTask_ReturnNextMondayTaskThroughExclamationMark()
     {
-        var service = new TaskParserService(DateServiceMock(2019, 7,28));
+        var service = new TaskParserService(DateServiceMock(2019, 7, 28));
 
         var result = service.ParseTask("!1 Test");
 
         Assert.Equal("Test", result.Title);
-        Assert.Equal(TaskTypeEnum.Simple, result.Type);
-        Assert.Equal(new DateTime(2019, 7, 29, 0, 0, 0),  result.Date);
+        Assert.Equal(TaskType.Simple, result.Type);
+        Assert.Equal(new DateTime(2019, 7, 29, 0, 0, 0), result.Date);
         Assert.Null(result.Time);
     }
 
@@ -247,8 +249,8 @@ public class TaskParserServiceTest : BaseTest
         var result = service.ParseTask("!3 Test");
 
         Assert.Equal("Test", result.Title);
-        Assert.Equal(TaskTypeEnum.Simple, result.Type);
-        Assert.Equal(new DateTime(2019, 7, 31, 0, 0, 0),  result.Date);
+        Assert.Equal(TaskType.Simple, result.Type);
+        Assert.Equal(new DateTime(2019, 7, 31, 0, 0, 0), result.Date);
         Assert.Null(result.Time);
     }
 
@@ -261,8 +263,8 @@ public class TaskParserServiceTest : BaseTest
         var result = service.ParseTask("!5 Test");
 
         Assert.Equal("Test", result.Title);
-        Assert.Equal(TaskTypeEnum.Simple, result.Type);
-        Assert.Equal(new DateTime(2019, 8, 2, 0, 0, 0),  result.Date);
+        Assert.Equal(TaskType.Simple, result.Type);
+        Assert.Equal(new DateTime(2019, 8, 2, 0, 0, 0), result.Date);
         Assert.Null(result.Time);
     }
 
@@ -286,7 +288,7 @@ public class TaskParserServiceTest : BaseTest
         var result = service.ParseTask("1231! Test");
 
         Assert.Equal("1231! Test", result.Title);
-        Assert.Equal(TaskTypeEnum.Simple, result.Type);
+        Assert.Equal(TaskType.Simple, result.Type);
         Assert.Null(result.Date);
         Assert.Null(result.Time);
     }
@@ -303,7 +305,7 @@ public class TaskParserServiceTest : BaseTest
         var result = service.ParseTask("1010 Test!", ignoreDate: true);
 
         Assert.Equal("Test!", result.Title);
-        Assert.Equal(TaskTypeEnum.Simple, result.Type);
+        Assert.Equal(TaskType.Simple, result.Type);
         Assert.Null(result.Date);
         Assert.Equal(610, result.Time);
     }
@@ -340,7 +342,7 @@ public class TaskParserServiceTest : BaseTest
 
     #region Helpers
 
-    private IDateService DateServiceMock(int year = 2019, int month = 1, int date = 1)
+    private static IDateService DateServiceMock(int year = 2019, int month = 1, int date = 1)
     {
         var mock = new Mock<IDateService>();
         mock.SetupGet(x => x.Today).Returns(new DateTime(year, month, date));

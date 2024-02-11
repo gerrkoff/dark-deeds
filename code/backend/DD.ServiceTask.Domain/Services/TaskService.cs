@@ -27,9 +27,9 @@ public interface ITaskService
     /// </summary>
     /// <param name="userId">Task's user id</param>
     /// <param name="from">Period start, included, UTC expected</param>
-    /// <param name="to">Period end, not included, UTC expected</param>
+    /// <param name="till">Period end, not included, UTC expected</param>
     /// <returns>Tasks</returns>
-    Task<IEnumerable<TaskDto>> LoadTasksByDateAsync(string userId, DateTime from, DateTime to);
+    Task<IEnumerable<TaskDto>> LoadTasksByDateAsync(string userId, DateTime from, DateTime till);
 
     Task<IEnumerable<TaskDto>> SaveTasksAsync(ICollection<TaskDto> tasks, string userId);
 }
@@ -44,7 +44,7 @@ public class TaskService(
 {
     public async Task<IEnumerable<TaskDto>> LoadActualTasksAsync(string userId, DateTime from)
     {
-        var spec = specFactory.New<ITaskSpecification, TaskEntity>()
+        var spec = specFactory.Create<ITaskSpecification, TaskEntity>()
             .FilterUserOwned(userId)
             .FilterActual(from)
             .FilterNotDeleted();
@@ -54,11 +54,11 @@ public class TaskService(
         return mapper.Map<IList<TaskDto>>(tasks).ToUtcDate();
     }
 
-    public async Task<IEnumerable<TaskDto>> LoadTasksByDateAsync(string userId, DateTime from, DateTime to)
+    public async Task<IEnumerable<TaskDto>> LoadTasksByDateAsync(string userId, DateTime from, DateTime till)
     {
-        var spec = specFactory.New<ITaskSpecification, TaskEntity>()
+        var spec = specFactory.Create<ITaskSpecification, TaskEntity>()
             .FilterUserOwned(userId)
-            .FilterDateInterval(from, to)
+            .FilterDateInterval(from, till)
             .FilterNotDeleted();
 
         var tasks = await tasksRepository.GetBySpecAsync(spec);
@@ -78,11 +78,13 @@ public class TaskService(
         }
 
         if (savedTasks.Count > 0)
+        {
             await notifierService.TaskUpdated(new TaskUpdatedDto
             {
                 Tasks = savedTasks,
                 UserId = userId,
             });
+        }
 
         return savedTasks;
     }
@@ -91,9 +93,9 @@ public class TaskService(
     {
         var entity = await tasksRepository.GetByIdAsync(taskToSave.Uid);
 
-        if (entity != null && !string.Equals(entity.UserId, userId))
+        if (entity != null && !string.Equals(entity.UserId, userId, StringComparison.Ordinal))
         {
-            logger.LogWarning($"Tried to update foreign task. TaskUid: {taskToSave.Uid} User: {userId}");
+            Log.TriedToUpdateForeignTask(logger, taskToSave.Uid, userId);
             return null;
         }
 
@@ -101,7 +103,7 @@ public class TaskService(
         {
             var success = await tasksRepository.DeleteAsync(taskToSave.Uid);
             if (!success)
-                logger.LogWarning($"Tried to delete non existing task. TaskUid: {taskToSave.Uid}");
+                Log.TriedToDeleteNonExistingTask(logger, taskToSave.Uid);
 
             taskToSave.Version++;
             return taskToSave;

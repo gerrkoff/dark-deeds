@@ -11,11 +11,13 @@ public interface ITelegramService
     Task<int> GetUserTimeAdjustment(int chatId);
 }
 
-class TelegramService(IRepository<TelegramUserEntity> telegramUserRepository) : ITelegramService
+internal sealed class TelegramService(IRepository<TelegramUserEntity> telegramUserRepository) : ITelegramService
 {
     public async Task<string> GenerateKey(string userId, int timeAdjustment)
     {
-        var user = telegramUserRepository.GetAll().FirstOrDefault(x => x.UserId == userId);
+        var user = telegramUserRepository
+            .GetAll()
+            .FirstOrDefault(x => x.UserId == userId);
 
         if (user == null)
         {

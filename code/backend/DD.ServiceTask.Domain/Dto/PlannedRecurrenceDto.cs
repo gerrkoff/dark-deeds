@@ -16,7 +16,7 @@ public class PlannedRecurrenceDto
 
     public string? EveryMonthDay { get; set; }
 
-    public RecurrenceWeekdayEnum? EveryWeekday { get; set; }
+    public RecurrenceWeekday? EveryWeekday { get; set; }
 
     public bool IsDeleted { get; set; }
 }

@@ -3,7 +3,7 @@ using DD.ServiceTask.Domain.Infrastructure.EntityRepository;
 
 namespace DD.ServiceTask.Details.Data.EntityRepository;
 
-class PlannedRecurrenceRepository(IMongoDbContext dbContext)
+internal sealed class PlannedRecurrenceRepository(IMongoDbContext dbContext)
     : Repository<PlannedRecurrenceEntity>(dbContext, "plannedRecurrences"), IPlannedRecurrenceRepository
 {
     static PlannedRecurrenceRepository()

@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 using DD.ServiceTask.Domain.Dto;
 using DD.ServiceTask.Domain.Entities;
@@ -7,6 +8,7 @@ using Xunit;
 
 namespace DD.ServiceTask.Tests.Unit.Services.RecurrenceCreatorServiceTests;
 
+[SuppressMessage("Naming", "CA1707:Identifiers should not contain underscores")]
 public partial class RecurrenceCreatorServiceTest
 {
     [Fact]
@@ -29,8 +31,11 @@ public partial class RecurrenceCreatorServiceTest
 
         var service = Service(new PlannedRecurrenceEntity
         {
-            Task = "Task", EveryNthDay = 1, StartDate = someDate, UserId = "userId",
-            Recurrences = new List<RecurrenceEntity>()
+            Task = "Task",
+            EveryNthDay = 1,
+            StartDate = someDate,
+            UserId = "userId",
+            Recurrences = [],
         });
 
         await service.CreateAsync(0, "userId");
@@ -52,8 +57,11 @@ public partial class RecurrenceCreatorServiceTest
 
         var service = Service(new PlannedRecurrenceEntity
         {
-            Task = "Task", EveryNthDay = 1, StartDate = now, UserId = "userId",
-            Recurrences = new List<RecurrenceEntity>()
+            Task = "Task",
+            EveryNthDay = 1,
+            StartDate = now,
+            UserId = "userId",
+            Recurrences = [],
         });
 
         await service.CreateAsync(0, "userId");
@@ -72,8 +80,10 @@ public partial class RecurrenceCreatorServiceTest
 
         var service = Service(new PlannedRecurrenceEntity
         {
-            EveryNthDay = 1, StartDate = new DateTime(2019, 9, 3), UserId = "userId",
-            Recurrences = new List<RecurrenceEntity>()
+            EveryNthDay = 1,
+            StartDate = new DateTime(2019, 9, 3),
+            UserId = "userId",
+            Recurrences = [],
         });
 
         await service.CreateAsync(0, "userId");
@@ -89,8 +99,9 @@ public partial class RecurrenceCreatorServiceTest
         var service = Service(new PlannedRecurrenceEntity
         {
             StartDate = new DateTime(2019, 9, 6),
-            EveryWeekday = RecurrenceWeekdayEnum.Monday | RecurrenceWeekdayEnum.Wednesday, UserId = "userId",
-            Recurrences = new List<RecurrenceEntity>()
+            EveryWeekday = RecurrenceWeekday.Monday | RecurrenceWeekday.Wednesday,
+            UserId = "userId",
+            Recurrences = [],
         });
 
         await service.CreateAsync(0, "userId");
@@ -111,8 +122,10 @@ public partial class RecurrenceCreatorServiceTest
 
         var service = Service(new PlannedRecurrenceEntity
         {
-            StartDate = new DateTime(2019, 9, 6), EveryMonthDay = "9,11", UserId = "userId",
-            Recurrences = new List<RecurrenceEntity>()
+            StartDate = new DateTime(2019, 9, 6),
+            EveryMonthDay = "9,11",
+            UserId = "userId",
+            Recurrences = [],
         });
 
         await service.CreateAsync(0, "userId");
@@ -133,8 +146,10 @@ public partial class RecurrenceCreatorServiceTest
 
         var service = Service(new PlannedRecurrenceEntity
         {
-            StartDate = new DateTime(2019, 9, 6), EveryNthDay = 6, UserId = "userId",
-            Recurrences = new List<RecurrenceEntity>()
+            StartDate = new DateTime(2019, 9, 6),
+            EveryNthDay = 6,
+            UserId = "userId",
+            Recurrences = [],
         });
 
         await service.CreateAsync(0, "userId");
@@ -155,9 +170,12 @@ public partial class RecurrenceCreatorServiceTest
 
         var service = Service(new PlannedRecurrenceEntity
         {
-            StartDate = new DateTime(2019, 9, 6), EveryNthDay = 6, EveryMonthDay = "6,12,13",
-            EveryWeekday = RecurrenceWeekdayEnum.Thursday | RecurrenceWeekdayEnum.Wednesday, UserId = "userId",
-            Recurrences = new List<RecurrenceEntity>()
+            StartDate = new DateTime(2019, 9, 6),
+            EveryNthDay = 6,
+            EveryMonthDay = "6,12,13",
+            EveryWeekday = RecurrenceWeekday.Thursday | RecurrenceWeekday.Wednesday,
+            UserId = "userId",
+            Recurrences = [],
         });
 
         await service.CreateAsync(0, "userId");
@@ -175,11 +193,10 @@ public partial class RecurrenceCreatorServiceTest
 
         var service = Service(new PlannedRecurrenceEntity
         {
-            EveryNthDay = 1, StartDate = new DateTime(2019, 9, 3), UserId = "userId",
-            Recurrences = new List<RecurrenceEntity>
-            {
-                new() {DateTime = new DateTime(2019, 9, 3)}
-            }
+            EveryNthDay = 1,
+            StartDate = new DateTime(2019, 9, 3),
+            UserId = "userId",
+            Recurrences = [new RecurrenceEntity { DateTime = new DateTime(2019, 9, 3) }],
         });
 
         await service.CreateAsync(0, "userId");
@@ -205,7 +222,9 @@ public partial class RecurrenceCreatorServiceTest
 
         var service = Service(new PlannedRecurrenceEntity
         {
-            StartDate = new DateTime(2019, 9, 6), UserId = "userId", Recurrences = new List<RecurrenceEntity>()
+            StartDate = new DateTime(2019, 9, 6),
+            UserId = "userId",
+            Recurrences = [],
         });
 
         await service.CreateAsync(0, "userId");
@@ -221,8 +240,10 @@ public partial class RecurrenceCreatorServiceTest
 
         var service = Service(new PlannedRecurrenceEntity
         {
-            StartDate = new DateTime(2019, 9, 6), EveryMonthDay = "6", UserId = "userId",
-            Recurrences = new List<RecurrenceEntity>()
+            StartDate = new DateTime(2019, 9, 6),
+            EveryMonthDay = "6",
+            UserId = "userId",
+            Recurrences = [],
         });
 
         await service.CreateAsync(0, "userId");

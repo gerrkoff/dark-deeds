@@ -2,7 +2,7 @@ using DD.ServiceTask.Domain.Dto;
 
 namespace DD.ServiceTask.Domain.DtoExtensions;
 
-static class RecurrenceExtensions
+internal static class RecurrenceExtensions
 {
     public static ICollection<PlannedRecurrenceDto> ToUtcDate(this ICollection<PlannedRecurrenceDto> recurrences)
     {

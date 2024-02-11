@@ -4,7 +4,7 @@ using DD.ServiceTask.Domain.Specifications;
 
 namespace DD.ServiceTask.Domain.Infrastructure;
 
-public interface IRepository<T> where T: Entity
+public interface IRepository<T> where T : Entity
 {
     Task<T?> GetByIdAsync(string uid);
     Task<IList<T>> GetBySpecAsync(ISpecification<T> spec);

@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Text.RegularExpressions;
 using DD.ServiceTask.Domain.Dto;
 using DD.ServiceTask.Domain.Entities.Enums;
@@ -17,12 +18,12 @@ public class TaskParserService(IDateService dateService) : ITaskParserService
     {
         var taskDto = new TaskDto();
         int year = 0, month = 0, day = 0, dayAdjustment = 0;
-        bool withDate = false;
+        var withDate = false;
 
         if (!ignoreDate)
             task = ParseDate(task, out year, out month, out day, out withDate, out dayAdjustment);
-        task = ParseTime(task, out int hour, out int minutes, out bool withTime);
-        task = ParseFlags(task, out bool isProbable, out TaskTypeEnum type);
+        task = ParseTime(task, out var hour, out var minutes, out var withTime);
+        task = ParseFlags(task, out var isProbable, out var type);
 
         taskDto.Title = task;
         taskDto.Type = type;
@@ -35,12 +36,12 @@ public class TaskParserService(IDateService dateService) : ITaskParserService
         return taskDto;
     }
 
-    private string ParseFlags(string task, out bool isProbable, out TaskTypeEnum type)
+    private static string ParseFlags(string task, out bool isProbable, out TaskType type)
     {
         var flagsRx = new Regex(@"\s[\?!]+$");
 
         isProbable = false;
-        type = TaskTypeEnum.Simple;
+        type = TaskType.Simple;
 
         if (!flagsRx.IsMatch(task))
             return task;
@@ -50,31 +51,31 @@ public class TaskParserService(IDateService dateService) : ITaskParserService
             if (f == '?')
                 isProbable = true;
             else if (f == '!')
-                type = TaskTypeEnum.Additional;
+                type = TaskType.Additional;
         }
 
         return flagsRx.Replace(task, "");
     }
 
-    private string ParseTime(string task, out int hour, out int minutes, out bool withTime)
+    private static string ParseTime(string task, out int hour, out int minutes, out bool withTime)
     {
         var timeRx = new Regex(@"^\d{4}\s");
-        string time = string.Empty;
+        var time = string.Empty;
         hour = 0;
         minutes = 0;
         withTime = false;
 
         if (timeRx.IsMatch(task))
         {
-            time = task.Substring(0, 4);
-            task = task.Substring(5);
+            time = task[..4];
+            task = task[5..];
             withTime = true;
         }
 
         if (!string.IsNullOrEmpty(time))
         {
-            hour = int.Parse(time.Substring(0, 2));
-            minutes = int.Parse(time.Substring(2, 2));
+            hour = int.Parse(time[..2], CultureInfo.InvariantCulture);
+            minutes = int.Parse(time[2..4], CultureInfo.InvariantCulture);
         }
 
         return task;
@@ -86,7 +87,7 @@ public class TaskParserService(IDateService dateService) : ITaskParserService
         var dateRx = new Regex(@"^\d{4}\s");
         var todayShiftRx = new Regex(@"^!+\s");
         var weekShiftRx = new Regex(@"^![1-7]\s");
-        string date = string.Empty;
+        var date = string.Empty;
         year = 0;
         month = 0;
         day = 0;
@@ -95,15 +96,15 @@ public class TaskParserService(IDateService dateService) : ITaskParserService
 
         if (dateWithYearRx.IsMatch(task))
         {
-            date = task.Substring(4, 4);
-            year = int.Parse(task.Substring(0, 4));
-            task = task.Substring(9);
+            date = task[4..8];
+            year = int.Parse(task[..4], CultureInfo.InvariantCulture);
+            task = task[9..];
         }
         else if (dateRx.IsMatch(task))
         {
-            date = task.Substring(0, 4);
+            date = task[..4];
             year = dateService.Today.Year;
-            task = task.Substring(5);
+            task = task[5..];
         }
         else if (todayShiftRx.IsMatch(task))
         {
@@ -124,8 +125,8 @@ public class TaskParserService(IDateService dateService) : ITaskParserService
 
         if (!string.IsNullOrEmpty(date))
         {
-            month = int.Parse(date.Substring(0, 2));
-            day = int.Parse(date.Substring(2, 2));
+            month = int.Parse(date[..2], CultureInfo.InvariantCulture);
+            day = int.Parse(date[2..4], CultureInfo.InvariantCulture);
             withDate = true;
         }
 
@@ -134,20 +135,20 @@ public class TaskParserService(IDateService dateService) : ITaskParserService
 
     private string ParseWeekShift(string task, out int dayAdjustment)
     {
-        int dayShift = int.Parse(task[1].ToString());
-        int nextSundayShift = (7 - (int) dateService.Today.DayOfWeek) % 7;
+        var dayShift = int.Parse(task[1].ToString(), CultureInfo.InvariantCulture);
+        var nextSundayShift = (7 - (int)dateService.Today.DayOfWeek) % 7;
         dayAdjustment = nextSundayShift + dayShift;
-        return task.Substring(3);
+        return task[3..];
     }
 
-    private string ParseTodayShift(string task, out int dayAdjustment)
+    private static string ParseTodayShift(string task, out int dayAdjustment)
     {
         dayAdjustment = new Regex("!+").Matches(task)[0].Length;
         dayAdjustment--;
-        return task.Substring(dayAdjustment + 2);
+        return task[(dayAdjustment + 2)..];
     }
 
-    private DateTime CreateDateTime(int year, int month, int day, int dayAdjustment)
+    private static DateTime CreateDateTime(int year, int month, int day, int dayAdjustment)
     {
         var dateTime = new DateTime(year, month, day, 0, 0, 0);
         dateTime = DateTime.SpecifyKind(dateTime, DateTimeKind.Utc);
@@ -162,7 +163,7 @@ public class TaskParserService(IDateService dateService) : ITaskParserService
 
     private string TaskToString(TaskDto task)
     {
-        string result = string.Empty;
+        var result = string.Empty;
 
         if (task.Time.HasValue)
             result += $"{TimeToString(task.Time.Value)} ";
@@ -172,10 +173,10 @@ public class TaskParserService(IDateService dateService) : ITaskParserService
         return result;
     }
 
-    private string TimeToString(int time)
+    private static string TimeToString(int time)
     {
-        int hour = time / 60;
-        int minute = time % 60;
+        var hour = time / 60;
+        var minute = time % 60;
         return $"{hour:D2}:{minute:D2}";
     }
 }

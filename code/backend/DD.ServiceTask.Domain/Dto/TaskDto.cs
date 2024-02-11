@@ -12,7 +12,7 @@ public class TaskDto
     public bool Completed { get; set; }
     public bool IsProbable { get; set; }
     public bool Deleted { get; set; }
-    public TaskTypeEnum Type { get; set; }
+    public TaskType Type { get; set; }
     public int Version { get; set; }
     public string Uid { get; set; } = string.Empty;
 }

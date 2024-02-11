@@ -1,5 +1,4 @@
 using DD.TelegramClient.Domain.Infrastructure;
-using DD.TelegramClient.Domain.Infrastructure.Dto;
 using DD.TelegramClient.Domain.Models.Commands;
 using Microsoft.Extensions.Logging;
 
@@ -21,10 +20,10 @@ public class ShowTodoCommandProcessor(
 
     protected override async Task ProcessCoreAsync(ShowTodoCommand command)
     {
-        string userId = await telegramService.GetUserId(command.UserChatId);
-        IEnumerable<TaskDto> tasks = await taskServiceApp.LoadTasksByDateAsync(command.From, command.To, userId);
-        ICollection<string> tasksAsString = await taskServiceApp.PrintTasks(tasks);
-        string text = tasksAsString.Count == 0
+        var userId = await telegramService.GetUserId(command.UserChatId);
+        var tasks = await taskServiceApp.LoadTasksByDateAsync(command.From, command.To, userId);
+        var tasksAsString = await taskServiceApp.PrintTasks(tasks);
+        var text = tasksAsString.Count == 0
             ? "No tasks"
             : string.Join("\n", tasksAsString);
         await _botSendMessageService.SendTextAsync(command.UserChatId, text);

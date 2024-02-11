@@ -31,7 +31,7 @@ public class RecurrenceCreatorService(
     {
         var createdRecurrencesCount = 0;
 
-        var spec = specFactory.New<IPlannedRecurrenceSpecification, PlannedRecurrenceEntity>()
+        var spec = specFactory.Create<IPlannedRecurrenceSpecification, PlannedRecurrenceEntity>()
             .FilterUserOwned(userId)
             .FilterNotDeleted();
         var plannedRecurrences = await plannedRecurrenceRepository.GetBySpecAsync(spec);
@@ -47,7 +47,7 @@ public class RecurrenceCreatorService(
                 if (alreadyExists)
                     continue;
 
-                TaskEntity task = CreateTaskFromRecurrence(plannedRecurrence, date);
+                var task = CreateTaskFromRecurrence(plannedRecurrence, date);
                 await taskRepository.UpsertAsync(task);
                 plannedRecurrence = await SaveRecurrence(plannedRecurrence,
                     new RecurrenceEntity
@@ -77,10 +77,7 @@ public class RecurrenceCreatorService(
                 entityToSave = currentEntity;
         } while (!success && entityToSave != null);
 
-        if (entityToSave == null)
-            throw new InvalidOperationException("Can't save recurrence");
-
-        return entityToSave;
+        return entityToSave ?? throw new InvalidOperationException("Can't save recurrence");
     }
 
     private void Notify(TaskEntity task, string userId)
@@ -88,14 +85,14 @@ public class RecurrenceCreatorService(
         var dto = mapper.Map<TaskDto>(task);
         notifierService.TaskUpdated(new TaskUpdatedDto
         {
-            Tasks = new[] {dto},
+            Tasks = new[] { dto },
             UserId = userId,
         });
     }
 
     private TaskEntity CreateTaskFromRecurrence(PlannedRecurrenceEntity plannedRecurrence, DateTime date)
     {
-        TaskDto dto = taskParserService.ParseTask(plannedRecurrence.Task, ignoreDate: true);
+        var dto = taskParserService.ParseTask(plannedRecurrence.Task, ignoreDate: true);
         var task = mapper.Map<TaskEntity>(dto);
         task.Date = date;
         task.UserId = plannedRecurrence.UserId;
@@ -103,18 +100,20 @@ public class RecurrenceCreatorService(
         return task;
     }
 
-    private ICollection<DateTime> EvaluateRecurrenceDatesWithinPeriod(PlannedRecurrenceEntity plannedRecurrence, int timezoneOffset)
+    private List<DateTime> EvaluateRecurrenceDatesWithinPeriod(PlannedRecurrenceEntity plannedRecurrence, int timezoneOffset)
     {
         var (periodStart, periodEnd) = EvaluatePeriod(timezoneOffset);
         var dates = new List<DateTime>();
-        for (DateTime i = periodStart; i != periodEnd; i = i.AddDays(1))
+        for (var i = periodStart; i != periodEnd; i = i.AddDays(1))
         {
             if (!HasSchedule(plannedRecurrence) ||
                 !MatchPeriod(plannedRecurrence, i) ||
                 !MatchWeekday(plannedRecurrence, i) ||
                 !MatchNthDay(plannedRecurrence, i) ||
                 !MatchMonthDay(plannedRecurrence, i))
+            {
                 continue;
+            }
 
             dates.Add(i);
         }
@@ -122,7 +121,7 @@ public class RecurrenceCreatorService(
         return dates;
     }
 
-    private bool HasSchedule(PlannedRecurrenceEntity plannedRecurrence)
+    private static bool HasSchedule(PlannedRecurrenceEntity plannedRecurrence)
     {
         return plannedRecurrence.EveryNthDay.HasValue ||
                plannedRecurrence.EveryWeekday.HasValue ||
@@ -133,7 +132,7 @@ public class RecurrenceCreatorService(
     public (DateTime, DateTime) EvaluatePeriod(int timezoneOffset)
     {
         var startDate = dateService.Now.AddMinutes(timezoneOffset).Date;
-        var currentDayOfWeek = (int) startDate.DayOfWeek;
+        var currentDayOfWeek = (int)startDate.DayOfWeek;
         var currentDayOfWeekFixed = (6 + currentDayOfWeek) % 7 + 1;
         var endDate = startDate
             .AddDays(RecurrencePeriodInDays - currentDayOfWeekFixed + 1)
@@ -142,40 +141,36 @@ public class RecurrenceCreatorService(
         return (startDate, endDate);
     }
 
-    public bool MatchPeriod(PlannedRecurrenceEntity plannedRecurrence, DateTime date)
+    public static bool MatchPeriod(PlannedRecurrenceEntity plannedRecurrence, DateTime date)
     {
         return date >= plannedRecurrence.StartDate &&
                (!plannedRecurrence.EndDate.HasValue || date <= plannedRecurrence.EndDate);
     }
 
-    public bool MatchNthDay(PlannedRecurrenceEntity plannedRecurrence, DateTime date)
+    public static bool MatchNthDay(PlannedRecurrenceEntity plannedRecurrence, DateTime date)
     {
         if (!plannedRecurrence.EveryNthDay.HasValue)
             return true;
 
-        TimeSpan dayCount = plannedRecurrence.StartDate.Date - date.Date;
+        var dayCount = plannedRecurrence.StartDate.Date - date.Date;
         return dayCount.Days % plannedRecurrence.EveryNthDay == 0;
     }
 
-    public bool MatchWeekday(PlannedRecurrenceEntity plannedRecurrence, DateTime date)
+    public static bool MatchWeekday(PlannedRecurrenceEntity plannedRecurrence, DateTime date)
     {
         if (!plannedRecurrence.EveryWeekday.HasValue)
             return true;
-
-        RecurrenceWeekdayEnum weekday;
-        switch (date.DayOfWeek)
+        var weekday = date.DayOfWeek switch
         {
-            case DayOfWeek.Sunday: weekday = RecurrenceWeekdayEnum.Sunday; break;
-            case DayOfWeek.Monday: weekday = RecurrenceWeekdayEnum.Monday; break;
-            case DayOfWeek.Tuesday: weekday = RecurrenceWeekdayEnum.Tuesday; break;
-            case DayOfWeek.Wednesday: weekday = RecurrenceWeekdayEnum.Wednesday; break;
-            case DayOfWeek.Thursday: weekday = RecurrenceWeekdayEnum.Thursday; break;
-            case DayOfWeek.Friday: weekday = RecurrenceWeekdayEnum.Friday; break;
-            case DayOfWeek.Saturday: weekday = RecurrenceWeekdayEnum.Saturday; break;
-            default:
-                throw new ArgumentOutOfRangeException();
-        }
-
+            DayOfWeek.Sunday => RecurrenceWeekday.Sunday,
+            DayOfWeek.Monday => RecurrenceWeekday.Monday,
+            DayOfWeek.Tuesday => RecurrenceWeekday.Tuesday,
+            DayOfWeek.Wednesday => RecurrenceWeekday.Wednesday,
+            DayOfWeek.Thursday => RecurrenceWeekday.Thursday,
+            DayOfWeek.Friday => RecurrenceWeekday.Friday,
+            DayOfWeek.Saturday => RecurrenceWeekday.Saturday,
+            _ => throw new ArgumentOutOfRangeException(nameof(date)),
+        };
         return plannedRecurrence.EveryWeekday.Value.HasFlag(weekday);
     }
 
@@ -191,17 +186,14 @@ public class RecurrenceCreatorService(
         }
         catch (Exception e)
         {
-            if (e is OverflowException || e is FormatException)
-            {
-                logger.LogWarning(
-                    $"Can't parse EveryMonthDay for PlannedRecurrenceUid = {plannedRecurrence.Uid}, Value = '{plannedRecurrence.EveryMonthDay}'");
-                return true;
-            }
+            if (e is not (OverflowException or FormatException)) throw;
 
-            throw;
+            Log.FailedToParseMonthWorkDay(logger, plannedRecurrence.Uid, plannedRecurrence.EveryMonthDay);
+
+            return true;
         }
 
-        int lastDay = DateTime.DaysInMonth(date.Year, date.Month);
+        var lastDay = DateTime.DaysInMonth(date.Year, date.Month);
 
 
         if (dayList.Any(x => x > lastDay))

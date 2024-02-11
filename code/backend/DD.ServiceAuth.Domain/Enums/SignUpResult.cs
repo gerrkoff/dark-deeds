@@ -1,6 +1,6 @@
 ﻿namespace DD.ServiceAuth.Domain.Enums;
 
-public enum SignUpResultEnum
+public enum SignUpResult
 {
     Unknown, Success, UsernameAlreadyExists, PasswordInsecure, InvalidUsername
 }

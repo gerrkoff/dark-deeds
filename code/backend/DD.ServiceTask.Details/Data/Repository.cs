@@ -8,7 +8,7 @@ using MongoDB.Driver.Linq;
 
 namespace DD.ServiceTask.Details.Data;
 
-abstract class Repository<T>(IMongoDbContext dbContext, string tableName) : IRepository<T>
+internal abstract class Repository<T>(IMongoDbContext dbContext, string tableName) : IRepository<T>
     where T : Entity
 {
     private readonly IMongoCollection<T> _collection = dbContext.GetCollection<T>(tableName);
@@ -33,8 +33,7 @@ abstract class Repository<T>(IMongoDbContext dbContext, string tableName) : IRep
 
     public async Task<IList<T>> GetBySpecAsync(ISpecification<T> spec)
     {
-        if (spec == null)
-            throw new ArgumentNullException(nameof(spec));
+        ArgumentNullException.ThrowIfNull(spec);
 
         var query = spec.Apply(_collection.AsQueryable()) as IMongoQueryable<T>;
         return await query.ToListAsync();
@@ -42,8 +41,7 @@ abstract class Repository<T>(IMongoDbContext dbContext, string tableName) : IRep
 
     public async Task<bool> AnyAsync(ISpecification<T> spec)
     {
-        if (spec == null)
-            throw new ArgumentNullException(nameof(spec));
+        ArgumentNullException.ThrowIfNull(spec);
 
         var query = spec.Apply(_collection.AsQueryable()) as IMongoQueryable<T>;
         return await query.AnyAsync();
@@ -51,8 +49,7 @@ abstract class Repository<T>(IMongoDbContext dbContext, string tableName) : IRep
 
     public async Task UpsertAsync(T entity)
     {
-        if (entity == null)
-            throw new ArgumentNullException(nameof(entity));
+        ArgumentNullException.ThrowIfNull(entity);
 
         await _collection.ReplaceOneAsync(x => x.Uid == entity.Uid, entity, new ReplaceOptions
         {
@@ -62,8 +59,7 @@ abstract class Repository<T>(IMongoDbContext dbContext, string tableName) : IRep
 
     public async Task<(bool, T?)> TryUpdateVersionAsync(T entity)
     {
-        if (entity == null)
-            throw new ArgumentNullException(nameof(entity));
+        ArgumentNullException.ThrowIfNull(entity);
 
         var version = entity.Version;
         entity.Version++;
@@ -86,10 +82,8 @@ abstract class Repository<T>(IMongoDbContext dbContext, string tableName) : IRep
 
     public async Task<(bool, T?)> TryUpdateVersionPropsAsync(T entity, params Expression<Func<T, object>>[] properties)
     {
-        if (entity == null)
-            throw new ArgumentNullException(nameof(entity));
-        if (string.IsNullOrWhiteSpace(entity.Uid))
-            throw new ArgumentNullException(nameof(entity.Uid));
+        ArgumentNullException.ThrowIfNull(entity);
+        ArgumentException.ThrowIfNullOrWhiteSpace(entity.Uid);
 
         var version = entity.Version;
         entity.Version++;

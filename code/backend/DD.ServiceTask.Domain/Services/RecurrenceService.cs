@@ -22,7 +22,7 @@ public class RecurrenceService(
 {
     public async Task<IEnumerable<PlannedRecurrenceDto>> LoadAsync(string userId)
     {
-        var spec = specFactory.New<IPlannedRecurrenceSpecification, PlannedRecurrenceEntity>()
+        var spec = specFactory.Create<IPlannedRecurrenceSpecification, PlannedRecurrenceEntity>()
             .FilterUserOwned(userId)
             .FilterNotDeleted();
 
@@ -35,7 +35,7 @@ public class RecurrenceService(
     {
         await CheckIfUserOwns(recurrences, userId);
 
-        int count = 0;
+        var count = 0;
         foreach (var dto in recurrences)
         {
             if (await SavePlannedRecurrence(dto, userId))
@@ -77,22 +77,22 @@ public class RecurrenceService(
 
     private async Task CheckIfUserOwns(ICollection<PlannedRecurrenceDto> recurrences, string userId)
     {
-        string[] ids = recurrences.Select(x => x.Uid).ToArray();
-        var foreignItemsSpec = specFactory.New<IPlannedRecurrenceSpecification, PlannedRecurrenceEntity>()
+        var ids = recurrences.Select(x => x.Uid).ToArray();
+        var foreignItemsSpec = specFactory.Create<IPlannedRecurrenceSpecification, PlannedRecurrenceEntity>()
             .FilterForeignUserOwned(userId, ids);
-        bool notUserEntities = await plannedRecurrenceRepository.AnyAsync(foreignItemsSpec);
+        var notUserEntities = await plannedRecurrenceRepository.AnyAsync(foreignItemsSpec);
 
         if (notUserEntities)
             throw ServiceException.InvalidEntity("Recurrence");
     }
 
-    private bool RecurrenceIsChanged(PlannedRecurrenceEntity entity, PlannedRecurrenceDto dto)
+    private static bool RecurrenceIsChanged(PlannedRecurrenceEntity entity, PlannedRecurrenceDto dto)
     {
-        return !string.Equals(entity.Task, dto.Task) ||
+        return !string.Equals(entity.Task, dto.Task, StringComparison.Ordinal) ||
                entity.StartDate != dto.StartDate ||
                entity.EndDate != dto.EndDate ||
                entity.EveryNthDay != dto.EveryNthDay ||
                entity.EveryWeekday != dto.EveryWeekday ||
-               !string.Equals(entity.EveryMonthDay, dto.EveryMonthDay ?? string.Empty);
+               !string.Equals(entity.EveryMonthDay, dto.EveryMonthDay ?? string.Empty, StringComparison.Ordinal);
     }
 }

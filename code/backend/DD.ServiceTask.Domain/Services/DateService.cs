@@ -7,7 +7,7 @@ public interface IDateService
     DateTime Now { get; }
 }
 
-class DateService : IDateService
+internal sealed class DateService : IDateService
 {
     public DateTime Today => DateTime.UtcNow.Date;
     public DateTime Now => DateTime.UtcNow;

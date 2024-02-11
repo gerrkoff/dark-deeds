@@ -4,7 +4,7 @@ namespace DD.ServiceTask.Domain.Specifications;
 
 public interface IUserOwnedSpecification<TEntity, out TSpec> : ISpecification<TEntity>
     where TSpec : class, IUserOwnedSpecification<TEntity, TSpec>
-    where TEntity: IUserOwnedEntity
+    where TEntity : IUserOwnedEntity
 
 {
     TSpec FilterUserOwned(string userId);
@@ -13,7 +13,7 @@ public interface IUserOwnedSpecification<TEntity, out TSpec> : ISpecification<TE
 
 public abstract class UserOwnedSpecification<TEntity, TSpec> : EntitySpecification<TEntity, TSpec>, IUserOwnedSpecification<TEntity, TSpec>
     where TSpec : class, IEntitySpecification<TEntity, TSpec>, IUserOwnedSpecification<TEntity, TSpec>
-    where TEntity: Entity, IUserOwnedEntity
+    where TEntity : Entity, IUserOwnedEntity
 {
     public TSpec FilterUserOwned(string userId)
     {

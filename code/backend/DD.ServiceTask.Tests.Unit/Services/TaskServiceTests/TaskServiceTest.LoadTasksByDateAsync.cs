@@ -12,7 +12,7 @@ public partial class TaskServiceTest
         var from = new DateTime(2018, 10, 20);
         var to = new DateTime(2018, 10, 26);
 
-        var service = CreateService(new TaskEntity {Date = new DateTime(2018, 10, 10)});
+        var service = CreateService(new TaskEntity { Date = new DateTime(2018, 10, 10) });
 
         var result = (await service.LoadTasksByDateAsync(userId, from, to)).ToList();
 

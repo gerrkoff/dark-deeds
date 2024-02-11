@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using DD.TelegramClient.Domain.Dto;
 using DD.TelegramClient.Domain.Implementation;
 using DD.TelegramClient.Domain.Implementation.CommandProcessor;
@@ -8,9 +9,10 @@ using Xunit;
 
 namespace DD.TelegramClient.Tests.Unit.Services;
 
+[SuppressMessage("Naming", "CA1707:Identifiers should not contain underscores")]
 public class BotProcessMessageServiceTest
 {
-    private UpdateDto UpdateEmpty => new()
+    private static UpdateDto UpdateEmpty => new()
     {
         Message = new MessageDto
         {
@@ -22,7 +24,7 @@ public class BotProcessMessageServiceTest
         }
     };
 
-    private Mock<IBotCommandParserService> CreateCommandParserMock(BotCommand? command)
+    private static Mock<IBotCommandParserService> CreateCommandParserMock(BotCommand? command)
     {
         var commandParserMock = new Mock<IBotCommandParserService>();
         commandParserMock.Setup(x => x.ParseCommand(It.IsAny<string>(), It.IsAny<int>()))

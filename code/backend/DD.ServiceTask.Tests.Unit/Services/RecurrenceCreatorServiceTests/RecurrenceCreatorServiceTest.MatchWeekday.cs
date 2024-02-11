@@ -9,11 +9,9 @@ public partial class RecurrenceCreatorServiceTest
     [Fact]
     public void MatchWeekday_ShouldMatchOneWeekday()
     {
-        var service = Service();
-
-        var result = service.MatchWeekday(new PlannedRecurrenceEntity
+        var result = Domain.Services.RecurrenceCreatorService.MatchWeekday(new PlannedRecurrenceEntity
         {
-            EveryWeekday = RecurrenceWeekdayEnum.Monday
+            EveryWeekday = RecurrenceWeekday.Monday
         }, new DateTime(2019, 9, 2));
 
         Assert.True(result);
@@ -22,11 +20,9 @@ public partial class RecurrenceCreatorServiceTest
     [Fact]
     public void MatchWeekday_ShouldMatchOneOfTwoWeekdays()
     {
-        var service = Service();
-
-        var result = service.MatchWeekday(new PlannedRecurrenceEntity
+        var result = Domain.Services.RecurrenceCreatorService.MatchWeekday(new PlannedRecurrenceEntity
         {
-            EveryWeekday = RecurrenceWeekdayEnum.Monday | RecurrenceWeekdayEnum.Friday
+            EveryWeekday = RecurrenceWeekday.Monday | RecurrenceWeekday.Friday
         }, new DateTime(2019, 9, 6));
 
         Assert.True(result);
@@ -35,11 +31,9 @@ public partial class RecurrenceCreatorServiceTest
     [Fact]
     public void MatchWeekday_ShouldNotMatchOneOfWeekdays()
     {
-        var service = Service();
-
-        var result = service.MatchWeekday(new PlannedRecurrenceEntity
+        var result = Domain.Services.RecurrenceCreatorService.MatchWeekday(new PlannedRecurrenceEntity
         {
-            EveryWeekday = RecurrenceWeekdayEnum.Monday | RecurrenceWeekdayEnum.Friday
+            EveryWeekday = RecurrenceWeekday.Monday | RecurrenceWeekday.Friday
         }, new DateTime(2019, 9, 5));
 
         Assert.False(result);
@@ -48,9 +42,7 @@ public partial class RecurrenceCreatorServiceTest
     [Fact]
     public void MatchWeekday_ShouldMatchIfWeekdayIsNull()
     {
-        var service = Service();
-
-        var result = service.MatchWeekday(new PlannedRecurrenceEntity
+        var result = Domain.Services.RecurrenceCreatorService.MatchWeekday(new PlannedRecurrenceEntity
         {
             EveryWeekday = null
         }, new DateTime());
