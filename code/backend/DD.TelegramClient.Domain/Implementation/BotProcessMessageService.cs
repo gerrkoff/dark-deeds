@@ -19,8 +19,8 @@ public class BotProcessMessageService(
 {
     public async Task ProcessMessageAsync(UpdateDto update)
     {
-        string text = update.Message?.Text?.Trim() ?? string.Empty;
-        int userChatId = update.Message?.Chat?.Id ?? throw new ArgumentNullException(nameof(userChatId));
+        var text = update.Message?.Text?.Trim() ?? string.Empty;
+        var userChatId = update.Message?.Chat?.Id ?? throw new InvalidOperationException("Chat id is not found");
 
         var command = await botCommandParserService.ParseCommand(text, userChatId);
         if (command != null)

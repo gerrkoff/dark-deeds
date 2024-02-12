@@ -7,11 +7,13 @@ namespace DD.Shared.Web;
 public interface IUserAuth
 {
     bool IsAuthenticated();
+
     string UserId();
+
     AuthToken AuthToken();
 }
 
-class UserAuth(
+internal sealed class UserAuth(
     IHttpContextAccessor httpContextAccessor,
     IAuthTokenConverter authTokenConverter)
     : IUserAuth
@@ -28,8 +30,7 @@ class UserAuth(
 
     public AuthToken AuthToken()
     {
-        if (httpContextAccessor.HttpContext is null)
-            throw new ArgumentNullException(nameof(httpContextAccessor.HttpContext));
+        ArgumentNullException.ThrowIfNull(httpContextAccessor.HttpContext);
 
         return authTokenConverter.FromPrincipal(httpContextAccessor.HttpContext.User);
     }

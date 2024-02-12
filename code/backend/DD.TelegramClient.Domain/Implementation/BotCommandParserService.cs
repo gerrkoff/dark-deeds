@@ -14,8 +14,8 @@ public class BotCommandParserService(
     ITaskServiceApp taskServiceApp)
     : IBotCommandParserService
 {
-    const string TodoCommand = "/todo";
-    const string StartCommand = "/start";
+    private const string TodoCommand = "/todo";
+    private const string StartCommand = "/start";
 
     public async Task<BotCommand?> ParseCommand(string command, int chatId)
     {
@@ -24,27 +24,26 @@ public class BotCommandParserService(
 
         if (CheckAndTrimCommand(TodoCommand, command, out args))
         {
-            int timeAdjustment = await telegramService.GetUserTimeAdjustment(chatId);
-            DateTime now = dateService.Now;
+            var timeAdjustment = await telegramService.GetUserTimeAdjustment(chatId);
+            var now = dateService.Now;
             return new ShowTodoCommand(args, now, timeAdjustment);
         }
 
-        if (!command.StartsWith("/"))
-            return new CreateTaskCommand(await taskServiceApp.ParseTask(command));
-
-        return null;
+        return command.StartsWith('/')
+            ? null
+            : new CreateTaskCommand(await taskServiceApp.ParseTask(command));
     }
 
-    private bool CheckAndTrimCommand(string command, string text, out string args)
+    private static bool CheckAndTrimCommand(string command, string text, out string args)
     {
         args = string.Empty;
 
-        if (string.Equals(text, command))
+        if (string.Equals(text, command, StringComparison.Ordinal))
             return true;
 
-        if (text.StartsWith(command + " "))
+        if (text.StartsWith(command + " ", StringComparison.Ordinal))
         {
-            args = text.Substring(command.Length + 1).Trim();
+            args = text[(command.Length + 1)..].Trim();
             return true;
         }
 

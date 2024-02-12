@@ -15,11 +15,10 @@ public class TaskHub(
     // TODO: remove
     public async Task Save(ICollection<TaskDto> tasks)
     {
-        if (Context.User == null)
-            throw new ArgumentNullException(nameof(Context.User));
+        ArgumentNullException.ThrowIfNull(Context.User);
 
         var userId = authTokenConverter.FromPrincipal(Context.User).UserId;
-        IEnumerable<TaskDto> updatedTasks = await taskService.SaveTasksAsync(tasks, userId);
+        var updatedTasks = await taskService.SaveTasksAsync(tasks, userId);
         await Clients.Caller.SendAsync("update", updatedTasks, true);
         await Clients.Others.SendAsync("update", updatedTasks, false);
     }

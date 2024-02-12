@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using DD.TelegramClient.Domain.Dto;
 using DD.TelegramClient.Domain.Implementation;
 using DD.TelegramClient.Domain.Implementation.CommandProcessor;
@@ -8,27 +9,20 @@ using Xunit;
 
 namespace DD.TelegramClient.Tests.Unit.Services;
 
+[SuppressMessage("Naming", "CA1707:Identifiers should not contain underscores", Justification = "Tests")]
 public class BotProcessMessageServiceTest
 {
-    private UpdateDto UpdateEmpty => new()
+    private static UpdateDto UpdateEmpty => new()
     {
         Message = new MessageDto
         {
             Text = string.Empty,
             Chat = new ChatDto
             {
-                Id = 1
-            }
-        }
+                Id = 1,
+            },
+        },
     };
-
-    private Mock<IBotCommandParserService> CreateCommandParserMock(BotCommand? command)
-    {
-        var commandParserMock = new Mock<IBotCommandParserService>();
-        commandParserMock.Setup(x => x.ParseCommand(It.IsAny<string>(), It.IsAny<int>()))
-            .Returns(() => Task.FromResult(command));
-        return commandParserMock;
-    }
 
     [Fact]
     public async Task BotProcessMessageServiceTest_SendUnknownCommand()
@@ -54,7 +48,7 @@ public class BotProcessMessageServiceTest
     [Fact]
     public async Task BotProcessMessageServiceTest_RunShowTodoCommand()
     {
-        var command = new ShowTodoCommand("", new DateTime(), 0);
+        var command = new ShowTodoCommand(string.Empty, new DateTime(), 0);
         var commandParserMock = CreateCommandParserMock(command);
         var commandMock = new Mock<IShowTodoCommandProcessor>();
         var botSendMessageServiceMock = new Mock<IBotSendMessageService>();
@@ -116,5 +110,13 @@ public class BotProcessMessageServiceTest
 
         commandMock.Verify(x => x.ProcessAsync(command));
         commandMock.VerifyNoOtherCalls();
+    }
+
+    private static Mock<IBotCommandParserService> CreateCommandParserMock(BotCommand? command)
+    {
+        var commandParserMock = new Mock<IBotCommandParserService>();
+        commandParserMock.Setup(x => x.ParseCommand(It.IsAny<string>(), It.IsAny<int>()))
+            .Returns(() => Task.FromResult(command));
+        return commandParserMock;
     }
 }

@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 using DD.ServiceTask.Domain.Dto;
 using DD.ServiceTask.Domain.Entities;
@@ -7,6 +8,7 @@ using Xunit;
 
 namespace DD.ServiceTask.Tests.Unit.Services.RecurrenceCreatorServiceTests;
 
+[SuppressMessage("Naming", "CA1707:Identifiers should not contain underscores", Justification = "Tests")]
 public partial class RecurrenceCreatorServiceTest
 {
     [Fact]
@@ -14,7 +16,7 @@ public partial class RecurrenceCreatorServiceTest
     {
         var service = Service();
 
-        await service.CreateAsync(0, "");
+        await service.CreateAsync(0, string.Empty);
 
         _plannedRecurrenceRepoMock.Verify(x => x.GetBySpecAsync(_plannedRecurrenceSpecMock.Object));
         _taskRepoMock.VerifyNoOtherCalls();
@@ -29,15 +31,17 @@ public partial class RecurrenceCreatorServiceTest
 
         var service = Service(new PlannedRecurrenceEntity
         {
-            Task = "Task", EveryNthDay = 1, StartDate = someDate, UserId = "userId",
-            Recurrences = new List<RecurrenceEntity>()
+            Task = "Task",
+            EveryNthDay = 1,
+            StartDate = someDate,
+            UserId = "userId",
+            Recurrences = [],
         });
 
         await service.CreateAsync(0, "userId");
 
         _taskRepoMock.Verify(x => x.UpsertAsync(It.Is<TaskEntity>(
-            y => y.Title == "Task" && y.UserId == "userId" && y.Date == someDate
-        )));
+            y => y.Title == "Task" && y.UserId == "userId" && y.Date == someDate)));
     }
 
     [Fact]
@@ -52,8 +56,11 @@ public partial class RecurrenceCreatorServiceTest
 
         var service = Service(new PlannedRecurrenceEntity
         {
-            Task = "Task", EveryNthDay = 1, StartDate = now, UserId = "userId",
-            Recurrences = new List<RecurrenceEntity>()
+            Task = "Task",
+            EveryNthDay = 1,
+            StartDate = now,
+            UserId = "userId",
+            Recurrences = [],
         });
 
         await service.CreateAsync(0, "userId");
@@ -61,8 +68,7 @@ public partial class RecurrenceCreatorServiceTest
         _plannedRecurrenceRepoMock.Verify(x => x.TryUpdateVersionPropsAsync(
             It.Is<PlannedRecurrenceEntity>(
                 y => y.Recurrences.Any(z => z.DateTime == now && z.TaskUid == "uid")),
-            It.IsAny<Expression<Func<PlannedRecurrenceEntity, object>>[]>()
-        ));
+            It.IsAny<Expression<Func<PlannedRecurrenceEntity, object>>[]>()));
     }
 
     [Fact]
@@ -72,8 +78,10 @@ public partial class RecurrenceCreatorServiceTest
 
         var service = Service(new PlannedRecurrenceEntity
         {
-            EveryNthDay = 1, StartDate = new DateTime(2019, 9, 3), UserId = "userId",
-            Recurrences = new List<RecurrenceEntity>()
+            EveryNthDay = 1,
+            StartDate = new DateTime(2019, 9, 3),
+            UserId = "userId",
+            Recurrences = [],
         });
 
         await service.CreateAsync(0, "userId");
@@ -89,18 +97,17 @@ public partial class RecurrenceCreatorServiceTest
         var service = Service(new PlannedRecurrenceEntity
         {
             StartDate = new DateTime(2019, 9, 6),
-            EveryWeekday = RecurrenceWeekdayEnum.Monday | RecurrenceWeekdayEnum.Wednesday, UserId = "userId",
-            Recurrences = new List<RecurrenceEntity>()
+            EveryWeekday = RecurrenceWeekday.Monday | RecurrenceWeekday.Wednesday,
+            UserId = "userId",
+            Recurrences = [],
         });
 
         await service.CreateAsync(0, "userId");
 
         _taskRepoMock.Verify(x => x.UpsertAsync(It.Is<TaskEntity>(
-            y => y.Date == new DateTime(2019, 9, 9)
-        )));
+            y => y.Date == new DateTime(2019, 9, 9))));
         _taskRepoMock.Verify(x => x.UpsertAsync(It.Is<TaskEntity>(
-            y => y.Date == new DateTime(2019, 9, 11)
-        )));
+            y => y.Date == new DateTime(2019, 9, 11))));
         _taskRepoMock.VerifyNoOtherCalls();
     }
 
@@ -111,18 +118,18 @@ public partial class RecurrenceCreatorServiceTest
 
         var service = Service(new PlannedRecurrenceEntity
         {
-            StartDate = new DateTime(2019, 9, 6), EveryMonthDay = "9,11", UserId = "userId",
-            Recurrences = new List<RecurrenceEntity>()
+            StartDate = new DateTime(2019, 9, 6),
+            EveryMonthDay = "9,11",
+            UserId = "userId",
+            Recurrences = [],
         });
 
         await service.CreateAsync(0, "userId");
 
         _taskRepoMock.Verify(x => x.UpsertAsync(It.Is<TaskEntity>(
-            y => y.Date == new DateTime(2019, 9, 9)
-        )));
+            y => y.Date == new DateTime(2019, 9, 9))));
         _taskRepoMock.Verify(x => x.UpsertAsync(It.Is<TaskEntity>(
-            y => y.Date == new DateTime(2019, 9, 11)
-        )));
+            y => y.Date == new DateTime(2019, 9, 11))));
         _taskRepoMock.VerifyNoOtherCalls();
     }
 
@@ -133,18 +140,18 @@ public partial class RecurrenceCreatorServiceTest
 
         var service = Service(new PlannedRecurrenceEntity
         {
-            StartDate = new DateTime(2019, 9, 6), EveryNthDay = 6, UserId = "userId",
-            Recurrences = new List<RecurrenceEntity>()
+            StartDate = new DateTime(2019, 9, 6),
+            EveryNthDay = 6,
+            UserId = "userId",
+            Recurrences = [],
         });
 
         await service.CreateAsync(0, "userId");
 
         _taskRepoMock.Verify(x => x.UpsertAsync(It.Is<TaskEntity>(
-            y => y.Date == new DateTime(2019, 9, 6)
-        )));
+            y => y.Date == new DateTime(2019, 9, 6))));
         _taskRepoMock.Verify(x => x.UpsertAsync(It.Is<TaskEntity>(
-            y => y.Date == new DateTime(2019, 9, 12)
-        )));
+            y => y.Date == new DateTime(2019, 9, 12))));
         _taskRepoMock.VerifyNoOtherCalls();
     }
 
@@ -155,16 +162,18 @@ public partial class RecurrenceCreatorServiceTest
 
         var service = Service(new PlannedRecurrenceEntity
         {
-            StartDate = new DateTime(2019, 9, 6), EveryNthDay = 6, EveryMonthDay = "6,12,13",
-            EveryWeekday = RecurrenceWeekdayEnum.Thursday | RecurrenceWeekdayEnum.Wednesday, UserId = "userId",
-            Recurrences = new List<RecurrenceEntity>()
+            StartDate = new DateTime(2019, 9, 6),
+            EveryNthDay = 6,
+            EveryMonthDay = "6,12,13",
+            EveryWeekday = RecurrenceWeekday.Thursday | RecurrenceWeekday.Wednesday,
+            UserId = "userId",
+            Recurrences = [],
         });
 
         await service.CreateAsync(0, "userId");
 
         _taskRepoMock.Verify(x => x.UpsertAsync(It.Is<TaskEntity>(
-            y => y.Date == new DateTime(2019, 9, 12)
-        )));
+            y => y.Date == new DateTime(2019, 9, 12))));
         _taskRepoMock.VerifyNoOtherCalls();
     }
 
@@ -175,11 +184,10 @@ public partial class RecurrenceCreatorServiceTest
 
         var service = Service(new PlannedRecurrenceEntity
         {
-            EveryNthDay = 1, StartDate = new DateTime(2019, 9, 3), UserId = "userId",
-            Recurrences = new List<RecurrenceEntity>
-            {
-                new() {DateTime = new DateTime(2019, 9, 3)}
-            }
+            EveryNthDay = 1,
+            StartDate = new DateTime(2019, 9, 3),
+            UserId = "userId",
+            Recurrences = [new RecurrenceEntity { DateTime = new DateTime(2019, 9, 3) }],
         });
 
         await service.CreateAsync(0, "userId");
@@ -205,7 +213,9 @@ public partial class RecurrenceCreatorServiceTest
 
         var service = Service(new PlannedRecurrenceEntity
         {
-            StartDate = new DateTime(2019, 9, 6), UserId = "userId", Recurrences = new List<RecurrenceEntity>()
+            StartDate = new DateTime(2019, 9, 6),
+            UserId = "userId",
+            Recurrences = [],
         });
 
         await service.CreateAsync(0, "userId");
@@ -218,17 +228,17 @@ public partial class RecurrenceCreatorServiceTest
     {
         _dateServiceMock.SetupGet(x => x.Now).Returns(new DateTime(2019, 9, 6));
 
-
         var service = Service(new PlannedRecurrenceEntity
         {
-            StartDate = new DateTime(2019, 9, 6), EveryMonthDay = "6", UserId = "userId",
-            Recurrences = new List<RecurrenceEntity>()
+            StartDate = new DateTime(2019, 9, 6),
+            EveryMonthDay = "6",
+            UserId = "userId",
+            Recurrences = [],
         });
 
         await service.CreateAsync(0, "userId");
 
         _notifierServiceMock.Verify(x => x.TaskUpdated(
-            It.Is<TaskUpdatedDto>(y => y.Tasks.Count == 1 && y.Tasks.First().Title == "Task")
-        ));
+            It.Is<TaskUpdatedDto>(y => y.Tasks.Count == 1 && y.Tasks.First().Title == "Task")));
     }
 }

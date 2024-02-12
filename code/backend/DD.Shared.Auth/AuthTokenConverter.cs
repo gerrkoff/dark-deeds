@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Security.Claims;
 
 namespace DD.Shared.Auth;
@@ -5,10 +6,11 @@ namespace DD.Shared.Auth;
 public interface IAuthTokenConverter
 {
     ClaimsIdentity ToIdentity(AuthToken authToken);
+
     AuthToken FromPrincipal(ClaimsPrincipal identity);
 }
 
-class AuthTokenConverter : IAuthTokenConverter
+internal sealed class AuthTokenConverter : IAuthTokenConverter
 {
     public ClaimsIdentity ToIdentity(AuthToken authToken)
     {
@@ -16,18 +18,20 @@ class AuthTokenConverter : IAuthTokenConverter
         {
             new(ClaimsIdentity.DefaultNameClaimType, authToken.Username),
             new(ClaimTypes.Sid, authToken.UserId),
-            new(ClaimTypes.GivenName, authToken.DisplayName)
+            new(ClaimTypes.GivenName, authToken.DisplayName),
         };
 
-        ClaimsIdentity claimsIdentity =
-            new ClaimsIdentity(claims, "Token",
-                ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
+        var claimsIdentity = new ClaimsIdentity(
+            claims,
+            "Token",
+            ClaimsIdentity.DefaultNameClaimType,
+            ClaimsIdentity.DefaultRoleClaimType);
         return claimsIdentity;
     }
 
     public AuthToken FromPrincipal(ClaimsPrincipal principal)
     {
-        var identity = (ClaimsIdentity?) principal.Identity;
+        var identity = (ClaimsIdentity?)principal.Identity;
 
         var expiration = identity?.FindFirst("exp")?.Value;
 
@@ -36,13 +40,15 @@ class AuthTokenConverter : IAuthTokenConverter
             Username = identity?.FindFirst(ClaimsIdentity.DefaultNameClaimType)?.Value ?? string.Empty,
             UserId = identity?.FindFirst(ClaimTypes.Sid)?.Value ?? string.Empty,
             DisplayName = identity?.FindFirst(ClaimTypes.GivenName)?.Value ?? string.Empty,
-            Expires = !string.IsNullOrWhiteSpace(expiration) ? UnixTimeStampToDateTime(double.Parse(expiration)) : null,
+            Expires = !string.IsNullOrWhiteSpace(expiration)
+                ? UnixTimeStampToDateTime(double.Parse(expiration, CultureInfo.InvariantCulture))
+                : null,
         };
 
         return user;
     }
 
-    private DateTime UnixTimeStampToDateTime(double unixTimeStamp)
+    private static DateTime UnixTimeStampToDateTime(double unixTimeStamp)
     {
         var dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
         dtDateTime = dtDateTime.AddSeconds(unixTimeStamp).ToLocalTime();

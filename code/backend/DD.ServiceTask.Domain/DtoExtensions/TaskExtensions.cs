@@ -2,7 +2,7 @@ using DD.ServiceTask.Domain.Dto;
 
 namespace DD.ServiceTask.Domain.DtoExtensions;
 
-static class TaskExtensions
+internal static class TaskExtensions
 {
     public static ICollection<TaskDto> ToUtcDate(this ICollection<TaskDto> tasks)
     {

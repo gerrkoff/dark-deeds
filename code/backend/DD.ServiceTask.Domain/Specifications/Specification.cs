@@ -9,7 +9,7 @@ public interface ISpecification<T>
 
 public abstract class Specification<T> : ISpecification<T>
 {
-    protected readonly List<Expression<Func<T, bool>>> Filters = new();
+    protected IList<Expression<Func<T, bool>>> Filters { get; } = [];
 
     public IQueryable<T> Apply(IQueryable<T> query)
     {

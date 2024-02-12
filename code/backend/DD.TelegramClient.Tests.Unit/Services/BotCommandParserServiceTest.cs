@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using DD.TelegramClient.Domain.Implementation;
 using DD.TelegramClient.Domain.Infrastructure;
 using DD.TelegramClient.Domain.Infrastructure.Dto;
@@ -7,6 +8,7 @@ using Xunit;
 
 namespace DD.TelegramClient.Tests.Unit.Services;
 
+[SuppressMessage("Naming", "CA1707:Identifiers should not contain underscores", Justification = "Tests")]
 public class BotCommandParserServiceTest
 {
     [Fact]
@@ -23,7 +25,7 @@ public class BotCommandParserServiceTest
 
         Assert.NotNull(result);
         Assert.IsType<CreateTaskCommand>(result);
-        Assert.Same(task, ((CreateTaskCommand) result!).Task);
+        Assert.Same(task, ((CreateTaskCommand)result!).Task);
     }
 
     [Fact]
@@ -40,8 +42,8 @@ public class BotCommandParserServiceTest
 
         Assert.NotNull(result);
         Assert.IsType<ShowTodoCommand>(result);
-        Assert.Equal(new DateTime(2010, 10, 10), ((ShowTodoCommand) result!).From);
-        Assert.Equal(new DateTime(2010, 10, 11), ((ShowTodoCommand) result).To);
+        Assert.Equal(new DateTime(2010, 10, 10), ((ShowTodoCommand)result!).From);
+        Assert.Equal(new DateTime(2010, 10, 11), ((ShowTodoCommand)result).To);
     }
 
     [Fact]
@@ -56,6 +58,6 @@ public class BotCommandParserServiceTest
 
         Assert.NotNull(result);
         Assert.IsType<StartCommand>(result);
-        Assert.Equal("SomeChatKey", ((StartCommand) result!).UserChatKey);
+        Assert.Equal("SomeChatKey", ((StartCommand)result!).UserChatKey);
     }
 }

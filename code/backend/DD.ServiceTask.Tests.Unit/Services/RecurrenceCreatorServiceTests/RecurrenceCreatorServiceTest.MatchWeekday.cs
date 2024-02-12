@@ -9,12 +9,12 @@ public partial class RecurrenceCreatorServiceTest
     [Fact]
     public void MatchWeekday_ShouldMatchOneWeekday()
     {
-        var service = Service();
-
-        var result = service.MatchWeekday(new PlannedRecurrenceEntity
-        {
-            EveryWeekday = RecurrenceWeekdayEnum.Monday
-        }, new DateTime(2019, 9, 2));
+        var result = Domain.Services.RecurrenceCreatorService.MatchWeekday(
+            new PlannedRecurrenceEntity
+            {
+                EveryWeekday = RecurrenceWeekday.Monday,
+            },
+            new DateTime(2019, 9, 2));
 
         Assert.True(result);
     }
@@ -22,12 +22,12 @@ public partial class RecurrenceCreatorServiceTest
     [Fact]
     public void MatchWeekday_ShouldMatchOneOfTwoWeekdays()
     {
-        var service = Service();
-
-        var result = service.MatchWeekday(new PlannedRecurrenceEntity
-        {
-            EveryWeekday = RecurrenceWeekdayEnum.Monday | RecurrenceWeekdayEnum.Friday
-        }, new DateTime(2019, 9, 6));
+        var result = Domain.Services.RecurrenceCreatorService.MatchWeekday(
+            new PlannedRecurrenceEntity
+            {
+                EveryWeekday = RecurrenceWeekday.Monday | RecurrenceWeekday.Friday,
+            },
+            new DateTime(2019, 9, 6));
 
         Assert.True(result);
     }
@@ -35,12 +35,12 @@ public partial class RecurrenceCreatorServiceTest
     [Fact]
     public void MatchWeekday_ShouldNotMatchOneOfWeekdays()
     {
-        var service = Service();
-
-        var result = service.MatchWeekday(new PlannedRecurrenceEntity
-        {
-            EveryWeekday = RecurrenceWeekdayEnum.Monday | RecurrenceWeekdayEnum.Friday
-        }, new DateTime(2019, 9, 5));
+        var result = Domain.Services.RecurrenceCreatorService.MatchWeekday(
+            new PlannedRecurrenceEntity
+            {
+                EveryWeekday = RecurrenceWeekday.Monday | RecurrenceWeekday.Friday,
+            },
+            new DateTime(2019, 9, 5));
 
         Assert.False(result);
     }
@@ -48,12 +48,12 @@ public partial class RecurrenceCreatorServiceTest
     [Fact]
     public void MatchWeekday_ShouldMatchIfWeekdayIsNull()
     {
-        var service = Service();
-
-        var result = service.MatchWeekday(new PlannedRecurrenceEntity
-        {
-            EveryWeekday = null
-        }, new DateTime());
+        var result = Domain.Services.RecurrenceCreatorService.MatchWeekday(
+            new PlannedRecurrenceEntity
+            {
+                EveryWeekday = null,
+            },
+            new DateTime());
 
         Assert.True(result);
     }

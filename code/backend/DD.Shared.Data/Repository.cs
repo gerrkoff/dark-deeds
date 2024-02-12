@@ -4,13 +4,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DD.Shared.Data;
 
-class Repository<T>(DbContext context) : IRepository<T>
+internal sealed class Repository<T>(DbContext context) : IRepository<T>
     where T : BaseEntity
 {
     private DbSet<T> Entities => context.Set<T>();
 
-
-    public virtual IQueryable<T> GetAll()
+    public IQueryable<T> GetAll()
     {
         return Entities.AsQueryable();
     }
@@ -39,7 +38,7 @@ class Repository<T>(DbContext context) : IRepository<T>
 
         Entities.Attach(entity);
 
-        IList<string?> propertiesToSave = properties
+        var propertiesToSave = properties
             .Select(x => context.Entry(entity).Property(x))
             .Select(x => x.Metadata.GetFieldName())
             .ToList();

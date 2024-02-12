@@ -24,7 +24,7 @@ public partial class TaskServiceTest : BaseTest
         _notifierServiceMock = new Mock<INotifierService>();
         _taskSpecMock = MocksCreator.TaskSpec();
         _specFactoryMock = new Mock<ISpecificationFactory>();
-        _specFactoryMock.Setup(x => x.New<ITaskSpecification, TaskEntity>()).Returns(_taskSpecMock.Object);
+        _specFactoryMock.Setup(x => x.Create<ITaskSpecification, TaskEntity>()).Returns(_taskSpecMock.Object);
         return new TaskService(
             _repoMock.Object,
             _loggerMock.Object,

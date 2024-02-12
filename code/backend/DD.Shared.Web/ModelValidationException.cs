@@ -6,22 +6,36 @@ namespace DD.Shared.Web;
 [Serializable]
 public class ModelValidationException : Exception
 {
-    public ICollection<ModelError> Errors { get; }
+    public ModelValidationException()
+    {
+        Errors = new List<ModelError>();
+    }
 
-    public ModelValidationException(string message) : base("Model validation exception")
+    public ModelValidationException(ModelStateDictionary modeState)
+        : base("Model validation exception")
+    {
+        var errors = new List<ModelError>();
+        foreach (var modelStateEntry in modeState.Values)
+        {
+            errors.AddRange(modelStateEntry.Errors);
+        }
+
+        Errors = errors;
+    }
+
+    public ModelValidationException(string message)
+        : base("Model validation exception")
     {
         Errors = new List<ModelError> { new(message) };
     }
 
-    public ModelValidationException(ModelStateDictionary modeState) : base("Model validation exception")
+    public ModelValidationException(string message, Exception innerException)
+        : base(message, innerException)
     {
-        var errors = new List<ModelError>();
-        foreach (ModelStateEntry modelStateEntry in modeState.Values)
-        {
-            errors.AddRange(modelStateEntry.Errors);
-        }
-        Errors = errors;
+        Errors = new List<ModelError> { new(message) };
     }
+
+    public ICollection<ModelError> Errors { get; }
 
     public override IDictionary Data => Errors.ToDictionary(x => x.ErrorMessage);
 }

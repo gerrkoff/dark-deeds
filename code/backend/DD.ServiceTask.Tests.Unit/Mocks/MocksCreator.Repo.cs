@@ -10,13 +10,19 @@ namespace DD.ServiceTask.Tests.Unit.Mocks;
 
 public static partial class MocksCreator
 {
-    public static Mock<ITaskRepository> RepoTask(params TaskEntity[] values) => Repo<ITaskRepository, TaskEntity>(values);
+    public static Mock<ITaskRepository> RepoTask(params TaskEntity[] values)
+    {
+        return Repo<ITaskRepository, TaskEntity>(values);
+    }
 
-    public static Mock<IPlannedRecurrenceRepository> RepoRecurrence(params PlannedRecurrenceEntity[] values) => Repo<IPlannedRecurrenceRepository, PlannedRecurrenceEntity>(values);
+    public static Mock<IPlannedRecurrenceRepository> RepoRecurrence(params PlannedRecurrenceEntity[] values)
+    {
+        return Repo<IPlannedRecurrenceRepository, PlannedRecurrenceEntity>(values);
+    }
 
     private static Mock<TRepository> Repo<TRepository, TEntity>(params TEntity[] values)
-        where TEntity: Entity
-        where TRepository: class, IRepository<TEntity>
+        where TEntity : Entity
+        where TRepository : class, IRepository<TEntity>
     {
         var repoMock = new Mock<TRepository>();
         var result = Task.FromResult(values.ToList() as IList<TEntity>);

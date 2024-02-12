@@ -4,15 +4,14 @@ namespace DD.ServiceTask.Domain.Specifications;
 
 public interface IEntitySpecification<TEntity, out TSpec> : ISpecification<TEntity>
     where TSpec : class, IEntitySpecification<TEntity, TSpec>
-    where TEntity: Entity
-
+    where TEntity : Entity
 {
     TSpec FilterNotDeleted();
 }
 
 public abstract class EntitySpecification<TEntity, TSpec> : Specification<TEntity>, IEntitySpecification<TEntity, TSpec>
     where TSpec : class, IEntitySpecification<TEntity, TSpec>
-    where TEntity: Entity
+    where TEntity : Entity
 {
     public TSpec FilterNotDeleted()
     {

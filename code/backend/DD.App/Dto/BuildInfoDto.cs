@@ -2,16 +2,11 @@ using System.Reflection;
 
 namespace DD.App.Dto;
 
-public class BuildInfoDto
+public class BuildInfoDto(Type app)
 {
-    public BuildInfoDto(Type app)
-    {
-        AppVersion = GetAssemblyVersion(app);
-    }
+    public string AppVersion { get; } = GetAssemblyVersion(app);
 
-    public string AppVersion { get; }
-
-    private string GetAssemblyVersion(Type type)
+    private static string GetAssemblyVersion(Type type)
     {
         return type.Assembly
             .GetCustomAttribute<AssemblyInformationalVersionAttribute>()

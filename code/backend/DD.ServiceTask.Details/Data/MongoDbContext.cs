@@ -12,5 +12,8 @@ public class MongoDbContext : IMongoDbContext
         _database = new MongoClient(connectionInfo[0]).GetDatabase(connectionInfo[1]);
     }
 
-    public IMongoCollection<T> GetCollection<T>(string tableName) => _database.GetCollection<T>(tableName);
+    public IMongoCollection<T> GetCollection<T>(string tableName)
+    {
+        return _database.GetCollection<T>(tableName);
+    }
 }

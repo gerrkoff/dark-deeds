@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using DD.ServiceTask.Domain.Entities;
 using DD.ServiceTask.Domain.Entities.Enums;
 using DD.ServiceTask.Domain.Specifications;
@@ -5,19 +6,9 @@ using Xunit;
 
 namespace DD.ServiceTask.Tests.Unit.Specifications;
 
+[SuppressMessage("Naming", "CA1707:Identifiers should not contain underscores", Justification = "Tests")]
 public class TaskSpecificationTest
 {
-    private List<TaskEntity> Collection() => new()
-    {
-        new() {Uid = "1", Date = new DateTime(2018, 10, 10), IsCompleted = true},
-        new() {Uid = "2", Date = new DateTime(2018, 10, 11)},
-        new() {Uid = "11", Date = new DateTime(2018, 10, 19), Type = TaskTypeEnum.Additional},
-        new() {Uid = "3", Date = new DateTime(2018, 10, 20)},
-        new() {Uid = "6", Date = new DateTime(2018, 10, 26)},
-        new() {Uid = "5", Date = new DateTime(2018, 10, 25)},
-        new() {Uid = "4"}
-    };
-
     [Fact]
     public void FilterActual_IncludeNoDate()
     {
@@ -84,5 +75,19 @@ public class TaskSpecificationTest
         Assert.DoesNotContain(result, x => x.Uid == "1");
         Assert.DoesNotContain(result, x => x.Uid == "2");
         Assert.DoesNotContain(result, x => x.Uid == "6"); // TO border is not included
+    }
+
+    private List<TaskEntity> Collection()
+    {
+        return
+        [
+            new TaskEntity { Uid = "1", Date = new DateTime(2018, 10, 10), IsCompleted = true },
+            new TaskEntity { Uid = "2", Date = new DateTime(2018, 10, 11) },
+            new TaskEntity { Uid = "11", Date = new DateTime(2018, 10, 19), Type = TaskType.Additional },
+            new TaskEntity { Uid = "3", Date = new DateTime(2018, 10, 20) },
+            new TaskEntity { Uid = "6", Date = new DateTime(2018, 10, 26) },
+            new TaskEntity { Uid = "5", Date = new DateTime(2018, 10, 25) },
+            new TaskEntity { Uid = "4" }
+        ];
     }
 }

@@ -14,11 +14,11 @@ public class StartController(
     [HttpPost]
     public async Task<TelegramStartDto> Post(int timezoneOffset)
     {
-        string chatKey = await telegramService.GenerateKey(userAuth.UserId(), timezoneOffset);
-        string botName = "darkdeedsbot";
+        var chatKey = await telegramService.GenerateKey(userAuth.UserId(), timezoneOffset);
+        var botName = "darkdeedsbot";
         return new TelegramStartDto
         {
-            Url = $"https://telegram.me/{botName}?start={chatKey}"
+            Url = $"https://telegram.me/{botName}?start={chatKey}",
         };
     }
 }

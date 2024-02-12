@@ -4,7 +4,7 @@ using DD.WebClientBff.Domain.Entities;
 
 namespace DD.WebClientBff.Domain.Mapping;
 
-class ModelsMapping : Profile
+internal sealed class ModelsMapping : Profile
 {
     public ModelsMapping()
     {

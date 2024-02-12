@@ -6,13 +6,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DD.Shared.Data.Context;
 
-class BackendDbContext : IdentityDbContext<UserEntity>
+internal sealed class BackendDbContext(DbContextOptions<BackendDbContext> options) : IdentityDbContext<UserEntity>(options)
 {
-    public BackendDbContext(DbContextOptions<BackendDbContext> options) : base(options)
-    {
-    }
-
     public DbSet<SettingsEntity> Settings { get; init; } = null!;
+
     public DbSet<TelegramUserEntity> TelegramUsers { get; init; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

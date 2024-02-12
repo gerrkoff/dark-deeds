@@ -14,7 +14,7 @@ COPY .editorconfig /code/backend/.editorconfig
 WORKDIR /code/backend
 ARG BUILD_VERSION
 
-RUN dotnet build /code/backend/DarkDeeds.sln
+RUN dotnet build -warnaserror /code/backend/DarkDeeds.sln
 RUN dotnet test "--logger:trx;LogFileName=results.trx" --results-directory /test-results /code/backend/DarkDeeds.sln
 RUN dotnet publish -c Release -o /build --version-suffix ${BUILD_VERSION} /code/backend/DD.App/DD.App.csproj
 

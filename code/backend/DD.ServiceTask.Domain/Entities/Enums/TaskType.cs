@@ -1,7 +1,7 @@
 namespace DD.ServiceTask.Domain.Entities.Enums;
 
-public enum TaskTypeEnum
+public enum TaskType
 {
     Simple,
-    Additional
+    Additional,
 }

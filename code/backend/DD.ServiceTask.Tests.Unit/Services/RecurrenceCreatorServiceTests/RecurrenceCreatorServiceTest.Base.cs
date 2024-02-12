@@ -12,12 +12,12 @@ namespace DD.ServiceTask.Tests.Unit.Services.RecurrenceCreatorServiceTests;
 
 public partial class RecurrenceCreatorServiceTest : BaseTest
 {
-    private Mock<IPlannedRecurrenceRepository> _plannedRecurrenceRepoMock = new();
     private readonly Mock<ITaskRepository> _taskRepoMock = MocksCreator.RepoTask();
     private readonly Mock<IDateService> _dateServiceMock = new();
     private readonly Mock<ITaskParserService> _taskParserServiceMock = new();
     private readonly Mock<INotifierService> _notifierServiceMock = new();
     private readonly Mock<ILogger<RecurrenceCreatorService>> _loggerMock = new();
+    private Mock<IPlannedRecurrenceRepository> _plannedRecurrenceRepoMock = new();
     private Mock<ISpecificationFactory> _specFactoryMock = new();
     private Mock<IPlannedRecurrenceSpecification> _plannedRecurrenceSpecMock = new();
 
@@ -25,10 +25,10 @@ public partial class RecurrenceCreatorServiceTest : BaseTest
     {
         _plannedRecurrenceSpecMock = MocksCreator.PlannedRecurrenceSpec();
         _specFactoryMock = new Mock<ISpecificationFactory>();
-        _specFactoryMock.Setup(x => x.New<IPlannedRecurrenceSpecification, PlannedRecurrenceEntity>()).Returns(_plannedRecurrenceSpecMock.Object);
+        _specFactoryMock.Setup(x => x.Create<IPlannedRecurrenceSpecification, PlannedRecurrenceEntity>()).Returns(_plannedRecurrenceSpecMock.Object);
 
         _plannedRecurrenceRepoMock = MocksCreator.RepoRecurrence(values);
-        _taskParserServiceMock.Setup(x => x.ParseTask(It.IsAny<string>(), It.IsAny<bool>())).Returns(new TaskDto {Title = "Task"});
+        _taskParserServiceMock.Setup(x => x.ParseTask(It.IsAny<string>(), It.IsAny<bool>())).Returns(new TaskDto { Title = "Task" });
         return new(
             _taskRepoMock.Object,
             _plannedRecurrenceRepoMock.Object,
@@ -37,7 +37,6 @@ public partial class RecurrenceCreatorServiceTest : BaseTest
             _taskParserServiceMock.Object,
             _notifierServiceMock.Object,
             Mapper,
-            _specFactoryMock.Object
-        );
+            _specFactoryMock.Object);
     }
 }

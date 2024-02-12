@@ -1,7 +1,7 @@
 namespace DD.ServiceTask.Domain.Entities.Enums;
 
 [Flags]
-public enum RecurrenceWeekdayEnum
+public enum RecurrenceWeekday
 {
     Monday = 1,
     Tuesday = 2,
