@@ -10,7 +10,7 @@ using Xunit;
 
 namespace DD.TelegramClient.Tests.Unit.Services.CommandProcessor;
 
-[SuppressMessage("Naming", "CA1707:Identifiers should not contain underscores")]
+[SuppressMessage("Naming", "CA1707:Identifiers should not contain underscores", Justification = "Tests")]
 public class ShowTodoCommandProcessorTest
 {
     [Fact]
@@ -18,7 +18,6 @@ public class ShowTodoCommandProcessorTest
     {
         var (telegramMock, taskServiceMock, sendMessageMock, loggerMock) =
             SetupMocks(new[] { "tasks" }, 100);
-
 
         var service = new ShowTodoCommandProcessor(
             sendMessageMock.Object,
@@ -28,7 +27,7 @@ public class ShowTodoCommandProcessorTest
 
         await service.ProcessAsync(new ShowTodoCommand(string.Empty, new DateTime(), 0)
         {
-            UserChatId = 100
+            UserChatId = 100,
         });
 
         sendMessageMock.Verify(x => x.SendTextAsync(100, "tasks"));
@@ -48,13 +47,17 @@ public class ShowTodoCommandProcessorTest
 
         await service.ProcessAsync(new ShowTodoCommand(string.Empty, new DateTime(), 0)
         {
-            UserChatId = 100
+            UserChatId = 100,
         });
 
         sendMessageMock.Verify(x => x.SendTextAsync(100, "No tasks"));
     }
 
-    private static (Mock<ITelegramService>, Mock<ITaskServiceApp>, Mock<IBotSendMessageService>, Mock<ILogger<BaseCommandProcessor<BotCommand>>>)
+    private static (
+        Mock<ITelegramService> TelegramServiceMock,
+        Mock<ITaskServiceApp> TaskServiceAppMock,
+        Mock<IBotSendMessageService> BotSendMessageServiceMock,
+        Mock<ILogger<BaseCommandProcessor<BotCommand>>> LoggerMock)
         SetupMocks(ICollection<string> tasksAsString, int chatId)
     {
         TaskDto[] tasks = [];

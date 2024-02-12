@@ -6,7 +6,7 @@ using Xunit;
 
 namespace DD.ServiceTask.Tests.Unit.Services.TaskServiceTests;
 
-[SuppressMessage("ReSharper", "ParameterOnlyUsedForPreconditionCheck.Local")]
+[SuppressMessage("ReSharper", "ParameterOnlyUsedForPreconditionCheck.Local", Justification = "Tests")]
 public partial class TaskServiceTest
 {
     private const string ForeignUserId = "foreign user";

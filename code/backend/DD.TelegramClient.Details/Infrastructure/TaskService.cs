@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using DD.ServiceTask.Domain.Services;
 using DD.TelegramClient.Domain.Infrastructure;
-using TaskDtoTelegramClient = DD.TelegramClient.Domain.Infrastructure.Dto.TaskDto;
 using TaskDtoTaskService = DD.ServiceTask.Domain.Dto.TaskDto;
+using TaskDtoTelegramClient = DD.TelegramClient.Domain.Infrastructure.Dto.TaskDto;
 
 namespace DD.TelegramClient.Details.Infrastructure;
 

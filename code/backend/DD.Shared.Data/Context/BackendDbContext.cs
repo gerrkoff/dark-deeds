@@ -9,6 +9,7 @@ namespace DD.Shared.Data.Context;
 internal sealed class BackendDbContext(DbContextOptions<BackendDbContext> options) : IdentityDbContext<UserEntity>(options)
 {
     public DbSet<SettingsEntity> Settings { get; init; } = null!;
+
     public DbSet<TelegramUserEntity> TelegramUsers { get; init; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

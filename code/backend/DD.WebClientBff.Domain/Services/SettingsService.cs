@@ -9,6 +9,7 @@ namespace DD.WebClientBff.Domain.Services;
 public interface ISettingsService
 {
     Task SaveAsync(SettingsDto settings, string userId);
+
     Task<SettingsDto> LoadAsync(string userId);
 }
 
@@ -43,7 +44,7 @@ internal sealed class SettingsService(
             : mapper.Map<SettingsDto>(entity);
     }
 
-    [SuppressMessage("Globalization", "CA1309:Use ordinal string comparison")]
+    [SuppressMessage("Globalization", "CA1309:Use ordinal string comparison", Justification = "IQueryable")]
     private Task<SettingsEntity?> FindUserSettings(string userId)
     {
         var result = settingsRepository

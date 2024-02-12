@@ -31,8 +31,7 @@ internal sealed class TokenService(
             notBefore: now,
             claims: identity.Claims,
             expires: now.Add(TimeSpan.FromMinutes(_authSettings.Lifetime)),
-            signingCredentials: new SigningCredentials(symmetricSecurityKey, SecurityAlgorithms.HmacSha256)
-        );
+            signingCredentials: new SigningCredentials(symmetricSecurityKey, SecurityAlgorithms.HmacSha256));
 
         var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
 

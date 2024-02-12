@@ -8,7 +8,7 @@ using Xunit;
 
 namespace DD.ServiceTask.Tests.Unit.Services.RecurrenceCreatorServiceTests;
 
-[SuppressMessage("Naming", "CA1707:Identifiers should not contain underscores")]
+[SuppressMessage("Naming", "CA1707:Identifiers should not contain underscores", Justification = "Tests")]
 public partial class RecurrenceCreatorServiceTest
 {
     [Fact]
@@ -16,7 +16,7 @@ public partial class RecurrenceCreatorServiceTest
     {
         var service = Service();
 
-        await service.CreateAsync(0, "");
+        await service.CreateAsync(0, string.Empty);
 
         _plannedRecurrenceRepoMock.Verify(x => x.GetBySpecAsync(_plannedRecurrenceSpecMock.Object));
         _taskRepoMock.VerifyNoOtherCalls();
@@ -41,8 +41,7 @@ public partial class RecurrenceCreatorServiceTest
         await service.CreateAsync(0, "userId");
 
         _taskRepoMock.Verify(x => x.UpsertAsync(It.Is<TaskEntity>(
-            y => y.Title == "Task" && y.UserId == "userId" && y.Date == someDate
-        )));
+            y => y.Title == "Task" && y.UserId == "userId" && y.Date == someDate)));
     }
 
     [Fact]
@@ -69,8 +68,7 @@ public partial class RecurrenceCreatorServiceTest
         _plannedRecurrenceRepoMock.Verify(x => x.TryUpdateVersionPropsAsync(
             It.Is<PlannedRecurrenceEntity>(
                 y => y.Recurrences.Any(z => z.DateTime == now && z.TaskUid == "uid")),
-            It.IsAny<Expression<Func<PlannedRecurrenceEntity, object>>[]>()
-        ));
+            It.IsAny<Expression<Func<PlannedRecurrenceEntity, object>>[]>()));
     }
 
     [Fact]
@@ -107,11 +105,9 @@ public partial class RecurrenceCreatorServiceTest
         await service.CreateAsync(0, "userId");
 
         _taskRepoMock.Verify(x => x.UpsertAsync(It.Is<TaskEntity>(
-            y => y.Date == new DateTime(2019, 9, 9)
-        )));
+            y => y.Date == new DateTime(2019, 9, 9))));
         _taskRepoMock.Verify(x => x.UpsertAsync(It.Is<TaskEntity>(
-            y => y.Date == new DateTime(2019, 9, 11)
-        )));
+            y => y.Date == new DateTime(2019, 9, 11))));
         _taskRepoMock.VerifyNoOtherCalls();
     }
 
@@ -131,11 +127,9 @@ public partial class RecurrenceCreatorServiceTest
         await service.CreateAsync(0, "userId");
 
         _taskRepoMock.Verify(x => x.UpsertAsync(It.Is<TaskEntity>(
-            y => y.Date == new DateTime(2019, 9, 9)
-        )));
+            y => y.Date == new DateTime(2019, 9, 9))));
         _taskRepoMock.Verify(x => x.UpsertAsync(It.Is<TaskEntity>(
-            y => y.Date == new DateTime(2019, 9, 11)
-        )));
+            y => y.Date == new DateTime(2019, 9, 11))));
         _taskRepoMock.VerifyNoOtherCalls();
     }
 
@@ -155,11 +149,9 @@ public partial class RecurrenceCreatorServiceTest
         await service.CreateAsync(0, "userId");
 
         _taskRepoMock.Verify(x => x.UpsertAsync(It.Is<TaskEntity>(
-            y => y.Date == new DateTime(2019, 9, 6)
-        )));
+            y => y.Date == new DateTime(2019, 9, 6))));
         _taskRepoMock.Verify(x => x.UpsertAsync(It.Is<TaskEntity>(
-            y => y.Date == new DateTime(2019, 9, 12)
-        )));
+            y => y.Date == new DateTime(2019, 9, 12))));
         _taskRepoMock.VerifyNoOtherCalls();
     }
 
@@ -181,8 +173,7 @@ public partial class RecurrenceCreatorServiceTest
         await service.CreateAsync(0, "userId");
 
         _taskRepoMock.Verify(x => x.UpsertAsync(It.Is<TaskEntity>(
-            y => y.Date == new DateTime(2019, 9, 12)
-        )));
+            y => y.Date == new DateTime(2019, 9, 12))));
         _taskRepoMock.VerifyNoOtherCalls();
     }
 
@@ -237,7 +228,6 @@ public partial class RecurrenceCreatorServiceTest
     {
         _dateServiceMock.SetupGet(x => x.Now).Returns(new DateTime(2019, 9, 6));
 
-
         var service = Service(new PlannedRecurrenceEntity
         {
             StartDate = new DateTime(2019, 9, 6),
@@ -249,7 +239,6 @@ public partial class RecurrenceCreatorServiceTest
         await service.CreateAsync(0, "userId");
 
         _notifierServiceMock.Verify(x => x.TaskUpdated(
-            It.Is<TaskUpdatedDto>(y => y.Tasks.Count == 1 && y.Tasks.First().Title == "Task")
-        ));
+            It.Is<TaskUpdatedDto>(y => y.Tasks.Count == 1 && y.Tasks.First().Title == "Task")));
     }
 }

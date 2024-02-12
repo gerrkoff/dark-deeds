@@ -4,7 +4,7 @@ using Xunit;
 
 namespace DD.ServiceTask.Tests.Unit.Services.TaskServiceTests;
 
-[SuppressMessage("Naming", "CA1707:Identifiers should not contain underscores")]
+[SuppressMessage("Naming", "CA1707:Identifiers should not contain underscores", Justification = "Tests")]
 public partial class TaskServiceTest
 {
     [Fact]

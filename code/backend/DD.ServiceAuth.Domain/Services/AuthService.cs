@@ -10,7 +10,9 @@ namespace DD.ServiceAuth.Domain.Services;
 public interface IAuthService
 {
     Task<SignUpResultDto> SignUpAsync(SignUpInfoDto signUpInfo);
+
     Task<SignInResultDto> SignInAsync(SignInInfoDto signInInfo);
+
     Task<string> GetUserIdAsync(string username);
 }
 
@@ -19,7 +21,6 @@ internal sealed class AuthService(
     ITokenService tokenService)
     : IAuthService
 {
-    #region Identity errors
     private static readonly IdentityErrorDescriber ErrorDescriber = new();
     private static readonly string InvalidUsernameCode = ErrorDescriber.InvalidUserName(string.Empty).Code;
     private static readonly string DuplicateUserNameCode = ErrorDescriber.DuplicateUserName(string.Empty).Code;
@@ -33,8 +34,6 @@ internal sealed class AuthService(
         ErrorDescriber.PasswordRequiresUniqueChars(0).Code
     ];
 
-    #endregion
-
     public async Task<SignUpResultDto> SignUpAsync(SignUpInfoDto signUpInfo)
     {
         var user = new UserEntity { UserName = signUpInfo.Username, DisplayName = signUpInfo.Username };
@@ -45,7 +44,7 @@ internal sealed class AuthService(
             return new SignUpResultDto
             {
                 Result = SignUpResult.Success,
-                Token = tokenService.Serialize(ToAuthToken(user))
+                Token = tokenService.Serialize(ToAuthToken(user)),
             };
         }
 
@@ -78,7 +77,7 @@ internal sealed class AuthService(
         return new SignInResultDto
         {
             Result = SignInResult.Success,
-            Token = tokenService.Serialize(ToAuthToken(user))
+            Token = tokenService.Serialize(ToAuthToken(user)),
         };
     }
 

@@ -8,7 +8,7 @@ using MocksCreator = DD.ServiceTask.Tests.Unit.Mocks.MocksCreator;
 
 namespace DD.ServiceTask.Tests.Unit.Services.RecurrenceServiceTests;
 
-[SuppressMessage("Naming", "CA1707:Identifiers should not contain underscores")]
+[SuppressMessage("Naming", "CA1707:Identifiers should not contain underscores", Justification = "Tests")]
 public partial class RecurrenceServiceTest
 {
     private readonly Mock<ISpecificationFactory> _specFactoryMock = new();
@@ -28,7 +28,7 @@ public partial class RecurrenceServiceTest
         var repoMock = MocksCreator.RepoRecurrence(new PlannedRecurrenceEntity
         {
             StartDate = new DateTime(1, DateTimeKind.Unspecified),
-            EndDate = new DateTime(1, DateTimeKind.Unspecified)
+            EndDate = new DateTime(1, DateTimeKind.Unspecified),
         });
 
         var service = new RecurrenceService(repoMock.Object, BaseTest.Mapper, _specFactoryMock.Object);

@@ -9,7 +9,7 @@ using Xunit;
 
 namespace DD.TelegramClient.Tests.Unit.Services;
 
-[SuppressMessage("Naming", "CA1707:Identifiers should not contain underscores")]
+[SuppressMessage("Naming", "CA1707:Identifiers should not contain underscores", Justification = "Tests")]
 public class BotProcessMessageServiceTest
 {
     private static UpdateDto UpdateEmpty => new()
@@ -19,18 +19,10 @@ public class BotProcessMessageServiceTest
             Text = string.Empty,
             Chat = new ChatDto
             {
-                Id = 1
-            }
-        }
+                Id = 1,
+            },
+        },
     };
-
-    private static Mock<IBotCommandParserService> CreateCommandParserMock(BotCommand? command)
-    {
-        var commandParserMock = new Mock<IBotCommandParserService>();
-        commandParserMock.Setup(x => x.ParseCommand(It.IsAny<string>(), It.IsAny<int>()))
-            .Returns(() => Task.FromResult(command));
-        return commandParserMock;
-    }
 
     [Fact]
     public async Task BotProcessMessageServiceTest_SendUnknownCommand()
@@ -56,7 +48,7 @@ public class BotProcessMessageServiceTest
     [Fact]
     public async Task BotProcessMessageServiceTest_RunShowTodoCommand()
     {
-        var command = new ShowTodoCommand("", new DateTime(), 0);
+        var command = new ShowTodoCommand(string.Empty, new DateTime(), 0);
         var commandParserMock = CreateCommandParserMock(command);
         var commandMock = new Mock<IShowTodoCommandProcessor>();
         var botSendMessageServiceMock = new Mock<IBotSendMessageService>();
@@ -118,5 +110,13 @@ public class BotProcessMessageServiceTest
 
         commandMock.Verify(x => x.ProcessAsync(command));
         commandMock.VerifyNoOtherCalls();
+    }
+
+    private static Mock<IBotCommandParserService> CreateCommandParserMock(BotCommand? command)
+    {
+        var commandParserMock = new Mock<IBotCommandParserService>();
+        commandParserMock.Setup(x => x.ParseCommand(It.IsAny<string>(), It.IsAny<int>()))
+            .Returns(() => Task.FromResult(command));
+        return commandParserMock;
     }
 }

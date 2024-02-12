@@ -5,7 +5,6 @@ namespace DD.ServiceTask.Domain.Specifications;
 public interface IEntitySpecification<TEntity, out TSpec> : ISpecification<TEntity>
     where TSpec : class, IEntitySpecification<TEntity, TSpec>
     where TEntity : Entity
-
 {
     TSpec FilterNotDeleted();
 }

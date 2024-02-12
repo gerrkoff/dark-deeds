@@ -66,19 +66,21 @@ public partial class RecurrenceServiceTest : BaseTest
             .Returns(() => Task.FromResult<PlannedRecurrenceEntity?>(new PlannedRecurrenceEntity { Uid = "42" }));
         var service = new RecurrenceService(repoMock.Object, Mapper, _specFactoryMock.Object);
 
-        await service.SaveAsync(new[]
-        {
-            new PlannedRecurrenceDto
+        await service.SaveAsync(
+            new[]
             {
-                Uid = "42",
-                Task = "42",
-                StartDate = new DateTime(2010, 10, 10),
-                EndDate = new DateTime(2011, 11, 11),
-                EveryWeekday = RecurrenceWeekday.Monday | RecurrenceWeekday.Sunday,
-                EveryMonthDay = "1,2,3",
-                EveryNthDay = 100500
-            }
-        }, string.Empty);
+                new PlannedRecurrenceDto
+                {
+                    Uid = "42",
+                    Task = "42",
+                    StartDate = new DateTime(2010, 10, 10),
+                    EndDate = new DateTime(2011, 11, 11),
+                    EveryWeekday = RecurrenceWeekday.Monday | RecurrenceWeekday.Sunday,
+                    EveryMonthDay = "1,2,3",
+                    EveryNthDay = 100500,
+                },
+            },
+            string.Empty);
 
         repoMock.Verify(x => x.TryUpdateVersionAsync(It.Is<PlannedRecurrenceEntity>(y =>
             y.Uid == "42" &&
@@ -106,23 +108,25 @@ public partial class RecurrenceServiceTest : BaseTest
                 EndDate = new DateTime(2011, 11, 11),
                 EveryWeekday = RecurrenceWeekday.Monday | RecurrenceWeekday.Sunday,
                 EveryMonthDay = "1,2,3",
-                EveryNthDay = 100500
+                EveryNthDay = 100500,
             }));
         var service = new RecurrenceService(repoMock.Object, Mapper, _specFactoryMock.Object);
 
-        await service.SaveAsync(new[]
-        {
-            new PlannedRecurrenceDto
+        await service.SaveAsync(
+            new[]
             {
-                Uid = "42",
-                Task = "42",
-                StartDate = new DateTime(2010, 10, 10),
-                EndDate = new DateTime(2011, 11, 11),
-                EveryWeekday = RecurrenceWeekday.Monday | RecurrenceWeekday.Sunday,
-                EveryMonthDay = "1,2,3",
-                EveryNthDay = 100500
-            }
-        }, string.Empty);
+                new PlannedRecurrenceDto
+                {
+                    Uid = "42",
+                    Task = "42",
+                    StartDate = new DateTime(2010, 10, 10),
+                    EndDate = new DateTime(2011, 11, 11),
+                    EveryWeekday = RecurrenceWeekday.Monday | RecurrenceWeekday.Sunday,
+                    EveryMonthDay = "1,2,3",
+                    EveryNthDay = 100500,
+                },
+            },
+            string.Empty);
 
         repoMock.Verify(x => x.GetByIdAsync("42"));
         repoMock.Verify(x => x.AnyAsync(It.IsAny<IPlannedRecurrenceSpecification>()));
@@ -141,11 +145,13 @@ public partial class RecurrenceServiceTest : BaseTest
             .Returns(() => Task.FromResult<(bool, PlannedRecurrenceEntity?)>((true, null)));
         var service = new RecurrenceService(repoMock.Object, Mapper, _specFactoryMock.Object);
 
-        var result = await service.SaveAsync(new[]
-        {
-            new PlannedRecurrenceDto {Uid = "42"},
-            new PlannedRecurrenceDto {Uid = "43", Task = "New"},
-        }, string.Empty);
+        var result = await service.SaveAsync(
+            new[]
+            {
+                new PlannedRecurrenceDto { Uid = "42" },
+                new PlannedRecurrenceDto { Uid = "43", Task = "New" },
+            },
+            string.Empty);
 
         Assert.Equal(1, result);
     }

@@ -1,8 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System.Diagnostics.CodeAnalysis;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace DarkDeeds.Backend.Data.Migrations;
 
+[SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1413:Use trailing comma in multi-line initializers", Justification = "Generated code")]
 public partial class Init : Migration
 {
     protected override void Up(MigrationBuilder migrationBuilder)

@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Net;
 using System.Text;
@@ -11,7 +12,9 @@ namespace DD.TelegramClient.Domain.Implementation;
 public interface IBotSendMessageService
 {
     Task SendUnknownCommandAsync(int userChatId);
+
     Task SendTextAsync(int userChatId, string text);
+
     Task SendFailedAsync(int userChatId);
 }
 
@@ -29,7 +32,7 @@ internal class BotSendMessageService : IBotSendMessageService
         return SendMessage(new SendMessageDto
         {
             ChatId = userChatId,
-            Text = "Unknown command"
+            Text = "Unknown command",
         });
     }
 
@@ -38,7 +41,7 @@ internal class BotSendMessageService : IBotSendMessageService
         return SendMessage(new SendMessageDto
         {
             ChatId = userChatId,
-            Text = text
+            Text = text,
         });
     }
 
@@ -47,7 +50,7 @@ internal class BotSendMessageService : IBotSendMessageService
         return SendMessage(new SendMessageDto
         {
             ChatId = userChatId,
-            Text = "Failed"
+            Text = "Failed",
         });
     }
 
@@ -65,17 +68,18 @@ internal class BotSendMessageService : IBotSendMessageService
     }
 }
 
+[SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Debug service is internal and should be in the same file")]
 internal sealed class BotSendMessageDebugService(string botToken) : BotSendMessageService(botToken)
 {
     protected override Task SendMessage(SendMessageDto message)
     {
-        Debug.WriteLine("");
+        Debug.WriteLine(string.Empty);
         Debug.WriteLine("_________________");
         Debug.WriteLine($"Chat Id: {message.ChatId}");
         Debug.WriteLine("Text:");
         Debug.WriteLine(message.Text);
         Debug.WriteLine("_________________");
-        Debug.WriteLine("");
+        Debug.WriteLine(string.Empty);
         return Task.CompletedTask;
     }
 }

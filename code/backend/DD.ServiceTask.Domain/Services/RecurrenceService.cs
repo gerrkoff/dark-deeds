@@ -11,6 +11,7 @@ namespace DD.ServiceTask.Domain.Services;
 public interface IRecurrenceService
 {
     Task<IEnumerable<PlannedRecurrenceDto>> LoadAsync(string userId);
+
     Task<int> SaveAsync(ICollection<PlannedRecurrenceDto> recurrences, string userId);
 }
 

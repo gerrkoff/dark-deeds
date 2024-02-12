@@ -8,6 +8,7 @@ namespace DD.ServiceTask.Domain.Services;
 public interface ITaskParserService
 {
     TaskDto ParseTask(string task, bool ignoreDate = false);
+
     // TODO: extract to telegram client
     IList<string> PrintTasks(IEnumerable<TaskDto> tasks);
 }
@@ -36,6 +37,11 @@ public class TaskParserService(IDateService dateService) : ITaskParserService
         return taskDto;
     }
 
+    public IList<string> PrintTasks(IEnumerable<TaskDto> tasks)
+    {
+        return tasks.Select(TaskToString).ToList();
+    }
+
     private static string ParseFlags(string task, out bool isProbable, out TaskType type)
     {
         var flagsRx = new Regex(@"\s[\?!]+$");
@@ -54,7 +60,7 @@ public class TaskParserService(IDateService dateService) : ITaskParserService
                 type = TaskType.Additional;
         }
 
-        return flagsRx.Replace(task, "");
+        return flagsRx.Replace(task, string.Empty);
     }
 
     private static string ParseTime(string task, out int hour, out int minutes, out bool withTime)
@@ -154,11 +160,6 @@ public class TaskParserService(IDateService dateService) : ITaskParserService
         dateTime = DateTime.SpecifyKind(dateTime, DateTimeKind.Utc);
         dateTime = dateTime.AddDays(dayAdjustment);
         return dateTime;
-    }
-
-    public IList<string> PrintTasks(IEnumerable<TaskDto> tasks)
-    {
-        return tasks.Select(TaskToString).ToList();
     }
 
     private string TaskToString(TaskDto task)

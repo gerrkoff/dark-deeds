@@ -23,6 +23,11 @@ public static class Setup
         services.AddTaskServiceDomain();
     }
 
+    public static void MapTaskServiceCustomRoutes(this IEndpointRouteBuilder endpoints)
+    {
+        endpoints.MapHub<TaskHub>("/ws/task/task");
+    }
+
     private static void AddTaskServiceWeb(this IServiceCollection services)
     {
         services.AddHostedService<HubHeartbeat<TaskHub>>();
@@ -44,11 +49,4 @@ public static class Setup
         services.AddScoped<ITaskRepository, TaskRepository>();
         services.AddScoped<IPlannedRecurrenceRepository, PlannedRecurrenceRepository>();
     }
-
-    public static void MapTaskServiceCustomRoutes(this IEndpointRouteBuilder endpoints)
-    {
-        endpoints.MapHub<TaskHub>("/ws/task/task");
-    }
-
-
 }

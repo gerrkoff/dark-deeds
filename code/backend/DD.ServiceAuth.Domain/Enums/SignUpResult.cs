@@ -2,5 +2,9 @@
 
 public enum SignUpResult
 {
-    Unknown, Success, UsernameAlreadyExists, PasswordInsecure, InvalidUsername
+    Unknown,
+    Success,
+    UsernameAlreadyExists,
+    PasswordInsecure,
+    InvalidUsername,
 }

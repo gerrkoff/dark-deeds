@@ -8,7 +8,7 @@ using Xunit;
 
 namespace DD.TelegramClient.Tests.Unit.Services;
 
-[SuppressMessage("Naming", "CA1707:Identifiers should not contain underscores")]
+[SuppressMessage("Naming", "CA1707:Identifiers should not contain underscores", Justification = "Tests")]
 public class BotCommandParserServiceTest
 {
     [Fact]

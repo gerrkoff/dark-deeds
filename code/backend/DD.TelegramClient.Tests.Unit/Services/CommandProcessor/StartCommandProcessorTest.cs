@@ -20,7 +20,7 @@ public class StartCommandProcessorTest
 
         await service.ProcessAsync(new StartCommand("key")
         {
-            UserChatId = 100
+            UserChatId = 100,
         });
 
         telegramMock.Verify(x => x.UpdateChatId("key", 100));

@@ -13,7 +13,6 @@ public partial class RecurrenceCreatorServiceTest
 
         var (_, result) = service.EvaluatePeriod(0);
 
-
         Assert.Equal(new DateTime(2019, 9, 16), result);
     }
 

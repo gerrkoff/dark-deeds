@@ -54,7 +54,7 @@ public class Startup(IConfiguration configuration)
             c.SwaggerDoc("v1", new OpenApiInfo
             {
                 Title = "DarkDeeds.Backend",
-                Version = buildInfo.AppVersion
+                Version = buildInfo.AppVersion,
             });
         });
     }

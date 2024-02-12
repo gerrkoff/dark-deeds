@@ -30,18 +30,20 @@ public class CreateTaskCommandProcessorTest
 
         await service.ProcessAsync(new CreateTaskCommand(task)
         {
-            UserChatId = 100
+            UserChatId = 100,
         });
-
 
         sendMessageMock.Verify(x => x.SendTextAsync(100, "Task created"));
         taskServiceMock.Verify(x => x.SaveTasksAsync(
             It.Is<ICollection<TaskDto>>(y => y.Any(e => e.Title == "Task")),
-            "userid"
-        ));
+            "userid"));
     }
 
-    private static (Mock<ITelegramService>, Mock<ITaskServiceApp>, Mock<IBotSendMessageService>, Mock<ILogger<BaseCommandProcessor<BotCommand>>>)
+    private static (
+        Mock<ITelegramService> TelegramServiceMock,
+        Mock<ITaskServiceApp> TaskServiceAppMock,
+        Mock<IBotSendMessageService> BotSendMessageServiceMock,
+        Mock<ILogger<BaseCommandProcessor<BotCommand>>> LoggerMock)
         SetupMocks(TaskDto task, TaskDto[] tasks, int chatId)
     {
         var telegramMock = new Mock<ITelegramService>();

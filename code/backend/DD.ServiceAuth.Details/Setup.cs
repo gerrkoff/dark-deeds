@@ -16,11 +16,6 @@ public static class Setup
         services.AddAuthServiceDomain();
     }
 
-    private static void AddAuthServiceWeb(this IServiceCollection services)
-    {
-        services.AddAutoMapper(typeof(ModelsMapping));
-    }
-
     public static void AddDdAuthentication(this IServiceCollection services, IConfiguration configuration)
     {
         services.Configure<AuthSettings>(options => configuration.GetSection("Auth").Bind(options));
@@ -43,7 +38,7 @@ public static class Setup
                     ValidateLifetime = true,
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(authSettings.Key)),
                     ValidateIssuerSigningKey = true,
-                    ClockSkew = TimeSpan.Zero
+                    ClockSkew = TimeSpan.Zero,
                 };
                 options.Events = new JwtBearerEvents
                 {
@@ -57,8 +52,13 @@ public static class Setup
                         }
 
                         return Task.CompletedTask;
-                    }
+                    },
                 };
             });
+    }
+
+    private static void AddAuthServiceWeb(this IServiceCollection services)
+    {
+        services.AddAutoMapper(typeof(ModelsMapping));
     }
 }

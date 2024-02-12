@@ -49,11 +49,12 @@ public class RecurrenceCreatorService(
 
                 var task = CreateTaskFromRecurrence(plannedRecurrence, date);
                 await taskRepository.UpsertAsync(task);
-                plannedRecurrence = await SaveRecurrence(plannedRecurrence,
+                plannedRecurrence = await SaveRecurrence(
+                    plannedRecurrence,
                     new RecurrenceEntity
                     {
                         DateTime = date,
-                        TaskUid = task.Uid
+                        TaskUid = task.Uid,
                     });
                 createdRecurrencesCount++;
                 Notify(task, userId);
@@ -63,73 +64,8 @@ public class RecurrenceCreatorService(
         return createdRecurrencesCount;
     }
 
-    private async Task<PlannedRecurrenceEntity> SaveRecurrence(PlannedRecurrenceEntity entity,
-        RecurrenceEntity recurrence)
-    {
-        var entityToSave = entity;
-        bool success;
-        do
-        {
-            entity.Recurrences.Add(recurrence);
-            (success, var currentEntity) = await plannedRecurrenceRepository
-                .TryUpdateVersionPropsAsync(entityToSave, x => x.Recurrences);
-            if (!success)
-                entityToSave = currentEntity;
-        } while (!success && entityToSave != null);
-
-        return entityToSave ?? throw new InvalidOperationException("Can't save recurrence");
-    }
-
-    private void Notify(TaskEntity task, string userId)
-    {
-        var dto = mapper.Map<TaskDto>(task);
-        notifierService.TaskUpdated(new TaskUpdatedDto
-        {
-            Tasks = new[] { dto },
-            UserId = userId,
-        });
-    }
-
-    private TaskEntity CreateTaskFromRecurrence(PlannedRecurrenceEntity plannedRecurrence, DateTime date)
-    {
-        var dto = taskParserService.ParseTask(plannedRecurrence.Task, ignoreDate: true);
-        var task = mapper.Map<TaskEntity>(dto);
-        task.Date = date;
-        task.UserId = plannedRecurrence.UserId;
-        task.Uid = Guid.NewGuid().ToString();
-        return task;
-    }
-
-    private List<DateTime> EvaluateRecurrenceDatesWithinPeriod(PlannedRecurrenceEntity plannedRecurrence, int timezoneOffset)
-    {
-        var (periodStart, periodEnd) = EvaluatePeriod(timezoneOffset);
-        var dates = new List<DateTime>();
-        for (var i = periodStart; i != periodEnd; i = i.AddDays(1))
-        {
-            if (!HasSchedule(plannedRecurrence) ||
-                !MatchPeriod(plannedRecurrence, i) ||
-                !MatchWeekday(plannedRecurrence, i) ||
-                !MatchNthDay(plannedRecurrence, i) ||
-                !MatchMonthDay(plannedRecurrence, i))
-            {
-                continue;
-            }
-
-            dates.Add(i);
-        }
-
-        return dates;
-    }
-
-    private static bool HasSchedule(PlannedRecurrenceEntity plannedRecurrence)
-    {
-        return plannedRecurrence.EveryNthDay.HasValue ||
-               plannedRecurrence.EveryWeekday.HasValue ||
-               !string.IsNullOrEmpty(plannedRecurrence.EveryMonthDay);
-    }
-
-    /// <remarks>End date is not included</remarks>
-    public (DateTime, DateTime) EvaluatePeriod(int timezoneOffset)
+    // End date is not included.
+    public (DateTime StartDate, DateTime EndDate) EvaluatePeriod(int timezoneOffset)
     {
         var startDate = dateService.Now.AddMinutes(timezoneOffset).Date;
         var currentDayOfWeek = (int)startDate.DayOfWeek;
@@ -195,10 +131,76 @@ public class RecurrenceCreatorService(
 
         var lastDay = DateTime.DaysInMonth(date.Year, date.Month);
 
-
         if (dayList.Any(x => x > lastDay))
             dayList.Add(lastDay);
 
         return dayList.Contains(date.Day);
+    }
+
+    private async Task<PlannedRecurrenceEntity> SaveRecurrence(
+        PlannedRecurrenceEntity entity,
+        RecurrenceEntity recurrence)
+    {
+        var entityToSave = entity;
+        bool success;
+        do
+        {
+            entity.Recurrences.Add(recurrence);
+            (success, var currentEntity) = await plannedRecurrenceRepository
+                .TryUpdateVersionPropsAsync(entityToSave, x => x.Recurrences);
+            if (!success)
+                entityToSave = currentEntity;
+        }
+        while (!success && entityToSave != null);
+
+        return entityToSave ?? throw new InvalidOperationException("Can't save recurrence");
+    }
+
+    private void Notify(TaskEntity task, string userId)
+    {
+        var dto = mapper.Map<TaskDto>(task);
+        notifierService.TaskUpdated(new TaskUpdatedDto
+        {
+            Tasks = new[] { dto },
+            UserId = userId,
+        });
+    }
+
+    private static bool HasSchedule(PlannedRecurrenceEntity plannedRecurrence)
+    {
+        return plannedRecurrence.EveryNthDay.HasValue ||
+               plannedRecurrence.EveryWeekday.HasValue ||
+               !string.IsNullOrEmpty(plannedRecurrence.EveryMonthDay);
+    }
+
+    private TaskEntity CreateTaskFromRecurrence(PlannedRecurrenceEntity plannedRecurrence, DateTime date)
+    {
+        var dto = taskParserService.ParseTask(plannedRecurrence.Task, ignoreDate: true);
+        var task = mapper.Map<TaskEntity>(dto);
+        task.Date = date;
+        task.UserId = plannedRecurrence.UserId;
+        task.Uid = Guid.NewGuid().ToString();
+        return task;
+    }
+
+    private List<DateTime> EvaluateRecurrenceDatesWithinPeriod(PlannedRecurrenceEntity plannedRecurrence, int timezoneOffset)
+    {
+        var (periodStart, periodEnd) = EvaluatePeriod(timezoneOffset);
+        var dates = new List<DateTime>();
+        for (var i = periodStart; i != periodEnd; i = i.AddDays(1))
+        {
+            if (!HasSchedule(plannedRecurrence) ||
+                !MatchPeriod(plannedRecurrence, i) ||
+                !MatchWeekday(plannedRecurrence, i) ||
+                !MatchNthDay(plannedRecurrence, i) ||
+                !MatchMonthDay(plannedRecurrence, i))
+            {
+                continue;
+            }
+
+            dates.Add(i);
+        }
+
+        return dates;
     }
 }

@@ -7,6 +7,7 @@ public interface ITaskSpecification : IEntitySpecification<TaskEntity, ITaskSpec
     IUserOwnedSpecification<TaskEntity, ITaskSpecification>
 {
     ITaskSpecification FilterActual(DateTime from);
+
     ITaskSpecification FilterDateInterval(DateTime from, DateTime till);
 }
 

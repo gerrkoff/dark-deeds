@@ -7,11 +7,9 @@ using Xunit;
 
 namespace DD.ServiceTask.Tests.Unit.Services;
 
-[SuppressMessage("Naming", "CA1707:Identifiers should not contain underscores")]
+[SuppressMessage("Naming", "CA1707:Identifiers should not contain underscores", Justification = "Tests")]
 public class TaskParserServiceTest : BaseTest
 {
-    #region Parse tasks - mirrored FE tests
-
     // These tests should be synced with FE TaskConverter.convertStringToModel tests
 
     // #1
@@ -293,10 +291,6 @@ public class TaskParserServiceTest : BaseTest
         Assert.Null(result.Time);
     }
 
-    #endregion
-
-    #region Other TaskParserService tests
-
     [Fact]
     public void ParseTask_IgnoreDateTaskWithTime()
     {
@@ -315,10 +309,13 @@ public class TaskParserServiceTest : BaseTest
     {
         var service = new TaskParserService(DateServiceMock());
 
-        var result = service.PrintTasks(new[] {new TaskDto
+        var result = service.PrintTasks(new[]
         {
-            Title = "Task text"
-        }});
+            new TaskDto
+            {
+                Title = "Task text",
+            },
+        });
 
         Assert.Equal("Task text", result.Single());
     }
@@ -328,19 +325,18 @@ public class TaskParserServiceTest : BaseTest
     {
         var service = new TaskParserService(DateServiceMock());
 
-        var result = service.PrintTasks(new[] {new TaskDto
+        var result = service.PrintTasks(new[]
         {
-            Title = "Task",
-            Date = new DateTime(2000, 10, 10, 0, 0, 0),
-            Time = 1060
-        }});
+            new TaskDto
+            {
+                Title = "Task",
+                Date = new DateTime(2000, 10, 10, 0, 0, 0),
+                Time = 1060,
+            },
+        });
 
         Assert.Equal("17:40 Task", result.Single());
     }
-
-    #endregion
-
-    #region Helpers
 
     private static IDateService DateServiceMock(int year = 2019, int month = 1, int date = 1)
     {
@@ -348,6 +344,4 @@ public class TaskParserServiceTest : BaseTest
         mock.SetupGet(x => x.Today).Returns(new DateTime(year, month, date));
         return mock.Object;
     }
-
-    #endregion
 }

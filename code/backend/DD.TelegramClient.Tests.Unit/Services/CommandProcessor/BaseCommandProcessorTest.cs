@@ -8,26 +8,9 @@ using Xunit;
 
 namespace DD.TelegramClient.Tests.Unit.Services.CommandProcessor;
 
-[SuppressMessage("Naming", "CA1707:Identifiers should not contain underscores")]
+[SuppressMessage("Naming", "CA1707:Identifiers should not contain underscores", Justification = "Tests")]
 public class BaseCommandProcessorTest
 {
-    private sealed class BotCommandImplementation : BotCommand;
-
-    private sealed class BaseCommandProcessorImplementation(
-        IBotSendMessageService botSendMessageService,
-        ILogger<BaseCommandProcessor<BotCommand>> logger,
-        // ReSharper disable once ParameterOnlyUsedForPreconditionCheck.Local
-        bool throwException)
-        : BaseCommandProcessor<BotCommandImplementation>(botSendMessageService, logger)
-    {
-        protected override Task ProcessCoreAsync(BotCommandImplementation command)
-        {
-            return throwException
-                ? throw new InvalidOperationException()
-                : Task.CompletedTask;
-        }
-    }
-
     [Fact]
     public async Task ProcessAsync_ProcessSuccess()
     {
@@ -47,9 +30,25 @@ public class BaseCommandProcessorTest
 
         await service.ProcessAsync(new BotCommandImplementation
         {
-            UserChatId = 100
+            UserChatId = 100,
         });
 
         sendMessageMock.Verify(x => x.SendFailedAsync(100));
+    }
+
+    private sealed class BotCommandImplementation : BotCommand;
+
+    private sealed class BaseCommandProcessorImplementation(
+        IBotSendMessageService botSendMessageService,
+        ILogger<BaseCommandProcessor<BotCommand>> logger,
+        bool throwException)
+        : BaseCommandProcessor<BotCommandImplementation>(botSendMessageService, logger)
+    {
+        protected override Task ProcessCoreAsync(BotCommandImplementation command)
+        {
+            return throwException
+                ? throw new InvalidOperationException()
+                : Task.CompletedTask;
+        }
     }
 }

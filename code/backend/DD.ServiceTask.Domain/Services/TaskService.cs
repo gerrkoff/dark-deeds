@@ -13,22 +13,22 @@ public interface ITaskService
 {
     /// <summary>
     /// Get all tasks, that:
-    /// <para>1. fits current period or in future</para>
-    /// <para>2. has no date</para>
-    /// <para>3. expired, but not completed</para>
+    /// <para>1. fits current period or in future.</para>
+    /// <para>2. has no date.</para>
+    /// <para>3. expired, but not completed.</para>
     /// </summary>
-    /// <param name="userId">Task's user id</param>
-    /// <param name="from">Current period start, UTC expected</param>
-    /// <returns>Tasks</returns>
+    /// <param name="userId">Task's user id.</param>
+    /// <param name="from">Current period start, UTC expected.</param>
+    /// <returns>Tasks.</returns>
     Task<IEnumerable<TaskDto>> LoadActualTasksAsync(string userId, DateTime from);
 
     /// <summary>
-    /// Get all tasks, filtered by date
+    /// Get all tasks, filtered by date.
     /// </summary>
-    /// <param name="userId">Task's user id</param>
-    /// <param name="from">Period start, included, UTC expected</param>
-    /// <param name="till">Period end, not included, UTC expected</param>
-    /// <returns>Tasks</returns>
+    /// <param name="userId">Task's user id.</param>
+    /// <param name="from">Period start, included, UTC expected.</param>
+    /// <param name="till">Period end, not included, UTC expected.</param>
+    /// <returns>Tasks.</returns>
     Task<IEnumerable<TaskDto>> LoadTasksByDateAsync(string userId, DateTime from, DateTime till);
 
     Task<IEnumerable<TaskDto>> SaveTasksAsync(ICollection<TaskDto> tasks, string userId);

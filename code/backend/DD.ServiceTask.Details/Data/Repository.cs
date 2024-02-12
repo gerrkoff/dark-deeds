@@ -13,15 +13,6 @@ internal abstract class Repository<T>(IMongoDbContext dbContext, string tableNam
 {
     private readonly IMongoCollection<T> _collection = dbContext.GetCollection<T>(tableName);
 
-    protected static void RegisterDefaultMap<TEntity>()
-    {
-        BsonClassMap.RegisterClassMap<TEntity>(map =>
-        {
-            map.AutoMap();
-            map.SetIgnoreExtraElements(true);
-        });
-    }
-
     public async Task<T?> GetByIdAsync(string uid)
     {
         if (string.IsNullOrWhiteSpace(uid))
@@ -53,7 +44,7 @@ internal abstract class Repository<T>(IMongoDbContext dbContext, string tableNam
 
         await _collection.ReplaceOneAsync(x => x.Uid == entity.Uid, entity, new ReplaceOptions
         {
-            IsUpsert = true
+            IsUpsert = true,
         });
     }
 
@@ -69,7 +60,7 @@ internal abstract class Repository<T>(IMongoDbContext dbContext, string tableNam
 
         var result = await _collection.ReplaceOneAsync(filter, entity, new ReplaceOptions
         {
-            IsUpsert = false
+            IsUpsert = false,
         });
 
         if (result.MatchedCount == 1)
@@ -100,7 +91,7 @@ internal abstract class Repository<T>(IMongoDbContext dbContext, string tableNam
 
         var result = await _collection.UpdateOneAsync(filter, update, new UpdateOptions
         {
-            IsUpsert = false
+            IsUpsert = false,
         });
 
         if (result.MatchedCount == 1)
@@ -120,7 +111,7 @@ internal abstract class Repository<T>(IMongoDbContext dbContext, string tableNam
 
         var result = await _collection.UpdateOneAsync(x => x.Uid == uid, update, new UpdateOptions
         {
-            IsUpsert = false
+            IsUpsert = false,
         });
 
         return result.ModifiedCount == 1;
@@ -133,5 +124,14 @@ internal abstract class Repository<T>(IMongoDbContext dbContext, string tableNam
 
         var result = await _collection.DeleteOneAsync(x => x.Uid == uid);
         return result.DeletedCount == 1;
+    }
+
+    protected static void RegisterDefaultMap<TEntity>()
+    {
+        BsonClassMap.RegisterClassMap<TEntity>(map =>
+        {
+            map.AutoMap();
+            map.SetIgnoreExtraElements(true);
+        });
     }
 }

@@ -5,9 +5,9 @@ namespace DD.ServiceTask.Domain.Specifications;
 public interface IUserOwnedSpecification<TEntity, out TSpec> : ISpecification<TEntity>
     where TSpec : class, IUserOwnedSpecification<TEntity, TSpec>
     where TEntity : IUserOwnedEntity
-
 {
     TSpec FilterUserOwned(string userId);
+
     TSpec FilterForeignUserOwned(string userId, string[] uidList);
 }
 

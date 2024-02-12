@@ -20,10 +20,12 @@ public partial class RecurrenceCreatorServiceTest
     {
         var service = Service();
 
-        var result = service.MatchMonthDay(new PlannedRecurrenceEntity
-        {
-            EveryMonthDay = "13"
-        }, new DateTime(2019, 9, 13));
+        var result = service.MatchMonthDay(
+            new PlannedRecurrenceEntity
+            {
+                EveryMonthDay = "13",
+            },
+            new DateTime(2019, 9, 13));
 
         Assert.True(result);
     }
@@ -33,10 +35,12 @@ public partial class RecurrenceCreatorServiceTest
     {
         var service = Service();
 
-        var result = service.MatchMonthDay(new PlannedRecurrenceEntity
-        {
-            EveryMonthDay = "13,15,22"
-        }, new DateTime(2019, 9, 13));
+        var result = service.MatchMonthDay(
+            new PlannedRecurrenceEntity
+            {
+                EveryMonthDay = "13,15,22",
+            },
+            new DateTime(2019, 9, 13));
 
         Assert.True(result);
     }
@@ -46,10 +50,12 @@ public partial class RecurrenceCreatorServiceTest
     {
         var service = Service();
 
-        var result = service.MatchMonthDay(new PlannedRecurrenceEntity
-        {
-            EveryMonthDay = "13,15,22,40"
-        }, new DateTime(2020, 2, 29));
+        var result = service.MatchMonthDay(
+            new PlannedRecurrenceEntity
+            {
+                EveryMonthDay = "13,15,22,40",
+            },
+            new DateTime(2020, 2, 29));
 
         Assert.True(result);
     }
@@ -59,10 +65,12 @@ public partial class RecurrenceCreatorServiceTest
     {
         var service = Service();
 
-        var result = service.MatchMonthDay(new PlannedRecurrenceEntity
-        {
-            EveryMonthDay = "13,15,22,40"
-        }, new DateTime(2020, 2, 16));
+        var result = service.MatchMonthDay(
+            new PlannedRecurrenceEntity
+            {
+                EveryMonthDay = "13,15,22,40",
+            },
+            new DateTime(2020, 2, 16));
 
         Assert.False(result);
     }
@@ -72,10 +80,12 @@ public partial class RecurrenceCreatorServiceTest
     {
         var service = Service();
 
-        var result = service.MatchMonthDay(new PlannedRecurrenceEntity
-        {
-            EveryMonthDay = "1q3"
-        }, new DateTime(2019, 9, 13));
+        var result = service.MatchMonthDay(
+            new PlannedRecurrenceEntity
+            {
+                EveryMonthDay = "1q3",
+            },
+            new DateTime(2019, 9, 13));
 
         Assert.True(result);
     }
@@ -85,10 +95,12 @@ public partial class RecurrenceCreatorServiceTest
     {
         var service = Service();
 
-        var result = service.MatchMonthDay(new PlannedRecurrenceEntity
-        {
-            EveryMonthDay = "999999999999999999"
-        }, new DateTime(2019, 9, 13));
+        var result = service.MatchMonthDay(
+            new PlannedRecurrenceEntity
+            {
+                EveryMonthDay = "999999999999999999",
+            },
+            new DateTime(2019, 9, 13));
 
         Assert.True(result);
     }

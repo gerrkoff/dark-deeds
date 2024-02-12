@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System.Diagnostics.CodeAnalysis;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
@@ -6,6 +7,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DD.Shared.Data.Migrations;
 
 /// <inheritdoc />
+[SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1413:Use trailing comma in multi-line initializers", Justification = "Generated code")]
+[SuppressMessage("StyleCop.CSharp.ReadabilityRules", "SA1122:Use string.Empty for empty strings", Justification = "Generated code")]
 public partial class ExtractTelegramUser : Migration
 {
     /// <inheritdoc />

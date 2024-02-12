@@ -12,12 +12,12 @@ namespace DD.ServiceTask.Tests.Unit.Services.RecurrenceCreatorServiceTests;
 
 public partial class RecurrenceCreatorServiceTest : BaseTest
 {
-    private Mock<IPlannedRecurrenceRepository> _plannedRecurrenceRepoMock = new();
     private readonly Mock<ITaskRepository> _taskRepoMock = MocksCreator.RepoTask();
     private readonly Mock<IDateService> _dateServiceMock = new();
     private readonly Mock<ITaskParserService> _taskParserServiceMock = new();
     private readonly Mock<INotifierService> _notifierServiceMock = new();
     private readonly Mock<ILogger<RecurrenceCreatorService>> _loggerMock = new();
+    private Mock<IPlannedRecurrenceRepository> _plannedRecurrenceRepoMock = new();
     private Mock<ISpecificationFactory> _specFactoryMock = new();
     private Mock<IPlannedRecurrenceSpecification> _plannedRecurrenceSpecMock = new();
 
@@ -37,7 +37,6 @@ public partial class RecurrenceCreatorServiceTest : BaseTest
             _taskParserServiceMock.Object,
             _notifierServiceMock.Object,
             Mapper,
-            _specFactoryMock.Object
-        );
+            _specFactoryMock.Object);
     }
 }

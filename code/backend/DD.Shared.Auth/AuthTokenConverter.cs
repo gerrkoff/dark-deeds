@@ -6,6 +6,7 @@ namespace DD.Shared.Auth;
 public interface IAuthTokenConverter
 {
     ClaimsIdentity ToIdentity(AuthToken authToken);
+
     AuthToken FromPrincipal(ClaimsPrincipal identity);
 }
 
@@ -17,12 +18,14 @@ internal sealed class AuthTokenConverter : IAuthTokenConverter
         {
             new(ClaimsIdentity.DefaultNameClaimType, authToken.Username),
             new(ClaimTypes.Sid, authToken.UserId),
-            new(ClaimTypes.GivenName, authToken.DisplayName)
+            new(ClaimTypes.GivenName, authToken.DisplayName),
         };
 
-        var claimsIdentity =
-            new ClaimsIdentity(claims, "Token",
-                ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
+        var claimsIdentity = new ClaimsIdentity(
+            claims,
+            "Token",
+            ClaimsIdentity.DefaultNameClaimType,
+            ClaimsIdentity.DefaultRoleClaimType);
         return claimsIdentity;
     }
 

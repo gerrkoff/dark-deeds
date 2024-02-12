@@ -18,7 +18,7 @@ public class StartController(
         var botName = "darkdeedsbot";
         return new TelegramStartDto
         {
-            Url = $"https://telegram.me/{botName}?start={chatKey}"
+            Url = $"https://telegram.me/{botName}?start={chatKey}",
         };
     }
 }

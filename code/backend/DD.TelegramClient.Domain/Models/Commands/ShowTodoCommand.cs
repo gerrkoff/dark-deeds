@@ -4,9 +4,6 @@ namespace DD.TelegramClient.Domain.Models.Commands;
 
 public class ShowTodoCommand : BotCommand
 {
-    public DateTime From { get; }
-    public DateTime To { get; }
-
     private readonly string _args;
 
     public ShowTodoCommand(string args, DateTime now, int timeAdjustment)
@@ -33,6 +30,10 @@ public class ShowTodoCommand : BotCommand
 
         To = From.AddDays(1);
     }
+
+    public DateTime From { get; }
+
+    public DateTime To { get; }
 
     public override string ToString()
     {

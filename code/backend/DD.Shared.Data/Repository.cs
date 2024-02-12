@@ -9,7 +9,6 @@ internal sealed class Repository<T>(DbContext context) : IRepository<T>
 {
     private DbSet<T> Entities => context.Set<T>();
 
-
     public IQueryable<T> GetAll()
     {
         return Entities.AsQueryable();

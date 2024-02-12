@@ -9,5 +9,4 @@ public class SendMessageDto
 
     [JsonPropertyName("text")]
     public string? Text { get; set; }
-
 }

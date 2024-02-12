@@ -2,5 +2,7 @@
 
 public enum SignInResult
 {
-    Unknown, Success, WrongUsernamePassword
+    Unknown,
+    Success,
+    WrongUsernamePassword,
 }

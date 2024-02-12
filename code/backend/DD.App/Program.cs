@@ -4,6 +4,8 @@ namespace DD.App;
 
 public static class Program
 {
+    public static readonly AppMeta Meta = AppMeta.FromEnvironment(typeof(Program), "dark-deeds");
+
     public static void Main(string[] args)
     {
         Logging.RunSafe(() => CreateHostBuilder(args).Build().Run(), Meta.Version);
@@ -15,6 +17,4 @@ public static class Program
             .UseLoggingWeb(Meta)
             .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); });
     }
-
-    public static readonly AppMeta Meta = AppMeta.FromEnvironment(typeof(Program), "dark-deeds");
 }

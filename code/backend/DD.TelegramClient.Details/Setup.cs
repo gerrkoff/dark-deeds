@@ -14,18 +14,19 @@ public static class Setup
     {
         services.AddTelegramClientInfrastructure();
         services.AddTelegramClientDomain(configuration);
+    }
 
+    public static void MapTelegramClientCustomRoutes(this IEndpointRouteBuilder endpoints, IConfiguration configuration)
+    {
+        endpoints.MapControllerRoute(
+            "bot",
+            $"api/tlgm/bot/{configuration["Bot"]}",
+            new { controller = "Bot", action = "Process" });
     }
 
     private static void AddTelegramClientInfrastructure(this IServiceCollection services)
     {
         services.AddScoped<ITaskServiceApp, TaskServiceApp>();
         services.AddAutoMapper(typeof(ModelsMapping));
-    }
-
-    public static void MapTelegramClientCustomRoutes(this IEndpointRouteBuilder endpoints, IConfiguration configuration)
-    {
-        endpoints.MapControllerRoute("bot", $"api/tlgm/bot/{configuration["Bot"]}",
-            new { controller = "Bot", action = "Process" });
     }
 }
