@@ -6,6 +6,7 @@ using System.Text;
 using System.Text.Json;
 using DD.TelegramClient.Domain.Dto;
 using DD.TelegramClient.Domain.Exceptions;
+using Microsoft.Extensions.Configuration;
 
 namespace DD.TelegramClient.Domain.Implementation;
 
@@ -22,8 +23,13 @@ internal class BotSendMessageService : IBotSendMessageService
 {
     private readonly string _apiSendMessage = "https://api.telegram.org/bot{0}/sendMessage";
 
-    public BotSendMessageService(string botToken)
+    private readonly IHttpClientFactory _httpClientFactory;
+
+    public BotSendMessageService(IConfiguration configuration, IHttpClientFactory httpClientFactory)
     {
+        _httpClientFactory = httpClientFactory;
+
+        var botToken = configuration["Bot"] ?? throw new InvalidOperationException("Bot token is not set");
         _apiSendMessage = string.Format(CultureInfo.InvariantCulture, _apiSendMessage, botToken);
     }
 
@@ -56,9 +62,9 @@ internal class BotSendMessageService : IBotSendMessageService
 
     protected virtual async Task SendMessage(SendMessageDto message)
     {
-        var client = new HttpClient();
+        var client = _httpClientFactory.CreateClient();
         var messageSerialized = JsonSerializer.Serialize(message);
-        HttpContent content = new StringContent(messageSerialized, Encoding.UTF8, "application/json");
+        using HttpContent content = new StringContent(messageSerialized, Encoding.UTF8, "application/json");
         var response = await client.PostAsync(new Uri(_apiSendMessage), content);
         if (response.StatusCode != HttpStatusCode.OK)
         {
@@ -69,7 +75,10 @@ internal class BotSendMessageService : IBotSendMessageService
 }
 
 [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Debug service is internal and should be in the same file")]
-internal sealed class BotSendMessageDebugService(string botToken) : BotSendMessageService(botToken)
+internal sealed class BotSendMessageDebugService(
+    IConfiguration configuration,
+    IHttpClientFactory httpClientFactory)
+    : BotSendMessageService(configuration, httpClientFactory)
 {
     protected override Task SendMessage(SendMessageDto message)
     {

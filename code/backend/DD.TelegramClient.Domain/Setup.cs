@@ -17,12 +17,11 @@ public static class Setup
         services.AddScoped<IStartCommandProcessor, StartCommandProcessor>();
         services.AddScoped<IBotProcessMessageService, BotProcessMessageService>();
         services.AddScoped<ITestService, TestService>();
-
-        var botToken = configuration["Bot"] ?? throw new InvalidOperationException("Bot token is not set");
+        services.AddHttpClient();
 
         if (bool.TryParse(configuration["EnableTelegramIntegration"], out var v) && v)
-            services.AddScoped<IBotSendMessageService>(_ => new BotSendMessageService(botToken));
+            services.AddScoped<IBotSendMessageService, BotSendMessageService>();
         else
-            services.AddScoped<IBotSendMessageService>(_ => new BotSendMessageDebugService(botToken));
+            services.AddScoped<IBotSendMessageService, BotSendMessageDebugService>();
     }
 }

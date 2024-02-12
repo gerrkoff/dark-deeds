@@ -95,7 +95,7 @@ internal sealed class AuthService(
         {
             UserId = user.Id,
             Username = user.UserName ?? string.Empty,
-            DisplayName = user.DisplayName ?? string.Empty,
+            DisplayName = user.DisplayName,
         };
     }
 }

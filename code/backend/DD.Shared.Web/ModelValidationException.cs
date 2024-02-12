@@ -6,10 +6,9 @@ namespace DD.Shared.Web;
 [Serializable]
 public class ModelValidationException : Exception
 {
-    public ModelValidationException(string message)
-        : base("Model validation exception")
+    public ModelValidationException()
     {
-        Errors = new List<ModelError> { new(message) };
+        Errors = new List<ModelError>();
     }
 
     public ModelValidationException(ModelStateDictionary modeState)
@@ -22,6 +21,18 @@ public class ModelValidationException : Exception
         }
 
         Errors = errors;
+    }
+
+    public ModelValidationException(string message)
+        : base("Model validation exception")
+    {
+        Errors = new List<ModelError> { new(message) };
+    }
+
+    public ModelValidationException(string message, Exception innerException)
+        : base(message, innerException)
+    {
+        Errors = new List<ModelError> { new(message) };
     }
 
     public ICollection<ModelError> Errors { get; }

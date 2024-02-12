@@ -19,5 +19,5 @@ public class PlannedRecurrenceEntity : Entity, IUserOwnedEntity
 
     public string UserId { get; set; } = string.Empty;
 
-    public List<RecurrenceEntity> Recurrences { get; set; } = [];
+    public IList<RecurrenceEntity> Recurrences { get; init; } = [];
 }

@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using DD.TelegramClient.Domain.Models.Commands;
 using Microsoft.Extensions.Logging;
 
@@ -8,6 +9,7 @@ public abstract class BaseCommandProcessor<T>(
     ILogger<BaseCommandProcessor<BotCommand>> logger)
     where T : BotCommand
 {
+    [SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "We need to catch all exceptions to log them and send a message to the user.")]
     public async Task ProcessAsync(T command)
     {
         try

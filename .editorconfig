@@ -32,27 +32,45 @@ csharp_style_var_when_type_is_apparent = true
 csharp_style_var_for_built_in_types = true
 csharp_style_var_elsewhere = true
 csharp_prefer_braces = when_multiline
+# Identifiers should not match keywords
 dotnet_code_quality.CA1716.analyzed_symbol_kinds = NamedType,Method,Property,Event,Parameter # Namespace
+# Dispose objects before losing scope
+dotnet_code_quality.CA2000.excluded_symbol_names = HttpClient
+# Use conditional expression for return
 dotnet_diagnostic.IDE0046.severity = none
+# Remove unnecessary expression value
 dotnet_diagnostic.IDE0058.severity = none
+# Missing XML comment for publicly visible type or member 'Type_or_Member'
 dotnet_diagnostic.CS1591.severity = none
-dotnet_diagnostic.CA1861.severity = none
-dotnet_diagnostic.SA1101.severity = none
-dotnet_diagnostic.SA1129.severity = none
-dotnet_diagnostic.SA1200.severity = none
-dotnet_diagnostic.SA1204.severity = none
-dotnet_diagnostic.SA1309.severity = none
-dotnet_diagnostic.SA1407.severity = none
-dotnet_diagnostic.SA1503.severity = none
-dotnet_diagnostic.SA1600.severity = none
-dotnet_diagnostic.SA1601.severity = none
-dotnet_diagnostic.SA1602.severity = none
-dotnet_diagnostic.SA1633.severity = none
-dotnet_diagnostic.SA1649.severity = none
-
-# CA1062: Validate arguments of public methods
+# Validate arguments of public methods
 dotnet_diagnostic.CA1062.severity = none
-# CA2007: Do not directly await a Task
-dotnet_diagnostic.CA2007.severity = none
-# CA1812: Avoid uninstantiated internal classes
+# Avoid uninstantiated internal classes
 dotnet_diagnostic.CA1812.severity = none
+# Avoid constant arrays as arguments
+dotnet_diagnostic.CA1861.severity = none
+# Do not directly await a Task
+dotnet_diagnostic.CA2007.severity = none
+# SA1101PrefixLocalCallsWithThis
+dotnet_diagnostic.SA1101.severity = none
+# SA1129DoNotUseDefaultValueTypeConstructor
+dotnet_diagnostic.SA1129.severity = none
+# SA1200UsingDirectivesMustBePlacedCorrectly
+dotnet_diagnostic.SA1200.severity = none
+# SA1204StaticElementsMustAppearBeforeInstanceElements
+dotnet_diagnostic.SA1204.severity = none
+# SA1309FieldNamesMustNotBeginWithUnderscore
+dotnet_diagnostic.SA1309.severity = none
+# SA1407ArithmeticExpressionsMustDeclarePrecedence
+dotnet_diagnostic.SA1407.severity = none
+# SA1503BracesMustNotBeOmitted
+dotnet_diagnostic.SA1503.severity = none
+# SA1600ElementsMustBeDocumented
+dotnet_diagnostic.SA1600.severity = none
+# SA1601PartialElementsMustBeDocumented
+dotnet_diagnostic.SA1601.severity = none
+# SA1602EnumerationItemsMustBeDocumented
+dotnet_diagnostic.SA1602.severity = none
+# SA1633FileMustHaveHeader
+dotnet_diagnostic.SA1633.severity = none
+# SA1649FileNameMustMatchTypeName
+dotnet_diagnostic.SA1649.severity = none
