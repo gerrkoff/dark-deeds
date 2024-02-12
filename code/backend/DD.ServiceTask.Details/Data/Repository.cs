@@ -15,8 +15,7 @@ internal abstract class Repository<T>(IMongoDbContext dbContext, string tableNam
 
     public async Task<T?> GetByIdAsync(string uid)
     {
-        if (string.IsNullOrWhiteSpace(uid))
-            throw new ArgumentNullException(nameof(uid));
+        ArgumentException.ThrowIfNullOrWhiteSpace(uid);
 
         using var cursor = await _collection.FindAsync(x => x.Uid == uid);
         return await cursor.SingleOrDefaultAsync();
@@ -24,24 +23,18 @@ internal abstract class Repository<T>(IMongoDbContext dbContext, string tableNam
 
     public async Task<IList<T>> GetBySpecAsync(ISpecification<T> spec)
     {
-        ArgumentNullException.ThrowIfNull(spec);
-
         var query = spec.Apply(_collection.AsQueryable()) as IMongoQueryable<T>;
         return await query.ToListAsync();
     }
 
     public async Task<bool> AnyAsync(ISpecification<T> spec)
     {
-        ArgumentNullException.ThrowIfNull(spec);
-
         var query = spec.Apply(_collection.AsQueryable()) as IMongoQueryable<T>;
         return await query.AnyAsync();
     }
 
     public async Task UpsertAsync(T entity)
     {
-        ArgumentNullException.ThrowIfNull(entity);
-
         await _collection.ReplaceOneAsync(x => x.Uid == entity.Uid, entity, new ReplaceOptions
         {
             IsUpsert = true,
@@ -50,8 +43,6 @@ internal abstract class Repository<T>(IMongoDbContext dbContext, string tableNam
 
     public async Task<(bool, T?)> TryUpdateVersionAsync(T entity)
     {
-        ArgumentNullException.ThrowIfNull(entity);
-
         var version = entity.Version;
         entity.Version++;
 
@@ -73,7 +64,6 @@ internal abstract class Repository<T>(IMongoDbContext dbContext, string tableNam
 
     public async Task<(bool, T?)> TryUpdateVersionPropsAsync(T entity, params Expression<Func<T, object>>[] properties)
     {
-        ArgumentNullException.ThrowIfNull(entity);
         ArgumentException.ThrowIfNullOrWhiteSpace(entity.Uid);
 
         var version = entity.Version;
@@ -104,8 +94,7 @@ internal abstract class Repository<T>(IMongoDbContext dbContext, string tableNam
 
     public async Task<bool> DeleteAsync(string uid)
     {
-        if (string.IsNullOrWhiteSpace(uid))
-            throw new ArgumentNullException(nameof(uid));
+        ArgumentException.ThrowIfNullOrWhiteSpace(uid);
 
         var update = Builders<T>.Update.Set(x => x.IsDeleted, true);
 
@@ -119,8 +108,7 @@ internal abstract class Repository<T>(IMongoDbContext dbContext, string tableNam
 
     public async Task<bool> DeleteHardAsync(string uid)
     {
-        if (string.IsNullOrWhiteSpace(uid))
-            throw new ArgumentNullException(nameof(uid));
+        ArgumentException.ThrowIfNullOrWhiteSpace(uid);
 
         var result = await _collection.DeleteOneAsync(x => x.Uid == uid);
         return result.DeletedCount == 1;

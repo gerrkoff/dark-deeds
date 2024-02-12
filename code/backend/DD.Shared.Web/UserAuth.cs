@@ -30,8 +30,8 @@ internal sealed class UserAuth(
 
     public AuthToken AuthToken()
     {
-        return httpContextAccessor.HttpContext is null
-            ? throw new ArgumentNullException(nameof(httpContextAccessor.HttpContext))
-            : authTokenConverter.FromPrincipal(httpContextAccessor.HttpContext.User);
+        ArgumentNullException.ThrowIfNull(httpContextAccessor.HttpContext);
+
+        return authTokenConverter.FromPrincipal(httpContextAccessor.HttpContext.User);
     }
 }
