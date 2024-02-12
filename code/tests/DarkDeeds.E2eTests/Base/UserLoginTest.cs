@@ -1,14 +1,15 @@
-using System;
-using System.Threading.Tasks;
 using OpenQA.Selenium.Remote;
 
 namespace DarkDeeds.E2eTests.Base;
 
 public class UserLoginTest : BaseTest
 {
-    protected override Task Test(Func<RemoteWebDriver, Task> action) => base.Test(async driver =>
+    protected override Task Test(Func<RemoteWebDriver, Task> action)
     {
-        await CreateUserAndLogin(driver);
-        await action(driver);
-    });
+        return base.Test(async driver =>
+        {
+            await CreateUserAndLogin(driver);
+            await action(driver);
+        });
+    }
 }

@@ -1,8 +1,7 @@
-using System.Net.Http;
+using System.Globalization;
 using System.Net.Mime;
 using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
 using DarkDeeds.E2eTests.Base;
 using DarkDeeds.E2eTests.Common;
 using DarkDeeds.E2eTests.Models;
@@ -28,17 +27,17 @@ public class TelegramTests : BaseTest
         });
     }
 
-    private async Task<int> GetTestChatId(string userId)
+    private static async Task<int> GetTestChatId(string userId)
     {
         using var client = CreateHttpClient();
-        var url = $"api/test/GetTestChatIdForUser?userId={userId}";
+        var url = new Uri($"api/test/GetTestChatIdForUser?userId={userId}");
         var result = await client.PostAsync(url, null!);
         result.EnsureSuccessStatusCode();
         var content = await result.Content.ReadAsStringAsync();
-        return int.Parse(content);
+        return int.Parse(content, CultureInfo.InvariantCulture);
     }
 
-    private async Task SendCommand(string text, int chatId)
+    private static async Task SendCommand(string text, int chatId)
     {
         using var client = CreateHttpClient();
         var payload = new
@@ -50,26 +49,26 @@ public class TelegramTests : BaseTest
                 from = new
                 {
                     id = 0,
-                    first_name = "",
-                    last_name = "",
-                    username = ""
+                    first_name = string.Empty,
+                    last_name = string.Empty,
+                    username = string.Empty,
                 },
                 date = 0,
                 chat = new
                 {
                     id = chatId,
-                    type = "",
-                    title = "",
-                    first_name = "",
-                    last_name = "",
-                    username = "",
+                    type = string.Empty,
+                    title = string.Empty,
+                    first_name = string.Empty,
+                    last_name = string.Empty,
+                    username = string.Empty,
                 },
                 text,
-            }
+            },
         };
         var serialized = JsonSerializer.Serialize(payload, JsonOptions.I);
-        var content = new StringContent(serialized, Encoding.UTF8, MediaTypeNames.Application.Json);
-        var result = await client.PostAsync("/api/tlgm/bot/bot", content);
+        using var content = new StringContent(serialized, Encoding.UTF8, MediaTypeNames.Application.Json);
+        var result = await client.PostAsync(new Uri("/api/tlgm/bot/bot"), content);
 
         result.EnsureSuccessStatusCode();
     }

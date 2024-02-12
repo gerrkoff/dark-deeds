@@ -48,6 +48,8 @@ dotnet_diagnostic.CA1062.severity = none
 dotnet_diagnostic.CA1812.severity = none
 # Avoid constant arrays as arguments
 dotnet_diagnostic.CA1861.severity = none
+# Do not use insecure randomness
+dotnet_diagnostic.CA5394.severity = none
 # Do not directly await a Task
 dotnet_diagnostic.CA2007.severity = none
 # SA1101PrefixLocalCallsWithThis

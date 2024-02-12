@@ -1,5 +1,3 @@
-using System.Linq;
-using System.Threading;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Remote;
 using Xunit;
@@ -103,7 +101,7 @@ public static class DriverExtensions
         driver.SwitchTo().Window(driver.WindowHandles[tabIndex]);
     }
 
-    public static void OpenNewTab(this RemoteWebDriver driver, string url)
+    public static void OpenNewTab(this RemoteWebDriver driver, Uri url)
     {
         driver.CreateTab();
         driver.SwitchTo().Window(driver.WindowHandles.Last());
@@ -111,9 +109,9 @@ public static class DriverExtensions
         driver.WaitUntilUserLoaded();
     }
 
-    public static void HideToasts(this RemoteWebDriver driver)
+    private static void HideToasts(this RemoteWebDriver driver)
     {
-        for (int i = 0; i < 5; i++)
+        for (var i = 0; i < 5; i++)
         {
             if (!driver.ToastExists())
                 return;
