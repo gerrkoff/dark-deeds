@@ -50,6 +50,16 @@ public class TaskSpecificationTest
     }
 
     [Fact]
+    public void FilterActual_ExcludeExpiredRoutine()
+    {
+        var service = new TaskSpecification().FilterActual(new DateTime(2018, 10, 20));
+
+        var result = service.Apply(Collection().AsQueryable()).ToList();
+
+        Assert.DoesNotContain(result, x => x.Uid == "12");
+    }
+
+    [Fact]
     public void FilterDateInterval_ExcludeNoDate()
     {
         var service = new TaskSpecification().FilterDateInterval(
@@ -84,6 +94,7 @@ public class TaskSpecificationTest
             new TaskEntity { Uid = "1", Date = new DateTime(2018, 10, 10), IsCompleted = true },
             new TaskEntity { Uid = "2", Date = new DateTime(2018, 10, 11) },
             new TaskEntity { Uid = "11", Date = new DateTime(2018, 10, 19), Type = TaskType.Additional },
+            new TaskEntity { Uid = "12", Date = new DateTime(2018, 10, 19), Type = TaskType.Routine },
             new TaskEntity { Uid = "3", Date = new DateTime(2018, 10, 20) },
             new TaskEntity { Uid = "6", Date = new DateTime(2018, 10, 26) },
             new TaskEntity { Uid = "5", Date = new DateTime(2018, 10, 25) },

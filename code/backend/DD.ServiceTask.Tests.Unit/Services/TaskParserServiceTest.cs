@@ -291,6 +291,79 @@ public class TaskParserServiceTest : BaseTest
         Assert.Null(result.Time);
     }
 
+    // #20
+    [Fact]
+    public void ParseTask_ReturnRoutineTaskWithDate()
+    {
+        var service = new TaskParserService(DateServiceMock());
+
+        var result = service.ParseTask("0220 Test *");
+
+        Assert.Equal("Test", result.Title);
+        Assert.Equal(TaskType.Routine, result.Type);
+        Assert.Equal(new DateTime(2019, 2, 20, 0, 0, 0), result.Date);
+        Assert.Null(result.Time);
+    }
+
+    // #21
+    [Fact]
+    public void ParseTask_ReturnRoutineTaskWithDateAndTime()
+    {
+        var service = new TaskParserService(DateServiceMock());
+
+        var result = service.ParseTask("20150220 2359 Test *");
+
+        Assert.Equal("Test", result.Title);
+        Assert.Equal(TaskType.Routine, result.Type);
+        Assert.Equal(new DateTime(2015, 2, 20, 0, 0, 0), result.Date);
+        Assert.Equal(1439, result.Time);
+    }
+
+    // #22
+    [Fact]
+    public void ParseTask_RoutineAndProbable()
+    {
+        var service = new TaskParserService(DateServiceMock());
+
+        var result = service.ParseTask("Test *?");
+
+        Assert.Equal("Test", result.Title);
+        Assert.Equal(TaskType.Routine, result.Type);
+        Assert.True(result.IsProbable);
+        Assert.Null(result.Date);
+        Assert.Null(result.Time);
+    }
+
+    // #22.1
+    [Fact]
+    public void ParseTask_ProbableAndRoutine()
+    {
+        var service = new TaskParserService(DateServiceMock());
+
+        var result = service.ParseTask("Test ?*");
+
+        Assert.Equal("Test", result.Title);
+        Assert.Equal(TaskType.Routine, result.Type);
+        Assert.True(result.IsProbable);
+        Assert.Null(result.Date);
+        Assert.Null(result.Time);
+    }
+
+    // #23
+    [Fact]
+    public void ParseTask_RoutineAndAdditional()
+    {
+        var service = new TaskParserService(DateServiceMock());
+
+        var result = service.ParseTask("Test !*");
+
+        Assert.Equal("Test !*", result.Title);
+        Assert.Equal(TaskType.Simple, result.Type);
+        Assert.False(result.IsProbable);
+        Assert.Null(result.Date);
+        Assert.Null(result.Time);
+    }
+
     [Fact]
     public void ParseTask_IgnoreDateTaskWithTime()
     {
@@ -336,6 +409,93 @@ public class TaskParserServiceTest : BaseTest
         });
 
         Assert.Equal("17:40 Task", result.Single());
+    }
+
+    [Fact]
+    public void PrintTasks_ReturnProbable()
+    {
+        var service = new TaskParserService(DateServiceMock());
+
+        var result = service.PrintTasks(new[]
+        {
+            new TaskDto
+            {
+                Title = "Task text",
+                IsProbable = true,
+            },
+        });
+
+        Assert.Equal("Task text ?", result.Single());
+    }
+
+    [Fact]
+    public void PrintTasks_ReturnAdditional()
+    {
+        var service = new TaskParserService(DateServiceMock());
+
+        var result = service.PrintTasks(new[]
+        {
+            new TaskDto
+            {
+                Title = "Task text",
+                Type = TaskType.Additional,
+            },
+        });
+
+        Assert.Equal("Task text !", result.Single());
+    }
+
+    [Fact]
+    public void PrintTasks_ReturnRoutine()
+    {
+        var service = new TaskParserService(DateServiceMock());
+
+        var result = service.PrintTasks(new[]
+        {
+            new TaskDto
+            {
+                Title = "Task text",
+                Type = TaskType.Routine,
+            },
+        });
+
+        Assert.Equal("Task text *", result.Single());
+    }
+
+    [Fact]
+    public void PrintTasks_ReturnRoutineAndProbable()
+    {
+        var service = new TaskParserService(DateServiceMock());
+
+        var result = service.PrintTasks(new[]
+        {
+            new TaskDto
+            {
+                Title = "Task text",
+                Type = TaskType.Routine,
+                IsProbable = true,
+            },
+        });
+
+        Assert.Equal("Task text *?", result.Single());
+    }
+
+    [Fact]
+    public void PrintTasks_ReturnAdditionalAndProbable()
+    {
+        var service = new TaskParserService(DateServiceMock());
+
+        var result = service.PrintTasks(new[]
+        {
+            new TaskDto
+            {
+                Title = "Task text",
+                Type = TaskType.Additional,
+                IsProbable = true,
+            },
+        });
+
+        Assert.Equal("Task text !?", result.Single());
     }
 
     private static IDateService DateServiceMock(int year = 2019, int month = 1, int date = 1)

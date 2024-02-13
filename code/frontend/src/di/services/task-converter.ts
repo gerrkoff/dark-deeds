@@ -34,7 +34,7 @@ export class TaskConverter {
 
         text = text.trimLeft()
 
-        if (/\s[?!]+$/.test(text)) {
+        if (/\s[?!*]+$/.test(text)) {
             text = result.extractFlags(text)
         }
 
@@ -61,11 +61,14 @@ export class TaskConverter {
         }
 
         let suffix: string = ' '
-        if (model.isProbable) {
-            suffix += '?'
-        }
         if (model.type === TaskTypeEnum.Additional) {
             suffix += '!'
+        }
+        if (model.type === TaskTypeEnum.Routine) {
+            suffix += '*'
+        }
+        if (model.isProbable) {
+            suffix += '?'
         }
         if (suffix.length === 1) {
             suffix = ''
@@ -138,13 +141,31 @@ class StringConvertingResult {
 
     public extractFlags(text: string): string {
         const flags = text.split(' ').reverse()[0]
-        flags.split('').forEach(x => {
+        for (const x of flags.split('')) {
             if (x === '!') {
+                if (this.type !== TaskTypeEnum.Simple) {
+                    this.type = TaskTypeEnum.Simple
+                    return text;
+                }
+
                 this.type = TaskTypeEnum.Additional
-            } else if (x === '?') {
+            } else if (x === '*') {
+                if (this.type !== TaskTypeEnum.Simple) {
+                    this.type = TaskTypeEnum.Simple
+                    return text;
+                }
+
+                this.type = TaskTypeEnum.Routine
+            }
+            else if (x === '?') {
+                if (this.isProbable) {
+                    this.isProbable = false
+                    return text;
+                }
+
                 this.isProbable = true
             }
-        })
+        }
         return text.slice(0, text.length - 1 - flags.length)
     }
 
