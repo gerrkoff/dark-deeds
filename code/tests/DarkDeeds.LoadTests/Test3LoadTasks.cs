@@ -1,5 +1,3 @@
-using System;
-using System.Threading.Tasks;
 using NBomber.CSharp;
 using NBomber.Plugins.Http.CSharp;
 using Xunit;
@@ -18,7 +16,8 @@ public class Test3LoadTasks : BaseTest
 
         var token = string.Empty;
 
-        var step = Step.Create(GetTestName(),
+        var step = Step.Create(
+            GetTestName(),
             HttpClientFactory.Create(),
             context =>
             {
@@ -27,7 +26,8 @@ public class Test3LoadTasks : BaseTest
                     .WithHeader("authorization", $"Bearer {token}");
 
                 return Http.Send(request, context);
-            }, timeout: TimeSpan.FromSeconds(Timeout));
+            },
+            timeout: TimeSpan.FromSeconds(Timeout));
 
         var scenario = ScenarioBuilder
             .CreateScenario(GetTestName(), step)
@@ -41,9 +41,7 @@ public class Test3LoadTasks : BaseTest
             .WithLoadSimulations(
                 Simulation.RampPerSec(RpsWarmUp, TimeSpan.FromSeconds(TimeWarmUp)),
                 Simulation.RampPerSec(RpsTest, TimeSpan.FromSeconds(TimeRamp)),
-                Simulation.InjectPerSec(RpsTest, TimeSpan.FromSeconds(TimeTest))
-                // Simulation.InjectPerSecRandom(RpsMin, RpsMax, TimeSpan.FromSeconds(Time))
-            );
+                Simulation.InjectPerSec(RpsTest, TimeSpan.FromSeconds(TimeTest)));
 
         var result = await RunScenario(scenario);
 
