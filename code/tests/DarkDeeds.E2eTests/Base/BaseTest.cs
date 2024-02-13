@@ -17,7 +17,6 @@ public class BaseTest
     private static readonly string ArtifactsPath = Environment.GetEnvironmentVariable("ARTIFACTS_PATH") ?? "artifacts";
     private static readonly Uri BackendUrl = new(Environment.GetEnvironmentVariable("URL") ?? "http://localhost:5000");
     private static readonly Random Random = new();
-    private static HttpClient? _httpClient;
 
     protected virtual async Task Test(Func<RemoteWebDriver, Task> action)
     {
@@ -52,21 +51,16 @@ public class BaseTest
     [SuppressMessage("Reliability", "CA2000:Dispose objects before losing scope", Justification = "HttpClientHandler is disposed at the end of the tests")]
     protected static HttpClient CreateHttpClient()
     {
-        if (_httpClient == null)
+        var handler = new HttpClientHandler
         {
-            var handler = new HttpClientHandler
-            {
-                ClientCertificateOptions = ClientCertificateOption.Manual,
-                ServerCertificateCustomValidationCallback = (_, _, _, _) => true,
-            };
+            ClientCertificateOptions = ClientCertificateOption.Manual,
+            ServerCertificateCustomValidationCallback = (_, _, _, _) => true,
+        };
 
-            _httpClient = new HttpClient(handler)
-            {
-                BaseAddress = BackendUrl,
-            };
-        }
-
-        return _httpClient;
+        return new HttpClient(handler)
+        {
+            BaseAddress = BackendUrl,
+        };
     }
 
     private static ChromeDriver CreateDriver()
@@ -87,7 +81,7 @@ public class BaseTest
     private static async Task<TestUserDto> CreateUser()
     {
         using var client = CreateHttpClient();
-        var result = await client.PostAsync(new Uri("/api/test/CreateTestUser"), null);
+        var result = await client.PostAsync(new Uri("api/test/CreateTestUser", UriKind.Relative), null);
         result.EnsureSuccessStatusCode();
         var content = await result.Content.ReadAsStringAsync();
         var user = JsonSerializer.Deserialize<TestUserDto>(content, JsonOptions.I);

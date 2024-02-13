@@ -14,7 +14,7 @@ public class SmokeTests(ITestOutputHelper output) : UserLoginTest
     public async void GetBuildVersionTest()
     {
         using var httpClient = CreateHttpClient();
-        var url = new Uri("/api/be/build-info");
+        var url = new Uri("api/be/build-info", UriKind.Relative);
         var result = await httpClient.GetStringAsync(url);
         var version = (string)JObject.Parse(result)["appVersion"];
         output.WriteLine($"App Version: {version}");

@@ -83,7 +83,7 @@ public abstract class BaseTest : IDisposable
         client.BaseAddress = Url;
         var payload = JsonSerializer.Serialize(new { username, password = Password });
         using var content = new StringContent(payload, Encoding.UTF8, MediaTypeNames.Application.Json);
-        var response = await client.PostAsync(new Uri("/api/auth/account/signup"), content);
+        var response = await client.PostAsync(new Uri("api/auth/account/signup", UriKind.Relative), content);
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 

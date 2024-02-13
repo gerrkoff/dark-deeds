@@ -30,7 +30,7 @@ public class TelegramTests : BaseTest
     private static async Task<int> GetTestChatId(string userId)
     {
         using var client = CreateHttpClient();
-        var url = new Uri($"api/test/GetTestChatIdForUser?userId={userId}");
+        var url = new Uri($"api/test/GetTestChatIdForUser?userId={userId}", UriKind.Relative);
         var result = await client.PostAsync(url, null!);
         result.EnsureSuccessStatusCode();
         var content = await result.Content.ReadAsStringAsync();
@@ -68,7 +68,7 @@ public class TelegramTests : BaseTest
         };
         var serialized = JsonSerializer.Serialize(payload, JsonOptions.I);
         using var content = new StringContent(serialized, Encoding.UTF8, MediaTypeNames.Application.Json);
-        var result = await client.PostAsync(new Uri("/api/tlgm/bot/bot"), content);
+        var result = await client.PostAsync(new Uri("api/tlgm/bot/bot", UriKind.Relative), content);
 
         result.EnsureSuccessStatusCode();
     }
