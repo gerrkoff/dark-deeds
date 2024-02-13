@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Globalization;
+using System.Text;
 using OpenQA.Selenium;
 
 namespace DarkDeeds.E2eTests.Common;
@@ -9,31 +10,31 @@ public class OverviewSectionParser(IWebElement section)
 
     public OverviewSectionParser FindBlock(int order)
     {
-        _query.Append($"//div{Xpath.ClassContains("days-block")}[{order}]");
+        _query.Append(CultureInfo.InvariantCulture, $"//div{XpathHelper.ClassContains("days-block")}[{order}]");
         return this;
     }
 
     public OverviewSectionParser FindDay(int order)
     {
-        _query.Append($"//div{Xpath.ClassContains("days-block-item")}[{order}]");
+        _query.Append(CultureInfo.InvariantCulture, $"//div{XpathHelper.ClassContains("days-block-item")}[{order}]");
         return this;
     }
 
     public OverviewSectionParser FindHeader()
     {
-        _query.Append($"//span{Xpath.ClassContains("day-card-header")}");
+        _query.Append(CultureInfo.InvariantCulture, $"//span{XpathHelper.ClassContains("day-card-header")}");
         return this;
     }
 
     public OverviewSectionParser FindTask(string text)
     {
-        _query.Append($"//{Xpath.TaskWithText(text)}");
+        _query.Append(CultureInfo.InvariantCulture, $"//{XpathHelper.TaskWithText(text)}");
         return this;
     }
 
     public int CountExpiredDays()
     {
-        string expiredDayXpath = $"//div{Xpath.ClassContains("day-card-expired")}";
+        var expiredDayXpath = $"//div{XpathHelper.ClassContains("day-card-expired")}";
         return section.FindElements(By.XPath(expiredDayXpath)).Count;
     }
 

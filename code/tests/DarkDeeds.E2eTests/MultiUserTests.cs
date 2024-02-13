@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using DarkDeeds.E2eTests.Base;
 using DarkDeeds.E2eTests.Common;
 using Xunit;
@@ -10,7 +9,7 @@ public class MultiUserTests : BaseTest
     [Fact]
     public Task ForeignTasksTest()
     {
-        string taskText = RandomizeText("task");
+        var taskText = RandomizeText("task");
         return Test(async driver =>
         {
             await CreateUserAndLogin(driver);
@@ -29,7 +28,7 @@ public class MultiUserTests : BaseTest
     [Fact]
     public Task ForeignPushNotificationsTest()
     {
-        string taskText = RandomizeText("task");
+        var taskText = RandomizeText("task");
         return Test(async driver =>
         {
             await CreateUserAndLogin(driver);

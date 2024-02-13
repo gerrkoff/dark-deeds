@@ -4,7 +4,7 @@ namespace DarkDeeds.E2eTests.Models;
 
 public static class JsonOptions
 {
-    public static JsonSerializerOptions I = new()
+    public static readonly JsonSerializerOptions I = new()
     {
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
     };

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Drawing;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Drawing;
 using DarkDeeds.E2eTests.Base;
 using DarkDeeds.E2eTests.Common;
 using Newtonsoft.Json.Linq;
@@ -17,9 +14,9 @@ public class SmokeTests(ITestOutputHelper output) : UserLoginTest
     public async void GetBuildVersionTest()
     {
         using var httpClient = CreateHttpClient();
-        var url = "/api/be/build-info";
+        var url = new Uri("api/be/build-info", UriKind.Relative);
         var result = await httpClient.GetStringAsync(url);
-        var version = (string) JObject.Parse(result)["appVersion"];
+        var version = (string)JObject.Parse(result)["appVersion"];
         output.WriteLine($"App Version: {version}");
     }
 
@@ -32,7 +29,7 @@ public class SmokeTests(ITestOutputHelper output) : UserLoginTest
     [Fact]
     public Task CreateNoDateTest()
     {
-        string taskText = RandomizeText("some long & strange name for task");
+        var taskText = RandomizeText("some long & strange name for task");
         return Test(driver =>
         {
             driver.CreateTaskViaAddButton(taskText);
@@ -49,9 +46,9 @@ public class SmokeTests(ITestOutputHelper output) : UserLoginTest
     [Fact]
     public Task DragAndDropTaskTest()
     {
-        string task1Text = RandomizeText("dnd task 1");
-        string task2Text = RandomizeText("dnd task 2");
-        string task3Text = RandomizeText("dnd task 3");
+        var task1Text = RandomizeText("dnd task 1");
+        var task2Text = RandomizeText("dnd task 2");
+        var task3Text = RandomizeText("dnd task 3");
         return Test(driver =>
         {
             var overviewSectionParser = new OverviewSectionParser(driver.GetCurrentSection());
@@ -103,7 +100,7 @@ public class SmokeTests(ITestOutputHelper output) : UserLoginTest
     [Fact]
     public Task SyncTasksBetweenTabsTest()
     {
-        string taskText = RandomizeText("task to sync");
+        var taskText = RandomizeText("task to sync");
         return Test(driver =>
         {
             driver.OpenNewTab(Url);
@@ -128,14 +125,14 @@ public class SmokeTests(ITestOutputHelper output) : UserLoginTest
     [Fact]
     public Task TimezoneTest()
     {
-        DateTime now = DateTime.Now;
-        string originalTaskText = RandomizeText("timezone task");
-        string taskTextWithDate = $"{now.Month:D2}{now.Day:D2} " + originalTaskText;
+        var now = DateTime.Now;
+        var originalTaskText = RandomizeText("timezone task");
+        var taskTextWithDate = $"{now.Month:D2}{now.Day:D2} " + originalTaskText;
         return Test(driver =>
         {
-            int expiredDaysCount = ((int) now.DayOfWeek + 6) % 7;
+            var expiredDaysCount = ((int)now.DayOfWeek + 6) % 7;
             var overviewSectionParser = new OverviewSectionParser(driver.GetCurrentSection());
-            int currentExpiredDaysCount = overviewSectionParser.CountExpiredDays();
+            var currentExpiredDaysCount = overviewSectionParser.CountExpiredDays();
             Assert.Equal(expiredDaysCount, currentExpiredDaysCount);
 
             driver.CreateTaskViaAddButton(taskTextWithDate);

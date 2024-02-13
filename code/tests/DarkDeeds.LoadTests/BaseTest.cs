@@ -1,40 +1,56 @@
-using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-using System.IO;
 using System.Net;
-using System.Net.Http;
 using System.Net.Mime;
 using System.Text;
-using System.Threading.Tasks;
+using System.Text.Json;
+using System.Text.RegularExpressions;
 using NBomber.Contracts;
 using NBomber.Contracts.Stats;
 using NBomber.CSharp;
 using NBomber.Plugins.Network.Ping;
-using System.Text.Json;
-using System.Text.RegularExpressions;
 using Xunit;
 
 namespace DarkDeeds.LoadTests;
 
 [Collection("Performance Tests")]
+[SuppressMessage("Design", "CA1063:Implement IDisposable Correctly", Justification = "It's implemented correctly. It's just not needed to call GC.SuppressFinalize(this) in this case.")]
 public abstract class BaseTest : IDisposable
 {
-    private const string TestSuite = "LoadTests";
-    private const string Password = "Qwerty!1";
-    private static readonly string DateFolder = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss");
-    private static readonly string Domain = Env.Domain;
-    private readonly StringBuilder _output = new();
-    protected static readonly string Url = $"https://{Domain}";
+    protected static readonly Uri Url = new($"https://{Domain}");
     protected static readonly Config Config = new();
 
-    protected int Timeout => Config.Timeout;
-    protected int TimeWarmUp => Config.TimeWarmUp;
-    protected int TimeRamp => Config.TimeRamp;
-    protected int TimeTest => Config.TimeTest;
-    protected abstract int RpsTest { get; }
-    protected int RpsWarmUp => Math.Max(1, (int) (0.1 * RpsTest));
+    private const string TestSuite = "LoadTests";
+    private const string Password = "Qwerty!1";
+    private static readonly string DateFolder = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture);
+    private readonly StringBuilder _output = new();
 
-    protected string GetTestName() => GetType().Name;
+    protected static int Timeout => Config.Timeout;
+
+    protected static int TimeWarmUp => Config.TimeWarmUp;
+
+    protected static int TimeRamp => Config.TimeRamp;
+
+    protected static int TimeTest => Config.TimeTest;
+
+    protected abstract int RpsTest { get; }
+
+    protected int RpsWarmUp => Math.Max(1, (int)(0.1 * RpsTest));
+
+    private static string Domain => Env.Domain;
+
+    public void Dispose()
+    {
+        if (_output.Length > 0)
+            File.AppendAllText(Path.Combine("reports", DateFolder, "output.txt"), _output.ToString());
+
+        GC.SuppressFinalize(this);
+    }
+
+    protected string GetTestName()
+    {
+        return GetType().Name;
+    }
 
     protected async Task<NodeStats> RunScenario(params Scenario[] scenarios)
     {
@@ -56,15 +72,18 @@ public abstract class BaseTest : IDisposable
         return result;
     }
 
-    protected string GenerateUsername() => $"test-{Guid.NewGuid()}";
+    protected static string GenerateUsername()
+    {
+        return $"test-{Guid.NewGuid()}";
+    }
 
-    protected async Task<string> CreateUserAndObtainToken(string username)
+    protected static async Task<string> CreateUserAndObtainToken(string username)
     {
         using var client = new HttpClient();
-        client.BaseAddress = new Uri(Url);
-        var payload = JsonSerializer.Serialize(new {username, password = Password});
-        var content = new StringContent(payload, Encoding.UTF8, MediaTypeNames.Application.Json);
-        var response = await client.PostAsync("/api/auth/account/signup", content);
+        client.BaseAddress = Url;
+        var payload = JsonSerializer.Serialize(new { username, password = Password });
+        using var content = new StringContent(payload, Encoding.UTF8, MediaTypeNames.Application.Json);
+        var response = await client.PostAsync(new Uri("api/auth/account/signup", UriKind.Relative), content);
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
@@ -72,10 +91,12 @@ public abstract class BaseTest : IDisposable
         var responseBodyParsed = JsonDocument.Parse(responseBody);
         var token = responseBodyParsed.RootElement.GetProperty("token").GetString();
 
+        Assert.NotNull(token);
+
         return token;
     }
 
-    protected void VerifyResults(NodeStats stats, Action additionalChecks = null)
+    protected void VerifyResults(NodeStats stats, Action? additionalChecks = null)
     {
         try
         {
@@ -100,20 +121,14 @@ public abstract class BaseTest : IDisposable
         var rps = Math.Round(stats.ScenarioStats[0].StepStats[0].Ok.Request.RPS, 0);
         var p95 = Math.Round(stats.ScenarioStats[0].StepStats[0].Ok.Latency.Percent95, 0);
         var p99 = Math.Round(stats.ScenarioStats[0].StepStats[0].Ok.Latency.Percent99, 0);
-        var name = Regex.Replace(GetTestName(), @"Test\d+", "");
+        var name = Regex.Replace(GetTestName(), @"Test\d+", string.Empty);
         var tick = success ? "[X]" : "[ ]";
-        _output.Append($"{tick} ");
-        _output.Append($"{name.PadLeft(20)} ");
-        _output.Append($"ok={okPercent.ToString(CultureInfo.InvariantCulture).PadRight(3)} ");
-        _output.Append($"rps={rps.ToString(CultureInfo.InvariantCulture).PadRight(5)} ");
-        _output.Append($"p95={p95.ToString(CultureInfo.InvariantCulture).PadRight(5)} ");
-        _output.Append($"p99={p99.ToString(CultureInfo.InvariantCulture).PadRight(5)}");
+        _output.Append(CultureInfo.InvariantCulture, $"{tick} ");
+        _output.Append(CultureInfo.InvariantCulture, $"{name.PadLeft(20)} ");
+        _output.Append(CultureInfo.InvariantCulture, $"ok={okPercent.ToString(CultureInfo.InvariantCulture).PadRight(3)} ");
+        _output.Append(CultureInfo.InvariantCulture, $"rps={rps.ToString(CultureInfo.InvariantCulture).PadRight(5)} ");
+        _output.Append(CultureInfo.InvariantCulture, $"p95={p95.ToString(CultureInfo.InvariantCulture).PadRight(5)} ");
+        _output.Append(CultureInfo.InvariantCulture, $"p99={p99.ToString(CultureInfo.InvariantCulture).PadRight(5)}");
         _output.AppendLine();
-    }
-
-    public void Dispose()
-    {
-        if (_output.Length > 0)
-            File.AppendAllText(Path.Combine("reports", DateFolder, "output.txt"), _output.ToString());
     }
 }

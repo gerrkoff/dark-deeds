@@ -1,6 +1,4 @@
-using System;
 using System.Net.Http.Json;
-using System.Threading.Tasks;
 using NBomber.CSharp;
 using NBomber.Plugins.Http.CSharp;
 using Xunit;
@@ -19,7 +17,8 @@ public class Test4CreateTaskSequential : BaseTest
 
         var token = string.Empty;
 
-        var step = Step.Create(GetTestName(),
+        var step = Step.Create(
+            GetTestName(),
             HttpClientFactory.Create(),
             context =>
             {
@@ -32,11 +31,12 @@ public class Test4CreateTaskSequential : BaseTest
                         {
                             title = "create_task_test",
                             uid = Guid.NewGuid(),
-                        }
+                        },
                     }));
 
                 return Http.Send(request, context);
-            }, timeout: TimeSpan.FromSeconds(Timeout));
+            },
+            timeout: TimeSpan.FromSeconds(Timeout));
 
         var scenario = ScenarioBuilder
             .CreateScenario(GetTestName(), step)
@@ -48,8 +48,7 @@ public class Test4CreateTaskSequential : BaseTest
             })
             .WithWarmUpDuration(TimeSpan.FromSeconds(TimeWarmUp))
             .WithLoadSimulations(
-                Simulation.KeepConstant(RpsTest, TimeSpan.FromSeconds(TimeTest))
-            );
+                Simulation.KeepConstant(RpsTest, TimeSpan.FromSeconds(TimeTest)));
 
         var result = await RunScenario(scenario);
 

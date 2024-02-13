@@ -1,10 +1,7 @@
-using System;
 using System.Diagnostics;
-using System.IO;
-using System.Net.Http;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Text.Json;
-using System.Threading.Tasks;
 using DarkDeeds.E2eTests.Common;
 using DarkDeeds.E2eTests.Models;
 using OpenQA.Selenium.Chrome;
@@ -14,25 +11,12 @@ namespace DarkDeeds.E2eTests.Base;
 
 public class BaseTest
 {
+    protected static readonly Uri Url = new(Environment.GetEnvironmentVariable("URL") ?? "http://localhost:3000");
+
     private static readonly bool RunContainer = bool.Parse(Environment.GetEnvironmentVariable("RUN_CONTAINER") ?? "false");
     private static readonly string ArtifactsPath = Environment.GetEnvironmentVariable("ARTIFACTS_PATH") ?? "artifacts";
-    protected static readonly string Url = Environment.GetEnvironmentVariable("URL") ?? "http://localhost:3000";
-    protected static readonly string BackendUrl = Environment.GetEnvironmentVariable("URL") ?? "http://localhost:5000";
+    private static readonly Uri BackendUrl = new(Environment.GetEnvironmentVariable("URL") ?? "http://localhost:5000");
     private static readonly Random Random = new();
-
-    private RemoteWebDriver CreateDriver()
-    {
-        ChromeOptions options = new ChromeOptions();
-        options.AddArguments("--ignore-certificate-errors");
-        if (RunContainer)
-        {
-            options.AddArguments("headless", "no-sandbox", "--verbose");
-        }
-        string driverPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-        var driver = new ChromeDriver(driverPath, options);
-        driver.Navigate().GoToUrl(Url);
-        return driver;
-    }
 
     protected virtual async Task Test(Func<RemoteWebDriver, Task> action)
     {
@@ -50,12 +34,12 @@ public class BaseTest
         }
     }
 
-    protected string RandomizeText(string text)
+    protected static string RandomizeText(string text)
     {
         return $"{text} {Random.Next()}";
     }
 
-    protected async Task<TestUserDto> CreateUserAndLogin(RemoteWebDriver driver)
+    protected static async Task<TestUserDto> CreateUserAndLogin(RemoteWebDriver driver)
     {
         var testUser = await CreateUser();
         driver.SignIn(testUser.Username, testUser.Password);
@@ -64,7 +48,8 @@ public class BaseTest
         return testUser;
     }
 
-    protected HttpClient CreateHttpClient()
+    [SuppressMessage("Reliability", "CA2000:Dispose objects before losing scope", Justification = "HttpClientHandler is disposed at the end of the tests")]
+    protected static HttpClient CreateHttpClient()
     {
         var handler = new HttpClientHandler
         {
@@ -74,16 +59,34 @@ public class BaseTest
 
         return new HttpClient(handler)
         {
-            BaseAddress = new Uri(BackendUrl)
+            BaseAddress = BackendUrl,
         };
     }
 
-    private async Task<TestUserDto> CreateUser()
+    private static ChromeDriver CreateDriver()
+    {
+        var options = new ChromeOptions();
+        options.AddArguments("--ignore-certificate-errors");
+        if (RunContainer)
+        {
+            options.AddArguments("headless", "no-sandbox", "--verbose");
+        }
+
+        var driverPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+        var driver = new ChromeDriver(driverPath, options);
+        driver.Navigate().GoToUrl(Url);
+        return driver;
+    }
+
+    private static async Task<TestUserDto> CreateUser()
     {
         using var client = CreateHttpClient();
-        var result = await client.PostAsync("/api/test/CreateTestUser", null);
+        var result = await client.PostAsync(new Uri("api/test/CreateTestUser", UriKind.Relative), null);
         result.EnsureSuccessStatusCode();
         var content = await result.Content.ReadAsStringAsync();
-        return JsonSerializer.Deserialize<TestUserDto>(content, JsonOptions.I);
+        var user = JsonSerializer.Deserialize<TestUserDto>(content, JsonOptions.I);
+
+        ArgumentNullException.ThrowIfNull(user);
+        return user;
     }
 }

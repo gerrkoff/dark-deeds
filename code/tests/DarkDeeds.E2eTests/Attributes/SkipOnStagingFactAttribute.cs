@@ -1,12 +1,13 @@
-using System;
 using Xunit;
 
 namespace DarkDeeds.E2eTests.Attributes;
 
 public sealed class SkipOnStagingFactAttribute : FactAttribute
 {
-    public SkipOnStagingFactAttribute() {
-        if(IsRunningOnStaging()) {
+    public SkipOnStagingFactAttribute()
+    {
+        if (IsRunningOnStaging())
+        {
             Skip = "Ignored on Staging";
         }
     }

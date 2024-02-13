@@ -26,6 +26,7 @@ RUN curl -sSL https://dl.google.com/linux/linux_signing_key.pub | apt-key add - 
 RUN dpkg-reconfigure -f noninteractive tzdata
 
 COPY code/tests/DarkDeeds.E2eTests/ /app
+COPY .editorconfig /app/.editorconfig
 WORKDIR /app
 
 ENTRYPOINT ["dotnet", "test", "-c", "Release", "--results-directory", "artifacts", "--logger:trx;LogFileName=results.trx"]
