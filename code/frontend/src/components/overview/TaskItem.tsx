@@ -2,7 +2,7 @@ import 'styles/task-item.css'
 
 import { MenuPopup } from 'components/overview'
 import { TouchMoveDelay } from 'helpers'
-import { Task, TaskModel, Time } from 'models'
+import { Task, TaskModel, TaskTypeEnum, Time } from 'models'
 import * as React from 'react'
 import { Icon, MenuItemProps } from 'semantic-ui-react'
 
@@ -100,6 +100,7 @@ export class TaskItem extends React.PureComponent<IProps, IState> {
             'task-item' +
             (task.completed ? ' task-item-completed' : '') +
             (task.isProbable ? ' task-item-probable' : '') +
+            (task.type === TaskTypeEnum.Routine ? ' task-item-routine' : '') +
             (this.state.selected ? ' task-item-selected' : '')
         let text = ''
         if (task.time !== null) {

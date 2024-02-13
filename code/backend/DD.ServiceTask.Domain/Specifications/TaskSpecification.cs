@@ -15,7 +15,7 @@ public class TaskSpecification : UserOwnedSpecification<TaskEntity, ITaskSpecifi
 {
     public ITaskSpecification FilterActual(DateTime from)
     {
-        Filters.Add(x => (!x.IsCompleted && x.Type != TaskType.Additional) ||
+        Filters.Add(x => (!x.IsCompleted && x.Type != TaskType.Additional && x.Type != TaskType.Routine) ||
                          !x.Date.HasValue ||
                          x.Date >= from);
         return this;

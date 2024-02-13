@@ -44,7 +44,7 @@ public class TaskParserService(IDateService dateService) : ITaskParserService
 
     private static string ParseFlags(string task, out bool isProbable, out TaskType type)
     {
-        var flagsRx = new Regex(@"\s[\?!]+$");
+        var flagsRx = new Regex(@"\s[?!*]+$");
 
         isProbable = false;
         type = TaskType.Simple;
@@ -54,10 +54,29 @@ public class TaskParserService(IDateService dateService) : ITaskParserService
 
         foreach (var f in task.Split(' ').Last())
         {
-            if (f == '?')
-                isProbable = true;
-            else if (f == '!')
-                type = TaskType.Additional;
+            switch (f)
+            {
+                case '?' when isProbable:
+                    isProbable = false;
+                    return task;
+                case '?':
+                    isProbable = true;
+                    break;
+                case '!' when type != TaskType.Simple:
+                    type = TaskType.Simple;
+                    return task;
+                case '!':
+                    type = TaskType.Additional;
+                    break;
+                case '*' when type != TaskType.Simple:
+                    type = TaskType.Simple;
+                    return task;
+                case '*':
+                    type = TaskType.Routine;
+                    break;
+                default:
+                    break;
+            }
         }
 
         return flagsRx.Replace(task, string.Empty);
@@ -170,6 +189,18 @@ public class TaskParserService(IDateService dateService) : ITaskParserService
             result += $"{TimeToString(task.Time.Value)} ";
 
         result += task.Title;
+
+        if (task.Type == TaskType.Additional)
+            result += " !";
+        else if (task.Type == TaskType.Routine)
+            result += " *";
+
+        if (task.IsProbable)
+        {
+            if (task.Type == TaskType.Simple)
+                result += " ";
+            result += "?";
+        }
 
         return result;
     }

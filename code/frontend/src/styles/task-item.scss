@@ -20,6 +20,12 @@
                                     supported by Chrome and Opera */
 }
 
+.task-item-bullet {
+  &.completed {
+    color: var(--clr-text-secondary);
+  }
+}
+
 .bulleted .task-item {
   margin-left: -0.5rem;
 }
@@ -28,6 +34,10 @@
   border-radius: 2px;
   background: var(--clr-base);
   color: var(--clr-text-primary) !important;
+}
+
+.task-item-routine {
+  color: var(--clr-text-secondary);
 }
 
 .task-item-completed {
