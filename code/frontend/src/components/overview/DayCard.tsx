@@ -74,8 +74,14 @@ export class DayCard extends React.PureComponent<IProps> {
                 data-id={this.props.day.date.getTime()}
             >
                 {tasks.map((x: Task) => (
-                    <List.Item key={x.uid} data-id={x.uid}
-                        className={'task-item-bullet' + (x.completed ? ' completed' : '')}>
+                    <List.Item
+                        key={x.uid}
+                        data-id={x.uid}
+                        className={
+                            'task-item-bullet' +
+                            (x.completed ? ' completed' : '')
+                        }
+                    >
                         {this.renderTask(x)}
                     </List.Item>
                 ))}

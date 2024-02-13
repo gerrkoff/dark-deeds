@@ -7,7 +7,7 @@ RUN npm install
 RUN npm run build
 RUN npm run test-ci
 
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS builder-be
+FROM mcr.microsoft.com/dotnet/sdk:8.0.100 AS builder-be
 
 COPY code/backend/ /code/backend/
 COPY .editorconfig /code/backend/.editorconfig

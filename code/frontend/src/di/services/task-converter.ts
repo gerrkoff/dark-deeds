@@ -145,22 +145,21 @@ class StringConvertingResult {
             if (x === '!') {
                 if (this.type !== TaskTypeEnum.Simple) {
                     this.type = TaskTypeEnum.Simple
-                    return text;
+                    return text
                 }
 
                 this.type = TaskTypeEnum.Additional
             } else if (x === '*') {
                 if (this.type !== TaskTypeEnum.Simple) {
                     this.type = TaskTypeEnum.Simple
-                    return text;
+                    return text
                 }
 
                 this.type = TaskTypeEnum.Routine
-            }
-            else if (x === '?') {
+            } else if (x === '?') {
                 if (this.isProbable) {
                     this.isProbable = false
-                    return text;
+                    return text
                 }
 
                 this.isProbable = true

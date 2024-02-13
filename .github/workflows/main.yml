@@ -25,7 +25,7 @@ jobs:
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 8.0.x
+        dotnet-version: 8.0.100
     - name: Build BE
       run: |
         dotnet build -warnaserror code/backend/DarkDeeds.sln
@@ -38,7 +38,7 @@ jobs:
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 8.0.x
+        dotnet-version: 8.0.100
     - name: Build E2E Tests
       run: |
         dotnet build -warnaserror code/tests/DarkDeeds.E2eTests/DarkDeeds.E2eTests.sln
@@ -50,7 +50,7 @@ jobs:
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 8.0.x
+        dotnet-version: 8.0.100
     - name: Build Load Tests
       run: |
         dotnet build -warnaserror code/tests/DarkDeeds.LoadTests/DarkDeeds.LoadTests.sln
