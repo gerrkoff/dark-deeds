@@ -74,8 +74,6 @@ public class TaskParserService(IDateService dateService) : ITaskParserService
                 case '*':
                     type = TaskType.Routine;
                     break;
-                default:
-                    break;
             }
         }
 

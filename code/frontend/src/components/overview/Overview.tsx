@@ -21,6 +21,7 @@ interface IProps {
     tasks: Task[]
     tasksLoaded: boolean
     showCompleted: boolean
+    routineShownDates: Set<number>
     openEditTask: () => void
     openTaskModal: (model: TaskModel, uid: string | null) => void
     changeAllTasks: (tasks: Task[]) => void
@@ -34,6 +35,7 @@ interface IProps {
         action: () => void,
         header: string
     ) => void
+    toggleRoutineShown: (date: Date) => void
 }
 export class Overview extends React.PureComponent<IProps> {
     private dateService = dateService
@@ -178,9 +180,11 @@ export class Overview extends React.PureComponent<IProps> {
                 days={model}
                 daysInRow={daysInRow}
                 expiredDate={today}
+                routineShownDates={this.props.routineShownDates}
                 openTaskModal={this.props.openTaskModal}
                 changeTaskStatus={this.props.changeTaskStatus}
                 confirmAction={this.props.confirmAction}
+                toggleRoutineShown={this.props.toggleRoutineShown}
             />
         )
     }

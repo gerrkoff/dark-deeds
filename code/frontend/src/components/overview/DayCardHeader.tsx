@@ -8,7 +8,11 @@ import { Icon, MenuItemProps } from 'semantic-ui-react'
 
 interface IProps {
     date: Date
+    isRoutineShown: boolean
+    hasRoutine: boolean
+    remainingRoutineCount: number
     openTaskModal?: (model: TaskModel, uid: string | null) => void
+    toggleRoutineShown?: (date: Date) => void
 }
 interface IState {
     menuPopupOpen: boolean
@@ -48,20 +52,48 @@ export class DayCardHeader extends React.PureComponent<IProps, IState> {
         })
 
         return (
-            <MenuPopup
-                content={this.renderContent()}
-                changeVisibility={this.handleMenuChangeVisibility}
-                menuItemProps={menuItemProps}
-            />
+            <div className="day-card-header">
+                <MenuPopup
+                    content={this.renderDate()}
+                    changeVisibility={this.handleMenuChangeVisibility}
+                    menuItemProps={menuItemProps}
+                />
+                {this.renderRoutineCount()}
+            </div>
         )
     }
 
-    private renderContent = () => {
-        const className =
-            'day-card-header' +
+    private renderRoutineCount = () => {
+        if (!this.props.hasRoutine) {
+            return <></>
+        }
+
+        const highlightClassName = this.props.isRoutineShown
+            ? ' day-card-header-routine-count-text-highlight'
+            : this.props.remainingRoutineCount === 0
+            ? ' day-card-header-routine-count-text-pale'
+            : ''
+        const routineCountClassName =
+            'day-card-header-routine-count' +
+            highlightClassName +
+            (this.props.isRoutineShown ? ' day-card-header-routine-shown' : '')
+
+        return (
+            <span
+                onClick={this.handleToggleRoutineShown}
+                className={routineCountClassName}
+            >
+                {this.props.remainingRoutineCount}
+            </span>
+        )
+    }
+
+    private renderDate = () => {
+        const dateClassName =
+            'day-card-header-date' +
             (this.state.menuPopupOpen ? ' day-card-header-selected' : '')
         return (
-            <span className={className}>
+            <span className={dateClassName}>
                 {this.dateService.toLabel(this.props.date)}
             </span>
         )
@@ -75,5 +107,9 @@ export class DayCardHeader extends React.PureComponent<IProps, IState> {
         if (this.props.openTaskModal) {
             this.props.openTaskModal(new TaskModel('', this.props.date), null)
         }
+    }
+
+    private handleToggleRoutineShown = () => {
+        this.props.toggleRoutineShown?.(this.props.date)
     }
 }

@@ -11,6 +11,7 @@ const inittialState: ITasksState = {
     tasks: [],
     hubReconnecting: false,
     hubHeartbeatLastTime: new Date(),
+    routineShownDates: new Set<number>(),
 }
 
 export function tasks(
@@ -66,6 +67,14 @@ export function tasks(
             }
         case actions.TASKS_HUB_HEARTBEAT:
             return { ...state, hubHeartbeatLastTime: new Date() }
+        case actions.TASKS_TOGGLE_ROUTINE_SHOWN:
+            return {
+                ...state,
+                routineShownDates: toggleRoutineShown(
+                    state.routineShownDates,
+                    action.date
+                ),
+            }
     }
     return state
 }
@@ -169,4 +178,19 @@ function changeTaskStatus(
     }
 
     return newTasks
+}
+
+function toggleRoutineShown(
+    routineShownDates: Set<number>,
+    date: Date
+): Set<number> {
+    const value = date.getTime()
+    const newRoutineShownDates = new Set(routineShownDates)
+    if (newRoutineShownDates.has(value)) {
+        newRoutineShownDates.delete(value)
+    } else {
+        newRoutineShownDates.add(value)
+    }
+
+    return newRoutineShownDates
 }

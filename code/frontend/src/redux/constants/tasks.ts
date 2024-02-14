@@ -80,6 +80,12 @@ export interface ITasksHubHeartbeat {
     type: typeof TASKS_HUB_HEARTBEAT
 }
 
+export const TASKS_TOGGLE_ROUTINE_SHOWN = 'TASKS_TOGGLE_ROUTINE_SHOWN'
+export interface ITasksToggleRoutineShown {
+    type: typeof TASKS_TOGGLE_ROUTINE_SHOWN
+    date: Date
+}
+
 export type TasksAction =
     | ITasksLoading
     | ITasksLoadingSuccess
@@ -94,3 +100,4 @@ export type TasksAction =
     | ITasksHubReconnected
     | ITasksHubHeartbeat
     | ITasksUpdateTasksSync
+    | ITasksToggleRoutineShown

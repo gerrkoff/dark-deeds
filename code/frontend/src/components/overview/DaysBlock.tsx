@@ -9,6 +9,7 @@ interface IProps {
     testId?: string
     daysInRow?: number
     expiredDate?: Date
+    routineShownDates: Set<number>
     openTaskModal?: (model: TaskModel, uid: string | null) => void
     changeTaskStatus?: (
         uid: string,
@@ -20,6 +21,7 @@ interface IProps {
         action: () => void,
         header: string
     ) => void
+    toggleRoutineShown?: (date: Date) => void
 }
 export class DaysBlock extends React.PureComponent<IProps> {
     public render() {
@@ -59,11 +61,17 @@ export class DaysBlock extends React.PureComponent<IProps> {
                                 <DayCard
                                     day={y}
                                     expiredDate={this.props.expiredDate}
+                                    routineShownDates={
+                                        this.props.routineShownDates
+                                    }
                                     openTaskModal={this.props.openTaskModal}
                                     changeTaskStatus={
                                         this.props.changeTaskStatus
                                     }
                                     confirmAction={this.props.confirmAction}
+                                    toggleRoutineShown={
+                                        this.props.toggleRoutineShown
+                                    }
                                 />
                             </div>
                         ))}

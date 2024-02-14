@@ -7,4 +7,5 @@ export interface ITasksState {
     tasks: Task[]
     hubReconnecting: boolean
     hubHeartbeatLastTime: Date
+    routineShownDates: Set<number>
 }

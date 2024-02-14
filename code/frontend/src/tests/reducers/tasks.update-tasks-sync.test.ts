@@ -17,6 +17,7 @@ function createState(
         changed,
         hubReconnecting,
         hubHeartbeatLastTime: new Date(),
+        routineShownDates: new Set(),
     }
 }
 

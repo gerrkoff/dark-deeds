@@ -9,6 +9,7 @@ import { List, Segment } from 'semantic-ui-react'
 interface IProps {
     day: DayCardModel
     expiredDate?: Date
+    routineShownDates: Set<number>
     openTaskModal?: (model: TaskModel, uid: string | null) => void
     changeTaskStatus?: (
         uid: string,
@@ -20,6 +21,7 @@ interface IProps {
         action: () => void,
         header: string
     ) => void
+    toggleRoutineShown?: (date: Date) => void
 }
 export class DayCard extends React.PureComponent<IProps> {
     private taskService = taskService
@@ -31,11 +33,18 @@ export class DayCard extends React.PureComponent<IProps> {
                 ? 'day-card-expired'
                 : ''
         const tasks = this.props.day.tasks.sort(this.taskService.sorting)
+        const includeRoutine = this.props.routineShownDates.has(
+            this.props.day.date.getTime()
+        )
         return (
             <Segment id="day-card" className={className} inverted raised>
                 <DayCardHeader
                     date={this.props.day.date}
+                    isRoutineShown={includeRoutine}
+                    hasRoutine={this.hasRoutine()}
+                    remainingRoutineCount={this.getRemainingRoutineCount()}
                     openTaskModal={this.props.openTaskModal}
+                    toggleRoutineShown={this.props.toggleRoutineShown}
                 />
                 {this.renderAdditionalTaskList(
                     tasks.filter(
@@ -44,7 +53,9 @@ export class DayCard extends React.PureComponent<IProps> {
                 )}
                 {this.renderTaskList(
                     tasks.filter(
-                        (x: Task) => x.type !== TaskTypeEnum.Additional
+                        (x: Task) =>
+                            x.type !== TaskTypeEnum.Additional &&
+                            (includeRoutine || x.type !== TaskTypeEnum.Routine)
                     )
                 )}
             </Segment>
@@ -97,6 +108,18 @@ export class DayCard extends React.PureComponent<IProps> {
                 confirmAction={this.props.confirmAction}
                 openTaskModal={this.props.openTaskModal}
             />
+        )
+    }
+
+    private getRemainingRoutineCount() {
+        return this.props.day.tasks.filter(
+            (x: Task) => x.type === TaskTypeEnum.Routine && !x.completed
+        ).length
+    }
+
+    private hasRoutine() {
+        return this.props.day.tasks.some(
+            (x: Task) => x.type === TaskTypeEnum.Routine
         )
     }
 }

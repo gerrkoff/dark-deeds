@@ -8,6 +8,7 @@ import {
     openEditTaskModal,
     openEditTaskWithModel,
     openModalConfirm,
+    toggleRoutineShown,
 } from 'redux/actions'
 import {
     EditTaskAction,
@@ -22,6 +23,7 @@ function mapStateToProps({ tasks, settings }: IAppState) {
         tasks: tasks.tasks,
         tasksLoaded: tasks.loadingState === TaskLoadingStateEnum.Loaded,
         showCompleted: settings.showCompleted,
+        routineShownDates: tasks.routineShownDates,
     }
 }
 
@@ -48,6 +50,7 @@ function mapDispatchToProps(
             deleted?: boolean
         ) => dispatch(changeTaskStatus(uid, completed, deleted)),
         changeAllTasks: (tasks: Task[]) => dispatch(changeAllTasks(tasks)),
+        toggleRoutineShown: (date: Date) => dispatch(toggleRoutineShown(date)),
     }
 }
 

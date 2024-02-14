@@ -36,6 +36,8 @@ csharp_prefer_braces = when_multiline
 dotnet_code_quality.CA1716.analyzed_symbol_kinds = NamedType,Method,Property,Event,Parameter # Namespace
 # Dispose objects before losing scope
 dotnet_code_quality.CA2000.excluded_symbol_names = HttpClient
+# Add missing cases to switch statement
+dotnet_diagnostic.IDE0010.severity = none
 # Use conditional expression for return
 dotnet_diagnostic.IDE0046.severity = none
 # Remove unnecessary expression value
