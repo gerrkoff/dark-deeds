@@ -2,13 +2,40 @@
 
 .day-card-header {
   width: 100%;
-  display: inline-block;
-  text-align: right;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row-reverse;
   font-size: $font-smaller;
-  cursor: pointer;
   color: var(--clr-text-primary);
   border-bottom: 1px solid var(--clr-base);
   margin-bottom: 0.2rem;
+  padding-bottom: 1px;
+}
+
+.day-card-header-routine-count {
+  cursor: pointer;
+  padding: 0 0.75rem;
+  margin-right: 1rem;
+}
+
+.day-card-header-routine-count-text-pale {
+  color: var(--clr-text-secondary);
+}
+
+.day-card-header-routine-count-text-highlight {
+  color: var(--clr-text-primary);
+}
+
+.day-card-header-routine-shown {
+  border-radius: 2px;
+  background: var(--clr-base);
+}
+
+.day-card-header-date {
+  cursor: pointer;
+  padding: 0 0.2rem 0 0;
+  flex-grow: 1;
+  text-align: right;
 }
 
 .day-card-header-selected {

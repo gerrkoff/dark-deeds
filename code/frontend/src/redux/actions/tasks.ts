@@ -141,3 +141,9 @@ export function changeTaskStatus(
 ): actions.ITasksChangeTaskStatus {
     return { type: actions.TASKS_CHANGE_TASK_STATUS, uid, completed, deleted }
 }
+
+export function toggleRoutineShown(
+    date: Date
+): actions.ITasksToggleRoutineShown {
+    return { type: actions.TASKS_TOGGLE_ROUTINE_SHOWN, date }
+}
