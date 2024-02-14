@@ -53,10 +53,10 @@ public class SmokeTests(ITestOutputHelper output) : UserLoginTest
         {
             var overviewSectionParser = new OverviewSectionParser(driver.GetCurrentSection());
 
-            var header1 = overviewSectionParser.FindBlock(1).FindDay(2).FindHeader().GetElement();
+            var header1 = overviewSectionParser.FindBlock(1).FindDay(2).FindHeaderDate().GetElement();
             driver.CreateTaskViaDayHeader(header1, task1Text);
 
-            var header2 = overviewSectionParser.FindBlock(1).FindDay(4).FindHeader().GetElement();
+            var header2 = overviewSectionParser.FindBlock(1).FindDay(4).FindHeaderDate().GetElement();
             driver.CreateTaskViaDayHeader(header2, task2Text);
             driver.CreateTaskViaDayHeader(header2, task3Text);
 

@@ -20,9 +20,9 @@ public class OverviewSectionParser(IWebElement section)
         return this;
     }
 
-    public OverviewSectionParser FindHeader()
+    public OverviewSectionParser FindHeaderDate()
     {
-        _query.Append(CultureInfo.InvariantCulture, $"//span{XpathHelper.ClassContains("day-card-header")}");
+        _query.Append(CultureInfo.InvariantCulture, $"//span{XpathHelper.ClassContains("day-card-header-date")}");
         return this;
     }
 
