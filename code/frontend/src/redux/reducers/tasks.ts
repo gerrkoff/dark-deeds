@@ -70,7 +70,10 @@ export function tasks(
         case actions.TASKS_TOGGLE_ROUTINE_SHOWN:
             return {
                 ...state,
-                routineShownDates: toggleRoutineShown(state.routineShownDates, action.date),
+                routineShownDates: toggleRoutineShown(
+                    state.routineShownDates,
+                    action.date
+                ),
             }
     }
     return state
@@ -179,9 +182,9 @@ function changeTaskStatus(
 
 function toggleRoutineShown(
     routineShownDates: Set<number>,
-    date: Date,
+    date: Date
 ): Set<number> {
-    const value = date.getTime();
+    const value = date.getTime()
     const newRoutineShownDates = new Set(routineShownDates)
     if (newRoutineShownDates.has(value)) {
         newRoutineShownDates.delete(value)

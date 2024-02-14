@@ -9,7 +9,9 @@ test('renders tasks', () => {
         tasks.push(new Task(i.toString(), '', new Date()))
     }
     const model = new DayCardModel(new Date(), tasks)
-    const component = enzyme.shallow(<DayCard day={model} routineShownDates={new Set()} />)
+    const component = enzyme.shallow(
+        <DayCard day={model} routineShownDates={new Set()} />
+    )
 
     expect(component.find('List').length).toBe(1)
     expect(component.find('ListItem').length).toBe(19)
@@ -19,13 +21,21 @@ test('renders tasks', () => {
 test('renders expired days', () => {
     const model = new DayCardModel(new Date(2018, 9, 10))
     let component = enzyme.shallow(
-        <DayCard day={model} expiredDate={new Date(2018, 9, 11)} routineShownDates={new Set()} />
+        <DayCard
+            day={model}
+            expiredDate={new Date(2018, 9, 11)}
+            routineShownDates={new Set()}
+        />
     )
 
     expect(component.find('.day-card-expired').length).toBe(1)
 
     component = enzyme.shallow(
-        <DayCard day={model} expiredDate={new Date(2018, 9, 10)} routineShownDates={new Set()} />
+        <DayCard
+            day={model}
+            expiredDate={new Date(2018, 9, 10)}
+            routineShownDates={new Set()}
+        />
     )
 
     expect(component.find('.day-card-expired').length).toBe(0)
@@ -35,14 +45,18 @@ test('renders non-expired days if expired date null', () => {
     const date = new Date(2018, 9, 10)
     date.setDate(-10000)
     const model = new DayCardModel(date)
-    const component = enzyme.shallow(<DayCard day={model} routineShownDates={new Set()} />)
+    const component = enzyme.shallow(
+        <DayCard day={model} routineShownDates={new Set()} />
+    )
 
     expect(component.find('.day-card-expired').length).toBe(0)
 })
 
 test('renders ready for drag-n-drop', () => {
     const model = new DayCardModel(new Date())
-    const component = enzyme.shallow(<DayCard day={model} routineShownDates={new Set()} />)
+    const component = enzyme.shallow(
+        <DayCard day={model} routineShownDates={new Set()} />
+    )
     expect(component.find('.dragula-container').length).toBe(1)
 })
 
@@ -66,7 +80,9 @@ test('renders all day tasks as separate list with all-day-item classes', () => {
         )
     }
     const model = new DayCardModel(new Date(), tasks)
-    const component = enzyme.shallow(<DayCard day={model} routineShownDates={new Set()} />)
+    const component = enzyme.shallow(
+        <DayCard day={model} routineShownDates={new Set()} />
+    )
 
     expect(component.find('List').length).toBe(2)
     expect(component.find('ListItem').length).toBe(6)

@@ -52,7 +52,7 @@ export class DayCardHeader extends React.PureComponent<IProps, IState> {
         })
 
         return (
-            <div className='day-card-header'>
+            <div className="day-card-header">
                 <MenuPopup
                     content={this.renderDate()}
                     changeVisibility={this.handleMenuChangeVisibility}
@@ -71,23 +71,31 @@ export class DayCardHeader extends React.PureComponent<IProps, IState> {
         const highlightClassName = this.props.isRoutineShown
             ? ' day-card-header-routine-count-text-highlight'
             : this.props.remainingRoutineCount === 0
-                ? ' day-card-header-routine-count-text-pale'
-                : '';
-        const routineCountClassName = 'day-card-header-routine-count' + highlightClassName +
-            (this.props.isRoutineShown ? ' day-card-header-routine-shown' : '');
+            ? ' day-card-header-routine-count-text-pale'
+            : ''
+        const routineCountClassName =
+            'day-card-header-routine-count' +
+            highlightClassName +
+            (this.props.isRoutineShown ? ' day-card-header-routine-shown' : '')
 
-        return (<span onClick={this.handleToggleRoutineShown} className={routineCountClassName}>
-                    {this.props.remainingRoutineCount}
-                </span>
+        return (
+            <span
+                onClick={this.handleToggleRoutineShown}
+                className={routineCountClassName}
+            >
+                {this.props.remainingRoutineCount}
+            </span>
         )
     }
 
     private renderDate = () => {
-        const dateClassName = 'day-card-header-date' + (this.state.menuPopupOpen ? ' day-card-header-selected' : '');
+        const dateClassName =
+            'day-card-header-date' +
+            (this.state.menuPopupOpen ? ' day-card-header-selected' : '')
         return (
-                <span className={dateClassName}>
-                    {this.dateService.toLabel(this.props.date)}
-                </span>
+            <span className={dateClassName}>
+                {this.dateService.toLabel(this.props.date)}
+            </span>
         )
     }
 

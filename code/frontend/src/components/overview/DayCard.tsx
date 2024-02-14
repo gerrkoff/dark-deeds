@@ -33,7 +33,9 @@ export class DayCard extends React.PureComponent<IProps> {
                 ? 'day-card-expired'
                 : ''
         const tasks = this.props.day.tasks.sort(this.taskService.sorting)
-        const includeRoutine = this.props.routineShownDates.has(this.props.day.date.getTime())
+        const includeRoutine = this.props.routineShownDates.has(
+            this.props.day.date.getTime()
+        )
         return (
             <Segment id="day-card" className={className} inverted raised>
                 <DayCardHeader
@@ -51,7 +53,9 @@ export class DayCard extends React.PureComponent<IProps> {
                 )}
                 {this.renderTaskList(
                     tasks.filter(
-                        (x: Task) => x.type !== TaskTypeEnum.Additional && (includeRoutine || x.type !== TaskTypeEnum.Routine)
+                        (x: Task) =>
+                            x.type !== TaskTypeEnum.Additional &&
+                            (includeRoutine || x.type !== TaskTypeEnum.Routine)
                     )
                 )}
             </Segment>

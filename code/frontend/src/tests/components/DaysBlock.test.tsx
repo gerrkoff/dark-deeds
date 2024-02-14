@@ -9,7 +9,9 @@ test('renders days and blocks', () => {
         days.push(new DayCardModel(new Date(2018, 10, i)))
     }
 
-    const component = enzyme.shallow(<DaysBlock days={days} daysInRow={7} routineShownDates={new Set()} />)
+    const component = enzyme.shallow(
+        <DaysBlock days={days} daysInRow={7} routineShownDates={new Set()} />
+    )
 
     expect(component.find('.days-block').length).toBe(3)
     expect(component.find('DayCard').length).toBe(19)
@@ -21,7 +23,9 @@ test('renders days and blocks - all rows fill', () => {
         days.push(new DayCardModel(new Date(2018, 10, i)))
     }
 
-    const component = enzyme.shallow(<DaysBlock days={days} daysInRow={7} routineShownDates={new Set()} />)
+    const component = enzyme.shallow(
+        <DaysBlock days={days} daysInRow={7} routineShownDates={new Set()} />
+    )
 
     expect(component.find('.days-block').length).toBe(2)
     expect(component.find('DayCard').length).toBe(14)
@@ -33,12 +37,16 @@ test('renders days and blocks in one row', () => {
         days.push(new DayCardModel(new Date(2018, 10, i)))
     }
 
-    let component = enzyme.shallow(<DaysBlock days={days} daysInRow={-1} routineShownDates={new Set()} />)
+    let component = enzyme.shallow(
+        <DaysBlock days={days} daysInRow={-1} routineShownDates={new Set()} />
+    )
 
     expect(component.find('.days-block').length).toBe(1)
     expect(component.find('DayCard').length).toBe(19)
 
-    component = enzyme.shallow(<DaysBlock days={days} routineShownDates={new Set()} />)
+    component = enzyme.shallow(
+        <DaysBlock days={days} routineShownDates={new Set()} />
+    )
 
     expect(component.find('.days-block').length).toBe(1)
     expect(component.find('DayCard').length).toBe(19)
@@ -50,7 +58,9 @@ test('renders days sorted', () => {
         new DayCardModel(new Date(2019, 5, 5)),
     ]
 
-    const component = enzyme.shallow(<DaysBlock days={days} routineShownDates={new Set()} />)
+    const component = enzyme.shallow(
+        <DaysBlock days={days} routineShownDates={new Set()} />
+    )
 
     // tslint:disable-next-line no-unnecessary-type-assertion
     expect(

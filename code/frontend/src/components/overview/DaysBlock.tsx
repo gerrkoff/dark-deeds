@@ -61,13 +61,17 @@ export class DaysBlock extends React.PureComponent<IProps> {
                                 <DayCard
                                     day={y}
                                     expiredDate={this.props.expiredDate}
-                                    routineShownDates={this.props.routineShownDates}
+                                    routineShownDates={
+                                        this.props.routineShownDates
+                                    }
                                     openTaskModal={this.props.openTaskModal}
                                     changeTaskStatus={
                                         this.props.changeTaskStatus
                                     }
                                     confirmAction={this.props.confirmAction}
-                                    toggleRoutineShown={this.props.toggleRoutineShown}
+                                    toggleRoutineShown={
+                                        this.props.toggleRoutineShown
+                                    }
                                 />
                             </div>
                         ))}
