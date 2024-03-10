@@ -3,6 +3,7 @@ using DD.ServiceAuth.Details;
 using DD.ServiceTask.Details;
 using DD.Shared.Auth;
 using DD.Shared.Data;
+using DD.Shared.Data.Migrator;
 using DD.Shared.Web;
 using DD.TelegramClient.Details;
 using DD.WebClientBff.Details;
@@ -35,6 +36,7 @@ public class Startup(IConfiguration configuration)
         services.AddSharedAuth();
         services.AddSharedWeb();
         services.AddSharedData(Configuration);
+        services.AddSharedDataMigrator();
 
         services.AddDdAuthentication(Configuration);
 

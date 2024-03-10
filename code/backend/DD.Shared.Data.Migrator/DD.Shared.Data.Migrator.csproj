@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -10,22 +10,16 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DD.Shared.Data.Migrator\DD.Shared.Data.Migrator.csproj" />
-    <ProjectReference Include="..\DD.Shared.Web\DD.Shared.Web.csproj" />
-    <ProjectReference Include="..\DD.Shared.Data\DD.Shared.Data.csproj" />
-    <ProjectReference Include="..\DD.ServiceAuth.Details\DD.ServiceAuth.Details.csproj" />
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\DD.ServiceTask.Details\DD.ServiceTask.Details.csproj" />
     <ProjectReference Include="..\DD.TelegramClient.Details\DD.TelegramClient.Details.csproj" />
     <ProjectReference Include="..\DD.WebClientBff.Details\DD.WebClientBff.Details.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
-    <PackageReference Include="Serilog.AspNetCore" Version="5.0.0" />
-    <PackageReference Include="Serilog.Enrichers.ClientInfo" Version="1.1.4" />
-    <PackageReference Include="Serilog.Enrichers.Span" Version="2.2.0" />
-    <PackageReference Include="Serilog.Sinks.Grafana.Loki" Version="7.1.0" />
-    <PackageReference Include="GerrKoff.Monitoring" Version="0.7.1" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.556">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

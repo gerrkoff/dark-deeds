@@ -5,7 +5,7 @@ using DD.WebClientBff.Domain.Infrastructure;
 
 namespace DD.WebClientBff.Details.Data;
 
-internal sealed class UserSettingsRepository(IMongoDbContext dbContext)
+public sealed class UserSettingsRepository(IMongoDbContext dbContext)
     : BaseRepository<UserSettingsEntity>(dbContext, "userSettings"), IUserSettingsRepository
 {
     static UserSettingsRepository()

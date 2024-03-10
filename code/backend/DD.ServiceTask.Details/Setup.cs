@@ -41,7 +41,9 @@ public static class Setup
 
     private static void AddTaskServiceData(this IServiceCollection services)
     {
+        services.AddScoped<TaskRepository>();
         services.AddScoped<ITaskRepository, TaskRepository>();
+        services.AddScoped<PlannedRecurrenceRepository>();
         services.AddScoped<IPlannedRecurrenceRepository, PlannedRecurrenceRepository>();
     }
 }

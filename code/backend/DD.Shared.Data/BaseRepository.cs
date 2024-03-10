@@ -6,7 +6,7 @@ namespace DD.Shared.Data;
 
 public abstract class BaseRepository<T>(IMongoDbContext dbContext, string tableName)
 {
-    protected IMongoCollection<T> Collection => dbContext.GetCollection<T>(tableName);
+    public IMongoCollection<T> Collection => dbContext.GetCollection<T>(tableName);
 
     protected abstract Expression<Func<T, string>> FieldId { get; }
 

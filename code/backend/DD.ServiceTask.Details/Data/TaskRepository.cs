@@ -4,7 +4,7 @@ using DD.Shared.Data;
 
 namespace DD.ServiceTask.Details.Data;
 
-internal sealed class TaskRepository(IMongoDbContext dbContext) : Repository<TaskEntity>(dbContext, "tasks"), ITaskRepository
+public sealed class TaskRepository(IMongoDbContext dbContext) : Repository<TaskEntity>(dbContext, "tasks"), ITaskRepository
 {
     static TaskRepository()
     {

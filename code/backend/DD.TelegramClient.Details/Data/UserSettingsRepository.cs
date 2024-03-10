@@ -6,7 +6,7 @@ using MongoDB.Driver;
 
 namespace DD.TelegramClient.Details.Data;
 
-internal sealed class TelegramUserRepository(IMongoDbContext dbContext)
+public sealed class TelegramUserRepository(IMongoDbContext dbContext)
     : BaseRepository<TelegramUserEntity>(dbContext, "telegramUsers"), ITelegramUserRepository
 {
     static TelegramUserRepository()

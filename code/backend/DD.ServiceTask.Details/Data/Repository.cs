@@ -8,7 +8,7 @@ using MongoDB.Driver.Linq;
 
 namespace DD.ServiceTask.Details.Data;
 
-internal abstract class Repository<T>(IMongoDbContext dbContext, string tableName)
+public abstract class Repository<T>(IMongoDbContext dbContext, string tableName)
     : BaseRepository<T>(dbContext, tableName), IRepository<T>
     where T : Entity
 {
