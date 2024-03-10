@@ -15,6 +15,7 @@ public static class Setup
 
     private static void AddWebClientBffData(this IServiceCollection services)
     {
+        services.AddScoped<UserSettingsRepository>();
         services.AddScoped<IUserSettingsRepository, UserSettingsRepository>();
     }
 }

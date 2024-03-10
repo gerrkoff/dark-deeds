@@ -34,6 +34,7 @@ public static class Setup
 
     private static void AddTelegramClientData(this IServiceCollection services)
     {
+        services.AddScoped<TelegramUserRepository>();
         services.AddScoped<ITelegramUserRepository, TelegramUserRepository>();
     }
 }

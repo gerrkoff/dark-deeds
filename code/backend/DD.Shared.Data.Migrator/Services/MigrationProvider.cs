@@ -4,7 +4,7 @@ using MongoDB.Driver;
 
 namespace DD.Shared.Data.Migrator.Services;
 
-internal class MigrationProvider(
+internal sealed class MigrationProvider(
     ILogger<MigrationProvider> logger,
     IMigratorMongoDbContext context,
     IEnumerable<IMigrationBody> migrationBodies)

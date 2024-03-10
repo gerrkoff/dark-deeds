@@ -4,7 +4,7 @@ using MongoDB.Bson.Serialization;
 
 namespace DD.Shared.Data.Migrator.Services;
 
-internal class MigrationApplier(
+internal sealed class MigrationApplier(
     ILogger<MigrationApplier> logger,
     IMigratorMongoDbContext context)
 {

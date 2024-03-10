@@ -1,6 +1,6 @@
 namespace DD.Shared.Data.Migrator.Models;
 
-internal class MigrationRecord
+internal sealed class MigrationRecord
 {
     public required string Name { get; init; }
 

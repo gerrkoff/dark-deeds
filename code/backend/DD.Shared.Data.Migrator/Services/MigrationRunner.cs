@@ -6,12 +6,12 @@ using Microsoft.Extensions.Logging;
 
 namespace DD.Shared.Data.Migrator.Services;
 
-internal class MigrationRunner(
+internal sealed class MigrationRunner(
     ILogger<MigrationRunner> logger,
     IMigratorMongoDbContext context,
     IServiceProvider serviceProvider) : IHostedService
 {
-    public const string MigrationsCollectionName = "_migrationsDomain";
+    public const string MigrationsCollectionName = "dbMigrationsDomain";
 
     public Task StartAsync(CancellationToken cancellationToken)
     {

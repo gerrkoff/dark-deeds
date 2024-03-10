@@ -8,7 +8,7 @@ using MongoDB.Driver;
 
 namespace DD.Shared.Data.Migrator.Migrations;
 
-internal class D20240310N1_AddIndexesToEntities(
+internal sealed class D20240310N1_AddIndexesToEntities(
     TaskRepository taskRepository,
     PlannedRecurrenceRepository plannedRecurrenceRepository,
     UserSettingsRepository userSettingsRepository,

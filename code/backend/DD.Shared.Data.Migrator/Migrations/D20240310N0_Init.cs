@@ -4,7 +4,7 @@ using MongoDB.Driver;
 
 namespace DD.Shared.Data.Migrator.Migrations;
 
-internal class D20240310N0_Init(IMongoDbContext context) : IMigrationBody
+internal sealed class D20240310N0_Init(IMongoDbContext context) : IMigrationBody
 {
     public async Task UpAsync(CancellationToken cancellationToken)
     {

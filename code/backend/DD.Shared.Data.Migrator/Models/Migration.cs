@@ -1,6 +1,6 @@
 namespace DD.Shared.Data.Migrator.Models;
 
-internal class Migration
+internal sealed class Migration
 {
     public required IMigrationBody Body { get; init; }
 
