@@ -2,7 +2,7 @@ using DD.TelegramClient.Domain.Infrastructure;
 using DD.TelegramClient.Domain.Models.Commands;
 using Microsoft.Extensions.Logging;
 
-namespace DD.TelegramClient.Domain.Implementation.CommandProcessor;
+namespace DD.TelegramClient.Domain.Services.CommandProcessor;
 
 public interface ICreateTaskCommandProcessor
 {

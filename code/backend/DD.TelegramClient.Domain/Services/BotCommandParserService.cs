@@ -1,7 +1,7 @@
 using DD.TelegramClient.Domain.Infrastructure;
 using DD.TelegramClient.Domain.Models.Commands;
 
-namespace DD.TelegramClient.Domain.Implementation;
+namespace DD.TelegramClient.Domain.Services;
 
 public interface IBotCommandParserService
 {

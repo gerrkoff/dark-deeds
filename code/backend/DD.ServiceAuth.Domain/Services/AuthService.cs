@@ -86,14 +86,14 @@ internal sealed class AuthService(
         var user = await userManager.FindByNameAsync(username)
                    ?? throw new InvalidOperationException();
 
-        return user.Id;
+        return user.Id.ToString();
     }
 
     private static AuthToken ToAuthToken(UserEntity user)
     {
         return new AuthToken
         {
-            UserId = user.Id,
+            UserId = user.Id.ToString(),
             Username = user.UserName ?? string.Empty,
             DisplayName = user.DisplayName,
         };

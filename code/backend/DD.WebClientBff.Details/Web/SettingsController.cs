@@ -9,18 +9,18 @@ namespace DD.WebClientBff.Details.Web;
 [Route("api/web/[controller]")]
 public class SettingsController(
     IUserAuth userAuth,
-    ISettingsService settingsService)
+    IUserSettingsService userSettingsService)
     : ControllerBase
 {
     [HttpGet]
-    public Task<SettingsDto> Get()
+    public Task<UserSettingsDto> Get()
     {
-        return settingsService.LoadAsync(userAuth.UserId());
+        return userSettingsService.LoadAsync(userAuth.UserId());
     }
 
     [HttpPost]
-    public Task Post([FromBody] SettingsDto settings)
+    public Task Post([FromBody] UserSettingsDto userSettings)
     {
-        return settingsService.SaveAsync(settings, userAuth.UserId());
+        return userSettingsService.SaveAsync(userSettings, userAuth.UserId());
     }
 }

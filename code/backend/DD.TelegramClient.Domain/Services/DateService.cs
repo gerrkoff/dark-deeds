@@ -1,4 +1,4 @@
-namespace DD.TelegramClient.Domain.Implementation;
+namespace DD.TelegramClient.Domain.Services;
 
 public interface IDateService
 {

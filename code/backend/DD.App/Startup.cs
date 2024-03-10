@@ -26,15 +26,15 @@ public class Startup(IConfiguration configuration)
         services.AddMetricsWeb(Configuration, Program.Meta);
 
         // features
-        services.AddTaskService(Configuration);
-        services.AddAuthService();
+        services.AddTaskService();
+        services.AddAuthService(Configuration);
         services.AddTelegramClient(Configuration);
         services.AddWebClientBff();
 
         // shared
         services.AddSharedAuth();
-        services.AddDdSharedWeb();
-        services.AddDdSharedData(Configuration);
+        services.AddSharedWeb();
+        services.AddSharedData(Configuration);
 
         services.AddDdAuthentication(Configuration);
 

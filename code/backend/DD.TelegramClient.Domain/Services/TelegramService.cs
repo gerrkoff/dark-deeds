@@ -1,7 +1,7 @@
-using DD.Shared.Data.Abstractions;
 using DD.TelegramClient.Domain.Entities;
+using DD.TelegramClient.Domain.Infrastructure;
 
-namespace DD.TelegramClient.Domain.Implementation;
+namespace DD.TelegramClient.Domain.Services;
 
 public interface ITelegramService
 {
@@ -14,13 +14,11 @@ public interface ITelegramService
     Task<int> GetUserTimeAdjustment(int chatId);
 }
 
-internal sealed class TelegramService(IRepository<TelegramUserEntity> telegramUserRepository) : ITelegramService
+internal sealed class TelegramService(ITelegramUserRepository telegramUserRepository) : ITelegramService
 {
     public async Task<string> GenerateKey(string userId, int timeAdjustment)
     {
-        var user = telegramUserRepository
-            .GetAll()
-            .FirstOrDefault(x => x.UserId == userId);
+        var user = await telegramUserRepository.GetByIdAsync(userId);
 
         if (user == null)
         {
@@ -37,34 +35,34 @@ internal sealed class TelegramService(IRepository<TelegramUserEntity> telegramUs
             user.TelegramTimeAdjustment = timeAdjustment;
         }
 
-        await telegramUserRepository.SaveAsync(user);
+        await telegramUserRepository.UpsertAsync(user);
 
         return user.TelegramChatKey;
     }
 
     public async Task UpdateChatId(string userChatKey, int chatId)
     {
-        var users = telegramUserRepository.GetAll()
-            .Where(x => x.TelegramChatKey == userChatKey || x.TelegramChatId == chatId)
-            .ToList();
+        var users = await telegramUserRepository.GetByChatIdOrChatKeyAsync(chatId, userChatKey);
 
         foreach (var user in users)
         {
             user.TelegramChatId = user.TelegramChatKey == userChatKey ? chatId : 0;
 
-            await telegramUserRepository.SaveAsync(user);
+            await telegramUserRepository.UpsertAsync(user);
         }
     }
 
-    public Task<string> GetUserId(int chatId)
+    public async Task<string> GetUserId(int chatId)
     {
-        var user = telegramUserRepository.GetAll().Single(x => x.TelegramChatId == chatId);
-        return Task.FromResult(user.UserId);
+        var user = await telegramUserRepository.GetByChatIdAsync(chatId)
+                   ?? throw new InvalidOperationException($"User with chat id {chatId} not found");
+        return user.UserId;
     }
 
-    public Task<int> GetUserTimeAdjustment(int chatId)
+    public async Task<int> GetUserTimeAdjustment(int chatId)
     {
-        var user = telegramUserRepository.GetAll().Single(x => x.TelegramChatId == chatId);
-        return Task.FromResult(user.TelegramTimeAdjustment);
+        var user = await telegramUserRepository.GetByChatIdAsync(chatId)
+                     ?? throw new InvalidOperationException($"User with chat id {chatId} not found");
+        return user.TelegramTimeAdjustment;
     }
 }

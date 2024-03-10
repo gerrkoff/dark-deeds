@@ -2,7 +2,7 @@ using System.Diagnostics.CodeAnalysis;
 using DD.TelegramClient.Domain.Models.Commands;
 using Microsoft.Extensions.Logging;
 
-namespace DD.TelegramClient.Domain.Implementation.CommandProcessor;
+namespace DD.TelegramClient.Domain.Services.CommandProcessor;
 
 public abstract class BaseCommandProcessor<T>(
     IBotSendMessageService botSendMessageService,

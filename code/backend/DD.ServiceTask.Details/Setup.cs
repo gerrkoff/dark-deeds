@@ -1,5 +1,4 @@
 using DD.ServiceTask.Details.Data;
-using DD.ServiceTask.Details.Data.EntityRepository;
 using DD.ServiceTask.Details.Infrastructure;
 using DD.ServiceTask.Details.Web.Hubs;
 using DD.ServiceTask.Domain;
@@ -8,18 +7,17 @@ using DD.ServiceTask.Domain.Infrastructure.EntityRepository;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.SignalR;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DD.ServiceTask.Details;
 
 public static class Setup
 {
-    public static void AddTaskService(this IServiceCollection services, IConfiguration configuration)
+    public static void AddTaskService(this IServiceCollection services)
     {
         services.AddTaskServiceWeb();
         services.AddTaskServiceInfrastructure();
-        services.AddTaskServiceData(configuration);
+        services.AddTaskServiceData();
         services.AddTaskServiceDomain();
     }
 
@@ -41,11 +39,8 @@ public static class Setup
         services.AddScoped<INotifierService, NotifierService>();
     }
 
-    private static void AddTaskServiceData(this IServiceCollection services, IConfiguration configuration)
+    private static void AddTaskServiceData(this IServiceCollection services)
     {
-        var connectionString = configuration.GetConnectionString("tasksDb")
-                               ?? throw new InvalidOperationException("Connection string for tasksDb is not found");
-        services.AddSingleton<IMongoDbContext>(_ => new MongoDbContext(connectionString));
         services.AddScoped<ITaskRepository, TaskRepository>();
         services.AddScoped<IPlannedRecurrenceRepository, PlannedRecurrenceRepository>();
     }

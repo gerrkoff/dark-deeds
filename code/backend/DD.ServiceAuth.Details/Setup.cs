@@ -1,7 +1,10 @@
 using System.Text;
+using AspNetCore.Identity.Mongo;
 using DD.ServiceAuth.Details.Web;
 using DD.ServiceAuth.Domain;
+using DD.ServiceAuth.Domain.Entities;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
@@ -10,10 +13,11 @@ namespace DD.ServiceAuth.Details;
 
 public static class Setup
 {
-    public static void AddAuthService(this IServiceCollection services)
+    public static void AddAuthService(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddAuthServiceWeb();
         services.AddAuthServiceDomain();
+        services.AddAuthServiceData(configuration);
     }
 
     public static void AddDdAuthentication(this IServiceCollection services, IConfiguration configuration)
@@ -61,5 +65,31 @@ public static class Setup
     private static void AddAuthServiceWeb(this IServiceCollection services)
     {
         services.AddAutoMapper(typeof(ModelsMapping));
+    }
+
+    private static void AddAuthServiceData(this IServiceCollection services, IConfiguration configuration)
+    {
+        var connectionString = configuration.GetConnectionString("sharedDb");
+
+        services.AddIdentityCore<UserEntity>(options =>
+            {
+#if DEBUG
+                options.Password.RequiredLength = 3;
+#else
+                    options.Password.RequiredLength = 8;
+#endif
+                options.Password.RequiredUniqueChars = 0;
+                options.Password.RequireDigit = false;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequireNonAlphanumeric = false;
+            })
+            .AddDefaultTokenProviders()
+            .AddMongoDbStores<UserEntity>(mongo =>
+            {
+                mongo.ConnectionString = connectionString;
+                mongo.UsersCollection = "users";
+            })
+            .AddUserManager<UserManager<UserEntity>>();
     }
 }

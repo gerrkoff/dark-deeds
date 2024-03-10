@@ -1,6 +1,11 @@
 using MongoDB.Driver;
 
-namespace DD.ServiceTask.Details.Data;
+namespace DD.Shared.Data;
+
+public interface IMongoDbContext
+{
+    IMongoCollection<T> GetCollection<T>(string tableName);
+}
 
 public class MongoDbContext : IMongoDbContext
 {
@@ -8,8 +13,9 @@ public class MongoDbContext : IMongoDbContext
 
     public MongoDbContext(string connectionString)
     {
-        var connectionInfo = connectionString.Split(';');
-        _database = new MongoClient(connectionInfo[0]).GetDatabase(connectionInfo[1]);
+        // TODO: This is a hack, fix it
+        var db = connectionString.Split('/').Last().Split('?').First();
+        _database = new MongoClient(connectionString).GetDatabase(db);
     }
 
     public IMongoCollection<T> GetCollection<T>(string tableName)

@@ -1,14 +1,14 @@
-using DD.Shared.Data.Abstractions;
 using DD.TelegramClient.Domain.Entities;
+using DD.TelegramClient.Domain.Infrastructure;
 
-namespace DD.TelegramClient.Domain.Implementation;
+namespace DD.TelegramClient.Domain.Services;
 
 public interface ITestService
 {
     Task<int> GetTestChatIdForUser(string userId);
 }
 
-internal sealed class TestService(IRepository<TelegramUserEntity> telegramUserRepository) : ITestService
+internal sealed class TestService(ITelegramUserRepository telegramUserRepository) : ITestService
 {
     private static readonly SemaphoreSlim Semaphore = new(1);
 
@@ -18,14 +18,14 @@ internal sealed class TestService(IRepository<TelegramUserEntity> telegramUserRe
 
         try
         {
-            var minChatId = telegramUserRepository.GetAll().Select(x => x.TelegramChatId).DefaultIfEmpty().Min();
+            var minChatId = await telegramUserRepository.GetMinChatIdAsync();
             var user = new TelegramUserEntity
             {
                 TelegramChatId = minChatId - 1,
                 TelegramChatKey = string.Empty,
                 UserId = userId,
             };
-            await telegramUserRepository.SaveAsync(user);
+            await telegramUserRepository.UpsertAsync(user);
             return user.TelegramChatId;
         }
         finally

@@ -1,5 +1,5 @@
 ﻿using DD.Shared.Web;
-using DD.TelegramClient.Domain.Implementation;
+using DD.TelegramClient.Domain.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DD.TelegramClient.Details.Web.Controllers;

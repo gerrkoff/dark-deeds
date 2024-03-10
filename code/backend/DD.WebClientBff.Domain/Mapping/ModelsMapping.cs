@@ -8,6 +8,6 @@ internal sealed class ModelsMapping : Profile
 {
     public ModelsMapping()
     {
-        CreateMap<SettingsEntity, SettingsDto>().ReverseMap();
+        CreateMap<UserSettingsEntity, UserSettingsDto>().ReverseMap();
     }
 }

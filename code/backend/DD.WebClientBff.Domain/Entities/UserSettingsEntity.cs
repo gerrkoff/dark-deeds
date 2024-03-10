@@ -1,8 +1,6 @@
-using DD.Shared.Data.Abstractions;
-
 namespace DD.WebClientBff.Domain.Entities;
 
-public class SettingsEntity : BaseEntity
+public class UserSettingsEntity
 {
     public string UserId { get; set; } = string.Empty;
 

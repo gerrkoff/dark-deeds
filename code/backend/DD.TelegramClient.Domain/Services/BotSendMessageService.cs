@@ -8,7 +8,7 @@ using DD.TelegramClient.Domain.Dto;
 using DD.TelegramClient.Domain.Exceptions;
 using Microsoft.Extensions.Configuration;
 
-namespace DD.TelegramClient.Domain.Implementation;
+namespace DD.TelegramClient.Domain.Services;
 
 public interface IBotSendMessageService
 {

@@ -8,7 +8,7 @@ public static class Setup
 {
     public static void AddWebClientBffDomain(this IServiceCollection services)
     {
-        services.AddScoped<ISettingsService, SettingsService>();
+        services.AddScoped<IUserSettingsService, UserSettingsService>();
         services.AddAutoMapper(typeof(ModelsMapping));
     }
 }
