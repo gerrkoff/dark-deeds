@@ -89,6 +89,7 @@ public static class Setup
             {
                 mongo.ConnectionString = connectionString;
                 mongo.UsersCollection = "users";
+                mongo.MigrationCollection = "_migrationsIdentity";
             })
             .AddUserManager<UserManager<UserEntity>>();
     }
