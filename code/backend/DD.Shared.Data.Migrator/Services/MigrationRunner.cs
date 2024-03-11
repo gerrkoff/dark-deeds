@@ -1,4 +1,3 @@
-using System.Diagnostics.CodeAnalysis;
 using DD.Shared.Data.Migrator.Models;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -33,15 +32,24 @@ internal sealed class MigrationRunner(
 
         var migrations = migrationProvider.GetMigrationsToApply();
 
-        Log.ApplyingMigrations(logger, migrations.Count);
+        if (migrations.Count == 0)
+        {
+            Log.FoundNoMigrations(logger);
+            return;
+        }
 
-        // await ApplyMigrationsInTransactionAsync(cancellationToken, migrations);
-        await ApplyMigrationsAsync(migrationApplier, migrations, cancellationToken);
+        var transactionsEnabled = !string.IsNullOrEmpty(context.Client.Cluster.Settings.ReplicaSetName);
 
-        Log.AppliedMigrations(logger, migrations.Count);
+        Log.ApplyingMigrations(logger, migrations.Count, transactionsEnabled);
+
+        if (transactionsEnabled)
+            await ApplyMigrationsInTransactionAsync(migrationApplier, migrations, cancellationToken);
+        else
+            await ApplyMigrationsAsync(migrationApplier, migrations, cancellationToken);
+
+        Log.AppliedMigrations(logger, migrations.Count, transactionsEnabled);
     }
 
-    [SuppressMessage("ReSharper", "UnusedMember.Local", Justification = "This method is commented out for now, but will be used in the future.")]
     private async Task ApplyMigrationsInTransactionAsync(MigrationApplier migrationApplier, IReadOnlyList<Migration> migrations, CancellationToken cancellationToken)
     {
         using var session = await context.Client.StartSessionAsync(cancellationToken: cancellationToken);

@@ -11,16 +11,22 @@ internal static partial class Log
     public static partial void LookingForMigrations(ILogger logger);
 
     [LoggerMessage(
+        EventId = 3003,
+        Level = LogLevel.Information,
+        Message = "Found no migrations to apply")]
+    public static partial void FoundNoMigrations(ILogger logger);
+
+    [LoggerMessage(
         EventId = 3002,
         Level = LogLevel.Debug,
-        Message = "Applying {MigrationsCount} migrations...")]
-    public static partial void ApplyingMigrations(ILogger logger, int migrationsCount);
+        Message = "Applying {MigrationsCount} migrations with TransactionsEnabled={TransactionsEnabled}...")]
+    public static partial void ApplyingMigrations(ILogger logger, int migrationsCount, bool transactionsEnabled);
 
     [LoggerMessage(
         EventId = 3003,
-        Level = LogLevel.Information,
-        Message = "Applied {MigrationsCount} migrations")]
-    public static partial void AppliedMigrations(ILogger logger, int migrationsCount);
+        Level = LogLevel.Debug,
+        Message = "Applied {MigrationsCount} migrations with TransactionsEnabled={TransactionsEnabled}")]
+    public static partial void AppliedMigrations(ILogger logger, int migrationsCount, bool transactionsEnabled);
 
     [LoggerMessage(
         EventId = 3004,
