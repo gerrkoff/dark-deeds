@@ -4,5 +4,3 @@ docker-compose \
   -p dd \
   up \
   -d --build --remove-orphans # --force-recreate
-
-./code/data/db-update.sh

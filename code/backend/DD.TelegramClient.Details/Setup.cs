@@ -1,3 +1,4 @@
+using DD.TelegramClient.Details.Data;
 using DD.TelegramClient.Details.Infrastructure;
 using DD.TelegramClient.Domain;
 using DD.TelegramClient.Domain.Infrastructure;
@@ -14,6 +15,7 @@ public static class Setup
     {
         services.AddTelegramClientInfrastructure();
         services.AddTelegramClientDomain(configuration);
+        services.AddTelegramClientData();
     }
 
     public static void MapTelegramClientCustomRoutes(this IEndpointRouteBuilder endpoints, IConfiguration configuration)
@@ -28,5 +30,11 @@ public static class Setup
     {
         services.AddScoped<ITaskServiceApp, TaskServiceApp>();
         services.AddAutoMapper(typeof(ModelsMapping));
+    }
+
+    private static void AddTelegramClientData(this IServiceCollection services)
+    {
+        services.AddScoped<TelegramUserRepository>();
+        services.AddScoped<ITelegramUserRepository, TelegramUserRepository>();
     }
 }

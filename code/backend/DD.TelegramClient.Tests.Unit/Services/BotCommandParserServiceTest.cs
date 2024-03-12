@@ -1,8 +1,8 @@
 using System.Diagnostics.CodeAnalysis;
-using DD.TelegramClient.Domain.Implementation;
 using DD.TelegramClient.Domain.Infrastructure;
 using DD.TelegramClient.Domain.Infrastructure.Dto;
 using DD.TelegramClient.Domain.Models.Commands;
+using DD.TelegramClient.Domain.Services;
 using Moq;
 using Xunit;
 

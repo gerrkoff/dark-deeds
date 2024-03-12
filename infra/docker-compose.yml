@@ -9,17 +9,7 @@ services:
     volumes:
       - mongo-db-volume:/data/db
     ports:
-      - 27017:27017
-
-  postgres-db:
-    image: postgres:13.0-alpine
-    environment:
-      - POSTGRES_PASSWORD=postgres
-    volumes:
-      - postgres-db-volume:/var/lib/postgresql/data
-    ports:
-      - 5432:5432
+      - "27017:27017"
 
 volumes:
-  postgres-db-volume:
   mongo-db-volume:

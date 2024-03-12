@@ -14,6 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\DD.Shared.Data\DD.Shared.Data.csproj" />
     <ProjectReference Include="..\DD.Shared.Web\DD.Shared.Web.csproj" />
     <ProjectReference Include="..\DD.WebClientBff.Domain\DD.WebClientBff.Domain.csproj" />
   </ItemGroup>

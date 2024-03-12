@@ -10,6 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\DD.Shared.Data.Migrator\DD.Shared.Data.Migrator.csproj" />
     <ProjectReference Include="..\DD.Shared.Web\DD.Shared.Web.csproj" />
     <ProjectReference Include="..\DD.Shared.Data\DD.Shared.Data.csproj" />
     <ProjectReference Include="..\DD.ServiceAuth.Details\DD.ServiceAuth.Details.csproj" />

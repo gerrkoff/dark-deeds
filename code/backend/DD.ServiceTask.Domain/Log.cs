@@ -2,7 +2,7 @@ using Microsoft.Extensions.Logging;
 
 namespace DD.ServiceTask.Domain;
 
-public static partial class Log
+internal static partial class Log
 {
     [LoggerMessage(
         EventId = 1001,

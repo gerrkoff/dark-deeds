@@ -1,8 +1,6 @@
-using DD.Shared.Data.Abstractions;
-
 namespace DD.TelegramClient.Domain.Entities;
 
-public class TelegramUserEntity : BaseEntity
+public class TelegramUserEntity
 {
     public string UserId { get; set; } = string.Empty;
 

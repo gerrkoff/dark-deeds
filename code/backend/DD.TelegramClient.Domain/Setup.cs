@@ -1,5 +1,5 @@
-using DD.TelegramClient.Domain.Implementation;
-using DD.TelegramClient.Domain.Implementation.CommandProcessor;
+using DD.TelegramClient.Domain.Services;
+using DD.TelegramClient.Domain.Services.CommandProcessor;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 

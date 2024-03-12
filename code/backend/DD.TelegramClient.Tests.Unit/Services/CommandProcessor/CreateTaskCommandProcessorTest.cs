@@ -1,8 +1,8 @@
-using DD.TelegramClient.Domain.Implementation;
-using DD.TelegramClient.Domain.Implementation.CommandProcessor;
 using DD.TelegramClient.Domain.Infrastructure;
 using DD.TelegramClient.Domain.Infrastructure.Dto;
 using DD.TelegramClient.Domain.Models.Commands;
+using DD.TelegramClient.Domain.Services;
+using DD.TelegramClient.Domain.Services.CommandProcessor;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Xunit;

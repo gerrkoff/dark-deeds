@@ -3,6 +3,7 @@ using DD.ServiceAuth.Details;
 using DD.ServiceTask.Details;
 using DD.Shared.Auth;
 using DD.Shared.Data;
+using DD.Shared.Data.Migrator;
 using DD.Shared.Web;
 using DD.TelegramClient.Details;
 using DD.WebClientBff.Details;
@@ -26,15 +27,16 @@ public class Startup(IConfiguration configuration)
         services.AddMetricsWeb(Configuration, Program.Meta);
 
         // features
-        services.AddTaskService(Configuration);
-        services.AddAuthService();
+        services.AddTaskService();
+        services.AddAuthService(Configuration);
         services.AddTelegramClient(Configuration);
         services.AddWebClientBff();
 
         // shared
         services.AddSharedAuth();
-        services.AddDdSharedWeb();
-        services.AddDdSharedData(Configuration);
+        services.AddSharedWeb();
+        services.AddSharedData(Configuration);
+        services.AddSharedDataMigrator();
 
         services.AddDdAuthentication(Configuration);
 
