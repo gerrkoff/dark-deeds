@@ -35,6 +35,8 @@ public abstract class BaseTest : IDisposable
 
     protected abstract int RpsTest { get; }
 
+    protected abstract int RpsMaxLatency { get; }
+
     protected int RpsWarmUp => Math.Max(1, (int)(0.1 * RpsTest));
 
     private static string Domain => Env.Domain;
@@ -102,7 +104,7 @@ public abstract class BaseTest : IDisposable
         {
             var totalCount = stats.ScenarioStats[0].OkCount + stats.ScenarioStats[0].FailCount;
             Assert.InRange(stats.ScenarioStats[0].OkCount, 0.99 * totalCount, totalCount);
-            Assert.InRange(stats.ScenarioStats[0].StepStats[0].Ok.Latency.Percent95, 0, 300);
+            Assert.InRange(stats.ScenarioStats[0].StepStats[0].Ok.Latency.Percent95, 0, RpsMaxLatency);
             additionalChecks?.Invoke();
 
             SaveResults(stats, true);

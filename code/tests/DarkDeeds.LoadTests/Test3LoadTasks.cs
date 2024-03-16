@@ -8,6 +8,8 @@ public class Test3LoadTasks : BaseTest
 {
     protected override int RpsTest => Config.Test3Rps;
 
+    protected override int RpsMaxLatency => Config.Test3MaxLatency;
+
     [Fact]
     public async Task Test()
     {
