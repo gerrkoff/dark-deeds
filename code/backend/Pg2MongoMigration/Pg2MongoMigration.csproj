@@ -16,6 +16,8 @@
     <ItemGroup>
       <ProjectReference Include="..\DD.ServiceAuth.Domain\DD.ServiceAuth.Domain.csproj" />
       <ProjectReference Include="..\DD.ServiceTask.Domain\DD.ServiceTask.Domain.csproj" />
+      <ProjectReference Include="..\DD.TelegramClient.Domain\DD.TelegramClient.Domain.csproj" />
+      <ProjectReference Include="..\DD.WebClientBff.Domain\DD.WebClientBff.Domain.csproj" />
     </ItemGroup>
 
 </Project>
