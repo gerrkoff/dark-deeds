@@ -9,6 +9,8 @@ public class Test2CreateTask : BaseTest
 {
     protected override int RpsTest => Config.Test2Rps;
 
+    protected override int RpsMaxLatency => Config.Test2MaxLatency;
+
     [Fact]
     public async Task Test()
     {

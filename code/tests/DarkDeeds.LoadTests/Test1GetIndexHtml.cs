@@ -8,6 +8,8 @@ public class Test1GetIndexHtml : BaseTest
 {
     protected override int RpsTest => Config.Test1Rps;
 
+    protected override int RpsMaxLatency => Config.Test1MaxLatency;
+
     [Fact]
     public async Task Test()
     {

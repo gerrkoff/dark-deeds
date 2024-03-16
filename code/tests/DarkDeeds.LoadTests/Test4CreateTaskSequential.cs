@@ -9,6 +9,8 @@ public class Test4CreateTaskSequential : BaseTest
 {
     protected override int RpsTest => Config.Test4Rps;
 
+    protected override int RpsMaxLatency => Config.Test4MaxLatency;
+
     [Fact]
     public async Task Test()
     {
