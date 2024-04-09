@@ -64,6 +64,8 @@ public abstract class Repository<T>(IMongoDbContext dbContext, string tableName)
             update = update.Set(property, value);
         }
 
+        update = update.Set(x => x.Version, entity.Version);
+
         var result = await Collection.UpdateOneAsync(filter, update, new UpdateOptions
         {
             IsUpsert = false,
