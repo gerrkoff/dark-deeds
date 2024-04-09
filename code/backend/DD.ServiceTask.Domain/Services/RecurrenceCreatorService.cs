@@ -145,7 +145,7 @@ public class RecurrenceCreatorService(
         bool success;
         do
         {
-            entity.Recurrences.Add(recurrence);
+            entityToSave.Recurrences.Add(recurrence);
             (success, var currentEntity) = await plannedRecurrenceRepository
                 .TryUpdateVersionPropsAsync(entityToSave, x => x.Recurrences);
             if (!success)
