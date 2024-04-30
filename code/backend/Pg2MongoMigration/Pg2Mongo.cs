@@ -77,7 +77,7 @@ internal static class Pg2Mongo
     private static IMongoDatabase GetMongoDatabase()
     {
         var client = new MongoClient(MongoConnectionString);
-        var dbString = MongoConnectionString!.Split('/').Last().Split('?').First();
+        var dbString = MongoConnectionString.Split('/').Last().Split('?').First();
         return client.GetDatabase(dbString)!;
     }
 

@@ -85,6 +85,7 @@ internal static class Mongo2Atlas
         Console.WriteLine("----------------------");
     }
 
+    // ReSharper disable once UnusedMember.Local
     private static async Task SaveTasks(IMongoDatabase db, List<TaskEntity> tasks)
     {
         var tasksCollection = db.GetCollection<TaskEntity>("tasks");
