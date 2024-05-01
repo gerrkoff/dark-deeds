@@ -1,4 +1,5 @@
 using DD.App.Dto;
+using DD.MobileClient.Details;
 using DD.ServiceAuth.Details;
 using DD.ServiceTask.Details;
 using DD.Shared.Auth;
@@ -31,6 +32,7 @@ public class Startup(IConfiguration configuration)
         services.AddAuthService(Configuration);
         services.AddTelegramClient(Configuration);
         services.AddWebClientBff();
+        services.AddMobileClient();
 
         // shared
         services.AddSharedAuth();
