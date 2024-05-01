@@ -20,8 +20,8 @@ internal sealed class WatchService(
 
         try
         {
-            var from = DateTime.Today;
-            var till = from.AddHours(25);
+            var from = DateTime.UtcNow.Date;
+            var till = from.AddDays(1);
             var tasks = (await taskServiceApp.LoadTasksByDateAsync(from, till, user.UserId)).OrderBy(x => x.Order)
                 .ToList();
 
