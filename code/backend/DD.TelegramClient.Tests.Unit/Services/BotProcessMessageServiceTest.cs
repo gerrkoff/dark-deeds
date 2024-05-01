@@ -1,6 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
+using DD.Shared.Details.Abstractions.Dto;
 using DD.TelegramClient.Domain.Dto;
-using DD.TelegramClient.Domain.Infrastructure.Dto;
 using DD.TelegramClient.Domain.Models.Commands;
 using DD.TelegramClient.Domain.Services;
 using DD.TelegramClient.Domain.Services.CommandProcessor;

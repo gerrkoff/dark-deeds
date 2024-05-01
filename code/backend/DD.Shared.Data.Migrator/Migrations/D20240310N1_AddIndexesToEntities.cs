@@ -1,8 +1,8 @@
 using DD.ServiceTask.Details.Data;
 using DD.ServiceTask.Domain.Entities;
-using DD.TelegramClient.Details.Data;
+using DD.Shared.Details.TelegramClient.Data;
+using DD.Shared.Details.WebClientBff.Data;
 using DD.TelegramClient.Domain.Entities;
-using DD.WebClientBff.Details.Data;
 using DD.WebClientBff.Domain.Entities;
 using MongoDB.Driver;
 

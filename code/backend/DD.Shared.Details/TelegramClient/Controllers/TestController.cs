@@ -2,7 +2,7 @@
 using DD.TelegramClient.Domain.Services;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DD.TelegramClient.Details.Web.Controllers;
+namespace DD.Shared.Details.TelegramClient.Controllers;
 
 public class TestController(ITestService testService) : BaseControllerTest
 {

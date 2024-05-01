@@ -3,7 +3,7 @@ using DD.TelegramClient.Domain.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DD.TelegramClient.Details.Web.Controllers;
+namespace DD.Shared.Details.TelegramClient.Controllers;
 
 [AllowAnonymous]
 public class BotController(IBotProcessMessageService botProcessMessageService) : ControllerBase

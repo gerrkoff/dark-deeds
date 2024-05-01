@@ -15,9 +15,6 @@
     <ProjectReference Include="..\DD.Shared.Data\DD.Shared.Data.csproj" />
     <ProjectReference Include="..\DD.ServiceAuth.Details\DD.ServiceAuth.Details.csproj" />
     <ProjectReference Include="..\DD.ServiceTask.Details\DD.ServiceTask.Details.csproj" />
-    <ProjectReference Include="..\DD.TelegramClient.Details\DD.TelegramClient.Details.csproj" />
-    <ProjectReference Include="..\DD.WebClientBff.Details\DD.WebClientBff.Details.csproj" />
-    <ProjectReference Include="..\DD.MobileClient.Details\DD.MobileClient.Details.csproj" />
   </ItemGroup>
 
   <ItemGroup>

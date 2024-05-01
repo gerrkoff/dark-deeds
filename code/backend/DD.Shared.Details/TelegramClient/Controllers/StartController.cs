@@ -1,8 +1,9 @@
-﻿using DD.Shared.Web;
+﻿using DD.Shared.Details.TelegramClient.Dto;
+using DD.Shared.Web;
 using DD.TelegramClient.Domain.Services;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DD.TelegramClient.Details.Web.Controllers;
+namespace DD.Shared.Details.TelegramClient.Controllers;
 
 [ApiController]
 [Route("api/tlgm/[controller]")]

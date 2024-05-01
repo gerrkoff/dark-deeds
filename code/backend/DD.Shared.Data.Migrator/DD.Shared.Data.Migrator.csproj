@@ -14,10 +14,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DD.MobileClient.Details\DD.MobileClient.Details.csproj" />
     <ProjectReference Include="..\DD.ServiceTask.Details\DD.ServiceTask.Details.csproj" />
-    <ProjectReference Include="..\DD.TelegramClient.Details\DD.TelegramClient.Details.csproj" />
-    <ProjectReference Include="..\DD.WebClientBff.Details\DD.WebClientBff.Details.csproj" />
+    <ProjectReference Include="..\DD.Shared.Details\DD.Shared.Details.csproj" />
   </ItemGroup>
 
   <ItemGroup>

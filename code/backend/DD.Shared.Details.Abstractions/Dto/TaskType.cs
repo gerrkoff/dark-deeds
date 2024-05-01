@@ -1,4 +1,4 @@
-namespace DD.MobileClient.Domain.Infrastructure.Dto;
+namespace DD.Shared.Details.Abstractions.Dto;
 
 public enum TaskType
 {

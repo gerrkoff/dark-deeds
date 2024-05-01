@@ -4,7 +4,7 @@ using DD.MobileClient.Domain.Infrastructure;
 using DD.Shared.Data;
 using MongoDB.Driver;
 
-namespace DD.MobileClient.Details.Data;
+namespace DD.Shared.Details.MobileClient.Data;
 
 public sealed class MobileUserRepository(IMongoDbContext dbContext)
     : BaseRepository<MobileUserEntity>(dbContext, "mobileUsers"), IMobileUserRepository

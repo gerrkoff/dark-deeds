@@ -1,6 +1,7 @@
 using DD.MobileClient.Domain.Dto;
 using DD.MobileClient.Domain.Infrastructure;
-using DD.MobileClient.Domain.Infrastructure.Dto;
+using DD.Shared.Details.Abstractions;
+using DD.Shared.Details.Abstractions.Dto;
 
 namespace DD.MobileClient.Domain.Services;
 
@@ -26,7 +27,6 @@ internal sealed class WatchService(
                 .ToList();
 
             var remaining = tasks.Count(task => task is { Completed: false, Type: TaskType.Simple });
-            var remainingIncludingRoutine = tasks.Count(task => task is { Completed: false, Type: TaskType.Simple or TaskType.Routine });
             var firstNotCompleted = tasks.FirstOrDefault(task => task is { Completed: false, Type: TaskType.Simple });
             var firstNotCompletedIncludingRoutine = tasks.FirstOrDefault(task =>
                 task is { Completed: false, Type: TaskType.Simple or TaskType.Routine });
@@ -44,12 +44,9 @@ internal sealed class WatchService(
                 ? firstNotCompletedIncludingRoutineUi[..^2]
                 : firstNotCompletedIncludingRoutineUi;
 
-            var remainingIncludingRoutineSuffix = remainingIncludingRoutine == remaining
-                ? string.Empty
-                : $" ({remainingIncludingRoutine})";
-            var header = remainingIncludingRoutine == 0
+            var header = remaining == 0
                 ? "🎉 all finished!"
-                : $"{remaining}{remainingIncludingRoutineSuffix} remaining";
+                : $"{remaining} remaining";
 
             return new WatchStatusDto(header, firstNotCompletedUi, firstNotCompletedIncludingRoutineUi);
         }

@@ -10,14 +10,23 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DD.Shared.Details.Abstractions\DD.Shared.Details.Abstractions.csproj" />
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="8.0.0"/>
-    <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.0" />
-    <PackageReference Include="System.Text.Json" Version="5.0.2"/>
+    
+    <ProjectReference Include="..\DD.Shared.Data\DD.Shared.Data.csproj" />
+    <ProjectReference Include="..\DD.Shared.Web\DD.Shared.Web.csproj" />
+    <ProjectReference Include="..\DD.Shared.Details.Abstractions\DD.Shared.Details.Abstractions.csproj" />
+    <ProjectReference Include="..\DD.ServiceTask.Domain\DD.ServiceTask.Domain.csproj" />
+    <ProjectReference Include="..\DD.TelegramClient.Domain\DD.TelegramClient.Domain.csproj" />
+    <ProjectReference Include="..\DD.WebClientBff.Domain\DD.WebClientBff.Domain.csproj" />
+    <ProjectReference Include="..\DD.MobileClient.Domain\DD.MobileClient.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="12.0.1" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1"/>
     <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.556">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
