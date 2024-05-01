@@ -54,7 +54,7 @@ internal sealed class WatchService(
             return new WatchStatusDto(header, firstNotCompletedUi, firstNotCompletedIncludingRoutineUi);
         }
 #pragma warning disable CA1031
-        catch (Exception e)
+        catch (Exception)
 #pragma warning restore CA1031
         {
             return new WatchStatusDto(string.Empty, "🤯 error", string.Empty);
