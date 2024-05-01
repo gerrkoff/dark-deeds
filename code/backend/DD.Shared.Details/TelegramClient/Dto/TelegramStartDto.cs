@@ -1,6 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 
-namespace DD.TelegramClient.Details.Web;
+namespace DD.Shared.Details.TelegramClient.Dto;
 
 public class TelegramStartDto
 {

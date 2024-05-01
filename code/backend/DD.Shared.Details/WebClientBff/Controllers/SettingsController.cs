@@ -3,7 +3,7 @@ using DD.WebClientBff.Domain.Dto;
 using DD.WebClientBff.Domain.Services;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DD.WebClientBff.Details.Web;
+namespace DD.Shared.Details.WebClientBff.Controllers;
 
 [ApiController]
 [Route("api/web/[controller]")]

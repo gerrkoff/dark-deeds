@@ -1,13 +1,11 @@
 using DD.App.Dto;
-using DD.MobileClient.Details;
 using DD.ServiceAuth.Details;
 using DD.ServiceTask.Details;
 using DD.Shared.Auth;
 using DD.Shared.Data;
 using DD.Shared.Data.Migrator;
+using DD.Shared.Details;
 using DD.Shared.Web;
-using DD.TelegramClient.Details;
-using DD.WebClientBff.Details;
 using GerrKoff.Monitoring;
 using GerrKoff.Monitoring.Misc;
 using Microsoft.AspNetCore.Authorization;
@@ -30,9 +28,7 @@ public class Startup(IConfiguration configuration)
         // features
         services.AddTaskService();
         services.AddAuthService(Configuration);
-        services.AddTelegramClient(Configuration);
-        services.AddWebClientBff();
-        services.AddMobileClient();
+        services.AddClients(Configuration);
 
         // shared
         services.AddSharedAuth();
@@ -93,7 +89,7 @@ public class Startup(IConfiguration configuration)
         app.UseEndpoints(endpoints =>
         {
             endpoints.MapControllers();
-            endpoints.MapTelegramClientCustomRoutes(Configuration);
+            endpoints.MapClientsCustomRoutes(Configuration);
             endpoints.MapTaskServiceCustomRoutes();
         });
         app.UseDefaultFiles();

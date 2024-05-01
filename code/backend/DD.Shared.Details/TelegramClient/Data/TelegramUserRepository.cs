@@ -4,7 +4,7 @@ using DD.TelegramClient.Domain.Entities;
 using DD.TelegramClient.Domain.Infrastructure;
 using MongoDB.Driver;
 
-namespace DD.TelegramClient.Details.Data;
+namespace DD.Shared.Details.TelegramClient.Data;
 
 public sealed class TelegramUserRepository(IMongoDbContext dbContext)
     : BaseRepository<TelegramUserEntity>(dbContext, "telegramUsers"), ITelegramUserRepository

@@ -3,7 +3,7 @@ using DD.MobileClient.Domain.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DD.MobileClient.Details.Web;
+namespace DD.Shared.Details.MobileClient.Controllers;
 
 [AllowAnonymous]
 [ApiController]

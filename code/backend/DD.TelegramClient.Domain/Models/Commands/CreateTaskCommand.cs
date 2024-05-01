@@ -1,4 +1,4 @@
-using DD.TelegramClient.Domain.Infrastructure.Dto;
+using DD.Shared.Details.Abstractions.Dto;
 
 namespace DD.TelegramClient.Domain.Models.Commands;
 

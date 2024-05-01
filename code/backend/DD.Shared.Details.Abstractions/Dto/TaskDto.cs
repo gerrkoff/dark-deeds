@@ -1,4 +1,4 @@
-﻿namespace DD.TelegramClient.Domain.Infrastructure.Dto;
+﻿namespace DD.Shared.Details.Abstractions.Dto;
 
 public class TaskDto
 {
