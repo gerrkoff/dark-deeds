@@ -1,5 +1,6 @@
 using DD.MobileClient.Domain;
 using DD.MobileClient.Domain.Infrastructure;
+using DD.ServiceTask.Domain.Infrastructure;
 using DD.Shared.Details.Abstractions;
 using DD.Shared.Details.Common;
 using DD.Shared.Details.MobileClient.Data;
@@ -43,7 +44,11 @@ public static class Setup
     private static void AddClientInfrastructure(this IServiceCollection services)
     {
         services.AddScoped<ITaskServiceApp, TaskServiceApp>();
+        services.AddScoped<INotifierService, TaskServiceNotifier>();
         services.AddAutoMapper(typeof(ModelsMapping));
+
+        services.AddMemoryCache();
+        services.AddScoped<ICacheProvider, CacheProvider>();
     }
 
     private static void AddTelegramClientData(this IServiceCollection services)

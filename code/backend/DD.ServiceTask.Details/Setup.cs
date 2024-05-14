@@ -1,9 +1,9 @@
 using DD.ServiceTask.Details.Data;
-using DD.ServiceTask.Details.Infrastructure;
+using DD.ServiceTask.Details.Subscriptions;
 using DD.ServiceTask.Details.Web.Hubs;
 using DD.ServiceTask.Domain;
-using DD.ServiceTask.Domain.Infrastructure;
 using DD.ServiceTask.Domain.Infrastructure.EntityRepository;
+using DD.Shared.Details.Abstractions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.SignalR;
@@ -36,7 +36,7 @@ public static class Setup
 
     private static void AddTaskServiceInfrastructure(this IServiceCollection services)
     {
-        services.AddScoped<INotifierService, NotifierService>();
+        services.AddScoped<ITaskServiceSubscriber, TaskServiceSubscriber>();
     }
 
     private static void AddTaskServiceData(this IServiceCollection services)

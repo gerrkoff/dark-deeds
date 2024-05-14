@@ -87,7 +87,7 @@ public class TaskSpecificationTest
         Assert.DoesNotContain(result, x => x.Uid == "6"); // TO border is not included
     }
 
-    private List<TaskEntity> Collection()
+    private static List<TaskEntity> Collection()
     {
         return
         [
