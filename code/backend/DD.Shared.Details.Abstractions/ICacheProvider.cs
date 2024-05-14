@@ -1,12 +1,10 @@
-using DD.Shared.Details.Abstractions.Models;
-
 namespace DD.Shared.Details.Abstractions;
 
 public interface ICacheProvider
 {
-    T? GetValue<T>(ICacheKey key);
+    T? GetValue<T>(object key);
 
-    void SetValue<T>(ICacheKey key, T value);
+    void SetValue<T>(object key, T value);
 
-    void Evict(ICacheKey key);
+    void Evict(object key);
 }
