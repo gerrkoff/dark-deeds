@@ -129,7 +129,7 @@ internal sealed class WatchService(
         var remaining = tasks.Count(task => task is { Completed: false, Type: TaskType.Simple });
         var header = remaining == 0
             ? "🎉 all finished!"
-            : $"{remaining} remaining";
+            : $"\ud83d\udccc {remaining} remaining";
 
         return header;
     }
