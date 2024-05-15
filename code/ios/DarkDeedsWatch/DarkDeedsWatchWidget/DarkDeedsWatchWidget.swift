@@ -34,15 +34,15 @@ struct DarkDeedsStatusProvider: TimelineProvider {
     func placeholder(in context: Context) -> DarkDeedsStatusEntry {
         return DarkDeedsStatusEntry(date: Date(), header: "-2 (-3) remaining", main: "Do something", support: "Do this also")
     }
-    
+
     func getSnapshot(in context: Context, completion: @escaping (DarkDeedsStatusEntry) -> Void) {
         completion(DarkDeedsStatusEntry(date: Date(), header: "-1 (-2) remaining", main: "Do something", support: "Do this also"))
     }
-    
+
     func getTimeline(in context: Context, completion: @escaping (Timeline<DarkDeedsStatusEntry>) -> Void) {
         fetchStatusFromBackend(completion: completion)
     }
-    
+
     func getTimelineEntry(status: DarkDeedsStatusResponse) -> Timeline<DarkDeedsStatusEntry> {
         // Create a timeline entry for "now."
         let date = Date()
@@ -65,18 +65,18 @@ struct DarkDeedsStatusProvider: TimelineProvider {
 
         return timeline
     }
-    
+
     func fetchStatusFromBackend(completion: @escaping (Timeline<DarkDeedsStatusEntry>) -> Void) {
         print("DBG: fetching")
-        guard let url = URL(string: "https://dark-deeds.com/api/mobile/watch/f54d3975-d313-475d-a171-e85b05acf5e7") else {
+        guard let url = URL(string: "https://dark-deeds.com/api/mobile/watch/f54d3975-d313-475d-a171-e85b05acf5e7/widget") else {
             print("Invalid URL")
             return
         }
-        
+
         // Create a URLRequest
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
-        
+
         // Send the request
         URLSession.shared.dataTask(with: request) { data, response, error in
             // Check for errors
@@ -84,13 +84,13 @@ struct DarkDeedsStatusProvider: TimelineProvider {
                 print("Error: \(error)")
                 return
             }
-            
+
             // Check if response contains data
             guard let data = data else {
                 print("No data received")
                 return
             }
-            
+
             // Parse JSON response
             do {
                 let status = try JSONDecoder().decode(DarkDeedsStatusResponse.self, from: data)
@@ -121,20 +121,22 @@ struct DarkDeedsSummary : View {
     var entry: DarkDeedsStatusProvider.Entry
 
     var body: some View {
-        VStack(alignment: .leading, content: {
-//            HStack {
-//                Text("Time:")
-//                Text(entry.date, style: .time)
-//            }
-            
+        VStack(alignment: .leading) {
             Text(entry.header)
                 .font(.callout)
-            Text(entry.main)
-                .font(.headline)
-            Text(entry.support)
-                .font(.callout)
-                .fontWeight(.ultraLight)
-        })
+
+            if (!entry.main.isEmpty) {
+                Text(entry.main)
+                    .font(.headline)
+            }
+
+            if (!entry.support.isEmpty) {
+                Text(entry.support)
+                    .font(.callout)
+                    .fontWeight(.ultraLight)
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
 }
 
@@ -149,5 +151,8 @@ struct DarkDeedsNotAvailable : View {
 #Preview(as: .accessoryRectangular) {
     DarkDeedsStatusWidget()
 } timeline: {
-    DarkDeedsStatusEntry(date: .now, header: "1 (3) remaining", main: "Do something", support: "Do this also")
+    DarkDeedsStatusEntry(date: .now, header: "1 remaining", main: "Do something", support: "Do this also")
+    DarkDeedsStatusEntry(date: .now, header: "1 remaining", main: "", support: "Do this also")
+    DarkDeedsStatusEntry(date: .now, header: "1 remaining", main: "Do something", support: "")
+    DarkDeedsStatusEntry(date: .now, header: "1 remaining", main: "", support: "")
 }

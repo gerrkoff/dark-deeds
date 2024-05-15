@@ -1,67 +1,69 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State private var status = DarkDeedsStatusResponse(header: "Loading...", main: "", support: "")
-    var version = "v1"
+    @State private var status = DarkDeedsStatusResponse(header: "Loading...", items: [])
+    @State private var loading = false
     
     var body: some View {
-        VStack {
-//            Image(systemName: "globe")
-//                .imageScale(.large)
-//                .foregroundStyle(.tint)
-//            Text("Hello, world!")
-            
-            Text(status.header)
-                .font(.callout)
-                .padding(.bottom)
-            Text(status.main)
-                .font(.headline)
-                .padding(.bottom)
-            Text(status.support)
-                .font(.callout)
-                .fontWeight(.ultraLight)
-                
-            Text(version)
-                .font(.caption2)
-                .fontWeight(.ultraLight)
-                .padding(.top, 4.0)
+        ScrollView {
+            VStack(alignment: .leading) {
+                Text(status.header)
+                    .font(.headline)
+                    .padding(.bottom)
+                Spacer()
+                ForEach(status.items, id: \.self) { item in
+                    Text(item.item)
+                        .fontWeight(item.isSupport ? .ultraLight : .regular)
+                }
+                Spacer()
+                Button("Refresh", systemImage: "arrow.clockwise", action: fetchStatusFromBackend)
+                    .labelStyle(.iconOnly)
+                    .tint(.blue)
+                    .buttonStyle(.borderedProminent)
+                    .padding(.top)
+                    .disabled(loading)
+            }
+//            .background(.red)
+            .background(.black)
+            .frame(minHeight: 165)
         }
-        .padding()
+//        .background(.green)
+        .padding(.horizontal)
+        .padding(.top, -15)
         .onAppear {
             fetchStatusFromBackend()
         }
     }
     
     func fetchStatusFromBackend() {
-        guard let url = URL(string: "https://dark-deeds.com/api/mobile/watch/f54d3975-d313-475d-a171-e85b05acf5e7") else {
+        guard let url = URL(string: "https://dark-deeds.com/api/mobile/watch/f54d3975-d313-475d-a171-e85b05acf5e7/app") else {
             print("Invalid URL")
             return
         }
         
-        // Create a URLRequest
+        DispatchQueue.main.async {
+            self.loading = true
+        }
+        
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
         
-        // Send the request
         URLSession.shared.dataTask(with: request) { data, response, error in
-            // Check for errors
             if let error = error {
                 print("Error: \(error)")
                 return
             }
             
-            // Check if response contains data
             guard let data = data else {
                 print("No data received")
                 return
             }
             
-            // Parse JSON response
             do {
                 let status = try JSONDecoder().decode(DarkDeedsStatusResponse.self, from: data)
                 DispatchQueue.main.async {
-                    // Update the UI with the message from the backend
                     self.status = status
+                    self.loading = false
                 }
             } catch {
                 print("Error decoding JSON: \(error)")
@@ -73,8 +75,12 @@ struct ContentView: View {
 
 struct DarkDeedsStatusResponse: Decodable {
     var header: String
-    var main: String
-    var support: String
+    var items: [DarkDeedsStatusItem]
+}
+
+struct DarkDeedsStatusItem: Decodable, Hashable {
+    var item: String
+    var isSupport: Bool
 }
 
 #Preview {
