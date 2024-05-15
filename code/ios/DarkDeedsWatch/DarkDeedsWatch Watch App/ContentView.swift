@@ -14,6 +14,7 @@ struct ContentView: View {
                 ForEach(status.items, id: \.self) { item in
                     Text(item.item)
                         .fontWeight(item.isSupport ? .ultraLight : .regular)
+                        .lineLimit(1)
                 }
                 Spacer()
                 Button("Refresh", systemImage: "arrow.clockwise", action: fetchStatusFromBackend)
