@@ -1,32 +1,43 @@
 using DD.MobileClient.Domain.Dto;
+using DD.MobileClient.Domain.Entities;
 using DD.MobileClient.Domain.Infrastructure;
+using DD.MobileClient.Domain.Models;
 using DD.Shared.Details.Abstractions;
 using DD.Shared.Details.Abstractions.Dto;
+using Microsoft.Extensions.Logging;
 
 namespace DD.MobileClient.Domain.Services;
 
 public interface IWatchService
 {
-    Task<WatchStatusDto> GetStatus(string mobileKey);
+    Task<WatchWidgetStatusDto> GetWidgetStatus(string mobileKey);
+
+    Task<WatchAppStatusDto> GetAppStatus(string mobileKey);
 }
 
 internal sealed class WatchService(
     IMobileUserRepository mobileUserRepository,
-    ITaskServiceApp taskServiceApp) : IWatchService
+    ICacheProvider cacheProvider,
+    ITaskServiceApp taskServiceApp,
+    ILogger<WatchService> logger) : IWatchService
 {
-    public async Task<WatchStatusDto> GetStatus(string mobileKey)
+    public async Task<WatchWidgetStatusDto> GetWidgetStatus(string mobileKey)
     {
-        var user = await mobileUserRepository.GetByMobileKeyAsync(mobileKey)
-                     ?? throw new InvalidOperationException($"User with mobile key {mobileKey} not found");
+        var cacheKey = new WidgetStatusCacheKey(mobileKey);
+
+        if (cacheProvider.GetValue<WatchWidgetStatusDto>(cacheKey) is { } cached)
+            return cached;
+
+        Log.MissedWidgetStatusCache(logger, mobileKey);
+
+        var user = await GetUser(mobileKey);
 
         try
         {
-            var from = DateTime.UtcNow.Date;
-            var till = from.AddDays(1);
-            var tasks = (await taskServiceApp.LoadTasksByDateAsync(from, till, user.UserId)).OrderBy(x => x.Order)
-                .ToList();
+            var tasks = await GetTasks(user);
 
-            var remaining = tasks.Count(task => task is { Completed: false, Type: TaskType.Simple });
+            var header = GetHeader(tasks);
+
             var firstNotCompleted = tasks.FirstOrDefault(task => task is { Completed: false, Type: TaskType.Simple });
             var firstNotCompletedIncludingRoutine = tasks.FirstOrDefault(task =>
                 task is { Completed: false, Type: TaskType.Simple or TaskType.Routine });
@@ -44,17 +55,82 @@ internal sealed class WatchService(
                 ? firstNotCompletedIncludingRoutineUi[..^2]
                 : firstNotCompletedIncludingRoutineUi;
 
-            var header = remaining == 0
-                ? "🎉 all finished!"
-                : $"{remaining} remaining";
+            var result = new WatchWidgetStatusDto(header, firstNotCompletedUi, firstNotCompletedIncludingRoutineUi);
 
-            return new WatchStatusDto(header, firstNotCompletedUi, firstNotCompletedIncludingRoutineUi);
+            cacheProvider.SetValue(cacheKey, result);
+
+            return result;
         }
 #pragma warning disable CA1031
         catch (Exception)
 #pragma warning restore CA1031
         {
-            return new WatchStatusDto(string.Empty, "🤯 error", string.Empty);
+            return new WatchWidgetStatusDto("🤯 error", string.Empty, string.Empty);
         }
+    }
+
+    public async Task<WatchAppStatusDto> GetAppStatus(string mobileKey)
+    {
+        var cacheKey = new AppStatusCacheKey(mobileKey);
+
+        if (cacheProvider.GetValue<WatchAppStatusDto>(cacheKey) is { } cached)
+            return cached;
+
+        Log.MissedAppStatusCache(logger, mobileKey);
+
+        var user = await GetUser(mobileKey);
+
+        try
+        {
+            var tasks = await GetTasks(user);
+
+            var header = GetHeader(tasks);
+
+            List<WatchAppStatusItemDto> items = [];
+
+            foreach (var task in tasks)
+            {
+                var item = await taskServiceApp.PrintTasks([task]);
+                items.Add(new WatchAppStatusItemDto(item.First(), task.Type == TaskType.Routine));
+            }
+
+            var result = new WatchAppStatusDto(header, items);
+
+            cacheProvider.SetValue(cacheKey, result);
+
+            return result;
+        }
+#pragma warning disable CA1031
+        catch (Exception)
+#pragma warning restore CA1031
+        {
+            return new WatchAppStatusDto("🤯 error", []);
+        }
+    }
+
+    private async Task<MobileUserEntity> GetUser(string mobileKey)
+    {
+        var user = await mobileUserRepository.GetByMobileKeyAsync(mobileKey)
+                   ?? throw new InvalidOperationException($"User with mobile key {mobileKey} not found");
+        return user;
+    }
+
+    private async Task<List<TaskDto>> GetTasks(MobileUserEntity user)
+    {
+        var from = DateTime.UtcNow.Date;
+        var till = from.AddDays(1);
+        var tasks = (await taskServiceApp.LoadTasksByDateAsync(from, till, user.UserId)).OrderBy(x => x.Order)
+            .ToList();
+        return tasks;
+    }
+
+    private static string GetHeader(List<TaskDto> tasks)
+    {
+        var remaining = tasks.Count(task => task is { Completed: false, Type: TaskType.Simple });
+        var header = remaining == 0
+            ? "🎉 all finished!"
+            : $"\ud83d\udccc {remaining} remaining";
+
+        return header;
     }
 }

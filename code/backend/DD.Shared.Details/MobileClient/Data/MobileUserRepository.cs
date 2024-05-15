@@ -14,7 +14,7 @@ public sealed class MobileUserRepository(IMongoDbContext dbContext)
         RegisterDefaultMap<MobileUserEntity>();
     }
 
-    protected override Expression<Func<MobileUserEntity, string>> FieldId => x => x.MobileKey;
+    protected override Expression<Func<MobileUserEntity, string>> FieldId => x => x.UserId;
 
     public async Task<MobileUserEntity?> GetByMobileKeyAsync(string mobileKey)
     {

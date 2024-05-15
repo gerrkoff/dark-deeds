@@ -10,9 +10,15 @@ namespace DD.Shared.Details.MobileClient.Controllers;
 [Route("api/mobile/[controller]")]
 public class WatchController(IWatchService watchService) : ControllerBase
 {
-    [HttpGet("{mobileKey}")]
-    public Task<WatchStatusDto> Get(string mobileKey)
+    [HttpGet("{mobileKey}/widget")]
+    public Task<WatchWidgetStatusDto> GetWidget(string mobileKey)
     {
-        return watchService.GetStatus(mobileKey);
+        return watchService.GetWidgetStatus(mobileKey);
+    }
+
+    [HttpGet("{mobileKey}/app")]
+    public Task<WatchAppStatusDto> GetApp(string mobileKey)
+    {
+        return watchService.GetAppStatus(mobileKey);
     }
 }
