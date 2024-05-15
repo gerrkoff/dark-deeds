@@ -38,9 +38,9 @@ internal sealed class WatchService(
 
             var header = GetHeader(tasks);
 
-            var firstNotCompleted = tasks.FirstOrDefault(task => task is { Completed: false, Type: TaskType.Simple });
+            var firstNotCompleted = tasks.FirstOrDefault(task => task is { Type: TaskType.Simple });
             var firstNotCompletedIncludingRoutine = tasks.FirstOrDefault(task =>
-                task is { Completed: false, Type: TaskType.Simple or TaskType.Routine });
+                task is { Type: TaskType.Simple or TaskType.Routine });
 
             var firstNotCompletedUi = firstNotCompleted != null
                 ? (await taskServiceApp.PrintTasks([firstNotCompleted])).First()
@@ -90,8 +90,11 @@ internal sealed class WatchService(
 
             foreach (var task in tasks)
             {
-                var item = await taskServiceApp.PrintTasks([task]);
-                items.Add(new WatchAppStatusItemDto(item.First(), task.Type == TaskType.Routine));
+                var item = (await taskServiceApp.PrintTasks([task])).First();
+                var itemFixedForRoutine = task.Type == TaskType.Routine
+                    ? item[..^2]
+                    : item;
+                items.Add(new WatchAppStatusItemDto(itemFixedForRoutine, task.Type == TaskType.Routine));
             }
 
             var result = new WatchAppStatusDto(header, items);
@@ -119,7 +122,9 @@ internal sealed class WatchService(
     {
         var from = DateTime.UtcNow.Date;
         var till = from.AddDays(1);
-        var tasks = (await taskServiceApp.LoadTasksByDateAsync(from, till, user.UserId)).OrderBy(x => x.Order)
+        var tasks = (await taskServiceApp.LoadTasksByDateAsync(from, till, user.UserId))
+            .Where(x => !x.Completed)
+            .OrderBy(x => x.Order)
             .ToList();
         return tasks;
     }
