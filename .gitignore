@@ -11,3 +11,5 @@ node_modules
 build
 ci/results
 *.sln.DotSettings.user
+
+UserInterfaceState.xcuserstate
