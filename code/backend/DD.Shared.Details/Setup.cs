@@ -45,6 +45,8 @@ public static class Setup
     {
         services.AddScoped<ITaskServiceApp, TaskServiceApp>();
         services.AddScoped<INotifierService, TaskServiceNotifier>();
+        services.AddSingleton<ITaskServiceNotifierChannelProvider, TaskServiceNotifierChannelProvider>();
+        services.AddHostedService<TaskServiceNotifierBackgroundService>();
         services.AddAutoMapper(typeof(ModelsMapping));
 
         services.AddMemoryCache();
