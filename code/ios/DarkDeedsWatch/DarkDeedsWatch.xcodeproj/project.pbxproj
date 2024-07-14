@@ -1,0 +1,628 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		DFD19CFB2BE1A9A5009A2DF1 /* DarkDeedsWatch Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = DFD19CFA2BE1A9A5009A2DF1 /* DarkDeedsWatch Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		DFD19D002BE1A9A5009A2DF1 /* DarkDeedsWatchApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFD19CFF2BE1A9A5009A2DF1 /* DarkDeedsWatchApp.swift */; };
+		DFD19D022BE1A9A5009A2DF1 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFD19D012BE1A9A5009A2DF1 /* ContentView.swift */; };
+		DFD19D042BE1A9A6009A2DF1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DFD19D032BE1A9A6009A2DF1 /* Assets.xcassets */; };
+		DFD19D072BE1A9A6009A2DF1 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DFD19D062BE1A9A6009A2DF1 /* Preview Assets.xcassets */; };
+		DFD19D182BE1A9CC009A2DF1 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFD19D172BE1A9CC009A2DF1 /* WidgetKit.framework */; };
+		DFD19D1A2BE1A9CC009A2DF1 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFD19D192BE1A9CC009A2DF1 /* SwiftUI.framework */; };
+		DFD19D1D2BE1A9CC009A2DF1 /* DarkDeedsWatchWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFD19D1C2BE1A9CC009A2DF1 /* DarkDeedsWatchWidget.swift */; };
+		DFD19D1F2BE1A9CD009A2DF1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DFD19D1E2BE1A9CD009A2DF1 /* Assets.xcassets */; };
+		DFD19D232BE1A9CD009A2DF1 /* DarkDeedsWatchWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = DFD19D152BE1A9CC009A2DF1 /* DarkDeedsWatchWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		DFD19CFC2BE1A9A5009A2DF1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DFD19CEE2BE1A9A5009A2DF1 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DFD19CF92BE1A9A5009A2DF1;
+			remoteInfo = "DarkDeedsWatch Watch App";
+		};
+		DFD19D212BE1A9CD009A2DF1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DFD19CEE2BE1A9A5009A2DF1 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DFD19D142BE1A9CC009A2DF1;
+			remoteInfo = DarkDeedsWatchWidgetExtension;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		DFD19D0D2BE1A9A6009A2DF1 /* Embed Watch Content */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
+			dstSubfolderSpec = 16;
+			files = (
+				DFD19CFB2BE1A9A5009A2DF1 /* DarkDeedsWatch Watch App.app in Embed Watch Content */,
+			);
+			name = "Embed Watch Content";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DFD19D272BE1A9CD009A2DF1 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				DFD19D232BE1A9CD009A2DF1 /* DarkDeedsWatchWidgetExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		DFD19CF42BE1A9A5009A2DF1 /* DarkDeedsWatch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DarkDeedsWatch.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		DFD19CFA2BE1A9A5009A2DF1 /* DarkDeedsWatch Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "DarkDeedsWatch Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		DFD19CFF2BE1A9A5009A2DF1 /* DarkDeedsWatchApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DarkDeedsWatchApp.swift; sourceTree = "<group>"; };
+		DFD19D012BE1A9A5009A2DF1 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		DFD19D032BE1A9A6009A2DF1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		DFD19D062BE1A9A6009A2DF1 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		DFD19D152BE1A9CC009A2DF1 /* DarkDeedsWatchWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = DarkDeedsWatchWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		DFD19D172BE1A9CC009A2DF1 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		DFD19D192BE1A9CC009A2DF1 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
+		DFD19D1C2BE1A9CC009A2DF1 /* DarkDeedsWatchWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DarkDeedsWatchWidget.swift; sourceTree = "<group>"; };
+		DFD19D1E2BE1A9CD009A2DF1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		DFD19D202BE1A9CD009A2DF1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		DFD19CF72BE1A9A5009A2DF1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DFD19D122BE1A9CC009A2DF1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DFD19D1A2BE1A9CC009A2DF1 /* SwiftUI.framework in Frameworks */,
+				DFD19D182BE1A9CC009A2DF1 /* WidgetKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		DFD19CED2BE1A9A5009A2DF1 = {
+			isa = PBXGroup;
+			children = (
+				DFD19CFE2BE1A9A5009A2DF1 /* DarkDeedsWatch Watch App */,
+				DFD19D1B2BE1A9CC009A2DF1 /* DarkDeedsWatchWidget */,
+				DFD19D162BE1A9CC009A2DF1 /* Frameworks */,
+				DFD19CF52BE1A9A5009A2DF1 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		DFD19CF52BE1A9A5009A2DF1 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				DFD19CF42BE1A9A5009A2DF1 /* DarkDeedsWatch.app */,
+				DFD19CFA2BE1A9A5009A2DF1 /* DarkDeedsWatch Watch App.app */,
+				DFD19D152BE1A9CC009A2DF1 /* DarkDeedsWatchWidgetExtension.appex */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		DFD19CFE2BE1A9A5009A2DF1 /* DarkDeedsWatch Watch App */ = {
+			isa = PBXGroup;
+			children = (
+				DFD19CFF2BE1A9A5009A2DF1 /* DarkDeedsWatchApp.swift */,
+				DFD19D012BE1A9A5009A2DF1 /* ContentView.swift */,
+				DFD19D032BE1A9A6009A2DF1 /* Assets.xcassets */,
+				DFD19D052BE1A9A6009A2DF1 /* Preview Content */,
+			);
+			path = "DarkDeedsWatch Watch App";
+			sourceTree = "<group>";
+		};
+		DFD19D052BE1A9A6009A2DF1 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				DFD19D062BE1A9A6009A2DF1 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		DFD19D162BE1A9CC009A2DF1 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				DFD19D172BE1A9CC009A2DF1 /* WidgetKit.framework */,
+				DFD19D192BE1A9CC009A2DF1 /* SwiftUI.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		DFD19D1B2BE1A9CC009A2DF1 /* DarkDeedsWatchWidget */ = {
+			isa = PBXGroup;
+			children = (
+				DFD19D1C2BE1A9CC009A2DF1 /* DarkDeedsWatchWidget.swift */,
+				DFD19D1E2BE1A9CD009A2DF1 /* Assets.xcassets */,
+				DFD19D202BE1A9CD009A2DF1 /* Info.plist */,
+			);
+			path = DarkDeedsWatchWidget;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		DFD19CF32BE1A9A5009A2DF1 /* DarkDeedsWatch */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DFD19D0E2BE1A9A6009A2DF1 /* Build configuration list for PBXNativeTarget "DarkDeedsWatch" */;
+			buildPhases = (
+				DFD19CF22BE1A9A5009A2DF1 /* Resources */,
+				DFD19D0D2BE1A9A6009A2DF1 /* Embed Watch Content */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				DFD19CFD2BE1A9A5009A2DF1 /* PBXTargetDependency */,
+			);
+			name = DarkDeedsWatch;
+			productName = DarkDeedsWatch;
+			productReference = DFD19CF42BE1A9A5009A2DF1 /* DarkDeedsWatch.app */;
+			productType = "com.apple.product-type.application.watchapp2-container";
+		};
+		DFD19CF92BE1A9A5009A2DF1 /* DarkDeedsWatch Watch App */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DFD19D0A2BE1A9A6009A2DF1 /* Build configuration list for PBXNativeTarget "DarkDeedsWatch Watch App" */;
+			buildPhases = (
+				DFD19CF62BE1A9A5009A2DF1 /* Sources */,
+				DFD19CF72BE1A9A5009A2DF1 /* Frameworks */,
+				DFD19CF82BE1A9A5009A2DF1 /* Resources */,
+				DFD19D272BE1A9CD009A2DF1 /* Embed Foundation Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				DFD19D222BE1A9CD009A2DF1 /* PBXTargetDependency */,
+			);
+			name = "DarkDeedsWatch Watch App";
+			productName = "DarkDeedsWatch Watch App";
+			productReference = DFD19CFA2BE1A9A5009A2DF1 /* DarkDeedsWatch Watch App.app */;
+			productType = "com.apple.product-type.application";
+		};
+		DFD19D142BE1A9CC009A2DF1 /* DarkDeedsWatchWidgetExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DFD19D242BE1A9CD009A2DF1 /* Build configuration list for PBXNativeTarget "DarkDeedsWatchWidgetExtension" */;
+			buildPhases = (
+				DFD19D112BE1A9CC009A2DF1 /* Sources */,
+				DFD19D122BE1A9CC009A2DF1 /* Frameworks */,
+				DFD19D132BE1A9CC009A2DF1 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = DarkDeedsWatchWidgetExtension;
+			productName = DarkDeedsWatchWidgetExtension;
+			productReference = DFD19D152BE1A9CC009A2DF1 /* DarkDeedsWatchWidgetExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		DFD19CEE2BE1A9A5009A2DF1 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1530;
+				LastUpgradeCheck = 1530;
+				TargetAttributes = {
+					DFD19CF32BE1A9A5009A2DF1 = {
+						CreatedOnToolsVersion = 15.3;
+					};
+					DFD19CF92BE1A9A5009A2DF1 = {
+						CreatedOnToolsVersion = 15.3;
+					};
+					DFD19D142BE1A9CC009A2DF1 = {
+						CreatedOnToolsVersion = 15.3;
+					};
+				};
+			};
+			buildConfigurationList = DFD19CF12BE1A9A5009A2DF1 /* Build configuration list for PBXProject "DarkDeedsWatch" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = DFD19CED2BE1A9A5009A2DF1;
+			productRefGroup = DFD19CF52BE1A9A5009A2DF1 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				DFD19CF32BE1A9A5009A2DF1 /* DarkDeedsWatch */,
+				DFD19CF92BE1A9A5009A2DF1 /* DarkDeedsWatch Watch App */,
+				DFD19D142BE1A9CC009A2DF1 /* DarkDeedsWatchWidgetExtension */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		DFD19CF22BE1A9A5009A2DF1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DFD19CF82BE1A9A5009A2DF1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DFD19D072BE1A9A6009A2DF1 /* Preview Assets.xcassets in Resources */,
+				DFD19D042BE1A9A6009A2DF1 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DFD19D132BE1A9CC009A2DF1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DFD19D1F2BE1A9CD009A2DF1 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		DFD19CF62BE1A9A5009A2DF1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DFD19D022BE1A9A5009A2DF1 /* ContentView.swift in Sources */,
+				DFD19D002BE1A9A5009A2DF1 /* DarkDeedsWatchApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DFD19D112BE1A9CC009A2DF1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DFD19D1D2BE1A9CC009A2DF1 /* DarkDeedsWatchWidget.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		DFD19CFD2BE1A9A5009A2DF1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DFD19CF92BE1A9A5009A2DF1 /* DarkDeedsWatch Watch App */;
+			targetProxy = DFD19CFC2BE1A9A5009A2DF1 /* PBXContainerItemProxy */;
+		};
+		DFD19D222BE1A9CD009A2DF1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DFD19D142BE1A9CC009A2DF1 /* DarkDeedsWatchWidgetExtension */;
+			targetProxy = DFD19D212BE1A9CD009A2DF1 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		DFD19D082BE1A9A6009A2DF1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		DFD19D092BE1A9A6009A2DF1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+			};
+			name = Release;
+		};
+		DFD19D0B2BE1A9A6009A2DF1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"DarkDeedsWatch Watch App/Preview Content\"";
+				DEVELOPMENT_TEAM = 8PXX9X6828;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = DarkDeedsWatch;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKWatchOnly = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.dark-deeds.DarkDeedsWatch.watchkitapp";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 10.4;
+			};
+			name = Debug;
+		};
+		DFD19D0C2BE1A9A6009A2DF1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"DarkDeedsWatch Watch App/Preview Content\"";
+				DEVELOPMENT_TEAM = 8PXX9X6828;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = DarkDeedsWatch;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKWatchOnly = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.dark-deeds.DarkDeedsWatch.watchkitapp";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				VALIDATE_PRODUCT = YES;
+				WATCHOS_DEPLOYMENT_TARGET = 10.4;
+			};
+			name = Release;
+		};
+		DFD19D0F2BE1A9A6009A2DF1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 8PXX9X6828;
+				INFOPLIST_KEY_CFBundleDisplayName = DarkDeedsWatch;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.dark-deeds.DarkDeedsWatch";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		DFD19D102BE1A9A6009A2DF1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 8PXX9X6828;
+				INFOPLIST_KEY_CFBundleDisplayName = DarkDeedsWatch;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.dark-deeds.DarkDeedsWatch";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		DFD19D252BE1A9CD009A2DF1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 8PXX9X6828;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = DarkDeedsWatchWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = DarkDeedsWatchWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.dark-deeds.DarkDeedsWatch.watchkitapp.DarkDeedsWatchWidget";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 10.4;
+			};
+			name = Debug;
+		};
+		DFD19D262BE1A9CD009A2DF1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 8PXX9X6828;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = DarkDeedsWatchWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = DarkDeedsWatchWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.dark-deeds.DarkDeedsWatch.watchkitapp.DarkDeedsWatchWidget";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				VALIDATE_PRODUCT = YES;
+				WATCHOS_DEPLOYMENT_TARGET = 10.4;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		DFD19CF12BE1A9A5009A2DF1 /* Build configuration list for PBXProject "DarkDeedsWatch" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DFD19D082BE1A9A6009A2DF1 /* Debug */,
+				DFD19D092BE1A9A6009A2DF1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		DFD19D0A2BE1A9A6009A2DF1 /* Build configuration list for PBXNativeTarget "DarkDeedsWatch Watch App" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DFD19D0B2BE1A9A6009A2DF1 /* Debug */,
+				DFD19D0C2BE1A9A6009A2DF1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		DFD19D0E2BE1A9A6009A2DF1 /* Build configuration list for PBXNativeTarget "DarkDeedsWatch" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DFD19D0F2BE1A9A6009A2DF1 /* Debug */,
+				DFD19D102BE1A9A6009A2DF1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		DFD19D242BE1A9CD009A2DF1 /* Build configuration list for PBXNativeTarget "DarkDeedsWatchWidgetExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DFD19D252BE1A9CD009A2DF1 /* Debug */,
+				DFD19D262BE1A9CD009A2DF1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = DFD19CEE2BE1A9A5009A2DF1 /* Project object */;
+}
