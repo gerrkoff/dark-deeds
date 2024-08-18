@@ -14,7 +14,7 @@ internal sealed class TestService(IAuthService authService) : ITestService
     {
         var signUpInfo = new SignUpInfoDto
         {
-            Username = Guid.NewGuid().ToString(),
+            Username = $"test-{Guid.NewGuid()}",
             Password = "QWERTY123456qwerty!@#$%^",
         };
 

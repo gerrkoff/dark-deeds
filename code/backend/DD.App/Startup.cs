@@ -1,7 +1,6 @@
 using DD.App.Dto;
 using DD.ServiceAuth.Details;
 using DD.ServiceTask.Details;
-using DD.Shared.Auth;
 using DD.Shared.Data;
 using DD.Shared.Data.Migrator;
 using DD.Shared.Details;
@@ -31,7 +30,6 @@ public class Startup(IConfiguration configuration)
         services.AddClients(Configuration);
 
         // shared
-        services.AddSharedAuth();
         services.AddSharedWeb();
         services.AddSharedData(Configuration);
         services.AddSharedDataMigrator();

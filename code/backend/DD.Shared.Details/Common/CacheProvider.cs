@@ -12,7 +12,7 @@ public class CacheProvider(IMemoryCache cache) : ICacheProvider
 
     public void SetValue<T>(object key, T value)
     {
-        cache.Set(key, value, TimeSpan.FromMinutes(60));
+        cache.Set(key, value, TimeSpan.FromHours(24));
     }
 
     public void Evict(object key)

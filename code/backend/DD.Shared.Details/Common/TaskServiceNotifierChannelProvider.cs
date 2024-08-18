@@ -12,7 +12,7 @@ public interface ITaskServiceNotifierChannelProvider
     void Complete();
 }
 
-public class TaskServiceNotifierChannelProvider() : ITaskServiceNotifierChannelProvider
+public class TaskServiceNotifierChannelProvider : ITaskServiceNotifierChannelProvider
 {
     private readonly Channel<TasksUpdatedDto> _channel = Channel.CreateUnbounded<TasksUpdatedDto>();
 

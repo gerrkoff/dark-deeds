@@ -1,6 +1,7 @@
 using AutoMapper;
 using DD.ServiceTask.Domain.Dto;
 using DD.ServiceTask.Domain.Entities;
+using DD.Shared.Details.Abstractions.Dto;
 
 namespace DD.ServiceTask.Domain.Mapping;
 

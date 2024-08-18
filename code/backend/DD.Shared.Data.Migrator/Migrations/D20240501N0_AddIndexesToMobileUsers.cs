@@ -1,4 +1,5 @@
 using DD.MobileClient.Domain.Entities;
+using DD.Shared.Data.Migrator.Models;
 using DD.Shared.Details.MobileClient.Data;
 using MongoDB.Driver;
 

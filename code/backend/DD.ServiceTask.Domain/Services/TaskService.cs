@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
-using DD.ServiceTask.Domain.Dto;
 using DD.ServiceTask.Domain.DtoExtensions;
 using DD.ServiceTask.Domain.Entities;
 using DD.ServiceTask.Domain.Infrastructure;
 using DD.ServiceTask.Domain.Infrastructure.EntityRepository;
 using DD.ServiceTask.Domain.Specifications;
+using DD.Shared.Details.Abstractions.Dto;
 using Microsoft.Extensions.Logging;
 
 namespace DD.ServiceTask.Domain.Services;
@@ -79,7 +79,7 @@ public class TaskService(
 
         if (savedTasks.Count > 0)
         {
-            await notifierService.TaskUpdated(new TaskUpdatedDto
+            await notifierService.TaskUpdated(new TasksUpdatedDto
             {
                 Tasks = savedTasks,
                 UserId = userId,

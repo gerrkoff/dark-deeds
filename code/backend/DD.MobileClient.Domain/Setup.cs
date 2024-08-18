@@ -10,6 +10,7 @@ public static class Setup
     public static void AddMobileClientDomain(this IServiceCollection services)
     {
         services.AddScoped<IWatchService, WatchService>();
+        services.AddScoped<IWatchPayloadController, WatchPayloadController>();
         services.AddScoped<ITaskServiceSubscriber, TaskServiceSubscriber>();
     }
 }
