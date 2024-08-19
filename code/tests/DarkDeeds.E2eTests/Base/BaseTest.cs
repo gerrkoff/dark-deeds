@@ -1,21 +1,21 @@
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Reflection;
 using System.Text.Json;
 using DarkDeeds.E2eTests.Common;
 using DarkDeeds.E2eTests.Models;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Remote;
+using Xunit;
 
 namespace DarkDeeds.E2eTests.Base;
 
+[Collection("Sequential")]
 public class BaseTest
 {
-    protected static readonly Uri Url = new(Environment.GetEnvironmentVariable("URL") ?? "http://localhost:3000");
-
-    private static readonly bool RunContainer = bool.Parse(Environment.GetEnvironmentVariable("RUN_CONTAINER") ?? "false");
-    private static readonly string ArtifactsPath = Environment.GetEnvironmentVariable("ARTIFACTS_PATH") ?? "artifacts";
+    protected static readonly Uri Url = new(Environment.GetEnvironmentVariable("URL") ?? "http://host.docker.internal:3000");
     private static readonly Uri BackendUrl = new(Environment.GetEnvironmentVariable("URL") ?? "http://localhost:5000");
+    private static readonly Uri SeleniumGridUrl = new(Environment.GetEnvironmentVariable("SELENIUM_GRID_URL") ?? "http://localhost:4444");
+    private static readonly string ArtifactsPath = Environment.GetEnvironmentVariable("ARTIFACTS_PATH") ?? "artifacts";
     private static readonly Random Random = new();
 
     protected virtual async Task Test(Func<RemoteWebDriver, Task> action)
@@ -63,17 +63,18 @@ public class BaseTest
         };
     }
 
-    private static ChromeDriver CreateDriver()
+    private static RemoteWebDriver CreateDriver()
     {
         var options = new ChromeOptions();
         options.AddArguments("--ignore-certificate-errors");
-        if (RunContainer)
-        {
-            options.AddArguments("headless", "no-sandbox", "--verbose");
-        }
+        options.AddArguments("--headless");
+        options.AddArguments("--no-sandbox");
+        options.AddArguments("--disable-dev-shm-usage");
+        options.AddArguments("--disable-gpu");
+        options.AddArguments("--remote-debugging-port=9222");
+        options.AddArguments("--verbose");
 
-        var driverPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-        var driver = new ChromeDriver(driverPath, options);
+        var driver = new RemoteWebDriver(new Uri($"{SeleniumGridUrl}wd/hub"), options);
         driver.Navigate().GoToUrl(Url);
         return driver;
     }
