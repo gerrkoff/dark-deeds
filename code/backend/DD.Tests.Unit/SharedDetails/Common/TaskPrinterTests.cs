@@ -13,7 +13,7 @@ public class TaskPrinterTests
     {
         var service = new TaskPrinter();
 
-        var result = service.PrintWithSymbolCodes(new TaskDto("Task text"));
+        var result = service.PrintWithSymbolCodes(new TaskDto { Title = "Task text" });
 
         Assert.Equal("Task text", result);
     }
