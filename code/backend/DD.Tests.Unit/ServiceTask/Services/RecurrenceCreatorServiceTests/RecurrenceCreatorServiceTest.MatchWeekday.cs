@@ -1,5 +1,6 @@
 using DD.ServiceTask.Domain.Entities;
 using DD.ServiceTask.Domain.Entities.Enums;
+using DD.ServiceTask.Domain.Services;
 using Xunit;
 
 namespace DD.Tests.Unit.ServiceTask.Services.RecurrenceCreatorServiceTests;
@@ -9,7 +10,7 @@ public partial class RecurrenceCreatorServiceTest
     [Fact]
     public void MatchWeekday_ShouldMatchOneWeekday()
     {
-        var result = DD.ServiceTask.Domain.Services.RecurrenceCreatorService.MatchWeekday(
+        var result = RecurrenceCreatorService.MatchWeekday(
             new PlannedRecurrenceEntity
             {
                 EveryWeekday = RecurrenceWeekday.Monday,
@@ -22,7 +23,7 @@ public partial class RecurrenceCreatorServiceTest
     [Fact]
     public void MatchWeekday_ShouldMatchOneOfTwoWeekdays()
     {
-        var result = DD.ServiceTask.Domain.Services.RecurrenceCreatorService.MatchWeekday(
+        var result = RecurrenceCreatorService.MatchWeekday(
             new PlannedRecurrenceEntity
             {
                 EveryWeekday = RecurrenceWeekday.Monday | RecurrenceWeekday.Friday,
@@ -35,7 +36,7 @@ public partial class RecurrenceCreatorServiceTest
     [Fact]
     public void MatchWeekday_ShouldNotMatchOneOfWeekdays()
     {
-        var result = DD.ServiceTask.Domain.Services.RecurrenceCreatorService.MatchWeekday(
+        var result = RecurrenceCreatorService.MatchWeekday(
             new PlannedRecurrenceEntity
             {
                 EveryWeekday = RecurrenceWeekday.Monday | RecurrenceWeekday.Friday,
@@ -48,7 +49,7 @@ public partial class RecurrenceCreatorServiceTest
     [Fact]
     public void MatchWeekday_ShouldMatchIfWeekdayIsNull()
     {
-        var result = DD.ServiceTask.Domain.Services.RecurrenceCreatorService.MatchWeekday(
+        var result = RecurrenceCreatorService.MatchWeekday(
             new PlannedRecurrenceEntity
             {
                 EveryWeekday = null,

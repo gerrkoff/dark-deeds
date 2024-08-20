@@ -1,4 +1,5 @@
 using DD.ServiceTask.Domain.Entities;
+using DD.ServiceTask.Domain.Services;
 using Xunit;
 
 namespace DD.Tests.Unit.ServiceTask.Services.RecurrenceCreatorServiceTests;
@@ -8,7 +9,7 @@ public partial class RecurrenceCreatorServiceTest
     [Fact]
     public void MatchPeriod_ShouldMatchIfWithinPeriod()
     {
-        var result = DD.ServiceTask.Domain.Services.RecurrenceCreatorService.MatchPeriod(
+        var result = RecurrenceCreatorService.MatchPeriod(
             new PlannedRecurrenceEntity
             {
                 StartDate = new DateTime(2019, 9, 4),
@@ -22,7 +23,7 @@ public partial class RecurrenceCreatorServiceTest
     [Fact]
     public void MatchPeriod_ShouldMatchIfEqualsToStartDate()
     {
-        var result = DD.ServiceTask.Domain.Services.RecurrenceCreatorService.MatchPeriod(
+        var result = RecurrenceCreatorService.MatchPeriod(
             new PlannedRecurrenceEntity
             {
                 StartDate = new DateTime(2019, 9, 4),
@@ -36,7 +37,7 @@ public partial class RecurrenceCreatorServiceTest
     [Fact]
     public void MatchPeriod_ShouldMatchIfEqualsToEndDate()
     {
-        var result = DD.ServiceTask.Domain.Services.RecurrenceCreatorService.MatchPeriod(
+        var result = RecurrenceCreatorService.MatchPeriod(
             new PlannedRecurrenceEntity
             {
                 StartDate = new DateTime(2019, 9, 4),
@@ -50,7 +51,7 @@ public partial class RecurrenceCreatorServiceTest
     [Fact]
     public void MatchPeriod_ShouldMatchEvenIfEndDateIsNull()
     {
-        var result = DD.ServiceTask.Domain.Services.RecurrenceCreatorService.MatchPeriod(
+        var result = RecurrenceCreatorService.MatchPeriod(
             new PlannedRecurrenceEntity
             {
                 StartDate = new DateTime(2019, 9, 4),
@@ -63,7 +64,7 @@ public partial class RecurrenceCreatorServiceTest
     [Fact]
     public void MatchPeriod_ShouldNotMatchIfLessThanStartDate()
     {
-        var result = DD.ServiceTask.Domain.Services.RecurrenceCreatorService.MatchPeriod(
+        var result = RecurrenceCreatorService.MatchPeriod(
             new PlannedRecurrenceEntity
             {
                 StartDate = new DateTime(2019, 9, 4),
