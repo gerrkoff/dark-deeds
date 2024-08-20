@@ -1,4 +1,5 @@
 using DD.Shared.Details.Abstractions;
+using DD.Shared.Details.Abstractions.Models;
 using Microsoft.AspNetCore.Http;
 
 namespace DD.Shared.Web;

@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using DD.Shared.Details.Abstractions.Models;
 
 namespace DD.Shared.Details.Abstractions;
 

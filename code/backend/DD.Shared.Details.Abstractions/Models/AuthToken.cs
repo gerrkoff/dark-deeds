@@ -1,4 +1,4 @@
-﻿namespace DD.Shared.Details.Abstractions;
+﻿namespace DD.Shared.Details.Abstractions.Models;
 
 public class AuthToken
 {

@@ -1,6 +1,7 @@
 using System.Globalization;
 using System.Security.Claims;
 using DD.Shared.Details.Abstractions;
+using DD.Shared.Details.Abstractions.Models;
 
 namespace DD.Shared.Details.Common;
 

@@ -1,5 +1,5 @@
 using AutoMapper;
-using DD.Shared.Details.Abstractions;
+using DD.Shared.Details.Abstractions.Models;
 
 namespace DD.ServiceAuth.Details.Web;
 

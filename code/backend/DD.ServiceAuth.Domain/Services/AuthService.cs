@@ -1,7 +1,7 @@
 ﻿using DD.ServiceAuth.Domain.Dto;
 using DD.ServiceAuth.Domain.Entities;
 using DD.ServiceAuth.Domain.Enums;
-using DD.Shared.Details.Abstractions;
+using DD.Shared.Details.Abstractions.Models;
 using Microsoft.AspNetCore.Identity;
 using SignInResult = DD.ServiceAuth.Domain.Enums.SignInResult;
 
