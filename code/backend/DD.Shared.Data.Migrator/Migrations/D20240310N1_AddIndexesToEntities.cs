@@ -1,5 +1,6 @@
 using DD.ServiceTask.Details.Data;
 using DD.ServiceTask.Domain.Entities;
+using DD.Shared.Data.Migrator.Models;
 using DD.Shared.Details.TelegramClient.Data;
 using DD.Shared.Details.WebClientBff.Data;
 using DD.TelegramClient.Domain.Entities;

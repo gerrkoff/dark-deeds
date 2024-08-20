@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using DD.ServiceTask.Domain.Dto;
 using DD.ServiceTask.Domain.Services;
+using DD.Shared.Details.Abstractions.Dto;
 using DD.Shared.Web;
 using Microsoft.AspNetCore.Mvc;
 

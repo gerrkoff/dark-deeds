@@ -1,8 +1,8 @@
-﻿using DD.ServiceTask.Domain.Dto;
+﻿using DD.Shared.Details.Abstractions.Dto;
 
 namespace DD.ServiceTask.Domain.Infrastructure;
 
 public interface INotifierService
 {
-    Task TaskUpdated(TaskUpdatedDto updatedTasks);
+    Task TaskUpdated(TasksUpdatedDto updatedTasks);
 }

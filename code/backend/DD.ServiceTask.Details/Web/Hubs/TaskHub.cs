@@ -1,6 +1,6 @@
-using DD.ServiceTask.Domain.Dto;
 using DD.ServiceTask.Domain.Services;
-using DD.Shared.Auth;
+using DD.Shared.Details.Abstractions;
+using DD.Shared.Details.Abstractions.Dto;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 

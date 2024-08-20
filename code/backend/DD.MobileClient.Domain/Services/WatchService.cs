@@ -15,10 +15,11 @@ public interface IWatchService
     Task<WatchAppStatusDto> GetAppStatus(string mobileKey);
 }
 
-internal sealed class WatchService(
+public sealed class WatchService(
     IMobileUserRepository mobileUserRepository,
     ICacheProvider cacheProvider,
     ITaskServiceApp taskServiceApp,
+    IWatchPayloadController watchPayloadController,
     ILogger<WatchService> logger) : IWatchService
 {
     public async Task<WatchWidgetStatusDto> GetWidgetStatus(string mobileKey)
@@ -36,29 +37,11 @@ internal sealed class WatchService(
         {
             var tasks = await GetTasks(user);
 
-            var header = GetHeader(tasks);
+            var payload = watchPayloadController.GetWidgetStatus(tasks);
 
-            var firstNotCompleted = tasks.FirstOrDefault(task => task is { Type: TaskType.Simple });
-            var firstNotCompletedIncludingRoutine = tasks.FirstOrDefault();
+            cacheProvider.SetValue(cacheKey, payload);
 
-            var firstNotCompletedUi = firstNotCompleted != null
-                ? (await taskServiceApp.PrintTasks([firstNotCompleted])).First()
-                : string.Empty;
-
-            var firstNotCompletedIncludingRoutineUi = firstNotCompletedIncludingRoutine != null &&
-                                                      firstNotCompletedIncludingRoutine.Type == TaskType.Routine
-                ? (await taskServiceApp.PrintTasks([firstNotCompletedIncludingRoutine])).First()
-                : string.Empty;
-
-            firstNotCompletedIncludingRoutineUi = firstNotCompletedIncludingRoutineUi.Length > 2
-                ? firstNotCompletedIncludingRoutineUi[..^2]
-                : firstNotCompletedIncludingRoutineUi;
-
-            var result = new WatchWidgetStatusDto(header, firstNotCompletedUi, firstNotCompletedIncludingRoutineUi);
-
-            cacheProvider.SetValue(cacheKey, result);
-
-            return result;
+            return payload;
         }
 #pragma warning disable CA1031
         catch (Exception)
@@ -83,24 +66,11 @@ internal sealed class WatchService(
         {
             var tasks = await GetTasks(user);
 
-            var header = GetHeader(tasks);
+            var payload = watchPayloadController.GetAppStatus(tasks);
 
-            List<WatchAppStatusItemDto> items = [];
+            cacheProvider.SetValue(cacheKey, payload);
 
-            foreach (var task in tasks)
-            {
-                var item = (await taskServiceApp.PrintTasks([task])).First();
-                var itemFixedForRoutine = task.Type == TaskType.Routine
-                    ? item[..^2]
-                    : item;
-                items.Add(new WatchAppStatusItemDto(itemFixedForRoutine, task.Type == TaskType.Routine));
-            }
-
-            var result = new WatchAppStatusDto(header, items);
-
-            cacheProvider.SetValue(cacheKey, result);
-
-            return result;
+            return payload;
         }
 #pragma warning disable CA1031
         catch (Exception)
@@ -121,20 +91,6 @@ internal sealed class WatchService(
     {
         var from = DateTime.UtcNow.Date;
         var till = from.AddDays(1);
-        var tasks = (await taskServiceApp.LoadTasksByDateAsync(from, till, user.UserId))
-            .Where(x => !x.Completed && x.Type != TaskType.Additional)
-            .OrderBy(x => x.Order)
-            .ToList();
-        return tasks;
-    }
-
-    private static string GetHeader(List<TaskDto> tasks)
-    {
-        var remaining = tasks.Count(task => task is { Completed: false, Type: TaskType.Simple });
-        var header = remaining == 0
-            ? "🎉 all finished!"
-            : $"\ud83d\udccc {remaining} remaining";
-
-        return header;
+        return (await taskServiceApp.LoadTasksByDateAsync(from, till, user.UserId)).ToList();
     }
 }

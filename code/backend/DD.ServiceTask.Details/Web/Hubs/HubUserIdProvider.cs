@@ -1,4 +1,4 @@
-using DD.Shared.Auth;
+using DD.Shared.Details.Abstractions;
 using Microsoft.AspNetCore.SignalR;
 
 namespace DD.ServiceTask.Details.Web.Hubs;

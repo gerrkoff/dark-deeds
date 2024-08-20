@@ -1,4 +1,5 @@
 using System.Reflection;
+using DD.Shared.Data.Migrator.Models;
 using DD.Shared.Data.Migrator.Services;
 using Microsoft.Extensions.DependencyInjection;
 

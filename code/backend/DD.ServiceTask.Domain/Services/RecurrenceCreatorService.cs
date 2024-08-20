@@ -1,10 +1,10 @@
 using AutoMapper;
-using DD.ServiceTask.Domain.Dto;
 using DD.ServiceTask.Domain.Entities;
 using DD.ServiceTask.Domain.Entities.Enums;
 using DD.ServiceTask.Domain.Infrastructure;
 using DD.ServiceTask.Domain.Infrastructure.EntityRepository;
 using DD.ServiceTask.Domain.Specifications;
+using DD.Shared.Details.Abstractions.Dto;
 using Microsoft.Extensions.Logging;
 
 namespace DD.ServiceTask.Domain.Services;
@@ -159,9 +159,9 @@ public class RecurrenceCreatorService(
     private void Notify(TaskEntity task, string userId)
     {
         var dto = mapper.Map<TaskDto>(task);
-        notifierService.TaskUpdated(new TaskUpdatedDto
+        notifierService.TaskUpdated(new TasksUpdatedDto
         {
-            Tasks = new[] { dto },
+            Tasks = [dto],
             UserId = userId,
         });
     }

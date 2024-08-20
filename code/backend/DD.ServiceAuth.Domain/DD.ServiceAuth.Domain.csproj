@@ -10,7 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DD.Shared.Auth\DD.Shared.Auth.csproj" />
+    <ProjectReference Include="..\DD.Shared.Details.Abstractions\DD.Shared.Details.Abstractions.csproj" />
   </ItemGroup>
 
   <ItemGroup>

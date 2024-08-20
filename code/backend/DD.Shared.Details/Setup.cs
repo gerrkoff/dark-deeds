@@ -47,10 +47,10 @@ public static class Setup
         services.AddScoped<INotifierService, TaskServiceNotifier>();
         services.AddSingleton<ITaskServiceNotifierChannelProvider, TaskServiceNotifierChannelProvider>();
         services.AddHostedService<TaskServiceNotifierBackgroundService>();
-        services.AddAutoMapper(typeof(ModelsMapping));
-
         services.AddMemoryCache();
         services.AddScoped<ICacheProvider, CacheProvider>();
+        services.AddScoped<ITaskPrinter, TaskPrinter>();
+        services.AddTransient<IAuthTokenConverter, AuthTokenConverter>();
     }
 
     private static void AddTelegramClientData(this IServiceCollection services)

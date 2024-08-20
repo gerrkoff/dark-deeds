@@ -13,7 +13,8 @@ public class ShowTodoCommandProcessor(
     IBotSendMessageService botSendMessageService,
     ITelegramService telegramService,
     ILogger<BaseCommandProcessor<BotCommand>> logger,
-    ITaskServiceApp taskServiceApp)
+    ITaskServiceApp taskServiceApp,
+    ITaskPrinter taskPrinter)
     : BaseCommandProcessor<ShowTodoCommand>(botSendMessageService, logger), IShowTodoCommandProcessor
 {
     private readonly IBotSendMessageService _botSendMessageService = botSendMessageService;
@@ -22,7 +23,7 @@ public class ShowTodoCommandProcessor(
     {
         var userId = await telegramService.GetUserId(command.UserChatId);
         var tasks = await taskServiceApp.LoadTasksByDateAsync(command.From, command.To, userId);
-        var tasksAsString = await taskServiceApp.PrintTasks(tasks);
+        var tasksAsString = tasks.Select(taskPrinter.PrintWithSymbolCodes).ToList();
         var text = tasksAsString.Count == 0
             ? "No tasks"
             : string.Join("\n", tasksAsString);

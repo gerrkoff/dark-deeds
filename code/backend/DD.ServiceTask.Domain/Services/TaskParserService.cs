@@ -1,16 +1,12 @@
 using System.Globalization;
 using System.Text.RegularExpressions;
-using DD.ServiceTask.Domain.Dto;
-using DD.ServiceTask.Domain.Entities.Enums;
+using DD.Shared.Details.Abstractions.Dto;
 
 namespace DD.ServiceTask.Domain.Services;
 
 public interface ITaskParserService
 {
     TaskDto ParseTask(string task, bool ignoreDate = false);
-
-    // TODO: extract to telegram client
-    IList<string> PrintTasks(IEnumerable<TaskDto> tasks);
 }
 
 public class TaskParserService(IDateService dateService) : ITaskParserService
@@ -37,17 +33,12 @@ public class TaskParserService(IDateService dateService) : ITaskParserService
         return taskDto;
     }
 
-    public IList<string> PrintTasks(IEnumerable<TaskDto> tasks)
-    {
-        return tasks.Select(TaskToString).ToList();
-    }
-
-    private static string ParseFlags(string task, out bool isProbable, out TaskType type)
+    private static string ParseFlags(string task, out bool isProbable, out TaskTypeDto type)
     {
         var flagsRx = new Regex(@"\s[?!*]+$");
 
         isProbable = false;
-        type = TaskType.Simple;
+        type = TaskTypeDto.Simple;
 
         if (!flagsRx.IsMatch(task))
             return task;
@@ -62,17 +53,17 @@ public class TaskParserService(IDateService dateService) : ITaskParserService
                 case '?':
                     isProbable = true;
                     break;
-                case '!' when type != TaskType.Simple:
-                    type = TaskType.Simple;
+                case '!' when type != TaskTypeDto.Simple:
+                    type = TaskTypeDto.Simple;
                     return task;
                 case '!':
-                    type = TaskType.Additional;
+                    type = TaskTypeDto.Additional;
                     break;
-                case '*' when type != TaskType.Simple:
-                    type = TaskType.Simple;
+                case '*' when type != TaskTypeDto.Simple:
+                    type = TaskTypeDto.Simple;
                     return task;
                 case '*':
-                    type = TaskType.Routine;
+                    type = TaskTypeDto.Routine;
                     break;
             }
         }
@@ -177,36 +168,5 @@ public class TaskParserService(IDateService dateService) : ITaskParserService
         dateTime = DateTime.SpecifyKind(dateTime, DateTimeKind.Utc);
         dateTime = dateTime.AddDays(dayAdjustment);
         return dateTime;
-    }
-
-    private string TaskToString(TaskDto task)
-    {
-        var result = string.Empty;
-
-        if (task.Time.HasValue)
-            result += $"{TimeToString(task.Time.Value)} ";
-
-        result += task.Title;
-
-        if (task.Type == TaskType.Additional)
-            result += " !";
-        else if (task.Type == TaskType.Routine)
-            result += " *";
-
-        if (task.IsProbable)
-        {
-            if (task.Type == TaskType.Simple)
-                result += " ";
-            result += "?";
-        }
-
-        return result;
-    }
-
-    private static string TimeToString(int time)
-    {
-        var hour = time / 60;
-        var minute = time % 60;
-        return $"{hour:D2}:{minute:D2}";
     }
 }
