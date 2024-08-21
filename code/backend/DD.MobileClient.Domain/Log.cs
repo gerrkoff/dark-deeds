@@ -13,6 +13,6 @@ internal static partial class Log
     [LoggerMessage(
         EventId = 4002,
         Level = LogLevel.Information,
-        Message = "Missed app status cache for MobileKey={MobileKey}")]
+        Message = "Missed widget status cache for MobileKey={MobileKey}")]
     public static partial void MissedWidgetStatusCache(ILogger logger, string mobileKey);
 }
