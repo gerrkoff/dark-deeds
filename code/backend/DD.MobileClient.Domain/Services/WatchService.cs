@@ -24,10 +24,15 @@ public sealed class WatchService(
 {
     public async Task<WatchWidgetStatusDto> GetWidgetStatus(string mobileKey)
     {
+        var from = DateTime.UtcNow.Date;
         var cacheKey = new WidgetStatusCacheKey(mobileKey);
 
-        if (cacheProvider.GetValue<WatchWidgetStatusDto>(cacheKey) is { } cached)
-            return cached;
+        if (cacheProvider.GetValue<StatusCacheItem<WatchWidgetStatusDto>>(cacheKey) is { } cached
+            && cached.Date == from)
+        {
+            Log.HitWidgetStatusCache(logger, mobileKey);
+            return cached.Item;
+        }
 
         Log.MissedWidgetStatusCache(logger, mobileKey);
 
@@ -35,7 +40,7 @@ public sealed class WatchService(
 
         try
         {
-            var tasks = await GetTasks(user);
+            var tasks = await GetTasks(user, from);
 
             var payload = watchPayloadController.GetWidgetStatus(tasks);
 
@@ -53,10 +58,15 @@ public sealed class WatchService(
 
     public async Task<WatchAppStatusDto> GetAppStatus(string mobileKey)
     {
+        var from = DateTime.UtcNow.Date;
         var cacheKey = new AppStatusCacheKey(mobileKey);
 
-        if (cacheProvider.GetValue<WatchAppStatusDto>(cacheKey) is { } cached)
-            return cached;
+        if (cacheProvider.GetValue<StatusCacheItem<WatchAppStatusDto>>(cacheKey) is { } cached
+            && cached.Date == from)
+        {
+            Log.HitAppStatusCache(logger, mobileKey);
+            return cached.Item;
+        }
 
         Log.MissedAppStatusCache(logger, mobileKey);
 
@@ -64,7 +74,7 @@ public sealed class WatchService(
 
         try
         {
-            var tasks = await GetTasks(user);
+            var tasks = await GetTasks(user, from);
 
             var payload = watchPayloadController.GetAppStatus(tasks);
 
@@ -87,9 +97,8 @@ public sealed class WatchService(
         return user;
     }
 
-    private async Task<List<TaskDto>> GetTasks(MobileUserEntity user)
+    private async Task<List<TaskDto>> GetTasks(MobileUserEntity user, DateTime from)
     {
-        var from = DateTime.UtcNow.Date;
         var till = from.AddDays(1);
         return (await taskServiceApp.LoadTasksByDateAsync(from, till, user.UserId)).ToList();
     }
