@@ -47,6 +47,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Solution Items", "_Solutio
 		Directory.Packages.props = Directory.Packages.props
 		Directory.Build.props = Directory.Build.props
 		..\..\.editorconfig = ..\..\.editorconfig
+		..\..\ci\apps\app.dockerfile = ..\..\ci\apps\app.dockerfile
 	EndProjectSection
 EndProject
 Global
