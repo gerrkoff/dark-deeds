@@ -17,6 +17,8 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0.100 AS builder-be
 
 WORKDIR /code/backend
 
+COPY code/backend/Directory.Build.props /code/backend/Directory.Build.props
+COPY code/backend/Directory.Packages.props /code/backend/Directory.Packages.props
 COPY code/backend/*/*.csproj /code/backend/
 RUN for file in $(ls /code/backend/*.csproj); do mkdir -p /code/backend/$(basename $file .csproj); mv $file /code/backend/$(basename $file .csproj); done
 COPY code/backend/DarkDeeds.sln /code/backend/DarkDeeds.sln
