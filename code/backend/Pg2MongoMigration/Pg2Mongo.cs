@@ -1,4 +1,5 @@
-﻿using Dapper;
+﻿using System.Diagnostics.CodeAnalysis;
+using Dapper;
 using DD.ServiceAuth.Domain.Entities;
 using DD.ServiceTask.Domain.Entities;
 using MongoDB.Driver;
@@ -8,9 +9,9 @@ namespace Pg2MongoMigration;
 
 internal static class Pg2Mongo
 {
-    private static readonly string PgConnectionString = Environment.GetEnvironmentVariable("PG_CONNECTION_STRING") ?? "";
+    private static readonly string PgConnectionString = Environment.GetEnvironmentVariable("PG_CONNECTION_STRING") ?? string.Empty;
 
-    private static readonly string MongoConnectionString = Environment.GetEnvironmentVariable("MONGO_CONNECTION_STRING") ?? "";
+    private static readonly string MongoConnectionString = Environment.GetEnvironmentVariable("MONGO_CONNECTION_STRING") ?? string.Empty;
 
     public static async Task Run()
     {
@@ -102,9 +103,10 @@ internal static class Pg2Mongo
     }
 }
 
+[SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Tools")]
 internal class UserEntityPg : UserEntity
 {
-    public new string Id { get; set; } = "";
+    public new string Id { get; set; } = string.Empty;
 
     public UserEntity ToUserEntity()
     {
@@ -124,7 +126,7 @@ internal class UserEntityPg : UserEntity
             LockoutEnd = LockoutEnd,
             LockoutEnabled = LockoutEnabled,
             AccessFailedCount = AccessFailedCount,
-            DisplayName = DisplayName
+            DisplayName = DisplayName,
         };
     }
 }

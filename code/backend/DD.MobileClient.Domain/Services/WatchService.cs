@@ -44,7 +44,7 @@ public sealed class WatchService(
 
             var payload = watchPayloadController.GetWidgetStatus(tasks);
 
-            cacheProvider.SetValue(cacheKey, payload);
+            cacheProvider.SetValue(cacheKey, new StatusCacheItem<WatchWidgetStatusDto>(from, payload));
 
             return payload;
         }
@@ -78,7 +78,7 @@ public sealed class WatchService(
 
             var payload = watchPayloadController.GetAppStatus(tasks);
 
-            cacheProvider.SetValue(cacheKey, payload);
+            cacheProvider.SetValue(cacheKey, new StatusCacheItem<WatchAppStatusDto>(from, payload));
 
             return payload;
         }
