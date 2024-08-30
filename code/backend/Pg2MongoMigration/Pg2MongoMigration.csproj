@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <AnalysisLevel>default</AnalysisLevel>
+    <AnalysisLevel>6.0</AnalysisLevel>
   </PropertyGroup>
 
   <ItemGroup>

@@ -1,4 +1,5 @@
-﻿using Dapper;
+﻿using System.Diagnostics.CodeAnalysis;
+using Dapper;
 using DD.ServiceAuth.Domain.Entities;
 using DD.ServiceTask.Domain.Entities;
 using MongoDB.Driver;
@@ -102,9 +103,10 @@ internal static class Pg2Mongo
     }
 }
 
+[SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Tools")]
 internal class UserEntityPg : UserEntity
 {
-    public new string Id { get; set; } = "";
+    public new string Id { get; set; } = string.Empty;
 
     public UserEntity ToUserEntity()
     {
