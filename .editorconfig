@@ -10,7 +10,7 @@ tab_width = 4
 [{*.har,*.inputactions,*.jsb2,*.jsb3,*.json,.babelrc,.eslintrc,.stylelintrc,bowerrc,jest.config}]
 indent_size = 2
 
-[*.csproj]
+[{*.csproj,*.props}]
 indent_size = 2
 
 [{*.yaml,*.yml}]
