@@ -1,22 +1,26 @@
 import { DayCardModel } from '../../models/ui/day-card-model'
+import { Card } from '../common/card'
+import { DayCardHeader } from './day-card-header'
+import { DayCardItem } from './day-card-item'
 
-interface DayCardProps {
+interface Props {
     dayCardModel: DayCardModel
 }
 
-function DayCard({ dayCardModel }: DayCardProps) {
+function DayCard({ dayCardModel }: Props) {
     return (
-        <div className="card">
-            <div className="card-header">{dayCardModel.date.toISOString()}</div>
-            <ul className="list-group list-group-flush">
+        <Card style={{ minWidth: '160px', fontSize: '0.8rem' }}>
+            <div className="d-flex justify-content-between mt-1 mb-1">
+                <DayCardHeader dayCardModel={dayCardModel} />
+            </div>
+            <hr className="mt-0 mb-0" />
+            <ul className="ms-0 mt-1 mb-2">
                 {dayCardModel.tasks.map(task => (
-                    <li key={task.uid} className="list-group-item">
-                        {task.title}
-                    </li>
+                    <DayCardItem key={task.uid} task={task} />
                 ))}
             </ul>
-        </div>
+        </Card>
     )
 }
 
-export default DayCard
+export { DayCard }
