@@ -1,4 +1,4 @@
-import { TaskTypeEnum } from "../enums/task-type-enum";
+import { TaskTypeEnum } from '../enums/task-type-enum'
 
 export class TaskEntity {
     constructor(
@@ -12,6 +12,6 @@ export class TaskEntity {
         public type: TaskTypeEnum = TaskTypeEnum.Simple,
         public isProbable: boolean = false,
         public version: number = 0,
-        public time: number | null = null
+        public time: number | null = null,
     ) {}
 }

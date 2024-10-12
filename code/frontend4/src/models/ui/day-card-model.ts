@@ -1,4 +1,4 @@
-import { TaskEntity } from "../entities/task-entity";
+import { TaskEntity } from '../entities/task-entity'
 
 export class DayCardModel {
     constructor(

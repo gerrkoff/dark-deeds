@@ -1,9 +1,5 @@
 function DayCard() {
-  return (
-    <>
-      test
-    </>
-  )
+    return <>test</>
 }
 
 export default DayCard
