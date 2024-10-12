@@ -1,5 +1,3 @@
-import './App.css'
-
 function Navigation() {
     return (
         <nav className="navbar navbar-expand-sm fixed-bottom bg-dark-subtle">

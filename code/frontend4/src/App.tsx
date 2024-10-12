@@ -1,5 +1,4 @@
-import './App.css'
-import { DayCard } from './uikit/day-card/day-card'
+import { DayCard } from './components/common/day-card/day-card'
 import { DayCardModel } from './models/ui/day-card-model'
 import { TaskTypeEnum } from './models/enums/task-type-enum'
 import { Navigation } from './components/navigation/Navigation'
