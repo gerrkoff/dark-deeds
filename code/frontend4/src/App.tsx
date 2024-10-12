@@ -1,41 +1,62 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
 import DayCard from './uikit/day-card/day-card'
+import { DayCardModel } from './models/ui/day-card-model'
+
+const rows: DayCardModel[][] = []
+
+for (let row = 0; row < 2; row++) {
+    const dayCards: DayCardModel[] = []
+
+    for (let i = 1; i < 8; i++) {
+        dayCards.push({
+            date: new Date(2021, row, i),
+            tasks: [
+                {
+                    uid: `${row}-${i}-1`,
+                    title: 'Task 1',
+                    date: new Date(),
+                    order: 1,
+                    changed: false,
+                    completed: false,
+                    deleted: false,
+                    type: 1,
+                    isProbable: false,
+                    version: 1,
+                    time: 1,
+                },
+                {
+                    uid: `${row}-${i}-2`,
+                    title: 'Task 2',
+                    date: new Date(),
+                    order: 2,
+                    changed: false,
+                    completed: false,
+                    deleted: false,
+                    type: 1,
+                    isProbable: false,
+                    version: 1,
+                    time: 1,
+                },
+            ],
+        })
+    }
+
+    rows.push(dayCards)
+}
 
 function App() {
-    const [count, setCount] = useState(0)
-
     return (
-        <>
-            <div>
-                <a href="https://vitejs.dev" target="_blank">
-                    <img src={viteLogo} className="logo" alt="Vite logo" />
-                </a>
-                <a href="https://react.dev" target="_blank">
-                    <img
-                        src={reactLogo}
-                        className="logo react"
-                        alt="React logo"
-                    />
-                </a>
-            </div>
-            <h1>Vite + React</h1>
-            <div className="card">
-                <button onClick={() => setCount(count => count + 1)}>
-                    count is {count}
-                </button>
-                <p>
-                    Edit <code>src/App.tsx</code> and save to test HMR
-                </p>
-            </div>
-            <p className="read-the-docs">
-                Click on the Vite and React logos to learn more
-            </p>
-
-            <DayCard />
-        </>
+        <div className="container">
+            {rows.map(x => (
+                <div key={x[0].date.toString()} className="row g-2 mt-2">
+                    {x.map(y => (
+                        <div className="col-sm">
+                            <DayCard key={y.date.toString()} dayCardModel={y} />
+                        </div>
+                    ))}
+                </div>
+            ))}
+        </div>
     )
 }
 

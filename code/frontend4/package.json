@@ -8,8 +8,8 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "fmt": "prettier --write \"**/*.+(js|jsx|json|yml|yaml|scss|md|ts|tsx)\"",
-    "fmt:check": "prettier --check \"**/*.+(js|jsx|json|yml|yaml|scss|md|ts|tsx)\""
+    "fmt": "prettier --write \"**/*.+(js|jsx|json|yml|yaml|scss|md|ts|tsx|css)\"",
+    "fmt:check": "prettier --check \"**/*.+(js|jsx|json|yml|yaml|scss|md|ts|tsx|css)\""
   },
   "dependencies": {
     "react": "^18.3.1",
