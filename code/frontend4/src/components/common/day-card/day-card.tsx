@@ -17,7 +17,7 @@ function DayCard({ dayCardModel }: Props) {
                 <DayCardHeader dayCardModel={dayCardModel} />
             </div>
             <hr className="mt-0 mb-0" />
-            <ul className="ms-0 mt-1 mb-2">
+            <ul className="ms-0 mt-1 mb-2 ps-4">
                 {dayCardModel.tasks.map(task => (
                     <DayCardItem key={task.uid} task={task} />
                 ))}
