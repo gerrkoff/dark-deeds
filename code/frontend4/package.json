@@ -12,8 +12,10 @@
     "fmt:check": "prettier --check \"**/*.+(js|jsx|json|yml|yaml|scss|md|ts|tsx|css)\""
   },
   "dependencies": {
+    "@reduxjs/toolkit": "^2.2.8",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "react-redux": "^9.1.2"
   },
   "devDependencies": {
     "@eslint/js": "^9.11.1",
