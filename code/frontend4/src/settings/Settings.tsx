@@ -1,5 +1,15 @@
+import { TestCard } from './components/TestCard'
+import { UserInformationCard } from './components/UserInformationCard'
+
 function Settings() {
-    return <div>Settings</div>
+    return (
+        <>
+            <UserInformationCard />
+            <TestCard />
+            <UserInformationCard />
+            <TestCard />
+        </>
+    )
 }
 
 export { Settings }

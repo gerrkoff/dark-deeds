@@ -25,14 +25,14 @@ public class AccountController(
     [HttpPost(nameof(SignIn))]
     public async Task<SignInResultDto> SignIn(SignInInfoDto signInInfo)
     {
-        await Task.Delay(4000);
+        // await Task.Delay(4000);
         return await authService.SignInAsync(signInInfo);
     }
 
     [HttpGet]
     public async Task<CurrentUserDto> Current()
     {
-        await Task.Delay(3000);
+        // await Task.Delay(3000);
         var currentUser = userAuth.IsAuthenticated()
             ? mapper.Map<CurrentUserDto>(userAuth.AuthToken())
             : new CurrentUserDto();
