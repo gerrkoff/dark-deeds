@@ -1,7 +1,9 @@
-import { DayCard } from './components/common/day-card/day-card'
-import { DayCardModel } from './models/ui/day-card-model'
-import { TaskTypeEnum } from './models/enums/task-type-enum'
-import { Navigation } from './components/navigation/Navigation'
+import { DayCard } from './common/day-card/day-card'
+import { DayCardModel } from '../models/ui/day-card-model'
+import { TaskTypeEnum } from '../models/enums/task-type-enum'
+import { Navigation } from './navigation/Navigation'
+import { useAppDispatch, useAppSelector } from '../hooks'
+import { incrementByAmount } from '../features/overview/overview-slice'
 
 const rows: DayCardModel[][] = []
 
@@ -85,6 +87,9 @@ for (let row = 0; row < 2; row++) {
 }
 
 function App() {
+    const count = useAppSelector(state => state.overview.value)
+    const dispatch = useAppDispatch()
+
     return (
         <div className="container">
             {rows.map(x => (
@@ -96,6 +101,12 @@ function App() {
                     ))}
                 </div>
             ))}
+
+            {count}
+
+            <button onClick={() => dispatch(incrementByAmount(3))}>
+                Increment
+            </button>
 
             <Navigation />
         </div>
