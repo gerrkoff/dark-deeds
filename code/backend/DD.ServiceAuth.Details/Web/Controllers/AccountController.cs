@@ -32,7 +32,7 @@ public class AccountController(
     [HttpGet]
     public async Task<CurrentUserDto> Current()
     {
-        await Task.Delay(100);
+        await Task.Delay(3000);
         var currentUser = userAuth.IsAuthenticated()
             ? mapper.Map<CurrentUserDto>(userAuth.AuthToken())
             : new CurrentUserDto();

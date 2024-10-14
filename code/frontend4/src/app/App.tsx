@@ -20,7 +20,7 @@ function App() {
 
     const { loadCurrentUser } = useCurrentUserLoader()
 
-    const { isFetchUserPending: isFetchingUserPending } = useLoginState()
+    const { isFetchUserPending } = useLoginState()
 
     useEffect(() => {
         loadCurrentUser()
@@ -35,8 +35,8 @@ function App() {
     )
 
     return (
-        <div className="container">
-            {isFetchingUserPending ? (
+        <div className="container d-flex justify-content-center">
+            {isFetchUserPending ? (
                 <WelcomeState />
             ) : (
                 <>
