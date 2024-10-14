@@ -3,7 +3,7 @@ import { storageService, StorageService } from '../services/StorageService'
 const baseUrl =
     process.env.NODE_ENV === 'production'
         ? '/'
-        : `http://${window.location.hostname}:5000/`
+        : `http://${window.location.hostname}:5001/`
 
 export class Api {
     private readonly DEFAULT_ERROR_MESSAGE = 'An error has occured.'

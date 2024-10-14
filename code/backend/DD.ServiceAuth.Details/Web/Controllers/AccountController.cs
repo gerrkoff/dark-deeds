@@ -29,12 +29,13 @@ public class AccountController(
     }
 
     [HttpGet]
-    public Task<CurrentUserDto> Current()
+    public async Task<CurrentUserDto> Current()
     {
+        await Task.Delay(3000);
         var currentUser = userAuth.IsAuthenticated()
             ? mapper.Map<CurrentUserDto>(userAuth.AuthToken())
             : new CurrentUserDto();
 
-        return Task.FromResult(currentUser);
+        return currentUser;
     }
 }

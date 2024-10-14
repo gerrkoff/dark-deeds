@@ -85,7 +85,7 @@ const rows: DayCardModel[][] = []
 
 function Overview() {
     return (
-        <>
+        <div>
             {rows.map(x => (
                 <div key={x[0].date.toString()} className="row g-2 mt-2">
                     {x.map(y => (
@@ -95,7 +95,7 @@ function Overview() {
                     ))}
                 </div>
             ))}
-        </>
+        </div>
     )
 }
 
