@@ -1,4 +1,4 @@
-import { useAppSelector } from '../../hooks'
+// import { useAppSelector } from '../../hooks'
 
-export const useApplicationTab = () =>
-    useAppSelector(state => state.app.applicationTab)
+// export const useApplicationTab = () =>
+//     useAppSelector(state => state.app.applicationTab)

@@ -1,26 +1,23 @@
 import { useCallback, useEffect } from 'react'
-import { useAppDispatch } from '../hooks'
+import { useAppDispatch, useAppSelector } from '../hooks'
 import { NavigationBar } from './components/NavigationBar'
 import { switchToTab } from './redux/app-slice'
 import { ApplicationTabType } from './models/ApplicationTabType'
 import { Overview } from '../overview/Overview'
 import { RecurrentTasks } from '../recurrent/RecurrentTasks'
 import { Settings } from '../settings/Settings'
-import { useApplicationTab } from './redux/app-selectors'
 import { Login } from '../login/Login'
 import { fetchBuildInfo } from './redux/app-thunk'
-import { useCurrentUserLoader } from '../login/hooks/useCurrentUserLoader'
+import { useLoadCurrentUser } from '../login/hooks/useLoadCurrentUser'
 import { WelcomeState } from './WelcomeState'
-import { useLoginState } from '../login/redux/login-selectors'
 
 function App() {
     const dispatch = useAppDispatch()
 
-    const applicationTab = useApplicationTab()
+    const { applicationTab } = useAppSelector(state => state.app)
+    const { isFetchUserPending } = useAppSelector(state => state.login)
 
-    const { loadCurrentUser } = useCurrentUserLoader()
-
-    const { isFetchUserPending } = useLoginState()
+    const { loadCurrentUser } = useLoadCurrentUser()
 
     useEffect(() => {
         loadCurrentUser()

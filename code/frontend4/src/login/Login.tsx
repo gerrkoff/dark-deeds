@@ -2,15 +2,13 @@ import { useCallback, useState } from 'react'
 import { Signin } from './components/Signin'
 import { Signup } from './components/Signup'
 import { Card } from '../ui/components/Card'
-import { useCurrentUserLoader } from './hooks/useCurrentUserLoader'
 import { signin, signup } from './redux/login-thunk'
-import { useAppDispatch } from '../hooks'
+import { useAppDispatch, useAppSelector } from '../hooks'
 import { unwrapResult } from '@reduxjs/toolkit'
 import { SigninResultEnum } from './models/SigninResultDto'
 import { SignupResultEnum } from './models/SignupResultDto'
-import { storageService } from '../common/services/StorageService'
-import { useLoginState } from './redux/login-selectors'
 import { resetLogInError } from './redux/login-slice'
+import { useSignIn } from './hooks/useSignIn'
 
 function Login() {
     const dispatch = useAppDispatch()
@@ -20,9 +18,9 @@ function Login() {
     const [password, setPassword] = useState('')
     const [passwordConfirmation, setPasswordConfirmation] = useState('')
 
-    const { isLogInPending, logInError } = useLoginState()
+    const { isLogInPending, logInError } = useAppSelector(state => state.login)
 
-    const { loadCurrentUser } = useCurrentUserLoader()
+    const { signIn } = useSignIn()
 
     const handleSwitchToSignin = useCallback(() => {
         setIsSignIn(true)
@@ -39,20 +37,18 @@ function Login() {
         const loginResult = unwrapResult(actionResult)
 
         if (loginResult.result === SigninResultEnum.Success) {
-            storageService.saveAccessToken(loginResult.token)
-            loadCurrentUser()
+            signIn(loginResult.token)
         }
-    }, [dispatch, loadCurrentUser, password, username])
+    }, [dispatch, signIn, password, username])
 
     const handleSignup = useCallback(async () => {
         const actionResult = await dispatch(signup({ username, password }))
-        const loginResult = unwrapResult(actionResult)
+        const logInResult = unwrapResult(actionResult)
 
-        if (loginResult.result === SignupResultEnum.Success) {
-            storageService.saveAccessToken(loginResult.token)
-            loadCurrentUser()
+        if (logInResult.result === SignupResultEnum.Success) {
+            signIn(logInResult.token)
         }
-    }, [dispatch, loadCurrentUser, password, username])
+    }, [dispatch, signIn, password, username])
 
     return (
         <Card className="container" style={{ maxWidth: '500px' }}>

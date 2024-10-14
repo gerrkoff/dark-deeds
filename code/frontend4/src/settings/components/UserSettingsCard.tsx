@@ -15,7 +15,7 @@ function UserSettingsCard({
 }: Props) {
     return (
         <>
-            <Card className="mb-2 me-2" style={{ maxWidth: '500px' }}>
+            <Card className="mb-2 me-2">
                 <div className="card-header">User Settings</div>
                 <div className="card-body">
                     <div className="form-check mb-3">

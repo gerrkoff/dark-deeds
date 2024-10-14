@@ -13,7 +13,7 @@ function TelegramIntegrationCard({
 }: Props) {
     return (
         <>
-            <Card className="mb-2 me-2" style={{ maxWidth: '500px' }}>
+            <Card className="mb-2 me-2">
                 <div className="card-header">Telegram Integration</div>
                 <div className="card-body">
                     <button

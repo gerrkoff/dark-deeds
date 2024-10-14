@@ -1,19 +1,22 @@
+import { useAppSelector } from '../hooks'
+import { useSignOut } from '../login/hooks/useSignOut'
 import { AppInfoCard } from './components/AppInfoCard'
 import { TelegramIntegrationCard } from './components/TelegramIntegrationCard'
 import { UserInfoCard } from './components/UserInfoCard'
 import { UserSettingsCard } from './components/UserSettingsCard'
 
 function Settings() {
-    const username = 'John Doe'
+    const { appVersion } = useAppSelector(state => state.app)
+    const { user } = useAppSelector(state => state.login)
 
-    const handleSignOut = () => {
-        console.log('Sign out')
-    }
+    const username = user?.username || ''
+
+    const { signOut } = useSignOut()
 
     return (
         <div className="row">
             <div className="col">
-                <UserInfoCard username={username} signOut={handleSignOut} />
+                <UserInfoCard username={username} signOut={signOut} />
                 <UserSettingsCard
                     changeShowCompleted={() =>
                         console.log('changeShowCompleted')
@@ -31,9 +34,7 @@ function Settings() {
                     isGenerateStartIntegrationLinkPending={false}
                     startIntegrationLink="https://example.com"
                 />
-            </div>
-            <div className="col">
-                <AppInfoCard appVersion="1.0.0" />
+                <AppInfoCard appVersion={appVersion} />
             </div>
         </div>
     )

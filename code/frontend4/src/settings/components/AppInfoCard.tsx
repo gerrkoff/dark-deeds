@@ -7,7 +7,7 @@ interface Props {
 function AppInfoCard({ appVersion }: Props) {
     return (
         <>
-            <Card className="mb-2 me-2" style={{ maxWidth: '500px' }}>
+            <Card className="mb-2 me-2">
                 <div className="card-header">App Information</div>
                 <div className="card-body">
                     <p>

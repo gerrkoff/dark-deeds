@@ -8,7 +8,7 @@ interface Output {
     loadCurrentUser: () => Promise<void>
 }
 
-export function useCurrentUserLoader(): Output {
+export function useLoadCurrentUser(): Output {
     const dispatch = useAppDispatch()
 
     const loadCurrentUser = useCallback(async () => {
