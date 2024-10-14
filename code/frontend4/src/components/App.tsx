@@ -4,6 +4,7 @@ import { TaskTypeEnum } from '../models/enums/task-type-enum'
 import { Navigation } from './navigation/Navigation'
 import { useAppDispatch, useAppSelector } from '../hooks'
 import { incrementByAmount } from '../features/overview/overview-slice'
+import { addWithDelay } from '../features/overview/overview-thunk'
 
 const rows: DayCardModel[][] = []
 
@@ -92,6 +93,16 @@ function App() {
 
     return (
         <div className="container">
+            {count}
+
+            <button onClick={() => dispatch(incrementByAmount(3))}>
+                Increment
+            </button>
+
+            <button onClick={() => dispatch(addWithDelay(123))}>
+                Increment with delay
+            </button>
+
             {rows.map(x => (
                 <div key={x[0].date.toString()} className="row g-2 mt-2">
                     {x.map(y => (
@@ -101,12 +112,6 @@ function App() {
                     ))}
                 </div>
             ))}
-
-            {count}
-
-            <button onClick={() => dispatch(incrementByAmount(3))}>
-                Increment
-            </button>
 
             <Navigation />
         </div>

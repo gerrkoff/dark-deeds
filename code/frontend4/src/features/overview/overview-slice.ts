@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
+import { addWithDelay } from './overview-thunk'
 
 export interface OverviewState {
     value: number
@@ -14,10 +15,6 @@ export const overviewSlice = createSlice({
     initialState,
     reducers: {
         increment: state => {
-            // Redux Toolkit allows us to write "mutating" logic in reducers. It
-            // doesn't actually mutate the state because it uses the Immer library,
-            // which detects changes to a "draft state" and produces a brand new
-            // immutable state based off those changes
             state.value += 1
         },
         decrement: state => {
@@ -27,9 +24,21 @@ export const overviewSlice = createSlice({
             state.value += action.payload
         },
     },
+    extraReducers: builder => {
+        builder.addCase(addWithDelay.pending, (state, action) => {
+            state.value = -1
+            console.log('pending', action)
+        })
+        builder.addCase(addWithDelay.rejected, (state, action) => {
+            state.value = -100
+            console.log('rejected', action)
+        })
+        builder.addCase(addWithDelay.fulfilled, (state, action) => {
+            state.value = action.payload
+        })
+    },
 })
 
-// Action creators are generated for each case reducer function
 export const { increment, decrement, incrementByAmount } = overviewSlice.actions
 
 export default overviewSlice.reducer
