@@ -1,4 +1,4 @@
-function Navigation() {
+function NavigationBar() {
     return (
         <nav className="navbar navbar-expand-sm fixed-bottom bg-dark-subtle">
             <div className="container-fluid">
@@ -35,4 +35,4 @@ function Navigation() {
     )
 }
 
-export { Navigation }
+export { NavigationBar }

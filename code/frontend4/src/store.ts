@@ -1,5 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit'
-import overviewReducer from './redux/overview/overview-slice'
+import overviewReducer from './overview/redux/overview-slice'
 import logger from 'redux-logger'
 
 export const store = configureStore({

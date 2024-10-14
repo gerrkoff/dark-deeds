@@ -1,4 +1,4 @@
-import { TaskTypeEnum } from '../enums/task-type-enum'
+import { TaskTypeEnum } from './enums/task-type-enum'
 
 export interface TaskEntity {
     uid: string

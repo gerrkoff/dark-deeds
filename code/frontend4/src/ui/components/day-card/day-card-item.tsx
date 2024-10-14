@@ -1,5 +1,5 @@
-import { TaskEntity } from '../../../models/entities/task-entity'
-import { TaskTypeEnum } from '../../../models/enums/task-type-enum'
+import { TaskTypeEnum } from '../../../common/models/enums/task-type-enum'
+import { TaskEntity } from '../../../common/models/task-entity'
 
 interface Props {
     task: TaskEntity

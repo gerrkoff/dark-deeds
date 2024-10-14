@@ -1,11 +1,11 @@
-import { DayCard } from './common/day-card/day-card'
-import { DayCardModel } from '../models/common/day-card-model'
-import { TaskTypeEnum } from '../models/enums/task-type-enum'
-import { Navigation } from './navigation/Navigation'
+import { TaskTypeEnum } from '../common/models/enums/task-type-enum'
 import { useAppDispatch, useAppSelector } from '../hooks'
-import { incrementByAmount } from '../redux/overview/overview-slice'
-import { addWithDelay } from '../redux/overview/overview-thunk'
-import { overviewSelector } from '../redux/overview/overview-selectors'
+import { Navigation } from '../navigation/Navigation'
+import { overviewSelector } from '../overview/redux/overview-selectors'
+import { incrementByAmount } from '../overview/redux/overview-slice'
+import { addWithDelay } from '../overview/redux/overview-thunk'
+import { DayCard } from '../ui/components/day-card/day-card'
+import { DayCardModel } from '../ui/models/day-card-model'
 
 const rows: DayCardModel[][] = []
 
