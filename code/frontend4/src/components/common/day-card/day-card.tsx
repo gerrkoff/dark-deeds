@@ -1,4 +1,4 @@
-import { DayCardModel } from '../../../models/ui/day-card-model'
+import { DayCardModel } from '../../../models/common/day-card-model'
 import { Card } from '../card'
 import { DayCardHeader } from './day-card-header'
 import { DayCardItem } from './day-card-item'

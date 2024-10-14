@@ -1,10 +1,11 @@
 import { DayCard } from './common/day-card/day-card'
-import { DayCardModel } from '../models/ui/day-card-model'
+import { DayCardModel } from '../models/common/day-card-model'
 import { TaskTypeEnum } from '../models/enums/task-type-enum'
 import { Navigation } from './navigation/Navigation'
 import { useAppDispatch, useAppSelector } from '../hooks'
-import { incrementByAmount } from '../features/overview/overview-slice'
-import { addWithDelay } from '../features/overview/overview-thunk'
+import { incrementByAmount } from '../redux/overview/overview-slice'
+import { addWithDelay } from '../redux/overview/overview-thunk'
+import { overviewSelector } from '../redux/overview/overview-selectors'
 
 const rows: DayCardModel[][] = []
 
@@ -89,11 +90,13 @@ for (let row = 0; row < 2; row++) {
 
 function App() {
     const count = useAppSelector(state => state.overview.value)
+    const count2 = useAppSelector(overviewSelector)
     const dispatch = useAppDispatch()
 
     return (
         <div className="container">
             {count}
+            {count2}
 
             <button onClick={() => dispatch(incrementByAmount(3))}>
                 Increment

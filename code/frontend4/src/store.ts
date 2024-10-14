@@ -1,10 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit'
-import overviewReducer from './features/overview/overview-slice'
+import overviewReducer from './redux/overview/overview-slice'
+import logger from 'redux-logger'
 
 export const store = configureStore({
     reducer: {
         overview: overviewReducer,
     },
+    middleware: getDefaultMiddleware => getDefaultMiddleware().concat([logger]),
 })
 
 // Infer the `RootState` and `AppDispatch` types from the store itself
