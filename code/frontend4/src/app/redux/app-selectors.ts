@@ -1,7 +1,3 @@
-import { createSelector } from '@reduxjs/toolkit'
-import { RootState } from '../../store'
+import { useAppSelector } from '../../hooks'
 
-export const appSelector = createSelector(
-    (state: RootState) => state.app,
-    state => state,
-)
+export const useAppState = () => useAppSelector(state => state.app)

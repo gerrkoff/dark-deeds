@@ -1,4 +1,4 @@
-import { TaskEntity } from '../../common/models/task-entity'
+import { TaskEntity } from '../../common/models/TaskEntity'
 
 export interface DayCardModel {
     date: Date

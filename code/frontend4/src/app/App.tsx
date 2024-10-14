@@ -1,17 +1,17 @@
 import { useCallback } from 'react'
-import { useAppDispatch, useAppSelector } from '../hooks'
+import { useAppDispatch } from '../hooks'
 import { NavigationBar } from './components/NavigationBar'
-import { appSelector } from './redux/app-selectors'
 import { switchToTab } from './redux/app-slice'
 import { ApplicationTab } from './models/application-tab-type'
 import { Overview } from '../overview/Overview'
 import { RecurrentTasks } from '../recurrent/RecurrentTasks'
 import { Settings } from '../settings/Settings'
+import { useAppState } from './redux/app-selectors'
 
 function App() {
     const dispatch = useAppDispatch()
 
-    const { applicationTab } = useAppSelector(appSelector)
+    const { applicationTab } = useAppState()
 
     const switctToTab = useCallback(
         (applicationTab: ApplicationTab) => {
