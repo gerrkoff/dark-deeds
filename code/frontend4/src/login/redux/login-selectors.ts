@@ -1,4 +1,3 @@
 import { useAppSelector } from '../../hooks'
 
-export const useIsFetchingUserPending = () =>
-    useAppSelector(state => state.login.isFetchingUserPending)
+export const useLoginState = () => useAppSelector(state => state.login)

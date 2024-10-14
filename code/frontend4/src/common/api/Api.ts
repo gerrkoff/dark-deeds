@@ -68,7 +68,7 @@ export class Api {
             return Object() as T
         } else if (result.ok && isPlain) {
             // T must always be string
-            return result.text() as any
+            return result.text() as unknown as T
         } else if (result.ok && isJson) {
             return (await result.json()) as T
         } else {

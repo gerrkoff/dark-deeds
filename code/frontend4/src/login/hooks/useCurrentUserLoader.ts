@@ -20,7 +20,7 @@ export function useCurrentUserLoader(): Output {
             } else {
                 dispatch(switchToTab('login'))
             }
-        } catch (error) {
+        } catch {
             dispatch(switchToTab('login'))
         }
     }, [dispatch])

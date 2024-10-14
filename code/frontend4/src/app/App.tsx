@@ -11,7 +11,7 @@ import { Login } from '../login/Login'
 import { fetchBuildInfo } from './redux/app-thunk'
 import { useCurrentUserLoader } from '../login/hooks/useCurrentUserLoader'
 import { WelcomeState } from './WelcomeState'
-import { useIsFetchingUserPending } from '../login/redux/login-selectors'
+import { useLoginState } from '../login/redux/login-selectors'
 
 function App() {
     const dispatch = useAppDispatch()
@@ -20,12 +20,12 @@ function App() {
 
     const { loadCurrentUser } = useCurrentUserLoader()
 
-    const isFetchingUserPending = useIsFetchingUserPending()
+    const { isFetchUserPending: isFetchingUserPending } = useLoginState()
 
     useEffect(() => {
         loadCurrentUser()
         dispatch(fetchBuildInfo())
-    }, [loadCurrentUser])
+    }, [dispatch, loadCurrentUser])
 
     const switctToTab = useCallback(
         (applicationTab: ApplicationTabType) => {
@@ -33,8 +33,6 @@ function App() {
         },
         [dispatch],
     )
-
-    console.log('APP', applicationTab, isFetchingUserPending)
 
     return (
         <div className="container">
