@@ -24,7 +24,6 @@ export const appSlice = createSlice({
     extraReducers: builder => {
         builder.addCase(fetchBuildInfo.fulfilled, (state, action) => {
             state.appVersion = action.payload.appVersion
-            console.log('appVersion:', state.appVersion)
         })
     },
 })
