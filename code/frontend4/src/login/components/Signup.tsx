@@ -104,7 +104,7 @@ function Signup({
                 )}
             </button>
             <div>
-                Already have an account? Haven't got an account yet?{' '}
+                Already have an account?{' '}
                 <a href="#" onClick={handleSwitchToSignin}>
                     Sign in here.
                 </a>

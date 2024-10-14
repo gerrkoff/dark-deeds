@@ -55,7 +55,7 @@ function Login() {
     }, [dispatch, loadCurrentUser, password, username])
 
     return (
-        <Card className="container mt-3" style={{ maxWidth: '550px' }}>
+        <Card className="container mt-2" style={{ maxWidth: '500px' }}>
             {isSignIn ? (
                 <Signin
                     switchToSignup={handleSwitchToSignup}
