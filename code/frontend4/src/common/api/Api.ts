@@ -8,9 +8,9 @@ const baseUrl =
 export class Api {
     private readonly DEFAULT_ERROR_MESSAGE = 'An error has occured.'
 
-    public constructor(private storageService: StorageService) {}
+    constructor(private storageService: StorageService) {}
 
-    public get<T>(api: string, params?: Map<string, string>): Promise<T> {
+    get<T>(api: string, params?: Map<string, string>): Promise<T> {
         if (params !== undefined) {
             let paramString = ''
             params.forEach(
@@ -30,7 +30,7 @@ export class Api {
         )
     }
 
-    public post<T>(api: string, data: unknown): Promise<T> {
+    post<T>(api: string, data: unknown): Promise<T> {
         return this.sendRequest(`POST ${api}`, () =>
             fetch(baseUrl + api, {
                 body: JSON.stringify(data),

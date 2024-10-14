@@ -1,5 +1,5 @@
 import { DayCardModel } from '../../models/DayCardModel'
-import { Card } from '../Card2'
+import { Card } from '../Card'
 import { DayCardHeader } from './DayCardHeader'
 import { DayCardItem } from './DayCardItem'
 
