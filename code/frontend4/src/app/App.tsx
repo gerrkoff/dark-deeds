@@ -2,7 +2,7 @@ import { useCallback } from 'react'
 import { useAppDispatch } from '../hooks'
 import { NavigationBar } from './components/NavigationBar'
 import { switchToTab } from './redux/app-slice'
-import { ApplicationTab } from './models/application-tab-type'
+import { ApplicationTabType } from './models/ApplicationTabType'
 import { Overview } from '../overview/Overview'
 import { RecurrentTasks } from '../recurrent/RecurrentTasks'
 import { Settings } from '../settings/Settings'
@@ -14,7 +14,7 @@ function App() {
     const { applicationTab } = useAppState()
 
     const switctToTab = useCallback(
-        (applicationTab: ApplicationTab) => {
+        (applicationTab: ApplicationTabType) => {
             return dispatch(switchToTab(applicationTab))
         },
         [dispatch],

@@ -1,9 +1,9 @@
 import clsx from 'clsx'
-import { ApplicationTab } from '../models/application-tab-type'
+import { ApplicationTabType } from '../models/ApplicationTabType'
 
 interface Props {
-    applicationTab: ApplicationTab
-    switchTo: (tab: ApplicationTab) => void
+    applicationTab: ApplicationTabType
+    switchTo: (tab: ApplicationTabType) => void
 }
 
 function NavigationBar({ applicationTab, switchTo }: Props) {

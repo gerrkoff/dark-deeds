@@ -1,9 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
-import { ApplicationTab } from '../models/application-tab-type'
+import { ApplicationTabType } from '../models/ApplicationTabType'
 
 export interface AppState {
-    applicationTab: ApplicationTab
+    applicationTab: ApplicationTabType
 }
 
 const initialState: AppState = {
@@ -14,7 +14,7 @@ export const appSlice = createSlice({
     name: 'overview',
     initialState,
     reducers: {
-        switchToTab: (state, action: PayloadAction<ApplicationTab>) => {
+        switchToTab: (state, action: PayloadAction<ApplicationTabType>) => {
             state.applicationTab = action.payload
         },
     },

@@ -1,4 +1,4 @@
-import { DayCardModel } from '../../models/day-card-model'
+import { DayCardModel } from '../../models/DayCardModel'
 
 interface Props {
     dayCardModel: DayCardModel

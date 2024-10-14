@@ -1,6 +1,6 @@
 // import { TaskTypeEnum } from '../common/models/enums/task-type-enum'
-import { DayCard } from '../ui/components/day-card/day-card'
-import { DayCardModel } from '../ui/models/day-card-model'
+import { DayCard } from '../ui/components/day-card/DayCard'
+import { DayCardModel } from '../ui/models/DayCardModel'
 
 const rows: DayCardModel[][] = []
 

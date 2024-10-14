@@ -1,16 +1,13 @@
-import { DayCardModel } from '../../models/day-card-model'
-import { Card } from '../card'
-import { DayCardHeader } from './day-card-header'
-import { DayCardItem } from './day-card-item'
+import { DayCardModel } from '../../models/DayCardModel'
+import { Card } from '../Card2'
+import { DayCardHeader } from './DayCardHeader'
+import { DayCardItem } from './DayCardItem'
 
 interface Props {
     dayCardModel: DayCardModel
 }
 
 function DayCard({ dayCardModel }: Props) {
-    // const w: any = 123
-
-    // console.log(w)
     return (
         <Card style={{ minWidth: '160px', fontSize: '0.8rem' }}>
             <div className="d-flex justify-content-between mt-1 mb-1">
