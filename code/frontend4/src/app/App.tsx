@@ -35,7 +35,7 @@ function App() {
     )
 
     return (
-        <div className="container d-flex justify-content-center p-2">
+        <div className="container p-2">
             {isFetchUserPending ? (
                 <WelcomeState />
             ) : (
