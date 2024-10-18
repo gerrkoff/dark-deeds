@@ -5,24 +5,46 @@ import { AppInfoCard } from './components/AppInfoCard'
 import { TelegramIntegrationCard } from './components/TelegramIntegrationCard'
 import { UserInfoCard } from './components/UserInfoCard'
 import { UserSettingsCard } from './components/UserSettingsCard'
-import { startTelegram } from './redux/settings-thunk'
+import { saveSharedSettings, startTelegram } from './redux/settings-thunk'
+import { changeShowCompleted } from './redux/settings-slice'
 
 function Settings() {
     const dispatch = useAppDispatch()
 
     const { appVersion } = useAppSelector(state => state.app)
     const { user } = useAppSelector(state => state.login)
-    const { startTelegramLink, isStartTelegramPending } = useAppSelector(
-        state => state.settings,
-    )
+    const {
+        startTelegramLink,
+        isStartTelegramPending,
+        isShowCompletedEnabled,
+        isSaveSharedSettingsPending,
+        isLoadSharedSettingsPending,
+    } = useAppSelector(state => state.settings)
 
     const username = user?.username || ''
 
     const { signOut } = useSignOut()
 
-    const startTelegramIntegration = useCallback(
+    const handleStartTelegram = useCallback(
         () => dispatch(startTelegram()),
         [dispatch],
+    )
+
+    const handleShowCompletedChange = useCallback(
+        (isEnabled: boolean) => {
+            dispatch(changeShowCompleted(isEnabled))
+        },
+        [dispatch],
+    )
+
+    const handleSaveSettings = useCallback(
+        () =>
+            dispatch(
+                saveSharedSettings({
+                    showCompleted: isShowCompletedEnabled,
+                }),
+            ),
+        [dispatch, isShowCompletedEnabled],
     )
 
     return (
@@ -30,17 +52,16 @@ function Settings() {
             <div className="col">
                 <UserInfoCard username={username} signOut={signOut} />
                 <UserSettingsCard
-                    changeShowCompleted={() =>
-                        console.log('changeShowCompleted')
-                    }
-                    isSaveSettingsPending={false}
-                    isShowCompletedEnabled={false}
-                    saveSettings={() => console.log('saveSettings')}
+                    isShowCompletedEnabled={isShowCompletedEnabled}
+                    changeShowCompleted={handleShowCompletedChange}
+                    saveSettings={handleSaveSettings}
+                    isSaveSettingsPending={isSaveSharedSettingsPending}
+                    isLoadSettingsPending={isLoadSharedSettingsPending}
                 />
             </div>
             <div className="col">
                 <TelegramIntegrationCard
-                    generateStartIntegrationLink={startTelegramIntegration}
+                    generateStartIntegrationLink={handleStartTelegram}
                     isGenerateStartIntegrationLinkPending={
                         isStartTelegramPending
                     }
