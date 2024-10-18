@@ -21,7 +21,9 @@ function UserSettingsCard({
                 <div className="card-header">User Settings</div>
                 <div className="card-body">
                     {isLoadSettingsPending ? (
-                        <>Skeleton</>
+                        <div className="spinner-border" role="status">
+                            <span className="visually-hidden">Loading...</span>
+                        </div>
                     ) : (
                         <>
                             <div className="form-check mb-3">
@@ -47,6 +49,7 @@ function UserSettingsCard({
                                 className="btn btn-outline-primary"
                                 onClick={saveSettings}
                                 disabled={isSaveSettingsPending}
+                                style={{ minWidth: '70px' }}
                             >
                                 {isSaveSettingsPending ? (
                                     <>

@@ -21,6 +21,7 @@ function TelegramIntegrationCard({
                         className="btn btn-outline-primary mb-2"
                         onClick={generateStartIntegrationLink}
                         disabled={isGenerateStartIntegrationLinkPending}
+                        style={{ minWidth: '120px' }}
                     >
                         {isGenerateStartIntegrationLinkPending ? (
                             <>
