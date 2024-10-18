@@ -3,7 +3,7 @@ import { createSlice } from '@reduxjs/toolkit'
 // import { addWithDelay } from './overview-thunk'
 import { TaskEntity } from '../../common/models/TaskEntity'
 import { dateService } from '../../common/services/DateService'
-import { TaskTypeEnum } from '../../common/models/enums/task-type-enum'
+import { TaskTypeEnum } from '../../common/models/TaskTypeEnum'
 
 const initTasks: TaskEntity[] = []
 const monday: Date = dateService.monday(dateService.today())
