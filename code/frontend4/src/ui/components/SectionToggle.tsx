@@ -37,7 +37,7 @@ function SectionToggle({
             <button
                 ref={collapseToggleRef}
                 className={clsx(
-                    'btn btn-sm d-flex align-items-center',
+                    'btn btn-sm d-flex align-items-center mb-1',
                     styles.toggle,
                 )}
                 type="button"
