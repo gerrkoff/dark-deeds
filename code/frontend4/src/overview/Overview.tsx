@@ -8,6 +8,7 @@ import { OverviewModel } from './models/OverviewModel'
 import { overviewModelSelector } from './redux/overview-selectors'
 import { toggleOverviewTab } from '../settings/redux/settings-slice'
 import { OverviewTabEnum } from '../settings/models/OverviewTabEnum'
+import { AddTaskButton } from './components/AddTaskButton'
 
 function Overview() {
     const dispatch = useAppDispatch()
@@ -41,40 +42,47 @@ function Overview() {
     )
 
     return (
-        <div>
-            <SectionToggle
-                className="mb-2"
-                label="No date"
-                isInitExpanded={isNoDateExpanded}
-                onToggle={handleNoDateToggle}
-            >
-                <NoDateSection tasks={model.noDate} />
-            </SectionToggle>
-            <SectionToggle
-                className="mb-2"
-                label="Expired"
-                isInitExpanded={isExpiredExpanded}
-                onToggle={handleExpiredToggle}
-            >
-                <DatesSection dayCards={model.expired} />
-            </SectionToggle>
-            <SectionToggle
-                className="mb-2"
-                label="Current"
-                isInitExpanded={isCurrentExpanded}
-                onToggle={handleCurrentToggle}
-            >
-                <DatesSection dayCards={model.current} daysInRowCount={7} />
-            </SectionToggle>
-            <SectionToggle
-                className="mb-2"
-                label="Future"
-                isInitExpanded={isFutureExpanded}
-                onToggle={handleFutureToggle}
-            >
-                <DatesSection dayCards={model.future} />
-            </SectionToggle>
-        </div>
+        <>
+            <div>
+                <SectionToggle
+                    className="mb-2"
+                    label="No date"
+                    isInitExpanded={isNoDateExpanded}
+                    onToggle={handleNoDateToggle}
+                >
+                    <NoDateSection tasks={model.noDate} />
+                </SectionToggle>
+
+                <SectionToggle
+                    className="mb-2"
+                    label="Expired"
+                    isInitExpanded={isExpiredExpanded}
+                    onToggle={handleExpiredToggle}
+                >
+                    <DatesSection dayCards={model.expired} />
+                </SectionToggle>
+
+                <SectionToggle
+                    className="mb-2"
+                    label="Current"
+                    isInitExpanded={isCurrentExpanded}
+                    onToggle={handleCurrentToggle}
+                >
+                    <DatesSection dayCards={model.current} daysInRowCount={7} />
+                </SectionToggle>
+
+                <SectionToggle
+                    className="mb-2"
+                    label="Future"
+                    isInitExpanded={isFutureExpanded}
+                    onToggle={handleFutureToggle}
+                >
+                    <DatesSection dayCards={model.future} />
+                </SectionToggle>
+            </div>
+
+            <AddTaskButton />
+        </>
     )
 }
 
