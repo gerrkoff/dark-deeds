@@ -1,7 +1,7 @@
 import { Card } from '../../ui/components/Card'
 
 interface Props {
-    startIntegrationLink: string
+    startIntegrationLink: string | null
     generateStartIntegrationLink: () => void
     isGenerateStartIntegrationLinkPending: boolean
 }
@@ -34,11 +34,13 @@ function TelegramIntegrationCard({
                         )}
                     </button>
 
-                    <div>
-                        <a href={startIntegrationLink}>
-                            {startIntegrationLink}
-                        </a>
-                    </div>
+                    {startIntegrationLink && (
+                        <div>
+                            <a href={startIntegrationLink}>
+                                {startIntegrationLink}
+                            </a>
+                        </div>
+                    )}
                 </div>
             </Card>
         </>

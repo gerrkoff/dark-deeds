@@ -1,17 +1,29 @@
-import { useAppSelector } from '../hooks'
+import { useCallback } from 'react'
+import { useAppDispatch, useAppSelector } from '../hooks'
 import { useSignOut } from '../login/hooks/useSignOut'
 import { AppInfoCard } from './components/AppInfoCard'
 import { TelegramIntegrationCard } from './components/TelegramIntegrationCard'
 import { UserInfoCard } from './components/UserInfoCard'
 import { UserSettingsCard } from './components/UserSettingsCard'
+import { startTelegram } from './redux/settings-thunk'
 
 function Settings() {
+    const dispatch = useAppDispatch()
+
     const { appVersion } = useAppSelector(state => state.app)
     const { user } = useAppSelector(state => state.login)
+    const { startTelegramLink, isStartTelegramPending } = useAppSelector(
+        state => state.settings,
+    )
 
     const username = user?.username || ''
 
     const { signOut } = useSignOut()
+
+    const startTelegramIntegration = useCallback(
+        () => dispatch(startTelegram()),
+        [dispatch],
+    )
 
     return (
         <div className="row">
@@ -28,11 +40,11 @@ function Settings() {
             </div>
             <div className="col">
                 <TelegramIntegrationCard
-                    generateStartIntegrationLink={() =>
-                        console.log('generateStartIntegrationLink')
+                    generateStartIntegrationLink={startTelegramIntegration}
+                    isGenerateStartIntegrationLinkPending={
+                        isStartTelegramPending
                     }
-                    isGenerateStartIntegrationLinkPending={false}
-                    startIntegrationLink="https://example.com"
+                    startIntegrationLink={startTelegramLink}
                 />
                 <AppInfoCard appVersion={appVersion} />
             </div>
