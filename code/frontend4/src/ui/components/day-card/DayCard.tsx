@@ -1,7 +1,7 @@
 import { DayCardModel } from '../../models/DayCardModel'
 import { Card } from '../Card'
 import { DayCardHeader } from './DayCardHeader'
-import { DayCardItem } from './DayCardItem'
+import { DayCardList } from './DayCardList'
 
 interface Props {
     dayCardModel: DayCardModel
@@ -14,11 +14,7 @@ function DayCard({ dayCardModel }: Props) {
                 <DayCardHeader dayCardModel={dayCardModel} />
             </div>
             <hr className="mt-0 mb-0" />
-            <ul className="ms-0 mt-1 mb-2 ps-4">
-                {dayCardModel.tasks.map(task => (
-                    <DayCardItem key={task.uid} task={task} />
-                ))}
-            </ul>
+            <DayCardList tasks={dayCardModel.tasks} />
         </Card>
     )
 }

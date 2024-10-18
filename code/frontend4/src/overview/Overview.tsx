@@ -2,6 +2,7 @@ import { useAppSelector } from '../hooks'
 import { DayCard } from '../ui/components/day-card/DayCard'
 import { SectionToggle } from '../ui/components/SectionToggle'
 import { DayCardModel } from '../ui/models/DayCardModel'
+import { NoDateSection } from './components/NoDateSection'
 import { OverviewModel } from './models/OverviewModel'
 import { overviewModelSelector } from './redux/overview-selectors'
 
@@ -12,6 +13,9 @@ function Overview() {
 
     return (
         <div>
+            <SectionToggle label="No date">
+                <NoDateSection tasks={model.noDate} />
+            </SectionToggle>
             <SectionToggle label="Expired">
                 {model.expired.map(day => (
                     <DayCard key={day.date.toString()} dayCardModel={day} />

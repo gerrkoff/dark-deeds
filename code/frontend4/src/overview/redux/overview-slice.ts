@@ -30,12 +30,26 @@ while (start < daysAfterMonday) {
         version: 1,
     }
 
-    console.log(start.toISOString(), '-----', start, '-----', task)
-
     initTasks.push(task)
 }
 
-console.log(initTasks)
+for (let i = 0; i < 10; i++) {
+    const task: TaskEntity = {
+        uid: `test-${i}`,
+        changed: false,
+        completed: i % 2 === 0,
+        date: null,
+        deleted: false,
+        isProbable: i % 3 === 0,
+        order: 0,
+        time: null,
+        title: `test ${i}`,
+        type: i % 4 === 1 ? TaskTypeEnum.Simple : TaskTypeEnum.Additional,
+        version: 1,
+    }
+
+    initTasks.push(task)
+}
 
 export interface OverviewState {
     tasks: TaskEntity[]
