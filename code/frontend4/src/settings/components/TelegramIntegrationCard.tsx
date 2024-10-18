@@ -1,3 +1,4 @@
+import { IconTelegram } from '../../common/icons/IconTelegram'
 import { Card } from '../../ui/components/Card'
 
 interface Props {
@@ -14,7 +15,10 @@ function TelegramIntegrationCard({
     return (
         <>
             <Card className="mb-2 me-2">
-                <div className="card-header">Telegram Integration</div>
+                <div className="card-header d-flex align-items-center">
+                    <IconTelegram className="me-1" />
+                    Telegram Integration
+                </div>
                 <div className="card-body">
                     <button
                         type="button"

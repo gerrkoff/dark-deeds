@@ -1,3 +1,4 @@
+import { IconPerson } from '../../common/icons/IconPerson'
 import { Card } from '../../ui/components/Card'
 
 interface Props {
@@ -9,7 +10,10 @@ function UserInfoCard({ username, signOut }: Props) {
     return (
         <>
             <Card className="mb-2 me-2">
-                <div className="card-header">User Information</div>
+                <div className="card-header d-flex align-items-center">
+                    <IconPerson className="me-1" />
+                    User Information
+                </div>
                 <div className="card-body">
                     <p>
                         Hello, <strong>{username}</strong>!

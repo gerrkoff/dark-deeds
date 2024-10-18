@@ -1,3 +1,4 @@
+import { IconSliders } from '../../common/icons/IconSliders2'
 import { Card } from '../../ui/components/Card'
 
 interface Props {
@@ -18,7 +19,10 @@ function UserSettingsCard({
     return (
         <>
             <Card className="mb-2 me-2">
-                <div className="card-header">User Settings</div>
+                <div className="card-header d-flex align-items-center">
+                    <IconSliders className="me-1" />
+                    User Settings
+                </div>
                 <div className="card-body">
                     {isLoadSettingsPending ? (
                         <div className="spinner-border" role="status">
