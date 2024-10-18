@@ -6,15 +6,16 @@ import styles from './SectionToggle.module.css'
 import clsx from 'clsx'
 
 interface Props {
+    className?: string
     label: string
     children: React.ReactNode
 }
 
-function SectionToggle({ label, children }: Props) {
+function SectionToggle({ className, label, children }: Props) {
     const uuid = useMemo(() => uuidv4(), [])
 
     return (
-        <div className={styles.section}>
+        <div className={clsx(styles.section, className)}>
             <button
                 className={clsx(
                     'btn btn-sm d-flex align-items-center',

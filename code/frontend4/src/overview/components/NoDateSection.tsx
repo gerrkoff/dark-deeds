@@ -3,7 +3,6 @@ import { DayCardList } from '../../ui/components/day-card/DayCardList'
 import { Card } from '../../ui/components/Card'
 
 interface Props {
-    className?: string
     tasks: TaskEntity[]
 }
 
