@@ -1,31 +1,51 @@
-import { useAppSelector } from '../hooks'
-import { useLocalSettings } from '../settings/hooks/useLocalSettings'
+import { useCallback } from 'react'
+import { useAppDispatch, useAppSelector } from '../hooks'
+import { overviewTabsExpandedSelector } from '../settings/redux/settings-selectors'
 import { SectionToggle } from '../ui/components/SectionToggle'
 import { DatesSection } from './components/DatesSection'
 import { NoDateSection } from './components/NoDateSection'
 import { OverviewModel } from './models/OverviewModel'
 import { overviewModelSelector } from './redux/overview-selectors'
+import { toggleOverviewTab } from '../settings/redux/settings-slice'
+import { OverviewTabEnum } from '../settings/models/OverviewTabEnum'
 
 function Overview() {
+    const dispatch = useAppDispatch()
+
     const model: OverviewModel = useAppSelector(overviewModelSelector)
 
     const {
-        isNoDateInitExpanded,
-        isExpiredInitExpanded,
-        isCurrentInitExpanded,
-        isFutureInitExpanded,
-        handleNoDateToggle,
-        handleExpiredToggle,
-        handleCurrentToggle,
-        handleFutureToggle,
-    } = useLocalSettings()
+        isNoDateExpanded,
+        isExpiredExpanded,
+        isCurrentExpanded,
+        isFutureExpanded,
+    } = useAppSelector(overviewTabsExpandedSelector)
+
+    const handleNoDateToggle = useCallback(
+        () => dispatch(toggleOverviewTab(OverviewTabEnum.NoDate)),
+        [dispatch],
+    )
+
+    const handleExpiredToggle = useCallback(
+        () => dispatch(toggleOverviewTab(OverviewTabEnum.Expired)),
+        [dispatch],
+    )
+
+    const handleCurrentToggle = useCallback(
+        () => dispatch(toggleOverviewTab(OverviewTabEnum.Current)),
+        [dispatch],
+    )
+    const handleFutureToggle = useCallback(
+        () => dispatch(toggleOverviewTab(OverviewTabEnum.Future)),
+        [dispatch],
+    )
 
     return (
         <div>
             <SectionToggle
                 className="mb-2"
                 label="No date"
-                isInitExpanded={isNoDateInitExpanded}
+                isInitExpanded={isNoDateExpanded}
                 onToggle={handleNoDateToggle}
             >
                 <NoDateSection tasks={model.noDate} />
@@ -33,7 +53,7 @@ function Overview() {
             <SectionToggle
                 className="mb-2"
                 label="Expired"
-                isInitExpanded={isExpiredInitExpanded}
+                isInitExpanded={isExpiredExpanded}
                 onToggle={handleExpiredToggle}
             >
                 <DatesSection dayCards={model.expired} />
@@ -41,7 +61,7 @@ function Overview() {
             <SectionToggle
                 className="mb-2"
                 label="Current"
-                isInitExpanded={isCurrentInitExpanded}
+                isInitExpanded={isCurrentExpanded}
                 onToggle={handleCurrentToggle}
             >
                 <DatesSection dayCards={model.current} daysInRowCount={7} />
@@ -49,7 +69,7 @@ function Overview() {
             <SectionToggle
                 className="mb-2"
                 label="Future"
-                isInitExpanded={isFutureInitExpanded}
+                isInitExpanded={isFutureExpanded}
                 onToggle={handleFutureToggle}
             >
                 <DatesSection dayCards={model.future} />

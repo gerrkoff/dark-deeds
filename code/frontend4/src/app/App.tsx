@@ -10,6 +10,9 @@ import { Login } from '../login/Login'
 import { fetchBuildInfo } from './redux/app-thunk'
 import { useLoadCurrentUser } from '../login/hooks/useLoadCurrentUser'
 import { WelcomeState } from './WelcomeState'
+import { loadLocalSettings } from '../settings/redux/settings-slice'
+import { localSettingsService } from '../settings/services/SettingsService'
+import { useLocalSettingsTracking } from '../settings/hooks/useLocalSettingsTracking'
 
 function App() {
     const dispatch = useAppDispatch()
@@ -22,7 +25,10 @@ function App() {
     useEffect(() => {
         loadCurrentUser()
         dispatch(fetchBuildInfo())
+        dispatch(loadLocalSettings(localSettingsService.load()))
     }, [dispatch, loadCurrentUser])
+
+    useLocalSettingsTracking()
 
     const switctToTab = useCallback(
         (applicationTab: ApplicationTabType) => {

@@ -11,9 +11,9 @@ export class LocalSettingsService {
         const settingsSerialized = this.storageService.loadSettings()
         const settings: SettingsLocalDto =
             settingsSerialized === null
-                ? { overviewOpenedTabs: [] }
+                ? { overviewTabsExpanded: [] }
                 : {
-                      overviewOpenedTabs: [],
+                      overviewTabsExpanded: [],
                       ...JSON.parse(settingsSerialized),
                   }
 

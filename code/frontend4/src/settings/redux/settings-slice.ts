@@ -4,6 +4,8 @@ import {
     saveSharedSettings,
     startTelegram,
 } from './settings-thunk'
+import { OverviewTabEnum } from '../models/OverviewTabEnum'
+import { SettingsLocalDto } from '../models/SettingsLocalDto'
 
 export interface SettingsState {
     isStartTelegramPending: boolean
@@ -11,6 +13,8 @@ export interface SettingsState {
     isShowCompletedEnabled: boolean
     isSaveSharedSettingsPending: boolean
     isLoadSharedSettingsPending: boolean
+    isLocalSettingsLoaded: boolean
+    overviewTabsExpanded: OverviewTabEnum[]
 }
 
 const initialState: SettingsState = {
@@ -19,14 +23,27 @@ const initialState: SettingsState = {
     isShowCompletedEnabled: true,
     isSaveSharedSettingsPending: false,
     isLoadSharedSettingsPending: false,
+    isLocalSettingsLoaded: false,
+    overviewTabsExpanded: [],
 }
 
 export const settingsSlice = createSlice({
-    name: 'login',
+    name: 'settings',
     initialState,
     reducers: {
         changeShowCompleted: (state, action: PayloadAction<boolean>) => {
             state.isShowCompletedEnabled = action.payload
+        },
+        loadLocalSettings: (state, action: PayloadAction<SettingsLocalDto>) => {
+            state.overviewTabsExpanded = action.payload.overviewTabsExpanded
+            state.isLocalSettingsLoaded = true
+        },
+        toggleOverviewTab: (state, action: PayloadAction<OverviewTabEnum>) => {
+            state.overviewTabsExpanded = state.overviewTabsExpanded.includes(
+                action.payload,
+            )
+                ? state.overviewTabsExpanded.filter(x => x !== action.payload)
+                : [...state.overviewTabsExpanded, action.payload]
         },
     },
     extraReducers: builder => {
@@ -66,6 +83,7 @@ export const settingsSlice = createSlice({
     },
 })
 
-export const { changeShowCompleted } = settingsSlice.actions
+export const { changeShowCompleted, loadLocalSettings, toggleOverviewTab } =
+    settingsSlice.actions
 
 export default settingsSlice.reducer
