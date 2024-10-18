@@ -12,6 +12,11 @@ function Overview() {
 
     return (
         <div>
+            <SectionToggle label="Expired">
+                {model.expired.map(day => (
+                    <DayCard key={day.date.toString()} dayCardModel={day} />
+                ))}
+            </SectionToggle>
             <SectionToggle label="Current">
                 {current.map(week => (
                     <div key={week[0].date.toString()} className="row g-2 mt-2">
@@ -24,6 +29,11 @@ function Overview() {
                             </div>
                         ))}
                     </div>
+                ))}
+            </SectionToggle>
+            <SectionToggle label="Future">
+                {model.future.map(day => (
+                    <DayCard key={day.date.toString()} dayCardModel={day} />
                 ))}
             </SectionToggle>
         </div>
