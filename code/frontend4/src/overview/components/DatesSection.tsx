@@ -30,12 +30,11 @@ function DatesSection({ dayCards, daysInRowCount }: Props) {
                     className={clsx('row g-2', { 'mt-2': index > 0 })}
                 >
                     {row.map(day => (
-                        <div className="col-sm">
-                            <DayCard
-                                key={day.date.valueOf()}
-                                dayCardModel={day}
-                            />
-                        </div>
+                        <DayCard
+                            key={day.date.valueOf()}
+                            className="col-sm"
+                            dayCardModel={day}
+                        />
                     ))}
                 </div>
             ))}
