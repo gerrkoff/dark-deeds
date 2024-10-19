@@ -2,13 +2,13 @@ import { useCallback } from 'react'
 import { useAppDispatch, useAppSelector } from '../hooks'
 import { overviewTabsExpandedSelector } from '../settings/redux/settings-selectors'
 import { SectionToggle } from '../ui/components/SectionToggle'
-import { DatesSection } from './components/DatesSection'
 import { NoDateSection } from './components/NoDateSection'
 import { OverviewModel } from './models/OverviewModel'
 import { overviewModelSelector } from './redux/overview-selectors'
 import { toggleOverviewTab } from '../settings/redux/settings-slice'
 import { OverviewTabEnum } from '../settings/models/OverviewTabEnum'
 import { AddTaskButton } from './components/AddTaskButton'
+import { DayCardsSection } from '../ui/components/DayCardsSection'
 
 function Overview() {
     const dispatch = useAppDispatch()
@@ -59,7 +59,7 @@ function Overview() {
                     isInitExpanded={isExpiredExpanded}
                     onToggle={handleExpiredToggle}
                 >
-                    <DatesSection dayCards={model.expired} />
+                    <DayCardsSection dayCards={model.expired} />
                 </SectionToggle>
 
                 <SectionToggle
@@ -68,7 +68,10 @@ function Overview() {
                     isInitExpanded={isCurrentExpanded}
                     onToggle={handleCurrentToggle}
                 >
-                    <DatesSection dayCards={model.current} daysInRowCount={7} />
+                    <DayCardsSection
+                        dayCards={model.current}
+                        daysInRowCount={7}
+                    />
                 </SectionToggle>
 
                 <SectionToggle
@@ -77,7 +80,7 @@ function Overview() {
                     isInitExpanded={isFutureExpanded}
                     onToggle={handleFutureToggle}
                 >
-                    <DatesSection dayCards={model.future} />
+                    <DayCardsSection dayCards={model.future} />
                 </SectionToggle>
             </div>
 

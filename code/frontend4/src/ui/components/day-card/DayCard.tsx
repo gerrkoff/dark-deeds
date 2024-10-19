@@ -4,16 +4,12 @@ import { DayCardHeader } from './DayCardHeader'
 import { DayCardList } from './DayCardList'
 
 interface Props {
-    className?: string
     dayCardModel: DayCardModel
 }
 
-function DayCard({ className, dayCardModel }: Props) {
+function DayCard({ dayCardModel }: Props) {
     return (
-        <Card
-            style={{ minWidth: '160px', fontSize: '0.8rem' }}
-            className={className}
-        >
+        <Card style={{ minWidth: '160px', fontSize: '0.8rem' }}>
             <div className="d-flex justify-content-between mt-1 mb-1">
                 <DayCardHeader dayCardModel={dayCardModel} />
             </div>

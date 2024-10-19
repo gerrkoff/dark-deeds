@@ -1,6 +1,6 @@
-import { DayCardModel } from '../../ui/models/DayCardModel'
+import { DayCardModel } from '../models/DayCardModel'
 import { useMemo } from 'react'
-import { DayCard } from '../../ui/components/day-card/DayCard'
+import { DayCard } from './day-card/DayCard'
 import clsx from 'clsx'
 
 interface Props {
@@ -8,7 +8,7 @@ interface Props {
     daysInRowCount?: number
 }
 
-function DatesSection({ dayCards, daysInRowCount }: Props) {
+function DayCardsSection({ dayCards, daysInRowCount }: Props) {
     const rows: DayCardModel[][] = useMemo(() => {
         if (!daysInRowCount) {
             return [dayCards]
@@ -30,11 +30,12 @@ function DatesSection({ dayCards, daysInRowCount }: Props) {
                     className={clsx('row g-2', { 'mt-2': index > 0 })}
                 >
                     {row.map(day => (
-                        <DayCard
-                            key={day.date.valueOf()}
-                            className="col-sm"
-                            dayCardModel={day}
-                        />
+                        <div className="col-sm" key={day.date.valueOf()}>
+                            <DayCard
+                                key={day.date.valueOf()}
+                                dayCardModel={day}
+                            />
+                        </div>
                     ))}
                 </div>
             ))}
@@ -42,4 +43,4 @@ function DatesSection({ dayCards, daysInRowCount }: Props) {
     )
 }
 
-export { DatesSection }
+export { DayCardsSection }
