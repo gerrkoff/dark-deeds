@@ -3,7 +3,7 @@ import { TaskTypeEnum } from './TaskTypeEnum'
 export interface TaskEntity {
     uid: string
     title: string
-    date: Date | null
+    date: number | null
     order: number
     changed: boolean // TODO!
     completed: boolean

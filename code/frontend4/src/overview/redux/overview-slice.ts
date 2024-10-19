@@ -4,6 +4,7 @@ import { createSlice } from '@reduxjs/toolkit'
 import { TaskEntity } from '../../common/models/TaskEntity'
 import { dateService } from '../../common/services/DateService'
 import { TaskTypeEnum } from '../../common/models/TaskTypeEnum'
+import { uuidv4 } from '../../common/helpers/uuidv4'
 
 const initTasks: TaskEntity[] = []
 const monday: Date = dateService.monday(dateService.today())
@@ -17,15 +18,15 @@ while (start < daysAfterMonday) {
     const d = new Date(start)
 
     const task = {
-        uid: d.toISOString(),
+        uid: uuidv4(),
         changed: false,
         completed: false,
-        date: d,
+        date: d.valueOf(),
         deleted: false,
         isProbable: false,
         order: 0,
         time: null,
-        title: `test ${d.toTimeString()}`,
+        title: 'test',
         type: TaskTypeEnum.Simple,
         version: 1,
     }
@@ -35,7 +36,7 @@ while (start < daysAfterMonday) {
 
 for (let i = 0; i < 10; i++) {
     const task: TaskEntity = {
-        uid: `test-${i}`,
+        uid: uuidv4(),
         changed: false,
         completed: i % 2 === 0,
         date: null,

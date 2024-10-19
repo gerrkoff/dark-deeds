@@ -39,18 +39,19 @@ function overviewModelSelectorFn(tasks: TaskEntity[]): OverviewModel {
             return
         }
 
+        const taskDate = new Date(task.date)
         const days: DayCardModel[] =
-            task.date < currentStart
+            taskDate < currentStart
                 ? model.expired
-                : task.date >= futureStart
+                : taskDate >= futureStart
                   ? model.future
                   : model.current
 
-        let day = days.find(x => x.date.getTime() === task.date?.getTime())
+        let day = days.find(x => x.date.valueOf() === task.date)
 
         if (day === undefined) {
             day = {
-                date: task.date,
+                date: taskDate,
                 tasks: [],
             }
             days.push(day)
