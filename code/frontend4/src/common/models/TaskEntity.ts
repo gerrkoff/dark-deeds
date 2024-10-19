@@ -5,7 +5,7 @@ export interface TaskEntity {
     title: string
     date: Date | null
     order: number
-    changed: boolean
+    changed: boolean // TODO!
     completed: boolean
     deleted: boolean
     type: TaskTypeEnum
