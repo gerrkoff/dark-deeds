@@ -1,16 +1,11 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
+import { TaskModel } from '../../tasks/models/TaskModel'
+import { taskApi } from '../../tasks/api/TaskApi'
+import { dateService } from '../../common/services/DateService'
 
-export const addWithDelay = createAsyncThunk(
-    'overview/addWithDelay',
-    async (userId: number): Promise<number> => {
-        const response = await fetch(`https://reqres.in/api/users/${userId}`)
-        const body = await response.json()
-
-        if (!response.ok) {
-            throw new Error(body.error)
-        }
-
-        console.log('userId', userId, body)
-        return 100500
+export const loadTasks = createAsyncThunk(
+    'overview/loadTasks',
+    (): Promise<TaskModel[]> => {
+        return taskApi.loadTasks(dateService.monday(dateService.today()))
     },
 )

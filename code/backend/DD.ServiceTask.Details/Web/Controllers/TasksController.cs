@@ -14,14 +14,16 @@ public class TasksController(
     : ControllerBase
 {
     [HttpGet]
-    public Task<IEnumerable<TaskDto>> Get([Required] DateTime from)
+    public async Task<IEnumerable<TaskDto>> Get([Required] DateTime from)
     {
-        return taskService.LoadActualTasksAsync(userAuth.UserId(), from);
+        await Task.Delay(10000);
+        return await taskService.LoadActualTasksAsync(userAuth.UserId(), from);
     }
 
     [HttpPost]
-    public Task<IEnumerable<TaskDto>> Post([FromBody] ICollection<TaskDto> tasks)
+    public async Task<IEnumerable<TaskDto>> Post([FromBody] ICollection<TaskDto> tasks)
     {
-        return taskService.SaveTasksAsync(tasks, userAuth.UserId());
+        await Task.Delay(3000);
+        return await taskService.SaveTasksAsync(tasks, userAuth.UserId());
     }
 }

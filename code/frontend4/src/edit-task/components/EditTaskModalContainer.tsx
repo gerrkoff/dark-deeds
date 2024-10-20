@@ -44,11 +44,13 @@ function EditTaskModalContainer({
 
     return (
         <div
-            className={clsx('modal fade', { show })}
-            style={{
-                backgroundColor: 'rgba(0, 0, 0, 0.5)',
-                display: visible ? 'block' : 'none',
-            }}
+            className={clsx(
+                'modal fade',
+                { show },
+                { 'd-block': visible },
+                { 'd-none': !visible },
+            )}
+            style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
             id="exampleModal"
             tabIndex={-1}
             aria-label="Edit task"
