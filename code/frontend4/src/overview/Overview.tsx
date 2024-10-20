@@ -11,6 +11,7 @@ import { updateTasks } from './redux/overview-slice'
 import { TaskModel } from '../tasks/models/TaskModel'
 import { SectionToggle } from '../common/components/SectionToggle'
 import { DayCardsSection } from '../common/components/DayCardsSection'
+import { taskService } from '../tasks/services/TaskService'
 
 function Overview() {
     const dispatch = useAppDispatch()
@@ -44,7 +45,10 @@ function Overview() {
     )
 
     const handleAddTasks = useCallback(
-        (tasks: TaskModel[]) => dispatch(updateTasks(tasks)),
+        (tasks: TaskModel[]) => {
+            dispatch(updateTasks(tasks))
+            taskService.scheduleTasksSaving(tasks)
+        },
         [dispatch],
     )
 

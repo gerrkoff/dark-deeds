@@ -2,6 +2,7 @@ import { useCallback, useState } from 'react'
 import { EditTaskModalContainer } from './EditTaskModalContainer'
 import { TaskTypeEnum } from '../../../tasks/models/TaskTypeEnum'
 import { TaskModel } from '../../../tasks/models/TaskModel'
+import { uuidv4 } from '../../utils/uuidv4'
 
 interface Props {
     isShown: boolean
@@ -16,7 +17,7 @@ function EditTaskModal({ isShown, onClose, onSave }: Props) {
         setTask('')
         onSave([
             {
-                uid: task,
+                uid: uuidv4(),
                 title: task,
                 changed: false,
                 completed: false,
