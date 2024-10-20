@@ -1,4 +1,4 @@
-import { IDateable } from '../models/interfaces/idateable'
+import { IDateable } from '../models/IDateable'
 
 export class DateService {
     readonly dateInputFormat = 'M/D/YYYY'
@@ -99,12 +99,14 @@ export class DateService {
         return -new Date().getTimezoneOffset()
     }
 
+    // TODO!
     private fixAfterServer(date: Date): Date {
         const fixed = new Date(date)
         fixed.setMinutes(fixed.getMinutes() + fixed.getTimezoneOffset())
         return fixed
     }
 
+    // TODO!
     private fixBeforeServer(date: Date): Date {
         const fixed = new Date(date)
         fixed.setMinutes(fixed.getMinutes() - fixed.getTimezoneOffset())
