@@ -18,6 +18,5 @@ if (root) {
 
 // item menu
 // server push
-// hooks insted of services??
 // day cards
-// edit task mode
+// edit task model
