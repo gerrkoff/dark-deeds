@@ -8,19 +8,27 @@ export class TaskConvertService {
     constructor(private dateService: DateService) {}
 
     convertTaskToString(task: TaskModel | null): string {
-        if (task === null) {
+        const model = this.convertTaskToModel(task)
+
+        if (model === null) {
             return ''
         }
 
-        const model = {
+        return this.convertModelToString(model)
+    }
+
+    convertTaskToModel(task: TaskModel | null): TaskEditModel | null {
+        if (task === null) {
+            return null
+        }
+
+        return {
             date: task.date !== null ? new Date(task.date) : null,
             type: task.type,
             title: task.title,
             isProbable: task.isProbable,
             time: task.time,
         }
-
-        return this.convertModelToString(model)
     }
 
     createTaskFromModel(result: TaskEditModel): TaskModel {
