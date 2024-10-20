@@ -1,5 +1,3 @@
-import { IDateable } from '../models/IDateable'
-
 export class DateService {
     readonly dateInputFormat = 'M/D/YYYY'
     readonly daysLong = [
@@ -53,38 +51,6 @@ export class DateService {
         return new Date(date.setDate(diff))
     }
 
-    adjustDatesAfterLoading(dateables: IDateable[]): IDateable[] {
-        const fixed = dateables.map(x => ({ ...x }))
-        fixed.forEach(x => {
-            if (x.date) {
-                x.date = this.fixAfterServer(x.date)
-            }
-            if (x.startDate) {
-                x.startDate = this.fixAfterServer(x.startDate)
-            }
-            if (x.endDate) {
-                x.endDate = this.fixAfterServer(x.endDate)
-            }
-        })
-        return fixed
-    }
-
-    adjustDatesBeforeSaving(dateables: IDateable[]): IDateable[] {
-        const fixed = dateables.map(x => ({ ...x }))
-        fixed.forEach(x => {
-            if (x.date) {
-                x.date = this.fixBeforeServer(x.date)
-            }
-            if (x.startDate) {
-                x.startDate = this.fixBeforeServer(x.startDate)
-            }
-            if (x.endDate) {
-                x.endDate = this.fixBeforeServer(x.endDate)
-            }
-        })
-        return fixed
-    }
-
     equal(dateX: Date | null, dateY: Date | null): boolean {
         if (dateX === null && dateY === null) {
             return true
@@ -99,15 +65,13 @@ export class DateService {
         return -new Date().getTimezoneOffset()
     }
 
-    // TODO!
-    private fixAfterServer(date: Date): Date {
+    changeFromUtcToLocal(date: Date): Date {
         const fixed = new Date(date)
         fixed.setMinutes(fixed.getMinutes() + fixed.getTimezoneOffset())
         return fixed
     }
 
-    // TODO!
-    private fixBeforeServer(date: Date): Date {
+    changeFromLocalToUtc(date: Date): Date {
         const fixed = new Date(date)
         fixed.setMinutes(fixed.getMinutes() - fixed.getTimezoneOffset())
         return fixed

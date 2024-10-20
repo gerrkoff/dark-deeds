@@ -5,7 +5,7 @@ import {
 import { SettingsLocalDto } from '../models/SettingsLocalDto'
 
 export class LocalSettingsService {
-    public constructor(private storageService: StorageService) {}
+    constructor(private storageService: StorageService) {}
 
     load(): SettingsLocalDto {
         const settingsSerialized = this.storageService.loadSettings()

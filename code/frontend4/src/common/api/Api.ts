@@ -30,7 +30,7 @@ export class Api {
         )
     }
 
-    post<T>(api: string, data: unknown): Promise<T> {
+    post<TData, TResult>(api: string, data: TData): Promise<TResult> {
         return this.sendRequest(`POST ${api}`, () =>
             fetch(baseUrl + api, {
                 body: JSON.stringify(data),
