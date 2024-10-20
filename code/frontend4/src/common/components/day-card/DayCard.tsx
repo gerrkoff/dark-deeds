@@ -9,7 +9,14 @@ interface Props {
 
 function DayCard({ dayCardModel }: Props) {
     return (
-        <Card style={{ minWidth: '160px', fontSize: '0.8rem' }}>
+        <Card
+            style={{
+                minWidth: '160px',
+                minHeight: '100px',
+                height: '100%',
+                fontSize: '0.8rem',
+            }}
+        >
             <div className="d-flex justify-content-between mt-1 mb-1">
                 <DayCardHeader dayCardModel={dayCardModel} />
             </div>
