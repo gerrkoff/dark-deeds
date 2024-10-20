@@ -13,8 +13,6 @@ import { WelcomeState } from './WelcomeState'
 import { loadLocalSettings } from '../settings/redux/settings-slice'
 import { localSettingsService } from '../settings/services/SettingsService'
 import { useLocalSettingsTracking } from '../settings/hooks/useLocalSettingsTracking'
-import { taskApi } from '../tasks/api/TaskApi'
-import { dateService } from '../common/services/DateService'
 
 function App() {
     const dispatch = useAppDispatch()
