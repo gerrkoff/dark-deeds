@@ -1,6 +1,6 @@
-import { TaskEntity } from '../../common/models/TaskEntity'
 import { DayCardList } from '../../ui/components/day-card/DayCardList'
 import { Card } from '../../ui/components/Card'
+import { TaskEntity } from '../../tasks/models/TaskEntity'
 
 interface Props {
     tasks: TaskEntity[]

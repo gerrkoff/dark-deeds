@@ -1,4 +1,4 @@
-import { TaskEntity } from '../../common/models/TaskEntity'
+import { TaskEntity } from '../../tasks/models/TaskEntity'
 import { DayCardModel } from '../../ui/models/DayCardModel'
 
 export interface OverviewModel {

@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react'
-import { TaskEntity } from '../../../common/models/TaskEntity'
-import { TaskTypeEnum } from '../../../common/models/TaskTypeEnum'
 import { EditTaskModalContainer } from './EditTaskModalContainer'
+import { TaskTypeEnum } from '../../../tasks/models/TaskTypeEnum'
+import { TaskEntity } from '../../../tasks/models/TaskEntity'
 
 interface Props {
     isShown: boolean

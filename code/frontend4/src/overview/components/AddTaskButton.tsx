@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react'
 import { IconPlusLg } from '../../common/icons/IconPlusLg'
 import { EditTaskModal } from '../../ui/components/edit-task-modal/EditTaskModal'
-import { TaskEntity } from '../../common/models/TaskEntity'
+import { TaskEntity } from '../../tasks/models/TaskEntity'
 
 interface Props {
     onAddTasks: (tasks: TaskEntity[]) => void

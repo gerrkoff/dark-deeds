@@ -1,10 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 // import { addWithDelay } from './overview-thunk'
-import { TaskEntity } from '../../common/models/TaskEntity'
 import { dateService } from '../../common/services/DateService'
-import { TaskTypeEnum } from '../../common/models/TaskTypeEnum'
-import { uuidv4 } from '../../common/helpers/uuidv4'
+import { uuidv4 } from '../../common/utils/uuidv4'
+import { TaskEntity } from '../../tasks/models/TaskEntity'
+import { TaskTypeEnum } from '../../tasks/models/TaskTypeEnum'
 
 const initTasks: TaskEntity[] = []
 const monday: Date = dateService.monday(dateService.today())

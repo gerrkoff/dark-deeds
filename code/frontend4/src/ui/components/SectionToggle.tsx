@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef } from 'react'
-import { uuidv4 } from '../../common/helpers/uuidv4'
+import { uuidv4 } from '../../common/utils/uuidv4'
 import { IconChevronDown } from '../../common/icons/IconChevronDown'
 import { IconChevronRight } from '../../common/icons/IconChevronRight'
 import styles from './SectionToggle.module.css'

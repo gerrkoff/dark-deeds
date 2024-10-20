@@ -10,7 +10,7 @@ import { OverviewTabEnum } from '../settings/models/OverviewTabEnum'
 import { AddTaskButton } from './components/AddTaskButton'
 import { DayCardsSection } from '../ui/components/DayCardsSection'
 import { updateTasks } from './redux/overview-slice'
-import { TaskEntity } from '../common/models/TaskEntity'
+import { TaskEntity } from '../tasks/models/TaskEntity'
 
 function Overview() {
     const dispatch = useAppDispatch()

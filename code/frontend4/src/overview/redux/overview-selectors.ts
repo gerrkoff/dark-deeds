@@ -1,9 +1,9 @@
 import { createSelector } from '@reduxjs/toolkit'
 import { RootState } from '../../store'
-import { TaskEntity } from '../../common/models/TaskEntity'
 import { OverviewModel } from '../models/OverviewModel'
 import { dateService } from '../../common/services/DateService'
 import { DayCardModel } from '../../ui/models/DayCardModel'
+import { TaskEntity } from '../../tasks/models/TaskEntity'
 
 export const overviewModelSelector = createSelector(
     (state: RootState) => state.overview.tasks,
