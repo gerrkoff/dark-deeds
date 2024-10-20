@@ -1,5 +1,5 @@
+import { Card } from '../../common/components/Card'
 import { IconInfoLg } from '../../common/icons/IconInfoLg'
-import { Card } from '../../ui/components/Card'
 
 interface Props {
     appVersion: string

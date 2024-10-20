@@ -1,5 +1,5 @@
 import { IconTelegram } from '../../common/icons/IconTelegram'
-import { Card } from '../../ui/components/Card'
+import { Card } from '../../common/components/Card'
 
 interface Props {
     startIntegrationLink: string | null

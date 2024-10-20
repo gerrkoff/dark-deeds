@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react'
 import { Signin } from './components/Signin'
 import { Signup } from './components/Signup'
-import { Card } from '../ui/components/Card'
+import { Card } from '../common/components/Card'
 import { signin, signup } from './redux/login-thunk'
 import { useAppDispatch, useAppSelector } from '../hooks'
 import { unwrapResult } from '@reduxjs/toolkit'

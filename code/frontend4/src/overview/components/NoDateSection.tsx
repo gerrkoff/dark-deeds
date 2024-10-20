@@ -1,5 +1,5 @@
-import { DayCardList } from '../../ui/components/day-card/DayCardList'
-import { Card } from '../../ui/components/Card'
+import { DayCardList } from '../../common/components/day-card/DayCardList'
+import { Card } from '../../common/components/Card'
 import { TaskModel } from '../../tasks/models/TaskModel'
 
 interface Props {

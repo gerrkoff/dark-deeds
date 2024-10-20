@@ -2,7 +2,7 @@ import { createSelector } from '@reduxjs/toolkit'
 import { RootState } from '../../store'
 import { OverviewModel } from '../models/OverviewModel'
 import { dateService } from '../../common/services/DateService'
-import { DayCardModel } from '../../ui/models/DayCardModel'
+import { DayCardModel } from '../../common/models/DayCardModel'
 import { TaskModel } from '../../tasks/models/TaskModel'
 
 export const overviewModelSelector = createSelector(

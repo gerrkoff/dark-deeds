@@ -1,5 +1,5 @@
 import { TaskModel } from '../../tasks/models/TaskModel'
-import { DayCardModel } from '../../ui/models/DayCardModel'
+import { DayCardModel } from '../../common/models/DayCardModel'
 
 export interface OverviewModel {
     noDate: TaskModel[]

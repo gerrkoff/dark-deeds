@@ -1,16 +1,16 @@
 import { useCallback } from 'react'
 import { useAppDispatch, useAppSelector } from '../hooks'
 import { overviewTabsExpandedSelector } from '../settings/redux/settings-selectors'
-import { SectionToggle } from '../ui/components/SectionToggle'
 import { NoDateSection } from './components/NoDateSection'
 import { OverviewModel } from './models/OverviewModel'
 import { overviewModelSelector } from './redux/overview-selectors'
 import { toggleOverviewTab } from '../settings/redux/settings-slice'
 import { OverviewTabEnum } from '../settings/models/OverviewTabEnum'
 import { AddTaskButton } from './components/AddTaskButton'
-import { DayCardsSection } from '../ui/components/DayCardsSection'
 import { updateTasks } from './redux/overview-slice'
 import { TaskModel } from '../tasks/models/TaskModel'
+import { SectionToggle } from '../common/components/SectionToggle'
+import { DayCardsSection } from '../common/components/DayCardsSection'
 
 function Overview() {
     const dispatch = useAppDispatch()

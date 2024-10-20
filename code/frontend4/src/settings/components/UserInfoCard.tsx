@@ -1,5 +1,5 @@
 import { IconPerson } from '../../common/icons/IconPerson'
-import { Card } from '../../ui/components/Card'
+import { Card } from '../../common/components/Card'
 
 interface Props {
     username: string
