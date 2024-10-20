@@ -1,6 +1,6 @@
 import { TaskTypeEnum } from './TaskTypeEnum'
 
-export interface TaskEntity {
+export interface TaskModel {
     uid: string
     title: string
     date: number | null

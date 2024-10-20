@@ -3,14 +3,14 @@ import { RootState } from '../../store'
 import { OverviewModel } from '../models/OverviewModel'
 import { dateService } from '../../common/services/DateService'
 import { DayCardModel } from '../../ui/models/DayCardModel'
-import { TaskEntity } from '../../tasks/models/TaskEntity'
+import { TaskModel } from '../../tasks/models/TaskModel'
 
 export const overviewModelSelector = createSelector(
     (state: RootState) => state.overview.tasks,
     state => overviewModelSelectorFn(state),
 )
 
-function overviewModelSelectorFn(tasks: TaskEntity[]): OverviewModel {
+function overviewModelSelectorFn(tasks: TaskModel[]): OverviewModel {
     const model: OverviewModel = {
         noDate: [],
         expired: [],

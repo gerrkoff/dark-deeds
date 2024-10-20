@@ -1,6 +1,6 @@
-import { TaskEntity } from '../../tasks/models/TaskEntity'
+import { TaskModel } from '../../tasks/models/TaskModel'
 
 export interface DayCardModel {
     date: Date
-    tasks: TaskEntity[]
+    tasks: TaskModel[]
 }

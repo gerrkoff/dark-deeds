@@ -10,7 +10,7 @@ import { OverviewTabEnum } from '../settings/models/OverviewTabEnum'
 import { AddTaskButton } from './components/AddTaskButton'
 import { DayCardsSection } from '../ui/components/DayCardsSection'
 import { updateTasks } from './redux/overview-slice'
-import { TaskEntity } from '../tasks/models/TaskEntity'
+import { TaskModel } from '../tasks/models/TaskModel'
 
 function Overview() {
     const dispatch = useAppDispatch()
@@ -44,7 +44,7 @@ function Overview() {
     )
 
     const handleAddTasks = useCallback(
-        (tasks: TaskEntity[]) => dispatch(updateTasks(tasks)),
+        (tasks: TaskModel[]) => dispatch(updateTasks(tasks)),
         [dispatch],
     )
 

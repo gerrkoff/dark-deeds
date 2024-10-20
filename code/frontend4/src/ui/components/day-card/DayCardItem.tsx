@@ -1,8 +1,8 @@
-import { TaskEntity } from '../../../tasks/models/TaskEntity'
+import { TaskModel } from '../../../tasks/models/TaskModel'
 import { TaskTypeEnum } from '../../../tasks/models/TaskTypeEnum'
 
 interface Props {
-    task: TaskEntity
+    task: TaskModel
 }
 
 function DayCardItem({ task }: Props) {

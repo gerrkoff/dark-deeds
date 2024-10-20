@@ -3,10 +3,10 @@ import type { PayloadAction } from '@reduxjs/toolkit'
 // import { addWithDelay } from './overview-thunk'
 import { dateService } from '../../common/services/DateService'
 import { uuidv4 } from '../../common/utils/uuidv4'
-import { TaskEntity } from '../../tasks/models/TaskEntity'
+import { TaskModel } from '../../tasks/models/TaskModel'
 import { TaskTypeEnum } from '../../tasks/models/TaskTypeEnum'
 
-const initTasks: TaskEntity[] = []
+const initTasks: TaskModel[] = []
 const monday: Date = dateService.monday(dateService.today())
 const start: Date = new Date(monday)
 start.setDate(monday.getDate() - 3)
@@ -35,7 +35,7 @@ while (start < daysAfterMonday) {
 }
 
 for (let i = 0; i < 10; i++) {
-    const task: TaskEntity = {
+    const task: TaskModel = {
         uid: uuidv4(),
         changed: false,
         completed: i % 2 === 0,
@@ -53,7 +53,7 @@ for (let i = 0; i < 10; i++) {
 }
 
 export interface OverviewState {
-    tasks: TaskEntity[]
+    tasks: TaskModel[]
 }
 
 const initialState: OverviewState = {
@@ -70,7 +70,7 @@ export const overviewSlice = createSlice({
         // decrement: state => {
         //     state.value -= 1
         // },
-        updateTasks: (state, action: PayloadAction<TaskEntity[]>) => {
+        updateTasks: (state, action: PayloadAction<TaskModel[]>) => {
             state.tasks.push(...action.payload)
         },
     },

@@ -1,9 +1,9 @@
 import { DayCardList } from '../../ui/components/day-card/DayCardList'
 import { Card } from '../../ui/components/Card'
-import { TaskEntity } from '../../tasks/models/TaskEntity'
+import { TaskModel } from '../../tasks/models/TaskModel'
 
 interface Props {
-    tasks: TaskEntity[]
+    tasks: TaskModel[]
 }
 
 function NoDateSection({ tasks }: Props) {

@@ -1,8 +1,8 @@
-import { TaskEntity } from '../../tasks/models/TaskEntity'
+import { TaskModel } from '../../tasks/models/TaskModel'
 import { DayCardModel } from '../../ui/models/DayCardModel'
 
 export interface OverviewModel {
-    noDate: TaskEntity[]
+    noDate: TaskModel[]
     expired: DayCardModel[]
     current: DayCardModel[]
     future: DayCardModel[]

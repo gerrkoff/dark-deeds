@@ -1,12 +1,12 @@
 import { useCallback, useState } from 'react'
 import { EditTaskModalContainer } from './EditTaskModalContainer'
 import { TaskTypeEnum } from '../../../tasks/models/TaskTypeEnum'
-import { TaskEntity } from '../../../tasks/models/TaskEntity'
+import { TaskModel } from '../../../tasks/models/TaskModel'
 
 interface Props {
     isShown: boolean
     onClose: () => void
-    onSave: (task: TaskEntity[]) => void
+    onSave: (task: TaskModel[]) => void
 }
 
 function EditTaskModal({ isShown, onClose, onSave }: Props) {

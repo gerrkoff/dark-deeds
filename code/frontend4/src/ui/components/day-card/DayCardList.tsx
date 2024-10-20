@@ -1,8 +1,8 @@
-import { TaskEntity } from '../../../tasks/models/TaskEntity'
+import { TaskModel } from '../../../tasks/models/TaskModel'
 import { DayCardItem } from './DayCardItem'
 
 interface Props {
-    tasks: TaskEntity[]
+    tasks: TaskModel[]
 }
 
 function DayCardList({ tasks }: Props) {
