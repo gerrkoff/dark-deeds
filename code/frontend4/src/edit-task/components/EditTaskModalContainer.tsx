@@ -36,6 +36,12 @@ function EditTaskModalContainer({
         onSave()
     }
 
+    const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
+        if (e.target === e.currentTarget) {
+            onClose()
+        }
+    }
+
     return (
         <div
             className={clsx('modal fade', { show })}
@@ -46,6 +52,7 @@ function EditTaskModalContainer({
             id="exampleModal"
             tabIndex={-1}
             aria-label="Edit task"
+            onClick={handleBackdropClick}
         >
             <div className="modal-dialog">
                 <div className="modal-content">
