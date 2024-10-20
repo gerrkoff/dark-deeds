@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-// import type { PayloadAction } from '@reduxjs/toolkit'
+import type { PayloadAction } from '@reduxjs/toolkit'
 // import { addWithDelay } from './overview-thunk'
 import { TaskEntity } from '../../common/models/TaskEntity'
 import { dateService } from '../../common/services/DateService'
@@ -70,9 +70,9 @@ export const overviewSlice = createSlice({
         // decrement: state => {
         //     state.value -= 1
         // },
-        // incrementByAmount: (state, action: PayloadAction<number>) => {
-        //     state.value += action.payload
-        // },
+        updateTasks: (state, action: PayloadAction<TaskEntity[]>) => {
+            state.tasks.push(...action.payload)
+        },
     },
     // extraReducers: builder => {
     // builder.addCase(addWithDelay.pending, (state, action) => {
@@ -89,6 +89,6 @@ export const overviewSlice = createSlice({
     // },
 })
 
-// export const { increment, decrement, incrementByAmount } = overviewSlice.actions
+export const { updateTasks } = overviewSlice.actions
 
 export default overviewSlice.reducer

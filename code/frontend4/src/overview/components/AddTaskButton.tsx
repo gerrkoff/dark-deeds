@@ -3,15 +3,22 @@ import { IconPlusLg } from '../../common/icons/IconPlusLg'
 import { EditTaskModal } from '../../ui/components/edit-task-modal/EditTaskModal'
 import { TaskEntity } from '../../common/models/TaskEntity'
 
-function AddTaskButton() {
+interface Props {
+    onAddTasks: (tasks: TaskEntity[]) => void
+}
+
+function AddTaskButton({ onAddTasks }: Props) {
     const [isEditTaskModalShown, setIsEditTaskModalShown] = useState(false)
 
     const handleClose = useCallback(() => setIsEditTaskModalShown(false), [])
 
-    const handleSave = useCallback((tasks: TaskEntity[]) => {
-        console.log('save', tasks)
-        setIsEditTaskModalShown(false)
-    }, [])
+    const handleSave = useCallback(
+        (tasks: TaskEntity[]) => {
+            onAddTasks(tasks)
+            setIsEditTaskModalShown(false)
+        },
+        [onAddTasks],
+    )
 
     return (
         <>

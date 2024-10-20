@@ -9,6 +9,8 @@ import { toggleOverviewTab } from '../settings/redux/settings-slice'
 import { OverviewTabEnum } from '../settings/models/OverviewTabEnum'
 import { AddTaskButton } from './components/AddTaskButton'
 import { DayCardsSection } from '../ui/components/DayCardsSection'
+import { updateTasks } from './redux/overview-slice'
+import { TaskEntity } from '../common/models/TaskEntity'
 
 function Overview() {
     const dispatch = useAppDispatch()
@@ -38,6 +40,11 @@ function Overview() {
     )
     const handleFutureToggle = useCallback(
         () => dispatch(toggleOverviewTab(OverviewTabEnum.Future)),
+        [dispatch],
+    )
+
+    const handleAddTasks = useCallback(
+        (tasks: TaskEntity[]) => dispatch(updateTasks(tasks)),
         [dispatch],
     )
 
@@ -84,7 +91,7 @@ function Overview() {
                 </SectionToggle>
             </div>
 
-            <AddTaskButton />
+            <AddTaskButton onAddTasks={handleAddTasks} />
         </>
     )
 }

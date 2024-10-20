@@ -13,6 +13,7 @@ function EditTaskModal({ isShown, onClose, onSave }: Props) {
     const [task, setTask] = useState('')
 
     const handleSave = useCallback(() => {
+        setTask('')
         onSave([
             {
                 uid: task,
