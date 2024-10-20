@@ -4,6 +4,7 @@ import { switchToTab } from '../../app/redux/app-slice'
 import { fetchCurrentUser } from '../redux/login-thunk'
 import { unwrapResult } from '@reduxjs/toolkit'
 import { loadSharedSettings } from '../../settings/redux/settings-thunk'
+import { loadOverviewTasks } from '../../overview/redux/overview-thunk'
 
 interface Output {
     loadCurrentUser: () => Promise<void>
@@ -21,6 +22,7 @@ export function useLoadCurrentUser(): Output {
             if (currentUserInfo.userAuthenticated) {
                 dispatch(switchToTab('overview'))
                 dispatch(loadSharedSettings())
+                dispatch(loadOverviewTasks())
             } else {
                 dispatch(switchToTab('login'))
             }

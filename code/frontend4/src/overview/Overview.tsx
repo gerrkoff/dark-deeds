@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react'
+import { useCallback } from 'react'
 import { useAppDispatch, useAppSelector } from '../hooks'
 import { overviewTabsExpandedSelector } from '../settings/redux/settings-selectors'
 import { NoDateSection } from './components/NoDateSection'
@@ -12,7 +12,6 @@ import { TaskModel } from '../tasks/models/TaskModel'
 import { SectionToggle } from '../common/components/SectionToggle'
 import { DayCardsSection } from '../common/components/DayCardsSection'
 import { taskSaveService } from '../tasks/services/TaskSaveService'
-import { loadTasks } from './redux/overview-thunk'
 
 function Overview() {
     const dispatch = useAppDispatch()
@@ -52,10 +51,6 @@ function Overview() {
         },
         [dispatch],
     )
-
-    useEffect(() => {
-        dispatch(loadTasks())
-    }, [dispatch])
 
     return (
         <>
