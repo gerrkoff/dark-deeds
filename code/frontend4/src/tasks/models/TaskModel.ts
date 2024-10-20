@@ -5,7 +5,6 @@ export interface TaskModel {
     title: string
     date: number | null
     order: number
-    changed: boolean // TODO!
     completed: boolean
     deleted: boolean
     type: TaskTypeEnum

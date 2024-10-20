@@ -11,17 +11,23 @@ export class LoginApi {
     }
 
     signin(username: string, password: string): Promise<SigninResultDto> {
-        return this.api.post<SigninResultDto>('api/auth/account/signin', {
-            username,
-            password,
-        })
+        return this.api.post<unknown, SigninResultDto>(
+            'api/auth/account/signin',
+            {
+                username,
+                password,
+            },
+        )
     }
 
     signup(username: string, password: string): Promise<SignupResultDto> {
-        return this.api.post<SignupResultDto>('api/auth/account/signup', {
-            username,
-            password,
-        })
+        return this.api.post<unknown, SignupResultDto>(
+            'api/auth/account/signup',
+            {
+                username,
+                password,
+            },
+        )
     }
 }
 

@@ -3,7 +3,7 @@ import { TaskModel } from '../models/TaskModel'
 
 export type ProcessUpdateCallback = (isSaving: boolean) => void
 
-export class TaskService {
+export class TaskSavingService {
     private savingTasksPromise = new Promise<void>(r => r())
     private tasksToSave: TaskModel[] = []
     private isScheduled = false
@@ -21,7 +21,7 @@ export class TaskService {
             this.processUpdateSubscriptions.filter(x => x !== callback)
     }
 
-    scheduleTasksSaving(tasks: TaskModel[]) {
+    scheduleSaving(tasks: TaskModel[]) {
         this.tasksToSave.push(...tasks)
 
         if (!this.isScheduled) {
@@ -53,4 +53,4 @@ export class TaskService {
     }
 }
 
-export const taskService = new TaskService(taskApi)
+export const taskService = new TaskSavingService(taskApi)

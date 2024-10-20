@@ -37,7 +37,6 @@ while (start < daysAfterMonday) {
 for (let i = 0; i < 10; i++) {
     const task: TaskModel = {
         uid: uuidv4(),
-        changed: false,
         completed: i % 2 === 0,
         date: null,
         deleted: false,

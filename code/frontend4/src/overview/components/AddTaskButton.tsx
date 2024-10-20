@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react'
 import { IconPlusLg } from '../../common/icons/IconPlusLg'
-import { EditTaskModal } from '../../common/components/edit-task-modal/EditTaskModal'
+import { EditTaskModal } from '../../edit-task/EditTaskModal'
 import { TaskModel } from '../../tasks/models/TaskModel'
 
 interface Props {
@@ -46,6 +46,7 @@ function AddTaskButton({ onAddTasks }: Props) {
                 isShown={isEditTaskModalShown}
                 onClose={handleClose}
                 onSave={handleSave}
+                updatedTask={null}
             />
         </>
     )
