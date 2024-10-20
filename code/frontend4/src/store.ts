@@ -3,6 +3,7 @@ import overviewReducer from './overview/redux/overview-slice'
 import appReducer from './app/redux/app-slice'
 import loginReducer from './login/redux/login-slice'
 import settingsReducer from './settings/redux/settings-slice'
+import statusPanelReducer from './status-panel/redux/status-panel-slice'
 // import logger from 'redux-logger'
 
 export const store = configureStore({
@@ -11,6 +12,7 @@ export const store = configureStore({
         login: loginReducer,
         overview: overviewReducer,
         settings: settingsReducer,
+        statusPanel: statusPanelReducer,
     },
     middleware: getDefaultMiddleware =>
         getDefaultMiddleware().concat([

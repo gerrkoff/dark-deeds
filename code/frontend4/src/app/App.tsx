@@ -9,10 +9,11 @@ import { Settings } from '../settings/Settings'
 import { Login } from '../login/Login'
 import { fetchBuildInfo } from './redux/app-thunk'
 import { useLoadCurrentUser } from '../login/hooks/useLoadCurrentUser'
-import { WelcomeState } from './WelcomeState'
+import { WelcomeState } from './components/WelcomeState'
 import { loadLocalSettings } from '../settings/redux/settings-slice'
 import { localSettingsService } from '../settings/services/SettingsService'
 import { useLocalSettingsTracking } from '../settings/hooks/useLocalSettingsTracking'
+import { StatusPanel } from '../status-panel/StatusPanel'
 
 function App() {
     const dispatch = useAppDispatch()
@@ -43,6 +44,7 @@ function App() {
                 <WelcomeState />
             ) : (
                 <>
+                    <StatusPanel />
                     {applicationTab === 'login' && <Login />}
                     {applicationTab === 'overview' && <Overview />}
                     {applicationTab === 'recurrent' && <RecurrentTasks />}

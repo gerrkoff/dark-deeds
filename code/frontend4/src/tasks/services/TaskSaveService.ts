@@ -1,7 +1,7 @@
 import { taskApi, TaskApi } from '../api/TaskApi'
 import { TaskModel } from '../models/TaskModel'
 
-export type ProcessUpdateCallback = (isSaving: boolean) => void
+export type ProcessUpdateCallback = (isPending: boolean) => void
 
 export class TaskSavingService {
     private savingTasksPromise = new Promise<void>(r => r())
@@ -53,4 +53,4 @@ export class TaskSavingService {
     }
 }
 
-export const taskService = new TaskSavingService(taskApi)
+export const taskSaveService = new TaskSavingService(taskApi)
