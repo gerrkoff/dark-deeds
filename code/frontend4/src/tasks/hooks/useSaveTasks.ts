@@ -3,6 +3,7 @@ import { useAppDispatch } from '../../hooks'
 import { TaskModel } from '../models/TaskModel'
 import { toggleSaveTaskPending } from '../../status-panel/redux/status-panel-slice'
 import { taskApi } from '../api/TaskApi'
+import { taskSaveService } from '../services/TaskSaveService'
 
 interface Output {
     scheduleTaskSaving: (tasks: TaskModel[]) => void
@@ -27,7 +28,13 @@ export function useSaveTasks(): Output {
         const tasks = tasksToSave
         tasksToSave = []
         isSaving = true
-        await taskApi.saveTasks(tasks)
+        try {
+            await taskApi.saveTasks(tasks)
+        } catch {
+            tasksToSave = taskSaveService.prependAndFlatten(tasksToSave, tasks)
+            savingTasksPromise = schedule()
+            return
+        }
         isSaving = false
 
         if (!isScheduled) {
@@ -37,7 +44,7 @@ export function useSaveTasks(): Output {
 
     const scheduleTaskSaving = useCallback(
         (tasks: TaskModel[]) => {
-            tasksToSave.push(...tasks)
+            tasksToSave = taskSaveService.appendAndFlatten(tasksToSave, tasks)
 
             if (!isScheduled) {
                 savingTasksPromise = schedule()
