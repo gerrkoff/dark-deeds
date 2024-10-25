@@ -37,12 +37,11 @@ function NoDateSection({ tasks, saveTasks }: Props) {
 
     return (
         <Card elementRef={cardRef} style={{ fontSize: '0.8rem' }}>
-            <DayCardList tasks={tasks} onTaskContextMenu={openItemMenu} />
+            <DayCardList tasks={tasks} onOpenTaskMenu={openItemMenu} />
 
             {itemMenuContext && (
                 <DayCardItemMenu
-                    task={itemMenuContext.task}
-                    position={itemMenuContext.position}
+                    context={itemMenuContext}
                     onClose={closeItemMenu}
                     onToggleCompleted={toggleTaskCompleted}
                     onDelete={deleteTask}

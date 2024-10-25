@@ -8,6 +8,8 @@ import { DayCardItemMenu } from './DayCardItemMenu'
 import { TaskModel } from '../../tasks/models/TaskModel'
 import { EditTaskModal } from '../../edit-task/EditTaskModal'
 import { useEditTaskModal } from '../../edit-task/hooks/useEditTaskModal'
+import { useDayCardHeaderMenu } from '../hooks/useDayCardHeaderMenu'
+import { DayCardHeaderMenu } from './DayCardHeaderMenu'
 
 interface Props {
     dayCardModel: DayCardModel
@@ -20,6 +22,7 @@ function DayCard({ dayCardModel, saveTasks }: Props) {
     const {
         taskEditModalContext,
         openTaskEditModal,
+        openTaskEditModalForDate,
         closeTaskEditModal,
         saveAndCloseTaskEditModal,
     } = useEditTaskModal({ saveTasks })
@@ -37,6 +40,16 @@ function DayCard({ dayCardModel, saveTasks }: Props) {
         openTaskEditModal,
     })
 
+    const {
+        headerMenuContext,
+        openHeaderMenu,
+        closeHeaderMenu,
+        onAddTaskForDate,
+    } = useDayCardHeaderMenu({
+        containerRef: cardRef,
+        openTaskEditModalForDate,
+    })
+
     return (
         <Card
             elementRef={cardRef}
@@ -47,21 +60,31 @@ function DayCard({ dayCardModel, saveTasks }: Props) {
                 fontSize: '0.8rem',
             }}
         >
-            <DayCardHeader dayCardModel={dayCardModel} />
+            <DayCardHeader
+                dayCardModel={dayCardModel}
+                onOpenHeaderMenu={openHeaderMenu}
+            />
             <hr className="mt-0 mb-0" />
             <DayCardList
                 tasks={dayCardModel.tasks}
-                onTaskContextMenu={openItemMenu}
+                onOpenTaskMenu={openItemMenu}
             />
 
             {itemMenuContext && (
                 <DayCardItemMenu
-                    task={itemMenuContext.task}
-                    position={itemMenuContext.position}
+                    context={itemMenuContext}
                     onClose={closeItemMenu}
                     onToggleCompleted={toggleTaskCompleted}
                     onDelete={deleteTask}
                     onEdit={editTask}
+                />
+            )}
+
+            {headerMenuContext && (
+                <DayCardHeaderMenu
+                    context={headerMenuContext}
+                    onClose={closeHeaderMenu}
+                    onAddTaskForDate={onAddTaskForDate}
                 />
             )}
 

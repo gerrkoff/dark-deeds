@@ -2,9 +2,10 @@ import { DayCardModel } from '../models/DayCardModel'
 
 interface Props {
     dayCardModel: DayCardModel
+    onOpenHeaderMenu: (e: React.MouseEvent<HTMLElement>, date: Date) => void
 }
 
-function DayCardHeader({ dayCardModel }: Props) {
+function DayCardHeader({ dayCardModel, onOpenHeaderMenu }: Props) {
     const routineCount = 2
     const date = dayCardModel.date.toDateString()
 
@@ -23,7 +24,15 @@ function DayCardHeader({ dayCardModel }: Props) {
     return (
         <div className="d-flex justify-content-between mt-1 mb-1">
             <span className={routineCounterClass}>{routineCount}</span>
-            <span className={dateClass}>{date}</span>
+            <span
+                className={dateClass}
+                onClick={e => {
+                    console.log('DayCardHeader.tsx: onOpenHeaderMenu')
+                    return onOpenHeaderMenu(e, dayCardModel.date)
+                }}
+            >
+                {date}
+            </span>
         </div>
     )
 }

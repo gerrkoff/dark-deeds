@@ -1,9 +1,9 @@
 import { FloatingPanel } from '../../common/components/FloatingPanel'
 import { TaskModel } from '../../tasks/models/TaskModel'
+import { DayCardItemMenuContext } from '../models/DayCardItemMenuContext'
 
 interface Props {
-    task: TaskModel
-    position: { x: number; y: number }
+    context: DayCardItemMenuContext
     onClose: () => void
     onEdit: (task: TaskModel) => void
     onDelete: (task: TaskModel) => void
@@ -11,8 +11,7 @@ interface Props {
 }
 
 function DayCardItemMenu({
-    task,
-    position,
+    context: { task, position },
     onClose,
     onDelete,
     onEdit,

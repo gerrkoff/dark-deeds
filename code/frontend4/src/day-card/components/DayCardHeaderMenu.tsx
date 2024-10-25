@@ -1,15 +1,14 @@
 import { FloatingPanel } from '../../common/components/FloatingPanel'
+import { DayCardHeaderMenuContext } from '../models/DayCardHeaderMenuContext'
 
 interface Props {
-    date: Date
-    position: { x: number; y: number }
+    context: DayCardHeaderMenuContext
     onAddTaskForDate: (date: Date) => void
     onClose: () => void
 }
 
 function DayCardHeaderMenu({
-    date,
-    position,
+    context: { date, position },
     onClose,
     onAddTaskForDate,
 }: Props) {

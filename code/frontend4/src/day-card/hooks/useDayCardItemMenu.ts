@@ -13,7 +13,7 @@ interface Output {
 }
 
 interface Props {
-    containerRef?: React.RefObject<HTMLDivElement>
+    containerRef: React.RefObject<HTMLDivElement>
     saveTasks: (tasks: TaskModel[]) => void
     openTaskEditModal: (task: TaskModel) => void
 }
@@ -23,21 +23,20 @@ export function useDayCardItemMenu({
     saveTasks,
     openTaskEditModal,
 }: Props): Output {
-    const [itemMenuContext, setItemMenuContext] =
-        useState<DayCardItemMenuContext | null>(null)
+    const [context, setContext] = useState<DayCardItemMenuContext | null>(null)
 
-    const openItemMenu = useCallback(
+    const openMenu = useCallback(
         (e: React.MouseEvent<HTMLElement>, task: TaskModel) => {
             e.preventDefault()
 
-            if (!containerRef?.current) {
+            if (!containerRef.current) {
                 return
             }
 
             const targetRect = containerRef.current.getBoundingClientRect()
             const x = e.clientX - targetRect.left
             const y = e.clientY - targetRect.top
-            setItemMenuContext({
+            setContext({
                 task,
                 position: { x, y },
             })
@@ -45,14 +44,14 @@ export function useDayCardItemMenu({
         [containerRef],
     )
 
-    const closeItemMenu = useCallback(() => setItemMenuContext(null), [])
+    const closeMenu = useCallback(() => setContext(null), [])
 
     const saveTaskAndCloseMenu = useCallback(
         (tasks: TaskModel[]) => {
             saveTasks(tasks)
-            closeItemMenu()
+            closeMenu()
         },
-        [closeItemMenu, saveTasks],
+        [closeMenu, saveTasks],
     )
 
     const { toggleTaskCompleted, deleteTask } = useChangeHandlers({
@@ -61,16 +60,16 @@ export function useDayCardItemMenu({
 
     const editTask = useCallback(
         (task: TaskModel) => {
-            closeItemMenu()
+            closeMenu()
             openTaskEditModal(task)
         },
-        [closeItemMenu, openTaskEditModal],
+        [closeMenu, openTaskEditModal],
     )
 
     return {
-        itemMenuContext,
-        openItemMenu,
-        closeItemMenu,
+        itemMenuContext: context,
+        openItemMenu: openMenu,
+        closeItemMenu: closeMenu,
         toggleTaskCompleted,
         deleteTask,
         editTask,
