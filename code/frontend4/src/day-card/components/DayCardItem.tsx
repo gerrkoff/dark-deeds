@@ -28,7 +28,7 @@ function DayCardItem({ task, onOpenTaskMenu }: Props) {
     const liClass = task.type === TaskTypeEnum.Additional ? 'd-block' : ''
 
     return (
-        <li className={liClass} onContextMenu={e => onOpenTaskMenu(e, task)}>
+        <li className={liClass} onClick={e => onOpenTaskMenu(e, task)}>
             <span className={spanClass}>{task.title}</span>
         </li>
     )

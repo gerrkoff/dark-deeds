@@ -17,6 +17,8 @@ if (root) {
 }
 
 // item menu
+// icons
+
 // dnd
 // server push
 // day cards

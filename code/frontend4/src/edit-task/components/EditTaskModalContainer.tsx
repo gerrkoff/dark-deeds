@@ -51,7 +51,6 @@ function EditTaskModalContainer({
                 { 'd-none': !visible },
             )}
             style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
-            id="exampleModal"
             tabIndex={-1}
             aria-label="Edit task"
             onClick={handleBackdropClick}
