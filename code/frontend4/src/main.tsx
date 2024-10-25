@@ -17,6 +17,7 @@ if (root) {
 }
 
 // item menu
+// dnd
 // server push
 // day cards
 // edit task model

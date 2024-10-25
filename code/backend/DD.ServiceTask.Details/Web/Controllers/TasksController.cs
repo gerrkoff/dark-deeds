@@ -16,7 +16,7 @@ public class TasksController(
     [HttpGet]
     public async Task<IEnumerable<TaskDto>> Get([Required] DateTime from)
     {
-        await Task.Delay(10000);
+        await Task.Delay(1000);
         return await taskService.LoadActualTasksAsync(userAuth.UserId(), from);
     }
 

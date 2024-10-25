@@ -21,10 +21,10 @@ function DayCardHeader({ dayCardModel }: Props) {
             : ''
 
     return (
-        <>
+        <div className="d-flex justify-content-between mt-1 mb-1">
             <span className={routineCounterClass}>{routineCount}</span>
             <span className={dateClass}>{date}</span>
-        </>
+        </div>
     )
 }
 

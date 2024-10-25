@@ -33,7 +33,7 @@ function SectionToggle({
     }, [])
 
     return (
-        <div className={clsx(styles.section, className)}>
+        <div className={className}>
             <button
                 ref={collapseToggleRef}
                 className={clsx(

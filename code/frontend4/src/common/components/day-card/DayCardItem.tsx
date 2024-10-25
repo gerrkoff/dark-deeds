@@ -3,9 +3,10 @@ import { TaskTypeEnum } from '../../../tasks/models/TaskTypeEnum'
 
 interface Props {
     task: TaskModel
+    onContextMenu: (e: React.MouseEvent<HTMLElement>, task: TaskModel) => void
 }
 
-function DayCardItem({ task }: Props) {
+function DayCardItem({ task, onContextMenu }: Props) {
     let spanClass = 'd-block'
 
     if (task.completed) {
@@ -27,7 +28,7 @@ function DayCardItem({ task }: Props) {
     const liClass = task.type === TaskTypeEnum.Additional ? 'd-block' : ''
 
     return (
-        <li className={liClass}>
+        <li className={liClass} onContextMenu={e => onContextMenu(e, task)}>
             <span className={spanClass}>{task.title}</span>
         </li>
     )
