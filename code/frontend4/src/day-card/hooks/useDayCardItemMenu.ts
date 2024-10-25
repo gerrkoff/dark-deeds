@@ -1,18 +1,28 @@
 import { useCallback, useState } from 'react'
 import { TaskModel } from '../../tasks/models/TaskModel'
 import { DayCardItemMenuContext } from '../models/DayCardItemMenuContext'
+import { useChangeHandlers } from '../../tasks/hooks/useChangeHandlers'
 
 interface Output {
     itemMenuContext: DayCardItemMenuContext | null
     openItemMenu: (e: React.MouseEvent<HTMLElement>, task: TaskModel) => void
     closeItemMenu: () => void
+    toggleTaskCompleted: (task: TaskModel) => void
+    deleteTask: (task: TaskModel) => void
+    editTask: (task: TaskModel) => void
 }
 
 interface Props {
     containerRef?: React.RefObject<HTMLDivElement>
+    saveTasks: (tasks: TaskModel[]) => void
+    openTaskEditModal: (task: TaskModel) => void
 }
 
-export function useDayCardItemMenu({ containerRef }: Props): Output {
+export function useDayCardItemMenu({
+    containerRef,
+    saveTasks,
+    openTaskEditModal,
+}: Props): Output {
     const [itemMenuContext, setItemMenuContext] =
         useState<DayCardItemMenuContext | null>(null)
 
@@ -37,9 +47,32 @@ export function useDayCardItemMenu({ containerRef }: Props): Output {
 
     const closeItemMenu = useCallback(() => setItemMenuContext(null), [])
 
+    const saveTaskAndCloseMenu = useCallback(
+        (tasks: TaskModel[]) => {
+            saveTasks(tasks)
+            closeItemMenu()
+        },
+        [closeItemMenu, saveTasks],
+    )
+
+    const { toggleTaskCompleted, deleteTask } = useChangeHandlers({
+        saveTasks: saveTaskAndCloseMenu,
+    })
+
+    const editTask = useCallback(
+        (task: TaskModel) => {
+            closeItemMenu()
+            openTaskEditModal(task)
+        },
+        [closeItemMenu, openTaskEditModal],
+    )
+
     return {
         itemMenuContext,
         openItemMenu,
         closeItemMenu,
+        toggleTaskCompleted,
+        deleteTask,
+        editTask,
     }
 }

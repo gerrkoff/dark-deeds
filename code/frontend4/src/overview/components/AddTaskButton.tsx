@@ -1,4 +1,3 @@
-import { useCallback } from 'react'
 import { IconPlusLg } from '../../common/icons/IconPlusLg'
 import { EditTaskModal } from '../../edit-task/EditTaskModal'
 import { TaskModel } from '../../tasks/models/TaskModel'
@@ -9,16 +8,12 @@ interface Props {
 }
 
 function AddTaskButton({ saveTasks }: Props) {
-    const { taskEditModalContext, openTaskEditModal, closeTaskEditModal } =
-        useEditTaskModal()
-
-    const handleSave = useCallback(
-        (tasks: TaskModel[]) => {
-            saveTasks(tasks)
-            closeTaskEditModal()
-        },
-        [closeTaskEditModal, saveTasks],
-    )
+    const {
+        taskEditModalContext,
+        openTaskEditModal,
+        closeTaskEditModal,
+        saveAndCloseTaskEditModal,
+    } = useEditTaskModal({ saveTasks })
 
     return (
         <>
@@ -45,7 +40,7 @@ function AddTaskButton({ saveTasks }: Props) {
             <EditTaskModal
                 context={taskEditModalContext}
                 onClose={closeTaskEditModal}
-                onSave={handleSave}
+                onSave={saveAndCloseTaskEditModal}
             />
         </>
     )

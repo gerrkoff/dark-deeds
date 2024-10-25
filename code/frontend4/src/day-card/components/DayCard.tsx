@@ -1,4 +1,4 @@
-import { useCallback, useRef } from 'react'
+import { useRef } from 'react'
 import { DayCardModel } from '../models/DayCardModel'
 import { useDayCardItemMenu } from '../hooks/useDayCardItemMenu'
 import { Card } from '../../common/components/Card'
@@ -6,7 +6,6 @@ import { DayCardHeader } from './DayCardHeader'
 import { DayCardList } from './DayCardList'
 import { DayCardItemMenu } from './DayCardItemMenu'
 import { TaskModel } from '../../tasks/models/TaskModel'
-import { useChangeHandlers } from '../../tasks/hooks/useChangeHandlers'
 import { EditTaskModal } from '../../edit-task/EditTaskModal'
 import { useEditTaskModal } from '../../edit-task/hooks/useEditTaskModal'
 
@@ -18,42 +17,25 @@ interface Props {
 function DayCard({ dayCardModel, saveTasks }: Props) {
     const cardRef = useRef<HTMLDivElement>(null)
 
-    const { itemMenuContext, openItemMenu, closeItemMenu } = useDayCardItemMenu(
-        {
-            containerRef: cardRef,
-        },
-    )
+    const {
+        taskEditModalContext,
+        openTaskEditModal,
+        closeTaskEditModal,
+        saveAndCloseTaskEditModal,
+    } = useEditTaskModal({ saveTasks })
 
-    const { taskEditModalContext, openTaskEditModal, closeTaskEditModal } =
-        useEditTaskModal()
-
-    const saveTaskAndCloseModal = useCallback(
-        (tasks: TaskModel[]) => {
-            saveTasks(tasks)
-            closeTaskEditModal()
-        },
-        [closeTaskEditModal, saveTasks],
-    )
-
-    const saveTaskAndCloseMenu = useCallback(
-        (tasks: TaskModel[]) => {
-            saveTasks(tasks)
-            closeItemMenu()
-        },
-        [closeItemMenu, saveTasks],
-    )
-
-    const { toggleTaskCompleted, deleteTask } = useChangeHandlers({
-        saveTasks: saveTaskAndCloseMenu,
+    const {
+        itemMenuContext,
+        openItemMenu,
+        closeItemMenu,
+        deleteTask,
+        editTask,
+        toggleTaskCompleted,
+    } = useDayCardItemMenu({
+        containerRef: cardRef,
+        saveTasks,
+        openTaskEditModal,
     })
-
-    const editTask = useCallback(
-        (task: TaskModel) => {
-            closeItemMenu()
-            openTaskEditModal(task)
-        },
-        [closeItemMenu, openTaskEditModal],
-    )
 
     return (
         <Card
@@ -86,7 +68,7 @@ function DayCard({ dayCardModel, saveTasks }: Props) {
             <EditTaskModal
                 context={taskEditModalContext}
                 onClose={closeTaskEditModal}
-                onSave={saveTaskAndCloseModal}
+                onSave={saveAndCloseTaskEditModal}
             />
         </Card>
     )

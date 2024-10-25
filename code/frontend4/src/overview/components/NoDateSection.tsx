@@ -1,10 +1,9 @@
-import { useCallback, useRef } from 'react'
+import { useRef } from 'react'
 import { Card } from '../../common/components/Card'
 import { DayCardList } from '../../day-card/components/DayCardList'
 import { TaskModel } from '../../tasks/models/TaskModel'
 import { useDayCardItemMenu } from '../../day-card/hooks/useDayCardItemMenu'
 import { DayCardItemMenu } from '../../day-card/components/DayCardItemMenu'
-import { useChangeHandlers } from '../../tasks/hooks/useChangeHandlers'
 import { EditTaskModal } from '../../edit-task/EditTaskModal'
 import { useEditTaskModal } from '../../edit-task/hooks/useEditTaskModal'
 
@@ -16,42 +15,25 @@ interface Props {
 function NoDateSection({ tasks, saveTasks }: Props) {
     const cardRef = useRef<HTMLDivElement>(null)
 
-    const { itemMenuContext, openItemMenu, closeItemMenu } = useDayCardItemMenu(
-        {
-            containerRef: cardRef,
-        },
-    )
+    const {
+        taskEditModalContext,
+        openTaskEditModal,
+        closeTaskEditModal,
+        saveAndCloseTaskEditModal,
+    } = useEditTaskModal({ saveTasks })
 
-    const { taskEditModalContext, openTaskEditModal, closeTaskEditModal } =
-        useEditTaskModal()
-
-    const saveTaskAndCloseModal = useCallback(
-        (tasks: TaskModel[]) => {
-            saveTasks(tasks)
-            closeTaskEditModal()
-        },
-        [closeTaskEditModal, saveTasks],
-    )
-
-    const saveTaskAndCloseMenu = useCallback(
-        (tasks: TaskModel[]) => {
-            saveTasks(tasks)
-            closeItemMenu()
-        },
-        [closeItemMenu, saveTasks],
-    )
-
-    const { toggleTaskCompleted, deleteTask } = useChangeHandlers({
-        saveTasks: saveTaskAndCloseMenu,
+    const {
+        itemMenuContext,
+        openItemMenu,
+        closeItemMenu,
+        deleteTask,
+        editTask,
+        toggleTaskCompleted,
+    } = useDayCardItemMenu({
+        containerRef: cardRef,
+        saveTasks,
+        openTaskEditModal,
     })
-
-    const editTask = useCallback(
-        (task: TaskModel) => {
-            closeItemMenu()
-            openTaskEditModal(task)
-        },
-        [closeItemMenu, openTaskEditModal],
-    )
 
     return (
         <Card elementRef={cardRef} style={{ fontSize: '0.8rem' }}>
@@ -71,7 +53,7 @@ function NoDateSection({ tasks, saveTasks }: Props) {
             <EditTaskModal
                 context={taskEditModalContext}
                 onClose={closeTaskEditModal}
-                onSave={saveTaskAndCloseModal}
+                onSave={saveAndCloseTaskEditModal}
             />
         </Card>
     )

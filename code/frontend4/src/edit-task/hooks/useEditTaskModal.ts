@@ -7,9 +7,14 @@ interface Output {
     openTaskEditModal: (task: TaskModel | null) => void
     openTaskEditModalForDate: (date: Date) => void
     closeTaskEditModal: () => void
+    saveAndCloseTaskEditModal: (tasks: TaskModel[]) => void
 }
 
-export function useEditTaskModal(): Output {
+interface Props {
+    saveTasks: (tasks: TaskModel[]) => void
+}
+
+export function useEditTaskModal({ saveTasks }: Props): Output {
     const [taskEditModalContext, setTaskEditModalContext] =
         useState<TaskEditModalContext>({
             isShown: false,
@@ -42,10 +47,19 @@ export function useEditTaskModal(): Output {
         [],
     )
 
+    const saveAndCloseTaskEditModal = useCallback(
+        (tasks: TaskModel[]) => {
+            saveTasks(tasks)
+            closeTaskEditModal()
+        },
+        [closeTaskEditModal, saveTasks],
+    )
+
     return {
         taskEditModalContext,
         openTaskEditModal,
         openTaskEditModalForDate,
         closeTaskEditModal,
+        saveAndCloseTaskEditModal,
     }
 }
