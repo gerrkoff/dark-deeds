@@ -46,6 +46,17 @@ export class TaskConvertService {
         }
     }
 
+    mergeTaskWithModel(result: TaskEditModel, task: TaskModel): TaskModel {
+        return {
+            ...task,
+            title: result.title,
+            date: result.date !== null ? result.date.getTime() : null,
+            type: result.type,
+            isProbable: result.isProbable,
+            time: result.time,
+        }
+    }
+
     convertStringToModel(text: string): TaskEditModel {
         const result = new StringConvertingResult(this.dateService.today())
 

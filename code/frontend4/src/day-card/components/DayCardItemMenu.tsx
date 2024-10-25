@@ -24,6 +24,8 @@ function DayCardItemMenu({
 
     const deleteTask = () => onDelete(task)
 
+    const toggleCompletedLabel = task.completed ? 'Uncomplete' : 'Complete'
+
     return (
         <FloatingPanel position={position} onClose={onClose}>
             <div className="list-group">
@@ -32,7 +34,7 @@ function DayCardItemMenu({
                     className="list-group-item list-group-item-action"
                     onClick={toggleTaskCompleted}
                 >
-                    Complete
+                    {toggleCompletedLabel}
                 </button>
                 <button
                     type="button"

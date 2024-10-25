@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { EditTaskModalContainer } from './components/EditTaskModalContainer'
 import { TaskModel } from '../tasks/models/TaskModel'
-import { TaskEditModel } from './models/TaskEditModel'
 import { taskConvertService } from './services/TaskConvertService'
 import { isKeyEsc } from '../common/utils/keys'
 
@@ -15,24 +14,35 @@ interface Props {
 function EditTaskModal({ isShown, onClose, onSave, updatedTask }: Props) {
     const inputRef = useRef<HTMLInputElement>(null)
 
-    const [task, setTask] = useState(
-        taskConvertService.convertTaskToString(updatedTask),
-    )
-    const [editModel, setEditModel] = useState<TaskEditModel | null>(
-        taskConvertService.convertTaskToModel(updatedTask),
+    const [task, setTask] = useState('')
+
+    useEffect(() => {
+        if (updatedTask) {
+            setTask(taskConvertService.convertTaskToString(updatedTask))
+        }
+    }, [updatedTask])
+
+    const editModel = useMemo(
+        () => taskConvertService.convertStringToModel(task),
+        [task],
     )
 
     const handleSave = useCallback(() => {
         setTask('')
-        setEditModel(null)
         if (editModel !== null) {
-            onSave([taskConvertService.createTaskFromModel(editModel)])
+            onSave([
+                updatedTask
+                    ? taskConvertService.mergeTaskWithModel(
+                          editModel,
+                          updatedTask,
+                      )
+                    : taskConvertService.createTaskFromModel(editModel),
+            ])
         }
-    }, [editModel, onSave])
+    }, [editModel, onSave, updatedTask])
 
     const handleTaskChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setTask(e.target.value)
-        setEditModel(taskConvertService.convertStringToModel(e.target.value))
     }
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
