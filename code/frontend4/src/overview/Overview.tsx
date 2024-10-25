@@ -46,7 +46,7 @@ function Overview() {
 
     const { scheduleTaskSaving } = useSaveTasks()
 
-    const handleAddTasks = useCallback(
+    const saveTasks = useCallback(
         (tasks: TaskModel[]) => {
             dispatch(updateTasks(tasks))
             scheduleTaskSaving(tasks)
@@ -63,7 +63,7 @@ function Overview() {
                     isInitExpanded={isNoDateExpanded}
                     onToggle={handleNoDateToggle}
                 >
-                    <NoDateSection tasks={model.noDate} />
+                    <NoDateSection tasks={model.noDate} saveTasks={saveTasks} />
                 </SectionToggle>
 
                 {model.expired.length > 0 && (
@@ -73,7 +73,10 @@ function Overview() {
                         isInitExpanded={isExpiredExpanded}
                         onToggle={handleExpiredToggle}
                     >
-                        <DayCardsSection dayCards={model.expired} />
+                        <DayCardsSection
+                            dayCards={model.expired}
+                            saveTasks={saveTasks}
+                        />
                     </SectionToggle>
                 )}
 
@@ -86,6 +89,7 @@ function Overview() {
                     <DayCardsSection
                         dayCards={model.current}
                         daysInRowCount={7}
+                        saveTasks={saveTasks}
                     />
                 </SectionToggle>
 
@@ -96,12 +100,15 @@ function Overview() {
                         isInitExpanded={isFutureExpanded}
                         onToggle={handleFutureToggle}
                     >
-                        <DayCardsSection dayCards={model.future} />
+                        <DayCardsSection
+                            dayCards={model.future}
+                            saveTasks={saveTasks}
+                        />
                     </SectionToggle>
                 )}
             </div>
 
-            <AddTaskButton onAddTasks={handleAddTasks} />
+            <AddTaskButton saveTasks={saveTasks} />
         </>
     )
 }

@@ -4,11 +4,8 @@ import { DayCardItemMenuContext } from '../models/DayCardItemMenuContext'
 
 interface Output {
     itemMenuContext: DayCardItemMenuContext | null
-    handleTaskContextMenu: (
-        e: React.MouseEvent<HTMLElement>,
-        task: TaskModel,
-    ) => void
-    handleTaskContextMenuClose: () => void
+    openItemMenu: (e: React.MouseEvent<HTMLElement>, task: TaskModel) => void
+    closeItemMenu: () => void
 }
 
 interface Props {
@@ -19,7 +16,7 @@ export function useDayCardItemMenu({ containerRef }: Props): Output {
     const [itemMenuContext, setItemMenuContext] =
         useState<DayCardItemMenuContext | null>(null)
 
-    const handleTaskContextMenu = useCallback(
+    const openItemMenu = useCallback(
         (e: React.MouseEvent<HTMLElement>, task: TaskModel) => {
             e.preventDefault()
 
@@ -38,14 +35,11 @@ export function useDayCardItemMenu({ containerRef }: Props): Output {
         [containerRef],
     )
 
-    const handleTaskContextMenuClose = useCallback(
-        () => setItemMenuContext(null),
-        [],
-    )
+    const closeItemMenu = useCallback(() => setItemMenuContext(null), [])
 
     return {
         itemMenuContext,
-        handleTaskContextMenu,
-        handleTaskContextMenuClose,
+        openItemMenu,
+        closeItemMenu,
     }
 }

@@ -18,7 +18,12 @@ export const overviewSlice = createSlice({
     initialState,
     reducers: {
         updateTasks: (state, action: PayloadAction<TaskModel[]>) => {
-            state.tasks.push(...action.payload)
+            state.tasks = [
+                ...state.tasks.filter(
+                    task => !action.payload.find(t => t.uid === task.uid),
+                ),
+                ...action.payload,
+            ]
         },
     },
     extraReducers: builder => {

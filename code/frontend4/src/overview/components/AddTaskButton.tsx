@@ -1,23 +1,23 @@
-import { useCallback, useState } from 'react'
+import { useCallback } from 'react'
 import { IconPlusLg } from '../../common/icons/IconPlusLg'
 import { EditTaskModal } from '../../edit-task/EditTaskModal'
 import { TaskModel } from '../../tasks/models/TaskModel'
+import { useEditTaskModal } from '../../edit-task/hooks/useEditTaskModal'
 
 interface Props {
-    onAddTasks: (tasks: TaskModel[]) => void
+    saveTasks: (tasks: TaskModel[]) => void
 }
 
-function AddTaskButton({ onAddTasks }: Props) {
-    const [isEditTaskModalShown, setIsEditTaskModalShown] = useState(false)
-
-    const handleClose = useCallback(() => setIsEditTaskModalShown(false), [])
+function AddTaskButton({ saveTasks }: Props) {
+    const { taskEditModalContext, openTaskEditModal, closeTaskEditModal } =
+        useEditTaskModal()
 
     const handleSave = useCallback(
         (tasks: TaskModel[]) => {
-            onAddTasks(tasks)
-            setIsEditTaskModalShown(false)
+            saveTasks(tasks)
+            closeTaskEditModal()
         },
-        [onAddTasks],
+        [closeTaskEditModal, saveTasks],
     )
 
     return (
@@ -36,17 +36,17 @@ function AddTaskButton({ onAddTasks }: Props) {
                         minWidth: '42px',
                         borderRadius: '50%',
                     }}
-                    onClick={() => setIsEditTaskModalShown(true)}
+                    onClick={() => openTaskEditModal(null)}
                 >
                     <IconPlusLg />
                 </button>
             </div>
 
             <EditTaskModal
-                isShown={isEditTaskModalShown}
-                onClose={handleClose}
+                isShown={taskEditModalContext.isShown}
+                updatedTask={taskEditModalContext.task}
+                onClose={closeTaskEditModal}
                 onSave={handleSave}
-                updatedTask={null}
             />
         </>
     )

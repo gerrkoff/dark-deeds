@@ -2,13 +2,15 @@ import { DayCardModel } from '../models/DayCardModel'
 import { useMemo } from 'react'
 import clsx from 'clsx'
 import { DayCard } from './DayCard'
+import { TaskModel } from '../../tasks/models/TaskModel'
 
 interface Props {
     dayCards: DayCardModel[]
     daysInRowCount?: number
+    saveTasks: (tasks: TaskModel[]) => void
 }
 
-function DayCardsSection({ dayCards, daysInRowCount }: Props) {
+function DayCardsSection({ dayCards, daysInRowCount, saveTasks }: Props) {
     const rows: DayCardModel[][] = useMemo(() => {
         if (!daysInRowCount) {
             return [dayCards]
@@ -34,6 +36,7 @@ function DayCardsSection({ dayCards, daysInRowCount }: Props) {
                             <DayCard
                                 key={day.date.valueOf()}
                                 dayCardModel={day}
+                                saveTasks={saveTasks}
                             />
                         </div>
                     ))}

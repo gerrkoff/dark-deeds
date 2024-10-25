@@ -5,19 +5,28 @@ import { Card } from '../../common/components/Card'
 import { DayCardHeader } from './DayCardHeader'
 import { DayCardList } from './DayCardList'
 import { DayCardItemMenu } from './DayCardItemMenu'
+import { TaskModel } from '../../tasks/models/TaskModel'
+import { useChangeHandlers } from '../../tasks/hooks/useChangeHandlers'
 
 interface Props {
     dayCardModel: DayCardModel
+    saveTasks: (tasks: TaskModel[]) => void
 }
 
-function DayCard({ dayCardModel }: Props) {
+function DayCard({ dayCardModel, saveTasks }: Props) {
     const cardRef = useRef<HTMLDivElement>(null)
 
-    const {
-        itemMenuContext,
-        handleTaskContextMenu,
-        handleTaskContextMenuClose,
-    } = useDayCardItemMenu({ containerRef: cardRef })
+    const { toggleTaskCompleted, deleteTask } = useChangeHandlers({ saveTasks })
+
+    const { itemMenuContext, openItemMenu, closeItemMenu } = useDayCardItemMenu(
+        {
+            containerRef: cardRef,
+        },
+    )
+
+    const editTask = (task: TaskModel) => {
+        console.log('Edit task:', task)
+    }
 
     return (
         <Card
@@ -33,14 +42,17 @@ function DayCard({ dayCardModel }: Props) {
             <hr className="mt-0 mb-0" />
             <DayCardList
                 tasks={dayCardModel.tasks}
-                onTaskContextMenu={handleTaskContextMenu}
+                onTaskContextMenu={openItemMenu}
             />
 
             {itemMenuContext && (
                 <DayCardItemMenu
                     task={itemMenuContext.task}
                     position={itemMenuContext.position}
-                    onClose={handleTaskContextMenuClose}
+                    onClose={closeItemMenu}
+                    onToggleCompleted={toggleTaskCompleted}
+                    onDelete={deleteTask}
+                    onEdit={editTask}
                 />
             )}
         </Card>
