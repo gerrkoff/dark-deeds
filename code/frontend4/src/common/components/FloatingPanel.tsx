@@ -11,7 +11,7 @@ function FloatingPanel({ className, position: { x, y }, children }: Props) {
     return (
         <div
             className={clsx('z-3 position-absolute', className)}
-            style={{ background: 'red', opacity: 0.7, left: x, top: y }}
+            style={{ left: x, top: y }}
         >
             {children}
         </div>
