@@ -43,8 +43,7 @@ function AddTaskButton({ saveTasks }: Props) {
             </div>
 
             <EditTaskModal
-                isShown={taskEditModalContext.isShown}
-                updatedTask={taskEditModalContext.task}
+                context={taskEditModalContext}
                 onClose={closeTaskEditModal}
                 onSave={handleSave}
             />

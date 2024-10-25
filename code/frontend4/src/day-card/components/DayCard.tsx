@@ -84,8 +84,7 @@ function DayCard({ dayCardModel, saveTasks }: Props) {
             )}
 
             <EditTaskModal
-                isShown={taskEditModalContext.isShown}
-                updatedTask={taskEditModalContext.task}
+                context={taskEditModalContext}
                 onClose={closeTaskEditModal}
                 onSave={saveTaskAndCloseModal}
             />

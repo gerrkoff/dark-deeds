@@ -3,24 +3,28 @@ import { EditTaskModalContainer } from './components/EditTaskModalContainer'
 import { TaskModel } from '../tasks/models/TaskModel'
 import { taskConvertService } from './services/TaskConvertService'
 import { isKeyEsc } from '../common/utils/keys'
+import { TaskEditModalContext } from './models/TaskEditModalContext'
 
 interface Props {
-    isShown: boolean
+    context: TaskEditModalContext
     onClose: () => void
     onSave: (task: TaskModel[]) => void
-    updatedTask: TaskModel | null
 }
 
-function EditTaskModal({ isShown, onClose, onSave, updatedTask }: Props) {
+function EditTaskModal({ context, onClose, onSave }: Props) {
     const inputRef = useRef<HTMLInputElement>(null)
 
     const [task, setTask] = useState('')
 
     useEffect(() => {
-        if (updatedTask) {
-            setTask(taskConvertService.convertTaskToString(updatedTask))
+        if (context.task) {
+            setTask(taskConvertService.convertTaskToString(context.task))
+        } else if (context.date) {
+            setTask(
+                `${context.date.getDate()} ${context.date.getMonth() + 1} ${context.date.getFullYear()}`,
+            )
         }
-    }, [updatedTask])
+    }, [context.task, context.date])
 
     const editModel = useMemo(
         () => taskConvertService.convertStringToModel(task),
@@ -31,15 +35,15 @@ function EditTaskModal({ isShown, onClose, onSave, updatedTask }: Props) {
         setTask('')
         if (editModel !== null) {
             onSave([
-                updatedTask
+                context.task
                     ? taskConvertService.mergeTaskWithModel(
                           editModel,
-                          updatedTask,
+                          context.task,
                       )
                     : taskConvertService.createTaskFromModel(editModel),
             ])
         }
-    }, [editModel, onSave, updatedTask])
+    }, [editModel, onSave, context.task])
 
     const handleTaskChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setTask(e.target.value)
@@ -52,20 +56,20 @@ function EditTaskModal({ isShown, onClose, onSave, updatedTask }: Props) {
     }
 
     const label = useMemo(() => {
-        return updatedTask
-            ? `Edit: ${taskConvertService.convertTaskToString(updatedTask)}`
+        return context.task
+            ? `Edit: ${taskConvertService.convertTaskToString(context.task)}`
             : 'Add task: 1231 2359 December 31, 23:59'
-    }, [updatedTask])
+    }, [context.task])
 
     useEffect(() => {
-        if (isShown) {
+        if (context.isShown) {
             setTimeout(() => inputRef.current?.focus(), 16)
         }
-    }, [isShown])
+    }, [context.isShown])
 
     return (
         <EditTaskModalContainer
-            isShown={isShown}
+            isShown={context.isShown}
             onClose={onClose}
             onSave={handleSave}
             isSaveEnabled={task.length > 0}
