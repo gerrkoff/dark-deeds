@@ -1,7 +1,7 @@
 import { DayCardModel } from '../models/DayCardModel'
 import { useMemo } from 'react'
-import { DayCard } from './day-card/DayCard'
 import clsx from 'clsx'
+import { DayCard } from './DayCard'
 
 interface Props {
     dayCards: DayCardModel[]

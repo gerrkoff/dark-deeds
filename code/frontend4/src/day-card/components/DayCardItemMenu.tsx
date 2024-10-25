@@ -1,5 +1,5 @@
-import { TaskModel } from '../../../tasks/models/TaskModel'
-import { FloatingPanel } from '../FloatingPanel'
+import { FloatingPanel } from '../../common/components/FloatingPanel'
+import { TaskModel } from '../../tasks/models/TaskModel'
 
 interface Props {
     task: TaskModel

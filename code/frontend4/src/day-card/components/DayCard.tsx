@@ -1,10 +1,10 @@
 import { useRef } from 'react'
-import { DayCardModel } from '../../models/DayCardModel'
-import { Card } from '../Card'
+import { DayCardModel } from '../models/DayCardModel'
+import { useDayCardItemMenu } from '../hooks/useDayCardItemMenu'
+import { Card } from '../../common/components/Card'
 import { DayCardHeader } from './DayCardHeader'
 import { DayCardList } from './DayCardList'
 import { DayCardItemMenu } from './DayCardItemMenu'
-import { useDayCardItemMenu } from '../../hooks/useDayCardItemMenu'
 
 interface Props {
     dayCardModel: DayCardModel

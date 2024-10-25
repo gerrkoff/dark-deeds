@@ -10,7 +10,7 @@ import { AddTaskButton } from './components/AddTaskButton'
 import { updateTasks } from './redux/overview-slice'
 import { TaskModel } from '../tasks/models/TaskModel'
 import { SectionToggle } from '../common/components/SectionToggle'
-import { DayCardsSection } from '../common/components/DayCardsSection'
+import { DayCardsSection } from '../day-card/components/DayCardsSection'
 import { useSaveTasks } from '../tasks/hooks/useSaveTasks'
 
 function Overview() {

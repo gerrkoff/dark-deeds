@@ -1,4 +1,4 @@
-import { TaskModel } from '../../../tasks/models/TaskModel'
+import { TaskModel } from '../../tasks/models/TaskModel'
 import { DayCardItem } from './DayCardItem'
 
 interface Props {
