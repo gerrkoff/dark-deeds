@@ -68,6 +68,7 @@ function DayCard({ dayCardModel, saveTasks }: Props) {
                 <hr className="mt-0 mb-0" />
                 <DayCardList
                     tasks={dayCardModel.tasks}
+                    openedMenuTaskUid={itemMenuContext?.task.uid ?? null}
                     onOpenTaskMenu={openItemMenu}
                 />
 

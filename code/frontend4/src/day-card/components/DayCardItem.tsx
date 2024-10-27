@@ -3,26 +3,22 @@ import { TaskTypeEnum } from '../../tasks/models/TaskTypeEnum'
 
 interface Props {
     task: TaskModel
+    isHighlighted: boolean
     onOpenTaskMenu: (e: React.MouseEvent<HTMLElement>, task: TaskModel) => void
 }
 
-function DayCardItem({ task, onOpenTaskMenu }: Props) {
+function DayCardItem({ task, isHighlighted, onOpenTaskMenu }: Props) {
     let spanClass = 'd-block'
 
-    if (task.completed) {
-        spanClass += ' text-secondary text-decoration-line-through'
-    }
+    spanClass += ` ${textColor(task, isHighlighted)}`
+    spanClass += ` ${textDecoration(task)}`
 
-    if (task.isProbable) {
-        spanClass += ' fst-italic'
-    }
-
-    if (task.type === TaskTypeEnum.Routine) {
-        spanClass += ' text-secondary-emphasis '
+    if (isHighlighted) {
+        spanClass += ' rounded text-bg-secondary'
     }
 
     if (task.type === TaskTypeEnum.Additional) {
-        spanClass += ' text-secondary text-end me-1'
+        spanClass += ' text-end me-1'
     }
 
     const liClass = task.type === TaskTypeEnum.Additional ? 'd-block' : ''
@@ -32,6 +28,34 @@ function DayCardItem({ task, onOpenTaskMenu }: Props) {
             <span className={spanClass}>{task.title}</span>
         </li>
     )
+}
+
+function textColor(task: TaskModel, isHighlighted: boolean): string {
+    if (isHighlighted) {
+        return ''
+    }
+
+    if (task.completed || task.type === TaskTypeEnum.Additional) {
+        return 'text-secondary'
+    }
+
+    if (task.type === TaskTypeEnum.Routine) {
+        return 'text-secondary-emphasis'
+    }
+
+    return ''
+}
+
+function textDecoration(task: TaskModel): string {
+    if (task.completed) {
+        return 'text-decoration-line-through'
+    }
+
+    if (task.isProbable) {
+        return 'fst-italic'
+    }
+
+    return ''
 }
 
 export { DayCardItem }
