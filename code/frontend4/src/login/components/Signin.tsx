@@ -27,7 +27,6 @@ function Signin({
     }
 
     const handleSubmit = (e: React.FormEvent) => {
-        console.log('handleSubmit')
         e.preventDefault()
         signin()
     }

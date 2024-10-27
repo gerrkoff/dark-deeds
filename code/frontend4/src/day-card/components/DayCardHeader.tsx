@@ -26,10 +26,7 @@ function DayCardHeader({ dayCardModel, onOpenHeaderMenu }: Props) {
             <span className={routineCounterClass}>{routineCount}</span>
             <span
                 className={dateClass}
-                onClick={e => {
-                    console.log('DayCardHeader.tsx: onOpenHeaderMenu')
-                    return onOpenHeaderMenu(e, dayCardModel.date)
-                }}
+                onClick={e => onOpenHeaderMenu(e, dayCardModel.date)}
             >
                 {date}
             </span>
