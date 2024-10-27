@@ -18,14 +18,14 @@ function AddTaskButton({ saveTasks }: Props) {
     return (
         <>
             <div
-                className="position-fixed bottom-0 end-0 shadow"
+                className="position-fixed bottom-0 end-0"
                 style={{
                     marginBottom: '76px',
                     marginRight: '20px',
                 }}
             >
                 <button
-                    className="btn btn-primary d-flex align-items-center"
+                    className="btn btn-primary d-flex align-items-center shadow"
                     style={{
                         minHeight: '42px',
                         minWidth: '42px',

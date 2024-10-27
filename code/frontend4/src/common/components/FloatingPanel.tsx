@@ -32,7 +32,7 @@ function FloatingPanel({
     return (
         <div
             ref={ref}
-            className={clsx('z-3 position-absolute', className)}
+            className={clsx('z-3 position-absolute shadow', className)}
             style={{ left: x, top: y, minWidth: '100px' }}
         >
             {children}

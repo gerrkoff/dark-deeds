@@ -20,9 +20,7 @@ function EditTaskModal({ context, onClose, onSave }: Props) {
         if (context.task) {
             setTask(taskConvertService.convertTaskToString(context.task))
         } else if (context.date) {
-            setTask(
-                `${context.date.getDate()} ${context.date.getMonth() + 1} ${context.date.getFullYear()}`,
-            )
+            setTask(`${taskConvertService.convertDateToString(context.date)} `)
         }
     }, [context.task, context.date])
 

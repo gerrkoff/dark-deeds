@@ -98,12 +98,7 @@ export class TaskConvertService {
         let s = ''
 
         if (model.date !== null) {
-            if (new Date().getFullYear() !== model.date.getFullYear()) {
-                s += model.date.getFullYear().toString()
-            }
-            s += `${this.str2digits(
-                model.date.getMonth() + 1,
-            )}${this.str2digits(model.date.getDate())}`
+            s += this.convertDateToString(model.date)
 
             if (model.time !== null) {
                 const time = new Time(model.time)
@@ -128,6 +123,20 @@ export class TaskConvertService {
         }
 
         return `${s}${model.title}${suffix}`
+    }
+
+    convertDateToString(date: Date): string {
+        let s = ''
+
+        if (new Date().getFullYear() !== date.getFullYear()) {
+            s += date.getFullYear().toString()
+        }
+
+        s += `${this.str2digits(
+            date.getMonth() + 1,
+        )}${this.str2digits(date.getDate())}`
+
+        return s
     }
 
     private str2digits(n: number): string {
