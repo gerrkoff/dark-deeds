@@ -14,6 +14,7 @@ import { loadLocalSettings } from '../settings/redux/settings-slice'
 import { localSettingsService } from '../settings/services/SettingsService'
 import { useLocalSettingsTracking } from '../settings/hooks/useLocalSettingsTracking'
 import { StatusPanel } from '../status-panel/StatusPanel'
+import { useSaveTasks } from '../tasks/hooks/useSaveTasks'
 
 function App() {
     const dispatch = useAppDispatch()
@@ -37,6 +38,8 @@ function App() {
         },
         [dispatch],
     )
+
+    useSaveTasks()
 
     return (
         <div className="container pt-2" style={{ paddingBottom: '60px' }}>

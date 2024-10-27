@@ -7,11 +7,10 @@ import { overviewModelSelector } from './redux/overview-selectors'
 import { toggleOverviewTab } from '../settings/redux/settings-slice'
 import { OverviewTabEnum } from '../settings/models/OverviewTabEnum'
 import { AddTaskButton } from './components/AddTaskButton'
-import { updateTasks } from './redux/overview-slice'
 import { TaskModel } from '../tasks/models/TaskModel'
 import { SectionToggle } from '../common/components/SectionToggle'
 import { DayCardsSection } from '../day-card/components/DayCardsSection'
-import { useSaveTasks } from '../tasks/hooks/useSaveTasks'
+import { updateAndSyncTasks } from './redux/overview-thunk'
 
 function Overview() {
     const dispatch = useAppDispatch()
@@ -44,14 +43,11 @@ function Overview() {
         [dispatch],
     )
 
-    const { scheduleTaskSaving } = useSaveTasks()
-
     const saveTasks = useCallback(
         (tasks: TaskModel[]) => {
-            dispatch(updateTasks(tasks))
-            scheduleTaskSaving(tasks)
+            dispatch(updateAndSyncTasks(tasks))
         },
-        [dispatch, scheduleTaskSaving],
+        [dispatch],
     )
 
     return (

@@ -16,14 +16,14 @@ public class TasksController(
     [HttpGet]
     public async Task<IEnumerable<TaskDto>> Get([Required] DateTime from)
     {
-        await Task.Delay(1000);
+        // await Task.Delay(1000);
         return await taskService.LoadActualTasksAsync(userAuth.UserId(), from);
     }
 
     [HttpPost]
     public async Task<IEnumerable<TaskDto>> Post([FromBody] ICollection<TaskDto> tasks)
     {
-        await Task.Delay(3000);
+        // await Task.Delay(3000);
         return await taskService.SaveTasksAsync(tasks, userAuth.UserId());
     }
 }

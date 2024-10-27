@@ -1,57 +1,20 @@
-import { useCallback } from 'react'
+import { useEffect } from 'react'
 import { useAppDispatch } from '../../hooks'
-import { TaskModel } from '../models/TaskModel'
 import { toggleSaveTaskPending } from '../../status-panel/redux/status-panel-slice'
-import { taskApi } from '../api/TaskApi'
-import { taskSaveService } from '../services/TaskSaveService'
+import { taskSyncService } from '../services/TaskSyncService'
 
-interface Output {
-    scheduleTaskSaving: (tasks: TaskModel[]) => void
-}
-
-let savingTasksPromise = new Promise<void>(r => r())
-let tasksToSave: TaskModel[] = []
-let isScheduled = false
-let isSaving = false
-
-export function useSaveTasks(): Output {
+export function useSaveTasks() {
     const dispatch = useAppDispatch()
 
-    const schedule = useCallback(async (): Promise<void> => {
-        if (!isSaving) {
-            dispatch(toggleSaveTaskPending(true))
+    useEffect(() => {
+        const subscription = (isSynchronizing: boolean) => {
+            dispatch(toggleSaveTaskPending(isSynchronizing))
         }
 
-        isScheduled = true
-        await savingTasksPromise
-        isScheduled = false
-        const tasks = tasksToSave
-        tasksToSave = []
-        isSaving = true
-        try {
-            await taskApi.saveTasks(tasks)
-        } catch {
-            tasksToSave = taskSaveService.prependAndFlatten(tasksToSave, tasks)
-            savingTasksPromise = schedule()
-            return
-        }
-        isSaving = false
+        taskSyncService.subscribe(subscription)
 
-        if (!isScheduled) {
-            dispatch(toggleSaveTaskPending(false))
+        return () => {
+            taskSyncService.unsubscribe(subscription)
         }
     }, [dispatch])
-
-    const scheduleTaskSaving = useCallback(
-        (tasks: TaskModel[]) => {
-            tasksToSave = taskSaveService.appendAndFlatten(tasksToSave, tasks)
-
-            if (!isScheduled) {
-                savingTasksPromise = schedule()
-            }
-        },
-        [schedule],
-    )
-
-    return { scheduleTaskSaving }
 }
