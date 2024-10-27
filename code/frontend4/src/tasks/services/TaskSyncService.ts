@@ -1,79 +1,109 @@
 import { taskApi, TaskApi } from '../api/TaskApi'
 import { TaskModel } from '../models/TaskModel'
+import { TaskVersionModel } from '../models/TaskVersionModel'
 
-export type TaskSyncServiceSubscription = (isSynchronizing: boolean) => void
+export type StatusUpdateSubscription = (isSynchronizing: boolean) => void
+
+export type TaskVersionUpdateSubscription = (
+    versions: TaskVersionModel[],
+) => void
 
 export class TaskSyncService {
     constructor(private taskApi: TaskApi) {}
 
     savingTasksPromise = new Promise<void>(r => r())
-    tasksToSave: TaskModel[] = []
+    tasksToSave = new Map<string, TaskModel>()
     isScheduled = false
     isSaving = false
 
-    subscriptions: TaskSyncServiceSubscription[] = []
+    inProgress = false
 
-    subscribe(callback: TaskSyncServiceSubscription) {
-        this.subscriptions.push(callback)
+    statusUpdateSubscriptions: StatusUpdateSubscription[] = []
+
+    versionUpdateSubscriptions: TaskVersionUpdateSubscription[] = []
+
+    subscribeStatusUpdate(callback: StatusUpdateSubscription) {
+        this.statusUpdateSubscriptions.push(callback)
     }
 
-    unsubscribe(callback: TaskSyncServiceSubscription) {
-        this.subscriptions = this.subscriptions.filter(x => x !== callback)
+    unsubscribeStatusUpdate(callback: StatusUpdateSubscription) {
+        this.statusUpdateSubscriptions = this.statusUpdateSubscriptions.filter(
+            x => x !== callback,
+        )
+    }
+
+    subscribeVersionsUpdate(callback: TaskVersionUpdateSubscription) {
+        this.versionUpdateSubscriptions.push(callback)
+    }
+
+    unsubscribeVersionsUpdate(callback: TaskVersionUpdateSubscription) {
+        this.versionUpdateSubscriptions =
+            this.versionUpdateSubscriptions.filter(x => x !== callback)
     }
 
     sync(tasks: TaskModel[]) {
-        this.tasksToSave = this.appendAndFlatten(this.tasksToSave, tasks)
+        const tasksMap = new Map<string, TaskModel>(tasks.map(x => [x.uid, x]))
 
-        if (!this.isScheduled) {
-            this.savingTasksPromise = this.schedule()
-        }
+        this.tasksToSave = this.concat(this.tasksToSave, tasksMap)
+
+        this.schedule()
     }
 
     private async schedule(): Promise<void> {
-        if (!this.isSaving) {
-            this.subscriptions.forEach(x => x(true))
-        }
-
-        this.isScheduled = true
-        await this.savingTasksPromise
-        this.isScheduled = false
-        const tasks = this.tasksToSave
-        this.tasksToSave = []
-        this.isSaving = true
-        try {
-            await this.taskApi.saveTasks(tasks)
-        } catch {
-            this.tasksToSave = this.prependAndFlatten(this.tasksToSave, tasks)
-            this.savingTasksPromise = this.schedule()
+        if (this.inProgress) {
             return
         }
-        this.isSaving = false
 
-        if (!this.isScheduled) {
-            this.subscriptions.forEach(x => x(false))
+        this.inProgress = true
+        this.statusUpdateSubscriptions.forEach(x => x(true))
+
+        await this.saveTasks()
+
+        this.statusUpdateSubscriptions.forEach(x => x(false))
+        this.inProgress = false
+    }
+
+    private async saveTasks(): Promise<void> {
+        while (this.tasksToSave.size > 0) {
+            const taskInFlight = this.tasksToSave
+            this.tasksToSave = new Map<string, TaskModel>()
+
+            const savedTasks = await this.taskApi.saveTasks([
+                ...taskInFlight.values(),
+            ])
+
+            savedTasks.forEach(x => {
+                taskInFlight.delete(x.uid)
+            })
+
+            this.tasksToSave = this.concat(taskInFlight, this.tasksToSave)
+
+            this.notifyVersionUpdate(savedTasks)
         }
     }
 
-    private appendAndFlatten(
-        tasks: TaskModel[],
-        tasksToAdd: TaskModel[],
-    ): TaskModel[] {
-        const newTasks = tasks.filter(
-            task => !tasksToAdd.some(t => t.uid === task.uid),
-        )
-        newTasks.push(...tasksToAdd)
-        return newTasks
+    private notifyVersionUpdate(newTasks: TaskModel[]) {
+        newTasks.forEach(x => {
+            const task = this.tasksToSave.get(x.uid)
+
+            if (task) {
+                this.tasksToSave.set(task.uid, { ...task, version: x.version })
+            }
+        })
+
+        const versions = newTasks.map(x => ({
+            uid: x.uid,
+            version: x.version,
+        }))
+
+        this.versionUpdateSubscriptions.forEach(x => x(versions))
     }
 
-    private prependAndFlatten(
-        tasks: TaskModel[],
-        tasksToAdd: TaskModel[],
-    ): TaskModel[] {
-        const newTasks = tasksToAdd.filter(
-            task => !tasks.some(t => t.uid === task.uid),
-        )
-        newTasks.push(...tasks)
-        return newTasks
+    private concat(
+        tasks1: Map<string, TaskModel>,
+        tasks2: Map<string, TaskModel>,
+    ): Map<string, TaskModel> {
+        return new Map<string, TaskModel>([...tasks1, ...tasks2])
     }
 }
 

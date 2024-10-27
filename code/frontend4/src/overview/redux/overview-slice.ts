@@ -2,6 +2,7 @@ import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { TaskModel } from '../../tasks/models/TaskModel'
 import { loadOverviewTasks } from './overview-thunk'
+import { TaskVersionModel } from '../../tasks/models/TaskVersionModel'
 
 export interface OverviewState {
     tasks: TaskModel[]
@@ -25,6 +26,14 @@ export const overviewSlice = createSlice({
                 ...action.payload,
             ]
         },
+        updateVersions: (state, action: PayloadAction<TaskVersionModel[]>) => {
+            state.tasks.forEach(task => {
+                const version = action.payload.find(x => x.uid === task.uid)
+                if (version) {
+                    task.version = version.version
+                }
+            })
+        },
     },
     extraReducers: builder => {
         builder.addCase(loadOverviewTasks.pending, state => {
@@ -40,6 +49,6 @@ export const overviewSlice = createSlice({
     },
 })
 
-export const { updateTasks } = overviewSlice.actions
+export const { updateTasks, updateVersions } = overviewSlice.actions
 
 export default overviewSlice.reducer

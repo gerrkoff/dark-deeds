@@ -23,10 +23,16 @@ export class TaskSaveService {
                 const task = tasksOnDate[i]
                 const order = i + 1
                 if (task.order !== order) {
-                    tasksToSync.set(task.uid, {
-                        ...task,
-                        order,
-                    })
+                    const taskToSync = tasksToSync.get(task.uid)
+
+                    if (taskToSync) {
+                        taskToSync.order = order
+                    } else {
+                        tasksToSync.set(task.uid, {
+                            ...task,
+                            order,
+                        })
+                    }
                 }
             }
         })
