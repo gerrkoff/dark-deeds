@@ -63,6 +63,7 @@ function DayCard({ dayCardModel, saveTasks }: Props) {
             >
                 <DayCardHeader
                     dayCardModel={dayCardModel}
+                    isHighlighted={headerMenuContext !== null}
                     onOpenHeaderMenu={openHeaderMenu}
                 />
                 <hr className="mt-0 mb-0" />

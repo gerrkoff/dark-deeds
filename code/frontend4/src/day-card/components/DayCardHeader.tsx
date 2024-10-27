@@ -2,10 +2,15 @@ import { DayCardModel } from '../models/DayCardModel'
 
 interface Props {
     dayCardModel: DayCardModel
+    isHighlighted: boolean
     onOpenHeaderMenu: (e: React.MouseEvent<HTMLElement>, date: Date) => void
 }
 
-function DayCardHeader({ dayCardModel, onOpenHeaderMenu }: Props) {
+function DayCardHeader({
+    dayCardModel,
+    isHighlighted,
+    onOpenHeaderMenu,
+}: Props) {
     const routineCount = 2
     const date = dayCardModel.date.toDateString()
 
@@ -15,11 +20,11 @@ function DayCardHeader({ dayCardModel, onOpenHeaderMenu }: Props) {
             ? ' text-bg-secondary'
             : ''
 
-    let dateClass = 'd-inline-block ps-1 pe-1 rounded'
-    dateClass +=
-        dayCardModel.date.getDay() % routineCount === 0
-            ? ' text-bg-secondary'
-            : ''
+    let dateClass = 'd-inline-block ps-1 pe-1'
+
+    if (isHighlighted) {
+        dateClass += ' rounded text-bg-secondary'
+    }
 
     return (
         <div className="d-flex justify-content-between mt-1 mb-1">
