@@ -1,6 +1,6 @@
 import { taskApi, TaskApi } from '../api/TaskApi'
-import { taskHubApi, TaskHubApi } from '../api/TaskHubApi'
 import { TaskModel } from '../models/TaskModel'
+import { TaskVersionModel } from '../models/TaskVersionModel'
 import {
     taskSubscriptionService,
     TaskSubscriptionService,
@@ -9,20 +9,12 @@ import {
 export class TaskSyncService {
     constructor(
         private taskApi: TaskApi,
-        private taskHubApi: TaskHubApi,
         private taskSubscriptionService: TaskSubscriptionService,
     ) {}
 
     inProgress = false
     tasksToSave = new Map<string, TaskModel>()
-
-    hubSubscribe() {
-        this.taskHubApi.onUpdate(this.updateTasks)
-    }
-
-    hubUnsubscribe() {
-        this.taskHubApi.offUpdate()
-    }
+    tasksInFlight = new Map<string, TaskModel>()
 
     sync(tasks: TaskModel[]) {
         for (const task of tasks) {
@@ -54,48 +46,65 @@ export class TaskSyncService {
 
     private async saveTasks(): Promise<void> {
         while (this.tasksToSave.size > 0) {
-            const taskInFlight = this.tasksToSave
+            this.tasksInFlight = this.tasksToSave
             this.tasksToSave = new Map<string, TaskModel>()
 
             const savedTasks = await this.taskApi.saveTasks([
-                ...taskInFlight.values(),
+                ...this.tasksInFlight.values(),
             ])
 
             for (const task of savedTasks) {
-                taskInFlight.delete(task.uid)
+                this.tasksInFlight.delete(task.uid)
             }
 
-            for (const [uid, task] of taskInFlight) {
+            for (const [uid, task] of this.tasksInFlight) {
                 if (!this.tasksToSave.has(uid)) {
                     this.tasksToSave.set(uid, task)
                 }
             }
-
-            this.updateTasks(savedTasks)
         }
     }
 
-    private updateTasks(updatedTasks: TaskModel[]) {
-        const updateTasksToNotify: TaskModel[] = []
+    updateTasks(updatedTasks: TaskModel[]): {
+        tasksToNotify: TaskModel[]
+        versionsToNotify: TaskVersionModel[]
+    } {
+        const tasksToNotify: TaskModel[] = []
+        const versionsToNotify: TaskVersionModel[] = []
 
         for (const updatedTask of updatedTasks) {
             const taskToSave = this.tasksToSave.get(updatedTask.uid)
+            const taskInFlight = this.tasksInFlight.get(updatedTask.uid)
 
             if (taskToSave) {
-                taskToSave.version = updatedTask.version
+                if (updatedTask.version > taskToSave.version) {
+                    taskToSave.version = updatedTask.version
+                    versionsToNotify.push({
+                        uid: updatedTask.uid,
+                        version: updatedTask.version,
+                    })
+                }
+            } else if (taskInFlight) {
+                if (updatedTask.version > taskInFlight.version) {
+                    taskInFlight.version = updatedTask.version
+                    versionsToNotify.push({
+                        uid: updatedTask.uid,
+                        version: updatedTask.version,
+                    })
+                }
             } else {
-                updateTasksToNotify.push(updatedTask)
+                tasksToNotify.push(updatedTask)
             }
         }
 
-        if (updateTasksToNotify.length > 0) {
-            this.taskSubscriptionService.notifyTaskUpdate(updateTasksToNotify)
+        return {
+            tasksToNotify,
+            versionsToNotify,
         }
     }
 }
 
 export const taskSyncService = new TaskSyncService(
     taskApi,
-    taskHubApi,
     taskSubscriptionService,
 )
