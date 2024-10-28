@@ -25,7 +25,9 @@ function DayCardItem({ task, isHighlighted, onOpenTaskMenu }: Props) {
 
     return (
         <li className={liClass} onClick={e => onOpenTaskMenu(e, task)}>
-            <span className={spanClass}>{task.title}</span>
+            <span className={spanClass}>
+                [{task.order}] {task.title} v{task.version}
+            </span>
         </li>
     )
 }

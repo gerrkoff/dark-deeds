@@ -1,6 +1,5 @@
 import { taskApi, TaskApi } from '../api/TaskApi'
 import { TaskModel } from '../models/TaskModel'
-import { TaskVersionModel } from '../models/TaskVersionModel'
 import {
     taskSubscriptionService,
     TaskSubscriptionService,
@@ -16,9 +15,15 @@ export class TaskSyncService {
     tasksToSave = new Map<string, TaskModel>()
 
     sync(tasks: TaskModel[]) {
-        const tasksMap = new Map<string, TaskModel>(tasks.map(x => [x.uid, x]))
+        for (const task of tasks) {
+            const taskToSave = this.tasksToSave.get(task.uid)
+            const version = taskToSave ? taskToSave.version : task.version
 
-        this.tasksToSave = this.concat(this.tasksToSave, tasksMap)
+            this.tasksToSave.set(task.uid, {
+                ...task,
+                version,
+            })
+        }
 
         this.schedule()
     }
@@ -46,45 +51,36 @@ export class TaskSyncService {
                 ...taskInFlight.values(),
             ])
 
-            savedTasks.forEach(x => {
-                taskInFlight.delete(x.uid)
-            })
+            for (const task of savedTasks) {
+                taskInFlight.delete(task.uid)
+            }
 
-            this.tasksToSave = this.concat(taskInFlight, this.tasksToSave)
+            for (const [uid, task] of taskInFlight) {
+                if (!this.tasksToSave.has(uid)) {
+                    this.tasksToSave.set(uid, task)
+                }
+            }
 
             this.updateTasks(savedTasks)
         }
     }
 
     private updateTasks(updatedTasks: TaskModel[]) {
-        const updateVersions: TaskVersionModel[] = []
-        const updateTasks: TaskModel[] = []
+        const updateTasksToNotify: TaskModel[] = []
 
-        updatedTasks.forEach(x => {
-            const task = this.tasksToSave.get(x.uid)
+        for (const updatedTask of updatedTasks) {
+            const taskToSave = this.tasksToSave.get(updatedTask.uid)
 
-            if (task) {
-                this.tasksToSave.set(task.uid, { ...task, version: x.version })
-                updateVersions.push({ uid: x.uid, version: x.version })
+            if (taskToSave) {
+                taskToSave.version = updatedTask.version
             } else {
-                updateTasks.push(x)
+                updateTasksToNotify.push(updatedTask)
             }
-        })
-
-        // if (updateVersions.length > 0) {
-        //     this.taskSubscriptionService.notifyVersionsUpdate(updateVersions)
-        // }
-
-        if (updateTasks.length > 0) {
-            this.taskSubscriptionService.notifyTaskUpdate(updateTasks)
         }
-    }
 
-    private concat(
-        tasks1: Map<string, TaskModel>,
-        tasks2: Map<string, TaskModel>,
-    ): Map<string, TaskModel> {
-        return new Map<string, TaskModel>([...tasks1, ...tasks2])
+        if (updateTasksToNotify.length > 0) {
+            this.taskSubscriptionService.notifyTaskUpdate(updateTasksToNotify)
+        }
     }
 }
 
