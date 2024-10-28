@@ -22,7 +22,7 @@ if (root) {
 
 // dnd
 // server push
-// fix modal
+// fix modal (too many nodes)
 // icons
 // day cards
 // edit task model
