@@ -1,13 +1,13 @@
 import { useCallback } from 'react'
 import { storageService } from '../../common/services/StorageService'
-import { useLoadCurrentUser } from './useLoadCurrentUser'
+import { useCurrentUser } from './useCurrentUser'
 
 interface Output {
     signIn: (accessToken: string) => Promise<void>
 }
 
 export function useSignIn(): Output {
-    const { loadCurrentUser } = useLoadCurrentUser()
+    const { loadCurrentUser } = useCurrentUser()
 
     const signIn = useCallback(
         async (accessToken: string) => {

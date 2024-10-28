@@ -1,21 +1,18 @@
 import { useCallback } from 'react'
-import { useAppDispatch } from '../../hooks'
-import { switchToTab } from '../../app/redux/app-slice'
 import { storageService } from '../../common/services/StorageService'
-import { taskHubApi } from '../../tasks/api/TaskHubApi'
+import { useCurrentUser } from './useCurrentUser'
 
 interface Output {
     signOut: () => void
 }
 
 export function useSignOut(): Output {
-    const dispatch = useAppDispatch()
+    const { unloadCurrentUser } = useCurrentUser()
 
     const signOut = useCallback(async (): Promise<void> => {
-        await taskHubApi.stop()
+        await unloadCurrentUser()
         storageService.clearAccessToken()
-        dispatch(switchToTab('login'))
-    }, [dispatch])
+    }, [unloadCurrentUser])
 
     return { signOut }
 }

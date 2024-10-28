@@ -8,13 +8,13 @@ import { RecurrentTasks } from '../recurrent/RecurrentTasks'
 import { Settings } from '../settings/Settings'
 import { Login } from '../login/Login'
 import { fetchBuildInfo } from './redux/app-thunk'
-import { useLoadCurrentUser } from '../login/hooks/useLoadCurrentUser'
 import { WelcomeState } from './components/WelcomeState'
 import { loadLocalSettings } from '../settings/redux/settings-slice'
 import { localSettingsService } from '../settings/services/SettingsService'
 import { useLocalSettingsTracking } from '../settings/hooks/useLocalSettingsTracking'
 import { StatusPanel } from '../status-panel/StatusPanel'
 import { useTasksHub } from '../tasks/hooks/useTasksHub'
+import { useCurrentUser } from '../login/hooks/useCurrentUser'
 
 function App() {
     const dispatch = useAppDispatch()
@@ -22,7 +22,7 @@ function App() {
     const { applicationTab } = useAppSelector(state => state.app)
     const { isFetchUserPending } = useAppSelector(state => state.login)
 
-    const { loadCurrentUser } = useLoadCurrentUser()
+    const { loadCurrentUser } = useCurrentUser()
 
     useLocalSettingsTracking()
 

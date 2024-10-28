@@ -37,7 +37,13 @@ export const loginSlice = createSlice({
         })
         builder.addCase(fetchCurrentUser.fulfilled, (state, action) => {
             state.isFetchUserPending = false
-            state.user = action.payload
+            if (action.payload.userAuthenticated) {
+                state.user = {
+                    username: action.payload.username,
+                }
+            } else {
+                state.user = null
+            }
         })
 
         builder.addCase(signin.pending, state => {

@@ -6,12 +6,17 @@ import { unwrapResult } from '@reduxjs/toolkit'
 import { loadSharedSettings } from '../../settings/redux/settings-thunk'
 import { loadOverviewTasks } from '../../overview/redux/overview-thunk'
 import { taskHubApi } from '../../tasks/api/TaskHubApi'
+import {
+    taskHubConnected,
+    taskHubConnecting,
+} from '../../status-panel/redux/status-panel-slice'
 
 interface Output {
     loadCurrentUser: () => Promise<void>
+    unloadCurrentUser: () => Promise<void>
 }
 
-export function useLoadCurrentUser(): Output {
+export function useCurrentUser(): Output {
     const dispatch = useAppDispatch()
 
     const loadCurrentUser = useCallback(async () => {
@@ -24,7 +29,9 @@ export function useLoadCurrentUser(): Output {
                 dispatch(switchToTab('overview'))
                 dispatch(loadSharedSettings())
                 dispatch(loadOverviewTasks())
+                dispatch(taskHubConnecting())
                 await taskHubApi.start()
+                dispatch(taskHubConnected())
             } else {
                 dispatch(switchToTab('login'))
             }
@@ -33,5 +40,10 @@ export function useLoadCurrentUser(): Output {
         }
     }, [dispatch])
 
-    return { loadCurrentUser }
+    const unloadCurrentUser = useCallback(async () => {
+        await taskHubApi.stop()
+        dispatch(switchToTab('login'))
+    }, [dispatch])
+
+    return { loadCurrentUser, unloadCurrentUser }
 }

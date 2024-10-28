@@ -1,6 +1,11 @@
 import { useEffect } from 'react'
 import { useAppDispatch } from '../../hooks'
-import { toggleSaveTaskPending } from '../../status-panel/redux/status-panel-slice'
+import {
+    taskHubConnected,
+    taskHubConnecting,
+    taskHubDisconnected,
+    toggleSaveTaskPending,
+} from '../../status-panel/redux/status-panel-slice'
 import {
     updateTasks,
     updateVersions,
@@ -18,21 +23,21 @@ export function useTasksHub() {
 
     useEffect(() => {
         const handleHubClose = () => {
-            console.log('Closed')
+            dispatch(taskHubDisconnected())
         }
 
         const handleHubReconnecting = () => {
-            console.log('Reconnecting')
+            dispatch(taskHubConnecting())
         }
 
         const handleHubReconnected = () => {
-            console.log('Reconnected')
+            dispatch(taskHubConnected())
         }
 
         taskHubApi.onClose(handleHubClose)
         taskHubApi.onReconnecting(handleHubReconnecting)
         taskHubApi.onReconnected(handleHubReconnected)
-    }, [])
+    }, [dispatch])
 
     useEffect(() => {
         const handleUpdateStatus = (isSynchronizing: boolean) => {
