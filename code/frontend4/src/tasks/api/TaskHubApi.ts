@@ -1,0 +1,128 @@
+import * as signalR from '@microsoft/signalr'
+import {
+    baseUrlProvider,
+    BaseUrlProvider,
+} from '../../common/api/BaseUrlProvider'
+import {
+    storageService,
+    StorageService,
+} from '../../common/services/StorageService'
+import { TaskModel } from '../models/TaskModel'
+import { taskMapper, TaskMapper } from '../services/TaskMapper'
+
+export class TaskHubApi {
+    private connection: signalR.HubConnection | null = null
+
+    constructor(
+        private baseUrlProvider: BaseUrlProvider,
+        private storage: StorageService,
+        private mapper: TaskMapper,
+    ) {}
+
+    init() {
+        this.connection = new signalR.HubConnectionBuilder()
+            .withUrl(this.baseUrlProvider.getBaseUrl() + 'ws/task/task', {
+                accessTokenFactory: () => {
+                    const accessToken = this.storage.loadAccessToken()
+
+                    if (accessToken === null) {
+                        throw new Error('Access token is not initialized')
+                    }
+
+                    return accessToken
+                },
+            })
+            // TODO: different levels in prod
+            .configureLogging(signalR.LogLevel.Information)
+            .build()
+    }
+
+    isConnected(): boolean {
+        this.guardConnection(this.connection)
+
+        return this.connection.state === signalR.HubConnectionState.Connected
+    }
+
+    async start(): Promise<void> {
+        this.guardConnection(this.connection)
+
+        await this.connection.start()
+    }
+
+    async stop(): Promise<void> {
+        this.guardConnection(this.connection)
+
+        await this.connection.stop()
+    }
+
+    onClose(callback: () => void) {
+        this.guardConnection(this.connection)
+
+        this.connection.onclose((error?: Error) => {
+            if (error !== undefined) {
+                console.warn('Hub Connection was closed with error', error)
+            }
+            callback()
+        })
+    }
+
+    onReconnecting(callback: () => void) {
+        this.guardConnection(this.connection)
+
+        this.connection.onreconnecting((error?: Error) => {
+            if (error !== undefined) {
+                console.warn(
+                    'Hub Connection is reconnecting due to error',
+                    error,
+                )
+            }
+            callback()
+        })
+    }
+
+    onReconnected(callback: () => void) {
+        this.guardConnection(this.connection)
+
+        this.connection.onreconnected(callback)
+    }
+
+    onUpdate(callback: (tasks: TaskModel[]) => void) {
+        this.guardConnection(this.connection)
+
+        this.connection.on('update', tasks =>
+            callback(this.mapper.mapToModel(tasks)),
+        )
+    }
+
+    offUpdate() {
+        this.guardConnection(this.connection)
+
+        this.connection.off('update')
+    }
+
+    onHeartbeat(callback: () => void) {
+        this.guardConnection(this.connection)
+
+        this.connection.on('heartbeat', callback)
+    }
+
+    offHeartbeat() {
+        this.guardConnection(this.connection)
+
+        this.connection.off('heartbeat')
+    }
+
+    private guardConnection(
+        connection: signalR.HubConnection | null,
+    ): asserts connection is signalR.HubConnection {
+        if (!connection) {
+            throw new Error('Hub connection is not initialized')
+        }
+    }
+}
+
+export const taskHubApi = new TaskHubApi(
+    baseUrlProvider,
+    storageService,
+    taskMapper,
+)

@@ -12,6 +12,7 @@
     "fmt:check": "prettier --check \"**/*.+(js|jsx|json|yml|yaml|scss|md|ts|tsx|css)\""
   },
   "dependencies": {
+    "@microsoft/signalr": "^8.0.7",
     "@reduxjs/toolkit": "^2.2.8",
     "clsx": "^2.1.1",
     "react": "^18.3.1",

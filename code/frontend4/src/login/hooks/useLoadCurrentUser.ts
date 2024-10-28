@@ -5,6 +5,7 @@ import { fetchCurrentUser } from '../redux/login-thunk'
 import { unwrapResult } from '@reduxjs/toolkit'
 import { loadSharedSettings } from '../../settings/redux/settings-thunk'
 import { loadOverviewTasks } from '../../overview/redux/overview-thunk'
+import { taskHubApi } from '../../tasks/api/TaskHubApi'
 
 interface Output {
     loadCurrentUser: () => Promise<void>
@@ -23,6 +24,7 @@ export function useLoadCurrentUser(): Output {
                 dispatch(switchToTab('overview'))
                 dispatch(loadSharedSettings())
                 dispatch(loadOverviewTasks())
+                await taskHubApi.start()
             } else {
                 dispatch(switchToTab('login'))
             }

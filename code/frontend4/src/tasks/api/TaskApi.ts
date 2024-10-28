@@ -2,11 +2,13 @@ import { api, Api } from '../../common/api/Api'
 import { dateService, DateService } from '../../common/services/DateService'
 import { TaskDto } from '../models/TaskDto'
 import { TaskModel } from '../models/TaskModel'
+import { taskMapper, TaskMapper } from '../services/TaskMapper'
 
 export class TaskApi {
     constructor(
         private api: Api,
         private dateService: DateService,
+        private mapper: TaskMapper,
     ) {}
 
     async loadTasks(from: Date): Promise<TaskModel[]> {
@@ -14,51 +16,17 @@ export class TaskApi {
             ['from', this.dateService.changeFromLocalToUtc(from).toISOString()],
         ])
         const result = await this.api.get<TaskDto[]>('api/task/tasks', params)
-        return this.convertToModel(result)
+        return this.mapper.mapToModel(result)
     }
 
     async saveTasks(tasks: TaskModel[]): Promise<TaskModel[]> {
-        const data = this.convertToDto(tasks)
+        const data = this.mapper.mapToDto(tasks)
         const result = await this.api.post<TaskDto[], TaskDto[]>(
             'api/task/tasks',
             data,
         )
-        return this.convertToModel(result)
-    }
-
-    private convertToDto(tasks: TaskModel[]): TaskDto[] {
-        return tasks.map(x => ({
-            uid: x.uid,
-            completed: x.completed,
-            deleted: x.deleted,
-            isProbable: x.isProbable,
-            order: x.order,
-            time: x.time,
-            title: x.title,
-            type: x.type,
-            version: x.version,
-            date: x.date
-                ? this.dateService.changeFromLocalToUtc(new Date(x.date))
-                : null,
-        }))
-    }
-
-    private convertToModel(tasks: TaskDto[]): TaskModel[] {
-        return tasks.map(x => ({
-            uid: x.uid,
-            completed: x.completed,
-            deleted: x.deleted,
-            isProbable: x.isProbable,
-            order: x.order,
-            time: x.time,
-            title: x.title,
-            type: x.type,
-            version: x.version,
-            date: x.date
-                ? this.dateService.changeFromUtcToLocal(x.date).valueOf()
-                : null,
-        }))
+        return this.mapper.mapToModel(result)
     }
 }
 
-export const taskApi = new TaskApi(api, dateService)
+export const taskApi = new TaskApi(api, dateService, taskMapper)

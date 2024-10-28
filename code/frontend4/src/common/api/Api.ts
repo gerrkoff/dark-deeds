@@ -1,14 +1,13 @@
 import { storageService, StorageService } from '../services/StorageService'
-
-const baseUrl =
-    process.env.NODE_ENV === 'production'
-        ? '/'
-        : `http://${window.location.hostname}:5001/`
+import { baseUrlProvider, BaseUrlProvider } from './BaseUrlProvider'
 
 export class Api {
     private readonly DEFAULT_ERROR_MESSAGE = 'An error has occured.'
 
-    constructor(private storageService: StorageService) {}
+    constructor(
+        private baseUrlProvider: BaseUrlProvider,
+        private storageService: StorageService,
+    ) {}
 
     get<T>(api: string, params?: Map<string, string>): Promise<T> {
         if (params !== undefined) {
@@ -21,7 +20,7 @@ export class Api {
         }
 
         return this.sendRequest(`GET ${api}`, () =>
-            fetch(baseUrl + api, {
+            fetch(this.baseUrlProvider.getBaseUrl() + api, {
                 headers: {
                     Authorization:
                         'Bearer ' + this.storageService.loadAccessToken(),
@@ -32,7 +31,7 @@ export class Api {
 
     post<TData, TResult>(api: string, data: TData): Promise<TResult> {
         return this.sendRequest(`POST ${api}`, () =>
-            fetch(baseUrl + api, {
+            fetch(this.baseUrlProvider.getBaseUrl() + api, {
                 body: JSON.stringify(data),
                 headers: {
                     Authorization:
@@ -86,4 +85,4 @@ export class Api {
     }
 }
 
-export const api = new Api(storageService)
+export const api = new Api(baseUrlProvider, storageService)

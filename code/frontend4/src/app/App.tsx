@@ -14,7 +14,7 @@ import { loadLocalSettings } from '../settings/redux/settings-slice'
 import { localSettingsService } from '../settings/services/SettingsService'
 import { useLocalSettingsTracking } from '../settings/hooks/useLocalSettingsTracking'
 import { StatusPanel } from '../status-panel/StatusPanel'
-import { useSaveTasks } from '../tasks/hooks/useSaveTasks'
+import { useTasksHub } from '../tasks/hooks/useTasksHub'
 
 function App() {
     const dispatch = useAppDispatch()
@@ -24,13 +24,15 @@ function App() {
 
     const { loadCurrentUser } = useLoadCurrentUser()
 
+    useLocalSettingsTracking()
+
+    useTasksHub()
+
     useEffect(() => {
         loadCurrentUser()
         dispatch(fetchBuildInfo())
         dispatch(loadLocalSettings(localSettingsService.load()))
     }, [dispatch, loadCurrentUser])
-
-    useLocalSettingsTracking()
 
     const switctToTab = useCallback(
         (applicationTab: ApplicationTabType) => {
@@ -38,8 +40,6 @@ function App() {
         },
         [dispatch],
     )
-
-    useSaveTasks()
 
     return (
         <div className="container pt-2" style={{ paddingBottom: '60px' }}>

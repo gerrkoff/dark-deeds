@@ -1,4 +1,5 @@
 import { taskApi, TaskApi } from '../api/TaskApi'
+import { taskHubApi, TaskHubApi } from '../api/TaskHubApi'
 import { TaskModel } from '../models/TaskModel'
 import {
     taskSubscriptionService,
@@ -8,11 +9,20 @@ import {
 export class TaskSyncService {
     constructor(
         private taskApi: TaskApi,
+        private taskHubApi: TaskHubApi,
         private taskSubscriptionService: TaskSubscriptionService,
     ) {}
 
     inProgress = false
     tasksToSave = new Map<string, TaskModel>()
+
+    hubSubscribe() {
+        this.taskHubApi.onUpdate(this.updateTasks)
+    }
+
+    hubUnsubscribe() {
+        this.taskHubApi.offUpdate()
+    }
 
     sync(tasks: TaskModel[]) {
         for (const task of tasks) {
@@ -86,5 +96,6 @@ export class TaskSyncService {
 
 export const taskSyncService = new TaskSyncService(
     taskApi,
+    taskHubApi,
     taskSubscriptionService,
 )
