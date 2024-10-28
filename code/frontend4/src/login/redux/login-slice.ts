@@ -22,6 +22,9 @@ export const loginSlice = createSlice({
     name: 'login',
     initialState,
     reducers: {
+        logout: state => {
+            state.user = null
+        },
         resetLogInError: state => {
             state.logInError = null
         },
@@ -99,6 +102,6 @@ export const loginSlice = createSlice({
     },
 })
 
-export const { resetLogInError } = loginSlice.actions
+export const { resetLogInError, logout } = loginSlice.actions
 
 export default loginSlice.reducer

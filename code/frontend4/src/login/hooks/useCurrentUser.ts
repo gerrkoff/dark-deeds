@@ -10,6 +10,7 @@ import {
     taskHubConnected,
     taskHubConnecting,
 } from '../../status-panel/redux/status-panel-slice'
+import { logout } from '../redux/login-slice'
 
 interface Output {
     loadCurrentUser: () => Promise<void>
@@ -42,6 +43,7 @@ export function useCurrentUser(): Output {
 
     const unloadCurrentUser = useCallback(async () => {
         await taskHubApi.stop()
+        dispatch(logout())
         dispatch(switchToTab('login'))
     }, [dispatch])
 
