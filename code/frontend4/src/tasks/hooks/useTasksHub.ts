@@ -45,14 +45,14 @@ export function useTasksHub() {
         }
 
         const handleHubHeartbeat = () => {
-            console.log('Heartbeat')
+            console.log(`[${new Date().toISOString()}] Heartbeat`)
         }
 
         const handleUpdateTasks = (tasks: TaskModel[]) => {
             const { tasksToNotify, versionsToNotify } =
                 taskSyncService.updateTasks(tasks)
 
-            console.log('WS Update tasks: ', {
+            console.log('WS update tasks: ', {
                 WS: tasks,
                 tasksToNotify,
                 versionsToNotify,
