@@ -1,21 +1,15 @@
-import { useCallback, useEffect } from 'react'
+import { useEffect } from 'react'
 import { useAppDispatch } from '../../hooks'
 import { toggleSaveTaskPending } from '../../status-panel/redux/status-panel-slice'
 import {
     updateTasks,
     updateVersions,
 } from '../../overview/redux/overview-slice'
-import { taskSubscriptionService } from '../services/TaskSubscriptionService'
 import { TaskModel } from '../models/TaskModel'
 import { taskHubApi } from '../api/TaskHubApi'
 import { taskSyncService } from '../services/TaskSyncService'
 
-interface Output {
-    connectTasksHub: () => Promise<void>
-    disconnectTasksHub: () => Promise<void>
-}
-
-export function useTasksHub(): Output {
+export function useTasksHub() {
     const dispatch = useAppDispatch()
 
     useEffect(() => {
@@ -45,11 +39,15 @@ export function useTasksHub(): Output {
             dispatch(toggleSaveTaskPending(isSynchronizing))
         }
 
+        const handleHubHeartbeat = () => {
+            console.log('Heartbeat')
+        }
+
         const handleUpdateTasks = (tasks: TaskModel[]) => {
             const { tasksToNotify, versionsToNotify } =
                 taskSyncService.updateTasks(tasks)
 
-            console.log('Update tasks FROM WS: ', {
+            console.log('WS Update tasks: ', {
                 WS: tasks,
                 tasksToNotify,
                 versionsToNotify,
@@ -64,35 +62,14 @@ export function useTasksHub(): Output {
             }
         }
 
-        const handleHubHeartbeat = () => {
-            console.log('Heartbeat')
-        }
-
-        taskSubscriptionService.subscribeStatusUpdate(handleUpdateStatus)
-        // taskSubscriptionService.subscribeTaskUpdate(handleUpdateTasks)
-
+        taskSyncService.subscribeStatusUpdate(handleUpdateStatus)
         taskHubApi.onUpdate(handleUpdateTasks)
-
         taskHubApi.onHeartbeat(handleHubHeartbeat)
 
         return () => {
-            taskSubscriptionService.unsubscribeStatusUpdate(handleUpdateStatus)
-            // taskSubscriptionService.unsubscribeTaskUpdate(handleUpdateTasks)
-            taskHubApi.offHeartbeat()
-            taskHubApi.offUpdate()
+            taskSyncService.unsubscribeStatusUpdate(handleUpdateStatus)
+            taskHubApi.offUpdate(handleUpdateTasks)
+            taskHubApi.offHeartbeat(handleHubHeartbeat)
         }
     }, [dispatch])
-
-    const connectTasksHub = useCallback(async () => {
-        await taskHubApi.start()
-    }, [])
-
-    const disconnectTasksHub = useCallback(async () => {
-        await taskHubApi.stop()
-    }, [])
-
-    return {
-        connectTasksHub,
-        disconnectTasksHub,
-    }
 }

@@ -94,10 +94,10 @@ export class TaskHubApi {
         )
     }
 
-    offUpdate() {
+    offUpdate(callback: (tasks: TaskModel[]) => void) {
         this.guardConnection(this.connection)
 
-        this.connection.off('update')
+        this.connection.off('update', callback)
     }
 
     onHeartbeat(callback: () => void) {
@@ -106,10 +106,10 @@ export class TaskHubApi {
         this.connection.on('heartbeat', callback)
     }
 
-    offHeartbeat() {
+    offHeartbeat(callback: () => void) {
         this.guardConnection(this.connection)
 
-        this.connection.off('heartbeat')
+        this.connection.off('heartbeat', callback)
     }
 
     private guardConnection(

@@ -1,16 +1,23 @@
 import { taskApi, TaskApi } from '../api/TaskApi'
 import { TaskModel } from '../models/TaskModel'
 import { TaskVersionModel } from '../models/TaskVersionModel'
-import {
-    taskSubscriptionService,
-    TaskSubscriptionService,
-} from './TaskSubscriptionService'
+
+export type StatusUpdateSubscription = (isSynchronizing: boolean) => void
 
 export class TaskSyncService {
-    constructor(
-        private taskApi: TaskApi,
-        private taskSubscriptionService: TaskSubscriptionService,
-    ) {}
+    constructor(private taskApi: TaskApi) {}
+
+    private statusUpdateSubscriptions: StatusUpdateSubscription[] = []
+
+    subscribeStatusUpdate(callback: StatusUpdateSubscription) {
+        this.statusUpdateSubscriptions.push(callback)
+    }
+
+    unsubscribeStatusUpdate(callback: StatusUpdateSubscription) {
+        this.statusUpdateSubscriptions = this.statusUpdateSubscriptions.filter(
+            x => x !== callback,
+        )
+    }
 
     inProgress = false
     tasksToSave = new Map<string, TaskModel>()
@@ -36,11 +43,11 @@ export class TaskSyncService {
         }
 
         this.inProgress = true
-        this.taskSubscriptionService.notifyStatusUpdate(true)
+        this.statusUpdateSubscriptions.forEach(x => x(true))
 
         await this.saveTasks()
 
-        this.taskSubscriptionService.notifyStatusUpdate(false)
+        this.statusUpdateSubscriptions.forEach(x => x(false))
         this.inProgress = false
     }
 
@@ -104,7 +111,4 @@ export class TaskSyncService {
     }
 }
 
-export const taskSyncService = new TaskSyncService(
-    taskApi,
-    taskSubscriptionService,
-)
+export const taskSyncService = new TaskSyncService(taskApi)
