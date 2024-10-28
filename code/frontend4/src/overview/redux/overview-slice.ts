@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { TaskModel } from '../../tasks/models/TaskModel'
-import { loadOverviewTasks } from './overview-thunk'
+import { loadOverviewTasks, reloadOverviewTasks } from './overview-thunk'
 import { TaskVersionModel } from '../../tasks/models/TaskVersionModel'
 
 export interface OverviewState {
@@ -47,6 +47,16 @@ export const overviewSlice = createSlice({
         builder.addCase(loadOverviewTasks.fulfilled, (state, action) => {
             state.isLoadTasksPending = false
             state.tasks = action.payload
+        })
+
+        builder.addCase(reloadOverviewTasks.pending, state => {
+            state.isLoadTasksPending = true
+        })
+        builder.addCase(reloadOverviewTasks.rejected, state => {
+            state.isLoadTasksPending = false
+        })
+        builder.addCase(reloadOverviewTasks.fulfilled, state => {
+            state.isLoadTasksPending = false
         })
     },
 })

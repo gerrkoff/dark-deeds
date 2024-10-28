@@ -1,18 +1,16 @@
-import clsx from 'clsx'
-
 interface Props {
     className?: string
     size?: number
 }
 
-function IconFloppy2({ className, size = 16 }: Props) {
+function IconFloppy({ className, size = 16 }: Props) {
     return (
         <svg
             xmlns="http://www.w3.org/2000/svg"
             width={size}
             height={size}
             fill="currentColor"
-            className={clsx('bi bi-floppy', className)}
+            className={className}
             viewBox="0 0 17 17"
         >
             <path d="M11 2H9v3h2z" />
@@ -21,4 +19,4 @@ function IconFloppy2({ className, size = 16 }: Props) {
     )
 }
 
-export { IconFloppy2 }
+export { IconFloppy }

@@ -32,8 +32,8 @@ export class TaskHubApi {
                     return accessToken
                 },
             })
-            // TODO: different levels in prod
             .configureLogging(signalR.LogLevel.Information)
+            .withAutomaticReconnect()
             .build()
     }
 
@@ -58,26 +58,13 @@ export class TaskHubApi {
     onClose(callback: () => void) {
         this.guardConnection(this.connection)
 
-        this.connection.onclose((error?: Error) => {
-            if (error !== undefined) {
-                console.warn('Hub Connection was closed with error', error)
-            }
-            callback()
-        })
+        this.connection.onclose(callback)
     }
 
     onReconnecting(callback: () => void) {
         this.guardConnection(this.connection)
 
-        this.connection.onreconnecting((error?: Error) => {
-            if (error !== undefined) {
-                console.warn(
-                    'Hub Connection is reconnecting due to error',
-                    error,
-                )
-            }
-            callback()
-        })
+        this.connection.onreconnecting(callback)
     }
 
     onReconnected(callback: () => void) {

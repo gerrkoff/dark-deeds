@@ -14,6 +14,13 @@ export const loadOverviewTasks = createAsyncThunk(
     },
 )
 
+export const reloadOverviewTasks = createAsyncThunk(
+    'overview/reloadTasks',
+    (): Promise<TaskModel[]> => {
+        return taskApi.loadTasks(dateService.monday(dateService.today()))
+    },
+)
+
 export const updateAndSyncTasks =
     (tasks: TaskModel[]): AppThunk =>
     (dispatch, getState) => {

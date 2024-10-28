@@ -1,5 +1,5 @@
 import { useAppSelector } from '../hooks'
-import { IconFloppy2 } from '../common/icons/IconFloppy2'
+import { IconFloppy } from '../common/icons/IconFloppy'
 import styles from './StatusPanel.module.css'
 import clsx from 'clsx'
 import { IconGlobe } from '../common/icons/IconGlobe'
@@ -31,7 +31,7 @@ function StatusPanel() {
                 <IconArrowRepeat className={clsx('ms-2', styles.rotate)} />
             )}
             {isSaveTaskPending && (
-                <IconFloppy2 className={clsx('ms-2', styles.blink)} />
+                <IconFloppy className={clsx('ms-2', styles.blink)} />
             )}
         </div>
     )

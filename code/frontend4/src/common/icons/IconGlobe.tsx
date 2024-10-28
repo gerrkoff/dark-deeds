@@ -1,14 +1,12 @@
 interface Props {
     className?: string
-    style?: React.CSSProperties
     size?: number
 }
 
-function IconGlobe({ className, style, size = 16 }: Props) {
+function IconGlobe({ className, size = 16 }: Props) {
     return (
         <svg
             xmlns="http://www.w3.org/2000/svg"
-            style={style}
             width={size}
             height={size}
             fill="currentColor"

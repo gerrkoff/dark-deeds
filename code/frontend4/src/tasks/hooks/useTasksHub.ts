@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useCallback, useEffect } from 'react'
 import { useAppDispatch } from '../../hooks'
 import {
     taskHubConnected,
@@ -13,6 +13,8 @@ import {
 import { TaskModel } from '../models/TaskModel'
 import { taskHubApi } from '../api/TaskHubApi'
 import { taskSyncService } from '../services/TaskSyncService'
+import { reloadOverviewTasks } from '../../overview/redux/overview-thunk'
+import { unwrapResult } from '@reduxjs/toolkit'
 
 export function useTasksHub() {
     const dispatch = useAppDispatch()
@@ -21,39 +23,13 @@ export function useTasksHub() {
         taskHubApi.init()
     }, [])
 
-    useEffect(() => {
-        const handleHubClose = () => {
-            dispatch(taskHubDisconnected())
-        }
-
-        const handleHubReconnecting = () => {
-            dispatch(taskHubConnecting())
-        }
-
-        const handleHubReconnected = () => {
-            dispatch(taskHubConnected())
-        }
-
-        taskHubApi.onClose(handleHubClose)
-        taskHubApi.onReconnecting(handleHubReconnecting)
-        taskHubApi.onReconnected(handleHubReconnected)
-    }, [dispatch])
-
-    useEffect(() => {
-        const handleUpdateStatus = (isSynchronizing: boolean) => {
-            dispatch(toggleSaveTaskPending(isSynchronizing))
-        }
-
-        const handleHubHeartbeat = () => {
-            console.log(`[${new Date().toISOString()}] Heartbeat`)
-        }
-
-        const handleUpdateTasks = (tasks: TaskModel[]) => {
+    const handleUpdateTasks = useCallback(
+        (tasks: TaskModel[]) => {
             const { tasksToNotify, versionsToNotify } =
                 taskSyncService.updateTasks(tasks)
 
-            console.log('WS update tasks: ', {
-                WS: tasks,
+            console.log('Tasks Online Update:', {
+                tasks,
                 tasksToNotify,
                 versionsToNotify,
             })
@@ -65,16 +41,41 @@ export function useTasksHub() {
             if (versionsToNotify.length > 0) {
                 dispatch(updateVersions(versionsToNotify))
             }
+        },
+        [dispatch],
+    )
+
+    useEffect(() => {
+        const handleHubClose = () => {
+            dispatch(taskHubDisconnected())
         }
 
-        taskSyncService.subscribeStatusUpdate(handleUpdateStatus)
+        const handleHubReconnecting = () => {
+            dispatch(taskHubConnecting())
+        }
+
+        const handleHubReconnected = async (): Promise<void> => {
+            dispatch(taskHubConnected())
+            const reloadOverviewTasksResult = await dispatch(
+                reloadOverviewTasks(),
+            )
+            const tasks = unwrapResult(reloadOverviewTasksResult)
+            handleUpdateTasks(tasks)
+        }
+
+        const handleUpdateStatus = (isSynchronizing: boolean) => {
+            dispatch(toggleSaveTaskPending(isSynchronizing))
+        }
+
+        taskHubApi.onClose(handleHubClose)
+        taskHubApi.onReconnecting(handleHubReconnecting)
+        taskHubApi.onReconnected(handleHubReconnected)
         taskHubApi.onUpdate(handleUpdateTasks)
-        taskHubApi.onHeartbeat(handleHubHeartbeat)
+        taskSyncService.subscribeStatusUpdate(handleUpdateStatus)
 
         return () => {
-            taskSyncService.unsubscribeStatusUpdate(handleUpdateStatus)
             taskHubApi.offUpdate(handleUpdateTasks)
-            taskHubApi.offHeartbeat(handleHubHeartbeat)
+            taskSyncService.unsubscribeStatusUpdate(handleUpdateStatus)
         }
-    }, [dispatch])
+    }, [dispatch, handleUpdateTasks])
 }

@@ -1,4 +1,4 @@
-import { IconSliders } from '../../common/icons/IconSliders2'
+import { IconSliders } from '../../common/icons/IconSliders'
 import { Card } from '../../common/components/Card'
 
 interface Props {

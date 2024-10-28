@@ -1,5 +1,3 @@
-import clsx from 'clsx'
-
 interface Props {
     className?: string
     size?: number
@@ -12,7 +10,7 @@ function IconSliders({ className, size = 16 }: Props) {
             width={size}
             height={size}
             fill="currentColor"
-            className={clsx('bi bi-sliders2', className)}
+            className={className}
             viewBox="0 0 16 16"
         >
             <path
