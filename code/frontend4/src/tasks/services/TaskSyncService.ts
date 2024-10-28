@@ -1,45 +1,19 @@
 import { taskApi, TaskApi } from '../api/TaskApi'
 import { TaskModel } from '../models/TaskModel'
 import { TaskVersionModel } from '../models/TaskVersionModel'
-
-export type StatusUpdateSubscription = (isSynchronizing: boolean) => void
-
-export type TaskVersionUpdateSubscription = (
-    versions: TaskVersionModel[],
-) => void
+import {
+    taskSubscriptionService,
+    TaskSubscriptionService,
+} from './TaskSubscriptionService'
 
 export class TaskSyncService {
-    constructor(private taskApi: TaskApi) {}
-
-    savingTasksPromise = new Promise<void>(r => r())
-    tasksToSave = new Map<string, TaskModel>()
-    isScheduled = false
-    isSaving = false
+    constructor(
+        private taskApi: TaskApi,
+        private taskSubscriptionService: TaskSubscriptionService,
+    ) {}
 
     inProgress = false
-
-    statusUpdateSubscriptions: StatusUpdateSubscription[] = []
-
-    versionUpdateSubscriptions: TaskVersionUpdateSubscription[] = []
-
-    subscribeStatusUpdate(callback: StatusUpdateSubscription) {
-        this.statusUpdateSubscriptions.push(callback)
-    }
-
-    unsubscribeStatusUpdate(callback: StatusUpdateSubscription) {
-        this.statusUpdateSubscriptions = this.statusUpdateSubscriptions.filter(
-            x => x !== callback,
-        )
-    }
-
-    subscribeVersionsUpdate(callback: TaskVersionUpdateSubscription) {
-        this.versionUpdateSubscriptions.push(callback)
-    }
-
-    unsubscribeVersionsUpdate(callback: TaskVersionUpdateSubscription) {
-        this.versionUpdateSubscriptions =
-            this.versionUpdateSubscriptions.filter(x => x !== callback)
-    }
+    tasksToSave = new Map<string, TaskModel>()
 
     sync(tasks: TaskModel[]) {
         const tasksMap = new Map<string, TaskModel>(tasks.map(x => [x.uid, x]))
@@ -55,11 +29,11 @@ export class TaskSyncService {
         }
 
         this.inProgress = true
-        this.statusUpdateSubscriptions.forEach(x => x(true))
+        this.taskSubscriptionService.notifyStatusUpdate(true)
 
         await this.saveTasks()
 
-        this.statusUpdateSubscriptions.forEach(x => x(false))
+        this.taskSubscriptionService.notifyStatusUpdate(false)
         this.inProgress = false
     }
 
@@ -78,25 +52,32 @@ export class TaskSyncService {
 
             this.tasksToSave = this.concat(taskInFlight, this.tasksToSave)
 
-            this.notifyVersionUpdate(savedTasks)
+            this.updateTasks(savedTasks)
         }
     }
 
-    private notifyVersionUpdate(newTasks: TaskModel[]) {
-        newTasks.forEach(x => {
+    private updateTasks(updatedTasks: TaskModel[]) {
+        const updateVersions: TaskVersionModel[] = []
+        const updateTasks: TaskModel[] = []
+
+        updatedTasks.forEach(x => {
             const task = this.tasksToSave.get(x.uid)
 
             if (task) {
                 this.tasksToSave.set(task.uid, { ...task, version: x.version })
+                updateVersions.push({ uid: x.uid, version: x.version })
+            } else {
+                updateTasks.push(x)
             }
         })
 
-        const versions = newTasks.map(x => ({
-            uid: x.uid,
-            version: x.version,
-        }))
+        // if (updateVersions.length > 0) {
+        //     this.taskSubscriptionService.notifyVersionsUpdate(updateVersions)
+        // }
 
-        this.versionUpdateSubscriptions.forEach(x => x(versions))
+        if (updateTasks.length > 0) {
+            this.taskSubscriptionService.notifyTaskUpdate(updateTasks)
+        }
     }
 
     private concat(
@@ -107,4 +88,7 @@ export class TaskSyncService {
     }
 }
 
-export const taskSyncService = new TaskSyncService(taskApi)
+export const taskSyncService = new TaskSyncService(
+    taskApi,
+    taskSubscriptionService,
+)

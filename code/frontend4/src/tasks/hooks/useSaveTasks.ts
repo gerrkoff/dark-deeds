@@ -1,9 +1,13 @@
 import { useEffect } from 'react'
 import { useAppDispatch } from '../../hooks'
 import { toggleSaveTaskPending } from '../../status-panel/redux/status-panel-slice'
-import { taskSyncService } from '../services/TaskSyncService'
 import { TaskVersionModel } from '../models/TaskVersionModel'
-import { updateVersions } from '../../overview/redux/overview-slice'
+import {
+    updateTasks,
+    updateVersions,
+} from '../../overview/redux/overview-slice'
+import { taskSubscriptionService } from '../services/TaskSubscriptionService'
+import { TaskModel } from '../models/TaskModel'
 
 export function useSaveTasks() {
     const dispatch = useAppDispatch()
@@ -17,12 +21,22 @@ export function useSaveTasks() {
             dispatch(updateVersions(versions))
         }
 
-        taskSyncService.subscribeStatusUpdate(updateStatusCallback)
-        taskSyncService.subscribeVersionsUpdate(updateVersionCallback)
+        const updateTaskCallback = (tasks: TaskModel[]) => {
+            dispatch(updateTasks(tasks))
+        }
+
+        taskSubscriptionService.subscribeStatusUpdate(updateStatusCallback)
+        taskSubscriptionService.subscribeVersionsUpdate(updateVersionCallback)
+        taskSubscriptionService.subscribeTaskUpdate(updateTaskCallback)
 
         return () => {
-            taskSyncService.unsubscribeStatusUpdate(updateStatusCallback)
-            taskSyncService.unsubscribeVersionsUpdate(updateVersionCallback)
+            taskSubscriptionService.unsubscribeStatusUpdate(
+                updateStatusCallback,
+            )
+            taskSubscriptionService.unsubscribeVersionsUpdate(
+                updateVersionCallback,
+            )
+            taskSubscriptionService.unsubscribeTaskUpdate(updateTaskCallback)
         }
     }, [dispatch])
 }

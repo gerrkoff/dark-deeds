@@ -19,12 +19,14 @@ export const overviewSlice = createSlice({
     initialState,
     reducers: {
         updateTasks: (state, action: PayloadAction<TaskModel[]>) => {
-            state.tasks = [
-                ...state.tasks.filter(
-                    task => !action.payload.find(t => t.uid === task.uid),
-                ),
-                ...action.payload,
-            ]
+            for (const task of action.payload) {
+                const index = state.tasks.findIndex(t => t.uid === task.uid)
+                if (index !== -1) {
+                    state.tasks[index] = task
+                } else {
+                    state.tasks.push(task)
+                }
+            }
         },
         updateVersions: (state, action: PayloadAction<TaskVersionModel[]>) => {
             state.tasks.forEach(task => {

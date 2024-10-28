@@ -57,7 +57,6 @@ export class TaskApi {
             date: x.date
                 ? this.dateService.changeFromUtcToLocal(x.date).valueOf()
                 : null,
-            changed: false,
         }))
     }
 }
