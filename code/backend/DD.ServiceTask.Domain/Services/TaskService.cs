@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using DD.ServiceTask.Domain.DtoExtensions;
 using DD.ServiceTask.Domain.Entities;
 using DD.ServiceTask.Domain.Infrastructure;
 using DD.ServiceTask.Domain.Infrastructure.EntityRepository;

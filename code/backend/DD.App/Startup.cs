@@ -74,7 +74,7 @@ public class Startup(IConfiguration configuration)
                 c.RoutePrefix = string.Empty;
             });
             app.UseCors(builder => builder
-                .SetIsOriginAllowed(origin => origin.EndsWith(":5173", StringComparison.Ordinal))
+                .SetIsOriginAllowed(origin => origin.EndsWith(":3000", StringComparison.Ordinal))
                 .AllowAnyHeader()
                 .AllowAnyMethod()
                 .AllowCredentials());

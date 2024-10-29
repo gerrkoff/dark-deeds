@@ -13,16 +13,14 @@ public class SettingsController(
     : ControllerBase
 {
     [HttpGet]
-    public async Task<UserSettingsDto> Get()
+    public Task<UserSettingsDto> Get()
     {
-        await Task.Delay(3000);
-        return await userSettingsService.LoadAsync(userAuth.UserId());
+        return userSettingsService.LoadAsync(userAuth.UserId());
     }
 
     [HttpPost]
-    public async Task Post([FromBody] UserSettingsDto userSettings)
+    public Task Post([FromBody] UserSettingsDto userSettings)
     {
-        await Task.Delay(3000);
-        userSettingsService.SaveAsync(userSettings, userAuth.UserId());
+        return userSettingsService.SaveAsync(userSettings, userAuth.UserId());
     }
 }

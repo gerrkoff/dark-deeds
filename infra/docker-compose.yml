@@ -11,10 +11,11 @@ services:
     ports:
       - "27017:27017"
 
-#  test-e2e-chrome:
-#    image: selenium/standalone-chrome:127.0-20240813
-#    ports:
-#      - "4444:4444"
+  test-e2e-chrome:
+    image: selenium/standalone-chrome:127.0-20240813
+    platform: linux/x86_64
+    ports:
+      - "4444:4444"
 
 volumes:
   mongo-db-volume:
