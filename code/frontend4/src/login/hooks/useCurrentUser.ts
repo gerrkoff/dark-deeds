@@ -36,7 +36,8 @@ export function useCurrentUser(): Output {
             } else {
                 dispatch(switchToTab('login'))
             }
-        } catch {
+        } catch (error) {
+            console.error(error)
             dispatch(switchToTab('login'))
         }
     }, [dispatch])

@@ -38,13 +38,19 @@ export class TaskHubApi {
     }
 
     isConnected(): boolean {
-        this.guardConnection(this.connection)
+        if (this.connection === null) {
+            return false
+        }
 
         return this.connection.state === signalR.HubConnectionState.Connected
     }
 
     async start(): Promise<void> {
         this.guardConnection(this.connection)
+
+        if (this.connection.state !== signalR.HubConnectionState.Disconnected) {
+            return
+        }
 
         await this.connection.start()
     }
