@@ -14,7 +14,6 @@ public partial class TaskServiceTest
 
         var service = CreateService(new TaskEntity { Date = new DateTime(2018, 10, 10) });
 
-
         _ = (await service.LoadTasksByDateAsync(userId, from, to)).ToList();
 
         // TODO: is it needed?
