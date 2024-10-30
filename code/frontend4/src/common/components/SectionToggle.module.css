@@ -1,0 +1,11 @@
+.toggle[aria-expanded='true'] {
+    .collapsed {
+        display: none;
+    }
+}
+
+.toggle[aria-expanded='false'] {
+    .expanded {
+        display: none;
+    }
+}

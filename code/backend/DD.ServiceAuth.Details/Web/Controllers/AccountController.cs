@@ -29,12 +29,12 @@ public class AccountController(
     }
 
     [HttpGet]
-    public Task<CurrentUserDto> Current()
+    public CurrentUserDto Current()
     {
         var currentUser = userAuth.IsAuthenticated()
             ? mapper.Map<CurrentUserDto>(userAuth.AuthToken())
             : new CurrentUserDto();
 
-        return Task.FromResult(currentUser);
+        return currentUser;
     }
 }

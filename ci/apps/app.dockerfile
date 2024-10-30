@@ -13,6 +13,20 @@ COPY .editorconfig /code/frontend/.editorconfig
 RUN npm run build
 RUN npm run test-ci
 
+FROM node:21.4-alpine as builder-fe-4
+
+WORKDIR /code/frontend4
+
+COPY code/frontend4/package.json /code/frontend4/package.json
+COPY code/frontend4/package-lock.json /code/frontend4/package-lock.json
+
+RUN npm install
+
+COPY code/frontend4/ /code/frontend4/
+COPY .editorconfig /code/frontend4/.editorconfig
+
+RUN npm run ci
+
 FROM mcr.microsoft.com/dotnet/sdk:8.0.100 AS builder-be
 
 WORKDIR /code/backend
@@ -41,6 +55,7 @@ WORKDIR /app
 
 COPY --from=builder-be /build /app/
 COPY --from=builder-fe /code/frontend/build /app/wwwroot/
+COPY --from=builder-fe-4 /code/frontend4/dist /app/wwwroot/new
 
 ENV ASPNETCORE_ENVIRONMENT=Production
 

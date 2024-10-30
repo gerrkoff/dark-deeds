@@ -10,6 +10,6 @@ public class TaskServiceSubscriber(IHubContext<TaskHub> hubContext) : ITaskServi
     public Task TasksUpdated(TasksUpdatedDto tasksUpdated)
     {
         return hubContext.Clients.User(tasksUpdated.UserId)
-            .SendAsync("update", tasksUpdated.Tasks, false);
+            .SendAsync("update", tasksUpdated.Tasks);
     }
 }
