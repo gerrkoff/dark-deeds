@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using DD.ServiceTask.Domain.DtoExtensions;
 using DD.ServiceTask.Domain.Entities;
 using DD.ServiceTask.Domain.Infrastructure;
 using DD.ServiceTask.Domain.Infrastructure.EntityRepository;
@@ -50,7 +51,7 @@ public class TaskService(
 
         var tasks = await tasksRepository.GetBySpecAsync(spec);
 
-        return mapper.Map<IList<TaskDto>>(tasks);
+        return mapper.Map<IList<TaskDto>>(tasks).ToUtcDate();
     }
 
     public async Task<IEnumerable<TaskDto>> LoadTasksByDateAsync(string userId, DateTime from, DateTime till)
@@ -62,7 +63,7 @@ public class TaskService(
 
         var tasks = await tasksRepository.GetBySpecAsync(spec);
 
-        return mapper.Map<IList<TaskDto>>(tasks);
+        return mapper.Map<IList<TaskDto>>(tasks).ToUtcDate();
     }
 
     public async Task<IEnumerable<TaskDto>> SaveTasksAsync(ICollection<TaskDto> tasks, string userId)
