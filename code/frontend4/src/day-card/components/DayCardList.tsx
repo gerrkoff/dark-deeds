@@ -4,12 +4,14 @@ import { DayCardItem } from './DayCardItem'
 interface Props {
     tasks: TaskModel[]
     openedMenuTaskUid: string | null
+    isDebug: boolean
     onOpenTaskMenu: (e: React.MouseEvent<HTMLElement>, task: TaskModel) => void
 }
 
 function DayCardList({
     tasks,
     openedMenuTaskUid,
+    isDebug,
     onOpenTaskMenu: onTaskContextMenu,
 }: Props) {
     return (
@@ -18,6 +20,7 @@ function DayCardList({
                 <DayCardItem
                     key={task.uid}
                     task={task}
+                    isDebug={isDebug}
                     isHighlighted={task.uid === openedMenuTaskUid}
                     onOpenTaskMenu={onTaskContextMenu}
                 />

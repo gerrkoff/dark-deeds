@@ -13,10 +13,11 @@ import { DayCardHeaderMenu } from './DayCardHeaderMenu'
 
 interface Props {
     dayCardModel: DayCardModel
+    isDebug: boolean
     saveTasks: (tasks: TaskModel[]) => void
 }
 
-function DayCard({ dayCardModel, saveTasks }: Props) {
+function DayCard({ dayCardModel, isDebug, saveTasks }: Props) {
     const cardRef = useRef<HTMLDivElement>(null)
 
     const {
@@ -69,6 +70,7 @@ function DayCard({ dayCardModel, saveTasks }: Props) {
                 <hr className="mt-0 mb-0" />
                 <DayCardList
                     tasks={dayCardModel.tasks}
+                    isDebug={isDebug}
                     openedMenuTaskUid={itemMenuContext?.task.uid ?? null}
                     onOpenTaskMenu={openItemMenu}
                 />

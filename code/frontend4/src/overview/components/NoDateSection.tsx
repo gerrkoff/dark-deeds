@@ -9,10 +9,11 @@ import { useEditTaskModal } from '../../edit-task/hooks/useEditTaskModal'
 
 interface Props {
     tasks: TaskModel[]
+    isDebug: boolean
     saveTasks: (tasks: TaskModel[]) => void
 }
 
-function NoDateSection({ tasks, saveTasks }: Props) {
+function NoDateSection({ tasks, isDebug, saveTasks }: Props) {
     const cardRef = useRef<HTMLDivElement>(null)
 
     const {
@@ -39,6 +40,7 @@ function NoDateSection({ tasks, saveTasks }: Props) {
         <Card elementRef={cardRef} style={{ fontSize: '0.8rem' }}>
             <DayCardList
                 tasks={tasks}
+                isDebug={isDebug}
                 openedMenuTaskUid={itemMenuContext?.task.uid ?? null}
                 onOpenTaskMenu={openItemMenu}
             />

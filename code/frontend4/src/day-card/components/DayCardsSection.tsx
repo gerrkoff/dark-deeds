@@ -7,10 +7,16 @@ import { TaskModel } from '../../tasks/models/TaskModel'
 interface Props {
     dayCards: DayCardModel[]
     daysInRowCount?: number
+    isDebug: boolean
     saveTasks: (tasks: TaskModel[]) => void
 }
 
-function DayCardsSection({ dayCards, daysInRowCount, saveTasks }: Props) {
+function DayCardsSection({
+    dayCards,
+    daysInRowCount,
+    isDebug,
+    saveTasks,
+}: Props) {
     const rows: DayCardModel[][] = useMemo(() => {
         if (!daysInRowCount) {
             return [dayCards]
@@ -36,6 +42,7 @@ function DayCardsSection({ dayCards, daysInRowCount, saveTasks }: Props) {
                             <DayCard
                                 key={day.date.valueOf()}
                                 dayCardModel={day}
+                                isDebug={isDebug}
                                 saveTasks={saveTasks}
                             />
                         </div>
