@@ -11,6 +11,7 @@ internal static class TaskExtensions
             if (task.Date != null)
                 task.Date = DateTime.SpecifyKind(task.Date.Value, DateTimeKind.Utc);
         }
+
         return tasks;
     }
 }
