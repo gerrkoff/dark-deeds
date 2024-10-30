@@ -101,8 +101,7 @@ export class TaskConvertService {
             s += this.convertDateToString(model.date)
 
             if (model.time !== null) {
-                const time = new Time(model.time)
-                s += ` ${time.hourString}${time.minuteString} `
+                s += ` ${dateService.toTimeLabel(model.time)} `
             } else {
                 s += ' '
             }
@@ -253,28 +252,6 @@ class StringConvertingResult {
             isProbable: this.isProbable,
             time: this.hasTime ? this.hour * 60 + this.minute : null,
         }
-    }
-}
-
-class Time {
-    hour: number
-    minute: number
-
-    constructor(time: number) {
-        this.hour = Math.floor(time / 60)
-        this.minute = time % 60
-    }
-
-    get hourString(): string {
-        return this.str2digits(this.hour)
-    }
-
-    get minuteString(): string {
-        return this.str2digits(this.minute)
-    }
-
-    private str2digits(n: number): string {
-        return n < 10 ? '0' + n : n.toString()
     }
 }
 

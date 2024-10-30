@@ -35,6 +35,11 @@ export class DateService {
         return date ? date.getTime() : 0
     }
 
+    toTimeLabel(time: number): string {
+        const timeInstance = new Time(time)
+        return `${timeInstance.hourString}:${timeInstance.minuteString}`
+    }
+
     getWeekdayName(date: Date): string {
         return this.days[date.getDay()]
     }
@@ -75,6 +80,28 @@ export class DateService {
         const fixed = new Date(date)
         fixed.setMinutes(fixed.getMinutes() - fixed.getTimezoneOffset())
         return fixed
+    }
+}
+
+class Time {
+    hour: number
+    minute: number
+
+    constructor(time: number) {
+        this.hour = Math.floor(time / 60)
+        this.minute = time % 60
+    }
+
+    get hourString(): string {
+        return this.str2digits(this.hour)
+    }
+
+    get minuteString(): string {
+        return this.str2digits(this.minute)
+    }
+
+    private str2digits(n: number): string {
+        return n < 10 ? '0' + n : n.toString()
     }
 }
 

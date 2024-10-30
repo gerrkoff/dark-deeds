@@ -15,10 +15,3 @@ if (root) {
         </StrictMode>,
     )
 }
-
-// dnd
-// fix modal (too many nodes)
-// icons
-// day cards
-// edit task model
-// tests

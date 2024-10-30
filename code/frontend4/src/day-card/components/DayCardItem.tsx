@@ -1,3 +1,4 @@
+import { dateService } from '../../common/services/DateService'
 import { TaskModel } from '../../tasks/models/TaskModel'
 import { TaskTypeEnum } from '../../tasks/models/TaskTypeEnum'
 
@@ -25,9 +26,7 @@ function DayCardItem({ task, isHighlighted, onOpenTaskMenu }: Props) {
 
     return (
         <li className={liClass} onClick={e => onOpenTaskMenu(e, task)}>
-            <span className={spanClass}>
-                [{task.order}] {task.title} v{task.version}
-            </span>
+            <span className={spanClass}>{text(task)}</span>
         </li>
     )
 }
@@ -58,6 +57,17 @@ function textDecoration(task: TaskModel): string {
     }
 
     return ''
+}
+
+function text(task: TaskModel): string {
+    let text = `[${task.order}]`
+    if (task.time !== null) {
+        text += ` ${dateService.toTimeLabel(task.time)}`
+    }
+    text += ` ${task.title}`
+    text += ` v${task.version}`
+
+    return text
 }
 
 export { DayCardItem }
