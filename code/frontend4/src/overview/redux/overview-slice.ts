@@ -6,11 +6,13 @@ import { TaskVersionModel } from '../../tasks/models/TaskVersionModel'
 
 export interface OverviewState {
     tasks: TaskModel[]
+    routineTaskDatesShown: number[]
     isLoadTasksPending: boolean
 }
 
 const initialState: OverviewState = {
     tasks: [],
+    routineTaskDatesShown: [],
     isLoadTasksPending: false,
 }
 
@@ -34,6 +36,16 @@ export const overviewSlice = createSlice({
                 if (index !== -1) {
                     state.tasks[index].version = task.version
                 }
+            }
+        },
+        toggleRoutineTaskDate: (state, action: PayloadAction<Date>) => {
+            const index = state.routineTaskDatesShown.indexOf(
+                action.payload.valueOf(),
+            )
+            if (index !== -1) {
+                state.routineTaskDatesShown.splice(index, 1)
+            } else {
+                state.routineTaskDatesShown.push(action.payload.valueOf())
             }
         },
     },
@@ -61,6 +73,7 @@ export const overviewSlice = createSlice({
     },
 })
 
-export const { updateTasks, updateVersions } = overviewSlice.actions
+export const { updateTasks, updateVersions, toggleRoutineTaskDate } =
+    overviewSlice.actions
 
 export default overviewSlice.reducer
