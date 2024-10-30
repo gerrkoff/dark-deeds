@@ -12,8 +12,6 @@ function AppInfoCard({
     isDebugEnabled,
     onDebugEnabledToggle,
 }: Props) {
-    console.log('AppInfoCard render', isDebugEnabled)
-
     return (
         <>
             <Card className="mb-2 me-2">
