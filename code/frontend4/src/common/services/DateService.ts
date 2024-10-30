@@ -23,12 +23,8 @@ export class DateService {
         return new Date(year, month - 1, day)
     }
 
-    toLabel(date: Date): string {
-        return `${this.toDateString(date)} ${this.getWeekdayName(date)}`
-    }
-
-    toDateString(date: Date): string {
-        return date.toLocaleDateString('en-US')
+    toDateLabel(date: Date): string {
+        return `${date.toLocaleDateString()} ${this.getWeekdayName(date)}`
     }
 
     toNumber(date: Date | null): number {
