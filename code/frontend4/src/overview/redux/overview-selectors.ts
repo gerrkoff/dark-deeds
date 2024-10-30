@@ -33,10 +33,14 @@ function overviewModelSelectorFn(tasks: TaskModel[]): OverviewModel {
         model.current.push(day)
     }
 
-    tasks.forEach(task => {
+    for (const task of tasks) {
+        if (task.deleted) {
+            continue
+        }
+
         if (task.date === null) {
             model.noDate.push(task)
-            return
+            continue
         }
 
         const taskDate = new Date(task.date)
@@ -58,7 +62,7 @@ function overviewModelSelectorFn(tasks: TaskModel[]): OverviewModel {
         }
 
         day.tasks.push(task)
-    })
+    }
 
     model.noDate.sort((a, b) => a.order - b.order)
     model.current.forEach(day => day.tasks.sort((a, b) => a.order - b.order))

@@ -3,9 +3,17 @@ import { IconInfoLg } from '../../common/icons/IconInfoLg'
 
 interface Props {
     appVersion: string
+    isDebugEnabled: boolean
+    onDebugEnabledToggle: (isEnabled: boolean) => void
 }
 
-function AppInfoCard({ appVersion }: Props) {
+function AppInfoCard({
+    appVersion,
+    isDebugEnabled,
+    onDebugEnabledToggle,
+}: Props) {
+    console.log('AppInfoCard render', isDebugEnabled)
+
     return (
         <>
             <Card className="mb-2 me-2">
@@ -17,6 +25,23 @@ function AppInfoCard({ appVersion }: Props) {
                     <p>
                         App version: <strong>{appVersion}</strong>
                     </p>
+                    <div className="form-check mb-3">
+                        <input
+                            className="form-check-input"
+                            type="checkbox"
+                            checked={isDebugEnabled}
+                            onChange={e =>
+                                onDebugEnabledToggle(e.target.checked)
+                            }
+                            id="debugEnabledCheckbox"
+                        />
+                        <label
+                            className="form-check-label"
+                            htmlFor="debugEnabledCheckbox"
+                        >
+                            Debug mode
+                        </label>
+                    </div>
                 </div>
             </Card>
         </>

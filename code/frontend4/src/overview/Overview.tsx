@@ -24,6 +24,8 @@ function Overview() {
         isFutureExpanded,
     } = useAppSelector(overviewTabsExpandedSelector)
 
+    const { isDebugEnabled } = useAppSelector(state => state.settings)
+
     const handleNoDateToggle = useCallback(
         () => dispatch(toggleOverviewTab(OverviewTabEnum.NoDate)),
         [dispatch],
@@ -59,7 +61,11 @@ function Overview() {
                     isInitExpanded={isNoDateExpanded}
                     onToggle={handleNoDateToggle}
                 >
-                    <NoDateSection tasks={model.noDate} saveTasks={saveTasks} />
+                    <NoDateSection
+                        tasks={model.noDate}
+                        isDebug={isDebugEnabled}
+                        saveTasks={saveTasks}
+                    />
                 </SectionToggle>
 
                 {model.expired.length > 0 && (
@@ -71,6 +77,7 @@ function Overview() {
                     >
                         <DayCardsSection
                             dayCards={model.expired}
+                            isDebug={isDebugEnabled}
                             saveTasks={saveTasks}
                         />
                     </SectionToggle>
@@ -85,6 +92,7 @@ function Overview() {
                     <DayCardsSection
                         dayCards={model.current}
                         daysInRowCount={7}
+                        isDebug={isDebugEnabled}
                         saveTasks={saveTasks}
                     />
                 </SectionToggle>
@@ -98,6 +106,7 @@ function Overview() {
                     >
                         <DayCardsSection
                             dayCards={model.future}
+                            isDebug={isDebugEnabled}
                             saveTasks={saveTasks}
                         />
                     </SectionToggle>

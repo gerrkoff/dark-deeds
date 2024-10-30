@@ -34,7 +34,7 @@ function UserSettingsCard({
                                 <input
                                     className="form-check-input"
                                     type="checkbox"
-                                    value={isShowCompletedEnabled ? 'on' : ''}
+                                    checked={isShowCompletedEnabled}
                                     onChange={e =>
                                         changeShowCompleted(e.target.checked)
                                     }

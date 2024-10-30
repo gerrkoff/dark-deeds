@@ -5,10 +5,11 @@ import { TaskTypeEnum } from '../../tasks/models/TaskTypeEnum'
 interface Props {
     task: TaskModel
     isHighlighted: boolean
+    isDebug: boolean
     onOpenTaskMenu: (e: React.MouseEvent<HTMLElement>, task: TaskModel) => void
 }
 
-function DayCardItem({ task, isHighlighted, onOpenTaskMenu }: Props) {
+function DayCardItem({ task, isHighlighted, isDebug, onOpenTaskMenu }: Props) {
     let spanClass = 'd-block'
 
     spanClass += ` ${textColor(task, isHighlighted)}`
@@ -26,7 +27,7 @@ function DayCardItem({ task, isHighlighted, onOpenTaskMenu }: Props) {
 
     return (
         <li className={liClass} onClick={e => onOpenTaskMenu(e, task)}>
-            <span className={spanClass}>{text(task)}</span>
+            <span className={spanClass}>{text(task, isDebug)}</span>
         </li>
     )
 }
@@ -59,15 +60,20 @@ function textDecoration(task: TaskModel): string {
     return ''
 }
 
-function text(task: TaskModel): string {
-    let text = `[${task.order}]`
+function text(task: TaskModel, isDebug: boolean): string {
+    let text = ''
+    if (isDebug) {
+        text += ` [${task.order}]`
+    }
     if (task.time !== null) {
         text += ` ${dateService.toTimeLabel(task.time)}`
     }
     text += ` ${task.title}`
-    text += ` v${task.version}`
+    if (isDebug) {
+        text += ` v${task.version}`
+    }
 
-    return text
+    return text.trimStart()
 }
 
 export { DayCardItem }

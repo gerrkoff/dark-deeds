@@ -15,6 +15,7 @@ export interface SettingsState {
     isLoadSharedSettingsPending: boolean
     isLocalSettingsLoaded: boolean
     overviewTabsExpanded: OverviewTabEnum[]
+    isDebugEnabled: boolean
 }
 
 const initialState: SettingsState = {
@@ -25,6 +26,7 @@ const initialState: SettingsState = {
     isLoadSharedSettingsPending: false,
     isLocalSettingsLoaded: false,
     overviewTabsExpanded: [],
+    isDebugEnabled: false,
 }
 
 export const settingsSlice = createSlice({
@@ -36,6 +38,7 @@ export const settingsSlice = createSlice({
         },
         loadLocalSettings: (state, action: PayloadAction<SettingsLocalDto>) => {
             state.overviewTabsExpanded = action.payload.overviewTabsExpanded
+            state.isDebugEnabled = action.payload.isDebugEnabled
             state.isLocalSettingsLoaded = true
         },
         toggleOverviewTab: (state, action: PayloadAction<OverviewTabEnum>) => {
@@ -44,6 +47,9 @@ export const settingsSlice = createSlice({
             )
                 ? state.overviewTabsExpanded.filter(x => x !== action.payload)
                 : [...state.overviewTabsExpanded, action.payload]
+        },
+        toggleDebugEnabled: (state, action: PayloadAction<boolean>) => {
+            state.isDebugEnabled = action.payload
         },
     },
     extraReducers: builder => {
@@ -83,7 +89,11 @@ export const settingsSlice = createSlice({
     },
 })
 
-export const { changeShowCompleted, loadLocalSettings, toggleOverviewTab } =
-    settingsSlice.actions
+export const {
+    changeShowCompleted,
+    loadLocalSettings,
+    toggleOverviewTab,
+    toggleDebugEnabled,
+} = settingsSlice.actions
 
 export default settingsSlice.reducer

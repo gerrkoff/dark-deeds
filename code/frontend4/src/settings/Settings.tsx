@@ -6,7 +6,7 @@ import { TelegramIntegrationCard } from './components/TelegramIntegrationCard'
 import { UserInfoCard } from './components/UserInfoCard'
 import { UserSettingsCard } from './components/UserSettingsCard'
 import { saveSharedSettings, startTelegram } from './redux/settings-thunk'
-import { changeShowCompleted } from './redux/settings-slice'
+import { changeShowCompleted, toggleDebugEnabled } from './redux/settings-slice'
 
 function Settings() {
     const dispatch = useAppDispatch()
@@ -19,6 +19,7 @@ function Settings() {
         isShowCompletedEnabled,
         isSaveSharedSettingsPending,
         isLoadSharedSettingsPending,
+        isDebugEnabled,
     } = useAppSelector(state => state.settings)
 
     const username = user?.username || ''
@@ -47,6 +48,13 @@ function Settings() {
         [dispatch, isShowCompletedEnabled],
     )
 
+    const handleToggleDebugEnabled = useCallback(
+        (isEnabled: boolean) => {
+            dispatch(toggleDebugEnabled(isEnabled))
+        },
+        [dispatch],
+    )
+
     return (
         <div className="row">
             <div className="col">
@@ -67,7 +75,11 @@ function Settings() {
                     }
                     startIntegrationLink={startTelegramLink}
                 />
-                <AppInfoCard appVersion={appVersion} />
+                <AppInfoCard
+                    appVersion={appVersion}
+                    isDebugEnabled={isDebugEnabled}
+                    onDebugEnabledToggle={handleToggleDebugEnabled}
+                />
             </div>
         </div>
     )
