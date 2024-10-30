@@ -79,11 +79,13 @@ function DayCard({
                 />
                 <hr className="mt-0 mb-0" />
                 <DayCardList
+                    date={dayCardModel.date}
                     tasks={dayCardModel.tasks}
                     isDebug={isDebug}
                     isRoutineShown={isRoutineShown}
                     openedMenuTaskUid={itemMenuContext?.task.uid ?? null}
                     onOpenTaskMenu={openItemMenu}
+                    onSaveTasks={saveTasks}
                 />
 
                 {itemMenuContext && (

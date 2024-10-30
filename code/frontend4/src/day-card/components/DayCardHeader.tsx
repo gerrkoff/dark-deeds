@@ -30,7 +30,7 @@ function DayCardHeader({
     return (
         <div className="d-flex justify-content-between flex-row-reverse mt-1 mb-1">
             <span
-                className={clsx('d-inline-block ps-2 pe-2 rounded', {
+                className={clsx('d-inline-block ps-2 pe-2 rounded-1', {
                     'text-bg-secondary': isHighlighted,
                 })}
                 onClick={e => onOpenHeaderMenu(e, dayCardModel.date)}
@@ -40,7 +40,7 @@ function DayCardHeader({
 
             {hasRoutine && (
                 <span
-                    className={clsx('d-inline-block ps-3 pe-3 rounded', {
+                    className={clsx('d-inline-block ps-3 pe-3 rounded-1', {
                         'text-bg-secondary': isRoutineShown,
                         'text-secondary':
                             routineRemainingCount === 0 && !isRoutineShown,
