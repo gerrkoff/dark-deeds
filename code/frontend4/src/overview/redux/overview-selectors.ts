@@ -60,6 +60,7 @@ function overviewModelSelectorFn(tasks: TaskModel[]): OverviewModel {
         day.tasks.push(task)
     })
 
+    model.noDate.sort((a, b) => a.order - b.order)
     model.current.forEach(day => day.tasks.sort((a, b) => a.order - b.order))
     model.future.forEach(day => day.tasks.sort((a, b) => a.order - b.order))
     model.expired.forEach(day => day.tasks.sort((a, b) => a.order - b.order))
