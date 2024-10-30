@@ -8,14 +8,18 @@ interface Props {
 }
 
 function DayCardHeaderMenu({
-    context: { date, position },
+    context: { date, position, anchorElement },
     onClose,
     onAddTaskForDate,
 }: Props) {
     const addTask = () => onAddTaskForDate(date)
 
     return (
-        <FloatingPanel position={position} onClose={onClose}>
+        <FloatingPanel
+            position={position}
+            anchorElement={anchorElement}
+            onClose={onClose}
+        >
             <div className="list-group">
                 <button
                     type="button"

@@ -23,21 +23,33 @@ export function useDayCardHeaderMenu({
 
     const openMenu = useCallback(
         (e: React.MouseEvent<HTMLElement>, date: Date) => {
-            e.preventDefault()
+            setContext(old => {
+                if (
+                    !containerRef.current ||
+                    !(e.target instanceof HTMLElement)
+                ) {
+                    return old
+                }
 
-            if (!containerRef.current) {
-                return
-            }
+                if (old !== null) {
+                    return null
+                }
 
-            const targetRect = containerRef.current.getBoundingClientRect()
-            const x = e.clientX - targetRect.left
-            const y = e.clientY - targetRect.top
-            setContext({
-                date,
-                position: { x, y },
+                const containerRect =
+                    containerRef.current.getBoundingClientRect()
+                const targetRect = e.target.getBoundingClientRect()
+                const x = targetRect.left - containerRect.left
+                const y =
+                    targetRect.top - containerRect.top + targetRect.height + 4
+
+                return {
+                    date,
+                    position: { x, y },
+                    anchorElement: e.target,
+                }
             })
         },
-        [containerRef],
+        [containerRef, setContext],
     )
 
     const closeMenu = useCallback(() => setContext(null), [])

@@ -11,7 +11,7 @@ interface Props {
 }
 
 function DayCardItemMenu({
-    context: { task, position },
+    context: { task, position, anchorElement },
     onClose,
     onDelete,
     onEdit,
@@ -26,7 +26,11 @@ function DayCardItemMenu({
     const toggleCompletedLabel = task.completed ? 'Uncomplete' : 'Complete'
 
     return (
-        <FloatingPanel position={position} onClose={onClose}>
+        <FloatingPanel
+            position={position}
+            anchorElement={anchorElement}
+            onClose={onClose}
+        >
             <div className="list-group">
                 <button
                     type="button"
