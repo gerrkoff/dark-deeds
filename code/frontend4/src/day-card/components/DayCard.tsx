@@ -14,10 +14,18 @@ import { DayCardHeaderMenu } from './DayCardHeaderMenu'
 interface Props {
     dayCardModel: DayCardModel
     isDebug: boolean
+    isRoutineShown: boolean
     saveTasks: (tasks: TaskModel[]) => void
+    onRoutineToggle: (date: Date) => void
 }
 
-function DayCard({ dayCardModel, isDebug, saveTasks }: Props) {
+function DayCard({
+    dayCardModel,
+    isDebug,
+    isRoutineShown,
+    saveTasks,
+    onRoutineToggle,
+}: Props) {
     const cardRef = useRef<HTMLDivElement>(null)
 
     const {
@@ -65,12 +73,15 @@ function DayCard({ dayCardModel, isDebug, saveTasks }: Props) {
                 <DayCardHeader
                     dayCardModel={dayCardModel}
                     isHighlighted={headerMenuContext !== null}
+                    isRoutineShown={isRoutineShown}
                     onOpenHeaderMenu={openHeaderMenu}
+                    onRoutineToggle={onRoutineToggle}
                 />
                 <hr className="mt-0 mb-0" />
                 <DayCardList
                     tasks={dayCardModel.tasks}
                     isDebug={isDebug}
+                    isRoutineShown={isRoutineShown}
                     openedMenuTaskUid={itemMenuContext?.task.uid ?? null}
                     onOpenTaskMenu={openItemMenu}
                 />

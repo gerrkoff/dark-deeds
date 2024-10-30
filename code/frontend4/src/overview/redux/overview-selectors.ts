@@ -5,6 +5,11 @@ import { dateService } from '../../common/services/DateService'
 import { DayCardModel } from '../../day-card/models/DayCardModel'
 import { TaskModel } from '../../tasks/models/TaskModel'
 
+export const overviewTaskRoutinesSelector = createSelector(
+    (state: RootState) => state.overview.routineTaskDatesShown,
+    state => new Set(state),
+)
+
 export const overviewModelSelector = createSelector(
     (state: RootState) => state.overview.tasks,
     state => overviewModelSelectorFn(state),

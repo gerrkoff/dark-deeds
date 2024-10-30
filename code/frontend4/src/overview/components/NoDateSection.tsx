@@ -41,6 +41,7 @@ function NoDateSection({ tasks, isDebug, saveTasks }: Props) {
             <DayCardList
                 tasks={tasks}
                 isDebug={isDebug}
+                isRoutineShown={true}
                 openedMenuTaskUid={itemMenuContext?.task.uid ?? null}
                 onOpenTaskMenu={openItemMenu}
             />

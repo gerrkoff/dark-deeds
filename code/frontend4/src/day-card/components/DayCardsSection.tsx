@@ -8,14 +8,18 @@ interface Props {
     dayCards: DayCardModel[]
     daysInRowCount?: number
     isDebug: boolean
+    routineTaskDatesShown: Set<number>
     saveTasks: (tasks: TaskModel[]) => void
+    onRoutineToggle: (date: Date) => void
 }
 
 function DayCardsSection({
     dayCards,
     daysInRowCount,
     isDebug,
+    routineTaskDatesShown,
     saveTasks,
+    onRoutineToggle,
 }: Props) {
     const rows: DayCardModel[][] = useMemo(() => {
         if (!daysInRowCount) {
@@ -43,7 +47,11 @@ function DayCardsSection({
                                 key={day.date.valueOf()}
                                 dayCardModel={day}
                                 isDebug={isDebug}
+                                isRoutineShown={routineTaskDatesShown.has(
+                                    day.date.valueOf(),
+                                )}
                                 saveTasks={saveTasks}
+                                onRoutineToggle={onRoutineToggle}
                             />
                         </div>
                     ))}
