@@ -42,7 +42,7 @@ function App() {
     )
 
     return (
-        <div className="container pt-2" style={{ paddingBottom: '60px' }}>
+        <div className="container-xxl pt-2" style={{ paddingBottom: '60px' }}>
             {isFetchUserPending ? (
                 <WelcomeState />
             ) : (

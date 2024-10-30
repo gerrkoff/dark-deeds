@@ -23,7 +23,7 @@ function AppInfoCard({
                     <p>
                         App version: <strong>{appVersion}</strong>
                     </p>
-                    <div className="form-check mb-3">
+                    <div className="form-check">
                         <input
                             className="form-check-input"
                             type="checkbox"
