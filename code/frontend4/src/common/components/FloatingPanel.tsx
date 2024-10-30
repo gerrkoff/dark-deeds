@@ -3,6 +3,7 @@ import { useEffect, useRef } from 'react'
 
 interface Props {
     className?: string
+    anchorElement: HTMLElement
     position: { x: number; y: number }
     children: React.ReactNode
     onClose: () => void
@@ -10,6 +11,7 @@ interface Props {
 
 function FloatingPanel({
     className,
+    anchorElement,
     position: { x, y },
     onClose,
     children,
@@ -18,7 +20,11 @@ function FloatingPanel({
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
-            if (ref.current && !ref.current.contains(event.target as Node)) {
+            if (
+                ref.current &&
+                !ref.current.contains(event.target as Node) &&
+                !anchorElement.contains(event.target as Node)
+            ) {
                 onClose()
             }
         }
@@ -27,7 +33,7 @@ function FloatingPanel({
         return () => {
             document.removeEventListener('mousedown', handleClickOutside)
         }
-    }, [onClose])
+    }, [anchorElement, onClose])
 
     return (
         <div

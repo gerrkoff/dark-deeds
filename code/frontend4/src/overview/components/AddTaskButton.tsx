@@ -2,6 +2,8 @@ import { IconPlusLg } from '../../common/icons/IconPlusLg'
 import { EditTaskModal } from '../../edit-task/EditTaskModal'
 import { TaskModel } from '../../tasks/models/TaskModel'
 import { useEditTaskModal } from '../../edit-task/hooks/useEditTaskModal'
+import { useEffect } from 'react'
+import { isKeyEnter } from '../../common/utils/keys'
 
 interface Props {
     saveTasks: (tasks: TaskModel[]) => void
@@ -14,6 +16,20 @@ function AddTaskButton({ saveTasks }: Props) {
         closeTaskEditModal,
         saveAndCloseTaskEditModal,
     } = useEditTaskModal({ saveTasks })
+
+    useEffect(() => {
+        const onKeydown = (event: KeyboardEvent) => {
+            if (isKeyEnter(event) && (event.ctrlKey || event.metaKey)) {
+                openTaskEditModal(null)
+            }
+        }
+
+        document.addEventListener('keydown', onKeydown)
+
+        return () => {
+            document.removeEventListener('keydown', onKeydown)
+        }
+    }, [openTaskEditModal])
 
     return (
         <>

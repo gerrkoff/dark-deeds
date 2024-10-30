@@ -52,7 +52,7 @@ function Overview() {
     )
 
     const handleRoutineToggle = useCallback(
-        (date: Date) => dispatch(toggleRoutineTaskDate(date)),
+        (date: Date) => dispatch(toggleRoutineTaskDate(date.valueOf())),
         [dispatch],
     )
 

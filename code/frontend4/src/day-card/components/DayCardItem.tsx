@@ -1,39 +1,72 @@
 import { dateService } from '../../common/services/DateService'
 import { TaskModel } from '../../tasks/models/TaskModel'
 import { TaskTypeEnum } from '../../tasks/models/TaskTypeEnum'
+import { useTaskItemDnd } from '../../tasks/hooks/useTaskItemDnd'
 
 interface Props {
     task: TaskModel
     isHighlighted: boolean
     isDebug: boolean
     onOpenTaskMenu: (e: React.MouseEvent<HTMLElement>, task: TaskModel) => void
+    onSaveTasks: (tasks: TaskModel[]) => void
 }
 
-function DayCardItem({ task, isHighlighted, isDebug, onOpenTaskMenu }: Props) {
-    let spanClass = 'd-block'
+function DayCardItem({
+    task,
+    isHighlighted,
+    isDebug,
+    onOpenTaskMenu,
+    onSaveTasks,
+}: Props) {
+    const { dragRef, dropRef, isDragging, isDropping } = useTaskItemDnd({
+        task,
+        onSaveTasks,
+    })
 
-    spanClass += ` ${textColor(task, isHighlighted)}`
+    let spanClass = 'd-block rounded-1'
+
+    spanClass += ` ${textColor(task, isHighlighted, isDragging)}`
     spanClass += ` ${textDecoration(task)}`
-
-    if (isHighlighted) {
-        spanClass += ' rounded text-bg-secondary'
-    }
+    spanClass += ` ${textBackground(isHighlighted, isDragging)}`
 
     if (task.type === TaskTypeEnum.Additional) {
         spanClass += ' text-end me-1'
     }
 
-    const liClass = task.type === TaskTypeEnum.Additional ? 'd-block' : ''
+    let liClass = 'border-top'
+
+    if (task.type === TaskTypeEnum.Additional) {
+        liClass += ' d-inline'
+    }
+
+    if (isDropping) {
+        liClass += ' border-top border-primary'
+    }
 
     return (
-        <li className={liClass} onClick={e => onOpenTaskMenu(e, task)}>
-            <span className={spanClass}>{text(task, isDebug)}</span>
+        <li
+            ref={dropRef}
+            className={liClass}
+            style={{
+                borderColor: !isDropping
+                    ? 'var(--bs-dark-bg-subtle) !important'
+                    : '',
+            }}
+            onClick={e => onOpenTaskMenu(e, task)}
+        >
+            <span ref={dragRef} className={spanClass}>
+                {text(task, isDebug)}
+            </span>
         </li>
     )
 }
 
-function textColor(task: TaskModel, isHighlighted: boolean): string {
-    if (isHighlighted) {
+function textColor(
+    task: TaskModel,
+    isHighlighted: boolean,
+    isDragging: boolean,
+): string {
+    if (isHighlighted || isDragging) {
         return ''
     }
 
@@ -55,6 +88,18 @@ function textDecoration(task: TaskModel): string {
 
     if (task.isProbable) {
         return 'fst-italic'
+    }
+
+    return ''
+}
+
+function textBackground(isHighlighted: boolean, isDragging: boolean): string {
+    if (isDragging) {
+        return 'bg-primary opacity-50'
+    }
+
+    if (isHighlighted) {
+        return 'text-bg-secondary'
     }
 
     return ''

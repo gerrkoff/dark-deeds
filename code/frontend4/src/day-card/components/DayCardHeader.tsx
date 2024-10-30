@@ -1,6 +1,7 @@
 import clsx from 'clsx'
 import { TaskTypeEnum } from '../../tasks/models/TaskTypeEnum'
 import { DayCardModel } from '../models/DayCardModel'
+import { dateService } from '../../common/services/DateService'
 
 interface Props {
     dayCardModel: DayCardModel
@@ -24,12 +25,12 @@ function DayCardHeader({
         x => x.type === TaskTypeEnum.Routine && !x.completed,
     ).length
 
-    const date = dayCardModel.date.toDateString()
+    const date = dateService.toDateLabel(dayCardModel.date)
 
     return (
         <div className="d-flex justify-content-between flex-row-reverse mt-1 mb-1">
             <span
-                className={clsx('d-inline-block ps-2 pe-2 rounded', {
+                className={clsx('d-inline-block ps-2 pe-2 rounded-1', {
                     'text-bg-secondary': isHighlighted,
                 })}
                 onClick={e => onOpenHeaderMenu(e, dayCardModel.date)}
@@ -39,7 +40,7 @@ function DayCardHeader({
 
             {hasRoutine && (
                 <span
-                    className={clsx('d-inline-block ms-1 ps-2 pe-2 rounded', {
+                    className={clsx('d-inline-block ps-3 pe-3 rounded-1', {
                         'text-bg-secondary': isRoutineShown,
                         'text-secondary':
                             routineRemainingCount === 0 && !isRoutineShown,

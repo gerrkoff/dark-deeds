@@ -6,7 +6,10 @@ import { TelegramIntegrationCard } from './components/TelegramIntegrationCard'
 import { UserInfoCard } from './components/UserInfoCard'
 import { UserSettingsCard } from './components/UserSettingsCard'
 import { saveSharedSettings, startTelegram } from './redux/settings-thunk'
-import { changeShowCompleted, toggleDebugEnabled } from './redux/settings-slice'
+import {
+    toggleCompletedShown,
+    toggleDebugEnabled,
+} from './redux/settings-slice'
 
 function Settings() {
     const dispatch = useAppDispatch()
@@ -16,7 +19,7 @@ function Settings() {
     const {
         startTelegramLink,
         isStartTelegramPending,
-        isShowCompletedEnabled,
+        isCompletedShown: isShowCompletedEnabled,
         isSaveSharedSettingsPending,
         isLoadSharedSettingsPending,
         isDebugEnabled,
@@ -33,7 +36,7 @@ function Settings() {
 
     const handleShowCompletedChange = useCallback(
         (isEnabled: boolean) => {
-            dispatch(changeShowCompleted(isEnabled))
+            dispatch(toggleCompletedShown(isEnabled))
         },
         [dispatch],
     )
@@ -57,7 +60,7 @@ function Settings() {
 
     return (
         <div className="row">
-            <div className="col">
+            <div className="col-md-6">
                 <UserInfoCard username={username} signOut={signOut} />
                 <UserSettingsCard
                     isShowCompletedEnabled={isShowCompletedEnabled}
@@ -67,7 +70,7 @@ function Settings() {
                     isLoadSettingsPending={isLoadSharedSettingsPending}
                 />
             </div>
-            <div className="col">
+            <div className="col-md-6">
                 <TelegramIntegrationCard
                     generateStartIntegrationLink={handleStartTelegram}
                     isGenerateStartIntegrationLinkPending={
