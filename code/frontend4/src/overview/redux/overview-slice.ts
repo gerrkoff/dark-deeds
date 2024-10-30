@@ -38,14 +38,12 @@ export const overviewSlice = createSlice({
                 }
             }
         },
-        toggleRoutineTaskDate: (state, action: PayloadAction<Date>) => {
-            const index = state.routineTaskDatesShown.indexOf(
-                action.payload.valueOf(),
-            )
+        toggleRoutineTaskDate: (state, action: PayloadAction<number>) => {
+            const index = state.routineTaskDatesShown.indexOf(action.payload)
             if (index !== -1) {
                 state.routineTaskDatesShown.splice(index, 1)
             } else {
-                state.routineTaskDatesShown.push(action.payload.valueOf())
+                state.routineTaskDatesShown.push(action.payload)
             }
         },
     },

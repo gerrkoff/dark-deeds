@@ -7,15 +7,21 @@ import { TaskModel } from '../../tasks/models/TaskModel'
 
 export const overviewTaskRoutinesSelector = createSelector(
     (state: RootState) => state.overview.routineTaskDatesShown,
-    state => new Set(state),
+    routineTaskDatesShown => new Set(routineTaskDatesShown),
 )
 
 export const overviewModelSelector = createSelector(
-    (state: RootState) => state.overview.tasks,
-    state => overviewModelSelectorFn(state),
+    [
+        (state: RootState) => state.overview.tasks,
+        (state: RootState) => state.settings.isCompletedShown,
+    ],
+    (tasks, isCompletedShow) => overviewModelSelectorFn(tasks, isCompletedShow),
 )
 
-function overviewModelSelectorFn(tasks: TaskModel[]): OverviewModel {
+function overviewModelSelectorFn(
+    tasks: TaskModel[],
+    isCompletedShown: boolean,
+): OverviewModel {
     const model: OverviewModel = {
         noDate: [],
         expired: [],
@@ -39,7 +45,7 @@ function overviewModelSelectorFn(tasks: TaskModel[]): OverviewModel {
     }
 
     for (const task of tasks) {
-        if (task.deleted) {
+        if (task.deleted || (!isCompletedShown && task.completed)) {
             continue
         }
 

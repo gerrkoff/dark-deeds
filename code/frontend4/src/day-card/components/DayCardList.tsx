@@ -15,7 +15,7 @@ function DayCardList({
     openedMenuTaskUid,
     isDebug,
     isRoutineShown,
-    onOpenTaskMenu: onTaskContextMenu,
+    onOpenTaskMenu,
 }: Props) {
     const shownTasks = isRoutineShown
         ? tasks
@@ -29,7 +29,7 @@ function DayCardList({
                     task={task}
                     isDebug={isDebug}
                     isHighlighted={task.uid === openedMenuTaskUid}
-                    onOpenTaskMenu={onTaskContextMenu}
+                    onOpenTaskMenu={onOpenTaskMenu}
                 />
             ))}
         </ul>

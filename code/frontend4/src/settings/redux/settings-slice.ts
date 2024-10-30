@@ -10,7 +10,7 @@ import { SettingsLocalDto } from '../models/SettingsLocalDto'
 export interface SettingsState {
     isStartTelegramPending: boolean
     startTelegramLink: string | null
-    isShowCompletedEnabled: boolean
+    isCompletedShown: boolean
     isSaveSharedSettingsPending: boolean
     isLoadSharedSettingsPending: boolean
     isLocalSettingsLoaded: boolean
@@ -21,7 +21,7 @@ export interface SettingsState {
 const initialState: SettingsState = {
     isStartTelegramPending: false,
     startTelegramLink: null,
-    isShowCompletedEnabled: true,
+    isCompletedShown: true,
     isSaveSharedSettingsPending: false,
     isLoadSharedSettingsPending: false,
     isLocalSettingsLoaded: false,
@@ -33,8 +33,8 @@ export const settingsSlice = createSlice({
     name: 'settings',
     initialState,
     reducers: {
-        changeShowCompleted: (state, action: PayloadAction<boolean>) => {
-            state.isShowCompletedEnabled = action.payload
+        toggleCompletedShown: (state, action: PayloadAction<boolean>) => {
+            state.isCompletedShown = action.payload
         },
         loadLocalSettings: (state, action: PayloadAction<SettingsLocalDto>) => {
             state.overviewTabsExpanded = action.payload.overviewTabsExpanded
@@ -84,13 +84,13 @@ export const settingsSlice = createSlice({
         })
         builder.addCase(loadSharedSettings.fulfilled, (state, action) => {
             state.isLoadSharedSettingsPending = false
-            state.isShowCompletedEnabled = action.payload.showCompleted
+            state.isCompletedShown = action.payload.showCompleted
         })
     },
 })
 
 export const {
-    changeShowCompleted,
+    toggleCompletedShown,
     loadLocalSettings,
     toggleOverviewTab,
     toggleDebugEnabled,
