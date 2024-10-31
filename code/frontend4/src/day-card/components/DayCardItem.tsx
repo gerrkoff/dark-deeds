@@ -4,6 +4,7 @@ import { TaskTypeEnum } from '../../tasks/models/TaskTypeEnum'
 import { useTaskItemDnd } from '../../tasks/hooks/useTaskItemDnd'
 import { useRef } from 'react'
 import { useDayCardItemDndTouchHighlight } from '../hooks/useDayCardItemDndTouchHighlight'
+import styles from './DayCard.module.css'
 
 interface Props {
     task: TaskModel
@@ -41,6 +42,10 @@ function DayCardItem({
 
     let liClass = 'border-top'
 
+    if (!isDropping) {
+        liClass += ` ${styles.item}`
+    }
+
     if (task.type === TaskTypeEnum.Additional) {
         liClass += ' d-inline'
     }
@@ -53,11 +58,6 @@ function DayCardItem({
         <li
             ref={dropRef}
             className={liClass}
-            style={{
-                borderColor: !isDropping
-                    ? 'var(--bs-dark-bg-subtle) !important'
-                    : '',
-            }}
             onClick={e => onOpenTaskMenu(e, task)}
         >
             <span

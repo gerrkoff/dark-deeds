@@ -3,6 +3,7 @@ import { DayCardItem } from './DayCardItem'
 import { TaskTypeEnum } from '../../tasks/models/TaskTypeEnum'
 import { useTaskDayDnd } from '../../tasks/hooks/useTaskDayDnd'
 import clsx from 'clsx'
+import styles from './DayCard.module.css'
 
 interface Props {
     date: Date | null
@@ -38,12 +39,7 @@ function DayCardList({
 
     return (
         <>
-            <ul
-                className="flex-grow-1 d-flex flex-column ps-4 mt-1 mb-0"
-                style={{
-                    userSelect: 'none',
-                }}
-            >
+            <ul className="flex-grow-1 d-flex flex-column ps-4 mt-1 mb-0">
                 {shownTasks.map(task => (
                     <DayCardItem
                         key={task.uid}
@@ -56,14 +52,13 @@ function DayCardList({
                 ))}
                 <li
                     ref={dropRef}
-                    className={clsx('d-inline border-top flex-grow-1', {
-                        'border-primary': isDropping,
-                    })}
+                    className={clsx(
+                        'd-inline border-top flex-grow-1',
+                        !isDropping && styles.item,
+                        isDropping && 'border-primary',
+                    )}
                     style={{
                         minHeight: '8px',
-                        borderColor: !isDropping
-                            ? 'var(--bs-dark-bg-subtle) !important'
-                            : '',
                     }}
                 ></li>
             </ul>

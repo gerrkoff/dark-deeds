@@ -1,0 +1,14 @@
+.card {
+    min-width: 160px;
+    min-height: 100px;
+    height: 100%;
+    font-size: 0.8rem;
+    user-select: none;
+    -webkit-user-select: none; /* Safari */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+}
+
+.item {
+    border-color: var(--bs-dark-bg-subtle) !important;
+}

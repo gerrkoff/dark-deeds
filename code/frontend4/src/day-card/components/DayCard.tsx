@@ -10,6 +10,7 @@ import { EditTaskModal } from '../../edit-task/EditTaskModal'
 import { useEditTaskModal } from '../../edit-task/hooks/useEditTaskModal'
 import { useDayCardHeaderMenu } from '../hooks/useDayCardHeaderMenu'
 import { DayCardHeaderMenu } from './DayCardHeaderMenu'
+import styles from './DayCard.module.css'
 
 interface Props {
     dayCardModel: DayCardModel
@@ -61,15 +62,7 @@ function DayCard({
 
     return (
         <>
-            <Card
-                elementRef={cardRef}
-                style={{
-                    minWidth: '160px',
-                    minHeight: '100px',
-                    height: '100%',
-                    fontSize: '0.8rem',
-                }}
-            >
+            <Card elementRef={cardRef} className={styles.card}>
                 <DayCardHeader
                     dayCardModel={dayCardModel}
                     isHighlighted={headerMenuContext !== null}
