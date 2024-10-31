@@ -54,6 +54,11 @@ export class TaskSaveService {
             }
         }
 
+        console.log('__ Sync tasks:', {
+            updatedTasks,
+            tasksToSync: [...tasksToSync.values()],
+        })
+
         return [...tasksToSync.values()]
     }
 
