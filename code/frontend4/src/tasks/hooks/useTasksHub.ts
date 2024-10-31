@@ -28,7 +28,7 @@ export function useTasksHub() {
             const { tasksToNotify, versionsToNotify } =
                 taskSyncService.updateTasks(tasks)
 
-            console.log('Tasks Online Update:', {
+            console.log('__ Tasks Online Update:', {
                 tasks,
                 tasksToNotify,
                 versionsToNotify,
@@ -67,14 +67,20 @@ export function useTasksHub() {
             dispatch(toggleSaveTaskPending(isSynchronizing))
         }
 
+        const handleHeartbeat = () => {
+            /* Do nothing */
+        }
+
         taskHubApi.onClose(handleHubClose)
         taskHubApi.onReconnecting(handleHubReconnecting)
         taskHubApi.onReconnected(handleHubReconnected)
         taskHubApi.onUpdate(handleUpdateTasks)
+        taskHubApi.onHeartbeat(handleHeartbeat)
         taskSyncService.subscribeStatusUpdate(handleUpdateStatus)
 
         return () => {
             taskHubApi.offUpdate(handleUpdateTasks)
+            taskHubApi.offHeartbeat(handleHeartbeat)
             taskSyncService.unsubscribeStatusUpdate(handleUpdateStatus)
         }
     }, [dispatch, handleUpdateTasks])

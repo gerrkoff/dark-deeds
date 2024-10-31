@@ -45,7 +45,11 @@ export class TaskSyncService {
         this.inProgress = true
         this.statusUpdateSubscriptions.forEach(x => x(true))
 
-        await this.saveTasks()
+        try {
+            await this.saveTasks()
+        } catch (error) {
+            console.error('Failed to save tasks:', error)
+        }
 
         this.statusUpdateSubscriptions.forEach(x => x(false))
         this.inProgress = false
@@ -56,9 +60,13 @@ export class TaskSyncService {
             this.tasksInFlight = this.tasksToSave
             this.tasksToSave = new Map<string, TaskModel>()
 
+            console.log('__ Saving tasks:', [...this.tasksInFlight.values()])
+
             const savedTasks = await this.taskApi.saveTasks([
                 ...this.tasksInFlight.values(),
             ])
+
+            console.log('__ Saved tasks:', [...this.tasksInFlight.values()])
 
             for (const task of savedTasks) {
                 this.tasksInFlight.delete(task.uid)
@@ -69,6 +77,8 @@ export class TaskSyncService {
                     this.tasksToSave.set(uid, task)
                 }
             }
+
+            console.log('__ Remaining tasks:', [...this.tasksToSave.values()])
         }
     }
 
