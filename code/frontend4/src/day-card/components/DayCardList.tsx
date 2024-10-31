@@ -38,7 +38,12 @@ function DayCardList({
 
     return (
         <>
-            <ul className="flex-grow-1 d-flex flex-column ps-4 mt-1 mb-0">
+            <ul
+                className="flex-grow-1 d-flex flex-column ps-4 mt-1 mb-0"
+                style={{
+                    userSelect: 'none',
+                }}
+            >
                 {shownTasks.map(task => (
                     <DayCardItem
                         key={task.uid}

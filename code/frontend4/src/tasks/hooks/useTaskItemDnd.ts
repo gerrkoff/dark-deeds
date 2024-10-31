@@ -1,3 +1,4 @@
+import { dndType } from '../../common/utils/dnd'
 import { TaskModel } from '../models/TaskModel'
 import {
     ConnectDragSource,
@@ -5,7 +6,6 @@ import {
     useDrag,
     useDrop,
 } from 'react-dnd'
-import { TaskDndType } from '../models/TaskDndType'
 
 interface Output {
     dragRef: ConnectDragSource
@@ -22,7 +22,7 @@ interface Props {
 export function useTaskItemDnd({ task, onSaveTasks }: Props): Output {
     const [{ isDragging }, dragRef] = useDrag(
         () => ({
-            type: TaskDndType,
+            type: dndType.task,
             item: task,
             collect: monitor => ({
                 isDragging: monitor.isDragging(),
@@ -33,7 +33,7 @@ export function useTaskItemDnd({ task, onSaveTasks }: Props): Output {
 
     const [{ isDropping }, dropRef] = useDrop(
         () => ({
-            accept: TaskDndType,
+            accept: dndType.task,
             collect: monitor => ({
                 isDropping: monitor.isOver() && monitor.canDrop(),
             }),
