@@ -6,6 +6,7 @@ import { Provider } from 'react-redux'
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import { TouchBackend } from 'react-dnd-touch-backend'
+import { touchDndDelay } from './common/utils/dnd.ts'
 
 const root = document.getElementById('root')
 
@@ -14,7 +15,7 @@ const isMobile = () => {
 }
 
 const dndBackend = isMobile() ? TouchBackend : HTML5Backend
-const options = isMobile() ? { delay: 500, ignoreContextMenu: true } : {}
+const options = isMobile() ? { delay: touchDndDelay } : {}
 
 if (root) {
     createRoot(root).render(

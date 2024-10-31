@@ -1,6 +1,6 @@
 import { TaskModel } from '../models/TaskModel'
 import { ConnectDropTarget, useDrop } from 'react-dnd'
-import { TaskDndType } from '../models/TaskDndType'
+import { dndType } from '../../common/utils/dnd'
 
 interface Output {
     dropRef: ConnectDropTarget
@@ -22,7 +22,7 @@ export function useTaskDayDnd({
 }: Props): Output {
     const [{ isDropping }, dropRef] = useDrop(
         () => ({
-            accept: TaskDndType,
+            accept: dndType.task,
             collect: monitor => ({
                 isDropping: monitor.isOver() && monitor.canDrop(),
             }),
