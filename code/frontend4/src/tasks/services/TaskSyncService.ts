@@ -56,9 +56,13 @@ export class TaskSyncService {
             this.tasksInFlight = this.tasksToSave
             this.tasksToSave = new Map<string, TaskModel>()
 
+            console.log('Saving tasks:', this.tasksInFlight)
+
             const savedTasks = await this.taskApi.saveTasks([
                 ...this.tasksInFlight.values(),
             ])
+
+            console.log('Saved tasks:', this.tasksInFlight)
 
             for (const task of savedTasks) {
                 this.tasksInFlight.delete(task.uid)
@@ -69,6 +73,8 @@ export class TaskSyncService {
                     this.tasksToSave.set(uid, task)
                 }
             }
+
+            console.log('Remaining tasks:', this.tasksToSave)
         }
     }
 
