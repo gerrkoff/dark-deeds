@@ -104,7 +104,7 @@ export class TaskSyncService {
 
             if (taskToSave) {
                 if (updatedTask.version > taskToSave.version) {
-                    taskToSave.version = updatedTask.version + 100500
+                    taskToSave.version = updatedTask.version
                     versionsToNotify.push({
                         uid: updatedTask.uid,
                         version: updatedTask.version,
@@ -112,7 +112,7 @@ export class TaskSyncService {
                 }
             } else if (taskInFlight) {
                 if (updatedTask.version > taskInFlight.version) {
-                    taskInFlight.version = updatedTask.version + 100500
+                    taskInFlight.version = updatedTask.version
                     versionsToNotify.push({
                         uid: updatedTask.uid,
                         version: updatedTask.version,
