@@ -6,10 +6,7 @@ import {
     taskHubDisconnected,
     toggleSaveTaskPending,
 } from '../../status-panel/redux/status-panel-slice'
-import {
-    updateTasks,
-    updateVersions,
-} from '../../overview/redux/overview-slice'
+import { syncTasks, syncVersions } from '../../overview/redux/overview-slice'
 import { TaskModel } from '../models/TaskModel'
 import { taskHubApi } from '../api/TaskHubApi'
 import { taskSyncService } from '../services/TaskSyncService'
@@ -35,11 +32,11 @@ export function useTasksHub() {
             })
 
             if (tasksToNotify.length > 0) {
-                dispatch(updateTasks(tasksToNotify))
+                dispatch(syncTasks(tasksToNotify))
             }
 
             if (versionsToNotify.length > 0) {
-                dispatch(updateVersions(versionsToNotify))
+                dispatch(syncVersions(versionsToNotify))
             }
         },
         [dispatch],

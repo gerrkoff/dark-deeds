@@ -60,13 +60,19 @@ export class TaskSyncService {
             this.tasksInFlight = this.tasksToSave
             this.tasksToSave = new Map<string, TaskModel>()
 
-            console.log('__ Saving tasks:', [...this.tasksInFlight.values()])
+            console.log(
+                '__ Saving tasks:',
+                [...this.tasksInFlight.values()].map(x => ({ ...x })),
+            )
 
             const savedTasks = await this.taskApi.saveTasks([
                 ...this.tasksInFlight.values(),
             ])
 
-            console.log('__ Saved tasks:', [...this.tasksInFlight.values()])
+            console.log(
+                '__ Saved tasks:',
+                [...this.tasksInFlight.values()].map(x => ({ ...x })),
+            )
 
             for (const task of savedTasks) {
                 this.tasksInFlight.delete(task.uid)
@@ -78,7 +84,10 @@ export class TaskSyncService {
                 }
             }
 
-            console.log('__ Remaining tasks:', [...this.tasksToSave.values()])
+            console.log(
+                '__ Remaining tasks:',
+                [...this.tasksToSave.values()].map(x => ({ ...x })),
+            )
         }
     }
 
@@ -95,7 +104,7 @@ export class TaskSyncService {
 
             if (taskToSave) {
                 if (updatedTask.version > taskToSave.version) {
-                    taskToSave.version = updatedTask.version
+                    taskToSave.version = updatedTask.version + 100500
                     versionsToNotify.push({
                         uid: updatedTask.uid,
                         version: updatedTask.version,
@@ -103,7 +112,7 @@ export class TaskSyncService {
                 }
             } else if (taskInFlight) {
                 if (updatedTask.version > taskInFlight.version) {
-                    taskInFlight.version = updatedTask.version
+                    taskInFlight.version = updatedTask.version + 100500
                     versionsToNotify.push({
                         uid: updatedTask.uid,
                         version: updatedTask.version,

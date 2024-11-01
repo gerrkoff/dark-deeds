@@ -24,31 +24,69 @@ export const overviewSlice = createSlice({
             for (const task of action.payload) {
                 const index = state.tasks.findIndex(t => t.uid === task.uid)
                 if (index !== -1) {
-                    if (task.version > state.tasks[index].version) {
-                        state.tasks[index] = task
-                    } else {
-                        console.warn('Update Tasks Collision', {
-                            existing: state.tasks[index],
-                            incoming: task,
-                        })
+                    if (task.version < state.tasks[index].version) {
+                        console.warn(
+                            'Update Tasks Collision',
+                            {
+                                existing: state.tasks[index].version,
+                                incoming: task.version,
+                            },
+                            {
+                                existing: { ...state.tasks[index] },
+                                incoming: { ...task },
+                            },
+                        )
                     }
+
+                    state.tasks[index] = task
                 } else {
                     state.tasks.push(task)
                 }
             }
         },
-        updateVersions: (state, action: PayloadAction<TaskVersionModel[]>) => {
+        syncTasks: (state, action: PayloadAction<TaskModel[]>) => {
             for (const task of action.payload) {
                 const index = state.tasks.findIndex(t => t.uid === task.uid)
                 if (index !== -1) {
-                    if (task.version > state.tasks[index].version) {
-                        state.tasks[index].version = task.version
-                    } else {
-                        console.warn('Update Versions Collision', {
-                            existing: state.tasks[index],
-                            incoming: task,
-                        })
+                    if (task.version <= state.tasks[index].version) {
+                        console.warn(
+                            'Sync Tasks Collision',
+                            {
+                                existing: state.tasks[index].version,
+                                incoming: task.version,
+                            },
+                            {
+                                existing: { ...state.tasks[index] },
+                                incoming: { ...task },
+                            },
+                        )
                     }
+
+                    state.tasks[index] = task
+                } else {
+                    state.tasks.push(task)
+                }
+            }
+        },
+        syncVersions: (state, action: PayloadAction<TaskVersionModel[]>) => {
+            for (const task of action.payload) {
+                const index = state.tasks.findIndex(t => t.uid === task.uid)
+                if (index !== -1) {
+                    if (task.version <= state.tasks[index].version) {
+                        console.warn(
+                            'Sync Versions Collision',
+                            {
+                                existing: state.tasks[index].version,
+                                incoming: task.version,
+                            },
+                            {
+                                existing: { ...state.tasks[index] },
+                                incoming: { ...task },
+                            },
+                        )
+                    }
+
+                    state.tasks[index].version = task.version
                 }
             }
         },
@@ -85,7 +123,7 @@ export const overviewSlice = createSlice({
     },
 })
 
-export const { updateTasks, updateVersions, toggleRoutineTaskDate } =
+export const { updateTasks, syncTasks, syncVersions, toggleRoutineTaskDate } =
     overviewSlice.actions
 
 export default overviewSlice.reducer
