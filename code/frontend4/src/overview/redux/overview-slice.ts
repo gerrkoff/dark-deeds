@@ -24,7 +24,14 @@ export const overviewSlice = createSlice({
             for (const task of action.payload) {
                 const index = state.tasks.findIndex(t => t.uid === task.uid)
                 if (index !== -1) {
-                    state.tasks[index] = task
+                    if (task.version > state.tasks[index].version) {
+                        state.tasks[index] = task
+                    } else {
+                        console.warn('Update Tasks Collision', {
+                            existing: state.tasks[index],
+                            incoming: task,
+                        })
+                    }
                 } else {
                     state.tasks.push(task)
                 }
@@ -34,7 +41,14 @@ export const overviewSlice = createSlice({
             for (const task of action.payload) {
                 const index = state.tasks.findIndex(t => t.uid === task.uid)
                 if (index !== -1) {
-                    state.tasks[index].version = task.version
+                    if (task.version > state.tasks[index].version) {
+                        state.tasks[index].version = task.version
+                    } else {
+                        console.warn('Update Versions Collision', {
+                            existing: state.tasks[index],
+                            incoming: task,
+                        })
+                    }
                 }
             }
         },
