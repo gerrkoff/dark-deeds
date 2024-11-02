@@ -1,6 +1,5 @@
 import { useRef } from 'react'
 import { DayCardModel } from '../models/DayCardModel'
-import { useDayCardItemMenu } from '../hooks/useDayCardItemMenu'
 import { Card } from '../../common/components/Card'
 import { DayCardHeader } from './DayCardHeader'
 import { DayCardList } from './DayCardList'
@@ -8,9 +7,10 @@ import { DayCardItemMenu } from './DayCardItemMenu'
 import { TaskModel } from '../../tasks/models/TaskModel'
 import { EditTaskModal } from '../../edit-task/EditTaskModal'
 import { useEditTaskModal } from '../../edit-task/hooks/useEditTaskModal'
-import { useDayCardHeaderMenu } from '../hooks/useDayCardHeaderMenu'
 import { DayCardHeaderMenu } from './DayCardHeaderMenu'
 import styles from './DayCard.module.css'
+import { useDayCardMenuItem } from '../hooks/useDayCardMenuItem'
+import { useDayCardMenuHeader } from '../hooks/useDayCardMenuHeader'
 
 interface Props {
     dayCardModel: DayCardModel
@@ -44,7 +44,7 @@ function DayCard({
         deleteTask,
         editTask,
         toggleTaskCompleted,
-    } = useDayCardItemMenu({
+    } = useDayCardMenuItem({
         containerRef: cardRef,
         saveTasks,
         openTaskEditModal,
@@ -55,7 +55,7 @@ function DayCard({
         openHeaderMenu,
         closeHeaderMenu,
         onAddTaskForDate,
-    } = useDayCardHeaderMenu({
+    } = useDayCardMenuHeader({
         containerRef: cardRef,
         openTaskEditModalForDate,
     })
