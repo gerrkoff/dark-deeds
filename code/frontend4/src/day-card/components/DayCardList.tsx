@@ -5,8 +5,8 @@ import clsx from 'clsx'
 import styles from './DayCard.module.css'
 import { useDayCardDnd } from '../hooks/useDayCardDnd'
 import { useDayCardDndList } from '../hooks/useDayCardDndList'
-import { isBottomDropZoneId } from '../models/DayCardDndContext'
 import { useMemo } from 'react'
+import { dropZoneBottomId } from '../models/DayCardDndContext'
 
 interface Props {
     date: Date | null
@@ -73,9 +73,9 @@ function DayCardList({
                     ref={lastItemRef}
                     className={clsx(
                         'd-inline border-top flex-grow-1',
-                        !isBottomDropZoneId(dropzoneHighlightedTaskUid) &&
+                        dropzoneHighlightedTaskUid !== dropZoneBottomId &&
                             styles.item,
-                        isBottomDropZoneId(dropzoneHighlightedTaskUid) &&
+                        dropzoneHighlightedTaskUid === dropZoneBottomId &&
                             'border-primary',
                     )}
                     style={{

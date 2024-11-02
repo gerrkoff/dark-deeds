@@ -2,11 +2,9 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { TaskModel } from '../../tasks/models/TaskModel'
 import {
     DayCardItemDndContext,
-    DropZoneDirectionType,
     DropZoneIdType,
-    isBottomDropZoneId,
 } from '../models/DayCardDndContext'
-import { throttle } from '../../common/utils/throttle'
+import { TaskDndService } from '../services/TaskDndService'
 
 interface Output {
     draggedTaskUid: string | null
@@ -30,6 +28,7 @@ export function useDayCardDnd({ date, tasks, onSaveTasks }: Props): Output {
         const handleClear = () => {
             setDraggedTaskUid(null)
             setDropzoneHighlightedTaskUid(null)
+            TaskDndService.clear()
         }
 
         document.addEventListener('drop', handleClear)
@@ -46,63 +45,20 @@ export function useDayCardDnd({ date, tasks, onSaveTasks }: Props): Output {
     }, [])
 
     const itemDndContext: DayCardItemDndContext = useMemo(() => {
-        const handleItemDragStart = (e: DragEvent, task: TaskModel) => {
-            e.dataTransfer?.setData('dd/item', JSON.stringify(task))
-            setDraggedTaskUid(task.uid)
-        }
-
-        const handleItemDragOver = (
-            uid: DropZoneIdType,
-            direction: DropZoneDirectionType,
-        ) => {
-            const itemIndex = findCorrespondingIndex(tasks, uid, direction)
-            setDropzoneHighlightedTaskUid(
-                itemIndex === tasks.length
-                    ? 'bottom-dropzone'
-                    : tasks[itemIndex].uid,
-            )
-        }
-
-        const handleItemDragOverThrottled = throttle(handleItemDragOver)
-
-        const handleItemDrop = (
-            e: DragEvent,
-            dropZoneId: DropZoneIdType,
-            direction: DropZoneDirectionType,
-        ) => {
-            if (!e.dataTransfer) {
-                return
-            }
-
-            const draggedTask: TaskModel = JSON.parse(
-                e.dataTransfer.getData('dd/item'),
-            )
-
-            const itemIndex = findCorrespondingIndex(
-                tasks,
-                dropZoneId,
-                direction,
-            )
-            const order =
-                tasks.length === 0
-                    ? 0
-                    : itemIndex === tasks.length
-                      ? tasks[tasks.length - 1].order + 0.5
-                      : tasks[itemIndex].order - 0.5
-
-            const updatedItem = {
-                ...draggedTask,
-                date: date?.valueOf() ?? null,
-                order,
-            }
-
-            onSaveTasks([updatedItem])
-        }
+        const taskDndService = new TaskDndService(
+            tasks,
+            date,
+            onSaveTasks,
+            setDraggedTaskUid,
+            setDropzoneHighlightedTaskUid,
+        )
 
         return {
-            handleItemDragStart,
-            handleItemDragOver: handleItemDragOverThrottled,
-            handleItemDrop,
+            handleItemDragStart:
+                taskDndService.handleItemDragStart.bind(taskDndService),
+            handleItemDragOver:
+                taskDndService.handleItemDragOver.bind(taskDndService),
+            handleItemDrop: taskDndService.handleItemDrop.bind(taskDndService),
         }
     }, [tasks, date, onSaveTasks])
 
@@ -112,28 +68,4 @@ export function useDayCardDnd({ date, tasks, onSaveTasks }: Props): Output {
         handleListDragLeave,
         itemDndContext,
     }
-}
-
-function findCorrespondingIndex(
-    tasks: TaskModel[],
-    uid: DropZoneIdType,
-    direction: DropZoneDirectionType,
-): number {
-    if (isBottomDropZoneId(uid)) {
-        if (direction === 'above') {
-            return tasks.length
-        } else {
-            throw new Error(`Invalid direction ${direction}`)
-        }
-    }
-
-    const index = tasks.findIndex(task => task.uid === uid)
-
-    if (index === -1) {
-        throw new Error(`Task with uid ${uid} not found`)
-    }
-
-    const newIndex = direction === 'above' ? index : index + 1
-
-    return newIndex
 }

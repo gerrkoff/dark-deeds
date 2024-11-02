@@ -23,15 +23,13 @@ export function useDayCardDndItem({ task, itemDndContext }: Props): Output {
         const element = dragRef.current
 
         if (!element) {
-            return () => {
-                /**/
-            }
+            return
         }
 
         const { handleItemDragStart } = itemDndContext
 
-        const handleDragStart = (e: DragEvent) => {
-            handleItemDragStart(e, task)
+        const handleDragStart = () => {
+            handleItemDragStart(task)
         }
 
         element.addEventListener('dragstart', handleDragStart)
@@ -45,21 +43,17 @@ export function useDayCardDndItem({ task, itemDndContext }: Props): Output {
         const element = dropRef.current
 
         if (!element) {
-            return () => {
-                /**/
-            }
+            return
         }
 
         const { handleItemDragOver, handleItemDrop } = itemDndContext
 
         const handleDragOver = (e: DragEvent) => {
-            e.preventDefault()
             const direction = getDirection(e, element)
-            handleItemDragOver(task.uid, direction)
+            handleItemDragOver(e, task.uid, direction)
         }
 
         const handleDrop = (e: DragEvent) => {
-            e.preventDefault()
             const direction = getDirection(e, element)
             handleItemDrop(e, task.uid, direction)
         }
