@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client'
 import { App } from './app/App.tsx'
 import { store } from './store'
 import { Provider } from 'react-redux'
+import './DragDropTouch.js'
 
 const root = document.getElementById('root')
 

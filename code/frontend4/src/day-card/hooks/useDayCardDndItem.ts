@@ -29,6 +29,9 @@ export function useDayCardDndItem({ task, itemDndContext }: Props): Output {
         const { handleItemDragStart } = itemDndContext
 
         const handleDragStart = () => {
+            // hack for touch devices
+            element.classList.add('bg-primary')
+
             handleItemDragStart(task)
         }
 

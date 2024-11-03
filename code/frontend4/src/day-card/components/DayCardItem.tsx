@@ -4,7 +4,6 @@ import { TaskTypeEnum } from '../../tasks/models/TaskTypeEnum'
 import styles from './DayCard.module.css'
 import { DayCardItemDndContext } from '../models/DayCardDndContext'
 import { useDayCardDndItem } from '../hooks/useDayCardDndItem'
-import { useDayCardDndItemTouch } from '../hooks/useDayCardDndItemTouch'
 
 interface Props {
     task: TaskModel
@@ -30,13 +29,11 @@ function DayCardItem({
         itemDndContext,
     })
 
-    const { isDndTouchReady } = useDayCardDndItemTouch({ dragRef })
-
     let spanClass = 'd-block rounded-1'
 
-    spanClass += ` ${textColor(task, isHighlighted, isDragged, isDndTouchReady)}`
+    spanClass += ` ${textColor(task, isHighlighted, isDragged)}`
     spanClass += ` ${textDecoration(task)}`
-    spanClass += ` ${textBackground(isHighlighted, isDragged, isDndTouchReady)}`
+    spanClass += ` ${textBackground(isHighlighted, isDragged)}`
 
     if (task.type === TaskTypeEnum.Additional) {
         spanClass += ' text-end me-1'
@@ -78,9 +75,8 @@ function textColor(
     task: TaskModel,
     isHighlighted: boolean,
     isDragging: boolean,
-    isTouchDndReady: boolean,
 ): string {
-    if (isHighlighted || isDragging || isTouchDndReady) {
+    if (isHighlighted || isDragging) {
         return ''
     }
 
@@ -107,17 +103,9 @@ function textDecoration(task: TaskModel): string {
     return ''
 }
 
-function textBackground(
-    isHighlighted: boolean,
-    isDragging: boolean,
-    isTouchDndReady: boolean,
-): string {
+function textBackground(isHighlighted: boolean, isDragging: boolean): string {
     if (isDragging) {
         return 'bg-primary opacity-50'
-    }
-
-    if (isTouchDndReady) {
-        return 'bg-primary'
     }
 
     if (isHighlighted) {
