@@ -1,10 +1,13 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { TaskModel } from '../../tasks/models/TaskModel'
 import {
     DayCardItemDndContext,
     DropZoneIdType,
 } from '../models/DayCardDndContext'
-import { TaskDndService } from '../services/TaskDndService'
+import {
+    clearDraggedTask,
+    useDayCardDndItemContext,
+} from './useDayCardDndItemContext'
 
 interface Output {
     draggedTaskUid: string | null
@@ -28,7 +31,7 @@ export function useDayCardDnd({ date, tasks, onSaveTasks }: Props): Output {
         const handleClear = () => {
             setDraggedTaskUid(null)
             setDropzoneHighlightedTaskUid(null)
-            TaskDndService.clear()
+            clearDraggedTask()
         }
 
         document.addEventListener('drop', handleClear)
@@ -44,23 +47,13 @@ export function useDayCardDnd({ date, tasks, onSaveTasks }: Props): Output {
         setDropzoneHighlightedTaskUid(null)
     }, [])
 
-    const itemDndContext: DayCardItemDndContext = useMemo(() => {
-        const taskDndService = new TaskDndService(
-            tasks,
-            date,
-            onSaveTasks,
-            setDraggedTaskUid,
-            setDropzoneHighlightedTaskUid,
-        )
-
-        return {
-            handleItemDragStart:
-                taskDndService.handleItemDragStart.bind(taskDndService),
-            handleItemDragOver:
-                taskDndService.handleItemDragOver.bind(taskDndService),
-            handleItemDrop: taskDndService.handleItemDrop.bind(taskDndService),
-        }
-    }, [tasks, date, onSaveTasks])
+    const { context: itemDndContext } = useDayCardDndItemContext({
+        date,
+        tasks,
+        onSaveTasks,
+        setDraggedTaskUid,
+        setDropzoneHighlightedTaskUid,
+    })
 
     return {
         draggedTaskUid,
