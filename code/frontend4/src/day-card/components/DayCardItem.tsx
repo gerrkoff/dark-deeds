@@ -57,7 +57,7 @@ function DayCardItem({
         <li
             ref={dropRef}
             className={liClass}
-            style={{ cursor: 'pointer', padding: '1px 1px' }}
+            style={{ cursor: 'pointer', padding: '2px 2px' }}
             onClick={e => onOpenTaskMenu(e, task)}
         >
             <span draggable ref={dragRef} className={spanClass}>
