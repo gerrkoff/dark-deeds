@@ -54,7 +54,8 @@ FROM mcr.microsoft.com/dotnet/aspnet:8.0
 WORKDIR /app
 
 COPY --from=builder-be /build /app/
-COPY --from=builder-fe /code/frontend/build /app/wwwroot/old
+# COPY --from=builder-fe /code/frontend/build /app/wwwroot/old
+COPY --from=builder-fe /code/frontend/build /app/wwwroot/
 COPY --from=builder-fe-4 /code/frontend4/dist /app/wwwroot/
 
 ENV ASPNETCORE_ENVIRONMENT=Production
