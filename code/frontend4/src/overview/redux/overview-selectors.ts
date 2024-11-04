@@ -76,9 +76,12 @@ function overviewModelSelectorFn(
     }
 
     model.noDate.sort((a, b) => a.order - b.order)
+    model.expired.forEach(day => day.tasks.sort((a, b) => a.order - b.order))
     model.current.forEach(day => day.tasks.sort((a, b) => a.order - b.order))
     model.future.forEach(day => day.tasks.sort((a, b) => a.order - b.order))
-    model.expired.forEach(day => day.tasks.sort((a, b) => a.order - b.order))
+
+    model.expired.sort((a, b) => a.date.valueOf() - b.date.valueOf())
+    model.future.sort((a, b) => a.date.valueOf() - b.date.valueOf())
 
     return model
 }
