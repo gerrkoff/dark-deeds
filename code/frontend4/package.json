@@ -11,7 +11,8 @@
     "fmt": "prettier --write \"**/*.+(js|jsx|json|yml|yaml|scss|md|ts|tsx|css)\"",
     "fmt:check": "prettier --check \"**/*.+(js|jsx|json|yml|yaml|scss|md|ts|tsx|css)\"",
     "test": "vitest",
-    "ci": "npm run fmt:check && npm run lint && npm run build"
+    "test:run": "vitest run",
+    "ci": "npm run fmt:check && npm run lint && npm run build && npm run test:run"
   },
   "dependencies": {
     "@microsoft/signalr": "^8.0.7",
