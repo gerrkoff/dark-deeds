@@ -1,40 +1,39 @@
 import { dateService } from '../../common/services/DateService'
 import { TaskModel } from '../../tasks/models/TaskModel'
 import { TaskTypeEnum } from '../../tasks/models/TaskTypeEnum'
-import { useTaskItemDnd } from '../../tasks/hooks/useTaskItemDnd'
-import { useRef } from 'react'
-import { useDayCardItemDndTouchHighlight } from '../hooks/useDayCardItemDndTouchHighlight'
 import styles from './DayCard.module.css'
+import { DayCardItemDndContext } from '../models/DayCardDndContext'
+import { useDayCardDndItem } from '../hooks/useDayCardDndItem'
 
 interface Props {
     task: TaskModel
     isHighlighted: boolean
+    isDragged: boolean
+    isDraggedOver: boolean
     isDebug: boolean
+    itemDndContext: DayCardItemDndContext
     onOpenTaskMenu: (e: React.MouseEvent<HTMLElement>, task: TaskModel) => void
-    onSaveTasks: (tasks: TaskModel[]) => void
 }
 
 function DayCardItem({
     task,
     isHighlighted,
+    isDragged,
+    isDraggedOver,
     isDebug,
+    itemDndContext,
     onOpenTaskMenu,
-    onSaveTasks,
 }: Props) {
-    const elementRef = useRef<HTMLElement | null>(null)
-
-    const { dragRef, dropRef, isDragging, isDropping } = useTaskItemDnd({
+    const { dragRef, dropRef } = useDayCardDndItem({
         task,
-        onSaveTasks,
+        itemDndContext,
     })
-
-    const { isTouchDndReady } = useDayCardItemDndTouchHighlight({ elementRef })
 
     let spanClass = 'd-block rounded-1'
 
-    spanClass += ` ${textColor(task, isHighlighted, isDragging, isTouchDndReady)}`
+    spanClass += ` ${textColor(task, isHighlighted, isDragged)}`
     spanClass += ` ${textDecoration(task)}`
-    spanClass += ` ${textBackground(isHighlighted, isDragging, isTouchDndReady)}`
+    spanClass += ` ${textBackground(isHighlighted, isDragged)}`
 
     if (task.type === TaskTypeEnum.Additional) {
         spanClass += ' text-end me-1'
@@ -42,7 +41,7 @@ function DayCardItem({
 
     let liClass = 'border-top'
 
-    if (!isDropping) {
+    if (!isDraggedOver) {
         liClass += ` ${styles.item}`
     }
 
@@ -50,7 +49,7 @@ function DayCardItem({
         liClass += ' d-inline'
     }
 
-    if (isDropping) {
+    if (isDraggedOver) {
         liClass += ' border-top border-primary'
     }
 
@@ -60,14 +59,7 @@ function DayCardItem({
             className={liClass}
             onClick={e => onOpenTaskMenu(e, task)}
         >
-            <span
-                ref={node => {
-                    elementRef.current = node
-                    dragRef(node)
-                }}
-                onContextMenu={e => e.preventDefault()}
-                className={spanClass}
-            >
+            <span draggable ref={dragRef} className={spanClass}>
                 {text(task, isDebug)}
             </span>
         </li>
@@ -78,9 +70,8 @@ function textColor(
     task: TaskModel,
     isHighlighted: boolean,
     isDragging: boolean,
-    isTouchDndReady: boolean,
 ): string {
-    if (isHighlighted || isDragging || isTouchDndReady) {
+    if (isHighlighted || isDragging) {
         return ''
     }
 
@@ -107,17 +98,9 @@ function textDecoration(task: TaskModel): string {
     return ''
 }
 
-function textBackground(
-    isHighlighted: boolean,
-    isDragging: boolean,
-    isTouchDndReady: boolean,
-): string {
+function textBackground(isHighlighted: boolean, isDragging: boolean): string {
     if (isDragging) {
         return 'bg-primary opacity-50'
-    }
-
-    if (isTouchDndReady) {
-        return 'bg-primary'
     }
 
     if (isHighlighted) {

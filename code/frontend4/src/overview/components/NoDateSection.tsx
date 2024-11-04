@@ -2,10 +2,10 @@ import { useRef } from 'react'
 import { Card } from '../../common/components/Card'
 import { DayCardList } from '../../day-card/components/DayCardList'
 import { TaskModel } from '../../tasks/models/TaskModel'
-import { useDayCardItemMenu } from '../../day-card/hooks/useDayCardItemMenu'
 import { DayCardItemMenu } from '../../day-card/components/DayCardItemMenu'
 import { EditTaskModal } from '../../edit-task/EditTaskModal'
 import { useEditTaskModal } from '../../edit-task/hooks/useEditTaskModal'
+import { useDayCardMenuItem } from '../../day-card/hooks/useDayCardMenuItem'
 
 interface Props {
     tasks: TaskModel[]
@@ -30,7 +30,7 @@ function NoDateSection({ tasks, isDebug, saveTasks }: Props) {
         deleteTask,
         editTask,
         toggleTaskCompleted,
-    } = useDayCardItemMenu({
+    } = useDayCardMenuItem({
         containerRef: cardRef,
         saveTasks,
         openTaskEditModal,

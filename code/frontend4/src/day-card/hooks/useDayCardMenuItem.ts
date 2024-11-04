@@ -18,7 +18,7 @@ interface Props {
     openTaskEditModal: (task: TaskModel) => void
 }
 
-export function useDayCardItemMenu({
+export function useDayCardMenuItem({
     containerRef,
     saveTasks,
     openTaskEditModal,

@@ -13,7 +13,7 @@ interface Props {
     openTaskEditModalForDate: (date: Date) => void
 }
 
-export function useDayCardHeaderMenu({
+export function useDayCardMenuHeader({
     containerRef,
     openTaskEditModalForDate,
 }: Props): Output {
