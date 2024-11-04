@@ -33,9 +33,7 @@ function DayCard({
         taskEditModalContext,
         openTaskEditModal,
         openTaskEditModalForDate,
-        closeTaskEditModal,
-        saveAndCloseTaskEditModal,
-    } = useEditTaskModal({ saveTasks })
+    } = useEditTaskModal()
 
     const {
         itemMenuContext,
@@ -99,11 +97,13 @@ function DayCard({
                     />
                 )}
             </Card>
-            <EditTaskModal
-                context={taskEditModalContext}
-                onClose={closeTaskEditModal}
-                onSave={saveAndCloseTaskEditModal}
-            />
+
+            {taskEditModalContext && (
+                <EditTaskModal
+                    context={taskEditModalContext}
+                    onSave={saveTasks}
+                />
+            )}
         </>
     )
 }

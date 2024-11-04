@@ -10,12 +10,7 @@ interface Props {
 }
 
 function AddTaskButton({ saveTasks }: Props) {
-    const {
-        taskEditModalContext,
-        openTaskEditModal,
-        closeTaskEditModal,
-        saveAndCloseTaskEditModal,
-    } = useEditTaskModal({ saveTasks })
+    const { taskEditModalContext, openTaskEditModal } = useEditTaskModal()
 
     useEffect(() => {
         const onKeydown = (event: KeyboardEvent) => {
@@ -53,11 +48,12 @@ function AddTaskButton({ saveTasks }: Props) {
                 </button>
             </div>
 
-            <EditTaskModal
-                context={taskEditModalContext}
-                onClose={closeTaskEditModal}
-                onSave={saveAndCloseTaskEditModal}
-            />
+            {taskEditModalContext && (
+                <EditTaskModal
+                    context={taskEditModalContext}
+                    onSave={saveTasks}
+                />
+            )}
         </>
     )
 }

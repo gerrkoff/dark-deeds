@@ -1,23 +1,28 @@
 import clsx from 'clsx'
 import { useEffect, useState } from 'react'
+import { isTouchDevice } from '../../common/utils/isTouchDevice'
 
 interface Props {
     isShown: boolean
     isSaveEnabled: boolean
     onClose: () => void
+    onCleanup: () => void
     onSave: () => void
     children: React.ReactNode
 }
+
+const isStartAnimationEnabled = !isTouchDevice()
 
 function EditTaskModalContainer({
     isShown,
     isSaveEnabled,
     onClose,
+    onCleanup,
     onSave,
     children,
 }: Props) {
-    const [visible, setVisible] = useState(false)
-    const [show, setShow] = useState(false)
+    const [visible, setVisible] = useState(!isStartAnimationEnabled)
+    const [show, setShow] = useState(!isStartAnimationEnabled)
 
     useEffect(() => {
         if (isShown) {
@@ -26,10 +31,13 @@ function EditTaskModalContainer({
             document.body.style.overflow = 'hidden'
         } else {
             setShow(false)
-            setTimeout(() => setVisible(false), 150)
+            setTimeout(() => {
+                setVisible(false)
+                onCleanup()
+            }, 150)
             document.body.style.overflow = ''
         }
-    }, [isShown])
+    }, [isShown, onCleanup])
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
@@ -41,6 +49,20 @@ function EditTaskModalContainer({
             onClose()
         }
     }
+
+    useEffect(() => {
+        const handleTouchMove = (e: TouchEvent) => {
+            e.preventDefault()
+        }
+
+        document.addEventListener('touchmove', handleTouchMove, {
+            passive: false,
+        })
+
+        return () => {
+            document.removeEventListener('touchmove', handleTouchMove)
+        }
+    }, [])
 
     return (
         <div
