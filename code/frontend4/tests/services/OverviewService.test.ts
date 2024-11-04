@@ -13,9 +13,9 @@ function createService(): OverviewService {
 }
 
 test('[getModel] empty', () => {
-    const overviewService = createService()
+    const service = createService()
 
-    const result = overviewService.getModel([], false)
+    const result = service.getModel([], false)
 
     expect(result.noDate).toHaveLength(0)
     expect(result.expired).toHaveLength(0)
@@ -27,9 +27,9 @@ test('[getModel] empty', () => {
 })
 
 test('[getModel] no date task', () => {
-    const overviewService = createService()
+    const service = createService()
 
-    const result = overviewService.getModel(
+    const result = service.getModel(
         [
             {
                 uid: '1',
@@ -58,9 +58,9 @@ test('[getModel] no date task', () => {
 })
 
 test('[getModel] future task', () => {
-    const overviewService = createService()
+    const service = createService()
 
-    const result = overviewService.getModel(
+    const result = service.getModel(
         [
             {
                 uid: '1',
@@ -91,9 +91,9 @@ test('[getModel] future task', () => {
 })
 
 test('[getModel] expired task', () => {
-    const overviewService = createService()
+    const service = createService()
 
-    const result = overviewService.getModel(
+    const result = service.getModel(
         [
             {
                 uid: '1',
@@ -124,9 +124,9 @@ test('[getModel] expired task', () => {
 })
 
 test('[getModel] completed task (hidden)', () => {
-    const overviewService = createService()
+    const service = createService()
 
-    const result = overviewService.getModel(
+    const result = service.getModel(
         [
             {
                 uid: '1',
@@ -154,9 +154,9 @@ test('[getModel] completed task (hidden)', () => {
 })
 
 test('[getModel] completed task (shown)', () => {
-    const overviewService = createService()
+    const service = createService()
 
-    const result = overviewService.getModel(
+    const result = service.getModel(
         [
             {
                 uid: '1',
@@ -187,9 +187,9 @@ test('[getModel] completed task (shown)', () => {
 })
 
 test('[getModel] deleted task', () => {
-    const overviewService = createService()
+    const service = createService()
 
-    const result = overviewService.getModel(
+    const result = service.getModel(
         [
             {
                 uid: '1',
