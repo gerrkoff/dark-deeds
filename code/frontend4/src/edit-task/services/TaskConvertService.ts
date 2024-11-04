@@ -21,20 +21,6 @@ export class TaskConvertService {
         return this.convertModelToString(model)
     }
 
-    convertTaskToModel(task: TaskModel | null): TaskEditModel | null {
-        if (task === null) {
-            return null
-        }
-
-        return {
-            date: task.date !== null ? new Date(task.date) : null,
-            type: task.type,
-            title: task.title,
-            isProbable: task.isProbable,
-            time: task.time,
-        }
-    }
-
     createTaskFromModel(result: TaskEditModel): TaskModel {
         return {
             uid: uuidv4(),
@@ -131,7 +117,7 @@ export class TaskConvertService {
     convertDateToString(date: Date): string {
         let s = ''
 
-        if (new Date().getFullYear() !== date.getFullYear()) {
+        if (this.dateService.today().getFullYear() !== date.getFullYear()) {
             s += date.getFullYear().toString()
         }
 
@@ -142,15 +128,10 @@ export class TaskConvertService {
         return s
     }
 
-    convertTimeToString(time: number): string {
-        const timeInstance = new Time(time)
-        return `${timeInstance.hourString}${timeInstance.minuteString}`
-    }
-
     toDateLabel(date: Date): string {
         let s = ''
 
-        if (new Date().getFullYear() !== date.getFullYear()) {
+        if (this.dateService.today().getFullYear() !== date.getFullYear()) {
             s += `${date.getFullYear()}/`
         }
 
@@ -159,6 +140,25 @@ export class TaskConvertService {
         )}/${this.str2digits(date.getDate())} ${dateService.getWeekdayName(date)}`
 
         return s
+    }
+
+    private convertTaskToModel(task: TaskModel | null): TaskEditModel | null {
+        if (task === null) {
+            return null
+        }
+
+        return {
+            date: task.date !== null ? new Date(task.date) : null,
+            type: task.type,
+            title: task.title,
+            isProbable: task.isProbable,
+            time: task.time,
+        }
+    }
+
+    private convertTimeToString(time: number): string {
+        const timeInstance = new Time(time)
+        return `${timeInstance.hourString}${timeInstance.minuteString}`
     }
 
     private str2digits(n: number): string {
