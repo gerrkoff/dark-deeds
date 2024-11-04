@@ -27,10 +27,6 @@ export class DateService {
         return `${date.toLocaleDateString()} ${this.getWeekdayName(date)}`
     }
 
-    toNumber(date: Date | null): number {
-        return date ? date.getTime() : 0
-    }
-
     toTimeLabel(time: number): string {
         const timeInstance = new Time(time)
         return `${timeInstance.hourString}:${timeInstance.minuteString}`
@@ -79,7 +75,7 @@ export class DateService {
     }
 }
 
-class Time {
+export class Time {
     hour: number
     minute: number
 
