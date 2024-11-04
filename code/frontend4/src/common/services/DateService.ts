@@ -12,7 +12,7 @@ export class DateService {
     readonly days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 
     toDateLabel(date: Date): string {
-        return `${date.toLocaleDateString()} ${this.getWeekdayName(date)}`
+        return `${date.toLocaleDateString('en-US')} ${this.getWeekdayName(date)}`
     }
 
     toTimeLabel(time: number): string {
@@ -34,16 +34,6 @@ export class DateService {
         const day = date.getDay()
         const diff = date.getDate() - day + (day === 0 ? -6 : 1)
         return new Date(date.setDate(diff))
-    }
-
-    equal(dateX: Date | null, dateY: Date | null): boolean {
-        if (dateX === null && dateY === null) {
-            return true
-        }
-        if (dateX === null || dateY === null) {
-            return false
-        }
-        return dateX.getTime() === dateY.getTime()
     }
 
     getTimezoneOffset(): number {

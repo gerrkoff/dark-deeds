@@ -49,7 +49,7 @@ function NavigationBar({ applicationTab, switchTo }: Props) {
                                 href="#"
                                 onClick={() => switchTo('recurrent')}
                             >
-                                Recurrent tasks
+                                Recurrent
                             </a>
                         </li>
                         <li className="nav-item">
