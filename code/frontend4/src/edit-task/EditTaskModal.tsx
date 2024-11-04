@@ -4,6 +4,7 @@ import { TaskModel } from '../tasks/models/TaskModel'
 import { taskConvertService } from './services/TaskConvertService'
 import { isKeyEsc } from '../common/utils/keys'
 import { TaskEditModalContext } from './models/TaskEditModalContext'
+import { EditTaskHelper } from './components/EditTaskHelper'
 
 interface Props {
     context: TaskEditModalContext
@@ -87,13 +88,7 @@ function EditTaskModal({ context, onSave }: Props) {
                 />
                 <label htmlFor="taskInput">{label}</label>
             </div>
-            {editModel && (
-                <div>
-                    <pre className="mb-0">
-                        {JSON.stringify(editModel, undefined, 2)}
-                    </pre>
-                </div>
-            )}
+            {editModel && <EditTaskHelper task={editModel} />}
         </EditTaskModalContainer>
     )
 }
