@@ -1,4 +1,8 @@
-import { dateService, DateService } from '../../common/services/DateService'
+import {
+    dateService,
+    DateService,
+    Time,
+} from '../../common/services/DateService'
 import { uuidv4 } from '../../common/utils/uuidv4'
 import { TaskModel } from '../../tasks/models/TaskModel'
 import { TaskTypeEnum } from '../../tasks/models/TaskTypeEnum'
@@ -101,7 +105,7 @@ export class TaskConvertService {
             s += this.convertDateToString(model.date)
 
             if (model.time !== null) {
-                s += ` ${dateService.toTimeLabel(model.time)} `
+                s += ` ${this.convertTimeToString(model.time)} `
             } else {
                 s += ' '
             }
@@ -134,6 +138,25 @@ export class TaskConvertService {
         s += `${this.str2digits(
             date.getMonth() + 1,
         )}${this.str2digits(date.getDate())}`
+
+        return s
+    }
+
+    convertTimeToString(time: number): string {
+        const timeInstance = new Time(time)
+        return `${timeInstance.hourString}${timeInstance.minuteString}`
+    }
+
+    toDateLabel(date: Date): string {
+        let s = ''
+
+        if (new Date().getFullYear() !== date.getFullYear()) {
+            s += `${date.getFullYear()}/`
+        }
+
+        s += `${this.str2digits(
+            date.getMonth() + 1,
+        )}/${this.str2digits(date.getDate())} ${dateService.getWeekdayName(date)}`
 
         return s
     }

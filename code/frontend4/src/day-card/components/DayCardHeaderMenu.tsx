@@ -1,4 +1,5 @@
 import { FloatingPanel } from '../../common/components/FloatingPanel'
+import { IconPlus } from '../../common/icons/IconPlus'
 import { DayCardHeaderMenuContext } from '../models/DayCardHeaderMenuContext'
 
 interface Props {
@@ -23,9 +24,10 @@ function DayCardHeaderMenu({
             <div className="list-group">
                 <button
                     type="button"
-                    className="list-group-item list-group-item-action"
+                    className="list-group-item list-group-item-action d-flex align-items-center"
                     onClick={addTask}
                 >
+                    <IconPlus style={{ minWidth: '20px' }} />
                     Add
                 </button>
             </div>
