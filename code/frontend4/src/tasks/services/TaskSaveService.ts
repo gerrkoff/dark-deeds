@@ -2,8 +2,10 @@ import { TaskModel } from '../models/TaskModel'
 
 export class TaskSaveService {
     getTasksToSync(tasks: TaskModel[], updatedTasks: TaskModel[]): TaskModel[] {
+        this.updateTasksMap(tasks)
+
         const tasksToSync = new Map<string, TaskModel>(
-            updatedTasks.map(x => [x.uid, x]),
+            updatedTasks.map(x => [x.uid, this.fixVersion(x)]),
         )
 
         const tasksByDateMap = new Map<number | null, TaskModel[]>()
@@ -45,10 +47,13 @@ export class TaskSaveService {
                     if (taskToSync) {
                         taskToSync.order = order
                     } else {
-                        tasksToSync.set(task.uid, {
-                            ...task,
-                            order,
-                        })
+                        tasksToSync.set(
+                            task.uid,
+                            this.fixVersion({
+                                ...task,
+                                order,
+                            }),
+                        )
                     }
                 }
             }
@@ -77,6 +82,28 @@ export class TaskSaveService {
         }
 
         return dateTasks
+    }
+
+    private lastTasks: TaskModel[] = []
+    private lastTasksMap: Map<string, TaskModel> = new Map<string, TaskModel>()
+
+    private updateTasksMap(tasks: TaskModel[]) {
+        if (this.lastTasks === tasks) {
+            return
+        }
+
+        this.lastTasks = tasks
+        this.lastTasksMap = new Map<string, TaskModel>(
+            tasks.map(x => [x.uid, x]),
+        )
+    }
+
+    private fixVersion(task: TaskModel): TaskModel {
+        const existingTask = this.lastTasksMap.get(task.uid)
+
+        return existingTask?.version && existingTask.version > task.version
+            ? { ...task, version: existingTask.version }
+            : task
     }
 }
 

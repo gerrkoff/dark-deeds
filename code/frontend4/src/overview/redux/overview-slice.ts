@@ -38,7 +38,10 @@ export const overviewSlice = createSlice({
                         )
                     }
 
-                    state.tasks[index] = task
+                    state.tasks[index] = {
+                        ...task,
+                        version: state.tasks[index].version,
+                    }
                 } else {
                     state.tasks.push(task)
                 }
