@@ -28,18 +28,27 @@ export function useDayCardDnd({ date, tasks, onSaveTasks }: Props): Output {
         useState<DropZoneIdType | null>(null)
 
     useEffect(() => {
-        const handleClear = () => {
+        const handleDrop = () => {
             setDraggedTaskUid(null)
             setDropzoneHighlightedTaskUid(null)
             clearDraggedTask()
         }
 
-        document.addEventListener('drop', handleClear)
-        document.addEventListener('dragend', handleClear)
+        const handleDragEnd = () => {
+            if (window._isDragEnabled) {
+                return
+            }
+            setDraggedTaskUid(null)
+            setDropzoneHighlightedTaskUid(null)
+            clearDraggedTask()
+        }
+
+        document.addEventListener('drop', handleDrop)
+        document.addEventListener('dragend', handleDragEnd)
 
         return () => {
-            document.addEventListener('drop', handleClear)
-            document.removeEventListener('dragend', handleClear)
+            document.addEventListener('drop', handleDrop)
+            document.removeEventListener('dragend', handleDragEnd)
         }
     }, [])
 

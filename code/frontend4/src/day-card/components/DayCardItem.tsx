@@ -59,12 +59,7 @@ function DayCardItem({
             className={liClass}
             onClick={e => onOpenTaskMenu(e, task)}
         >
-            <span
-                draggable
-                ref={dragRef}
-                onContextMenu={e => e.preventDefault()}
-                className={spanClass}
-            >
+            <span draggable ref={dragRef} className={spanClass}>
                 {text(task, isDebug)}
             </span>
         </li>

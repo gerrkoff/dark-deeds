@@ -219,6 +219,7 @@ var DragDropTouch
                         if (DragDropTouch._ISPRESSHOLDMODE) {
                             this._pressHoldInterval = setTimeout(function () {
                                 _this._isDragEnabled = true
+                                window._isDragEnabled = true // === PATCH <<< ===
                                 _this._touchmove(e)
                             }, DragDropTouch._PRESSHOLDAWAIT)
                         }
@@ -303,6 +304,7 @@ var DragDropTouch
                             this._lastTarget,
                         )
                     }
+                    window._isDragEnabled = false // === PATCH <<< ===
                     this._dispatchEvent(
                         this._lastTouch,
                         'dragend',
@@ -361,6 +363,7 @@ var DragDropTouch
             this._lastTarget = null
             this._ptDown = null
             this._isDragEnabled = false
+            window._isDragEnabled = false // === PATCH <<< ===
             this._isDropZone = false
             this._dataTransfer = new DataTransfer()
             clearInterval(this._pressHoldInterval)
@@ -438,13 +441,13 @@ var DragDropTouch
                     // === PATCH >>> ===
                     // Constrain the image within the viewport
                     var viewportWidth = window.innerWidth
-                    var viewportHeight = window.innerHeight
+                    // var viewportHeight = window.innerHeight
                     var imgWidth = _this._img.offsetWidth
-                    var imgHeight = _this._img.offsetHeight
+                    // var imgHeight = _this._img.offsetHeight
                     var left = Math.round(pt.x - _this._imgOffset.x)
                     var top = Math.round(pt.y - _this._imgOffset.y)
                     left = Math.max(0, Math.min(left, viewportWidth - imgWidth))
-                    top = Math.max(0, Math.min(top, viewportHeight - imgHeight))
+                    // top = Math.max(0, Math.min(top, viewportHeight - imgHeight))
                     s.left = left + 'px'
                     s.top = top + 'px'
                     // s.left = Math.round(pt.x - _this._imgOffset.x) + 'px'
