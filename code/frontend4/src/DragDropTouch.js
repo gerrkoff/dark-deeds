@@ -288,12 +288,21 @@ var DragDropTouch
                     }
                     return
                 }
+
+                // === PATCH >>> ===
                 // user clicked the element but didn't drag, so clear the source and simulate a click
-                if (!this._img) {
-                    this._dragSource = null
-                    this._dispatchEvent(this._lastTouch, 'click', e.target)
-                    this._lastClick = Date.now()
+                // if (!this._img) {
+                //     this._dragSource = null
+                //     this._dispatchEvent(this._lastTouch, 'click', e.target)
+                //     this._lastClick = Date.now()
+                // }
+                if (this._isDragEnabled) {
+                    if (e.cancelable) {
+                        e.preventDefault()
+                    }
                 }
+                // === PATCH <<< ===
+
                 // finish dragging
                 this._destroyImage()
                 if (this._dragSource) {
