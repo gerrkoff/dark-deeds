@@ -12,18 +12,12 @@ function serviceWithToday(date?: Date): TaskConvertService {
     if (date === undefined) {
         date = new Date(2019, 0, 1)
     }
+
     const dateServiceMock: DateService = {
         today: () => date,
     } as unknown as DateService
 
-    console.log(
-        dateServiceMock,
-        'dateServiceMock',
-        dateServiceMock.today(),
-        'dateServiceMock.today()',
-    )
-
-    return new TaskConvertService(dateServiceMock as unknown as DateService)
+    return new TaskConvertService(dateServiceMock)
 }
 
 // [convertStringToModel] tests should be synced with BE TaskParserService.ParseTask tests
