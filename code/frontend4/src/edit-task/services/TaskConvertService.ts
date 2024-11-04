@@ -147,6 +147,20 @@ export class TaskConvertService {
         return `${timeInstance.hourString}${timeInstance.minuteString}`
     }
 
+    toDateLabel(date: Date): string {
+        let s = ''
+
+        if (new Date().getFullYear() !== date.getFullYear()) {
+            s += `${date.getFullYear()}/`
+        }
+
+        s += `${this.str2digits(
+            date.getMonth() + 1,
+        )}/${this.str2digits(date.getDate())} ${dateService.getWeekdayName(date)}`
+
+        return s
+    }
+
     private str2digits(n: number): string {
         return n < 10 ? '0' + n : n.toString()
     }

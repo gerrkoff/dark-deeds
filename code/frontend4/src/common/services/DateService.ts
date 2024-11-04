@@ -11,18 +11,6 @@ export class DateService {
     ]
     readonly days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 
-    toDateFromSpecialFormat(s: string): Date | null {
-        if (!/^\d{8}$/.test(s)) {
-            return null
-        }
-
-        const year = Number(s.substr(0, 4))
-        const month = Number(s.substr(4, 2))
-        const day = Number(s.substr(6, 2))
-
-        return new Date(year, month - 1, day)
-    }
-
     toDateLabel(date: Date): string {
         return `${date.toLocaleDateString()} ${this.getWeekdayName(date)}`
     }
