@@ -4,4 +4,6 @@ export interface TaskEditModalContext {
     isShown: boolean
     task: TaskModel | null
     date: Date | null
+    close: () => void
+    cleanup: () => void
 }

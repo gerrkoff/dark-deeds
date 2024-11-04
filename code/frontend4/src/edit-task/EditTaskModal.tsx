@@ -7,12 +7,13 @@ import { TaskEditModalContext } from './models/TaskEditModalContext'
 
 interface Props {
     context: TaskEditModalContext
-    onClose: () => void
     onSave: (task: TaskModel[]) => void
 }
 
-function EditTaskModal({ context, onClose, onSave }: Props) {
+function EditTaskModal({ context, onSave }: Props) {
     const inputRef = useRef<HTMLInputElement>(null)
+
+    const { close, cleanup } = context
 
     const [task, setTask] = useState('')
 
@@ -40,8 +41,9 @@ function EditTaskModal({ context, onClose, onSave }: Props) {
                       )
                     : taskConvertService.createTaskFromModel(editModel),
             ])
+            close()
         }
-    }, [editModel, onSave, context.task])
+    }, [editModel, onSave, context.task, close])
 
     const handleTaskChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setTask(e.target.value)
@@ -49,7 +51,7 @@ function EditTaskModal({ context, onClose, onSave }: Props) {
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (isKeyEsc(e)) {
-            onClose()
+            close()
         }
     }
 
@@ -60,20 +62,20 @@ function EditTaskModal({ context, onClose, onSave }: Props) {
     }, [context.task])
 
     useEffect(() => {
-        if (context.isShown) {
-            setTimeout(() => inputRef.current?.focus(), 16)
-        }
-    }, [context.isShown])
+        setTimeout(() => inputRef.current?.focus(), 16)
+    }, [])
 
     return (
         <EditTaskModalContainer
             isShown={context.isShown}
-            onClose={onClose}
+            onClose={close}
+            onCleanup={cleanup}
             onSave={handleSave}
             isSaveEnabled={task.length > 0}
         >
             <div className="form-floating mb-3">
                 <input
+                    autoFocus
                     ref={inputRef}
                     type="text"
                     className="form-control"
@@ -82,7 +84,6 @@ function EditTaskModal({ context, onClose, onSave }: Props) {
                     value={task}
                     onChange={handleTaskChange}
                     onKeyDown={handleKeyDown}
-                    autoFocus={true}
                 />
                 <label htmlFor="taskInput">{label}</label>
             </div>

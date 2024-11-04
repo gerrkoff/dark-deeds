@@ -1,29 +1,22 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { TaskModel } from '../../tasks/models/TaskModel'
 import { TaskEditModalContext } from '../models/TaskEditModalContext'
 
 interface Output {
-    taskEditModalContext: TaskEditModalContext
+    taskEditModalContext: TaskEditModalContext | null
     openTaskEditModal: (task: TaskModel | null) => void
     openTaskEditModalForDate: (date: Date) => void
-    closeTaskEditModal: () => void
-    saveAndCloseTaskEditModal: (tasks: TaskModel[]) => void
 }
 
-interface Props {
-    saveTasks: (tasks: TaskModel[]) => void
-}
-
-export function useEditTaskModal({ saveTasks }: Props): Output {
-    const [taskEditModalContext, setTaskEditModalContext] =
-        useState<TaskEditModalContext>({
-            isShown: false,
-            task: null,
-            date: null,
-        })
+export function useEditTaskModal(): Output {
+    const [context, setContext] = useState<{
+        isShown: boolean
+        task: TaskModel | null
+        date: Date | null
+    } | null>(null)
 
     const openTaskEditModal = useCallback((task: TaskModel | null) => {
-        setTaskEditModalContext({
+        setContext({
             isShown: true,
             task,
             date: null,
@@ -31,35 +24,36 @@ export function useEditTaskModal({ saveTasks }: Props): Output {
     }, [])
 
     const openTaskEditModalForDate = useCallback((date: Date) => {
-        setTaskEditModalContext({
+        setContext({
             isShown: true,
             task: null,
             date,
         })
     }, [])
 
-    const closeTaskEditModal = useCallback(
-        () =>
-            setTaskEditModalContext(old => ({
-                ...old,
-                isShown: false,
-            })),
-        [],
-    )
+    const taskEditModalContext = useMemo(() => {
+        if (context === null) {
+            return null
+        }
 
-    const saveAndCloseTaskEditModal = useCallback(
-        (tasks: TaskModel[]) => {
-            saveTasks(tasks)
-            closeTaskEditModal()
-        },
-        [closeTaskEditModal, saveTasks],
-    )
+        const close = () =>
+            setContext({
+                ...context,
+                isShown: false,
+            })
+
+        const cleanup = () => setContext(null)
+
+        return {
+            ...context,
+            close,
+            cleanup,
+        }
+    }, [context])
 
     return {
         taskEditModalContext,
         openTaskEditModal,
         openTaskEditModalForDate,
-        closeTaskEditModal,
-        saveAndCloseTaskEditModal,
     }
 }

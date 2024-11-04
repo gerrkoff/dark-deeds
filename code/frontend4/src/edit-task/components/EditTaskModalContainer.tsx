@@ -5,6 +5,7 @@ interface Props {
     isShown: boolean
     isSaveEnabled: boolean
     onClose: () => void
+    onCleanup: () => void
     onSave: () => void
     children: React.ReactNode
 }
@@ -13,6 +14,7 @@ function EditTaskModalContainer({
     isShown,
     isSaveEnabled,
     onClose,
+    onCleanup,
     onSave,
     children,
 }: Props) {
@@ -26,10 +28,13 @@ function EditTaskModalContainer({
             document.body.style.overflow = 'hidden'
         } else {
             setShow(false)
-            setTimeout(() => setVisible(false), 150)
+            setTimeout(() => {
+                setVisible(false)
+                onCleanup()
+            }, 150)
             document.body.style.overflow = ''
         }
-    }, [isShown])
+    }, [isShown, onCleanup])
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()

@@ -16,12 +16,7 @@ interface Props {
 function NoDateSection({ tasks, isDebug, saveTasks }: Props) {
     const cardRef = useRef<HTMLDivElement>(null)
 
-    const {
-        taskEditModalContext,
-        openTaskEditModal,
-        closeTaskEditModal,
-        saveAndCloseTaskEditModal,
-    } = useEditTaskModal({ saveTasks })
+    const { taskEditModalContext, openTaskEditModal } = useEditTaskModal()
 
     const {
         itemMenuContext,
@@ -61,11 +56,12 @@ function NoDateSection({ tasks, isDebug, saveTasks }: Props) {
                 />
             )}
 
-            <EditTaskModal
-                context={taskEditModalContext}
-                onClose={closeTaskEditModal}
-                onSave={saveAndCloseTaskEditModal}
-            />
+            {taskEditModalContext && (
+                <EditTaskModal
+                    context={taskEditModalContext}
+                    onSave={saveTasks}
+                />
+            )}
         </Card>
     )
 }
