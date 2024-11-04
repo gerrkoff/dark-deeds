@@ -1,4 +1,7 @@
 import { FloatingPanel } from '../../common/components/FloatingPanel'
+import { IconCheck } from '../../common/icons/IconCheck'
+import { IconPencil } from '../../common/icons/IconPencil'
+import { IconX } from '../../common/icons/IconX'
 import { TaskModel } from '../../tasks/models/TaskModel'
 import { DayCardItemMenuContext } from '../models/DayCardItemMenuContext'
 
@@ -34,23 +37,26 @@ function DayCardItemMenu({
             <div className="list-group">
                 <button
                     type="button"
-                    className="list-group-item list-group-item-action"
+                    className="list-group-item list-group-item-action d-flex align-items-center"
                     onClick={toggleTaskCompleted}
                 >
+                    <IconCheck style={{ minWidth: '20px' }} />
                     {toggleCompletedLabel}
                 </button>
                 <button
                     type="button"
-                    className="list-group-item list-group-item-action"
+                    className="list-group-item list-group-item-action d-flex align-items-center"
                     onClick={editTask}
                 >
+                    <IconPencil size={10} style={{ minWidth: '20px' }} />
                     Edit
                 </button>
                 <button
                     type="button"
-                    className="list-group-item list-group-item-action"
+                    className="list-group-item list-group-item-action d-flex align-items-center"
                     onClick={deleteTask}
                 >
+                    <IconX style={{ minWidth: '20px' }} />
                     Delete
                 </button>
             </div>
