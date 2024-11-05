@@ -15,7 +15,11 @@ function EditTaskHelper({ task }: Props) {
 
     return (
         <p className="mb-0">
-            <strong>{task.title}</strong> <br />
+            {task.title && (
+                <>
+                    <strong>{task.title}</strong> <br />
+                </>
+            )}
             {date && (
                 <>
                     Date: {date}
