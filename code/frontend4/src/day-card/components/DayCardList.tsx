@@ -55,7 +55,10 @@ function DayCardList({
         <>
             <ul
                 ref={listRef}
-                className="flex-grow-1 d-flex flex-column ps-4 mt-1 mb-0"
+                className={clsx(
+                    'flex-grow-1 d-flex flex-column ps-4 mt-1 mb-0',
+                    styles.list,
+                )}
             >
                 {shownTasks.map(task => (
                     <DayCardItem
