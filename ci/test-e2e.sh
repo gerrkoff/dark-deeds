@@ -8,6 +8,12 @@ echo
 
 # https://hub.docker.com/r/selenium/standalone-chrome/tags?page=&page_size=&name=&ordering=last_updated
 
+echo "----------- Params:"
+FE_URL="${1}"
+BE_URL="${2:-$1}"
+echo "URL: $URL"
+echo "BE_URL: $BE_URL"
+
 echo "----------- Removing previous containers and networks..."
 docker rm -f dd-test-e2e-chrome
 docker network rm dd-test-e2e-network
@@ -35,8 +41,8 @@ docker run -t --rm \
   -e TZ=America/New_York \
   -e ARTIFACTS_PATH='/app/artifacts' \
   -e CONTAINER='true' \
-  -e URL="${1}" \
-  -e BE_URL="${2:-$1}" \
+  -e URL="$FE_URL" \
+  -e BE_URL="$BE_URL" \
   -e SELENIUM_GRID_URL='http://dd-test-e2e-chrome:4444' \
   -v "$(pwd)"/ci/results:/app/artifacts \
   --name dd-test-e2e \
