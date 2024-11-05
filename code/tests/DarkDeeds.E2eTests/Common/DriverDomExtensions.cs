@@ -5,19 +5,22 @@ namespace DarkDeeds.E2eTests.Common;
 
 public static class DriverDomExtensions
 {
+    // fixed
     public static IWebElement GetUsernameInput(this RemoteWebDriver driver)
     {
-        return driver.GetElement("//*[@data-test-id='username-input']/input");
+        return driver.GetElement("//*[@data-test-id='form-signin']//input[@id='username']");
     }
 
+    // fixed
     public static IWebElement GetPasswordInput(this RemoteWebDriver driver)
     {
-        return driver.GetElement("//*[@data-test-id='password-input']/input");
+        return driver.GetElement("//*[@data-test-id='form-signin']//input[@id='password']");
     }
 
+    // fixed
     public static IWebElement GetSignInButton(this RemoteWebDriver driver)
     {
-        return driver.GetElement("//*[@data-test-id='signin-button']");
+        return driver.GetElement("//*[@data-test-id='form-signin']//button[@type='submit']");
     }
 
     public static IWebElement GetSignOutButton(this RemoteWebDriver driver)
@@ -112,14 +115,16 @@ public static class DriverDomExtensions
         return driver.GetElement(XpathHelper.Toast(text));
     }
 
+    // fixed
     public static void WaitUntilLoginComponentDisappeared(this RemoteWebDriver driver)
     {
-        driver.WaitUntilDisappeared("//*[@data-test-id='login-component']");
+        driver.WaitUntilDisappeared("//*[@data-test-id='form-signin']");
     }
 
-    public static void WaitUntilOverviewComponentAppeared(this RemoteWebDriver driver)
+    // fixed
+    public static void WaitUntilNavbarComponentAppeared(this RemoteWebDriver driver)
     {
-        driver.WaitUntilAppeared("//*[@data-test-id='overview-component']");
+        driver.WaitUntilAppeared($"//*{XpathHelper.ClassContains("navbar")}");
     }
 
     public static void WaitUntilSavingIndicatorDisappeared(this RemoteWebDriver driver)

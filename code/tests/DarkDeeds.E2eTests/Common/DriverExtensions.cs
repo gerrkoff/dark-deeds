@@ -16,7 +16,7 @@ public static class DriverExtensions
 
     public static void WaitUntilUserLoaded(this RemoteWebDriver driver)
     {
-        driver.WaitUntilOverviewComponentAppeared();
+        driver.WaitUntilNavbarComponentAppeared();
     }
 
     public static void WaitUntilSavingFinished(this RemoteWebDriver driver)
