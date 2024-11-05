@@ -67,6 +67,8 @@ public class BaseTest
 
     private static RemoteWebDriver CreateDriver()
     {
+        Console.WriteLine($"URL: {Url} BE_URL: {BackendUrl}");
+
         var options = new ChromeOptions();
         options.AddArguments("--ignore-certificate-errors");
         options.AddArguments("--verbose");
