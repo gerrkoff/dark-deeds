@@ -34,7 +34,9 @@ docker run -t --rm \
   --network dd-test-e2e-network \
   -e TZ=America/New_York \
   -e ARTIFACTS_PATH='/app/artifacts' \
-  -e URL="$1" \
+  -e CONTAINER='true' \
+  -e URL="${1}" \
+  -e BE_URL="${2:-$1}" \
   -e SELENIUM_GRID_URL='http://dd-test-e2e-chrome:4444' \
   -v "$(pwd)"/ci/results:/app/artifacts \
   --name dd-test-e2e \
