@@ -2,6 +2,7 @@
   "name": "dark-deeds",
   "version": "1.0.0",
   "private": true,
+  "//homepage": "/old",
   "dependencies": {
     "@microsoft/signalr": "^6.0.2",
     "connected-react-router": "^6.9.2",

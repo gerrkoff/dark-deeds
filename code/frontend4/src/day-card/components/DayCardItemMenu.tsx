@@ -1,9 +1,11 @@
+import { useState } from 'react'
 import { FloatingPanel } from '../../common/components/FloatingPanel'
 import { IconCheck } from '../../common/icons/IconCheck'
 import { IconPencil } from '../../common/icons/IconPencil'
 import { IconX } from '../../common/icons/IconX'
 import { TaskModel } from '../../tasks/models/TaskModel'
 import { DayCardItemMenuContext } from '../models/DayCardItemMenuContext'
+import clsx from 'clsx'
 
 interface Props {
     context: DayCardItemMenuContext
@@ -20,11 +22,18 @@ function DayCardItemMenu({
     onEdit,
     onToggleCompleted,
 }: Props) {
+    const [isDeletePending, setIsDeletePending] = useState(false)
+
     const toggleTaskCompleted = () => onToggleCompleted(task)
 
     const editTask = () => onEdit(task)
 
-    const deleteTask = () => onDelete(task)
+    const deleteTask = () => {
+        if (isDeletePending) {
+            onDelete(task)
+        }
+        setIsDeletePending(true)
+    }
 
     const toggleCompletedLabel = task.completed ? 'Uncomplete' : 'Complete'
 
@@ -53,7 +62,12 @@ function DayCardItemMenu({
                 </button>
                 <button
                     type="button"
-                    className="list-group-item list-group-item-action d-flex align-items-center"
+                    className={clsx(
+                        'list-group-item list-group-item-action d-flex align-items-center',
+                        {
+                            'bg-danger': isDeletePending,
+                        },
+                    )}
                     onClick={deleteTask}
                 >
                     <IconX style={{ minWidth: '20px' }} />
