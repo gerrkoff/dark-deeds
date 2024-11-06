@@ -20,19 +20,19 @@ export class Toolbar extends React.PureComponent<IProps> {
             >
                 {renderMenuItem(
                     this.props.navigateTo,
-                    '/',
+                    '/old',
                     'calendar',
                     this.props.path
                 )}
                 {renderMenuItem(
                     this.props.navigateTo,
-                    '/recurrences',
+                    '/old/recurrences',
                     'sync alternate',
                     this.props.path
                 )}
                 {renderMenuItem(
                     this.props.navigateTo,
-                    '/settings',
+                    '/old/settings',
                     'settings',
                     this.props.path
                 )}
@@ -48,9 +48,9 @@ function renderMenuItem(
     currentPath: string
 ): React.ReactNode {
     const active =
-        currentPath === '/'
-            ? path === '/'
-            : path !== '/' && currentPath.startsWith(path)
+        currentPath === '/old'
+            ? path === '/old'
+            : path !== '/old' && currentPath.startsWith(path)
     const dataTestId = `nav-${path}`
 
     return (
