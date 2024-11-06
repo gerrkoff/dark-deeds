@@ -17,5 +17,5 @@
 }
 
 .item {
-    border-color: var(--bs-dark-bg-subtle) !important;
+    margin-top: 1px;
 }

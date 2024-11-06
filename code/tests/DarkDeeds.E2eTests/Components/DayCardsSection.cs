@@ -18,7 +18,7 @@ public class DayCardsSection(string path) : X(path)
 
     public DayCardsSection Expired()
     {
-        Query.Append($"//*{XpathHelper.ClassContains("expired")}");
+        Query.Append($"//*{XpathHelper.ClassContains("border-0")}");
         return this;
     }
 }
