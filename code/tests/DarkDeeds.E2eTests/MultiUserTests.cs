@@ -17,8 +17,7 @@ public class MultiUserTests : BaseTest
             driver.CreateTaskViaAddButton(taskText);
             driver.WaitUntilSavingFinished();
 
-            driver.NavigateToSettings();
-            driver.GetSignOutButton().Click();
+            driver.SignOut();
 
             await CreateUserAndLogin(driver);
             driver.WaitUntilTaskDisappeared(taskText);
@@ -34,8 +33,9 @@ public class MultiUserTests : BaseTest
             await CreateUserAndLogin(driver);
 
             driver.OpenNewTab(Url);
-            driver.NavigateToSettings();
-            driver.GetSignOutButton().Click();
+
+            driver.SignOut();
+
             await CreateUserAndLogin(driver);
 
             driver.CreateTaskViaAddButton(taskText);

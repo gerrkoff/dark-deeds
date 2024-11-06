@@ -5,11 +5,6 @@ namespace DarkDeeds.E2eTests.Common;
 
 public static class DriverDomExtensions
 {
-    public static IWebElement GetSignOutButton(this RemoteWebDriver driver)
-    {
-        return driver.GetElement("//*[@data-test-id='signout-button']");
-    }
-
     public static IWebElement GetAddTaskToDayButton(this RemoteWebDriver driver)
     {
         return driver.GetElement("//*[@data-test-id='add-task-to-day-button']");

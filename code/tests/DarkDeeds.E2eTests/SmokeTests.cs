@@ -36,7 +36,7 @@ public class SmokeTests(ITestOutputHelper output) : UserLoginTest
             driver.CreateTaskViaAddButton(taskText);
             driver.WaitUntilSavingFinished();
 
-            var task = driver.GetElement(X.GetNoDateList().GetTaskByText(taskText));
+            var task = driver.GetElement(X.NoDateList().TaskByText(taskText));
             driver.DeleteTask(task);
             driver.WaitUntilSavingFinished();
 
@@ -109,10 +109,10 @@ public class SmokeTests(ITestOutputHelper output) : UserLoginTest
             driver.SwitchToTab(0);
             driver.CreateTaskViaAddButton(taskText);
             driver.WaitUntilSavingFinished();
-            driver.GetElement(X.GetNoDateList().GetTaskByText(taskText));
+            driver.GetElement(X.NoDateList().TaskByText(taskText));
 
             driver.SwitchToTab(1);
-            var task = driver.GetElement(X.GetNoDateList().GetTaskByText(taskText));
+            var task = driver.GetElement(X.NoDateList().TaskByText(taskText));
             driver.DeleteTask(task);
             driver.WaitUntilSavingFinished();
 

@@ -16,27 +16,32 @@ public abstract class X(string initPath)
         return Query.ToString();
     }
 
-    public static RootContainer GetRoot()
+    public static RootContainer Root()
     {
         return new RootContainer();
     }
 
-    public static SignInForm GetSignInForm()
+    public static Navbar Navbar()
+    {
+        return new Navbar();
+    }
+
+    public static SignInForm SignInForm()
     {
         return new SignInForm();
     }
 
-    public static EditTaskModal GetEditTaskModal()
+    public static EditTaskModal EditTaskModal()
     {
         return new EditTaskModal();
     }
 
-    public static CardList GetNoDateList()
+    public static CardList NoDateList()
     {
         return new CardList("//*[@data-test-id='card-no-date']");
     }
 
-    public static TaskMenu GetTaskMenu()
+    public static TaskMenu TaskMenu()
     {
         return new TaskMenu();
     }

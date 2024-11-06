@@ -2,19 +2,19 @@ namespace DarkDeeds.E2eTests.Components;
 
 public class SignInForm() : X("//*[@data-test-id='form-signin']")
 {
-    public SignInForm GetUsernameInput()
+    public SignInForm UsernameInput()
     {
         Query.Append("//input[@id='username']");
         return this;
     }
 
-    public SignInForm GetPasswordInput()
+    public SignInForm PasswordInput()
     {
         Query.Append("//input[@id='password']");
         return this;
     }
 
-    public SignInForm GetSubmitButton()
+    public SignInForm SubmitButton()
     {
         Query.Append("//button[@type='submit']");
         return this;

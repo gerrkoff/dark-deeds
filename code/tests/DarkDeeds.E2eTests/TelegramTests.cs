@@ -24,7 +24,7 @@ public class TelegramTests : BaseTest
             var task = RandomizeText("task");
             await SendCommand(task, testChatId);
 
-            driver.GetElement(X.GetNoDateList().GetTaskByText(task));
+            driver.GetElement(X.NoDateList().TaskByText(task));
         });
     }
 

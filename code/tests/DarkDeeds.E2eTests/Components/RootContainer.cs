@@ -1,24 +1,22 @@
-using DarkDeeds.E2eTests.Common;
-
 namespace DarkDeeds.E2eTests.Components;
 
 public class RootContainer() : X("//*[@id='root']")
 {
-    public RootContainer GetAddTaskButton()
+    public RootContainer AddTaskButton()
     {
         Query.Append("//*[@data-test-id='btn-add-task']");
         return this;
     }
 
-    public RootContainer GetSavingStatus()
+    public RootContainer SavingStatus()
     {
         Query.Append("//*[@data-test-id='status-saving']");
         return this;
     }
 
-    public RootContainer GetNavbar()
+    public RootContainer SignOutButton()
     {
-        Query.Append($"//*{XpathHelper.ClassContains("navbar")}");
+        Query.Append("//*[@data-test-id='btn-signout']");
         return this;
     }
 }
