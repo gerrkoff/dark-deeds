@@ -39,7 +39,7 @@ function DayCardItem({
         spanClass += ' text-end me-1'
     }
 
-    let liClass = 'border-top'
+    let liClass = ''
 
     if (!isDraggedOver) {
         liClass += ` ${styles.item}`

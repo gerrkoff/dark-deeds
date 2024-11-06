@@ -12,7 +12,6 @@ import styles from './DayCard.module.css'
 import { useDayCardMenuItem } from '../hooks/useDayCardMenuItem'
 import { useDayCardMenuHeader } from '../hooks/useDayCardMenuHeader'
 import { dateService } from '../../common/services/DateService'
-import clsx from 'clsx'
 
 interface Props {
     dayCardModel: DayCardModel
@@ -66,7 +65,8 @@ function DayCard({
         <>
             <Card
                 elementRef={cardRef}
-                className={clsx(styles.card, { expired: isExpired })}
+                isDimmed={isExpired}
+                className={styles.card}
             >
                 <DayCardHeader
                     dayCardModel={dayCardModel}

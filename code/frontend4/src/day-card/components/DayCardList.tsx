@@ -75,13 +75,14 @@ function DayCardList({
                 <li
                     ref={lastItemRef}
                     className={clsx(
-                        'd-inline border-top flex-grow-1',
+                        'd-inline flex-grow-1',
                         dropzoneHighlightedTaskUid !== dropZoneBottomId &&
                             styles.item,
                         dropzoneHighlightedTaskUid === dropZoneBottomId &&
-                            'border-primary',
+                            'border-top border-primary',
                     )}
                     style={{
+                        boxSizing: 'initial',
                         minHeight: '8px',
                     }}
                 ></li>
