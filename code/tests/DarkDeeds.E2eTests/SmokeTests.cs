@@ -3,7 +3,6 @@ using DarkDeeds.E2eTests.Base;
 using DarkDeeds.E2eTests.Common;
 using DarkDeeds.E2eTests.Components;
 using Newtonsoft.Json.Linq;
-using OpenQA.Selenium;
 using OpenQA.Selenium.Interactions;
 using Xunit;
 using Xunit.Abstractions;
