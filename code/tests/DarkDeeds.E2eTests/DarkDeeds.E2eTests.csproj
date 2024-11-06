@@ -6,7 +6,7 @@
     <AnalysisLevel>latest-all</AnalysisLevel>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <NoWarn>CA1305;CA1024</NoWarn>
+    <NoWarn>CA1305;CA1024;CA1822</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>

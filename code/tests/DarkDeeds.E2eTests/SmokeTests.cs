@@ -70,10 +70,7 @@ public class SmokeTests(ITestOutputHelper output) : UserLoginTest
             actions
                 .ClickAndHold(task1Original)
                 .MoveToElement(task2Original)
-                .Build()
-                .Perform();
-            actions
-                .MoveByOffset(task2Original.Size.Width / 2, task2Original.Size.Height / 2)
+                .MoveByOffset(0, task2Original.Size.Height / 4)
                 .Release()
                 .Build()
                 .Perform();
