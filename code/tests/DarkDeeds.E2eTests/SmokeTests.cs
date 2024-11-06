@@ -1,6 +1,7 @@
 ﻿using System.Drawing;
 using DarkDeeds.E2eTests.Base;
 using DarkDeeds.E2eTests.Common;
+using DarkDeeds.E2eTests.Components;
 using Newtonsoft.Json.Linq;
 using OpenQA.Selenium.Interactions;
 using Xunit;
@@ -35,7 +36,7 @@ public class SmokeTests(ITestOutputHelper output) : UserLoginTest
             driver.CreateTaskViaAddButton(taskText);
             driver.WaitUntilSavingFinished();
 
-            var task = driver.GetTaskByTextInNoDateSection(taskText);
+            var task = driver.GetElement(X.GetNoDateList().GetTaskByText(taskText));
             driver.DeleteTask(task);
             driver.WaitUntilSavingFinished();
 
@@ -108,10 +109,10 @@ public class SmokeTests(ITestOutputHelper output) : UserLoginTest
             driver.SwitchToTab(0);
             driver.CreateTaskViaAddButton(taskText);
             driver.WaitUntilSavingFinished();
-            driver.GetTaskByTextInNoDateSection(taskText);
+            driver.GetElement(X.GetNoDateList().GetTaskByText(taskText));
 
             driver.SwitchToTab(1);
-            var task = driver.GetTaskByTextInNoDateSection(taskText);
+            var task = driver.GetElement(X.GetNoDateList().GetTaskByText(taskText));
             driver.DeleteTask(task);
             driver.WaitUntilSavingFinished();
 

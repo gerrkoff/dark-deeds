@@ -1,3 +1,4 @@
+using DarkDeeds.E2eTests.Components;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Remote;
 using Xunit;
@@ -8,29 +9,29 @@ public static class DriverExtensions
 {
     public static void SignIn(this RemoteWebDriver driver, string username, string password)
     {
-        driver.GetUsernameInput().SendKeys(username);
-        driver.GetPasswordInput().SendKeys(password);
-        driver.GetSignInButton().Click();
-        driver.WaitUntilLoginComponentDisappeared();
+        driver.GetElement(X.GetSignInForm().GetUsernameInput()).SendKeys(username);
+        driver.GetElement(X.GetSignInForm().GetPasswordInput()).SendKeys(password);
+        driver.GetElement(X.GetSignInForm().GetSubmitButton()).Click();
+        driver.WaitUntilDisappeared(X.GetSignInForm());
     }
 
     public static void WaitUntilUserLoaded(this RemoteWebDriver driver)
     {
-        driver.WaitUntilNavbarComponentAppeared();
+        driver.WaitUntilAppeared(X.GetRoot().GetNavbar());
     }
 
     public static void WaitUntilSavingFinished(this RemoteWebDriver driver)
     {
-        driver.WaitUntilSavingIndicatorAppeared();
-        driver.WaitUntilSavingIndicatorDisappeared();
+        driver.WaitUntilAppeared(X.GetRoot().GetSavingStatus());
+        driver.WaitUntilDisappeared(X.GetRoot().GetSavingStatus());
     }
 
     public static void DeleteTask(this RemoteWebDriver driver, IWebElement taskElement)
     {
         driver.ScrollToElement(taskElement);
         taskElement.Click();
-        driver.GetDeleteTaskButton().Click();
-        driver.GetModalConfirmButton().Click();
+        driver.GetElement(X.GetTaskMenu().GetDeleteButton()).Click();
+        driver.GetElement(X.GetTaskMenu().GetDeleteButton()).Click();
     }
 
     public static void CreateTaskViaDayHeader(this RemoteWebDriver driver, IWebElement dayHeaderElement, string task)
@@ -38,15 +39,15 @@ public static class DriverExtensions
         driver.ScrollToElement(dayHeaderElement);
         dayHeaderElement.Click();
         driver.GetAddTaskToDayButton().Click();
-        driver.GetEditTaskInput().SendKeys(task);
-        driver.GetSaveTaskButton().Click();
+        driver.GetElement(X.GetEditTaskModal().GetInput()).SendKeys(task);
+        driver.GetElement(X.GetEditTaskModal().GetSubmitButton()).Click();
     }
 
     public static void CreateTaskViaAddButton(this RemoteWebDriver driver, string task)
     {
-        driver.GetAddTaskButton().Click();
-        driver.GetEditTaskInput().SendKeys(task);
-        driver.GetSaveTaskButton().Click();
+        driver.GetElement(X.GetRoot().GetAddTaskButton()).Click();
+        driver.GetElement(X.GetEditTaskModal().GetInput()).SendKeys(task);
+        driver.GetElement(X.GetEditTaskModal().GetSubmitButton()).Click();
     }
 
     public static void NavigateToOverview(this RemoteWebDriver driver)

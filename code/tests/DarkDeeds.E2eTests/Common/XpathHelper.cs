@@ -32,11 +32,6 @@ public static class XpathHelper
         return "*[@data-test-id='create-recurrence-form-weekdays']";
     }
 
-    public static string SavingIndicator()
-    {
-        return "*[@data-test-id='saving-indicator']";
-    }
-
     public static string RecurrenceList()
     {
         return $"*{ClassContains("recurrences-view-recurrence-list")}";
