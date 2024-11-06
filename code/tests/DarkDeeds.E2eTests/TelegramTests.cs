@@ -4,6 +4,7 @@ using System.Text;
 using System.Text.Json;
 using DarkDeeds.E2eTests.Base;
 using DarkDeeds.E2eTests.Common;
+using DarkDeeds.E2eTests.Components;
 using DarkDeeds.E2eTests.Models;
 using Xunit;
 
@@ -23,7 +24,7 @@ public class TelegramTests : BaseTest
             var task = RandomizeText("task");
             await SendCommand(task, testChatId);
 
-            driver.GetTaskByTextInNoDateSection(task);
+            driver.GetElement(X.OverviewPage().NoDateSection().TaskByText(task));
         });
     }
 

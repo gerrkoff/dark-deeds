@@ -1,6 +1,7 @@
 ﻿using System.Drawing;
 using DarkDeeds.E2eTests.Base;
 using DarkDeeds.E2eTests.Common;
+using DarkDeeds.E2eTests.Components;
 using Newtonsoft.Json.Linq;
 using OpenQA.Selenium.Interactions;
 using Xunit;
@@ -35,7 +36,7 @@ public class SmokeTests(ITestOutputHelper output) : UserLoginTest
             driver.CreateTaskViaAddButton(taskText);
             driver.WaitUntilSavingFinished();
 
-            var task = driver.GetTaskByTextInNoDateSection(taskText);
+            var task = driver.GetElement(X.OverviewPage().NoDateSection().TaskByText(taskText));
             driver.DeleteTask(task);
             driver.WaitUntilSavingFinished();
 
@@ -51,29 +52,24 @@ public class SmokeTests(ITestOutputHelper output) : UserLoginTest
         var task3Text = RandomizeText("dnd task 3");
         return Test(driver =>
         {
-            var overviewSectionParser = new OverviewSectionParser(driver.GetCurrentSection());
-
-            var header1 = overviewSectionParser.FindBlock(1).FindDay(2).FindHeaderDate().GetElement();
+            var header1 = driver.GetElement(X.OverviewPage().CurrentSection().Block(1).Day(2).DateHeader());
             driver.CreateTaskViaDayHeader(header1, task1Text);
 
-            var header2 = overviewSectionParser.FindBlock(1).FindDay(4).FindHeaderDate().GetElement();
-            driver.CreateTaskViaDayHeader(header2, task2Text);
+            var header2 = driver.GetElement(X.OverviewPage().CurrentSection().Block(1).Day(4).DateHeader());
             driver.CreateTaskViaDayHeader(header2, task3Text);
+            driver.CreateTaskViaDayHeader(header2, task2Text);
 
             driver.WaitUntilSavingFinished();
 
-            var task1Original = overviewSectionParser.FindBlock(1).FindDay(2).FindTask(task1Text).GetElement();
-            var task2Original = overviewSectionParser.FindBlock(1).FindDay(4).FindTask(task2Text).GetElement();
+            var task1Original = driver.GetElement(X.OverviewPage().CurrentSection().Block(1).Day(2).List().TaskByText(task1Text));
+            var task2Original = driver.GetElement(X.OverviewPage().CurrentSection().Block(1).Day(4).List().TaskByText(task2Text));
 
             var actions = new Actions(driver);
 
             actions
                 .ClickAndHold(task1Original)
                 .MoveToElement(task2Original)
-                .Build()
-                .Perform();
-            actions
-                .MoveByOffset(task2Original.Size.Width / 2, task2Original.Size.Height / 2)
+                .MoveByOffset(0, task2Original.Size.Height / 4)
                 .Release()
                 .Build()
                 .Perform();
@@ -83,10 +79,9 @@ public class SmokeTests(ITestOutputHelper output) : UserLoginTest
             driver.Navigate().Refresh();
             driver.WaitUntilUserLoaded();
 
-            overviewSectionParser = new OverviewSectionParser(driver.GetCurrentSection());
-            var task1Saved = overviewSectionParser.FindBlock(1).FindDay(4).FindTask(task1Text).GetElement();
-            var task2Saved = overviewSectionParser.FindBlock(1).FindDay(4).FindTask(task2Text).GetElement();
-            var task3Saved = overviewSectionParser.FindBlock(1).FindDay(4).FindTask(task3Text).GetElement();
+            var task1Saved = driver.GetElement(X.OverviewPage().CurrentSection().Block(1).Day(4).List().TaskByText(task1Text));
+            var task2Saved = driver.GetElement(X.OverviewPage().CurrentSection().Block(1).Day(4).List().TaskByText(task2Text));
+            var task3Saved = driver.GetElement(X.OverviewPage().CurrentSection().Block(1).Day(4).List().TaskByText(task3Text));
 
             Assert.True(task1Saved.Location.X == task2Saved.Location.X);
             Assert.True(task1Saved.Location.X == task3Saved.Location.X);
@@ -108,15 +103,15 @@ public class SmokeTests(ITestOutputHelper output) : UserLoginTest
             driver.SwitchToTab(0);
             driver.CreateTaskViaAddButton(taskText);
             driver.WaitUntilSavingFinished();
-            driver.GetTaskByTextInNoDateSection(taskText);
+            driver.GetElement(X.OverviewPage().NoDateSection().TaskByText(taskText));
 
             driver.SwitchToTab(1);
-            var task = driver.GetTaskByTextInNoDateSection(taskText);
+            var task = driver.GetElement(X.OverviewPage().NoDateSection().TaskByText(taskText));
             driver.DeleteTask(task);
             driver.WaitUntilSavingFinished();
 
             driver.SwitchToTab(0);
-            driver.WaitUntilTaskDisappeared(taskText);
+            driver.WaitUntilDisappeared(X.OverviewPage().NoDateSection().TaskByText(taskText));
 
             return Task.CompletedTask;
         });
@@ -131,12 +126,11 @@ public class SmokeTests(ITestOutputHelper output) : UserLoginTest
         return Test(driver =>
         {
             var expiredDaysCount = ((int)now.DayOfWeek + 6) % 7;
-            var overviewSectionParser = new OverviewSectionParser(driver.GetCurrentSection());
-            var currentExpiredDaysCount = overviewSectionParser.CountExpiredDays();
+            var currentExpiredDaysCount = driver.CountElements(X.OverviewPage().CurrentSection().Block(1).Expired());
             Assert.Equal(expiredDaysCount, currentExpiredDaysCount);
 
             driver.CreateTaskViaAddButton(taskTextWithDate);
-            overviewSectionParser.FindBlock(1).FindDay(expiredDaysCount + 1).FindTask(originalTaskText).GetElement();
+            driver.GetElement(X.OverviewPage().CurrentSection().Block(1).Day(expiredDaysCount + 1).List().TaskByText(originalTaskText));
 
             return Task.CompletedTask;
         });
@@ -147,9 +141,8 @@ public class SmokeTests(ITestOutputHelper output) : UserLoginTest
     {
         return Test(driver =>
         {
-            var overviewSectionParser = new OverviewSectionParser(driver.GetCurrentSection());
             var days = Enumerable.Range(1, 7)
-                .Select(x => overviewSectionParser.FindBlock(1).FindDay(x).GetElement())
+                .Select(x => driver.GetElement(X.OverviewPage().CurrentSection().Block(1).Day(x)))
                 .ToList();
 
             driver.Manage().Window.Size = new Size(1400, 1080);
@@ -176,26 +169,25 @@ public class SmokeTests(ITestOutputHelper output) : UserLoginTest
         });
     }
 
-    [Fact]
-    public Task RecurrenceTest()
-    {
-        return Test(driver =>
-        {
-            driver.NavigateToRecurrences();
-            driver.WaitUntilRecurrencesLoaded();
-
-            var task = RandomizeText("recurrence");
-            var recurrenceTask = $"2359 {task}";
-            driver.CreateRecurrence(recurrenceTask);
-            driver.CreateTaskRecurrences(2);
-
-            driver.NavigateToOverview();
-
-            var overviewSectionParser = new OverviewSectionParser(driver.GetCurrentSection());
-            overviewSectionParser.FindBlock(1).FindDay(7).FindTask($"23:59 {task}").GetElement();
-            overviewSectionParser.FindBlock(2).FindDay(7).FindTask($"23:59 {task}").GetElement();
-
-            return Task.CompletedTask;
-        });
-    }
+    // [Fact]
+    // public Task RecurrenceTest()
+    // {
+    //     return Test(driver =>
+    //     {
+    //         driver.NavigateToRecurrences();
+    //         driver.WaitUntilRecurrencesLoaded();
+    //
+    //         var task = RandomizeText("recurrence");
+    //         var recurrenceTask = $"2359 {task}";
+    //         driver.CreateRecurrence(recurrenceTask);
+    //         driver.CreateTaskRecurrences(2);
+    //
+    //         driver.NavigateToOverview();
+    //
+    //         driver.GetElement(X.CurrentSection().Block(1).Day(7).List().TaskByText($"23:59 {task}"));
+    //         driver.GetElement(X.CurrentSection().Block(2).Day(7).List().TaskByText($"23:59 {task}"));
+    //
+    //         return Task.CompletedTask;
+    //     });
+    // }
 }

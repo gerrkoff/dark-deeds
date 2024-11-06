@@ -93,6 +93,9 @@ export const overviewSlice = createSlice({
                 }
             }
         },
+        cleanup: state => {
+            state.tasks = []
+        },
         toggleRoutineTaskDate: (state, action: PayloadAction<number>) => {
             const index = state.routineTaskDatesShown.indexOf(action.payload)
             if (index !== -1) {
@@ -115,7 +118,12 @@ export const overviewSlice = createSlice({
     },
 })
 
-export const { updateTasks, syncTasks, syncVersions, toggleRoutineTaskDate } =
-    overviewSlice.actions
+export const {
+    updateTasks,
+    syncTasks,
+    syncVersions,
+    toggleRoutineTaskDate,
+    cleanup,
+} = overviewSlice.actions
 
 export default overviewSlice.reducer

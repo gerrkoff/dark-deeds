@@ -25,6 +25,11 @@ public static class DriverLowLevelExtensions
         return driver.FindElementByXPath(xpath);
     }
 
+    public static int CountElements(this RemoteWebDriver driver, string xpath)
+    {
+        return driver.FindElements(By.XPath(xpath)).Count;
+    }
+
     public static bool ElementExists(this RemoteWebDriver driver, string xpath)
     {
         return driver.FindElementsByXPath(xpath).Count != 0;

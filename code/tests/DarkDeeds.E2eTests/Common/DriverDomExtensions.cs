@@ -1,68 +1,14 @@
-using OpenQA.Selenium;
-using OpenQA.Selenium.Remote;
+// using OpenQA.Selenium;
+// using OpenQA.Selenium.Remote;
 
 namespace DarkDeeds.E2eTests.Common;
 
 public static class DriverDomExtensions
 {
-    public static IWebElement GetUsernameInput(this RemoteWebDriver driver)
-    {
-        return driver.GetElement("//*[@data-test-id='username-input']/input");
-    }
-
-    public static IWebElement GetPasswordInput(this RemoteWebDriver driver)
-    {
-        return driver.GetElement("//*[@data-test-id='password-input']/input");
-    }
-
-    public static IWebElement GetSignInButton(this RemoteWebDriver driver)
-    {
-        return driver.GetElement("//*[@data-test-id='signin-button']");
-    }
-
-    public static IWebElement GetSignOutButton(this RemoteWebDriver driver)
-    {
-        return driver.GetElement("//*[@data-test-id='signout-button']");
-    }
-
-    public static IWebElement GetAddTaskButton(this RemoteWebDriver driver)
-    {
-        return driver.GetElement("//*[@data-test-id='add-task-button']");
-    }
-
-    public static IWebElement GetEditTaskInput(this RemoteWebDriver driver)
-    {
-        return driver.GetElement("//*[@data-test-id='edit-task-input']/input");
-    }
-
-    public static IWebElement GetSaveTaskButton(this RemoteWebDriver driver)
-    {
-        return driver.GetElement("//*[@data-test-id='save-task-button']");
-    }
-
-    public static IWebElement GetAddTaskToDayButton(this RemoteWebDriver driver)
-    {
-        return driver.GetElement("//*[@data-test-id='add-task-to-day-button']");
-    }
-
-    public static IWebElement GetDeleteTaskButton(this RemoteWebDriver driver)
-    {
-        return driver.GetElement("//*[@data-test-id='delete-task-button']");
-    }
-
+    /*
     public static IWebElement GetModalConfirmButton(this RemoteWebDriver driver)
     {
         return driver.GetElement("//*[@data-test-id='modal-confirm-button']");
-    }
-
-    public static IWebElement GetTaskByTextInNoDateSection(this RemoteWebDriver driver, string text)
-    {
-        return driver.GetElement($"//div[@id='no-date-card']//{XpathHelper.TaskWithText(text)}");
-    }
-
-    public static IWebElement GetCurrentSection(this RemoteWebDriver driver)
-    {
-        return driver.GetElement("//*[@data-test-id='current-days-block-component']");
     }
 
     public static IWebElement GetNavLink(this RemoteWebDriver driver, string link)
@@ -112,26 +58,6 @@ public static class DriverDomExtensions
         return driver.GetElement(XpathHelper.Toast(text));
     }
 
-    public static void WaitUntilLoginComponentDisappeared(this RemoteWebDriver driver)
-    {
-        driver.WaitUntilDisappeared("//*[@data-test-id='login-component']");
-    }
-
-    public static void WaitUntilOverviewComponentAppeared(this RemoteWebDriver driver)
-    {
-        driver.WaitUntilAppeared("//*[@data-test-id='overview-component']");
-    }
-
-    public static void WaitUntilSavingIndicatorDisappeared(this RemoteWebDriver driver)
-    {
-        driver.WaitUntilDisappeared($"//{XpathHelper.SavingIndicator()}");
-    }
-
-    public static void WaitUntilSavingIndicatorAppeared(this RemoteWebDriver driver)
-    {
-        driver.WaitUntilAppeared($"//{XpathHelper.SavingIndicator()}");
-    }
-
     public static void WaitUntilRecurrencesSkeletonDisappeared(this RemoteWebDriver driver)
     {
         driver.WaitUntilDisappeared("//*[@data-test-id='recurrences-skeleton']");
@@ -147,11 +73,6 @@ public static class DriverDomExtensions
         driver.WaitUntilDisappeared(XpathHelper.Toast(text));
     }
 
-    public static void WaitUntilTaskDisappeared(this RemoteWebDriver driver, string text)
-    {
-        driver.WaitUntilDisappeared($"//{XpathHelper.TaskWithText(text)}");
-    }
-
     public static void WaitUntilRecurrenceAppeared(this RemoteWebDriver driver, string text)
     {
         driver.WaitUntilAppeared($"//{XpathHelper.RecurrenceList()}//{XpathHelper.RecurrenceItem()}//*{XpathHelper.TextContains(text)}");
@@ -161,4 +82,5 @@ public static class DriverDomExtensions
     {
         return driver.ElementExists(XpathHelper.Toast(text));
     }
+    */
 }

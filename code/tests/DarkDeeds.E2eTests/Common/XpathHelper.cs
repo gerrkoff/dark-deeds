@@ -17,11 +17,7 @@ public static class XpathHelper
         return $"[not(@{attr})]";
     }
 
-    public static string TaskWithText(string text)
-    {
-        return $"span{ClassContains("task-item")}{TextContains(text)}";
-    }
-
+    /*
     public static string CreateRecurrenceForm()
     {
         return $"form{ClassContains("recurrences-view-recurrence-item-form")}";
@@ -30,11 +26,6 @@ public static class XpathHelper
     public static string CreateRecurrenceFormWeekdays()
     {
         return "*[@data-test-id='create-recurrence-form-weekdays']";
-    }
-
-    public static string SavingIndicator()
-    {
-        return "*[@data-test-id='saving-indicator']";
     }
 
     public static string RecurrenceList()
@@ -64,4 +55,5 @@ public static class XpathHelper
 
         return xpath;
     }
+    */
 }

@@ -89,7 +89,7 @@ steps:
       URL:
         from_secret: staging_url
     commands:
-      - ./ci/test-e2e.sh $URL staging
+      - ./ci/test-e2e.sh $URL
 
 trigger:
   event:
@@ -164,7 +164,7 @@ steps:
       URL:
         from_secret: staging_url
     commands:
-      - ./ci/test-e2e.sh $URL staging
+      - ./ci/test-e2e.sh $URL
 
 trigger:
   branch:

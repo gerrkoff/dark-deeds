@@ -1,5 +1,6 @@
 using DarkDeeds.E2eTests.Base;
 using DarkDeeds.E2eTests.Common;
+using DarkDeeds.E2eTests.Components;
 using Xunit;
 
 namespace DarkDeeds.E2eTests;
@@ -17,11 +18,10 @@ public class MultiUserTests : BaseTest
             driver.CreateTaskViaAddButton(taskText);
             driver.WaitUntilSavingFinished();
 
-            driver.NavigateToSettings();
-            driver.GetSignOutButton().Click();
+            driver.SignOut();
 
             await CreateUserAndLogin(driver);
-            driver.WaitUntilTaskDisappeared(taskText);
+            driver.WaitUntilDisappeared(X.OverviewPage().NoDateSection().TaskByText(taskText));
         });
     }
 
@@ -34,8 +34,9 @@ public class MultiUserTests : BaseTest
             await CreateUserAndLogin(driver);
 
             driver.OpenNewTab(Url);
-            driver.NavigateToSettings();
-            driver.GetSignOutButton().Click();
+
+            driver.SignOut();
+
             await CreateUserAndLogin(driver);
 
             driver.CreateTaskViaAddButton(taskText);
@@ -43,7 +44,7 @@ public class MultiUserTests : BaseTest
 
             driver.SwitchToTab(0);
 
-            driver.WaitUntilTaskDisappeared(taskText);
+            driver.WaitUntilDisappeared(X.OverviewPage().NoDateSection().TaskByText(taskText));
         });
     }
 }
