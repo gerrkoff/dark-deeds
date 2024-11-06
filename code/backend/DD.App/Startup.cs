@@ -1,3 +1,4 @@
+using System.Globalization;
 using DD.App.Dto;
 using DD.ServiceAuth.Details;
 using DD.ServiceTask.Details;
@@ -36,6 +37,7 @@ public class Startup(IConfiguration configuration)
 
         services.AddDdAuthentication(Configuration);
 
+        services.AddResponseCompression();
         services.AddHttpContextAccessor();
         services.AddHealthChecks();
         services.AddControllers(options =>
@@ -68,11 +70,11 @@ public class Startup(IConfiguration configuration)
         if (!env.IsProduction())
         {
             app.UseSwagger();
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "DarkDeeds.Backend v1");
-                c.RoutePrefix = string.Empty;
-            });
+            // app.UseSwaggerUI(c =>
+            // {
+            //     c.SwaggerEndpoint("/swagger/v1/swagger.json", "DarkDeeds.Backend v1");
+            //     c.RoutePrefix = string.Empty;
+            // });
             app.UseCors(builder => builder
                 .SetIsOriginAllowed(origin => origin.EndsWith(":3000", StringComparison.Ordinal))
                 .AllowAnyHeader()
@@ -80,6 +82,7 @@ public class Startup(IConfiguration configuration)
                 .AllowCredentials());
         }
 
+        app.UseResponseCompression();
         app.UseHealthChecks("/healthcheck");
         app.UseRouting();
         app.UseAuthentication();
@@ -91,6 +94,10 @@ public class Startup(IConfiguration configuration)
             endpoints.MapTaskServiceCustomRoutes();
         });
         app.UseDefaultFiles();
-        app.UseStaticFiles();
+        app.UseStaticFiles(new StaticFileOptions
+        {
+            OnPrepareResponse = ctx => ctx.Context.Response.Headers.Append(
+                "Cache-Control", $"public, max-age={604800}"), // one week
+        });
     }
 }
