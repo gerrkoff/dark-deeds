@@ -37,6 +37,7 @@ function NavigationBar({ applicationTab, switchTo }: Props) {
                                 })}
                                 href="#"
                                 onClick={() => switchTo('overview')}
+                                data-test-id="nav-overview"
                             >
                                 Overview
                             </a>
@@ -48,8 +49,9 @@ function NavigationBar({ applicationTab, switchTo }: Props) {
                                 })}
                                 href="#"
                                 onClick={() => switchTo('recurrent')}
+                                data-test-id="nav-recurrent"
                             >
-                                Recurrent
+                                Recurrences
                             </a>
                         </li>
                         <li className="nav-item">
@@ -59,6 +61,7 @@ function NavigationBar({ applicationTab, switchTo }: Props) {
                                 })}
                                 href="#"
                                 onClick={() => switchTo('settings')}
+                                data-test-id="nav-settings"
                             >
                                 Settings
                             </a>

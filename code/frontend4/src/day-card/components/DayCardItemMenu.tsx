@@ -69,6 +69,7 @@ function DayCardItemMenu({
                         },
                     )}
                     onClick={deleteTask}
+                    data-test-id="btn-delete-item"
                 >
                     <IconX style={{ minWidth: '20px' }} />
                     Delete

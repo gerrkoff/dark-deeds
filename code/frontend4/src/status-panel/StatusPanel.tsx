@@ -31,7 +31,10 @@ function StatusPanel() {
                 <IconArrowRepeat className={clsx('ms-2', styles.rotate)} />
             )}
             {isSaveTaskPending && (
-                <IconFloppy className={clsx('ms-2', styles.blink)} />
+                <IconFloppy
+                    className={clsx('ms-2', styles.blink)}
+                    dataTestId="status-saving"
+                />
             )}
         </div>
     )

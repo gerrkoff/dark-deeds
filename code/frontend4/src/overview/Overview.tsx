@@ -101,6 +101,7 @@ function Overview() {
                     label="Current"
                     isInitExpanded={isCurrentExpanded}
                     onToggle={handleCurrentToggle}
+                    dataTestId="section-current"
                 >
                     <DayCardsSection
                         dayCards={model.current}

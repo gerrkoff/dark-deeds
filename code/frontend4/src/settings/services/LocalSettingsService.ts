@@ -2,6 +2,7 @@ import {
     storageService,
     StorageService,
 } from '../../common/services/StorageService'
+import { OverviewTabEnum } from '../models/OverviewTabEnum'
 import { SettingsLocalDto } from '../models/SettingsLocalDto'
 
 export class LocalSettingsService {
@@ -10,7 +11,12 @@ export class LocalSettingsService {
     load(): SettingsLocalDto {
         const settingsSerialized = this.storageService.loadSettings()
         const defaultSettings: SettingsLocalDto = {
-            overviewTabsExpanded: [],
+            overviewTabsExpanded: [
+                OverviewTabEnum.NoDate,
+                OverviewTabEnum.Expired,
+                OverviewTabEnum.Current,
+                OverviewTabEnum.Future,
+            ],
             isDebugEnabled: false,
         }
         const settings: SettingsLocalDto =

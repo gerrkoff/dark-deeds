@@ -21,6 +21,7 @@ function UserInfoCard({ username, signOut }: Props) {
                     <button
                         className="btn btn-outline-primary"
                         onClick={signOut}
+                        data-test-id="btn-signout"
                     >
                         Sign out
                     </button>

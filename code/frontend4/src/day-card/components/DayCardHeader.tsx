@@ -35,6 +35,7 @@ function DayCardHeader({
                 })}
                 style={{ cursor: 'pointer' }}
                 onClick={e => onOpenHeaderMenu(e, dayCardModel.date)}
+                data-test-id="header-date"
             >
                 {date}
             </span>
