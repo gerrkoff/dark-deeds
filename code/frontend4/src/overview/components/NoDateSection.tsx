@@ -35,6 +35,7 @@ function NoDateSection({ tasks, isDebug, saveTasks }: Props) {
         <Card
             elementRef={cardRef}
             style={{ fontSize: '0.8rem', minHeight: '70px' }}
+            dataTestId="card-no-date"
         >
             <DayCardList
                 date={null}

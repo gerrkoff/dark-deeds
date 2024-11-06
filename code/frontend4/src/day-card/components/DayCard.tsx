@@ -11,6 +11,8 @@ import { DayCardHeaderMenu } from './DayCardHeaderMenu'
 import styles from './DayCard.module.css'
 import { useDayCardMenuItem } from '../hooks/useDayCardMenuItem'
 import { useDayCardMenuHeader } from '../hooks/useDayCardMenuHeader'
+import { dateService } from '../../common/services/DateService'
+import clsx from 'clsx'
 
 interface Props {
     dayCardModel: DayCardModel
@@ -58,9 +60,14 @@ function DayCard({
         openTaskEditModalForDate,
     })
 
+    const isExpired = dayCardModel.date < dateService.today()
+
     return (
         <>
-            <Card elementRef={cardRef} className={styles.card}>
+            <Card
+                elementRef={cardRef}
+                className={clsx(styles.card, { expired: isExpired })}
+            >
                 <DayCardHeader
                     dayCardModel={dayCardModel}
                     isHighlighted={headerMenuContext !== null}

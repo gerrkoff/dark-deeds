@@ -4,10 +4,17 @@ interface Props {
     elementRef?: React.RefObject<HTMLDivElement>
     style?: React.CSSProperties
     className?: string
+    dataTestId?: string
     children: React.ReactNode
 }
 
-function Card({ elementRef, style = {}, className = '', children }: Props) {
+function Card({
+    elementRef,
+    dataTestId,
+    style = {},
+    className = '',
+    children,
+}: Props) {
     return (
         <div
             ref={elementRef}
@@ -16,6 +23,7 @@ function Card({ elementRef, style = {}, className = '', children }: Props) {
                 className,
             )}
             style={style}
+            data-test-id={dataTestId}
         >
             {children}
         </div>

@@ -10,6 +10,7 @@ interface Props {
     label: string
     children: React.ReactNode
     isInitExpanded: boolean
+    dataTestId?: string
     onToggle: () => void
 }
 
@@ -17,6 +18,7 @@ function SectionToggle({
     className,
     label,
     isInitExpanded,
+    dataTestId,
     onToggle,
     children,
 }: Props) {
@@ -51,7 +53,12 @@ function SectionToggle({
                 <IconChevronRight className={styles.collapsed} size={12} />
                 <span className="ms-1">{label}</span>
             </button>
-            <div ref={collapseElementRef} className="collapse" id={uuid}>
+            <div
+                ref={collapseElementRef}
+                className="collapse"
+                id={uuid}
+                data-test-id={dataTestId}
+            >
                 {children}
             </div>
         </div>

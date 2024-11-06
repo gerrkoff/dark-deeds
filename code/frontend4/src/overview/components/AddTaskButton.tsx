@@ -36,6 +36,7 @@ function AddTaskButton({ saveTasks }: Props) {
                 }}
             >
                 <button
+                    data-test-id="btn-add-task"
                     className="btn btn-primary d-flex align-items-center shadow"
                     style={{
                         minHeight: '42px',

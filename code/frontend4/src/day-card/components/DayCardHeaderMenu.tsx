@@ -26,6 +26,7 @@ function DayCardHeaderMenu({
                     type="button"
                     className="list-group-item list-group-item-action d-flex align-items-center"
                     onClick={addTask}
+                    data-test-id="btn-add-item"
                 >
                     <IconPlus style={{ minWidth: '20px' }} />
                     Add

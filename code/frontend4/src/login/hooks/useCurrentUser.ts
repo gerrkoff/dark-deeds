@@ -4,13 +4,13 @@ import { switchToTab } from '../../app/redux/app-slice'
 import { fetchCurrentUser } from '../redux/login-thunk'
 import { unwrapResult } from '@reduxjs/toolkit'
 import { loadSharedSettings } from '../../settings/redux/settings-thunk'
-import { loadOverviewTasks } from '../../overview/redux/overview-thunk'
 import { taskHubApi } from '../../tasks/api/TaskHubApi'
 import {
     taskHubConnected,
     taskHubConnecting,
 } from '../../status-panel/redux/status-panel-slice'
 import { logout } from '../redux/login-slice'
+import { useTasksSynchronization } from '../../tasks/hooks/useTasksSynchronization'
 
 interface Output {
     loadCurrentUser: () => Promise<void>
@@ -19,6 +19,8 @@ interface Output {
 
 export function useCurrentUser(): Output {
     const dispatch = useAppDispatch()
+
+    const { reloadTasks } = useTasksSynchronization()
 
     const loadCurrentUser = useCallback(async () => {
         try {
@@ -29,7 +31,7 @@ export function useCurrentUser(): Output {
             if (currentUserInfo.userAuthenticated) {
                 dispatch(switchToTab('overview'))
                 dispatch(loadSharedSettings())
-                dispatch(loadOverviewTasks())
+                reloadTasks()
                 dispatch(taskHubConnecting())
                 await taskHubApi.start()
                 dispatch(taskHubConnected())
@@ -40,7 +42,7 @@ export function useCurrentUser(): Output {
             console.error(error)
             dispatch(switchToTab('login'))
         }
-    }, [dispatch])
+    }, [dispatch, reloadTasks])
 
     const unloadCurrentUser = useCallback(async () => {
         await taskHubApi.stop()

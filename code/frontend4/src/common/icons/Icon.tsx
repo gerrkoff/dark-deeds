@@ -2,6 +2,7 @@ export interface IconProps {
     className?: string
     size?: number
     style?: React.CSSProperties
+    dataTestId?: string
 }
 
 interface Props extends IconProps {
@@ -14,6 +15,7 @@ function Icon({
     className = '',
     size = 16,
     style = {},
+    dataTestId,
     viewBox = '0 0 16 16',
 }: Props) {
     return (
@@ -25,6 +27,7 @@ function Icon({
             className={className}
             style={style}
             viewBox={viewBox}
+            data-test-id={dataTestId}
         >
             {children}
         </svg>
