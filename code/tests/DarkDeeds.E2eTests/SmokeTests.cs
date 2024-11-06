@@ -127,7 +127,7 @@ public class SmokeTests(ITestOutputHelper output) : UserLoginTest
         return Test(driver =>
         {
             var expiredDaysCount = ((int)now.DayOfWeek + 6) % 7;
-            var currentExpiredDaysCount = driver.FindElements(By.XPath(X.OverviewPage().CurrentSection().Block(1).Expired())).Count;
+            var currentExpiredDaysCount = driver.CountElements(X.OverviewPage().CurrentSection().Block(1).Expired());
             Assert.Equal(expiredDaysCount, currentExpiredDaysCount);
 
             driver.CreateTaskViaAddButton(taskTextWithDate);
