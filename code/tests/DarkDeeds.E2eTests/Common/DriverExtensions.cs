@@ -1,7 +1,6 @@
 using DarkDeeds.E2eTests.Components;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Remote;
-using Xunit;
 
 namespace DarkDeeds.E2eTests.Common;
 
@@ -50,6 +49,7 @@ public static class DriverExtensions
         driver.GetElement(X.EditTaskModal().SubmitButton()).Click();
     }
 
+    /*
     public static void NavigateToOverview(this RemoteWebDriver driver)
     {
         driver.GetNavLink("/").Click();
@@ -59,6 +59,7 @@ public static class DriverExtensions
     {
         driver.GetNavLink("/recurrences").Click();
     }
+    */
 
     public static void SignOut(this RemoteWebDriver driver)
     {
@@ -66,6 +67,7 @@ public static class DriverExtensions
         driver.GetElement(X.Root().SignOutButton()).Click();
     }
 
+    /*
     public static void CreateRecurrence(this RemoteWebDriver driver, string recurrenceTask)
     {
         driver.GetAddRecurrenceButton().Click();
@@ -97,6 +99,7 @@ public static class DriverExtensions
         driver.WaitUntilToastAppeared($"{expectedTaskRecurrencesCount} recurrences were created");
         driver.HideToasts();
     }
+    */
 
     public static void SwitchToTab(this RemoteWebDriver driver, int tabIndex)
     {
@@ -111,6 +114,7 @@ public static class DriverExtensions
         driver.WaitUntilUserLoaded();
     }
 
+    /*
     private static void HideToasts(this RemoteWebDriver driver)
     {
         for (var i = 0; i < 5; i++)
@@ -132,4 +136,5 @@ public static class DriverExtensions
 
         Assert.True(false, "Too many toasts");
     }
+    */
 }

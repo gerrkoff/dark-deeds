@@ -1,5 +1,6 @@
 using DarkDeeds.E2eTests.Base;
 using DarkDeeds.E2eTests.Common;
+using DarkDeeds.E2eTests.Components;
 using Xunit;
 
 namespace DarkDeeds.E2eTests;
@@ -20,7 +21,7 @@ public class MultiUserTests : BaseTest
             driver.SignOut();
 
             await CreateUserAndLogin(driver);
-            driver.WaitUntilTaskDisappeared(taskText);
+            driver.WaitUntilDisappeared(X.NoDateList().TaskByText(taskText));
         });
     }
 
@@ -43,7 +44,7 @@ public class MultiUserTests : BaseTest
 
             driver.SwitchToTab(0);
 
-            driver.WaitUntilTaskDisappeared(taskText);
+            driver.WaitUntilDisappeared(X.NoDateList().TaskByText(taskText));
         });
     }
 }

@@ -1,10 +1,11 @@
-using OpenQA.Selenium;
-using OpenQA.Selenium.Remote;
+// using OpenQA.Selenium;
+// using OpenQA.Selenium.Remote;
 
 namespace DarkDeeds.E2eTests.Common;
 
 public static class DriverDomExtensions
 {
+    /*
     public static IWebElement GetModalConfirmButton(this RemoteWebDriver driver)
     {
         return driver.GetElement("//*[@data-test-id='modal-confirm-button']");
@@ -72,11 +73,6 @@ public static class DriverDomExtensions
         driver.WaitUntilDisappeared(XpathHelper.Toast(text));
     }
 
-    public static void WaitUntilTaskDisappeared(this RemoteWebDriver driver, string text)
-    {
-        driver.WaitUntilDisappeared($"//{XpathHelper.TaskWithText(text)}");
-    }
-
     public static void WaitUntilRecurrenceAppeared(this RemoteWebDriver driver, string text)
     {
         driver.WaitUntilAppeared($"//{XpathHelper.RecurrenceList()}//{XpathHelper.RecurrenceItem()}//*{XpathHelper.TextContains(text)}");
@@ -86,4 +82,5 @@ public static class DriverDomExtensions
     {
         return driver.ElementExists(XpathHelper.Toast(text));
     }
+    */
 }
