@@ -2,9 +2,9 @@ using System.Text;
 
 namespace DarkDeeds.E2eTests.Components;
 
-public abstract class X(string initPath)
+public abstract class X(string path)
 {
-    protected StringBuilder Query { get; } = new(initPath);
+    protected StringBuilder Query { get; } = new(path);
 
     public static implicit operator string(X x)
     {
@@ -36,13 +36,18 @@ public abstract class X(string initPath)
         return new EditTaskModal();
     }
 
-    public static CardList NoDateList()
+    public static DayCardList NoDateList()
     {
-        return new CardList("//*[@data-test-id='card-no-date']");
+        return new DayCardList("//*[@data-test-id='card-no-date']//ul");
     }
 
-    public static TaskMenu TaskMenu()
+    public static DayCardsSection CurrentSection()
     {
-        return new TaskMenu();
+        return new DayCardsSection("//*[@data-test-id='section-current']");
+    }
+
+    public static Menu TaskMenu()
+    {
+        return new Menu();
     }
 }

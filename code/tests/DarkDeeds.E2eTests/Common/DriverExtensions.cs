@@ -38,7 +38,7 @@ public static class DriverExtensions
     {
         driver.ScrollToElement(dayHeaderElement);
         dayHeaderElement.Click();
-        driver.GetAddTaskToDayButton().Click();
+        driver.GetElement(X.TaskMenu().AddButton()).Click();
         driver.GetElement(X.EditTaskModal().Input()).SendKeys(task);
         driver.GetElement(X.EditTaskModal().SubmitButton()).Click();
     }

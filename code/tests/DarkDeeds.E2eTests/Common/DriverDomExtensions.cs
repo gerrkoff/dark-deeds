@@ -5,19 +5,9 @@ namespace DarkDeeds.E2eTests.Common;
 
 public static class DriverDomExtensions
 {
-    public static IWebElement GetAddTaskToDayButton(this RemoteWebDriver driver)
-    {
-        return driver.GetElement("//*[@data-test-id='add-task-to-day-button']");
-    }
-
     public static IWebElement GetModalConfirmButton(this RemoteWebDriver driver)
     {
         return driver.GetElement("//*[@data-test-id='modal-confirm-button']");
-    }
-
-    public static IWebElement GetCurrentSection(this RemoteWebDriver driver)
-    {
-        return driver.GetElement("//*[@data-test-id='current-days-block-component']");
     }
 
     public static IWebElement GetNavLink(this RemoteWebDriver driver, string link)
