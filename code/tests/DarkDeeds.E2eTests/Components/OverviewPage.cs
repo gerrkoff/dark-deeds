@@ -4,12 +4,12 @@ public class OverviewPage() : X(string.Empty)
 {
     public DayCardList NoDateSection()
     {
-        return new DayCardList("//*[@data-test-id='card-no-date']//ul");
+        return new DayCardList($"{this}//*[@data-test-id='card-no-date']//ul");
     }
 
     public DayCardsSection CurrentSection()
     {
-        return new DayCardsSection("//*[@data-test-id='section-current']");
+        return new DayCardsSection($"{this}//*[@data-test-id='section-current']");
     }
 
     public OverviewPage AddTaskButton()
