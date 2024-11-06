@@ -36,18 +36,18 @@ public abstract class X(string path)
         return new EditTaskModal();
     }
 
-    public static DayCardList NoDateList()
-    {
-        return new DayCardList("//*[@data-test-id='card-no-date']//ul");
-    }
-
-    public static DayCardsSection CurrentSection()
-    {
-        return new DayCardsSection("//*[@data-test-id='section-current']");
-    }
-
     public static Menu TaskMenu()
     {
         return new Menu();
+    }
+
+    public static OverviewPage OverviewPage()
+    {
+        return new OverviewPage();
+    }
+
+    public static SettingsPage SettingsPage()
+    {
+        return new SettingsPage();
     }
 }

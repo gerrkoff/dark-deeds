@@ -44,7 +44,7 @@ public static class DriverExtensions
 
     public static void CreateTaskViaAddButton(this RemoteWebDriver driver, string task)
     {
-        driver.GetElement(X.Root().AddTaskButton()).Click();
+        driver.GetElement(X.OverviewPage().AddTaskButton()).Click();
         driver.GetElement(X.EditTaskModal().Input()).SendKeys(task);
         driver.GetElement(X.EditTaskModal().SubmitButton()).Click();
     }
@@ -64,7 +64,7 @@ public static class DriverExtensions
     public static void SignOut(this RemoteWebDriver driver)
     {
         driver.GetElement(X.Navbar().Settings()).Click();
-        driver.GetElement(X.Root().SignOutButton()).Click();
+        driver.GetElement(X.SettingsPage().SignOutButton()).Click();
     }
 
     /*

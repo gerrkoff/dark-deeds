@@ -21,7 +21,7 @@ public class MultiUserTests : BaseTest
             driver.SignOut();
 
             await CreateUserAndLogin(driver);
-            driver.WaitUntilDisappeared(X.NoDateList().TaskByText(taskText));
+            driver.WaitUntilDisappeared(X.OverviewPage().NoDateSection().TaskByText(taskText));
         });
     }
 
@@ -44,7 +44,7 @@ public class MultiUserTests : BaseTest
 
             driver.SwitchToTab(0);
 
-            driver.WaitUntilDisappeared(X.NoDateList().TaskByText(taskText));
+            driver.WaitUntilDisappeared(X.OverviewPage().NoDateSection().TaskByText(taskText));
         });
     }
 }
