@@ -36,7 +36,6 @@ public class Startup(IConfiguration configuration)
 
         services.AddDdAuthentication(Configuration);
 
-        services.AddResponseCompression();
         services.AddHttpContextAccessor();
         services.AddHealthChecks();
         services.AddControllers(options =>
@@ -81,7 +80,6 @@ public class Startup(IConfiguration configuration)
                 .AllowCredentials());
         }
 
-        app.UseResponseCompression();
         app.UseHealthChecks("/healthcheck");
         app.UseRouting();
         app.UseAuthentication();
