@@ -12,7 +12,7 @@ export interface LoginState {
 }
 
 const initialState: LoginState = {
-    isFetchUserPending: false,
+    isFetchUserPending: true,
     user: null,
     isLogInPending: false,
     logInError: null,

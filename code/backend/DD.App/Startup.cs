@@ -91,6 +91,10 @@ public class Startup(IConfiguration configuration)
             endpoints.MapTaskServiceCustomRoutes();
         });
         app.UseDefaultFiles();
-        app.UseStaticFiles();
+        app.UseStaticFiles(new StaticFileOptions
+        {
+            OnPrepareResponse = ctx => ctx.Context.Response.Headers.Append(
+                "Cache-Control", $"public, max-age={31536000}"), // one year
+        });
     }
 }
