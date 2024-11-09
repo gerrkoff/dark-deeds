@@ -51,7 +51,7 @@ export const overviewSlice = createSlice({
             for (const task of action.payload) {
                 const index = state.tasks.findIndex(t => t.uid === task.uid)
                 if (index !== -1) {
-                    if (task.version <= state.tasks[index].version) {
+                    if (task.version < state.tasks[index].version) {
                         console.warn(
                             'Sync Tasks Collision',
                             {

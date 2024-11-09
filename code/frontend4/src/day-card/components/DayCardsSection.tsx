@@ -1,5 +1,5 @@
 import { DayCardModel } from '../models/DayCardModel'
-import { useMemo } from 'react'
+import { memo, useMemo } from 'react'
 import clsx from 'clsx'
 import { DayCard } from './DayCard'
 import { TaskModel } from '../../tasks/models/TaskModel'
@@ -61,4 +61,6 @@ function DayCardsSection({
     )
 }
 
-export { DayCardsSection }
+const memoized = memo(DayCardsSection)
+
+export { memoized as DayCardsSection }
