@@ -19,7 +19,7 @@ export function useTasksSynchronization(): Output {
             const { tasksToNotify, versionsToNotify } =
                 taskSyncService.updateTasks(tasks)
 
-            console.log('__ Tasks Online Update:', {
+            console.log(`[${new Date().toISOString()}] Tasks Online Update:`, {
                 tasks,
                 tasksToNotify,
                 versionsToNotify,
