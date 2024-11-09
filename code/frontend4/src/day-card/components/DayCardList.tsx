@@ -5,7 +5,7 @@ import clsx from 'clsx'
 import styles from './DayCard.module.css'
 import { useDayCardDnd } from '../hooks/useDayCardDnd'
 import { useDayCardDndList } from '../hooks/useDayCardDndList'
-import { useMemo } from 'react'
+import { memo, useMemo } from 'react'
 import { dropZoneBottomId } from '../models/DayCardDndContext'
 
 interface Props {
@@ -91,4 +91,6 @@ function DayCardList({
     )
 }
 
-export { DayCardList }
+const memoized = memo(DayCardList)
+
+export { memoized as DayCardList }

@@ -4,6 +4,7 @@ import { TaskTypeEnum } from '../../tasks/models/TaskTypeEnum'
 import styles from './DayCard.module.css'
 import { DayCardItemDndContext } from '../models/DayCardDndContext'
 import { useDayCardDndItem } from '../hooks/useDayCardDndItem'
+import { memo } from 'react'
 
 interface Props {
     task: TaskModel
@@ -127,4 +128,6 @@ function text(task: TaskModel, isDebug: boolean): string {
     return text.trimStart()
 }
 
-export { DayCardItem }
+const memoized = memo(DayCardItem)
+
+export { memoized as DayCardItem }

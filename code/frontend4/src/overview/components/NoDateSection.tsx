@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useRef, memo } from 'react'
 import { Card } from '../../common/components/Card'
 import { DayCardList } from '../../day-card/components/DayCardList'
 import { TaskModel } from '../../tasks/models/TaskModel'
@@ -67,4 +67,6 @@ function NoDateSection({ tasks, isDebug, saveTasks }: Props) {
     )
 }
 
-export { NoDateSection }
+const memoized = memo(NoDateSection)
+
+export { memoized as NoDateSection }
