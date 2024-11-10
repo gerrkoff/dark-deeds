@@ -14,6 +14,7 @@ fi
 
 rm -rf ci/results
 docker build -t dd-test-load -f ci/apps/tests-load.dockerfile . || exit $?
+docker rm -f dd-test-load
 docker run -t --rm \
   -e DOMAIN="$1" \
   -v "$(pwd)"/ci/results:/app/bin/Release/net8.0/reports \
