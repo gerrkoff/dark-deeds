@@ -1,6 +1,6 @@
 ﻿using DD.ServiceAuth.Domain.Dto;
 using DD.ServiceAuth.Domain.Services;
-using DD.Shared.Web;
+using DD.Shared.Details.Controllers;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DD.ServiceAuth.Details.Web.Controllers;

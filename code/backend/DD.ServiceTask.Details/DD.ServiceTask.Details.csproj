@@ -5,8 +5,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DD.Shared.Web\DD.Shared.Web.csproj" />
     <ProjectReference Include="..\DD.Shared.Data\DD.Shared.Data.csproj" />
+    <ProjectReference Include="..\DD.Shared.Details\DD.Shared.Details.csproj" />
     <ProjectReference Include="..\DD.ServiceTask.Domain\DD.ServiceTask.Domain.csproj" />
   </ItemGroup>
 

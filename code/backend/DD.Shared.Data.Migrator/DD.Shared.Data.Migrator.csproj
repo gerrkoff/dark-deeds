@@ -6,7 +6,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DD.ServiceTask.Details\DD.ServiceTask.Details.csproj" />
-    <ProjectReference Include="..\DD.Shared.Details\DD.Shared.Details.csproj" />
+    <ProjectReference Include="..\DD.Clients.Details\DD.Clients.Details.csproj" />
   </ItemGroup>
 
 </Project>

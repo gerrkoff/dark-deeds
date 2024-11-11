@@ -1,6 +1,6 @@
+using DD.Clients.Details.MobileClient.Data;
 using DD.MobileClient.Domain.Entities;
 using DD.Shared.Data.Migrator.Models;
-using DD.Shared.Details.MobileClient.Data;
 using MongoDB.Driver;
 
 namespace DD.Shared.Data.Migrator.Migrations;

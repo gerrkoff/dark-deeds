@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using DD.ServiceTask.Domain.Services;
 using DD.Shared.Details.Abstractions.Dto;
-using DD.Shared.Web;
+using DD.Shared.Details.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DD.ServiceTask.Details.Web.Controllers;
