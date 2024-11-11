@@ -1,5 +1,5 @@
 using System.Linq.Expressions;
-using DD.Shared.Data;
+using DD.Shared.Details.Data;
 using DD.WebClientBff.Domain.Entities;
 using DD.WebClientBff.Domain.Infrastructure;
 

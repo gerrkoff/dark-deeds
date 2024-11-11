@@ -2,7 +2,7 @@ using System.Linq.Expressions;
 using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
 
-namespace DD.Shared.Data;
+namespace DD.Shared.Details.Data;
 
 public abstract class BaseRepository<T>(IMongoDbContext dbContext, string tableName)
 {

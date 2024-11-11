@@ -18,9 +18,11 @@ public static class Setup
         services.AddAuthServiceWeb();
         services.AddAuthServiceDomain();
         services.AddAuthServiceData(configuration);
+
+        services.AddAuthentication(configuration);
     }
 
-    public static void AddDdAuthentication(this IServiceCollection services, IConfiguration configuration)
+    private static void AddAuthentication(this IServiceCollection services, IConfiguration configuration)
     {
         services.Configure<AuthSettings>(options => configuration.GetSection("Auth").Bind(options));
 

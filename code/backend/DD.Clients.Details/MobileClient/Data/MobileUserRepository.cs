@@ -1,7 +1,7 @@
 using System.Linq.Expressions;
 using DD.MobileClient.Domain.Entities;
 using DD.MobileClient.Domain.Infrastructure;
-using DD.Shared.Data;
+using DD.Shared.Details.Data;
 using MongoDB.Driver;
 
 namespace DD.Clients.Details.MobileClient.Data;

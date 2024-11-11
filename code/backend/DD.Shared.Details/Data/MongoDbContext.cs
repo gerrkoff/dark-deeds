@@ -1,6 +1,6 @@
 using MongoDB.Driver;
 
-namespace DD.Shared.Data;
+namespace DD.Shared.Details.Data;
 
 public interface IMongoDbContext
 {

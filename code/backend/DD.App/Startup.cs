@@ -2,7 +2,6 @@ using DD.App.Dto;
 using DD.Clients.Details;
 using DD.ServiceAuth.Details;
 using DD.ServiceTask.Details;
-using DD.Shared.Data;
 using DD.Shared.Data.Migrator;
 using DD.Shared.Details;
 using GerrKoff.Monitoring;
@@ -33,8 +32,6 @@ public class Startup(IConfiguration configuration)
         services.AddSharedDetails();
         services.AddSharedData(Configuration);
         services.AddSharedDataMigrator();
-
-        services.AddDdAuthentication(Configuration);
 
         services.AddHttpContextAccessor();
         services.AddHealthChecks();

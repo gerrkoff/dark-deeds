@@ -1,6 +1,6 @@
 using DD.ServiceTask.Domain.Entities;
 using DD.ServiceTask.Domain.Infrastructure.EntityRepository;
-using DD.Shared.Data;
+using DD.Shared.Details.Data;
 
 namespace DD.ServiceTask.Details.Data;
 

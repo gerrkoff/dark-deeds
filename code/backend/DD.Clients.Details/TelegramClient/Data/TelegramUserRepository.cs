@@ -1,5 +1,5 @@
 using System.Linq.Expressions;
-using DD.Shared.Data;
+using DD.Shared.Details.Data;
 using DD.TelegramClient.Domain.Entities;
 using DD.TelegramClient.Domain.Infrastructure;
 using MongoDB.Driver;
