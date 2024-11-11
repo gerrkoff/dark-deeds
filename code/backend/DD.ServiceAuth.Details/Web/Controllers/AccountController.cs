@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DD.ServiceAuth.Details.Web.Controllers;
 
-[AllowAnonymous]
 [ApiController]
 [Route("api/auth/[controller]")]
 public class AccountController(
@@ -16,18 +15,21 @@ public class AccountController(
     IMapper mapper)
     : ControllerBase
 {
+    [AllowAnonymous]
     [HttpPost(nameof(SignUp))]
     public Task<SignUpResultDto> SignUp(SignUpInfoDto signUpInfo)
     {
         return authService.SignUpAsync(signUpInfo);
     }
 
+    [AllowAnonymous]
     [HttpPost(nameof(SignIn))]
     public Task<SignInResultDto> SignIn(SignInInfoDto signInInfo)
     {
         return authService.SignInAsync(signInInfo);
     }
 
+    [AllowAnonymous]
     [HttpGet]
     public CurrentUserDto Current()
     {
@@ -36,5 +38,11 @@ public class AccountController(
             : new CurrentUserDto();
 
         return currentUser;
+    }
+
+    [HttpPost(nameof(Renew))]
+    public string Renew()
+    {
+        return authService.RenewToken(userAuth.AuthToken());
     }
 }

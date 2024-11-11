@@ -14,6 +14,8 @@ public interface IAuthService
     Task<SignInResultDto> SignInAsync(SignInInfoDto signInInfo);
 
     Task<string> GetUserIdAsync(string username);
+
+    string RenewToken(AuthToken authToken);
 }
 
 internal sealed class AuthService(
@@ -89,12 +91,17 @@ internal sealed class AuthService(
         return user.Id.ToString();
     }
 
-    private static AuthToken ToAuthToken(UserEntity user)
+    public string RenewToken(AuthToken authToken)
     {
-        return new AuthToken
+        return tokenService.Serialize(authToken);
+    }
+
+    private static AuthTokenBuildInfo ToAuthToken(UserEntity user)
+    {
+        return new AuthTokenBuildInfo
         {
             UserId = user.Id.ToString(),
-            Username = user.UserName ?? string.Empty,
+            Username = user.UserName ?? throw new InvalidOperationException("Username is null"),
             DisplayName = user.DisplayName,
         };
     }

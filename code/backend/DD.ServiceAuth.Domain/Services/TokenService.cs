@@ -1,4 +1,5 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Text;
 using DD.Shared.Details.Abstractions;
 using DD.Shared.Details.Abstractions.Models;
@@ -9,33 +10,33 @@ namespace DD.ServiceAuth.Domain.Services;
 
 public interface ITokenService
 {
-    string Serialize(AuthToken authToken);
+    string Serialize(AuthTokenBuildInfo authToken);
 }
 
 internal sealed class TokenService(
     IOptions<AuthSettings> authSettings,
-    IAuthTokenConverter authTokenConverter)
+    IClaimsService claimsService)
     : ITokenService
 {
     private readonly AuthSettings _authSettings = authSettings.Value;
 
-    public string Serialize(AuthToken authToken)
+    public string Serialize(AuthTokenBuildInfo authToken)
     {
-        var identity = authTokenConverter.ToIdentity(authToken);
+        var keyBytes = Encoding.ASCII.GetBytes(_authSettings.Key);
+        var claims = claimsService.FromToken(authToken);
+        var tokenDescriptor = new SecurityTokenDescriptor
+        {
+            Subject = new ClaimsIdentity(claims),
+            Expires = DateTime.UtcNow.AddMinutes(_authSettings.Lifetime),
+            Issuer = _authSettings.Issuer,
+            Audience = _authSettings.Audience,
+            SigningCredentials = new SigningCredentials(
+                new SymmetricSecurityKey(keyBytes),
+                SecurityAlgorithms.HmacSha256Signature),
+        };
 
-        var now = DateTime.UtcNow;
-        var keyBytes = Encoding.ASCII.GetBytes(_authSettings.Key ?? string.Empty);
-        var symmetricSecurityKey = new SymmetricSecurityKey(keyBytes);
-        var jwt = new JwtSecurityToken(
-            _authSettings.Issuer,
-            _authSettings.Audience,
-            notBefore: now,
-            claims: identity.Claims,
-            expires: now.Add(TimeSpan.FromMinutes(_authSettings.Lifetime)),
-            signingCredentials: new SigningCredentials(symmetricSecurityKey, SecurityAlgorithms.HmacSha256));
-
-        var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
-
-        return encodedJwt;
+        var tokenHandler = new JwtSecurityTokenHandler();
+        var token = tokenHandler.CreateToken(tokenDescriptor);
+        return tokenHandler.WriteToken(token);
     }
 }

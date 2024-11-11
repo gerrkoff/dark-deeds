@@ -411,7 +411,6 @@ test('[convertModelToString] routine', () => {
 
 test('[convertModelToString] routine and probable', () => {
     const service = createService()
-    console.log(service, 'ewrwereeee')
     const result = service.convertModelToString({
         title: 'Test!',
         type: TaskTypeEnum.Routine,

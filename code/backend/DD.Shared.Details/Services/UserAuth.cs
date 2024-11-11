@@ -16,7 +16,7 @@ public interface IUserAuth
 
 internal sealed class UserAuth(
     IHttpContextAccessor httpContextAccessor,
-    IAuthTokenConverter authTokenConverter)
+    IClaimsService claimsService)
     : IUserAuth
 {
     public bool IsAuthenticated()
@@ -33,6 +33,6 @@ internal sealed class UserAuth(
     {
         ArgumentNullException.ThrowIfNull(httpContextAccessor.HttpContext);
 
-        return authTokenConverter.FromPrincipal(httpContextAccessor.HttpContext.User);
+        return claimsService.ToToken(httpContextAccessor.HttpContext.User.Claims);
     }
 }

@@ -1,12 +1,8 @@
 ﻿namespace DD.Shared.Details.Abstractions.Models;
 
-public class AuthToken
+public class AuthToken : AuthTokenBuildInfo
 {
-    public string UserId { get; init; } = string.Empty;
+    public required Guid TokenId { get; init; }
 
-    public string Username { get; init; } = string.Empty;
-
-    public string DisplayName { get; init; } = string.Empty;
-
-    public DateTime? Expires { get; init; }
+    public required DateTimeOffset Expires { get; init; }
 }

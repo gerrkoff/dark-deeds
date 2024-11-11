@@ -26,6 +26,7 @@ public class Startup(IConfiguration configuration)
         // features
         services.AddTaskService();
         services.AddAuthService(Configuration);
+        services.AddDdAuthentication(Configuration);
         services.AddClients(Configuration);
 
         // shared
@@ -50,6 +51,27 @@ public class Startup(IConfiguration configuration)
             {
                 Title = "DarkDeeds.Backend",
                 Version = buildInfo.AppVersion,
+            });
+            c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+            {
+                In = ParameterLocation.Header,
+                Name = "Authorization",
+                Type = SecuritySchemeType.ApiKey,
+                Scheme = "Bearer",
+            });
+            c.AddSecurityRequirement(new OpenApiSecurityRequirement
+            {
+                {
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = "Bearer",
+                        },
+                    },
+                    []
+                },
             });
         });
     }
@@ -79,8 +101,7 @@ public class Startup(IConfiguration configuration)
 
         app.UseHealthChecks("/healthcheck");
         app.UseRouting();
-        app.UseAuthentication();
-        app.UseAuthorization();
+        app.UseDdAuthentication();
         app.UseEndpoints(endpoints =>
         {
             endpoints.MapControllers();

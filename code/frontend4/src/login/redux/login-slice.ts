@@ -1,6 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { UserModel } from '../models/UserModel'
-import { fetchCurrentUser, signin, signup } from './login-thunk'
+import {
+    fetchCurrentUser,
+    refetchCurrentUser,
+    signin,
+    signup,
+} from './login-thunk'
 import { SigninResultEnum } from '../models/SigninResultDto'
 import { SignupResultEnum } from '../models/SignupResultDto'
 
@@ -43,6 +48,18 @@ export const loginSlice = createSlice({
             if (action.payload.userAuthenticated) {
                 state.user = {
                     username: action.payload.username,
+                    expiresAt: new Date(action.payload.expires).valueOf(),
+                }
+            } else {
+                state.user = null
+            }
+        })
+
+        builder.addCase(refetchCurrentUser.fulfilled, (state, action) => {
+            if (action.payload.userAuthenticated) {
+                state.user = {
+                    username: action.payload.username,
+                    expiresAt: new Date(action.payload.expires).valueOf(),
                 }
             } else {
                 state.user = null
