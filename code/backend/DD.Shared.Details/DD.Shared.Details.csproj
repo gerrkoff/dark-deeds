@@ -5,13 +5,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DD.Shared.Data\DD.Shared.Data.csproj" />
-    <ProjectReference Include="..\DD.Shared.Web\DD.Shared.Web.csproj" />
     <ProjectReference Include="..\DD.Shared.Details.Abstractions\DD.Shared.Details.Abstractions.csproj" />
     <ProjectReference Include="..\DD.ServiceTask.Domain\DD.ServiceTask.Domain.csproj" />
-    <ProjectReference Include="..\DD.TelegramClient.Domain\DD.TelegramClient.Domain.csproj" />
-    <ProjectReference Include="..\DD.WebClientBff.Domain\DD.WebClientBff.Domain.csproj" />
-    <ProjectReference Include="..\DD.MobileClient.Domain\DD.MobileClient.Domain.csproj" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="MongoDB.Driver" Version="2.19.0"/>
   </ItemGroup>
 
 </Project>

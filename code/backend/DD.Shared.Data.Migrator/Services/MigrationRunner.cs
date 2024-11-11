@@ -1,4 +1,5 @@
 using DD.Shared.Data.Migrator.Models;
+using DD.Shared.Details.Data;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;

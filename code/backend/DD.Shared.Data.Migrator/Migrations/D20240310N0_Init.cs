@@ -1,5 +1,6 @@
 using DD.Shared.Data.Migrator.Models;
 using DD.Shared.Data.Migrator.Services;
+using DD.Shared.Details.Data;
 using MongoDB.Driver;
 
 namespace DD.Shared.Data.Migrator.Migrations;

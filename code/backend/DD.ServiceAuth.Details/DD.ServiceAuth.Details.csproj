@@ -5,8 +5,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DD.Shared.Web\DD.Shared.Web.csproj" />
     <ProjectReference Include="..\DD.ServiceAuth.Domain\DD.ServiceAuth.Domain.csproj" />
+    <ProjectReference Include="..\DD.Shared.Details\DD.Shared.Details.csproj" />
   </ItemGroup>
 
   <ItemGroup>

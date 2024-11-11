@@ -2,7 +2,7 @@ using System.Linq.Expressions;
 using DD.ServiceTask.Domain.Entities.Abstractions;
 using DD.ServiceTask.Domain.Infrastructure;
 using DD.ServiceTask.Domain.Specifications;
-using DD.Shared.Data;
+using DD.Shared.Details.Data;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 

@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using DD.ServiceAuth.Domain.Dto;
 using DD.ServiceAuth.Domain.Services;
-using DD.Shared.Web;
+using DD.Shared.Details.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

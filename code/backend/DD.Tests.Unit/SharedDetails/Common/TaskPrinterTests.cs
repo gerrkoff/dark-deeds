@@ -1,6 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using DD.Shared.Details.Abstractions.Dto;
-using DD.Shared.Details.Common;
+using DD.Shared.Details.Services;
 using Xunit;
 
 namespace DD.Tests.Unit.SharedDetails.Common;
