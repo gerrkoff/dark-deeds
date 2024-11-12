@@ -5,15 +5,12 @@ import { SigninResultEnum } from '../models/SigninResultDto'
 import { SignupResultEnum } from '../models/SignupResultDto'
 
 export interface LoginState {
-    isFetchUserPending: boolean
     user: UserModel | null
     isLogInPending: boolean
     logInError: string | null
 }
 
 const initialState: LoginState = {
-    // TODO: Remove this property
-    isFetchUserPending: true,
     user: null,
     isLogInPending: false,
     logInError: null,
