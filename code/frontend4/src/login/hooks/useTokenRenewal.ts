@@ -1,10 +1,11 @@
 import { useEffect } from 'react'
 import { useAppDispatch, useAppSelector } from '../../hooks'
-import { refetchCurrentUser } from '../redux/login-thunk'
 import { loginApi } from '../api/LoginApi'
 import { storageService } from '../../common/services/StorageService'
+import { authService } from '../services/AuthService'
+import { setUser } from '../redux/login-slice'
 
-const oneHourMs = 3600_000
+const oneHourMs = 10_000 // 3600_000
 const oneDayMs = 86400_000
 
 const msToTimeString = (ms: number): string => {
@@ -38,7 +39,8 @@ export function useTokenRenewal() {
             if (timeToExpire < oneDayMs) {
                 const renewedToken = await loginApi.renewToken()
                 storageService.saveAccessToken(renewedToken)
-                dispatch(refetchCurrentUser())
+                const user = authService.getCurrentUser()
+                dispatch(setUser(user))
                 console.log(`[${new Date().toISOString()}] Token renewed`)
             }
 

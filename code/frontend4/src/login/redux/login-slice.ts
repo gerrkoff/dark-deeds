@@ -1,11 +1,6 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { UserModel } from '../models/UserModel'
-import {
-    fetchCurrentUser,
-    refetchCurrentUser,
-    signin,
-    signup,
-} from './login-thunk'
+import { signin, signup } from './login-thunk'
 import { SigninResultEnum } from '../models/SigninResultDto'
 import { SignupResultEnum } from '../models/SignupResultDto'
 
@@ -17,6 +12,7 @@ export interface LoginState {
 }
 
 const initialState: LoginState = {
+    // TODO: Remove this property
     isFetchUserPending: true,
     user: null,
     isLogInPending: false,
@@ -27,45 +23,14 @@ export const loginSlice = createSlice({
     name: 'login',
     initialState,
     reducers: {
-        logout: state => {
-            state.user = null
+        setUser: (state, action: PayloadAction<UserModel | null>) => {
+            state.user = action.payload
         },
         resetLogInError: state => {
             state.logInError = null
         },
     },
     extraReducers: builder => {
-        builder.addCase(fetchCurrentUser.pending, state => {
-            state.isFetchUserPending = true
-            state.user = null
-        })
-        builder.addCase(fetchCurrentUser.rejected, state => {
-            state.isFetchUserPending = false
-            state.user = null
-        })
-        builder.addCase(fetchCurrentUser.fulfilled, (state, action) => {
-            state.isFetchUserPending = false
-            if (action.payload.userAuthenticated) {
-                state.user = {
-                    username: action.payload.username,
-                    expiresAt: new Date(action.payload.expires).valueOf(),
-                }
-            } else {
-                state.user = null
-            }
-        })
-
-        builder.addCase(refetchCurrentUser.fulfilled, (state, action) => {
-            if (action.payload.userAuthenticated) {
-                state.user = {
-                    username: action.payload.username,
-                    expiresAt: new Date(action.payload.expires).valueOf(),
-                }
-            } else {
-                state.user = null
-            }
-        })
-
         builder.addCase(signin.pending, state => {
             state.isLogInPending = true
             state.logInError = null
@@ -119,6 +84,6 @@ export const loginSlice = createSlice({
     },
 })
 
-export const { resetLogInError, logout } = loginSlice.actions
+export const { setUser, resetLogInError } = loginSlice.actions
 
 export default loginSlice.reducer

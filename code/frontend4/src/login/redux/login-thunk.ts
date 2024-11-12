@@ -1,22 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import { loginApi } from '../api/LoginApi'
-import { CurrentUserDto } from '../models/CurrentUserDto'
 import { SigninResultDto } from '../models/SigninResultDto'
 import { SignupResultDto } from '../models/SignupResultDto'
-
-export const fetchCurrentUser = createAsyncThunk(
-    'login/fetchCurrentUser',
-    async (): Promise<CurrentUserDto> => {
-        return await loginApi.fetchCurrentUser()
-    },
-)
-
-export const refetchCurrentUser = createAsyncThunk(
-    'login/refetchCurrentUser',
-    async (): Promise<CurrentUserDto> => {
-        return await loginApi.fetchCurrentUser()
-    },
-)
 
 export const signin = createAsyncThunk(
     'login/signin',
