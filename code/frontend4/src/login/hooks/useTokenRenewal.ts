@@ -5,7 +5,7 @@ import { storageService } from '../../common/services/StorageService'
 import { authService } from '../services/AuthService'
 import { setUser } from '../redux/login-slice'
 
-const oneHourMs = 10_000 // 3600_000
+const oneHourMs = 3600_000
 const oneDayMs = 86400_000
 
 const msToTimeString = (ms: number): string => {
