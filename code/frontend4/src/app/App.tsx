@@ -8,21 +8,22 @@ import { RecurrentTasks } from '../recurrent/RecurrentTasks'
 import { Settings } from '../settings/Settings'
 import { Login } from '../login/Login'
 import { fetchBuildInfo } from './redux/app-thunk'
-import { WelcomeState } from './components/WelcomeState'
 import { loadLocalSettings } from '../settings/redux/settings-slice'
 import { localSettingsService } from '../settings/services/LocalSettingsService'
 import { useLocalSettingsTracking } from '../settings/hooks/useLocalSettingsTracking'
 import { StatusPanel } from '../status-panel/StatusPanel'
 import { useTasksHub } from '../tasks/hooks/useTasksHub'
 import { useCurrentUser } from '../login/hooks/useCurrentUser'
+import { useTokenRenewal } from '../login/hooks/useTokenRenewal'
 
 function App() {
     const dispatch = useAppDispatch()
 
     const { applicationTab } = useAppSelector(state => state.app)
-    const { isFetchUserPending } = useAppSelector(state => state.login)
 
     const { loadCurrentUser } = useCurrentUser()
+
+    useTokenRenewal()
 
     useLocalSettingsTracking()
 
@@ -43,24 +44,20 @@ function App() {
 
     return (
         <div className="container-xxl pt-2" style={{ paddingBottom: '60px' }}>
-            {isFetchUserPending ? (
-                <WelcomeState />
-            ) : (
-                <>
-                    <StatusPanel />
-                    {applicationTab === 'login' && <Login />}
-                    {applicationTab === 'overview' && <Overview />}
-                    {applicationTab === 'recurrent' && <RecurrentTasks />}
-                    {applicationTab === 'settings' && <Settings />}
+            <>
+                <StatusPanel />
+                {applicationTab === 'login' && <Login />}
+                {applicationTab === 'overview' && <Overview />}
+                {applicationTab === 'recurrent' && <RecurrentTasks />}
+                {applicationTab === 'settings' && <Settings />}
 
-                    {applicationTab !== 'login' && (
-                        <NavigationBar
-                            applicationTab={applicationTab}
-                            switchTo={switctToTab}
-                        />
-                    )}
-                </>
-            )}
+                {applicationTab !== 'login' && (
+                    <NavigationBar
+                        applicationTab={applicationTab}
+                        switchTo={switctToTab}
+                    />
+                )}
+            </>
         </div>
     )
 }
