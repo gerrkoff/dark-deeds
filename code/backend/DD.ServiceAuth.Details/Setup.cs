@@ -1,9 +1,11 @@
+using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using AspNetCore.Identity.Mongo;
 using DD.ServiceAuth.Details.Web;
 using DD.ServiceAuth.Domain;
 using DD.ServiceAuth.Domain.Entities;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,18 +20,24 @@ public static class Setup
         services.AddAuthServiceWeb();
         services.AddAuthServiceDomain();
         services.AddAuthServiceData(configuration);
-
-        services.AddAuthentication(configuration);
     }
 
-    private static void AddAuthentication(this IServiceCollection services, IConfiguration configuration)
+    public static void UseDdAuthentication(this IApplicationBuilder app)
     {
-        services.Configure<AuthSettings>(options => configuration.GetSection("Auth").Bind(options));
+        JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+        app.UseAuthentication();
+        app.UseAuthorization();
+    }
 
-        var authSettings = configuration.GetSection("Auth").Get<AuthSettings>();
+    public static void AddDdAuthentication(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddOptions<AuthSettings>()
+            .Bind(configuration.GetSection("Auth"))
+            .ValidateDataAnnotations()
+            .ValidateOnStart();
 
-        if (authSettings is null || string.IsNullOrEmpty(authSettings.Issuer) || string.IsNullOrEmpty(authSettings.Audience) || string.IsNullOrEmpty(authSettings.Key))
-            throw new InvalidOperationException("Auth settings are not configured");
+        var authSettings = configuration.GetSection("Auth").Get<AuthSettings>()
+                           ?? throw new InvalidOperationException("Auth settings are not configured");
 
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
@@ -41,10 +49,9 @@ public static class Setup
                     ValidIssuer = authSettings.Issuer,
                     ValidateAudience = true,
                     ValidAudience = authSettings.Audience,
-                    ValidateLifetime = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(authSettings.Key)),
                     ValidateIssuerSigningKey = true,
-                    ClockSkew = TimeSpan.Zero,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(authSettings.Key)),
+                    ValidateLifetime = true,
                 };
                 options.Events = new JwtBearerEvents
                 {

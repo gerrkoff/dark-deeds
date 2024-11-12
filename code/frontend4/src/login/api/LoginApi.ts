@@ -29,6 +29,10 @@ export class LoginApi {
             },
         )
     }
+
+    renewToken(): Promise<string> {
+        return this.api.post<unknown, string>('api/auth/account/renew', {})
+    }
 }
 
 export const loginApi = new LoginApi(api)

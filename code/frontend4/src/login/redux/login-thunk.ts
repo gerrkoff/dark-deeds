@@ -11,6 +11,13 @@ export const fetchCurrentUser = createAsyncThunk(
     },
 )
 
+export const refetchCurrentUser = createAsyncThunk(
+    'login/refetchCurrentUser',
+    async (): Promise<CurrentUserDto> => {
+        return await loginApi.fetchCurrentUser()
+    },
+)
+
 export const signin = createAsyncThunk(
     'login/signin',
     async ({

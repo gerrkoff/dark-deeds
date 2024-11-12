@@ -19,7 +19,6 @@ public static class Setup
         services.AddMemoryCache();
         services.AddScoped<ICacheProvider, CacheProvider>();
         services.AddScoped<ITaskPrinter, TaskPrinter>();
-        services.AddTransient<IAuthTokenConverter, AuthTokenConverter>();
         services.AddScoped<TestAttribute>();
         services.AddScoped<IUserAuth, UserAuth>();
         services.AddScoped<IValidator, Validator>();
