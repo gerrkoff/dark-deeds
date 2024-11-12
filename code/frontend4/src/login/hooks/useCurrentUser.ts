@@ -1,7 +1,7 @@
-import { useCallback, useEffect } from 'react'
-import { useAppDispatch, useAppSelector } from '../../hooks'
+import { useCallback } from 'react'
+import { useAppDispatch } from '../../hooks'
 import { switchToTab } from '../../app/redux/app-slice'
-import { fetchCurrentUser, refetchCurrentUser } from '../redux/login-thunk'
+import { fetchCurrentUser } from '../redux/login-thunk'
 import { unwrapResult } from '@reduxjs/toolkit'
 import { loadSharedSettings } from '../../settings/redux/settings-thunk'
 import { taskHubApi } from '../../tasks/api/TaskHubApi'
@@ -12,8 +12,6 @@ import {
 import { logout } from '../redux/login-slice'
 import { useTasksSynchronization } from '../../tasks/hooks/useTasksSynchronization'
 import { cleanup } from '../../overview/redux/overview-slice'
-import { loginApi } from '../api/LoginApi'
-import { storageService } from '../../common/services/StorageService'
 
 interface Output {
     loadCurrentUser: () => Promise<void>
@@ -53,35 +51,6 @@ export function useCurrentUser(): Output {
         dispatch(cleanup())
         dispatch(switchToTab('login'))
     }, [dispatch])
-
-    const { user } = useAppSelector(state => state.login)
-
-    useEffect(() => {
-        if (!user) {
-            return
-        }
-
-        let timeout: NodeJS.Timeout | null = null
-
-        const checkAndRenewTokenIfNeeded = async () => {
-            if (user.expiresAt - Date.now() < 300000) {
-                const renewedToken = await loginApi.renewToken()
-                storageService.saveAccessToken(renewedToken)
-                dispatch(refetchCurrentUser())
-                console.log(`[${new Date().toISOString()}] Token renewed`)
-            }
-
-            timeout = setTimeout(checkAndRenewTokenIfNeeded, 60000)
-        }
-
-        timeout = setTimeout(checkAndRenewTokenIfNeeded, 60000)
-
-        return () => {
-            if (timeout) {
-                clearTimeout(timeout)
-            }
-        }
-    }, [dispatch, user])
 
     return { loadCurrentUser, unloadCurrentUser }
 }

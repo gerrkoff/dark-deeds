@@ -15,6 +15,7 @@ import { useLocalSettingsTracking } from '../settings/hooks/useLocalSettingsTrac
 import { StatusPanel } from '../status-panel/StatusPanel'
 import { useTasksHub } from '../tasks/hooks/useTasksHub'
 import { useCurrentUser } from '../login/hooks/useCurrentUser'
+import { useTokenRenewal } from '../login/hooks/useTokenRenewal'
 
 function App() {
     const dispatch = useAppDispatch()
@@ -23,6 +24,8 @@ function App() {
     const { isFetchUserPending } = useAppSelector(state => state.login)
 
     const { loadCurrentUser } = useCurrentUser()
+
+    useTokenRenewal()
 
     useLocalSettingsTracking()
 
