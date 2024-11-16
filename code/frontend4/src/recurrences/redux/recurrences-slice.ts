@@ -27,7 +27,6 @@ export const recurrencesSlice = createSlice({
     extraReducers: builder => {
         builder.addCase(loadRecurrences.pending, state => {
             state.isLoadPending = true
-            state.recurrences = []
         })
         builder.addCase(loadRecurrences.rejected, state => {
             state.isLoadPending = false
