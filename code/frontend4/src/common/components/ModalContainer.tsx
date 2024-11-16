@@ -1,6 +1,7 @@
 import clsx from 'clsx'
 import { useEffect, useState } from 'react'
-import { isTouchDevice } from '../../common/utils/isTouchDevice'
+import { isTouchDevice } from '../utils/isTouchDevice'
+import { isKeyEsc } from '../utils/keys'
 
 interface Props {
     isShown: boolean
@@ -8,17 +9,19 @@ interface Props {
     onClose: () => void
     onCleanup: () => void
     onSave: () => void
+    autoFocusInputRef?: React.RefObject<HTMLInputElement>
     children: React.ReactNode
 }
 
 const isStartAnimationEnabled = !isTouchDevice()
 
-function EditTaskModalContainer({
+function ModalContainer({
     isShown,
     isSaveEnabled,
     onClose,
     onCleanup,
     onSave,
+    autoFocusInputRef,
     children,
 }: Props) {
     const [visible, setVisible] = useState(!isStartAnimationEnabled)
@@ -64,6 +67,16 @@ function EditTaskModalContainer({
         }
     }, [])
 
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (isKeyEsc(e)) {
+            onClose()
+        }
+    }
+
+    useEffect(() => {
+        setTimeout(() => autoFocusInputRef?.current?.focus(), 16)
+    }, [autoFocusInputRef])
+
     return (
         <div
             className={clsx(
@@ -76,6 +89,7 @@ function EditTaskModalContainer({
             tabIndex={-1}
             aria-label="Edit task"
             onClick={handleBackdropClick}
+            onKeyDown={handleKeyDown}
         >
             <div className="modal-dialog">
                 <div className="modal-content">
@@ -104,4 +118,4 @@ function EditTaskModalContainer({
     )
 }
 
-export { EditTaskModalContainer }
+export { ModalContainer }
