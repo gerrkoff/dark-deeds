@@ -4,6 +4,7 @@ import appReducer from './app/redux/app-slice'
 import loginReducer from './login/redux/login-slice'
 import settingsReducer from './settings/redux/settings-slice'
 import statusPanelReducer from './status-panel/redux/status-panel-slice'
+import recurrencesRecuder from './recurrences/redux/recurrences-slice'
 // import logger from 'redux-logger'
 
 export const store = configureStore({
@@ -13,6 +14,7 @@ export const store = configureStore({
         overview: overviewReducer,
         settings: settingsReducer,
         statusPanel: statusPanelReducer,
+        recurrences: recurrencesRecuder,
     },
     middleware: getDefaultMiddleware =>
         getDefaultMiddleware().concat([

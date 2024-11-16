@@ -4,7 +4,6 @@ import { NavigationBar } from './components/NavigationBar'
 import { switchToTab } from './redux/app-slice'
 import { ApplicationTabType } from './models/ApplicationTabType'
 import { Overview } from '../overview/Overview'
-import { RecurrentTasks } from '../recurrent/RecurrentTasks'
 import { Settings } from '../settings/Settings'
 import { Login } from '../login/Login'
 import { fetchBuildInfo } from './redux/app-thunk'
@@ -15,6 +14,7 @@ import { StatusPanel } from '../status-panel/StatusPanel'
 import { useTasksHub } from '../tasks/hooks/useTasksHub'
 import { useCurrentUser } from '../login/hooks/useCurrentUser'
 import { useTokenRenewal } from '../login/hooks/useTokenRenewal'
+import { Recurrences } from '../recurrences/RecurrentTasks'
 
 function App() {
     const dispatch = useAppDispatch()
@@ -48,7 +48,7 @@ function App() {
                 <StatusPanel />
                 {applicationTab === 'login' && <Login />}
                 {applicationTab === 'overview' && <Overview />}
-                {applicationTab === 'recurrent' && <RecurrentTasks />}
+                {applicationTab === 'recurrent' && <Recurrences />}
                 {applicationTab === 'settings' && <Settings />}
 
                 {applicationTab !== 'login' && (
