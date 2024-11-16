@@ -47,7 +47,10 @@ function Recurrences() {
                     <div className="row">
                         <div className="col-md-9">
                             <Card>
-                                <RecurrenceList recurrences={recurrences} />
+                                <RecurrenceList
+                                    recurrences={recurrences}
+                                    onEdit={openEditRecurrenceModal}
+                                />
                             </Card>
                         </div>
                         <div className="col-md-3">

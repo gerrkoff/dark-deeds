@@ -4,16 +4,17 @@ import { recurrenceService } from '../services/RecurrenceService'
 
 interface Props {
     recurrence: PlannedRecurrenceModel
+    onEdit: (recurrence: PlannedRecurrenceModel) => void
 }
 
-function RecurrenceItem({ recurrence }: Props) {
+function RecurrenceItem({ recurrence, onEdit }: Props) {
     const { task, schedule, borders } = useMemo(
         () => recurrenceService.print(recurrence),
         [recurrence],
     )
 
     return (
-        <tr>
+        <tr onClick={() => onEdit(recurrence)}>
             <td className="bg-dark-subtle">{task}</td>
             <td className="bg-dark-subtle">
                 {schedule}{' '}

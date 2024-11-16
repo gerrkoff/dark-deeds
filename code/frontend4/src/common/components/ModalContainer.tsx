@@ -2,12 +2,11 @@ import clsx from 'clsx'
 import { useEffect, useState } from 'react'
 import { isTouchDevice } from '../utils/isTouchDevice'
 import { isKeyEsc } from '../utils/keys'
+import { ModalContainerContext } from '../models/ModalContainerContext'
 
 interface Props {
-    isShown: boolean
+    context: ModalContainerContext
     isSaveEnabled: boolean
-    onClose: () => void
-    onCleanup: () => void
     onSave: () => void
     autoFocusInputRef?: React.RefObject<HTMLInputElement>
     children: React.ReactNode
@@ -16,10 +15,8 @@ interface Props {
 const isStartAnimationEnabled = !isTouchDevice()
 
 function ModalContainer({
-    isShown,
+    context: { isShown, close, cleanup },
     isSaveEnabled,
-    onClose,
-    onCleanup,
     onSave,
     autoFocusInputRef,
     children,
@@ -36,11 +33,11 @@ function ModalContainer({
             setShow(false)
             setTimeout(() => {
                 setVisible(false)
-                onCleanup()
+                cleanup()
             }, 150)
             document.body.style.overflow = ''
         }
-    }, [isShown, onCleanup])
+    }, [isShown, cleanup])
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
@@ -49,7 +46,7 @@ function ModalContainer({
 
     const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
         if (e.target === e.currentTarget) {
-            onClose()
+            close()
         }
     }
 
@@ -69,7 +66,7 @@ function ModalContainer({
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (isKeyEsc(e)) {
-            onClose()
+            close()
         }
     }
 
@@ -99,7 +96,7 @@ function ModalContainer({
                             <button
                                 type="button"
                                 className="btn btn-secondary"
-                                onClick={onClose}
+                                onClick={close}
                             >
                                 Close
                             </button>

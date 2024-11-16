@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { EditRecurrenceModalContext } from '../models/EditRecurrenceModalContext'
 import { PlannedRecurrenceModel } from '../models/PlannedRecurrenceModel'
 import { ModalContainer } from '../../common/components/ModalContainer'
@@ -8,10 +8,14 @@ interface Props {
     onSave: (recurrence: PlannedRecurrenceModel) => void
 }
 
+const taskLabel = 'Task...'
+
 function EditRecurrenceModal({ context, onSave }: Props) {
     const inputRef = useRef<HTMLInputElement>(null)
 
-    const { close, cleanup } = context
+    const { recurrence } = context
+
+    const [task, setTask] = useState(recurrence?.task ?? '')
 
     const handleSave = useCallback(() => {
         if (context.recurrence) {
@@ -24,14 +28,9 @@ function EditRecurrenceModal({ context, onSave }: Props) {
         setTimeout(() => inputRef.current?.focus(), 16)
     }, [])
 
-    const label = 'test'
-    const task = 'test'
-
     return (
         <ModalContainer
-            isShown={context.isShown}
-            onClose={close}
-            onCleanup={cleanup}
+            context={context}
             onSave={handleSave}
             isSaveEnabled={false}
         >
@@ -42,10 +41,11 @@ function EditRecurrenceModal({ context, onSave }: Props) {
                     type="text"
                     className="form-control"
                     id="taskInput"
-                    placeholder={label}
+                    placeholder={taskLabel}
                     value={task}
+                    onChange={e => setTask(e.target.value)}
                 />
-                <label htmlFor="taskInput">{label}</label>
+                <label htmlFor="taskInput">{taskLabel}</label>
             </div>
         </ModalContainer>
     )

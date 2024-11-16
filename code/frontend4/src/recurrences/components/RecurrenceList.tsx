@@ -3,9 +3,10 @@ import { RecurrenceItem } from './RecurrencesItem'
 
 interface Props {
     recurrences: PlannedRecurrenceModel[]
+    onEdit: (recurrence: PlannedRecurrenceModel) => void
 }
 
-function RecurrenceList({ recurrences }: Props) {
+function RecurrenceList({ recurrences, onEdit }: Props) {
     return (
         <table className="table table-hover table-sm mt-1 mb-1">
             <thead>
@@ -23,6 +24,7 @@ function RecurrenceList({ recurrences }: Props) {
                     <RecurrenceItem
                         key={recurrence.uid}
                         recurrence={recurrence}
+                        onEdit={onEdit}
                     />
                 ))}
             </tbody>

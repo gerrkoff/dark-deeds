@@ -13,8 +13,6 @@ interface Props {
 function EditTaskModal({ context, onSave }: Props) {
     const inputRef = useRef<HTMLInputElement>(null)
 
-    const { close, cleanup } = context
-
     const [task, setTask] = useState('')
 
     useEffect(() => {
@@ -43,7 +41,7 @@ function EditTaskModal({ context, onSave }: Props) {
             ])
             close()
         }
-    }, [editModel, onSave, context.task, close])
+    }, [editModel, onSave, context.task])
 
     const handleTaskChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setTask(e.target.value)
@@ -57,9 +55,7 @@ function EditTaskModal({ context, onSave }: Props) {
 
     return (
         <ModalContainer
-            isShown={context.isShown}
-            onClose={close}
-            onCleanup={cleanup}
+            context={context}
             onSave={handleSave}
             autoFocusInputRef={inputRef}
             isSaveEnabled={task.length > 0}
