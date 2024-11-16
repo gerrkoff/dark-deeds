@@ -1,4 +1,5 @@
 using DD.App.Dto;
+using DD.App.Middlewares;
 using DD.Clients.Details;
 using DD.ServiceAuth.Details;
 using DD.ServiceTask.Details;
@@ -36,6 +37,7 @@ public class Startup(IConfiguration configuration)
 
         services.AddHttpContextAccessor();
         services.AddHealthChecks();
+        services.AddProblemDetails();
         services.AddControllers(options =>
         {
             var authRequired = new AuthorizationPolicyBuilder()
@@ -80,7 +82,7 @@ public class Startup(IConfiguration configuration)
     {
         app.UseRequestLogging();
         app.UseMetrics();
-        app.UseUnhandledExceptionHandler(env);
+        app.UseExceptionHandler(x => x.Run(new ProblemDetailsExceptionHandler(env.IsProduction()).Handle));
         app.UseForwardedHeaders(new ForwardedHeadersOptions { ForwardedHeaders = ForwardedHeaders.All });
         app.UseHsts();
 
