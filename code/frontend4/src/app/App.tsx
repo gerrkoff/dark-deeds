@@ -14,7 +14,7 @@ import { StatusPanel } from '../status-panel/StatusPanel'
 import { useTasksHub } from '../tasks/hooks/useTasksHub'
 import { useCurrentUser } from '../login/hooks/useCurrentUser'
 import { useTokenRenewal } from '../login/hooks/useTokenRenewal'
-import { Recurrences } from '../recurrences/RecurrentTasks'
+import { Recurrences } from '../recurrences/Recurrences'
 
 function App() {
     const dispatch = useAppDispatch()

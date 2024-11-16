@@ -1,15 +1,23 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { PlannedRecurrenceModel } from '../models/PlannedRecurrenceModel'
-import { loadRecurrences } from './recurrences-thunk'
+import {
+    createRecurrences,
+    loadRecurrences,
+    saveRecurrences,
+} from './recurrences-thunk'
 
 export interface RecurrencesState {
-    isLoadPending: boolean
     recurrences: PlannedRecurrenceModel[]
+    isLoadPending: boolean
+    isSavePending: boolean
+    isCreatePending: boolean
 }
 
 const initialState: RecurrencesState = {
-    isLoadPending: false,
     recurrences: [],
+    isLoadPending: false,
+    isSavePending: false,
+    isCreatePending: false,
 }
 
 export const recurrencesSlice = createSlice({
@@ -27,6 +35,26 @@ export const recurrencesSlice = createSlice({
         builder.addCase(loadRecurrences.fulfilled, (state, action) => {
             state.isLoadPending = false
             state.recurrences = action.payload
+        })
+
+        builder.addCase(saveRecurrences.pending, state => {
+            state.isSavePending = true
+        })
+        builder.addCase(saveRecurrences.rejected, state => {
+            state.isSavePending = false
+        })
+        builder.addCase(saveRecurrences.fulfilled, state => {
+            state.isSavePending = false
+        })
+
+        builder.addCase(createRecurrences.pending, state => {
+            state.isCreatePending = true
+        })
+        builder.addCase(createRecurrences.rejected, state => {
+            state.isCreatePending = false
+        })
+        builder.addCase(createRecurrences.fulfilled, state => {
+            state.isCreatePending = false
         })
     },
 })

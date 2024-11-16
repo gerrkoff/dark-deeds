@@ -1,6 +1,9 @@
 import { useEffect } from 'react'
 import { useAppDispatch, useAppSelector } from '../hooks'
 import { loadRecurrences } from './redux/recurrences-thunk'
+import { RecurrenceList } from './components/RecurrenceList'
+import { Card } from '../common/components/Card'
+import { Loader } from '../common/components/Loader'
 
 function Recurrences() {
     const dispatch = useAppDispatch()
@@ -16,9 +19,11 @@ function Recurrences() {
     return (
         <div>
             {isLoadPending ? (
-                'Loading...'
+                <Loader />
             ) : (
-                <pre>{JSON.stringify(recurrences, null, 2)}</pre>
+                <Card>
+                    <RecurrenceList recurrences={recurrences} />
+                </Card>
             )}
         </div>
     )
