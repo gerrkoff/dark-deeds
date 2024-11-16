@@ -6,7 +6,6 @@ using DD.ServiceTask.Details;
 using DD.Shared.Data.Migrator;
 using DD.Shared.Details;
 using GerrKoff.Monitoring;
-using GerrKoff.Monitoring.Misc;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc.Authorization;
