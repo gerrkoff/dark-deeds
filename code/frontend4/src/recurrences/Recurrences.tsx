@@ -14,6 +14,7 @@ import { PlannedRecurrenceModel } from './models/PlannedRecurrenceModel'
 // sync
 // create
 // table?
+// mobile
 
 function Recurrences() {
     const dispatch = useAppDispatch()
