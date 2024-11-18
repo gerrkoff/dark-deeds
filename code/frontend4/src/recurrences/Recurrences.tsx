@@ -7,6 +7,13 @@ import { Loader } from '../common/components/Loader'
 import { RecurrenceActions } from './components/RecurrenceActions'
 import { useEditRecurrenceModal } from './hooks/useEditRecurrenceModal'
 import { EditRecurrenceModal } from './components/EditRecurrenceModal'
+import { updateRecurrences } from './redux/recurrences-slice'
+import { PlannedRecurrenceModel } from './models/PlannedRecurrenceModel'
+
+// delete
+// sync
+// create
+// table?
 
 function Recurrences() {
     const dispatch = useAppDispatch()
@@ -26,9 +33,14 @@ function Recurrences() {
         openEditRecurrenceModal(null)
     }, [openEditRecurrenceModal])
 
-    const handleSave = useCallback(() => {
-        console.log('Save')
-    }, [])
+    const handleSave = useCallback(() => console.log('save'), [])
+
+    const handleUpdate = useCallback(
+        (recurrence: PlannedRecurrenceModel) => {
+            dispatch(updateRecurrences([recurrence]))
+        },
+        [dispatch],
+    )
 
     const handleLoad = useCallback(() => {
         dispatch(loadRecurrences())
@@ -68,7 +80,7 @@ function Recurrences() {
             {editRecurrenceModalContext && (
                 <EditRecurrenceModal
                     context={editRecurrenceModalContext}
-                    onSave={handleSave}
+                    onUpdate={handleUpdate}
                 />
             )}
         </>

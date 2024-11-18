@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { PlannedRecurrenceModel } from '../models/PlannedRecurrenceModel'
 import {
     createRecurrences,
@@ -23,7 +23,25 @@ const initialState: RecurrencesState = {
 export const recurrencesSlice = createSlice({
     name: 'recurrences',
     initialState,
-    reducers: {},
+    reducers: {
+        updateRecurrences: (
+            state,
+            action: PayloadAction<PlannedRecurrenceModel[]>,
+        ) => {
+            for (const item of action.payload) {
+                const index = state.recurrences.findIndex(
+                    t => t.uid === item.uid,
+                )
+                if (index !== -1) {
+                    state.recurrences[index] = {
+                        ...item,
+                    }
+                } else {
+                    state.recurrences.push(item)
+                }
+            }
+        },
+    },
     extraReducers: builder => {
         builder.addCase(loadRecurrences.pending, state => {
             state.isLoadPending = true
@@ -58,6 +76,6 @@ export const recurrencesSlice = createSlice({
     },
 })
 
-// export const {} = recurrencesSlice.actions
+export const { updateRecurrences } = recurrencesSlice.actions
 
 export default recurrencesSlice.reducer

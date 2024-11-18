@@ -29,7 +29,7 @@ export class RecurrenceService {
         }
 
         if (recurrence.endDate !== null) {
-            result += `untill ${this.printDate(recurrence.endDate)}`
+            result += `until ${this.printDate(recurrence.endDate)}`
         }
 
         return result
@@ -114,7 +114,7 @@ export class RecurrenceService {
     }
 
     private printDate(date: number): string {
-        return new Date(date).toLocaleDateString('en-US')
+        return new Date(date).toLocaleDateString()
     }
 
     private printNthDays(nthDays: number): string {
