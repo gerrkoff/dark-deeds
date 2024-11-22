@@ -36,10 +36,9 @@ export const recurrencesSlice = createSlice({
                     t => t.uid === item.uid,
                 )
                 if (index !== -1) {
-                    state.hasChangesPending = !equals(
-                        state.recurrences[index],
-                        item,
-                    )
+                    state.hasChangesPending =
+                        state.hasChangesPending ||
+                        !equals(state.recurrences[index], item)
                     state.recurrences[index] = {
                         ...item,
                     }
