@@ -62,16 +62,8 @@ function Recurrences() {
                 {isLoadPending ? (
                     <Loader />
                 ) : (
-                    <div className="row">
-                        <div className="col-md-9">
-                            <Card>
-                                <RecurrenceList
-                                    recurrences={recurrences}
-                                    onEdit={openEditRecurrenceModal}
-                                />
-                            </Card>
-                        </div>
-                        <div className="col-md-3">
+                    <div className="row flex-row-reverse">
+                        <div className="col-md-3 mb-3">
                             <RecurrenceActions
                                 onAdd={handleAdd}
                                 onSave={handleSave}
@@ -81,6 +73,14 @@ function Recurrences() {
                                 isCreatePending={isCreatePending}
                                 hasChangesPending={hasChangesPending}
                             />
+                        </div>
+                        <div className="col-md-9">
+                            <Card>
+                                <RecurrenceList
+                                    recurrences={recurrences}
+                                    onEdit={openEditRecurrenceModal}
+                                />
+                            </Card>
                         </div>
                     </div>
                 )}
