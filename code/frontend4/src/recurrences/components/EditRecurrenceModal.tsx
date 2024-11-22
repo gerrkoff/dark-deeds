@@ -179,7 +179,7 @@ function EditRecurrenceModal({ context, onUpdate }: Props) {
         const { value, isValid } = handleDateChange(e, toRef.current)
         toRef.current = value
         setTo(value)
-        setIsToValid(isValid)
+        setIsToValid(isValid || value === '')
     }
 
     const editRecurrence: PlannedRecurrenceModel = useMemo(
@@ -212,6 +212,8 @@ function EditRecurrenceModal({ context, onUpdate }: Props) {
         context.close()
     }, [context, editRecurrence, onUpdate, recurrence?.uid])
 
+    const summaryLabel = `Task "${task}" repeats ${editRecurrencePrint.schedule} ${editRecurrencePrint.borders}`
+
     return (
         <ModalContainer
             context={context}
@@ -233,9 +235,7 @@ function EditRecurrenceModal({ context, onUpdate }: Props) {
                 <label htmlFor="taskInput">{taskLabel}</label>
             </div>
             <div className="mb-3">
-                <label className="form-label">
-                    Repeats: {editRecurrencePrint.schedule}
-                </label>
+                <label className="form-label">Repeats</label>
                 <select
                     id="weekdaysInput"
                     className="form-select mb-1"
@@ -277,9 +277,7 @@ function EditRecurrenceModal({ context, onUpdate }: Props) {
                 </div>
             </div>
             <div className="mb-3">
-                <label className="form-label">
-                    Within: {editRecurrencePrint.borders}
-                </label>
+                <label className="form-label">Within</label>
                 <div className="form-floating mb-1">
                     <input
                         type="text"
@@ -306,6 +304,9 @@ function EditRecurrenceModal({ context, onUpdate }: Props) {
                     />
                     <label htmlFor="toInput">{toLabel}</label>
                 </div>
+            </div>
+            <div className="mb-3">
+                <label className="form-label">{summaryLabel}</label>
             </div>
         </ModalContainer>
     )
