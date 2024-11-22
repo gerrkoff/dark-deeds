@@ -20,6 +20,10 @@ export class TaskHubApi {
     ) {}
 
     init() {
+        if (this.connection !== null) {
+            return
+        }
+
         this.connection = new signalR.HubConnectionBuilder()
             .withUrl(this.baseUrlProvider.getBaseUrl() + 'ws/task/task', {
                 accessTokenFactory: () => {

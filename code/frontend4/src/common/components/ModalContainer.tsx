@@ -1,24 +1,26 @@
 import clsx from 'clsx'
 import { useEffect, useState } from 'react'
-import { isTouchDevice } from '../../common/utils/isTouchDevice'
+import { isTouchDevice } from '../utils/isTouchDevice'
+import { isKeyEsc } from '../utils/keys'
+import { ModalContainerContext } from '../models/ModalContainerContext'
 
 interface Props {
-    isShown: boolean
+    context: ModalContainerContext
     isSaveEnabled: boolean
-    onClose: () => void
-    onCleanup: () => void
     onSave: () => void
+    onDelete?: () => void
+    autoFocusInputRef?: React.RefObject<HTMLInputElement>
     children: React.ReactNode
 }
 
 const isStartAnimationEnabled = !isTouchDevice()
 
-function EditTaskModalContainer({
-    isShown,
+function ModalContainer({
+    context: { isShown, close, cleanup },
     isSaveEnabled,
-    onClose,
-    onCleanup,
     onSave,
+    onDelete,
+    autoFocusInputRef,
     children,
 }: Props) {
     const [visible, setVisible] = useState(!isStartAnimationEnabled)
@@ -33,11 +35,11 @@ function EditTaskModalContainer({
             setShow(false)
             setTimeout(() => {
                 setVisible(false)
-                onCleanup()
+                cleanup()
             }, 150)
             document.body.style.overflow = ''
         }
-    }, [isShown, onCleanup])
+    }, [isShown, cleanup])
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
@@ -46,7 +48,7 @@ function EditTaskModalContainer({
 
     const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
         if (e.target === e.currentTarget) {
-            onClose()
+            close()
         }
     }
 
@@ -64,6 +66,32 @@ function EditTaskModalContainer({
         }
     }, [])
 
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (isKeyEsc(e)) {
+            close()
+        }
+    }
+
+    useEffect(() => {
+        setTimeout(() => autoFocusInputRef?.current?.focus(), 16)
+    }, [autoFocusInputRef])
+
+    const [isDeletePending, setIsDeletePending] = useState(false)
+
+    const handleDelete = () => {
+        if (!onDelete) {
+            return
+        }
+
+        if (isDeletePending) {
+            onDelete()
+        }
+
+        setIsDeletePending(true)
+    }
+
+    const isDeleteVisible = !!onDelete
+
     return (
         <div
             className={clsx(
@@ -76,6 +104,7 @@ function EditTaskModalContainer({
             tabIndex={-1}
             aria-label="Edit task"
             onClick={handleBackdropClick}
+            onKeyDown={handleKeyDown}
         >
             <div className="modal-dialog">
                 <div className="modal-content">
@@ -85,10 +114,22 @@ function EditTaskModalContainer({
                             <button
                                 type="button"
                                 className="btn btn-secondary"
-                                onClick={onClose}
+                                onClick={close}
                             >
                                 Close
                             </button>
+                            {isDeleteVisible && (
+                                <button
+                                    type="button"
+                                    className={clsx('btn', {
+                                        'btn-secondary': !isDeletePending,
+                                        'btn-danger': isDeletePending,
+                                    })}
+                                    onClick={handleDelete}
+                                >
+                                    Delete
+                                </button>
+                            )}
                             <button
                                 type="submit"
                                 className="btn btn-primary"
@@ -104,4 +145,4 @@ function EditTaskModalContainer({
     )
 }
 
-export { EditTaskModalContainer }
+export { ModalContainer }

@@ -1,5 +1,4 @@
 export class DateService {
-    readonly dateInputFormat = 'M/D/YYYY'
     readonly daysLong = [
         'Sunday',
         'Monday',
