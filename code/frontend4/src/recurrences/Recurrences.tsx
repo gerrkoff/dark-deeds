@@ -20,8 +20,13 @@ import { recurrencesSelector } from './redux/recurrences-selectors'
 function Recurrences() {
     const dispatch = useAppDispatch()
 
-    const { hasChangesPending, isLoadPending, isCreatePending, isSavePending } =
-        useAppSelector(state => state.recurrences)
+    const {
+        recurrences: allRecurrences,
+        hasChangesPending,
+        isLoadPending,
+        isCreatePending,
+        isSavePending,
+    } = useAppSelector(state => state.recurrences)
 
     const recurrences = useAppSelector(recurrencesSelector)
 
@@ -37,8 +42,8 @@ function Recurrences() {
     }, [openEditRecurrenceModal])
 
     const handleSave = useCallback(
-        () => dispatch(saveRecurrences(recurrences)),
-        [dispatch, recurrences],
+        () => dispatch(saveRecurrences(allRecurrences)),
+        [dispatch, allRecurrences],
     )
 
     const handleUpdate = useCallback(
