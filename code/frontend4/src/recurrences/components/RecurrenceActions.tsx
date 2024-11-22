@@ -1,11 +1,26 @@
+import clsx from 'clsx'
+
 interface Props {
     onAdd: () => void
     onSave: () => void
     onLoad: () => void
     onCreate: () => void
+    isSavingPending: boolean
+    isCreatePending: boolean
+    hasChangesPending: boolean
 }
 
-function RecurrenceActions({ onAdd, onSave, onLoad, onCreate }: Props) {
+function RecurrenceActions({
+    onAdd,
+    onSave,
+    onLoad,
+    onCreate,
+    hasChangesPending,
+    isCreatePending,
+    isSavingPending,
+}: Props) {
+    const isSavingEnabled = !isSavingPending && hasChangesPending
+
     return (
         <>
             <div className="row justify-content-center">
@@ -22,11 +37,24 @@ function RecurrenceActions({ onAdd, onSave, onLoad, onCreate }: Props) {
             <div className="row justify-content-center mt-2">
                 <button
                     type="button"
-                    className="btn btn-secondary"
+                    className={clsx('btn', {
+                        'btn-secondary': !hasChangesPending,
+                        'btn-success': hasChangesPending,
+                    })}
                     onClick={onSave}
                     style={{ width: '120px' }}
+                    disabled={!isSavingEnabled}
                 >
-                    Save
+                    {isSavingPending ? (
+                        <>
+                            <span
+                                className="spinner-border spinner-border-sm"
+                                aria-hidden="true"
+                            ></span>
+                        </>
+                    ) : (
+                        'Save'
+                    )}
                 </button>
             </div>
             <div className="row justify-content-center mt-2">
@@ -45,8 +73,18 @@ function RecurrenceActions({ onAdd, onSave, onLoad, onCreate }: Props) {
                     className="btn btn-primary"
                     onClick={onCreate}
                     style={{ width: '200px' }}
+                    disabled={isCreatePending}
                 >
-                    Create recurrences
+                    {isCreatePending ? (
+                        <>
+                            <span
+                                className="spinner-border spinner-border-sm"
+                                aria-hidden="true"
+                            ></span>
+                        </>
+                    ) : (
+                        'Create recurrences'
+                    )}
                 </button>
             </div>
         </>

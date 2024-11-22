@@ -5,9 +5,11 @@ import {
     loadRecurrences,
     saveRecurrences,
 } from './recurrences-thunk'
+import { equals } from '../../common/utils/equals'
 
 export interface RecurrencesState {
     recurrences: PlannedRecurrenceModel[]
+    hasChangesPending: boolean
     isLoadPending: boolean
     isSavePending: boolean
     isCreatePending: boolean
@@ -15,6 +17,7 @@ export interface RecurrencesState {
 
 const initialState: RecurrencesState = {
     recurrences: [],
+    hasChangesPending: false,
     isLoadPending: false,
     isSavePending: false,
     isCreatePending: false,
@@ -33,10 +36,15 @@ export const recurrencesSlice = createSlice({
                     t => t.uid === item.uid,
                 )
                 if (index !== -1) {
+                    state.hasChangesPending = !equals(
+                        state.recurrences[index],
+                        item,
+                    )
                     state.recurrences[index] = {
                         ...item,
                     }
                 } else {
+                    state.hasChangesPending = true
                     state.recurrences.push(item)
                 }
             }
@@ -52,6 +60,7 @@ export const recurrencesSlice = createSlice({
         builder.addCase(loadRecurrences.fulfilled, (state, action) => {
             state.isLoadPending = false
             state.recurrences = action.payload
+            state.hasChangesPending = false
         })
 
         builder.addCase(saveRecurrences.pending, state => {
@@ -62,6 +71,7 @@ export const recurrencesSlice = createSlice({
         })
         builder.addCase(saveRecurrences.fulfilled, state => {
             state.isSavePending = false
+            state.hasChangesPending = false
         })
 
         builder.addCase(createRecurrences.pending, state => {

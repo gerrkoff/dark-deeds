@@ -1,6 +1,10 @@
 import { useCallback, useEffect } from 'react'
 import { useAppDispatch, useAppSelector } from '../hooks'
-import { createRecurrences, loadRecurrences } from './redux/recurrences-thunk'
+import {
+    createRecurrences,
+    loadRecurrences,
+    saveRecurrences,
+} from './redux/recurrences-thunk'
 import { RecurrenceList } from './components/RecurrenceList'
 import { Card } from '../common/components/Card'
 import { Loader } from '../common/components/Loader'
@@ -11,7 +15,6 @@ import { updateRecurrences } from './redux/recurrences-slice'
 import { PlannedRecurrenceModel } from './models/PlannedRecurrenceModel'
 
 // delete
-// sync
 // create
 // table?
 // mobile
@@ -19,9 +22,13 @@ import { PlannedRecurrenceModel } from './models/PlannedRecurrenceModel'
 function Recurrences() {
     const dispatch = useAppDispatch()
 
-    const { recurrences, isLoadPending } = useAppSelector(
-        state => state.recurrences,
-    )
+    const {
+        recurrences,
+        isLoadPending,
+        hasChangesPending,
+        isCreatePending,
+        isSavePending,
+    } = useAppSelector(state => state.recurrences)
 
     const { editRecurrenceModalContext, openEditRecurrenceModal } =
         useEditRecurrenceModal()
@@ -34,7 +41,10 @@ function Recurrences() {
         openEditRecurrenceModal(null)
     }, [openEditRecurrenceModal])
 
-    const handleSave = useCallback(() => console.log('save'), [])
+    const handleSave = useCallback(
+        () => dispatch(saveRecurrences(recurrences)),
+        [dispatch, recurrences],
+    )
 
     const handleUpdate = useCallback(
         (recurrence: PlannedRecurrenceModel) => {
@@ -72,6 +82,9 @@ function Recurrences() {
                                 onSave={handleSave}
                                 onLoad={handleLoad}
                                 onCreate={handleCreate}
+                                isSavingPending={isSavePending}
+                                isCreatePending={isCreatePending}
+                                hasChangesPending={hasChangesPending}
                             />
                         </div>
                     </div>
