@@ -8,7 +8,9 @@ interface Props {
     context: ModalContainerContext
     isSaveEnabled: boolean
     onSave: () => void
+    onDelete?: () => void
     autoFocusInputRef?: React.RefObject<HTMLInputElement>
+    hasDeleteButton?: boolean
     children: React.ReactNode
 }
 
@@ -18,6 +20,7 @@ function ModalContainer({
     context: { isShown, close, cleanup },
     isSaveEnabled,
     onSave,
+    onDelete,
     autoFocusInputRef,
     children,
 }: Props) {
@@ -74,6 +77,22 @@ function ModalContainer({
         setTimeout(() => autoFocusInputRef?.current?.focus(), 16)
     }, [autoFocusInputRef])
 
+    const [isDeletePending, setIsDeletePending] = useState(false)
+
+    const handleDelete = () => {
+        if (!onDelete) {
+            return
+        }
+
+        if (isDeletePending) {
+            onDelete()
+        }
+
+        setIsDeletePending(true)
+    }
+
+    const isDeleteVisible = !!onDelete
+
     return (
         <div
             className={clsx(
@@ -100,6 +119,18 @@ function ModalContainer({
                             >
                                 Close
                             </button>
+                            {isDeleteVisible && (
+                                <button
+                                    type="button"
+                                    className={clsx('btn', {
+                                        'btn-secondary': !isDeletePending,
+                                        'btn-danger': isDeletePending,
+                                    })}
+                                    onClick={handleDelete}
+                                >
+                                    Delete
+                                </button>
+                            )}
                             <button
                                 type="submit"
                                 className="btn btn-primary"

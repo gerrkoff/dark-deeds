@@ -127,26 +127,26 @@ const getDateFromInput = (value: string): number | null => {
 function EditRecurrenceModal({ context, onUpdate }: Props) {
     const inputRef = useRef<HTMLInputElement>(null)
 
-    const { recurrence } = context
+    const { recurrence, close } = context
 
     const [task, setTask] = useState(recurrence?.task ?? '')
     const [weekday, setWeekday] = useState<string[]>(() =>
         getWeekdayOptionsInitialState(recurrence?.everyWeekday),
     )
     const [dates, setDates] = useState<string>(recurrence?.everyMonthDay ?? '')
-    const [isDatesValid, setIsDatesValid] = useState<boolean>(true)
+    const [isDatesValid, setIsDatesValid] = useState(true)
     const [nthDay, setNthDay] = useState<number | null>(
         recurrence?.everyNthDay ?? null,
     )
     const [from, setFrom] = useState<string>(() =>
         getDateInitialValue(recurrence?.startDate ?? new Date().valueOf()),
     )
-    const [isFromValid, setIsFromValid] = useState<boolean>(true)
+    const [isFromValid, setIsFromValid] = useState(true)
     const fromRef = useRef<string>(from)
     const [to, setTo] = useState<string>(() =>
         getDateInitialValue(recurrence?.endDate),
     )
-    const [isToValid, setIsToValid] = useState<boolean>(true)
+    const [isToValid, setIsToValid] = useState(true)
     const toRef = useRef<string>(to)
 
     const handleWeekdayChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -209,16 +209,28 @@ function EditRecurrenceModal({ context, onUpdate }: Props) {
     const handleSave = useCallback(() => {
         editRecurrence.uid = recurrence?.uid ?? uuidv4()
         onUpdate(editRecurrence)
-        context.close()
-    }, [context, editRecurrence, onUpdate, recurrence?.uid])
+        close()
+    }, [close, editRecurrence, onUpdate, recurrence?.uid])
 
     const summaryLabel = `Task "${task}" repeats ${editRecurrencePrint.schedule} ${editRecurrencePrint.borders}`
+
+    const handleDelete = useMemo(() => {
+        if (!recurrence) {
+            return undefined
+        }
+
+        return () => {
+            onUpdate({ ...recurrence, isDeleted: true })
+            close()
+        }
+    }, [close, onUpdate, recurrence])
 
     return (
         <ModalContainer
             context={context}
             autoFocusInputRef={inputRef}
             onSave={handleSave}
+            onDelete={handleDelete}
             isSaveEnabled={isValid}
         >
             <div className="form-floating mb-3">

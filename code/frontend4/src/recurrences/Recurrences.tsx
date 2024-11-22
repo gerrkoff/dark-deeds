@@ -13,22 +13,17 @@ import { useEditRecurrenceModal } from './hooks/useEditRecurrenceModal'
 import { EditRecurrenceModal } from './components/EditRecurrenceModal'
 import { updateRecurrences } from './redux/recurrences-slice'
 import { PlannedRecurrenceModel } from './models/PlannedRecurrenceModel'
+import { recurrencesSelector } from './redux/recurrences-selectors'
 
-// delete
-// create
-// table?
 // mobile
 
 function Recurrences() {
     const dispatch = useAppDispatch()
 
-    const {
-        recurrences,
-        isLoadPending,
-        hasChangesPending,
-        isCreatePending,
-        isSavePending,
-    } = useAppSelector(state => state.recurrences)
+    const { hasChangesPending, isLoadPending, isCreatePending, isSavePending } =
+        useAppSelector(state => state.recurrences)
+
+    const recurrences = useAppSelector(recurrencesSelector)
 
     const { editRecurrenceModalContext, openEditRecurrenceModal } =
         useEditRecurrenceModal()
