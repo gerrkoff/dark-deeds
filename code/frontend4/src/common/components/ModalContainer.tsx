@@ -10,7 +10,6 @@ interface Props {
     onSave: () => void
     onDelete?: () => void
     autoFocusInputRef?: React.RefObject<HTMLInputElement>
-    hasDeleteButton?: boolean
     children: React.ReactNode
 }
 
