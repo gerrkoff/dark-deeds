@@ -15,6 +15,8 @@ function EditTaskModal({ context, onSave }: Props) {
 
     const [task, setTask] = useState('')
 
+    const { close } = context
+
     useEffect(() => {
         if (context.task) {
             setTask(taskConvertService.convertTaskToString(context.task))
@@ -41,7 +43,7 @@ function EditTaskModal({ context, onSave }: Props) {
             ])
             close()
         }
-    }, [editModel, onSave, context.task])
+    }, [editModel, onSave, context.task, close])
 
     const handleTaskChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setTask(e.target.value)
