@@ -9,7 +9,7 @@ export interface AppState {
 }
 
 const initialState: AppState = {
-    applicationTab: 'login',
+    applicationTab: '',
     appVersion: '',
 }
 
