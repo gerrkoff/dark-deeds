@@ -7,8 +7,13 @@ public class RecurrencesPage() : X(string.Empty)
         return new Button($"{this}//*[@data-test-id='btn-add-recurrence']");
     }
 
-    public Button SaveRecurrenceButton()
+    public Button SaveRecurrencesButton()
     {
         return new Button($"{this}//*[@data-test-id='btn-save-recurrences']");
+    }
+
+    public Button CreateRecurrencesButton()
+    {
+        return new Button($"{this}//*[@data-test-id='btn-create-recurrences']");
     }
 }

@@ -77,6 +77,7 @@ function RecurrenceActions({
                     onClick={onCreate}
                     style={{ width: '200px' }}
                     disabled={isCreatePending}
+                    data-test-id="btn-create-recurrences"
                 >
                     {isCreatePending ? (
                         <>

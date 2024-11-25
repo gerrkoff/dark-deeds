@@ -36,6 +36,15 @@ public class BaseTest
         }
     }
 
+    protected async Task Test(Action<RemoteWebDriver> action)
+    {
+        await Test(driver =>
+        {
+            action(driver);
+            return Task.CompletedTask;
+        });
+    }
+
     protected static string RandomizeText(string text)
     {
         return $"{text} {Random.Next()}";
