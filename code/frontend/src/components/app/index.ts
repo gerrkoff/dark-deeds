@@ -1,6 +1,0 @@
-export * from 'components/app/App'
-export * from 'components/app/AppAuthWrapper'
-export * from 'components/app/AppRouting'
-export * from 'components/app/NotFound'
-export * from 'components/app/Shortcuts'
-export * from 'components/app/Toolbar'
