@@ -1,7 +1,7 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { App } from './app/App.tsx'
-import { store } from './store'
+import { store } from './store.ts'
 import { Provider } from 'react-redux'
 import './DragDropTouch.js'
 
