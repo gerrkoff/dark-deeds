@@ -71,7 +71,7 @@ public class RecurrenceService(
         entity.EndDate = dto.EndDate;
         entity.EveryNthDay = dto.EveryNthDay;
         entity.EveryWeekday = dto.EveryWeekday;
-        entity.EveryMonthDay = dto.EveryMonthDay ?? string.Empty;
+        entity.EveryMonthDay = dto.EveryMonthDay;
         var (success, _) = await plannedRecurrenceRepository.TryUpdateVersionAsync(entity);
         return success;
     }
@@ -89,11 +89,11 @@ public class RecurrenceService(
 
     private static bool RecurrenceIsChanged(PlannedRecurrenceEntity entity, PlannedRecurrenceDto dto)
     {
-        return !string.Equals(entity.Task, dto.Task, StringComparison.Ordinal) ||
+        return entity.Task != dto.Task ||
                entity.StartDate != dto.StartDate ||
                entity.EndDate != dto.EndDate ||
                entity.EveryNthDay != dto.EveryNthDay ||
                entity.EveryWeekday != dto.EveryWeekday ||
-               !string.Equals(entity.EveryMonthDay, dto.EveryMonthDay ?? string.Empty, StringComparison.Ordinal);
+               entity.EveryMonthDay != dto.EveryMonthDay;
     }
 }
