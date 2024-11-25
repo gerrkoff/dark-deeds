@@ -1,14 +1,14 @@
-FROM node:21.4-alpine as builder-fe-4
+FROM node:21.4-alpine as builder-fe
 
-WORKDIR /code/frontend4
+WORKDIR /code/frontend
 
-COPY code/frontend4/package.json /code/frontend4/package.json
-COPY code/frontend4/package-lock.json /code/frontend4/package-lock.json
+COPY code/frontend/package.json /code/frontend/package.json
+COPY code/frontend/package-lock.json /code/frontend/package-lock.json
 
 RUN npm install
 
-COPY code/frontend4/ /code/frontend4/
-COPY .editorconfig /code/frontend4/.editorconfig
+COPY code/frontend/ /code/frontend/
+COPY .editorconfig /code/frontend/.editorconfig
 
 RUN npm run ci
 
@@ -39,7 +39,7 @@ FROM mcr.microsoft.com/dotnet/aspnet:8.0
 WORKDIR /app
 
 COPY --from=builder-be /build /app/
-COPY --from=builder-fe-4 /code/frontend4/dist /app/wwwroot/
+COPY --from=builder-fe /code/frontend/dist /app/wwwroot/
 
 ENV ASPNETCORE_ENVIRONMENT=Production
 

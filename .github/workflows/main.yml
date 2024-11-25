@@ -3,7 +3,7 @@ name: CI
 on: [push]
 
 jobs:
-  build-fe-4:
+  build-fe:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
@@ -13,7 +13,7 @@ jobs:
         node-version: 21.x
     - name: Build FE-4
       run: |
-        cd code/frontend4
+        cd code/frontend
         npm install
         npm run ci
 
