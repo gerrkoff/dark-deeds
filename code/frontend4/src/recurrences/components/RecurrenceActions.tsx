@@ -29,6 +29,7 @@ function RecurrenceActions({
                     className="btn btn-secondary"
                     onClick={onAdd}
                     style={{ width: '120px' }}
+                    data-test-id="btn-add-recurrence"
                 >
                     Add
                 </button>
@@ -44,12 +45,14 @@ function RecurrenceActions({
                     onClick={onSave}
                     style={{ width: '120px' }}
                     disabled={!isSavingEnabled}
+                    data-test-id="btn-save-recurrences"
                 >
                     {isSavingPending ? (
                         <>
                             <span
                                 className="spinner-border spinner-border-sm"
                                 aria-hidden="true"
+                                data-test-id="btn-loader"
                             ></span>
                         </>
                     ) : (
@@ -80,6 +83,7 @@ function RecurrenceActions({
                             <span
                                 className="spinner-border spinner-border-sm"
                                 aria-hidden="true"
+                                data-test-id="btn-loader"
                             ></span>
                         </>
                     ) : (

@@ -2,9 +2,8 @@ namespace DarkDeeds.E2eTests.Components;
 
 public class SettingsPage() : X(string.Empty)
 {
-    public SettingsPage SignOutButton()
+    public Button SignOutButton()
     {
-        Query.Append("//*[@data-test-id='btn-signout']");
-        return this;
+        return new Button($"{this}//*[@data-test-id='btn-signout']");
     }
 }

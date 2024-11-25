@@ -36,6 +36,11 @@ public abstract class X(string path)
         return new EditTaskModal();
     }
 
+    public static EditRecurrenceModal EditRecurrenceModal()
+    {
+        return new EditRecurrenceModal();
+    }
+
     public static Menu TaskMenu()
     {
         return new Menu();
@@ -44,6 +49,11 @@ public abstract class X(string path)
     public static OverviewPage OverviewPage()
     {
         return new OverviewPage();
+    }
+
+    public static RecurrencesPage RecurrencesPage()
+    {
+        return new RecurrencesPage();
     }
 
     public static SettingsPage SettingsPage()

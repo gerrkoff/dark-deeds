@@ -49,17 +49,19 @@ public static class DriverExtensions
         driver.GetElement(X.EditTaskModal().SubmitButton()).Click();
     }
 
-    /*
     public static void NavigateToOverview(this RemoteWebDriver driver)
     {
-        driver.GetNavLink("/").Click();
+        driver.GetElement(X.Navbar().Overview()).Click();
+        driver.WaitUntilAppeared(X.Root().Loader());
+        driver.WaitUntilDisappeared(X.Root().Loader());
     }
 
     public static void NavigateToRecurrences(this RemoteWebDriver driver)
     {
-        driver.GetNavLink("/recurrences").Click();
+        driver.GetElement(X.Navbar().Recurrences()).Click();
+        driver.WaitUntilAppeared(X.Root().Loader());
+        driver.WaitUntilDisappeared(X.Root().Loader());
     }
-    */
 
     public static void SignOut(this RemoteWebDriver driver)
     {
@@ -67,18 +69,19 @@ public static class DriverExtensions
         driver.GetElement(X.SettingsPage().SignOutButton()).Click();
     }
 
-    /*
     public static void CreateRecurrence(this RemoteWebDriver driver, string recurrenceTask)
     {
-        driver.GetAddRecurrenceButton().Click();
-        driver.GetCreateRecurrenceFormTaskInput().SendKeys(recurrenceTask);
-        driver.GetCreateRecurrenceFormWeekday().Click();
-        driver.GetCreateRecurrenceFormWeekdayOption(7).Click();
-        driver.GetSaveRecurrencesButton().Click();
-        driver.WaitUntilRecurrenceAppeared(recurrenceTask);
-        driver.HideToasts();
+        driver.GetElement(X.RecurrencesPage().AddRecurrenceButton()).Click();
+        driver.GetElement(X.EditRecurrenceModal().TaskInput()).SendKeys(recurrenceTask);
+        driver.GetElement(X.EditRecurrenceModal().WeekdaysInputOption(7)).Click();
+        driver.GetElement(X.EditRecurrenceModal().SubmitButton()).Click();
+        driver.WaitUntilDisappeared(X.EditTaskModal());
+        driver.GetElement(X.RecurrencesPage().SaveRecurrenceButton()).Click();
+        driver.WaitUntilAppeared(X.RecurrencesPage().SaveRecurrenceButton().Loader());
+        driver.WaitUntilDisappeared(X.RecurrencesPage().SaveRecurrenceButton().Loader());
     }
 
+    /*
     public static void DeleteRecurrence(this RemoteWebDriver driver, string recurrenceTask)
     {
         driver.GetDeleteRecurrenceButton(recurrenceTask).Click();

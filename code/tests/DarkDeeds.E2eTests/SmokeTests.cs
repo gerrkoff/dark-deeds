@@ -169,25 +169,24 @@ public class SmokeTests(ITestOutputHelper output) : UserLoginTest
         });
     }
 
-    // [Fact]
-    // public Task RecurrenceTest()
-    // {
-    //     return Test(driver =>
-    //     {
-    //         driver.NavigateToRecurrences();
-    //         driver.WaitUntilRecurrencesLoaded();
-    //
-    //         var task = RandomizeText("recurrence");
-    //         var recurrenceTask = $"2359 {task}";
-    //         driver.CreateRecurrence(recurrenceTask);
-    //         driver.CreateTaskRecurrences(2);
-    //
-    //         driver.NavigateToOverview();
-    //
-    //         driver.GetElement(X.CurrentSection().Block(1).Day(7).List().TaskByText($"23:59 {task}"));
-    //         driver.GetElement(X.CurrentSection().Block(2).Day(7).List().TaskByText($"23:59 {task}"));
-    //
-    //         return Task.CompletedTask;
-    //     });
-    // }
+    [Fact]
+    public Task RecurrenceTest()
+    {
+        return Test(driver =>
+        {
+            driver.NavigateToRecurrences();
+
+            var task = RandomizeText("recurrence");
+            var recurrenceTask = $"2359 {task}";
+            driver.CreateRecurrence(recurrenceTask);
+            // driver.CreateTaskRecurrences(2);
+            //
+            // driver.NavigateToOverview();
+            //
+            // driver.GetElement(X.CurrentSection().Block(1).Day(7).List().TaskByText($"23:59 {task}"));
+            // driver.GetElement(X.CurrentSection().Block(2).Day(7).List().TaskByText($"23:59 {task}"));
+
+            return Task.CompletedTask;
+        });
+    }
 }

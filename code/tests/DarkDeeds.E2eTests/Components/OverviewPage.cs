@@ -12,9 +12,8 @@ public class OverviewPage() : X(string.Empty)
         return new DayCardsSection($"{this}//*[@data-test-id='section-current']");
     }
 
-    public OverviewPage AddTaskButton()
+    public Button AddTaskButton()
     {
-        Query.Append("//*[@data-test-id='btn-add-task']");
-        return this;
+        return new Button($"{this}//*[@data-test-id='btn-add-task']");
     }
 }

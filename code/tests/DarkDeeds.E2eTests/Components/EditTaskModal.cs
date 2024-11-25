@@ -10,9 +10,8 @@ public class EditTaskModal() : X($"//*{XpathHelper.ClassContains("modal-dialog")
         return this;
     }
 
-    public EditTaskModal SubmitButton()
+    public Button SubmitButton()
     {
-        Query.Append("//button[@type='submit']");
-        return this;
+        return new Button($"{this}//button[@type='submit']");
     }
 }
