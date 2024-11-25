@@ -3,21 +3,6 @@ name: CI
 on: [push]
 
 jobs:
-  build-fe:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v1
-    - name: Use Node.js 21.x
-      uses: actions/setup-node@v1
-      with:
-        node-version: 21.x
-    - name: Build FE
-      run: |
-        cd code/frontend
-        npm install
-        npm run build
-        npm run test-ci
-
   build-fe-4:
     runs-on: ubuntu-latest
     steps:
