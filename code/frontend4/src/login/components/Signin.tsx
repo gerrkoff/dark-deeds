@@ -77,6 +77,7 @@ function Signin({
                         <span
                             className="spinner-border spinner-border-sm"
                             aria-hidden="true"
+                            data-test-id="btn-loader"
                         ></span>
                     </>
                 ) : (

@@ -24,7 +24,7 @@ public class SmokeTests(ITestOutputHelper output) : UserLoginTest
     [Fact]
     public Task SignInTest()
     {
-        return Test(_ => Task.CompletedTask);
+        return Test(_ => { });
     }
 
     [Fact]
@@ -39,8 +39,6 @@ public class SmokeTests(ITestOutputHelper output) : UserLoginTest
             var task = driver.GetElement(X.OverviewPage().NoDateSection().TaskByText(taskText));
             driver.DeleteTask(task);
             driver.WaitUntilSavingFinished();
-
-            return Task.CompletedTask;
         });
     }
 
@@ -87,8 +85,6 @@ public class SmokeTests(ITestOutputHelper output) : UserLoginTest
             Assert.True(task1Saved.Location.X == task3Saved.Location.X);
             Assert.True(task1Saved.Location.Y > task2Saved.Location.Y);
             Assert.True(task1Saved.Location.Y < task3Saved.Location.Y);
-
-            return Task.CompletedTask;
         });
     }
 
@@ -112,8 +108,6 @@ public class SmokeTests(ITestOutputHelper output) : UserLoginTest
 
             driver.SwitchToTab(0);
             driver.WaitUntilDisappeared(X.OverviewPage().NoDateSection().TaskByText(taskText));
-
-            return Task.CompletedTask;
         });
     }
 
@@ -131,8 +125,6 @@ public class SmokeTests(ITestOutputHelper output) : UserLoginTest
 
             driver.CreateTaskViaAddButton(taskTextWithDate);
             driver.GetElement(X.OverviewPage().CurrentSection().Block(1).Day(expiredDaysCount + 1).List().TaskByText(originalTaskText));
-
-            return Task.CompletedTask;
         });
     }
 
@@ -164,30 +156,24 @@ public class SmokeTests(ITestOutputHelper output) : UserLoginTest
                 Assert.Equal(days[0].Location.X, day.Location.X);
                 Assert.NotEqual(days[0].Location.Y, day.Location.Y);
             }
-
-            return Task.CompletedTask;
         });
     }
 
-    // [Fact]
-    // public Task RecurrenceTest()
-    // {
-    //     return Test(driver =>
-    //     {
-    //         driver.NavigateToRecurrences();
-    //         driver.WaitUntilRecurrencesLoaded();
-    //
-    //         var task = RandomizeText("recurrence");
-    //         var recurrenceTask = $"2359 {task}";
-    //         driver.CreateRecurrence(recurrenceTask);
-    //         driver.CreateTaskRecurrences(2);
-    //
-    //         driver.NavigateToOverview();
-    //
-    //         driver.GetElement(X.CurrentSection().Block(1).Day(7).List().TaskByText($"23:59 {task}"));
-    //         driver.GetElement(X.CurrentSection().Block(2).Day(7).List().TaskByText($"23:59 {task}"));
-    //
-    //         return Task.CompletedTask;
-    //     });
-    // }
+    [Fact]
+    public Task RecurrenceTest()
+    {
+        return Test(driver =>
+        {
+            driver.NavigateToRecurrences();
+
+            var task = RandomizeText("recurrence");
+            var recurrenceTask = $"2359 {task}";
+            driver.CreateRecurrence(recurrenceTask);
+            driver.CreateTaskRecurrences();
+            driver.NavigateToOverview();
+
+            driver.ElementExists(X.OverviewPage().CurrentSection().Block(1).Day(7).List().TaskByText($"23:59 {task}"));
+            driver.ElementExists(X.OverviewPage().CurrentSection().Block(2).Day(7).List().TaskByText($"23:59 {task}"));
+        });
+    }
 }

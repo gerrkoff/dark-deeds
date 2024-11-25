@@ -49,17 +49,17 @@ public static class DriverExtensions
         driver.GetElement(X.EditTaskModal().SubmitButton()).Click();
     }
 
-    /*
     public static void NavigateToOverview(this RemoteWebDriver driver)
     {
-        driver.GetNavLink("/").Click();
+        driver.GetElement(X.Navbar().Overview()).Click();
     }
 
     public static void NavigateToRecurrences(this RemoteWebDriver driver)
     {
-        driver.GetNavLink("/recurrences").Click();
+        driver.GetElement(X.Navbar().Recurrences()).Click();
+        driver.WaitUntilAppeared(X.Root().Loader());
+        driver.WaitUntilDisappeared(X.Root().Loader());
     }
-    */
 
     public static void SignOut(this RemoteWebDriver driver)
     {
@@ -67,39 +67,24 @@ public static class DriverExtensions
         driver.GetElement(X.SettingsPage().SignOutButton()).Click();
     }
 
-    /*
     public static void CreateRecurrence(this RemoteWebDriver driver, string recurrenceTask)
     {
-        driver.GetAddRecurrenceButton().Click();
-        driver.GetCreateRecurrenceFormTaskInput().SendKeys(recurrenceTask);
-        driver.GetCreateRecurrenceFormWeekday().Click();
-        driver.GetCreateRecurrenceFormWeekdayOption(7).Click();
-        driver.GetSaveRecurrencesButton().Click();
-        driver.WaitUntilRecurrenceAppeared(recurrenceTask);
-        driver.HideToasts();
+        driver.GetElement(X.RecurrencesPage().AddRecurrenceButton()).Click();
+        driver.GetElement(X.EditRecurrenceModal().TaskInput()).SendKeys(recurrenceTask);
+        driver.GetElement(X.EditRecurrenceModal().WeekdaysInputOption(7)).Click();
+        driver.GetElement(X.EditRecurrenceModal().SubmitButton()).Click();
+        driver.WaitUntilDisappeared(X.EditTaskModal());
+        driver.GetElement(X.RecurrencesPage().SaveRecurrencesButton()).Click();
+        driver.WaitUntilAppeared(X.RecurrencesPage().SaveRecurrencesButton().Loader());
+        driver.WaitUntilDisappeared(X.RecurrencesPage().SaveRecurrencesButton().Loader());
     }
 
-    public static void DeleteRecurrence(this RemoteWebDriver driver, string recurrenceTask)
+    public static void CreateTaskRecurrences(this RemoteWebDriver driver)
     {
-        driver.GetDeleteRecurrenceButton(recurrenceTask).Click();
-        driver.GetModalConfirmButton().Click();
-        driver.GetSaveRecurrencesButton().Click();
-        driver.WaitUntilRecurrencesSkeletonDisappeared();
-        driver.HideToasts();
+        driver.GetElement(X.RecurrencesPage().CreateRecurrencesButton()).Click();
+        driver.WaitUntilAppeared(X.RecurrencesPage().CreateRecurrencesButton().Loader());
+        driver.WaitUntilDisappeared(X.RecurrencesPage().CreateRecurrencesButton().Loader());
     }
-
-    public static void WaitUntilRecurrencesLoaded(this RemoteWebDriver driver)
-    {
-        driver.WaitUntilRecurrencesSkeletonDisappeared();
-    }
-
-    public static void CreateTaskRecurrences(this RemoteWebDriver driver, int expectedTaskRecurrencesCount)
-    {
-        driver.GetCreateRecurrencesButton().Click();
-        driver.WaitUntilToastAppeared($"{expectedTaskRecurrencesCount} recurrences were created");
-        driver.HideToasts();
-    }
-    */
 
     public static void SwitchToTab(this RemoteWebDriver driver, int tabIndex)
     {
@@ -113,28 +98,4 @@ public static class DriverExtensions
         driver.Navigate().GoToUrl(url);
         driver.WaitUntilUserLoaded();
     }
-
-    /*
-    private static void HideToasts(this RemoteWebDriver driver)
-    {
-        for (var i = 0; i < 5; i++)
-        {
-            if (!driver.ToastExists())
-                return;
-
-            try
-            {
-                driver.GetToast().Click();
-            }
-            catch (ElementNotInteractableException)
-            {
-                return;
-            }
-
-            Thread.Sleep(1000);
-        }
-
-        Assert.True(false, "Too many toasts");
-    }
-    */
 }

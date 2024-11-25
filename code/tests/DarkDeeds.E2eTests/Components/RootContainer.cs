@@ -7,4 +7,10 @@ public class RootContainer() : X(string.Empty)
         Query.Append("//*[@data-test-id='status-saving']");
         return this;
     }
+
+    public RootContainer Loader()
+    {
+        Query.Append("//*[@data-test-id='loader']");
+        return this;
+    }
 }

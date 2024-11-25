@@ -14,9 +14,8 @@ public class SignInForm() : X("//*[@data-test-id='form-signin']")
         return this;
     }
 
-    public SignInForm SubmitButton()
+    public Button SubmitButton()
     {
-        Query.Append("//button[@type='submit']");
-        return this;
+        return new Button($"{this}//button[@type='submit']");
     }
 }

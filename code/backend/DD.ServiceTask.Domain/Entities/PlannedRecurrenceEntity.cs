@@ -13,7 +13,7 @@ public class PlannedRecurrenceEntity : Entity, IUserOwnedEntity
 
     public int? EveryNthDay { get; set; }
 
-    public string EveryMonthDay { get; set; } = string.Empty;
+    public string? EveryMonthDay { get; set; }
 
     public RecurrenceWeekday? EveryWeekday { get; set; }
 
