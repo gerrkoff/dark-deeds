@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef } from 'react'
-import { uuidv4 } from '../../common/utils/uuidv4'
-import { IconChevronDown } from '../../common/icons/IconChevronDown'
-import { IconChevronRight } from '../../common/icons/IconChevronRight'
+import { uuidv4 } from '../utils/uuidv4'
+import { IconChevronDown } from '../icons/IconChevronDown'
+import { IconChevronRight } from '../icons/IconChevronRight'
 import styles from './SectionToggle.module.css'
 import clsx from 'clsx'
 
