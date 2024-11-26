@@ -15,6 +15,7 @@ import { useTasksHub } from '../tasks/hooks/useTasksHub'
 import { useCurrentUser } from '../login/hooks/useCurrentUser'
 import { useTokenRenewal } from '../login/hooks/useTokenRenewal'
 import { Recurrences } from '../recurrences/Recurrences'
+import { Toasts } from '../toasts/Toasts'
 
 function App() {
     const dispatch = useAppDispatch()
@@ -46,6 +47,7 @@ function App() {
         <div className="container-xxl pt-2" style={{ paddingBottom: '60px' }}>
             <>
                 <StatusPanel />
+                <Toasts />
                 {applicationTab === 'login' && <Login />}
                 {applicationTab === 'overview' && <Overview />}
                 {applicationTab === 'recurrent' && <Recurrences />}
