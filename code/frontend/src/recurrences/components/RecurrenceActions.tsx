@@ -46,9 +46,10 @@ function RecurrenceActions({
             <div className="row justify-content-center mt-2">
                 <button
                     type="button"
-                    className={clsx('btn text-start align-middle', {
+                    className={clsx('btn align-middle', {
                         'btn-secondary': !hasChangesPending,
                         'btn-success': hasChangesPending,
+                        'text-start': !isSavingPending,
                     })}
                     onClick={onSave}
                     style={{ width: '120px' }}

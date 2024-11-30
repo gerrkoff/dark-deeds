@@ -1,5 +1,5 @@
 import clsx from 'clsx'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { isTouchDevice } from '../utils/isTouchDevice'
 import { isKeyEsc } from '../utils/keys'
 import { ModalContainerContext } from '../models/ModalContainerContext'
@@ -14,6 +14,7 @@ interface Props {
 }
 
 const isStartAnimationEnabled = !isTouchDevice()
+const isMobile = isTouchDevice()
 
 function ModalContainer({
     context: { isShown, close, cleanup },
@@ -23,21 +24,37 @@ function ModalContainer({
     autoFocusInputRef,
     children,
 }: Props) {
+    const containerRef = useRef<HTMLDivElement>(null)
     const [visible, setVisible] = useState(!isStartAnimationEnabled)
     const [show, setShow] = useState(!isStartAnimationEnabled)
+
+    useEffect(() => {
+        if (!isMobile) {
+            return
+        }
+
+        const appContainer = document.getElementById('app-container')
+        if (containerRef.current && appContainer) {
+            containerRef.current.style.height = `${appContainer?.offsetHeight}px`
+        }
+    }, [])
 
     useEffect(() => {
         if (isShown) {
             setVisible(true)
             setTimeout(() => setShow(true), 16)
-            document.body.style.overflow = 'hidden'
+            if (!isMobile) {
+                document.body.style.overflow = 'hidden'
+            }
         } else {
             setShow(false)
             setTimeout(() => {
                 setVisible(false)
                 cleanup()
             }, 150)
-            document.body.style.overflow = ''
+            if (!isMobile) {
+                document.body.style.overflow = ''
+            }
         }
     }, [isShown, cleanup])
 
@@ -51,20 +68,6 @@ function ModalContainer({
             close()
         }
     }
-
-    useEffect(() => {
-        const handleTouchMove = (e: TouchEvent) => {
-            e.preventDefault()
-        }
-
-        document.addEventListener('touchmove', handleTouchMove, {
-            passive: false,
-        })
-
-        return () => {
-            document.removeEventListener('touchmove', handleTouchMove)
-        }
-    }, [])
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (isKeyEsc(e)) {
@@ -94,13 +97,17 @@ function ModalContainer({
 
     return (
         <div
+            ref={containerRef}
             className={clsx(
                 'modal fade',
                 { show },
                 { 'd-block': visible },
                 { 'd-none': !visible },
             )}
-            style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
+            style={{
+                backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                position: isMobile ? 'absolute' : undefined,
+            }}
             tabIndex={-1}
             aria-label="Edit task"
             onClick={handleBackdropClick}

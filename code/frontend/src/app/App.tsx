@@ -44,7 +44,14 @@ function App() {
     )
 
     return (
-        <div className="container-xxl pt-2" style={{ paddingBottom: '60px' }}>
+        <div
+            id="app-container"
+            className="container-xxl pt-2"
+            style={{
+                paddingBottom: '60px',
+                flex: '1 0 auto',
+            }}
+        >
             <>
                 <StatusPanel />
                 <Toasts />
