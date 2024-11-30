@@ -11,6 +11,7 @@ import clsx from 'clsx'
 import { PlannedRecurrencePrintModel } from '../models/PlannedRecurrencePrintModel'
 import { recurrenceService } from '../services/RecurrenceService'
 import { uuidv4 } from '../../common/utils/uuidv4'
+import { isTouchDevice } from '../../common/utils/isTouchDevice'
 
 interface Props {
     context: EditRecurrenceModalContext
@@ -123,6 +124,8 @@ const getDateFromInput = (value: string): number | null => {
 
     return new Date(Number(year), Number(month) - 1, Number(day)).valueOf()
 }
+
+const isMobile = isTouchDevice()
 
 function EditRecurrenceModal({ context, onUpdate }: Props) {
     const inputRef = useRef<HTMLInputElement>(null)
@@ -255,6 +258,7 @@ function EditRecurrenceModal({ context, onUpdate }: Props) {
                     aria-label="Weekdays"
                     onChange={handleWeekdayChange}
                     value={weekday}
+                    style={{ height: !isMobile ? '155px' : undefined }}
                 >
                     {weekdayOptions.map(x => (
                         <option key={x.value} value={x.value}>
