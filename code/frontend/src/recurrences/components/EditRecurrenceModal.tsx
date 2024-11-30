@@ -255,7 +255,6 @@ function EditRecurrenceModal({ context, onUpdate }: Props) {
                     aria-label="Weekdays"
                     onChange={handleWeekdayChange}
                     value={weekday}
-                    style={{ height: '155px' }}
                 >
                     {weekdayOptions.map(x => (
                         <option key={x.value} value={x.value}>
