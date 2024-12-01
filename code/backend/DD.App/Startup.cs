@@ -112,8 +112,11 @@ public class Startup(IConfiguration configuration)
         app.UseDefaultFiles();
         app.UseStaticFiles(new StaticFileOptions
         {
-            OnPrepareResponse = ctx => ctx.Context.Response.Headers.Append(
-                "Cache-Control", $"public, max-age={31536000}"), // one year
+            OnPrepareResponse = ctx =>
+            {
+                var maxAge = ctx.File.Name.Equals("index.html", StringComparison.Ordinal) ? 300 : 31536000;
+                ctx.Context.Response.Headers.Append("Cache-Control", $"public, max-age={maxAge}");
+            },
         });
     }
 }
