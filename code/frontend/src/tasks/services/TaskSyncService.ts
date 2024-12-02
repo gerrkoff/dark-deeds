@@ -1,3 +1,4 @@
+import { delay } from '../../common/utils/delay'
 import { taskApi, TaskApi } from '../api/TaskApi'
 import { TaskModel } from '../models/TaskModel'
 import { TaskVersionModel } from '../models/TaskVersionModel'
@@ -68,6 +69,7 @@ export class TaskSyncService {
         while (this.tasksToSave.size > 0) {
             this.tasksInFlight = this.tasksToSave
             this.tasksToSave = new Map<string, TaskModel>()
+            let wait = false
 
             let savedTasks: TaskModel[] = []
 
@@ -77,6 +79,7 @@ export class TaskSyncService {
                 ])
             } catch (error) {
                 console.error('Failed to save tasks:', error)
+                wait = true
             }
 
             for (const task of savedTasks) {
@@ -91,6 +94,10 @@ export class TaskSyncService {
                 if (!this.tasksToSave.has(uid)) {
                     this.tasksToSave.set(uid, task)
                 }
+            }
+
+            if (wait) {
+                await delay(5000)
             }
         }
     }

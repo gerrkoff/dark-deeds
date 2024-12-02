@@ -16,9 +16,6 @@ import { PlannedRecurrenceModel } from './models/PlannedRecurrenceModel'
 import { recurrencesSelector } from './redux/recurrences-selectors'
 import { unwrapResult } from '@reduxjs/toolkit'
 import { addToast } from '../toasts/redux/toasts-slice'
-import { uuidv4 } from '../common/utils/uuidv4'
-
-// mobile
 
 function Recurrences() {
     const dispatch = useAppDispatch()
@@ -62,12 +59,7 @@ function Recurrences() {
 
     const handleCreate = useCallback(async () => {
         const result = unwrapResult(await dispatch(createRecurrences()))
-        dispatch(
-            addToast({
-                id: uuidv4(),
-                text: `${result} recurrences created`,
-            }),
-        )
+        dispatch(addToast({ text: `${result} recurrences created` }))
     }, [dispatch])
 
     return (

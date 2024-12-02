@@ -25,14 +25,12 @@ export function useTasksSynchronization(): Output {
                 versionsToNotify,
             })
 
-            if (tasksToNotify.length > 0 || versionsToNotify.length > 0) {
-                dispatch(
-                    syncTasks({
-                        tasks: tasksToNotify,
-                        versions: versionsToNotify,
-                    }),
-                )
-            }
+            dispatch(
+                syncTasks({
+                    tasks: tasksToNotify,
+                    versions: versionsToNotify,
+                }),
+            )
         },
         [dispatch],
     )

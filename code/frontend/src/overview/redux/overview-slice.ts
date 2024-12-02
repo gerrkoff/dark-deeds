@@ -48,10 +48,9 @@ export const overviewSlice = createSlice({
             }
         },
         syncTasks: (state, action: PayloadAction<TasksSyncModel>) => {
-            const taskIndexMap = new Map<string, number>()
-            for (let i = 0; i < state.tasks.length; i++) {
-                taskIndexMap.set(state.tasks[i].uid, i)
-            }
+            const taskIndexMap = new Map<string, number>(
+                state.tasks.map((x, i) => [x.uid, i]),
+            )
 
             for (const task of action.payload.tasks) {
                 const index = taskIndexMap.get(task.uid) ?? -1

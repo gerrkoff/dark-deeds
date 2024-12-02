@@ -100,15 +100,18 @@ public class TaskService(
 
         if (taskToSave.Deleted)
         {
-            var success = await tasksRepository.DeleteAsync(taskToSave.Uid);
-            if (!success)
+            if (entity == null)
+            {
                 Log.TriedToDeleteNonExistingTask(logger, taskToSave.Uid);
+                return taskToSave;
+            }
 
-            taskToSave.Version++;
-            return taskToSave;
+            entity.IsDeleted = true;
+            var (success, _) = await tasksRepository.TryUpdateVersionAsync(entity);
+            if (!success)
+                return null;
         }
-
-        if (entity == null)
+        else if (entity == null)
         {
             entity = mapper.Map<TaskEntity>(taskToSave);
             entity.UserId = userId;

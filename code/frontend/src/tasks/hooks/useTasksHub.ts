@@ -10,7 +10,6 @@ import { taskHubApi } from '../api/TaskHubApi'
 import { taskSyncService } from '../services/TaskSyncService'
 import { useTasksSynchronization } from './useTasksSynchronization'
 import { addToast } from '../../toasts/redux/toasts-slice'
-import { uuidv4 } from '../../common/utils/uuidv4'
 
 export function useTasksHub() {
     const dispatch = useAppDispatch()
@@ -47,8 +46,8 @@ export function useTasksHub() {
             if (notSaved > 0) {
                 dispatch(
                     addToast({
-                        id: uuidv4(),
                         text: `Failed to save ${notSaved} tasks`,
+                        category: 'task-save-failed',
                     }),
                 )
             }

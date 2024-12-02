@@ -5,7 +5,6 @@ import { storageService } from '../../common/services/StorageService'
 import { authService } from '../services/AuthService'
 import { setUser } from '../redux/login-slice'
 import { addToast } from '../../toasts/redux/toasts-slice'
-import { uuidv4 } from '../../common/utils/uuidv4'
 
 const oneHourMs = 3600_000
 const oneDayMs = 86400_000
@@ -49,7 +48,6 @@ export function useTokenRenewal() {
                     : Number.POSITIVE_INFINITY
                 dispatch(
                     addToast({
-                        id: uuidv4(),
                         text: `Token renewed, expires in ${msToTimeString(newTimeToExpire)}`,
                     }),
                 )
