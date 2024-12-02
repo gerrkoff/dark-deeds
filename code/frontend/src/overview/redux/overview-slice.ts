@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { TaskModel } from '../../tasks/models/TaskModel'
 import { reloadOverviewTasks } from './overview-thunk'
-import { TaskVersionModel } from '../../tasks/models/TaskVersionModel'
+import { TasksSyncModel } from '../../tasks/models/TasksSyncModel'
 
 export interface OverviewState {
     tasks: TaskModel[]
@@ -47,9 +47,13 @@ export const overviewSlice = createSlice({
                 }
             }
         },
-        syncTasks: (state, action: PayloadAction<TaskModel[]>) => {
-            for (const task of action.payload) {
-                const index = state.tasks.findIndex(t => t.uid === task.uid)
+        syncTasks: (state, action: PayloadAction<TasksSyncModel>) => {
+            const taskIndexMap = new Map<string, number>(
+                state.tasks.map((x, i) => [x.uid, i]),
+            )
+
+            for (const task of action.payload.tasks) {
+                const index = taskIndexMap.get(task.uid) ?? -1
                 if (index !== -1) {
                     if (task.version < state.tasks[index].version) {
                         console.warn(
@@ -64,16 +68,14 @@ export const overviewSlice = createSlice({
                             },
                         )
                     }
-
                     state.tasks[index] = task
                 } else {
                     state.tasks.push(task)
                 }
             }
-        },
-        syncVersions: (state, action: PayloadAction<TaskVersionModel[]>) => {
-            for (const task of action.payload) {
-                const index = state.tasks.findIndex(t => t.uid === task.uid)
+
+            for (const task of action.payload.versions) {
+                const index = taskIndexMap.get(task.uid) ?? -1
                 if (index !== -1) {
                     if (task.version <= state.tasks[index].version) {
                         console.warn(
@@ -118,12 +120,7 @@ export const overviewSlice = createSlice({
     },
 })
 
-export const {
-    updateTasks,
-    syncTasks,
-    syncVersions,
-    toggleRoutineTaskDate,
-    cleanup,
-} = overviewSlice.actions
+export const { updateTasks, syncTasks, toggleRoutineTaskDate, cleanup } =
+    overviewSlice.actions
 
 export default overviewSlice.reducer

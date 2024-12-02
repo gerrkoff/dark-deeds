@@ -43,9 +43,10 @@ public partial class TaskServiceTest
     [Fact]
     public async Task SaveTasksAsync_WhenDeletingCallDelete()
     {
-        var service = CreateService();
+        var service = CreateService(new TaskEntity { Uid = Uid, UserId = UserId });
 
-        _repoMock.Setup(x => x.DeleteAsync(Uid)).Returns(Task.FromResult(true));
+        _repoMock.Setup(x => x.TryUpdateVersionAsync(It.IsAny<TaskEntity>()))
+            .Returns(Task.FromResult<(bool, TaskEntity?)>((true, null)));
 
         var items = new[] { new TaskDto { Uid = Uid, Deleted = true } };
         var result = await service.SaveTasksAsync(items, UserId);
@@ -56,7 +57,7 @@ public partial class TaskServiceTest
             Assert.True(x.Deleted);
         });
         _repoMock.Verify(x => x.GetByIdAsync(Uid));
-        _repoMock.Verify(x => x.DeleteAsync(Uid));
+        _repoMock.Verify(x => x.TryUpdateVersionAsync(It.Is<TaskEntity>(y => y.Uid == Uid && y.IsDeleted)));
         _repoMock.VerifyNoOtherCalls();
     }
 
@@ -65,14 +66,11 @@ public partial class TaskServiceTest
     {
         var service = CreateService();
 
-        _repoMock.Setup(x => x.DeleteAsync(Uid)).Returns(Task.FromResult(false));
-
         var items = new[] { new TaskDto { Uid = Uid, Deleted = true } };
         var result = await service.SaveTasksAsync(items, UserId);
 
         Assert.Collection(result, _ => { });
         _repoMock.Verify(x => x.GetByIdAsync(Uid));
-        _repoMock.Verify(x => x.DeleteAsync(Uid));
         _repoMock.VerifyNoOtherCalls();
     }
 

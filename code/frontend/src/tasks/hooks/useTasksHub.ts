@@ -9,6 +9,7 @@ import {
 import { taskHubApi } from '../api/TaskHubApi'
 import { taskSyncService } from '../services/TaskSyncService'
 import { useTasksSynchronization } from './useTasksSynchronization'
+import { addToast } from '../../toasts/redux/toasts-slice'
 
 export function useTasksHub() {
     const dispatch = useAppDispatch()
@@ -41,17 +42,30 @@ export function useTasksHub() {
             /* Do nothing */
         }
 
+        const handleTaskSaveFinish = (notSaved: number) => {
+            if (notSaved > 0) {
+                dispatch(
+                    addToast({
+                        text: `Failed to save ${notSaved} tasks`,
+                        category: 'task-save-failed',
+                    }),
+                )
+            }
+        }
+
         taskHubApi.onClose(handleHubClose)
         taskHubApi.onReconnecting(handleHubReconnecting)
         taskHubApi.onReconnected(handleHubReconnected)
         taskHubApi.onUpdate(processTasksOnlineUpdate)
         taskHubApi.onHeartbeat(handleHeartbeat)
         taskSyncService.subscribeStatusUpdate(handleUpdateStatus)
+        taskSyncService.subscribeSaveFinish(handleTaskSaveFinish)
 
         return () => {
             taskHubApi.offUpdate(processTasksOnlineUpdate)
             taskHubApi.offHeartbeat(handleHeartbeat)
             taskSyncService.unsubscribeStatusUpdate(handleUpdateStatus)
+            taskSyncService.unsubscribeSaveFinish(handleTaskSaveFinish)
         }
     }, [dispatch, processTasksOnlineUpdate, reloadTasks])
 }

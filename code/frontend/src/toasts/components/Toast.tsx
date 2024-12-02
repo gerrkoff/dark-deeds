@@ -21,7 +21,10 @@ function Toast({ toast, onClose }: Props) {
             )}
         >
             <div className="d-flex">
-                <div className="toast-body">{toast.text}</div>
+                <div className="toast-body">
+                    {toast.text}
+                    {toast.counter ? ` [${toast.counter}]` : ''}
+                </div>
                 <button
                     type="button"
                     className="btn-close btn-close-white me-2 m-auto"

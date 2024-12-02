@@ -1,7 +1,7 @@
-import { ToastType } from './ToastTypeEnum'
-
 export interface ToastModel {
     id: string
-    type?: ToastType
+    type: '' | 'info' | 'success' | 'primary'
     text: string
+    category: '' | 'task-save-failed'
+    counter: number
 }
