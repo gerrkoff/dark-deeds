@@ -45,7 +45,8 @@ public class TaskService(
     {
         var spec = specFactory.Create<ITaskSpecification, TaskEntity>()
             .FilterUserOwned(userId)
-            .FilterActual(from);
+            .FilterActual(from)
+            .FilterNotDeletedEarlier(from.AddDays(-7));
 
         var tasks = await tasksRepository.GetBySpecAsync(spec);
 
@@ -106,7 +107,7 @@ public class TaskService(
                 return taskToSave;
             }
 
-            entity.IsDeleted = true;
+            entity.DeletedAt = DateTimeOffset.UtcNow;
             var (success, _) = await tasksRepository.TryUpdateVersionAsync(entity);
             if (!success)
                 return null;

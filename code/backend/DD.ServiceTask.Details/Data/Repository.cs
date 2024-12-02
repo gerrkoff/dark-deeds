@@ -83,7 +83,7 @@ public abstract class Repository<T>(IMongoDbContext dbContext, string tableName)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(uid);
 
-        var update = Builders<T>.Update.Set(x => x.IsDeleted, true);
+        var update = Builders<T>.Update.Set(x => x.DeletedAt, DateTimeOffset.UtcNow);
 
         var result = await Collection.UpdateOneAsync(x => x.Uid == uid, update, new UpdateOptions
         {

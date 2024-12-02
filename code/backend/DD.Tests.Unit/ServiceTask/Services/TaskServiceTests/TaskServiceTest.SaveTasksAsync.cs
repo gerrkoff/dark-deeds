@@ -57,7 +57,7 @@ public partial class TaskServiceTest
             Assert.True(x.Deleted);
         });
         _repoMock.Verify(x => x.GetByIdAsync(Uid));
-        _repoMock.Verify(x => x.TryUpdateVersionAsync(It.Is<TaskEntity>(y => y.Uid == Uid && y.IsDeleted)));
+        _repoMock.Verify(x => x.TryUpdateVersionAsync(It.Is<TaskEntity>(y => y.Uid == Uid && y.DeletedAt.HasValue)));
         _repoMock.VerifyNoOtherCalls();
     }
 
