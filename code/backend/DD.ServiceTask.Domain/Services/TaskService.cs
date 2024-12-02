@@ -102,6 +102,7 @@ public class TaskService(
             if (entity == null)
             {
                 Log.TriedToDeleteNonExistingTask(logger, taskToSave.Uid);
+                taskToSave.Version++;
                 return taskToSave;
             }
 
