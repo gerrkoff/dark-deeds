@@ -9,6 +9,8 @@ public interface ITaskSpecification : IEntitySpecification<TaskEntity, ITaskSpec
     ITaskSpecification FilterActual(DateTime from);
 
     ITaskSpecification FilterDateInterval(DateTime from, DateTime till);
+
+    ITaskSpecification FilterNotDeletedEarlier(DateTime deletedAt);
 }
 
 public class TaskSpecification : UserOwnedSpecification<TaskEntity, ITaskSpecification>, ITaskSpecification
@@ -24,6 +26,12 @@ public class TaskSpecification : UserOwnedSpecification<TaskEntity, ITaskSpecifi
     public ITaskSpecification FilterDateInterval(DateTime from, DateTime till)
     {
         Filters.Add(x => x.Date.HasValue && x.Date >= from && x.Date < till);
+        return this;
+    }
+
+    public ITaskSpecification FilterNotDeletedEarlier(DateTime deletedAt)
+    {
+        Filters.Add(x => x.DeletedAt == null || x.DeletedAt >= deletedAt);
         return this;
     }
 }

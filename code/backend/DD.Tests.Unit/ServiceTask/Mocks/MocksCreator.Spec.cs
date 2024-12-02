@@ -13,6 +13,7 @@ public static partial class MocksCreator
         taskSpecMock.Setup(x => x.FilterActual(It.IsAny<DateTime>())).Returns(taskSpecMock.Object);
         taskSpecMock.Setup(x => x.FilterDateInterval(It.IsAny<DateTime>(), It.IsAny<DateTime>()))
             .Returns(taskSpecMock.Object);
+        taskSpecMock.Setup(x => x.FilterNotDeletedEarlier(It.IsAny<DateTime>())).Returns(taskSpecMock.Object);
         return taskSpecMock;
     }
 

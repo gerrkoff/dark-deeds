@@ -17,10 +17,9 @@ public partial class TaskServiceTest
 
         _ = (await service.LoadActualTasksAsync(userId, from)).ToList();
 
-        // TODO: is it needed?
-        // Assert.Equal(DateTimeKind.Utc, result.First(x => x.Date.HasValue).Date!.Value.Kind);
         _taskSpecMock.Verify(x => x.FilterUserOwned(userId));
         _taskSpecMock.Verify(x => x.FilterActual(from));
+        _taskSpecMock.Verify(x => x.FilterNotDeletedEarlier(from.AddDays(-7)));
         _repoMock.Verify(x => x.GetBySpecAsync(_taskSpecMock.Object));
     }
 }
