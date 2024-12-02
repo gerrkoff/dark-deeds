@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
 import { useAppDispatch } from '../../hooks'
-import { syncTasks, syncVersions } from '../../overview/redux/overview-slice'
+import { syncTasks } from '../../overview/redux/overview-slice'
 import { TaskModel } from '../models/TaskModel'
 import { taskSyncService } from '../services/TaskSyncService'
 import { reloadOverviewTasks } from '../../overview/redux/overview-thunk'
@@ -25,12 +25,13 @@ export function useTasksSynchronization(): Output {
                 versionsToNotify,
             })
 
-            if (tasksToNotify.length > 0) {
-                dispatch(syncTasks(tasksToNotify))
-            }
-
-            if (versionsToNotify.length > 0) {
-                dispatch(syncVersions(versionsToNotify))
+            if (tasksToNotify.length > 0 || versionsToNotify.length > 0) {
+                dispatch(
+                    syncTasks({
+                        tasks: tasksToNotify,
+                        versions: versionsToNotify,
+                    }),
+                )
             }
         },
         [dispatch],

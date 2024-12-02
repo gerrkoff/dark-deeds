@@ -45,7 +45,8 @@ public class TaskService(
     {
         var spec = specFactory.Create<ITaskSpecification, TaskEntity>()
             .FilterUserOwned(userId)
-            .FilterActual(from);
+            .FilterActual(from)
+            .FilterNotDeleted();
 
         var tasks = await tasksRepository.GetBySpecAsync(spec);
 
