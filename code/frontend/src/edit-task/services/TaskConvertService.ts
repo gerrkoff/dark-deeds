@@ -26,7 +26,7 @@ export class TaskConvertService {
             uid: uuidv4(),
             title: result.title,
             date: result.date !== null ? result.date.getTime() : null,
-            order: 0,
+            order: 100500,
             completed: false,
             deleted: false,
             type: result.type,
