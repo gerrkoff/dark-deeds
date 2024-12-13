@@ -54,8 +54,8 @@ public class SmokeTests(ITestOutputHelper output) : UserLoginTest
             driver.CreateTaskViaDayHeader(header1, task1Text);
 
             var header2 = driver.GetElement(X.OverviewPage().CurrentSection().Block(1).Day(4).DateHeader());
-            driver.CreateTaskViaDayHeader(header2, task3Text);
             driver.CreateTaskViaDayHeader(header2, task2Text);
+            driver.CreateTaskViaDayHeader(header2, task3Text);
 
             driver.WaitUntilSavingFinished();
 
