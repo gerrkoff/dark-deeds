@@ -8,9 +8,9 @@
     <ProjectReference Include="..\DD.Shared.Details.Abstractions\DD.Shared.Details.Abstractions.csproj" />
     <ProjectReference Include="..\DD.ServiceTask.Domain\DD.ServiceTask.Domain.csproj" />
   </ItemGroup>
-  
+
   <ItemGroup>
-    <PackageReference Include="MongoDB.Driver" Version="2.19.0"/>
+    <PackageReference Include="MongoDB.Driver" Version="3.1.0"/>
   </ItemGroup>
 
 </Project>
