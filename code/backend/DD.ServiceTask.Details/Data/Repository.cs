@@ -16,13 +16,13 @@ public abstract class Repository<T>(IMongoDbContext dbContext, string tableName)
 
     public async Task<IList<T>> GetBySpecAsync(ISpecification<T> spec)
     {
-        var query = spec.Apply(Collection.AsQueryable()) as IMongoQueryable<T>;
+        var query = spec.Apply(Collection.AsQueryable());
         return await query.ToListAsync();
     }
 
     public async Task<bool> AnyAsync(ISpecification<T> spec)
     {
-        var query = spec.Apply(Collection.AsQueryable()) as IMongoQueryable<T>;
+        var query = spec.Apply(Collection.AsQueryable());
         return await query.AnyAsync();
     }
 
