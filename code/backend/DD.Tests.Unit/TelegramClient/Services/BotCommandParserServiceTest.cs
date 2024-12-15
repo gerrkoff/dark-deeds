@@ -25,7 +25,7 @@ public class BotCommandParserServiceTest
 
         Assert.NotNull(result);
         Assert.IsType<CreateTaskCommand>(result);
-        Assert.Same(task, ((CreateTaskCommand)result!).Task);
+        Assert.Same(task, ((CreateTaskCommand)result).Task);
     }
 
     [Fact]
@@ -42,7 +42,7 @@ public class BotCommandParserServiceTest
 
         Assert.NotNull(result);
         Assert.IsType<ShowTodoCommand>(result);
-        Assert.Equal(new DateTime(2010, 10, 10), ((ShowTodoCommand)result!).From);
+        Assert.Equal(new DateTime(2010, 10, 10), ((ShowTodoCommand)result).From);
         Assert.Equal(new DateTime(2010, 10, 11), ((ShowTodoCommand)result).To);
     }
 
@@ -58,6 +58,6 @@ public class BotCommandParserServiceTest
 
         Assert.NotNull(result);
         Assert.IsType<StartCommand>(result);
-        Assert.Equal("SomeChatKey", ((StartCommand)result!).UserChatKey);
+        Assert.Equal("SomeChatKey", ((StartCommand)result).UserChatKey);
     }
 }
