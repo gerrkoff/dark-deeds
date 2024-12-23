@@ -13,7 +13,7 @@ import { useEditRecurrenceModal } from './hooks/useEditRecurrenceModal'
 import { EditRecurrenceModal } from './components/EditRecurrenceModal'
 import { updateRecurrences } from './redux/recurrences-slice'
 import { PlannedRecurrenceModel } from './models/PlannedRecurrenceModel'
-import { recurrencesSelector } from './redux/recurrences-selectors'
+import { recurrenceGroupsSelector } from './redux/recurrences-selectors'
 import { unwrapResult } from '@reduxjs/toolkit'
 import { addToast } from '../toasts/redux/toasts-slice'
 
@@ -21,14 +21,14 @@ function Recurrences() {
     const dispatch = useAppDispatch()
 
     const {
-        recurrences: allRecurrences,
+        recurrences,
         hasChangesPending,
         isLoadPending,
         isCreatePending,
         isSavePending,
     } = useAppSelector(state => state.recurrences)
 
-    const recurrences = useAppSelector(recurrencesSelector)
+    const recurrenceGroups = useAppSelector(recurrenceGroupsSelector)
 
     const { editRecurrenceModalContext, openEditRecurrenceModal } =
         useEditRecurrenceModal()
@@ -42,8 +42,8 @@ function Recurrences() {
     }, [openEditRecurrenceModal])
 
     const handleSave = useCallback(
-        () => dispatch(saveRecurrences(allRecurrences)),
-        [dispatch, allRecurrences],
+        () => dispatch(saveRecurrences(recurrences)),
+        [dispatch, recurrences],
     )
 
     const handleUpdate = useCallback(
@@ -83,7 +83,7 @@ function Recurrences() {
                         <div className="col-md-9">
                             <Card>
                                 <RecurrenceList
-                                    recurrences={recurrences}
+                                    recurrenceGroups={recurrenceGroups}
                                     onEdit={openEditRecurrenceModal}
                                 />
                             </Card>
