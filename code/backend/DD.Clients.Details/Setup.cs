@@ -1,6 +1,7 @@
 using DD.Clients.Details.MobileClient.Data;
 using DD.Clients.Details.TelegramClient.Data;
 using DD.Clients.Details.WebClientBff.Data;
+using DD.McpClient.Domain;
 using DD.MobileClient.Domain;
 using DD.MobileClient.Domain.Infrastructure;
 using DD.TelegramClient.Domain;
@@ -26,6 +27,8 @@ public static class Setup
 
         services.AddWebClientBffDomain();
         services.AddWebClientBffData();
+
+        services.AddMcpClientDomain();
     }
 
     public static void MapClientsCustomRoutes(this IEndpointRouteBuilder endpoints, IConfiguration configuration)
@@ -34,6 +37,11 @@ public static class Setup
             "bot",
             $"api/tlgm/bot/{configuration["Bot"]}",
             new { controller = "Bot", action = "Process" });
+
+        endpoints.MapControllerRoute(
+            "mcp",
+            $"api/mcp/{configuration["McpKey"]}/{{action}}",
+            new { controller = "Mcp" });
     }
 
     private static void AddTelegramClientData(this IServiceCollection services)
