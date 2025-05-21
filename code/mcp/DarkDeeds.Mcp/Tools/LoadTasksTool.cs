@@ -33,7 +33,7 @@ public static class LoadTasksTool
         }
         catch (Exception ex)
         {
-            logger.LogInformation("{Service} exception: {Exception})", nameof(LoadTasksTool), ex.Message);
+            logger.LogInformation("{Service} exception: {Exception}", nameof(LoadTasksTool), ex.Message);
             Console.Write($"{nameof(LoadTasksTool)} exception: {ex.Message}");
 
             throw;
