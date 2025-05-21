@@ -13,7 +13,7 @@ public static class LoadTasksTool
     [Description("Loads tasks (in JSON) from Dark Deeds App for a date range.")]
     public static Task<string> Do(
         IMcpServer server,
-        [Description("Date from which tasks should loaded")] DateTime from,
+        [Description("Date from which tasks should be loaded")] DateTime from,
         [Description("Date till which tasks should loaded (not inclusive)")] DateTime till)
     {
         var logger = server.AsClientLoggerProvider().CreateLogger(nameof(LoadTasksTool));
