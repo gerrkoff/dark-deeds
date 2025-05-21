@@ -9,6 +9,7 @@
     <ProjectReference Include="..\DD.TelegramClient.Domain\DD.TelegramClient.Domain.csproj" />
     <ProjectReference Include="..\DD.WebClientBff.Domain\DD.WebClientBff.Domain.csproj" />
     <ProjectReference Include="..\DD.MobileClient.Domain\DD.MobileClient.Domain.csproj" />
+    <ProjectReference Include="..\DD.McpClient.Domain\DD.McpClient.Domain.csproj" />
   </ItemGroup>
 
 </Project>
