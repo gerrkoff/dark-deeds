@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 if [ $# -le 0 ]; then
   echo "How to call: ./ci/test-e2e.sh http://192.168.0.1:5000"
   exit 1

@@ -1,0 +1,48 @@
+name: Manual PR Pipeline
+
+on:
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: 'Pull Request number'
+        required: true
+        type: string
+
+jobs:
+  checkout-pr:
+    runs-on: ubuntu-latest
+    outputs:
+      pr_ref: ${{ steps.pr-info.outputs.ref }}
+      pr_sha: ${{ steps.pr-info.outputs.sha }}
+      pr_branch: ${{ steps.pr-info.outputs.branch }}
+    steps:
+      - name: Get PR information
+        id: pr-info
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: pr } = await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: ${{ github.event.inputs.pr_number }}
+            });
+
+            console.log(`PR #${{ github.event.inputs.pr_number }}: ${pr.title}`);
+            console.log(`Branch: ${pr.head.ref}`);
+            console.log(`SHA: ${pr.head.sha}`);
+
+            core.setOutput('ref', `refs/pull/${{ github.event.inputs.pr_number }}/head`);
+            core.setOutput('sha', pr.head.sha);
+            core.setOutput('branch', pr.head.ref);
+
+      - name: Checkout PR code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.pr-info.outputs.ref }}
+
+      - name: Show PR info
+        run: |
+          echo "✅ Successfully checked out PR #${{ github.event.inputs.pr_number }}"
+          echo "Branch: ${{ steps.pr-info.outputs.branch }}"
+          echo "SHA: ${{ steps.pr-info.outputs.sha }}"
+          echo "Ready for further pipeline steps!"
