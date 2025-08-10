@@ -40,7 +40,7 @@ jobs:
         dotnet-version: 8.0.100
     - name: Build MCP
       run: |
-        dotnet build -warnaserror code/mcp/DarkDeeds.Mcp/DarkDeeds.Mcp.sln
+        dotnet build -warnaserror code/mcp/DarkDeeds.Mcp/DarkDeeds.Mcp.csproj
 
   build-e2e-tests:
     runs-on: ubuntu-latest
