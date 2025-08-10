@@ -1,10 +1,10 @@
 name: Build
 
 on:
-  push:
-    branches: [ staging, master ]
-  pull_request:
   workflow_dispatch:
+  pull_request:
+  push:
+    branches: [ staging ]
 
 env:
   REGISTRY: ghcr.io
