@@ -2,9 +2,9 @@ name: Build Docker Images
 
 on:
   push:
-    branches: [ main, staging, develop ]
+    branches: [ master ]
   pull_request:
-    branches: [ main ]
+    branches: [ master ]
   workflow_dispatch:
 
 env:
