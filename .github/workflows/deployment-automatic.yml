@@ -23,7 +23,7 @@ jobs:
       - name: Get version from script
         id: version
         run: |
-          BRANCH_NAME="${{ github.event_name == 'pull_request' && github.head_ref || github.ref_name }}"
+          BRANCH_NAME="${{ github.head_ref }}"
           echo "Using branch name: $BRANCH_NAME"
           VERSION=$(./ci/workflows/version.sh "$BRANCH_NAME")
           echo "version=$VERSION" >> $GITHUB_OUTPUT
@@ -93,7 +93,7 @@ jobs:
   deploy-production:
     runs-on: ubuntu-latest
     needs: [get-version, run-e2e-tests]
-    if: ${{ success() && github.ref_name == 'staging' }}
+    if: ${{ success() && github.head_ref == 'staging' }}
     environment: prod
     steps:
       - name: Checkout code
