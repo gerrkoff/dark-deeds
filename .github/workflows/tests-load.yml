@@ -58,4 +58,5 @@ jobs:
             "${{ steps.load-tests-operation.outputs.build_number }}" \
             "${{ secrets.DRONE_SERVER }}" \
             "${{ secrets.DRONE_TOKEN }}" \
-            "${{ github.repository }}"
+            "${{ github.repository }}" \
+            "1800"

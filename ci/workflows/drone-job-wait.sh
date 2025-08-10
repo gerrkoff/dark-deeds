@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Script to wait for a Drone CI build to complete
-# Usage: ./wait-for-drone.sh <build_number> <drone_server> <drone_token> <repository>
+# Usage: ./wait-for-drone.sh <build_number> <drone_server> <drone_token> <repository> [max_wait_seconds]
 
 set -e
 
@@ -9,20 +9,21 @@ BUILD_NUMBER="$1"
 DRONE_SERVER="$2"
 DRONE_TOKEN="$3"
 REPOSITORY="$4"
+MAX_WAIT="${5:-600}"  # Default to 600 seconds if not provided
 
 if [ -z "$BUILD_NUMBER" ] || [ -z "$DRONE_SERVER" ] || [ -z "$DRONE_TOKEN" ] || [ -z "$REPOSITORY" ]; then
-    echo "Usage: $0 <build_number> <drone_server> <drone_token> <repository>"
-    echo "Example: $0 123 https://drone.example.com your_token owner/repo"
+    echo "Usage: $0 <build_number> <drone_server> <drone_token> <repository> [max_wait_seconds]"
+    echo "Example: $0 123 https://drone.example.com your_token owner/repo 600"
     exit 1
 fi
 
 echo "Waiting for Drone CI build $BUILD_NUMBER to complete..."
+echo "Maximum wait time: $MAX_WAIT seconds"
 
 API_URL="$DRONE_SERVER/api/repos/$REPOSITORY/builds/$BUILD_NUMBER"
 echo "Drone API URL: $API_URL"
 
-# Wait up to 10 minutes (600 seconds)
-MAX_WAIT=600
+# Wait for specified time
 WAIT_TIME=0
 SLEEP_INTERVAL=5
 
