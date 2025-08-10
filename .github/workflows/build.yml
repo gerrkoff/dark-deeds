@@ -24,7 +24,7 @@ jobs:
       - name: Get version from script
         id: version
         run: |
-          BRANCH_NAME="${{ github.event_name == 'pull_request' && github.head_ref || github.ref_name }}"
+          BRANCH_NAME="${{ github.head_ref || github.ref_name }}"
           echo "Using branch name: $BRANCH_NAME"
           VERSION=$(./ci/workflows/version.sh "$BRANCH_NAME")
           echo "version=$VERSION" >> $GITHUB_OUTPUT
