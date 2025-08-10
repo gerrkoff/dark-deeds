@@ -4,12 +4,8 @@
 # Works on macOS, Linux, and other POSIX-compatible systems
 
 # Get current branch name and sanitize it for Docker tag format
-# In GitHub Actions, use GITHUB_REF_NAME if available, otherwise fallback to git
-if [ -n "$GITHUB_REF_NAME123" ]; then
-    RAW_BRANCH="$GITHUB_REF_NAME"
-else
-    RAW_BRANCH=$(git rev-parse --abbrev-ref HEAD)
-fi
+# Use branch name passed as parameter if available, otherwise fallback to git
+RAW_BRANCH="${1:-$(git rev-parse --abbrev-ref HEAD)}"
 
 # Sanitize branch name for Docker tag format
 BRANCH=$(echo "$RAW_BRANCH" | sed 's/[^a-zA-Z0-9._-]/-/g')
