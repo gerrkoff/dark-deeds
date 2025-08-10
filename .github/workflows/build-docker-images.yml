@@ -43,6 +43,7 @@ jobs:
           - app.dockerfile
           - tests-e2e.dockerfile
           - tests-load.dockerfile
+          - mcp.dockerfile
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -72,6 +73,7 @@ jobs:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_PREFIX }}/${{ steps.extract-name.outputs.image-name }}
           tags: |
             type=raw,value=${{ needs.get-version.outputs.version }}
+            type=raw,value=latest
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v5

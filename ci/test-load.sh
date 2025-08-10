@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 if [ $# -le 0 ]; then
   echo "How to call: ./ci/test-load.sh google.com"
   exit 1
