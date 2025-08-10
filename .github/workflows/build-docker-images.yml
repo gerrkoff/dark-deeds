@@ -2,9 +2,8 @@ name: Build Docker Images
 
 on:
   push:
-    branches: [ master ]
+    branches: [ master, staging ]
   pull_request:
-    branches: [ master ]
   workflow_dispatch:
 
 env:
@@ -73,7 +72,7 @@ jobs:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_PREFIX }}/${{ steps.extract-name.outputs.image-name }}
           tags: |
             type=raw,value=${{ needs.get-version.outputs.version }}
-            type=raw,value=latest
+            type=raw,value=latest,enable=${{ github.ref == 'refs/heads/staging' }}
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
