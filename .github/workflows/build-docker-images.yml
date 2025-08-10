@@ -25,7 +25,7 @@ jobs:
       - name: Get version from script
         id: version
         env:
-          GITHUB_REF_NAME: ${{ github.ref_name }}
+          GITHUB_REF_NAME: ${{ github.head_ref }}
         run: |
           VERSION=$(./ci/version.sh)
           echo "version=$VERSION" >> $GITHUB_OUTPUT
