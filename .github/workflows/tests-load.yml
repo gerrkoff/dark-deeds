@@ -1,0 +1,61 @@
+name: Tests Load
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Runs daily at 02:00 UTC
+    - cron: '0 2 * * *'
+
+jobs:
+  deploy-staging-latest:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy staging with latest version
+        run: |
+          OUTPUT=$(./ci/workflows/drone-job-trigger.sh \
+            "deploy-staging" \
+            "latest" \
+            "${{ github.ref_name }}" \
+            "${{ secrets.DRONE_SERVER }}" \
+            "${{ secrets.DRONE_TOKEN }}" \
+            "${{ github.repository }}")
+          echo "$OUTPUT"
+          echo "$OUTPUT" | tail -1 >> $GITHUB_OUTPUT
+        id: deploy-operation
+
+      - name: Wait for staging deployment to complete
+        run: |
+          ./ci/workflows/drone-job-wait.sh \
+            "${{ steps.deploy-operation.outputs.build_number }}" \
+            "${{ secrets.DRONE_SERVER }}" \
+            "${{ secrets.DRONE_TOKEN }}" \
+            "${{ github.repository }}"
+
+      - name: Wait before running load tests
+        run: |
+          echo "Waiting 30 seconds before starting load tests..."
+          sleep 30
+
+      - name: Trigger load tests
+        run: |
+          OUTPUT=$(./ci/workflows/drone-job-trigger.sh \
+            "run-load-tests" \
+            "latest" \
+            "${{ github.ref_name }}" \
+            "${{ secrets.DRONE_SERVER }}" \
+            "${{ secrets.DRONE_TOKEN }}" \
+            "${{ github.repository }}")
+          echo "$OUTPUT"
+          echo "$OUTPUT" | tail -1 >> $GITHUB_OUTPUT
+        id: load-tests-operation
+
+      - name: Wait for load tests to complete
+        run: |
+          ./ci/workflows/drone-job-wait.sh \
+            "${{ steps.load-tests-operation.outputs.build_number }}" \
+            "${{ secrets.DRONE_SERVER }}" \
+            "${{ secrets.DRONE_TOKEN }}" \
+            "${{ github.repository }}"

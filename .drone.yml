@@ -17,7 +17,7 @@ steps:
           exit 78
         fi
 
-  - name: deploy to staging
+  - name: run operation
     environment:
       COMMAND:
         from_secret: deploy_staging_cmd
@@ -54,7 +54,7 @@ steps:
           exit 78
         fi
 
-  - name: deploy to production
+  - name: run operation
     environment:
       COMMAND:
         from_secret: deploy_prod_cmd
@@ -91,12 +91,43 @@ steps:
           exit 78
         fi
 
-  - name: run e2e tests
+  - name: run operation
     environment:
       URL:
         from_secret: staging_url
     commands:
       - ./ci/workflows/test-e2e.sh $URL
+
+trigger:
+  event:
+    - custom
+
+---
+kind: pipeline
+type: exec
+name: run-load-tests
+
+platform:
+  os: linux
+  arch: amd64
+
+steps:
+  - name: check operation
+    commands:
+      - |
+        echo "Received: $operation"
+        if [ "$operation" != "run-load-tests" ]; then
+          echo "Skipping pipeline - wrong operation"
+          exit 78
+        fi
+
+  - name: run operation
+    environment:
+      COMMAND:
+        from_secret: launch_load_testing
+    commands:
+      - echo "CMD = $COMMAND"
+      - eval $CMD
 
 trigger:
   event:
@@ -123,8 +154,9 @@ steps:
 
 depends_on:
   - deploy-staging
-  - run-e2e-tests
   - deploy-production
+  - run-e2e-tests
+  - run-load-tests
 
 trigger:
   status:
