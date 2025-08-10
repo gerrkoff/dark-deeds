@@ -22,6 +22,7 @@ jobs:
           OUTPUT=$(./ci/workflows/drone-job-trigger.sh \
             "deploy-production" \
             "${{ inputs.version }}" \
+            "${{ github.ref_name }}" \
             "${{ secrets.DRONE_SERVER }}" \
             "${{ secrets.DRONE_TOKEN }}" \
             "${{ github.repository }}")
