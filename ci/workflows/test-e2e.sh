@@ -1,6 +1,6 @@
 #!/bin/bash
 if [ $# -le 0 ]; then
-  echo "How to call: ./ci/test-e2e.sh http://192.168.0.1:5000"
+  echo "How to call: ./ci/workflows/test-e2e.sh http://192.168.0.1:5000"
   exit 1
 fi
 
@@ -52,4 +52,4 @@ echo "----------- Removing containers and networks..."
 docker rm -f dd-test-e2e-chrome
 docker network rm dd-test-e2e-network
 
-echo "----------- Test e2e completed"
+echo "----------- Completed!"

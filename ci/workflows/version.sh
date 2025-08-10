@@ -43,7 +43,8 @@ format_timestamp() {
 # Generate version based on branch
 if [ "$BRANCH" = "$DEPLOY_BRANCH" ]; then
     # For staging branch: use formatted commit timestamp
-    format_timestamp "$COMMIT_TIME"
+    VERSION=$(format_timestamp "$COMMIT_TIME")
+    echo "$VERSION"
 else
     # For other branches: use sanitized branch name
     echo "$BRANCH"

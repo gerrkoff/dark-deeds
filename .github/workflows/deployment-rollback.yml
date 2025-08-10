@@ -1,0 +1,33 @@
+name: Deployment Rollback
+
+on:
+  workflow_dispatch:
+
+jobs:
+  rollback-production:
+    runs-on: ubuntu-latest
+    environment: prod
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Trigger Drone job
+        id: operation
+        run: |
+          OUTPUT=$(./ci/workflows/drone-job-trigger.sh \
+            "deploy-production" \
+            "--" \
+            "${{ github.ref_name }}" \
+            "${{ secrets.DRONE_SERVER }}" \
+            "${{ secrets.DRONE_TOKEN }}" \
+            "${{ github.repository }}")
+          echo "$OUTPUT"
+          echo "$OUTPUT" | tail -1 >> $GITHUB_OUTPUT
+
+      - name: Wait for Drone job to complete
+        run: |
+          ./ci/workflows/drone-job-wait.sh \
+            "${{ steps.operation.outputs.build_number }}" \
+            "${{ secrets.DRONE_SERVER }}" \
+            "${{ secrets.DRONE_TOKEN }}" \
+            "${{ github.repository }}"

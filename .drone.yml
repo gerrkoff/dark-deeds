@@ -1,95 +1,102 @@
 ---
-# ==============================
-# COMMON
-# ==============================
 kind: pipeline
 type: exec
-name: deploy
+name: deploy-staging
 
 platform:
   os: linux
   arch: amd64
 
 steps:
-  - name: deploy prod
-    environment:
-      DEPLOY_PROD_CMD:
-        from_secret: deploy_prod_cmd
+  - name: check operation
     commands:
-      - VERSION=$(./ci/version.sh "date -d @")
-      - CMD=$(echo "$DEPLOY_PROD_CMD" | sed "s/VERSION/$VERSION/g")
+      - |
+        echo "Received: $operation"
+        if [ "$operation" != "deploy-staging" ]; then
+          echo "Skipping pipeline - wrong operation"
+          exit 78
+        fi
+
+  - name: deploy to staging
+    environment:
+      COMMAND:
+        from_secret: deploy_staging_cmd
+    commands:
+      - |
+        if [ -z "$version" ]; then
+          echo "ERROR: VERSION parameter is required but not provided!"
+          exit 1
+        fi
+      - CMD=$(echo "$COMMAND" | sed "s/VERSION/$version/g")
+      - echo "CMD = $CMD"
       - eval $CMD
 
 trigger:
   event:
-    - promote
+    - custom
 
 ---
 kind: pipeline
 type: exec
-name: rollback
+name: deploy-production
 
 platform:
   os: linux
   arch: amd64
 
 steps:
-  - name: rollback prod
+  - name: check operation
+    commands:
+      - |
+        echo "Received: $operation"
+        if [ "$operation" != "deploy-production" ]; then
+          echo "Skipping pipeline - wrong operation"
+          exit 78
+        fi
+
+  - name: deploy to production
     environment:
-      DEPLOY_PROD_CMD:
+      COMMAND:
         from_secret: deploy_prod_cmd
     commands:
-      - VERSION=--
-      - CMD=$(echo "$DEPLOY_PROD_CMD" | sed "s/VERSION/$VERSION/g")
+      - |
+        if [ -z "$version" ]; then
+          echo "ERROR: VERSION parameter is required but not provided!"
+          exit 1
+        fi
+      - CMD=$(echo "$COMMAND" | sed "s/VERSION/$version/g")
+      - echo "CMD = $CMD"
       - eval $CMD
 
 trigger:
   event:
-    - rollback
-
-# ==============================
-# CUSTOM
-# ==============================
+    - custom
 
 ---
 kind: pipeline
 type: exec
-name: (custom) build & test
+name: run-e2e-tests
 
 platform:
   os: linux
   arch: amd64
 
 steps:
-  - name: docker login
-    environment:
-      USERNAME:
-        from_secret: docker_user
-      PASSWORD:
-        from_secret: docker_pass
+  - name: check operation
     commands:
-      - docker login -u $USERNAME -p $PASSWORD
+      - |
+        echo "Received: $operation"
+        if [ "$operation" != "run-e2e-tests" ]; then
+          echo "Skipping pipeline - wrong operation"
+          exit 78
+        fi
 
-  - name: build
-    commands:
-      - git remote set-url origin git@github.com:gerrkoff/dark-deeds.git
-      - ./ci/publish.sh "date -d @"
-
-  - name: start staging
-    environment:
-      START_STAGING_CMD:
-        from_secret: start_staging_cmd
-    commands:
-      - VERSION=$(./ci/version.sh "date -d @")
-      - CMD=$(echo "$START_STAGING_CMD" | sed "s/VERSION/$VERSION/g")
-      - eval $CMD
-
-  - name: test
+  - name: run e2e tests
     environment:
       URL:
         from_secret: staging_url
     commands:
-      - ./ci/test-e2e.sh $URL
+      - ./ci/workflows/test-e2e.sh $URL
 
 trigger:
   event:
@@ -98,7 +105,7 @@ trigger:
 ---
 kind: pipeline
 type: docker
-name: (custom) notify
+name: notify
 
 steps:
   - name: telegram
@@ -108,92 +115,20 @@ steps:
         from_secret: telegram_bot_token
       to:
         from_secret: telegram_user_id
+      message: |
+        🚀 {{repo.name}} ➜ ${operation}
+        📦 Version: ${version}
+        {{#success build.status}}✅ Success{{/success}}{{#failure build.status}}❌ Failed{{/failure}}
+        ⏰ {{datetime build.finished "2006-01-02 15:04:05" "UTC"}}
 
 depends_on:
-  - (custom) build & test
-  - deploy
+  - deploy-staging
+  - run-e2e-tests
+  - deploy-production
 
 trigger:
   status:
     - success
     - failure
   event:
-    - promote
-    - rollback
     - custom
-
-# # ==============================
-# # STAGING – FULL COPY OF CUSTOM WITH ADJUSTED TRIGGER
-# # ==============================
-
----
-kind: pipeline
-type: exec
-name: (staging) build & test
-
-platform:
-  os: linux
-  arch: amd64
-
-steps:
-  - name: docker login
-    environment:
-      USERNAME:
-        from_secret: docker_user
-      PASSWORD:
-        from_secret: docker_pass
-    commands:
-      - docker login -u $USERNAME -p $PASSWORD
-
-  - name: build
-    commands:
-      - git remote set-url origin git@github.com:gerrkoff/dark-deeds.git
-      - ./ci/publish.sh "date -d @"
-
-  - name: start staging
-    environment:
-      START_STAGING_CMD:
-        from_secret: start_staging_cmd
-    commands:
-      - VERSION=$(./ci/version.sh "date -d @")
-      - CMD=$(echo "$START_STAGING_CMD" | sed "s/VERSION/$VERSION/g")
-      - eval $CMD
-
-  - name: test
-    environment:
-      URL:
-        from_secret: staging_url
-    commands:
-      - ./ci/test-e2e.sh $URL
-
-trigger:
-  branch:
-    - staging
-  event:
-    - push
-
----
-kind: pipeline
-type: docker
-name: (staging) notify
-
-steps:
-  - name: telegram
-    image: appleboy/drone-telegram
-    settings:
-      token:
-        from_secret: telegram_bot_token
-      to:
-        from_secret: telegram_user_id
-
-depends_on:
-  - (staging) build & test
-
-trigger:
-  status:
-    - success
-    - failure
-  branch:
-    - staging
-  event:
-    - push

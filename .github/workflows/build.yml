@@ -1,8 +1,8 @@
-name: Build Docker Images
+name: Build
 
 on:
   push:
-    branches: [ master, staging ]
+    branches: [ staging ]
   pull_request:
   workflow_dispatch:
 
@@ -26,7 +26,7 @@ jobs:
         run: |
           BRANCH_NAME="${{ github.event_name == 'pull_request' && github.head_ref || github.ref_name }}"
           echo "Using branch name: $BRANCH_NAME"
-          VERSION=$(./ci/version.sh "$BRANCH_NAME")
+          VERSION=$(./ci/workflows/version.sh "$BRANCH_NAME")
           echo "version=$VERSION" >> $GITHUB_OUTPUT
           echo "Generated version: $VERSION"
 

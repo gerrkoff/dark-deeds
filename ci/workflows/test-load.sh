@@ -1,6 +1,6 @@
 #!/bin/bash
 if [ $# -le 0 ]; then
-  echo "How to call: ./ci/test-load.sh google.com"
+  echo "How to call: ./ci/workflows/test-load.sh google.com"
   exit 1
 fi
 
