@@ -8,8 +8,8 @@
 RAW_BRANCH="${1:-$(git rev-parse --abbrev-ref HEAD)}"
 
 # Sanitize branch name for Docker tag format
-# First replace / with _, then replace any other non-allowed characters with -
-BRANCH=$(echo "$RAW_BRANCH" | sed 's#/#_#g' | sed 's/[^a-zA-Z0-9._-]/-/g')
+# Кeplace non-allowed characters with -
+BRANCH=$(echo "$RAW_BRANCH" | sed 's/[^a-zA-Z0-9._-]/-/g')
 
 # Get commit timestamp in UTC seconds since epoch
 COMMIT_TIME=$(git show -s --format=%ct)
