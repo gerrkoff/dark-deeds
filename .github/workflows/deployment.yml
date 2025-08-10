@@ -5,7 +5,7 @@ on:
     workflows: ["E2E Testing"]
     types:
       - completed
-    branches: ["ci/migrate-to-actions-3"]
+    branches: ["master"]
 
 jobs:
   deploy:

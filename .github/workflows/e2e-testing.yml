@@ -6,7 +6,7 @@ on:
     workflows: ["Build Docker Images"]
     types:
       - completed
-    branches: ["ci/migrate-to-actions-3"]
+    branches: ["master"]
 
 jobs:
   e2e-tests:
