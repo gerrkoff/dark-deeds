@@ -4,7 +4,15 @@
 # Works on macOS, Linux, and other POSIX-compatible systems
 
 # Get current branch name and sanitize it for Docker tag format
-BRANCH=$(git rev-parse --abbrev-ref HEAD | sed 's/[^a-zA-Z0-9._-]/-/g')
+# In GitHub Actions, use GITHUB_REF_NAME if available, otherwise fallback to git
+if [ -n "$GITHUB_REF_NAME" ]; then
+    RAW_BRANCH="$GITHUB_REF_NAME"
+else
+    RAW_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+fi
+
+# Sanitize branch name for Docker tag format
+BRANCH=$(echo "$RAW_BRANCH" | sed 's/[^a-zA-Z0-9._-]/-/g')
 
 # Get commit timestamp in UTC seconds since epoch
 COMMIT_TIME=$(git show -s --format=%ct)
