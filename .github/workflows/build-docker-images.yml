@@ -25,7 +25,7 @@ jobs:
       - name: Get version from script
         id: version
         env:
-          GITHUB_REF_NAME: ${{ github.head_ref || github.ref_name }}
+          GITHUB_REF_NAME: ${{ github.head_ref && github.head_ref || github.ref_name }}
         run: |
           echo "Debug info:"
           echo "  github.event_name: ${{ github.event_name }}"
