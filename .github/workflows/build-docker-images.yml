@@ -70,8 +70,6 @@ jobs:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_PREFIX }}/${{ steps.extract-name.outputs.image-name }}
           tags: |
             type=raw,value=${{ needs.get-version.outputs.version }}
-            type=raw,value=latest,enable={{is_default_branch}}
-            type=sha,prefix={{branch}}-,suffix=-{{date 'YYYYMMDD-HHmmss'}}
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
