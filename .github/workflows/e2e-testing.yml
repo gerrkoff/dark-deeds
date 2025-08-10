@@ -6,7 +6,7 @@ on:
     workflows: ["Build Docker Images"]
     types:
       - completed
-    branches: [staging]
+    branches: ["master"]
 
 jobs:
   e2e-tests:
