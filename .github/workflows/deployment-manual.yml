@@ -1,7 +1,12 @@
-name: Deployment Rollback
+name: Deployment Manual
 
 on:
   workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to deploy (use "--" for rollback)'
+        required: true
+        type: string
 
 jobs:
   rollback-production:
@@ -16,8 +21,7 @@ jobs:
         run: |
           OUTPUT=$(./ci/workflows/drone-job-trigger.sh \
             "deploy-production" \
-            "--" \
-            "${{ github.ref_name }}" \
+            "${{ inputs.version }}" \
             "${{ secrets.DRONE_SERVER }}" \
             "${{ secrets.DRONE_TOKEN }}" \
             "${{ github.repository }}")
