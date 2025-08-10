@@ -5,7 +5,7 @@
 
 # Get current branch name and sanitize it for Docker tag format
 # In GitHub Actions, use GITHUB_REF_NAME if available, otherwise fallback to git
-if [ -n "$GITHUB_REF_NAME" ]; then
+if [ -n "$GITHUB_REF_NAME123" ]; then
     RAW_BRANCH="$GITHUB_REF_NAME"
 else
     RAW_BRANCH=$(git rev-parse --abbrev-ref HEAD)
