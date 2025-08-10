@@ -31,7 +31,7 @@ jobs:
           echo "  github.event_name: ${{ github.event_name }}"
           echo "  github.ref_name: ${{ github.ref_name }}"
           echo "  github.head_ref: ${{ github.head_ref }}"
-          echo "  GITHUB_REF_NAME env: $GITHUB_REF_NAME123"
+          echo "  GITHUB_REF_NAME123 env: $GITHUB_REF_NAME123"
           echo "Direct test: '${{ github.head_ref }}'"
           VERSION=$(./ci/version.sh)
           echo "version=$VERSION" >> $GITHUB_OUTPUT
