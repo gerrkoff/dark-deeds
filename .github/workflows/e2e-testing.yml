@@ -1,0 +1,18 @@
+name: E2E Testing
+
+on:
+  workflow_dispatch:
+  workflow_run:
+    workflows: ["Build Docker Images"]
+    types:
+      - completed
+    branches: [staging]
+
+jobs:
+  e2e-tests:
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+    steps:
+      - name: Run E2E Tests
+        run: |
+          echo "E2E tests triggered"
