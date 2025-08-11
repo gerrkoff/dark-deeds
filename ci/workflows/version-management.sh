@@ -11,6 +11,12 @@ REPOSITORY="$2"
 GITHUB_TOKEN="$3"
 NEW_VERSION="$4"
 
+# Debug output
+echo "DEBUG: Operation: $OPERATION" >&2
+echo "DEBUG: Repository: $REPOSITORY" >&2
+echo "DEBUG: Token length: ${#GITHUB_TOKEN}" >&2
+echo "DEBUG: New version: $NEW_VERSION" >&2
+
 CURRENT_VAR="PROD_VERSION_CURRENT"
 PREVIOUS_VAR="PROD_VERSION_PREVIOUS"
 
@@ -25,10 +31,19 @@ get_variable() {
         "https://api.github.com/repos/$REPOSITORY/actions/variables/$var_name" 2>&1)
 
     local body=$(echo "$response" | head -n -1)
+    local http_code=$(echo "$response" | tail -n1)
+
+    # Debug output
+    echo "DEBUG: Getting variable '$var_name'" >&2
+    echo "DEBUG: HTTP code: $http_code" >&2
+    echo "DEBUG: Response body: $body" >&2
 
     if echo "$body" | grep -q '"value"'; then
-        echo "$body" | grep -o '"value":"[^"]*"' | cut -d'"' -f4
+        local value=$(echo "$body" | grep -o '"value":"[^"]*"' | cut -d'"' -f4)
+        echo "DEBUG: Extracted value: '$value'" >&2
+        echo "$value"
     else
+        echo "DEBUG: No value found in response" >&2
         echo ""
     fi
 }
@@ -121,8 +136,6 @@ case "$OPERATION" in
         # Get current version
         CURRENT_VERSION=$(get_variable "$CURRENT_VAR")
 
-        echo "Current version: $CURRENT_VERSION"
-
         if [ -n "$CURRENT_VERSION" ]; then
             echo "Current version: $CURRENT_VERSION"
 
@@ -134,10 +147,10 @@ case "$OPERATION" in
             echo "No current version found (first deployment)"
         fi
 
-        # # Set new version as current
-        # set_variable "$CURRENT_VAR" "$NEW_VERSION"
-        # echo "✅ Current version set to: $NEW_VERSION"
-        # echo "🎉 Version tracking updated successfully!"
+        # Set new version as current
+        set_variable "$CURRENT_VAR" "$NEW_VERSION"
+        echo "✅ Current version set to: $NEW_VERSION"
+        echo "🎉 Version tracking updated successfully!"
         ;;
 
     *)
