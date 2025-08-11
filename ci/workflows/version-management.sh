@@ -140,29 +140,12 @@ case "$OPERATION" in
         # echo "🎉 Version tracking updated successfully!"
         ;;
 
-    "get-previous")
-        PREVIOUS_VERSION=$(get_variable "$PREVIOUS_VAR")
-        if [ -n "$PREVIOUS_VERSION" ]; then
-            echo "$PREVIOUS_VERSION"
-        else
-            echo "❌ No previous version found" >&2
-            exit 1
-        fi
-        ;;
-
     *)
         echo "Usage: $0 <operation> <repository> <github_token> [version]"
         echo ""
         echo "Operations:"
         echo "  determine <repo> <token> <version>  - Determine deployment version (use '--' for rollback)"
         echo "  update <repo> <token> <version>     - Move current to previous, set new current"
-        echo "  get-previous <repo> <token>         - Get previous deployed version"
-        echo ""
-        echo "Examples:"
-        echo "  $0 determine owner/repo \$GITHUB_TOKEN 20250812-143052"
-        echo "  $0 determine owner/repo \$GITHUB_TOKEN --"
-        echo "  $0 update owner/repo \$GITHUB_TOKEN 20250812-143052"
-        echo "  $0 get-previous owner/repo \$GITHUB_TOKEN"
         exit 1
         ;;
 esac

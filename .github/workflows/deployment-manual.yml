@@ -27,6 +27,7 @@ jobs:
             "${{ github.repository }}" \
             "${{ secrets.CI_VARS_PAT }}" \
             "${{ inputs.version }}")
+          echo "$OUTPUT"
           echo "$OUTPUT" | tail -1 >> $GITHUB_OUTPUT
 
       # - name: Trigger Drone job
