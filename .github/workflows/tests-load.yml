@@ -7,7 +7,7 @@ on:
     - cron: '0 2 * * *'
 
 jobs:
-  deploy-staging-latest:
+  tests-load:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
