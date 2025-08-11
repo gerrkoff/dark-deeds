@@ -126,8 +126,7 @@ steps:
       COMMAND:
         from_secret: launch_load_testing
     commands:
-      - echo "CMD = $COMMAND"
-      - eval $CMD
+      - eval $COMMAND
 
 trigger:
   event:
