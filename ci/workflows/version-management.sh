@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Script to manage deployment version tracking using GitHub Environment Variables for Prod
+# Script to manage deployment version tracking using GitHub Repository Variables
 # Usage: ./manage-deployment-versions.sh <operation> <repository> <github_token> <new_version>
 # Operations: update, get-previous
 
@@ -11,9 +11,8 @@ REPOSITORY="$2"
 GITHUB_TOKEN="$3"
 NEW_VERSION="$4"
 
-ENVIRONMENT_NAME="prod"
-CURRENT_VAR="VERSION_CURRENT"
-PREVIOUS_VAR="VERSION_PREVIOUS"
+CURRENT_VAR="PROD_VERSION_CURRENT"
+PREVIOUS_VAR="PROD_VERSION_PREVIOUS"
 
 # Debug information
 echo "🐛 [DEBUG] Script started with parameters:" >&2
@@ -21,48 +20,21 @@ echo "🐛 [DEBUG] Operation: $OPERATION" >&2
 echo "🐛 [DEBUG] Repository: $REPOSITORY" >&2
 echo "🐛 [DEBUG] Token length: ${#GITHUB_TOKEN} chars" >&2
 echo "🐛 [DEBUG] New version: $NEW_VERSION" >&2
-echo "🐛 [DEBUG] Environment: $ENVIRONMENT_NAME" >&2
 echo "🐛 [DEBUG] Current var name: $CURRENT_VAR" >&2
 echo "🐛 [DEBUG] Previous var name: $PREVIOUS_VAR" >&2
 
-# Function to check if environment exists
-check_environment() {
-    echo "🔍 [DEBUG] Checking if environment '$ENVIRONMENT_NAME' exists..." >&2
-    local env_response=$(curl -s -w "\n%{http_code}" \
-        -H "Authorization: Bearer $GITHUB_TOKEN" \
-        -H "Accept: application/vnd.github+json" \
-        -H "X-GitHub-Api-Version: 2022-11-28" \
-        "https://api.github.com/repos/$REPOSITORY/environments/$ENVIRONMENT_NAME" 2>&1)
-
-    local env_http_code=$(echo "$env_response" | tail -n1)
-    local env_body=$(echo "$env_response" | head -n -1)
-
-    echo "🔍 [DEBUG] Environment check HTTP Status: $env_http_code" >&2
-    echo "🔍 [DEBUG] Environment check Response body: $env_body" >&2
-
-    if [ "$env_http_code" != "200" ]; then
-        echo "❌ Environment '$ENVIRONMENT_NAME' does not exist or is not accessible" >&2
-        echo "❌ HTTP Status: $env_http_code" >&2
-        echo "❌ Response: $env_body" >&2
-        return 1
-    fi
-
-    echo "✅ Environment '$ENVIRONMENT_NAME' exists" >&2
-    return 0
-}
-
-# Function to get environment variable
+# Function to get repository variable
 get_variable() {
     local var_name="$1"
-    echo "🔍 [DEBUG] Getting variable: $var_name from environment: $ENVIRONMENT_NAME" >&2
+    echo "🔍 [DEBUG] Getting repository variable: $var_name" >&2
     echo "🔍 [DEBUG] Repository: $REPOSITORY" >&2
-    echo "🔍 [DEBUG] URL: https://api.github.com/repos/$REPOSITORY/environments/$ENVIRONMENT_NAME/variables/$var_name" >&2
+    echo "🔍 [DEBUG] URL: https://api.github.com/repos/$REPOSITORY/actions/variables/$var_name" >&2
 
     local response=$(curl -s -w "\n%{http_code}" \
         -H "Authorization: Bearer $GITHUB_TOKEN" \
         -H "Accept: application/vnd.github+json" \
         -H "X-GitHub-Api-Version: 2022-11-28" \
-        "https://api.github.com/repos/$REPOSITORY/environments/$ENVIRONMENT_NAME/variables/$var_name" 2>&1)
+        "https://api.github.com/repos/$REPOSITORY/actions/variables/$var_name" 2>&1)
 
     local http_code=$(echo "$response" | tail -n1)
     local body=$(echo "$response" | head -n -1)
@@ -77,13 +49,12 @@ get_variable() {
     fi
 }
 
-# Function to set environment variable
+# Function to set repository variable
 set_variable() {
     local var_name="$1"
     local var_value="$2"
 
-    echo "📝 [DEBUG] Setting variable: $var_name = $var_value" >&2
-    echo "📝 [DEBUG] Environment: $ENVIRONMENT_NAME" >&2
+    echo "📝 [DEBUG] Setting repository variable: $var_name = $var_value" >&2
     echo "📝 [DEBUG] Repository: $REPOSITORY" >&2
 
     # Check if variable exists
@@ -92,7 +63,7 @@ set_variable() {
         -H "Authorization: Bearer $GITHUB_TOKEN" \
         -H "Accept: application/vnd.github+json" \
         -H "X-GitHub-Api-Version: 2022-11-28" \
-        "https://api.github.com/repos/$REPOSITORY/environments/$ENVIRONMENT_NAME/variables/$var_name" 2>&1)
+        "https://api.github.com/repos/$REPOSITORY/actions/variables/$var_name" 2>&1)
 
     local check_http_code=$(echo "$existing" | tail -n1)
     local check_body=$(echo "$existing" | head -n -1)
@@ -103,7 +74,7 @@ set_variable() {
     if echo "$check_body" | grep -q '"name"'; then
         # Update existing variable
         echo "📝 [DEBUG] Updating existing variable..." >&2
-        local update_url="https://api.github.com/repos/$REPOSITORY/environments/$ENVIRONMENT_NAME/variables/$var_name"
+        local update_url="https://api.github.com/repos/$REPOSITORY/actions/variables/$var_name"
         echo "📝 [DEBUG] Update URL: $update_url" >&2
 
         local update_response=$(curl -s -w "\n%{http_code}" \
@@ -123,7 +94,7 @@ set_variable() {
     else
         # Create new variable
         echo "📝 [DEBUG] Creating new variable..." >&2
-        local create_url="https://api.github.com/repos/$REPOSITORY/environments/$ENVIRONMENT_NAME/variables"
+        local create_url="https://api.github.com/repos/$REPOSITORY/actions/variables"
         echo "📝 [DEBUG] Create URL: $create_url" >&2
 
         local create_response=$(curl -s -w "\n%{http_code}" \
@@ -154,11 +125,6 @@ case "$OPERATION" in
         echo "🔄 Updating deployment versions..."
         echo "New version: $NEW_VERSION"
 
-        # Check if environment exists
-        if ! check_environment; then
-            exit 1
-        fi
-
         # Get current version
         CURRENT_VERSION=$(get_variable "$CURRENT_VAR")
         if [ -n "$CURRENT_VERSION" ]; then
@@ -179,11 +145,6 @@ case "$OPERATION" in
         ;;
 
     "get-previous")
-        # Check if environment exists
-        if ! check_environment; then
-            exit 1
-        fi
-
         PREVIOUS_VERSION=$(get_variable "$PREVIOUS_VAR")
         if [ -n "$PREVIOUS_VERSION" ]; then
             echo "$PREVIOUS_VERSION"

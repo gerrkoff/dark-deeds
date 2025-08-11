@@ -37,26 +37,26 @@ jobs:
 
           echo "version=$DEPLOY_VERSION" >> $GITHUB_OUTPUT
 
-      - name: Trigger Drone job
-        id: operation
-        run: |
-          OUTPUT=$(./ci/workflows/drone-job-trigger.sh \
-            "deploy-production" \
-            "${{ steps.version.outputs.version }}" \
-            "${{ github.ref_name }}" \
-            "${{ secrets.DRONE_SERVER }}" \
-            "${{ secrets.DRONE_TOKEN }}" \
-            "${{ github.repository }}")
-          echo "$OUTPUT"
-          echo "$OUTPUT" | tail -1 >> $GITHUB_OUTPUT
+      # - name: Trigger Drone job
+      #   id: operation
+      #   run: |
+      #     OUTPUT=$(./ci/workflows/drone-job-trigger.sh \
+      #       "deploy-production" \
+      #       "${{ steps.version.outputs.version }}" \
+      #       "${{ github.ref_name }}" \
+      #       "${{ secrets.DRONE_SERVER }}" \
+      #       "${{ secrets.DRONE_TOKEN }}" \
+      #       "${{ github.repository }}")
+      #     echo "$OUTPUT"
+      #     echo "$OUTPUT" | tail -1 >> $GITHUB_OUTPUT
 
-      - name: Wait for Drone job to complete
-        run: |
-          ./ci/workflows/drone-job-wait.sh \
-            "${{ steps.operation.outputs.build_number }}" \
-            "${{ secrets.DRONE_SERVER }}" \
-            "${{ secrets.DRONE_TOKEN }}" \
-            "${{ github.repository }}"
+      # - name: Wait for Drone job to complete
+      #   run: |
+      #     ./ci/workflows/drone-job-wait.sh \
+      #       "${{ steps.operation.outputs.build_number }}" \
+      #       "${{ secrets.DRONE_SERVER }}" \
+      #       "${{ secrets.DRONE_TOKEN }}" \
+      #       "${{ github.repository }}"
 
       - name: Update deployment version tracking
         run: |
