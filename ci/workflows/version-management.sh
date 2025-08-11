@@ -15,17 +15,63 @@ ENVIRONMENT_NAME="prod"
 CURRENT_VAR="VERSION_CURRENT"
 PREVIOUS_VAR="VERSION_PREVIOUS"
 
-# Function to get environment variable
-get_variable() {
-    local var_name="$1"
-    local response=$(curl -s \
+# Debug information
+echo "🐛 [DEBUG] Script started with parameters:" >&2
+echo "🐛 [DEBUG] Operation: $OPERATION" >&2
+echo "🐛 [DEBUG] Repository: $REPOSITORY" >&2
+echo "🐛 [DEBUG] Token length: ${#GITHUB_TOKEN} chars" >&2
+echo "🐛 [DEBUG] New version: $NEW_VERSION" >&2
+echo "🐛 [DEBUG] Environment: $ENVIRONMENT_NAME" >&2
+echo "🐛 [DEBUG] Current var name: $CURRENT_VAR" >&2
+echo "🐛 [DEBUG] Previous var name: $PREVIOUS_VAR" >&2
+
+# Function to check if environment exists
+check_environment() {
+    echo "🔍 [DEBUG] Checking if environment '$ENVIRONMENT_NAME' exists..." >&2
+    local env_response=$(curl -s -w "\n%{http_code}" \
         -H "Authorization: Bearer $GITHUB_TOKEN" \
         -H "Accept: application/vnd.github+json" \
         -H "X-GitHub-Api-Version: 2022-11-28" \
-        "https://api.github.com/repos/$REPOSITORY/environments/$ENVIRONMENT_NAME/variables/$var_name" 2>/dev/null)
+        "https://api.github.com/repos/$REPOSITORY/environments/$ENVIRONMENT_NAME" 2>&1)
 
-    if echo "$response" | grep -q '"value"'; then
-        echo "$response" | grep -o '"value":"[^"]*"' | cut -d'"' -f4
+    local env_http_code=$(echo "$env_response" | tail -n1)
+    local env_body=$(echo "$env_response" | head -n -1)
+
+    echo "🔍 [DEBUG] Environment check HTTP Status: $env_http_code" >&2
+    echo "🔍 [DEBUG] Environment check Response body: $env_body" >&2
+
+    if [ "$env_http_code" != "200" ]; then
+        echo "❌ Environment '$ENVIRONMENT_NAME' does not exist or is not accessible" >&2
+        echo "❌ HTTP Status: $env_http_code" >&2
+        echo "❌ Response: $env_body" >&2
+        return 1
+    fi
+
+    echo "✅ Environment '$ENVIRONMENT_NAME' exists" >&2
+    return 0
+}
+
+# Function to get environment variable
+get_variable() {
+    local var_name="$1"
+    echo "🔍 [DEBUG] Getting variable: $var_name from environment: $ENVIRONMENT_NAME" >&2
+    echo "🔍 [DEBUG] Repository: $REPOSITORY" >&2
+    echo "🔍 [DEBUG] URL: https://api.github.com/repos/$REPOSITORY/environments/$ENVIRONMENT_NAME/variables/$var_name" >&2
+
+    local response=$(curl -s -w "\n%{http_code}" \
+        -H "Authorization: Bearer $GITHUB_TOKEN" \
+        -H "Accept: application/vnd.github+json" \
+        -H "X-GitHub-Api-Version: 2022-11-28" \
+        "https://api.github.com/repos/$REPOSITORY/environments/$ENVIRONMENT_NAME/variables/$var_name" 2>&1)
+
+    local http_code=$(echo "$response" | tail -n1)
+    local body=$(echo "$response" | head -n -1)
+
+    echo "🔍 [DEBUG] HTTP Status: $http_code" >&2
+    echo "🔍 [DEBUG] Response body: $body" >&2
+
+    if echo "$body" | grep -q '"value"'; then
+        echo "$body" | grep -o '"value":"[^"]*"' | cut -d'"' -f4
     else
         echo ""
     fi
@@ -36,31 +82,64 @@ set_variable() {
     local var_name="$1"
     local var_value="$2"
 
+    echo "📝 [DEBUG] Setting variable: $var_name = $var_value" >&2
+    echo "📝 [DEBUG] Environment: $ENVIRONMENT_NAME" >&2
+    echo "📝 [DEBUG] Repository: $REPOSITORY" >&2
+
     # Check if variable exists
-    local existing=$(curl -s \
+    echo "📝 [DEBUG] Checking if variable exists..." >&2
+    local existing=$(curl -s -w "\n%{http_code}" \
         -H "Authorization: Bearer $GITHUB_TOKEN" \
         -H "Accept: application/vnd.github+json" \
         -H "X-GitHub-Api-Version: 2022-11-28" \
-        "https://api.github.com/repos/$REPOSITORY/environments/$ENVIRONMENT_NAME/variables/$var_name" 2>/dev/null)
+        "https://api.github.com/repos/$REPOSITORY/environments/$ENVIRONMENT_NAME/variables/$var_name" 2>&1)
 
-    if echo "$existing" | grep -q '"name"'; then
+    local check_http_code=$(echo "$existing" | tail -n1)
+    local check_body=$(echo "$existing" | head -n -1)
+
+    echo "📝 [DEBUG] Check HTTP Status: $check_http_code" >&2
+    echo "📝 [DEBUG] Check Response body: $check_body" >&2
+
+    if echo "$check_body" | grep -q '"name"'; then
         # Update existing variable
-        curl -s \
+        echo "📝 [DEBUG] Updating existing variable..." >&2
+        local update_url="https://api.github.com/repos/$REPOSITORY/environments/$ENVIRONMENT_NAME/variables/$var_name"
+        echo "📝 [DEBUG] Update URL: $update_url" >&2
+
+        local update_response=$(curl -s -w "\n%{http_code}" \
             -X PATCH \
             -H "Authorization: Bearer $GITHUB_TOKEN" \
             -H "Accept: application/vnd.github+json" \
             -H "X-GitHub-Api-Version: 2022-11-28" \
-            "https://api.github.com/repos/$REPOSITORY/environments/$ENVIRONMENT_NAME/variables/$var_name" \
-            -d "{\"name\":\"$var_name\",\"value\":\"$var_value\"}" >/dev/null
+            -H "Content-Type: application/json" \
+            "$update_url" \
+            -d "{\"name\":\"$var_name\",\"value\":\"$var_value\"}" 2>&1)
+
+        local update_http_code=$(echo "$update_response" | tail -n1)
+        local update_body=$(echo "$update_response" | head -n -1)
+
+        echo "📝 [DEBUG] Update HTTP Status: $update_http_code" >&2
+        echo "📝 [DEBUG] Update Response body: $update_body" >&2
     else
         # Create new variable
-        curl -s \
+        echo "📝 [DEBUG] Creating new variable..." >&2
+        local create_url="https://api.github.com/repos/$REPOSITORY/environments/$ENVIRONMENT_NAME/variables"
+        echo "📝 [DEBUG] Create URL: $create_url" >&2
+
+        local create_response=$(curl -s -w "\n%{http_code}" \
             -X POST \
             -H "Authorization: Bearer $GITHUB_TOKEN" \
             -H "Accept: application/vnd.github+json" \
             -H "X-GitHub-Api-Version: 2022-11-28" \
-            "https://api.github.com/repos/$REPOSITORY/environments/$ENVIRONMENT_NAME/variables" \
-            -d "{\"name\":\"$var_name\",\"value\":\"$var_value\"}" >/dev/null
+            -H "Content-Type: application/json" \
+            "$create_url" \
+            -d "{\"name\":\"$var_name\",\"value\":\"$var_value\"}" 2>&1)
+
+        local create_http_code=$(echo "$create_response" | tail -n1)
+        local create_body=$(echo "$create_response" | head -n -1)
+
+        echo "📝 [DEBUG] Create HTTP Status: $create_http_code" >&2
+        echo "📝 [DEBUG] Create Response body: $create_body" >&2
     fi
 }
 
@@ -74,6 +153,11 @@ case "$OPERATION" in
 
         echo "🔄 Updating deployment versions..."
         echo "New version: $NEW_VERSION"
+
+        # Check if environment exists
+        if ! check_environment; then
+            exit 1
+        fi
 
         # Get current version
         CURRENT_VERSION=$(get_variable "$CURRENT_VAR")
@@ -95,6 +179,11 @@ case "$OPERATION" in
         ;;
 
     "get-previous")
+        # Check if environment exists
+        if ! check_environment; then
+            exit 1
+        fi
+
         PREVIOUS_VERSION=$(get_variable "$PREVIOUS_VAR")
         if [ -n "$PREVIOUS_VERSION" ]; then
             echo "$PREVIOUS_VERSION"
