@@ -38,12 +38,13 @@ get_variable() {
     echo "DEBUG: HTTP code: $http_code" >&2
     echo "DEBUG: Response body: $body" >&2
 
-    if echo "$body" | grep -q '"value"'; then
-        local value=$(echo "$body" | grep -o '"value":"[^"]*"' | cut -d'"' -f4)
+    if [ "$http_code" = "200" ] && echo "$body" | grep -q '"value"'; then
+        # Use sed to extract the value, handling multiline JSON
+        local value=$(echo "$body" | sed -n 's/.*"value": *"\([^"]*\)".*/\1/p')
         echo "DEBUG: Extracted value: '$value'" >&2
         echo "$value"
     else
-        echo "DEBUG: No value found in response" >&2
+        echo "DEBUG: No value found in response or HTTP error" >&2
         echo ""
     fi
 }
