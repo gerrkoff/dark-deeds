@@ -11,12 +11,6 @@ REPOSITORY="$2"
 GITHUB_TOKEN="$3"
 NEW_VERSION="$4"
 
-# Debug output
-echo "DEBUG: Operation: $OPERATION" >&2
-echo "DEBUG: Repository: $REPOSITORY" >&2
-echo "DEBUG: Token length: ${#GITHUB_TOKEN}" >&2
-echo "DEBUG: New version: $NEW_VERSION" >&2
-
 CURRENT_VAR="PROD_VERSION_CURRENT"
 PREVIOUS_VAR="PROD_VERSION_PREVIOUS"
 
@@ -33,18 +27,11 @@ get_variable() {
     local body=$(echo "$response" | head -n -1)
     local http_code=$(echo "$response" | tail -n1)
 
-    # Debug output
-    echo "DEBUG: Getting variable '$var_name'" >&2
-    echo "DEBUG: HTTP code: $http_code" >&2
-    echo "DEBUG: Response body: $body" >&2
-
     if [ "$http_code" = "200" ] && echo "$body" | grep -q '"value"'; then
         # Use sed to extract the value, handling multiline JSON
         local value=$(echo "$body" | sed -n 's/.*"value": *"\([^"]*\)".*/\1/p')
-        echo "DEBUG: Extracted value: '$value'" >&2
         echo "$value"
     else
-        echo "DEBUG: No value found in response or HTTP error" >&2
         echo ""
     fi
 }
@@ -139,6 +126,13 @@ case "$OPERATION" in
 
         if [ -n "$CURRENT_VERSION" ]; then
             echo "Current version: $CURRENT_VERSION"
+
+            # Check if new version is the same as current
+            if [ "$CURRENT_VERSION" = "$NEW_VERSION" ]; then
+                echo "⚠️ New version ($NEW_VERSION) is the same as current version"
+                echo "No update needed - skipping version tracking update"
+                exit 0
+            fi
 
             # Move current to previous
             echo "📦 Moving current version to previous..."
