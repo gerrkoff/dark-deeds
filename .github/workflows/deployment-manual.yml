@@ -22,20 +22,12 @@ jobs:
       - name: Determine deployment version
         id: version
         run: |
-          if [ "${{ inputs.version }}" = "--" ]; then
-            echo "🔄 Rollback requested, getting previous version..."
-            DEPLOY_VERSION=$(./ci/workflows/version-management.sh \
-              "get-previous" \
-              "${{ github.repository }}" \
-              "${{ secrets.GITHUB_TOKEN }}")
-            echo "Rolling back to version: $DEPLOY_VERSION"
-          else
-            echo "🚀 Regular deployment requested..."
-            DEPLOY_VERSION="${{ inputs.version }}"
-            echo "Deploying version: $DEPLOY_VERSION"
-          fi
-
-          echo "version=$DEPLOY_VERSION" >> $GITHUB_OUTPUT
+          OUTPUT=$(./ci/workflows/version-management.sh \
+            "determine" \
+            "${{ github.repository }}" \
+            "${{ secrets.CI_VARS_PAT }}" \
+            "${{ inputs.version }}")
+          echo "$OUTPUT" | tail -1 >> $GITHUB_OUTPUT
 
       # - name: Trigger Drone job
       #   id: operation
