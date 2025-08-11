@@ -118,23 +118,23 @@ case "$OPERATION" in
         echo "🔄 Updating deployment versions..."
         echo "New version: $NEW_VERSION"
 
-        # Get current version
-        CURRENT_VERSION=$(get_variable "$CURRENT_VAR")
-        if [ -n "$CURRENT_VERSION" ]; then
-            echo "Current version: $CURRENT_VERSION"
+        # # Get current version
+        # CURRENT_VERSION=$(get_variable "$CURRENT_VAR")
+        # if [ -n "$CURRENT_VERSION" ]; then
+        #     echo "Current version: $CURRENT_VERSION"
 
-            # Move current to previous
-            echo "📦 Moving current version to previous..."
-            set_variable "$PREVIOUS_VAR" "$CURRENT_VERSION"
-            echo "✅ Previous version set to: $CURRENT_VERSION"
-        else
-            echo "No current version found (first deployment)"
-        fi
+        #     # Move current to previous
+        #     echo "📦 Moving current version to previous..."
+        #     set_variable "$PREVIOUS_VAR" "$CURRENT_VERSION"
+        #     echo "✅ Previous version set to: $CURRENT_VERSION"
+        # else
+        #     echo "No current version found (first deployment)"
+        # fi
 
-        # Set new version as current
-        set_variable "$CURRENT_VAR" "$NEW_VERSION"
-        echo "✅ Current version set to: $NEW_VERSION"
-        echo "🎉 Version tracking updated successfully!"
+        # # Set new version as current
+        # set_variable "$CURRENT_VAR" "$NEW_VERSION"
+        # echo "✅ Current version set to: $NEW_VERSION"
+        # echo "🎉 Version tracking updated successfully!"
         ;;
 
     "get-previous")
