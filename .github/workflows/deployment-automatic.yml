@@ -99,9 +99,6 @@ jobs:
     needs: [get-version, run-e2e-tests]
     if: ${{ success() && github.event_name == 'workflow_run' }}
     environment: prod
-    permissions:
-      contents: read
-      actions: write
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
