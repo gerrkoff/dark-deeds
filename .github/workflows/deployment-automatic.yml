@@ -132,5 +132,5 @@ jobs:
           ./ci/workflows/version-management.sh \
             "update" \
             "${{ github.repository }}" \
-            "${{ secrets.GITHUB_TOKEN }}" \
+            "${{ secrets.CI_VARS_PAT }}" \
             "${{ needs.get-version.outputs.version }}"
