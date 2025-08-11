@@ -4,24 +4,35 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'Version to deploy (use "--" for rollback)'
+        description: 'Version to deploy (use "--" for rollback to previous version)'
         required: true
         type: string
 
 jobs:
-  rollback-production:
+  deploy-or-rollback-production:
     runs-on: ubuntu-latest
     environment: prod
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Determine deployment version
+        id: version
+        run: |
+          OUTPUT=$(./ci/workflows/version-management.sh \
+            "determine" \
+            "${{ github.repository }}" \
+            "${{ secrets.CI_VARS_PAT }}" \
+            "${{ inputs.version }}")
+          echo "$OUTPUT"
+          echo "$OUTPUT" | tail -1 >> $GITHUB_OUTPUT
+
       - name: Trigger Drone job
         id: operation
         run: |
           OUTPUT=$(./ci/workflows/drone-job-trigger.sh \
             "deploy-production" \
-            "${{ inputs.version }}" \
+            "${{ steps.version.outputs.version }}" \
             "${{ github.ref_name }}" \
             "${{ secrets.DRONE_SERVER }}" \
             "${{ secrets.DRONE_TOKEN }}" \
@@ -36,3 +47,11 @@ jobs:
             "${{ secrets.DRONE_SERVER }}" \
             "${{ secrets.DRONE_TOKEN }}" \
             "${{ github.repository }}"
+
+      - name: Update deployment version tracking
+        run: |
+          ./ci/workflows/version-management.sh \
+            "update" \
+            "${{ github.repository }}" \
+            "${{ secrets.CI_VARS_PAT }}" \
+            "${{ steps.version.outputs.version }}"
