@@ -43,7 +43,7 @@ jobs:
         run: |
           OUTPUT=$(./ci/workflows/drone-job-trigger.sh \
             "run-load-tests" \
-            "latest" \
+            "" \
             "${{ github.ref_name }}" \
             "${{ secrets.DRONE_SERVER }}" \
             "${{ secrets.DRONE_TOKEN }}" \
