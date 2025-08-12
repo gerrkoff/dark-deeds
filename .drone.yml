@@ -146,10 +146,10 @@ steps:
       to:
         from_secret: telegram_user_id
       message: |
-        🚀 {{repo.name}} ➜ ${operation}
+        🚀 {{repo.name}} ➜ ${operation} {{#success build.status}}✅{{/success}}{{#failure build.status}}❌{{/failure}}
         📦 Version: ${version}
-        {{#success build.status}}✅ Success{{/success}}{{#failure build.status}}❌ Failed{{/failure}}
         ⏰ {{datetime build.finished "2006-01-02 15:04:05" "UTC"}}
+        🔗 {{build.link}}
 
 depends_on:
   - deploy-staging
