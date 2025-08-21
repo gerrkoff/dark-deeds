@@ -9,6 +9,8 @@ using Xunit.Abstractions;
 
 namespace DarkDeeds.E2eTests;
 
+// TODO: add test for weekly tasks
+
 public class SmokeTests(ITestOutputHelper output) : UserLoginTest
 {
     [Fact]
