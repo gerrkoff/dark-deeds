@@ -18,6 +18,7 @@ export class TaskTransformService {
                 task.type === TaskTypeEnum.Weekly
                     ? TaskTypeEnum.Simple
                     : task.type,
+            date: null,
         }
     }
 

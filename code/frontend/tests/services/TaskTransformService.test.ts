@@ -34,20 +34,21 @@ describe('TaskTransformService', () => {
         expect(r.date).toBe(existingDate)
     })
 
-    test('toNoDate converts weekly to simple', () => {
+    test('toNoDate converts weekly to simple and nulls date', () => {
         const t = base({
             type: TaskTypeEnum.Weekly,
             date: new Date().valueOf(),
         })
         const r = taskTransformService.toNoDate(t)
         expect(r.type).toBe(TaskTypeEnum.Simple)
-        expect(r.date).toBe(t.date)
+        expect(r.date).toBeNull()
     })
 
-    test('toNoDate keeps non-weekly type', () => {
+    test('toNoDate keeps non-weekly type and nulls date', () => {
         const t = base({ type: TaskTypeEnum.Routine })
         const r = taskTransformService.toNoDate(t)
         expect(r.type).toBe(TaskTypeEnum.Routine)
+        expect(r.date).toBeNull()
     })
 
     test('toDated converts weekly to simple and sets date', () => {
