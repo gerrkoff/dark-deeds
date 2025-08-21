@@ -77,7 +77,7 @@ export class TaskConvertService {
 
         text = text.trimLeft()
 
-        if (/\s[?!*]+$/.test(text)) {
+        if (/\s[?!*%]+$/.test(text)) {
             text = result.extractFlags(text)
         }
 
@@ -103,6 +103,9 @@ export class TaskConvertService {
         }
         if (model.type === TaskTypeEnum.Routine) {
             suffix += '*'
+        }
+        if (model.type === TaskTypeEnum.Weekly) {
+            suffix += '%'
         }
         if (model.isProbable) {
             suffix += '?'
@@ -234,23 +237,30 @@ class StringConvertingResult {
             if (x === '!') {
                 if (this.type !== TaskTypeEnum.Simple) {
                     this.type = TaskTypeEnum.Simple
+                    this.isProbable = false
                     return text
                 }
-
                 this.type = TaskTypeEnum.Additional
             } else if (x === '*') {
                 if (this.type !== TaskTypeEnum.Simple) {
                     this.type = TaskTypeEnum.Simple
-                    return text
-                }
-
-                this.type = TaskTypeEnum.Routine
-            } else if (x === '?') {
-                if (this.isProbable) {
                     this.isProbable = false
                     return text
                 }
-
+                this.type = TaskTypeEnum.Routine
+            } else if (x === '%') {
+                if (this.type !== TaskTypeEnum.Simple) {
+                    this.type = TaskTypeEnum.Simple
+                    this.isProbable = false
+                    return text
+                }
+                this.type = TaskTypeEnum.Weekly
+            } else if (x === '?') {
+                if (this.isProbable) {
+                    this.type = TaskTypeEnum.Simple
+                    this.isProbable = false
+                    return text
+                }
                 this.isProbable = true
             }
         }

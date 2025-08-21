@@ -5,4 +5,5 @@ public enum TaskType
     Simple,
     Additional,
     Routine,
+    Weekly,
 }

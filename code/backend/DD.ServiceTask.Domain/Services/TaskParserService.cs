@@ -35,7 +35,7 @@ public class TaskParserService(IDateService dateService) : ITaskParserService
 
     private static string ParseFlags(string task, out bool isProbable, out TaskTypeDto type)
     {
-        var flagsRx = new Regex(@"\s[?!*]+$");
+        var flagsRx = new Regex(@"\s[?!*%]+$");
 
         isProbable = false;
         type = TaskTypeDto.Simple;
@@ -43,27 +43,47 @@ public class TaskParserService(IDateService dateService) : ITaskParserService
         if (!flagsRx.IsMatch(task))
             return task;
 
-        foreach (var f in task.Split(' ').Last())
+        var token = task.Split(' ').Last();
+        foreach (var f in token)
         {
             switch (f)
             {
-                case '?' when isProbable:
-                    isProbable = false;
-                    return task;
                 case '?':
+                    if (isProbable)
+                    {
+                        // Full cancellation: revert type then probability to match ordering convention
+                        type = TaskTypeDto.Simple;
+                        isProbable = false;
+                        return task;
+                    }
                     isProbable = true;
                     break;
-                case '!' when type != TaskTypeDto.Simple:
-                    type = TaskTypeDto.Simple;
-                    return task;
                 case '!':
+                    if (type != TaskTypeDto.Simple)
+                    {
+                        type = TaskTypeDto.Simple;
+                        isProbable = false;
+                        return task;
+                    }
                     type = TaskTypeDto.Additional;
                     break;
-                case '*' when type != TaskTypeDto.Simple:
-                    type = TaskTypeDto.Simple;
-                    return task;
                 case '*':
+                    if (type != TaskTypeDto.Simple)
+                    {
+                        type = TaskTypeDto.Simple;
+                        isProbable = false;
+                        return task;
+                    }
                     type = TaskTypeDto.Routine;
+                    break;
+                case '%':
+                    if (type != TaskTypeDto.Simple)
+                    {
+                        type = TaskTypeDto.Simple;
+                        isProbable = false;
+                        return task;
+                    }
+                    type = TaskTypeDto.Weekly;
                     break;
             }
         }
