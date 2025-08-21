@@ -18,9 +18,15 @@ public class TaskSpecification : UserOwnedSpecification<TaskEntity, ITaskSpecifi
     // important
     public ITaskSpecification FilterActual(DateTime from)
     {
-        Filters.Add(x => (!x.IsCompleted && x.Type != TaskType.Additional && x.Type != TaskType.Routine) ||
-                        !x.Date.HasValue ||
-                        x.Date >= from);
+        var weekEnd = from.AddDays(7);
+        Filters.Add(x =>
+            // 1. Not completed and not expired (for non-weekly) OR weekly inside current week
+            (!x.IsCompleted && x.Type != TaskType.Additional && x.Type != TaskType.Routine &&
+                (x.Type != TaskType.Weekly || (x.Date.HasValue && x.Date.Value >= from && x.Date.Value < weekEnd)))
+            // 2. Or has no date (always included)
+            || !x.Date.HasValue
+            // 3. Or scheduled today or in future (any type) beyond the from boundary
+            || x.Date >= from);
         return this;
     }
 
@@ -35,4 +41,5 @@ public class TaskSpecification : UserOwnedSpecification<TaskEntity, ITaskSpecifi
         Filters.Add(x => x.DeletedAt == null || x.DeletedAt >= deletedAt);
         return this;
     }
+
 }
