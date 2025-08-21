@@ -1,4 +1,4 @@
-import { useRef, memo } from 'react'
+import { useRef, memo, useCallback } from 'react'
 import { Card } from '../../common/components/Card'
 import { DayCardList } from '../../day-card/components/DayCardList'
 import { TaskModel } from '../../tasks/models/TaskModel'
@@ -6,6 +6,8 @@ import { DayCardItemMenu } from '../../day-card/components/DayCardItemMenu'
 import { EditTaskModal } from '../../edit-task/EditTaskModal'
 import { useEditTaskModal } from '../../edit-task/hooks/useEditTaskModal'
 import { useDayCardMenuItem } from '../../day-card/hooks/useDayCardMenuItem'
+import { TaskTypeEnum } from '../../tasks/models/TaskTypeEnum'
+import { dateService } from '../../common/services/DateService'
 
 interface Props {
     tasks: TaskModel[]
@@ -31,6 +33,15 @@ function WeeklySection({ tasks, isDebug, saveTasks }: Props) {
         openTaskEditModal,
     })
 
+    const transformDrop = useCallback(
+        (task: TaskModel) => ({
+            ...task,
+            type: TaskTypeEnum.Weekly,
+            date: task.date ?? dateService.today().valueOf(),
+        }),
+        [],
+    )
+
     return (
         <Card
             elementRef={cardRef}
@@ -38,13 +49,13 @@ function WeeklySection({ tasks, isDebug, saveTasks }: Props) {
             dataTestId="card-weekly"
         >
             <DayCardList
-                date={null}
                 tasks={tasks}
                 isDebug={isDebug}
                 isRoutineShown={true}
                 openedMenuTaskUid={itemMenuContext?.task.uid ?? null}
                 onOpenTaskMenu={openItemMenu}
                 onSaveTasks={saveTasks}
+                onTransformDrop={transformDrop}
             />
 
             {itemMenuContext && (
