@@ -6,7 +6,7 @@ import { DayCardItemMenu } from '../../day-card/components/DayCardItemMenu'
 import { EditTaskModal } from '../../edit-task/EditTaskModal'
 import { useEditTaskModal } from '../../edit-task/hooks/useEditTaskModal'
 import { useDayCardMenuItem } from '../../day-card/hooks/useDayCardMenuItem'
-import { TaskTypeEnum } from '../../tasks/models/TaskTypeEnum'
+import { taskTransformService } from '../../common/services/TaskTransformService'
 
 interface Props {
     tasks: TaskModel[]
@@ -33,13 +33,7 @@ function NoDateSection({ tasks, isDebug, saveTasks }: Props) {
     })
 
     const transformDrop = useCallback(
-        (task: TaskModel) => ({
-            ...task,
-            type:
-                task.type === TaskTypeEnum.Weekly
-                    ? TaskTypeEnum.Simple
-                    : task.type,
-        }),
+        (task: TaskModel) => taskTransformService.toNoDate(task),
         [],
     )
 

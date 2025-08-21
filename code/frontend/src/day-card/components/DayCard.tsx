@@ -12,7 +12,7 @@ import styles from './DayCard.module.css'
 import { useDayCardMenuItem } from '../hooks/useDayCardMenuItem'
 import { useDayCardMenuHeader } from '../hooks/useDayCardMenuHeader'
 import { dateService } from '../../common/services/DateService'
-import { TaskTypeEnum } from '../../tasks/models/TaskTypeEnum'
+import { taskTransformService } from '../../common/services/TaskTransformService'
 
 interface Props {
     dayCardModel: DayCardModel
@@ -63,14 +63,8 @@ function DayCard({
     const isExpired = dayCardModel.date < dateService.today()
 
     const transformDrop = useCallback(
-        (task: TaskModel) => ({
-            ...task,
-            type:
-                task.type === TaskTypeEnum.Weekly
-                    ? TaskTypeEnum.Simple
-                    : task.type,
-            date: dayCardModel.date.valueOf(),
-        }),
+        (task: TaskModel) =>
+            taskTransformService.toDated(task, dayCardModel.date),
         [dayCardModel.date],
     )
 

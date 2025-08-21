@@ -6,8 +6,7 @@ import { DayCardItemMenu } from '../../day-card/components/DayCardItemMenu'
 import { EditTaskModal } from '../../edit-task/EditTaskModal'
 import { useEditTaskModal } from '../../edit-task/hooks/useEditTaskModal'
 import { useDayCardMenuItem } from '../../day-card/hooks/useDayCardMenuItem'
-import { TaskTypeEnum } from '../../tasks/models/TaskTypeEnum'
-import { dateService } from '../../common/services/DateService'
+import { taskTransformService } from '../../common/services/TaskTransformService'
 
 interface Props {
     tasks: TaskModel[]
@@ -34,11 +33,7 @@ function WeeklySection({ tasks, isDebug, saveTasks }: Props) {
     })
 
     const transformDrop = useCallback(
-        (task: TaskModel) => ({
-            ...task,
-            type: TaskTypeEnum.Weekly,
-            date: task.date ?? dateService.today().valueOf(),
-        }),
+        (task: TaskModel) => taskTransformService.toWeekly(task),
         [],
     )
 
