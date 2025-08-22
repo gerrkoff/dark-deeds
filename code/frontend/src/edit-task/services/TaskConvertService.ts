@@ -236,35 +236,36 @@ class StringConvertingResult {
         for (const x of flags.split('')) {
             if (x === '!') {
                 if (this.type !== TaskTypeEnum.Simple) {
-                    this.type = TaskTypeEnum.Simple
-                    this.isProbable = false
+                    this.resetToSimple()
                     return text
                 }
                 this.type = TaskTypeEnum.Additional
             } else if (x === '*') {
                 if (this.type !== TaskTypeEnum.Simple) {
-                    this.type = TaskTypeEnum.Simple
-                    this.isProbable = false
+                    this.resetToSimple()
                     return text
                 }
                 this.type = TaskTypeEnum.Routine
             } else if (x === '%') {
                 if (this.type !== TaskTypeEnum.Simple) {
-                    this.type = TaskTypeEnum.Simple
-                    this.isProbable = false
+                    this.resetToSimple()
                     return text
                 }
                 this.type = TaskTypeEnum.Weekly
             } else if (x === '?') {
                 if (this.isProbable) {
-                    this.type = TaskTypeEnum.Simple
-                    this.isProbable = false
+                    this.resetToSimple()
                     return text
                 }
                 this.isProbable = true
             }
         }
         return text.slice(0, text.length - 1 - flags.length)
+    }
+
+    private resetToSimple() {
+        this.type = TaskTypeEnum.Simple
+        this.isProbable = false
     }
 
     setHasDate() {
