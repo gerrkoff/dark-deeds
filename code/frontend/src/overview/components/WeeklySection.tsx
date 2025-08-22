@@ -14,7 +14,7 @@ interface Props {
     saveTasks: (tasks: TaskModel[]) => void
 }
 
-function NoDateSection({ tasks, isDebug, saveTasks }: Props) {
+function WeeklySection({ tasks, isDebug, saveTasks }: Props) {
     const cardRef = useRef<HTMLDivElement>(null)
 
     const { taskEditModalContext, openTaskEditModal } = useEditTaskModal()
@@ -33,7 +33,7 @@ function NoDateSection({ tasks, isDebug, saveTasks }: Props) {
     })
 
     const transformDrop = useCallback(
-        (task: TaskModel) => taskTransformService.toNoDate(task),
+        (task: TaskModel) => taskTransformService.toWeekly(task),
         [],
     )
 
@@ -41,7 +41,7 @@ function NoDateSection({ tasks, isDebug, saveTasks }: Props) {
         <Card
             elementRef={cardRef}
             style={{ fontSize: '0.8rem', minHeight: '70px' }}
-            dataTestId="card-no-date"
+            dataTestId="card-weekly"
         >
             <DayCardList
                 tasks={tasks}
@@ -73,6 +73,6 @@ function NoDateSection({ tasks, isDebug, saveTasks }: Props) {
     )
 }
 
-const memoized = memo(NoDateSection)
+const memoized = memo(WeeklySection)
 
-export { memoized as NoDateSection }
+export { memoized as WeeklySection }

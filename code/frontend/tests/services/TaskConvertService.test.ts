@@ -301,6 +301,78 @@ test('[convertStringToModel] routine and additional', () => {
     expect(result.time).toBeNull()
 })
 
+// #24
+test('[convertStringToModel] weekly task', () => {
+    const service = createService()
+    const result = service.convertStringToModel('Test %')
+
+    expect(result.title).toBe('Test')
+    expect(result.type).toBe(TaskTypeEnum.Weekly)
+    expect(result.isProbable).toBe(false)
+    expect(result.date).toBeNull()
+    expect(result.time).toBeNull()
+})
+
+// #25
+test('[convertStringToModel] weekly and probable', () => {
+    const service = createService()
+    const result = service.convertStringToModel('Test %?')
+
+    expect(result.title).toBe('Test')
+    expect(result.type).toBe(TaskTypeEnum.Weekly)
+    expect(result.isProbable).toBe(true)
+    expect(result.date).toBeNull()
+    expect(result.time).toBeNull()
+})
+
+// #25.1
+test('[convertStringToModel] probable and weekly', () => {
+    const service = createService()
+    const result = service.convertStringToModel('Test ?%')
+
+    expect(result.title).toBe('Test')
+    expect(result.type).toBe(TaskTypeEnum.Weekly)
+    expect(result.isProbable).toBe(true)
+    expect(result.date).toBeNull()
+    expect(result.time).toBeNull()
+})
+
+// #26
+test('[convertStringToModel] weekly duplicate cancels', () => {
+    const service = createService()
+    const result = service.convertStringToModel('Test %%')
+
+    expect(result.title).toBe('Test %%')
+    expect(result.type).toBe(TaskTypeEnum.Simple)
+    expect(result.isProbable).toBe(false)
+    expect(result.date).toBeNull()
+    expect(result.time).toBeNull()
+})
+
+// #27
+test('[convertStringToModel] weekly and routine conflict', () => {
+    const service = createService()
+    const result = service.convertStringToModel('Test %*')
+
+    expect(result.title).toBe('Test %*')
+    expect(result.type).toBe(TaskTypeEnum.Simple)
+    expect(result.isProbable).toBe(false)
+    expect(result.date).toBeNull()
+    expect(result.time).toBeNull()
+})
+
+// #28
+test('[convertStringToModel] probable weekly probable conflict', () => {
+    const service = createService()
+    const result = service.convertStringToModel('Test ?%?')
+
+    expect(result.title).toBe('Test ?%?')
+    expect(result.type).toBe(TaskTypeEnum.Simple)
+    expect(result.isProbable).toBe(false)
+    expect(result.date).toBeNull()
+    expect(result.time).toBeNull()
+})
+
 test('[convertModelToString] no date', () => {
     const service = createService()
     const result = service.convertModelToString({

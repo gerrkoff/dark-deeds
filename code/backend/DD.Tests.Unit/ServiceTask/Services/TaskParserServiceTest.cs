@@ -376,6 +376,96 @@ public class TaskParserServiceTest : BaseTest
         Assert.Equal(610, result.Time);
     }
 
+    // #24
+    [Fact]
+    public void ParseTask_ReturnWeeklyTask()
+    {
+        var service = new TaskParserService(DateServiceMock());
+
+        var result = service.ParseTask("Test %");
+
+        Assert.Equal("Test", result.Title);
+        Assert.Equal(TaskTypeDto.Weekly, result.Type);
+        Assert.False(result.IsProbable);
+        Assert.Null(result.Date);
+        Assert.Null(result.Time);
+    }
+
+    // #25
+    [Fact]
+    public void ParseTask_WeeklyAndProbable()
+    {
+        var service = new TaskParserService(DateServiceMock());
+
+        var result = service.ParseTask("Test %?");
+
+        Assert.Equal("Test", result.Title);
+        Assert.Equal(TaskTypeDto.Weekly, result.Type);
+        Assert.True(result.IsProbable);
+        Assert.Null(result.Date);
+        Assert.Null(result.Time);
+    }
+
+    // #25.1
+    [Fact]
+    public void ParseTask_ProbableAndWeekly()
+    {
+        var service = new TaskParserService(DateServiceMock());
+
+        var result = service.ParseTask("Test ?%");
+
+        Assert.Equal("Test", result.Title);
+        Assert.Equal(TaskTypeDto.Weekly, result.Type);
+        Assert.True(result.IsProbable);
+        Assert.Null(result.Date);
+        Assert.Null(result.Time);
+    }
+
+    // #26
+    [Fact]
+    public void ParseTask_WeeklyDuplicateCancels()
+    {
+        var service = new TaskParserService(DateServiceMock());
+
+        var result = service.ParseTask("Test %%");
+
+        Assert.Equal("Test %%", result.Title);
+        Assert.Equal(TaskTypeDto.Simple, result.Type);
+        Assert.False(result.IsProbable);
+        Assert.Null(result.Date);
+        Assert.Null(result.Time);
+    }
+
+    // #27
+    [Fact]
+    public void ParseTask_WeeklyAndRoutineConflict()
+    {
+        var service = new TaskParserService(DateServiceMock());
+
+        var result = service.ParseTask("Test %*");
+
+        Assert.Equal("Test %*", result.Title);
+        Assert.Equal(TaskTypeDto.Simple, result.Type);
+        Assert.False(result.IsProbable);
+        Assert.Null(result.Date);
+        Assert.Null(result.Time);
+    }
+
+    // #28
+    [Fact]
+    public void ParseTask_ProbableWeeklyProbableConflict()
+    {
+        var service = new TaskParserService(DateServiceMock());
+
+        var result = service.ParseTask("Test ?%?");
+
+        Assert.Equal("Test ?%?", result.Title);
+        Assert.Equal(TaskTypeDto.Simple, result.Type);
+        Assert.False(result.IsProbable);
+        Assert.Null(result.Date);
+        Assert.Null(result.Time);
+    }
+
     private static IDateService DateServiceMock(int year = 2019, int month = 1, int date = 1)
     {
         var mock = new Mock<IDateService>();

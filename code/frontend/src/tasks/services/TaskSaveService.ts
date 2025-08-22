@@ -1,4 +1,5 @@
 import { TaskModel } from '../models/TaskModel'
+import { TaskTypeEnum } from '../models/TaskTypeEnum'
 
 export class TaskSaveService {
     getTasksToSync(tasks: TaskModel[], updatedTasks: TaskModel[]): TaskModel[] {
@@ -8,29 +9,29 @@ export class TaskSaveService {
             updatedTasks.map(x => [x.uid, this.fixVersion(x)]),
         )
 
+        // Use a unified key for weekly tasks so their ordering is normalized together
         const tasksByDateMap = new Map<number | null, TaskModel[]>()
         const affectedDates = new Set<number | null>()
 
+        const getKey = (task: TaskModel): number | null =>
+            task.type === TaskTypeEnum.Weekly ? -1 : task.date
+
         for (const taskToSync of updatedTasks) {
-            const tasksOnDate = this.getTasksOnDate(
-                tasksByDateMap,
-                taskToSync.date,
-            )
+            const key = getKey(taskToSync)
+            const tasksOnDate = this.getTasksOnDate(tasksByDateMap, key)
 
             tasksOnDate.push(taskToSync)
-            affectedDates.add(taskToSync.date)
+            affectedDates.add(key)
         }
 
         for (const existingTask of tasks) {
-            const tasksOnDate = this.getTasksOnDate(
-                tasksByDateMap,
-                existingTask.date,
-            )
+            const key = getKey(existingTask)
+            const tasksOnDate = this.getTasksOnDate(tasksByDateMap, key)
 
             if (!tasksToSync.has(existingTask.uid)) {
                 tasksOnDate.push(existingTask)
             } else {
-                affectedDates.add(existingTask.date)
+                affectedDates.add(key)
             }
         }
 

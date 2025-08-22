@@ -15,11 +15,17 @@ public interface ITaskSpecification : IEntitySpecification<TaskEntity, ITaskSpec
 
 public class TaskSpecification : UserOwnedSpecification<TaskEntity, ITaskSpecification>, ITaskSpecification
 {
+    // important
     public ITaskSpecification FilterActual(DateTime from)
     {
-        Filters.Add(x => (!x.IsCompleted && x.Type != TaskType.Additional && x.Type != TaskType.Routine) ||
-                         !x.Date.HasValue ||
-                         x.Date >= from);
+        var weekEnd = from.AddDays(7);
+
+        Filters.Add(x =>
+            !x.Date.HasValue ||
+            (x.Type == TaskType.Simple && !x.IsCompleted) ||
+            (x.Type != TaskType.Weekly && x.Date >= from) ||
+            (x.Type == TaskType.Weekly && x.Date >= from && x.Date < weekEnd));
+
         return this;
     }
 

@@ -12,9 +12,9 @@ interface Output {
 }
 
 interface Props {
-    date: Date | null
     tasks: TaskModel[]
     onSaveTasks: (tasks: TaskModel[]) => void
+    onTransformDrop: (task: TaskModel) => TaskModel
     setDraggedTaskUid: (uid: string | null) => void
     setDropzoneHighlightedTaskUid: (uid: DropZoneIdType | null) => void
 }
@@ -22,9 +22,9 @@ interface Props {
 let draggedTaskPayload: TaskModel | null = null
 
 export function useDayCardDndItemContext({
-    date,
     tasks,
     onSaveTasks,
+    onTransformDrop,
     setDraggedTaskUid,
     setDropzoneHighlightedTaskUid,
 }: Props): Output {
@@ -88,18 +88,19 @@ export function useDayCardDndItemContext({
                           ? tasks[tasks.length - 1].order + 0.5
                           : tasks[itemIndex].order - 0.5
 
+                const transformed = onTransformDrop(draggedTaskPayload)
+
                 const updatedItem = {
-                    ...draggedTaskPayload,
+                    ...transformed,
                     order,
-                    date: date ? date.valueOf() : null,
                 }
 
                 onSaveTasks([updatedItem])
             },
         }),
         [
-            date,
             onSaveTasks,
+            onTransformDrop,
             setDraggedTaskUid,
             setDropzoneHighlightedTaskUid,
             tasks,

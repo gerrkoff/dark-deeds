@@ -9,23 +9,23 @@ import { memo, useMemo } from 'react'
 import { dropZoneBottomId } from '../models/DayCardDndContext'
 
 interface Props {
-    date: Date | null
     tasks: TaskModel[]
     openedMenuTaskUid: string | null
     isDebug: boolean
     isRoutineShown: boolean
     onOpenTaskMenu: (e: React.MouseEvent<HTMLElement>, task: TaskModel) => void
     onSaveTasks: (tasks: TaskModel[]) => void
+    onTransformDrop: (task: TaskModel) => TaskModel
 }
 
 function DayCardList({
-    date,
     tasks,
     openedMenuTaskUid,
     isDebug,
     isRoutineShown,
     onOpenTaskMenu,
     onSaveTasks,
+    onTransformDrop,
 }: Props) {
     const shownTasks = useMemo(
         () =>
@@ -41,9 +41,9 @@ function DayCardList({
         handleListDragLeave,
         itemDndContext,
     } = useDayCardDnd({
-        date,
         tasks: shownTasks,
         onSaveTasks,
+        onTransformDrop,
     })
 
     const { listRef, lastItemRef } = useDayCardDndList({

@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useCallback, useRef } from 'react'
 import { DayCardModel } from '../models/DayCardModel'
 import { Card } from '../../common/components/Card'
 import { DayCardHeader } from './DayCardHeader'
@@ -12,6 +12,7 @@ import styles from './DayCard.module.css'
 import { useDayCardMenuItem } from '../hooks/useDayCardMenuItem'
 import { useDayCardMenuHeader } from '../hooks/useDayCardMenuHeader'
 import { dateService } from '../../common/services/DateService'
+import { taskTransformService } from '../../common/services/TaskTransformService'
 
 interface Props {
     dayCardModel: DayCardModel
@@ -61,6 +62,12 @@ function DayCard({
 
     const isExpired = dayCardModel.date < dateService.today()
 
+    const transformDrop = useCallback(
+        (task: TaskModel) =>
+            taskTransformService.toDated(task, dayCardModel.date),
+        [dayCardModel.date],
+    )
+
     return (
         <>
             <Card
@@ -77,13 +84,13 @@ function DayCard({
                 />
                 <hr className="mt-0 mb-0" />
                 <DayCardList
-                    date={dayCardModel.date}
                     tasks={dayCardModel.tasks}
                     isDebug={isDebug}
                     isRoutineShown={isRoutineShown}
                     openedMenuTaskUid={itemMenuContext?.task.uid ?? null}
                     onOpenTaskMenu={openItemMenu}
                     onSaveTasks={saveTasks}
+                    onTransformDrop={transformDrop}
                 />
 
                 {itemMenuContext && (

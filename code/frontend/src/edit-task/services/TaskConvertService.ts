@@ -77,7 +77,7 @@ export class TaskConvertService {
 
         text = text.trimLeft()
 
-        if (/\s[?!*]+$/.test(text)) {
+        if (/\s[?!*%]+$/.test(text)) {
             text = result.extractFlags(text)
         }
 
@@ -103,6 +103,9 @@ export class TaskConvertService {
         }
         if (model.type === TaskTypeEnum.Routine) {
             suffix += '*'
+        }
+        if (model.type === TaskTypeEnum.Weekly) {
+            suffix += '%'
         }
         if (model.isProbable) {
             suffix += '?'
@@ -233,28 +236,36 @@ class StringConvertingResult {
         for (const x of flags.split('')) {
             if (x === '!') {
                 if (this.type !== TaskTypeEnum.Simple) {
-                    this.type = TaskTypeEnum.Simple
+                    this.resetToSimple()
                     return text
                 }
-
                 this.type = TaskTypeEnum.Additional
             } else if (x === '*') {
                 if (this.type !== TaskTypeEnum.Simple) {
-                    this.type = TaskTypeEnum.Simple
+                    this.resetToSimple()
                     return text
                 }
-
                 this.type = TaskTypeEnum.Routine
+            } else if (x === '%') {
+                if (this.type !== TaskTypeEnum.Simple) {
+                    this.resetToSimple()
+                    return text
+                }
+                this.type = TaskTypeEnum.Weekly
             } else if (x === '?') {
                 if (this.isProbable) {
-                    this.isProbable = false
+                    this.resetToSimple()
                     return text
                 }
-
                 this.isProbable = true
             }
         }
         return text.slice(0, text.length - 1 - flags.length)
+    }
+
+    private resetToSimple() {
+        this.type = TaskTypeEnum.Simple
+        this.isProbable = false
     }
 
     setHasDate() {
