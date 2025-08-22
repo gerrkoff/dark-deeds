@@ -10,11 +10,10 @@ using Xunit.Abstractions;
 namespace DarkDeeds.E2eTests;
 
 // TODO: add test for weekly tasks
-
 public class SmokeTests(ITestOutputHelper output) : UserLoginTest
 {
     [Fact]
-    public async void GetBuildVersionTest()
+    public async Task GetBuildVersionTest()
     {
         using var httpClient = CreateHttpClient();
         var url = new Uri("api/be/build-info", UriKind.Relative);
