@@ -58,6 +58,7 @@ public class TaskParserService(IDateService dateService) : ITaskParserService
                     }
                     isProbable = true;
                     break;
+
                 case '!':
                     if (type != TaskTypeDto.Simple)
                     {
@@ -67,6 +68,7 @@ public class TaskParserService(IDateService dateService) : ITaskParserService
                     }
                     type = TaskTypeDto.Additional;
                     break;
+
                 case '*':
                     if (type != TaskTypeDto.Simple)
                     {
@@ -76,6 +78,7 @@ public class TaskParserService(IDateService dateService) : ITaskParserService
                     }
                     type = TaskTypeDto.Routine;
                     break;
+
                 case '%':
                     if (type != TaskTypeDto.Simple)
                     {

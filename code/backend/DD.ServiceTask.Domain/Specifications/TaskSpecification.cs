@@ -41,5 +41,4 @@ public class TaskSpecification : UserOwnedSpecification<TaskEntity, ITaskSpecifi
         Filters.Add(x => x.DeletedAt == null || x.DeletedAt >= deletedAt);
         return this;
     }
-
 }
