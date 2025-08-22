@@ -85,7 +85,7 @@ public static class Setup
 #if DEBUG
                 options.Password.RequiredLength = 3;
 #else
-                    options.Password.RequiredLength = 8;
+                options.Password.RequiredLength = 8;
 #endif
                 options.Password.RequiredUniqueChars = 0;
                 options.Password.RequireDigit = false;
