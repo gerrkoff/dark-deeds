@@ -81,7 +81,7 @@ function textColor(
         return 'text-secondary'
     }
 
-    if (task.type === TaskTypeEnum.Routine) {
+    if (task.type === TaskTypeEnum.Routine || task.type === TaskTypeEnum.Weekly) {
         return 'text-secondary-emphasis'
     }
 
