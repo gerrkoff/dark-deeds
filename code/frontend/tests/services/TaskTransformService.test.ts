@@ -20,18 +20,18 @@ function base(overrides: Partial<TaskModel> = {}): TaskModel {
 }
 
 describe('TaskTransformService', () => {
-    test('toWeekly sets type and date if missing', () => {
+    test('toWeekly sets type and clears date', () => {
         const t = base()
         const r = taskTransformService.toWeekly(t)
         expect(r.type).toBe(TaskTypeEnum.Weekly)
-        expect(r.date).not.toBeNull()
+        expect(r.date).toBeNull()
     })
 
-    test('toWeekly preserves existing date', () => {
+    test('toWeekly clears existing date when converting', () => {
         const existingDate = new Date(2024, 1, 1).valueOf()
         const t = base({ date: existingDate })
         const r = taskTransformService.toWeekly(t)
-        expect(r.date).toBe(existingDate)
+        expect(r.date).toBeNull()
     })
 
     test('toNoDate converts weekly to simple and nulls date', () => {
@@ -51,11 +51,11 @@ describe('TaskTransformService', () => {
         expect(r.date).toBeNull()
     })
 
-    test('toDated converts weekly to simple and sets date', () => {
+    test('toDated keeps weekly type and sets date', () => {
         const t = base({ type: TaskTypeEnum.Weekly })
         const target = new Date(2025, 7, 22)
         const r = taskTransformService.toDated(t, target)
-        expect(r.type).toBe(TaskTypeEnum.Simple)
+        expect(r.type).toBe(TaskTypeEnum.Weekly)
         expect(r.date).toBe(target.valueOf())
     })
 

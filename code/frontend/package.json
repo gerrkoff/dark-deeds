@@ -12,7 +12,8 @@
     "fmt:check": "prettier --check \"**/*.+(js|jsx|json|yml|yaml|scss|md|ts|tsx|css)\"",
     "test": "vitest",
     "test:run": "vitest run",
-    "ci": "npm run fmt:check && npm run lint && npm run build && npm run test:run"
+    "ci": "npm run fmt:check && npm run lint && npm run build && npm run test:run",
+    "mcp-browser-tools": "npx @agentdeskai/browser-tools-server@1.2.0"
   },
   "dependencies": {
     "@microsoft/signalr": "^8.0.7",

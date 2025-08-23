@@ -14,7 +14,9 @@ export class TaskSaveService {
         const affectedDates = new Set<number | null>()
 
         const getKey = (task: TaskModel): number | null =>
-            task.type === TaskTypeEnum.Weekly ? -1 : task.date
+            task.type === TaskTypeEnum.Weekly && task.date === null
+                ? -1
+                : task.date
 
         for (const taskToSync of updatedTasks) {
             const key = getKey(taskToSync)

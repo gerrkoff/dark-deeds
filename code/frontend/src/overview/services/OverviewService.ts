@@ -36,7 +36,9 @@ export class OverviewService {
                 continue
             }
 
-            if (task.type === TaskTypeEnum.Weekly) {
+            // Weekly tasks without a date are shown in weekly section.
+            // Weekly tasks WITH a date should appear only in their day card (not duplicated in weekly section).
+            if (task.type === TaskTypeEnum.Weekly && task.date === null) {
                 model.weekly.push(task)
                 continue
             }
