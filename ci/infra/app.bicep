@@ -109,6 +109,11 @@ resource webApp 'Microsoft.Web/sites@2023-12-01' = {
                     name: 'ASPNETCORE_FORWARDEDHEADERS_ENABLED'
                     value: 'true'
                 }
+                {
+                    // Ensure the app listens on port 80 (default for Azure App Service)
+                    name: 'HTTP_PORTS'
+                    value: '80'
+                }
             ]
             connectionStrings: [
                 {
