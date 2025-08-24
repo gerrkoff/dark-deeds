@@ -1,0 +1,23 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "webAppImageTag": { "value": "" },
+    "stageName": { "value": "prod" },
+    "appServicePlanSku": { "value": "B1" },
+
+    "authIssuer": { "value": "" },
+    "authAudience": { "value": "" },
+    "authKey": { "value": "" },
+    "authLifetime": { "value": 10080 },
+    "monitoringLokiUrl": { "value": "" },
+    "monitoringLokiUser": { "value": "" },
+    "monitoringLokiPass": { "value": "" },
+    "monitoringMetricsEnabled": { "value": true },
+    "connectionStringSharedDb": { "value": "" },
+    "botToken": { "value": "" },
+    "mcpKey": { "value": "" },
+    "enableTestHandlers": { "value": false },
+    "enableTelegramIntegration": { "value": true }
+  }
+}
