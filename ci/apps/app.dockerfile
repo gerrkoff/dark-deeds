@@ -42,7 +42,6 @@ COPY --from=builder-be /build /app/
 COPY --from=builder-fe /code/frontend/dist /app/wwwroot/
 
 ENV ASPNETCORE_ENVIRONMENT=Production
-ENV ASPNETCORE_URLS=http://+:80
 
 EXPOSE 80
 
