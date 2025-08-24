@@ -82,7 +82,7 @@ resource webApp 'Microsoft.Web/sites@2023-12-01' = {
                 }
                 {
                     name: 'Monitoring__MetricsEnabled'
-                    value: monitoringMetricsEnabled ? 'true' : 'false'
+                    value: toLower(string(monitoringMetricsEnabled))
                 }
                 {
                     name: 'Bot'
@@ -94,11 +94,11 @@ resource webApp 'Microsoft.Web/sites@2023-12-01' = {
                 }
                 {
                     name: 'EnableTestHandlers'
-                    value: enableTestHandlers ? 'true' : 'false'
+                    value: toLower(string(enableTestHandlers))
                 }
                 {
                     name: 'EnableTelegramIntegration'
-                    value: enableTelegramIntegration ? 'true' : 'false'
+                    value: toLower(string(enableTelegramIntegration))
                 }
             ]
         }
@@ -111,29 +111,23 @@ resource keyVault 'Microsoft.KeyVault/vaults@2023-07-01' = {
     location: location
     properties: {
         tenantId: subscription().tenantId
+        enableRbacAuthorization: true
         sku: {
             name: 'standard'
             family: 'A'
         }
-        accessPolicies: [] // added after webApp identity known
         enabledForTemplateDeployment: true
     }
 }
 
-// Separate access policy for web app identity (dependsOn ensures identity is created first)
-resource keyVaultAccessPolicy 'Microsoft.KeyVault/vaults/accessPolicies@2023-07-01' = {
-    name: 'add'
-    parent: keyVault
+// RBAC role assignment: allow web app managed identity to read secrets
+resource keyVaultSecretsUserRole 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+    name: guid(keyVault.id, webApp.id, 'KeyVaultSecretsUser')
+    scope: keyVault
     properties: {
-        accessPolicies: [
-            {
-                tenantId: subscription().tenantId
-                objectId: webApp.identity.principalId
-                permissions: {
-                    secrets: [ 'Get', 'List' ]
-                }
-            }
-        ]
+        roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '4633458b-17de-408a-b874-0445c86b69e6') // Key Vault Secrets User
+        principalId: webApp.identity.principalId
+        principalType: 'ServicePrincipal'
     }
 }
 
