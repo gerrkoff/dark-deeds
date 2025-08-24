@@ -104,6 +104,11 @@ resource webApp 'Microsoft.Web/sites@2023-12-01' = {
                     name: 'GERRKOFF_MONITORING_ENV'
                     value: stageName
                 }
+                {
+                    // Enable automatic trust/processing of X-Forwarded-* headers in ASP.NET Core when behind Azure App Service reverse proxy
+                    name: 'ASPNETCORE_FORWARDEDHEADERS_ENABLED'
+                    value: 'true'
+                }
             ]
             connectionStrings: [
                 {
