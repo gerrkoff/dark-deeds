@@ -49,10 +49,6 @@ resource webApp 'Microsoft.Web/sites@2023-12-01' = {
             acrUseManagedIdentityCreds: false
             appSettings: [
                 {
-                    name: 'ConnectionStrings__SharedDb'
-                    value: '@Microsoft.KeyVault(VaultName=${keyVaultName};SecretName=connectionStringSharedDb)'
-                }
-                {
                     name: 'Auth__Issuer'
                     value: authIssuer
                 }
@@ -107,6 +103,13 @@ resource webApp 'Microsoft.Web/sites@2023-12-01' = {
                 {
                     name: 'GERRKOFF_MONITORING_ENV'
                     value: stageName
+                }
+            ]
+            connectionStrings: [
+                {
+                    name: 'sharedDb'
+                    connectionString: '@Microsoft.KeyVault(VaultName=${keyVaultName};SecretName=connectionStringSharedDb)'
+                    type: 'Custom'
                 }
             ]
         }
