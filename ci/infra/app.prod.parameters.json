@@ -5,10 +5,10 @@
     "stageName": { "value": "prod" },
     "appServicePlanSku": { "value": "B1" },
 
-    "authIssuer": { "value": "https://issuer.example" },
-    "authAudience": { "value": "dark-deeds-api" },
+    "authIssuer": { "value": "dark-deeds-prod-issuer" },
+    "authAudience": { "value": "dark-deeds-prod-audience" },
     "authLifetime": { "value": 10080 },
-    "monitoringLokiUrl": { "value": "https://loki.example" },
+    "monitoringLokiUrl": { "value": "https://logs-prod-eu-west-0.grafana.net" },
     "monitoringMetricsEnabled": { "value": true },
     "enableTestHandlers": { "value": false },
     "enableTelegramIntegration": { "value": true }
