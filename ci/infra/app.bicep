@@ -11,6 +11,7 @@ param monitoringLokiUrl string
 param monitoringMetricsEnabled bool
 param enableTestHandlers bool
 param enableTelegramIntegration bool
+param customDomains array = []
 
 var location = resourceGroup().location
 var containerImage = 'ghcr.io/gerrkoff/dark-deeds/app:${webAppImageTag}'
@@ -152,7 +153,21 @@ resource keyVaultSecretsUserRole 'Microsoft.Authorization/roleAssignments@2022-0
     }
 }
 
+// Optional custom domain bindings (requires DNS CNAME/TXT verification beforehand)
+resource hostNameBindings 'Microsoft.Web/sites/hostNameBindings@2023-12-01' = [
+    for domain in customDomains: {
+        parent: webApp
+        name: domain
+        properties: {
+            siteName: webApp.name
+            hostNameType: 'Verified'
+            // To enable HTTPS with existing cert later, add sslState & thumbprint fields here.
+        }
+    }
+]
+
 // Output helpful values
 output webAppHostname string = webApp.properties.defaultHostName
 output webAppId string = webApp.id
 output keyVaultUri string = keyVault.properties.vaultUri
+output customDomainVerificationId string = webApp.properties.customDomainVerificationId

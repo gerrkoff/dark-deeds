@@ -11,6 +11,7 @@
     "monitoringLokiUrl": { "value": "https://logs-prod-eu-west-0.grafana.net" },
     "monitoringMetricsEnabled": { "value": true },
     "enableTestHandlers": { "value": false },
-    "enableTelegramIntegration": { "value": true }
+    "enableTelegramIntegration": { "value": true },
+    "customDomains": { "value": ["az.dark-deeds.com"] }
   }
 }
