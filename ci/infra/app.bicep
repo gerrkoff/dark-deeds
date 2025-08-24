@@ -100,6 +100,14 @@ resource webApp 'Microsoft.Web/sites@2023-12-01' = {
                     name: 'EnableTelegramIntegration'
                     value: toLower(string(enableTelegramIntegration))
                 }
+                {
+                    name: 'GERRKOFF_MONITORING_INST'
+                    value: 'azure'
+                }
+                {
+                    name: 'GERRKOFF_MONITORING_ENV'
+                    value: stageName
+                }
             ]
         }
     }
