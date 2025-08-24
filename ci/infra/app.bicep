@@ -1,32 +1,22 @@
 targetScope = 'resourceGroup'
 
 @allowed(['B1'])
-param appServicePlanSku string = 'B1'
+param appServicePlanSku string
 param webAppImageTag string
-param stageName string = 'prod'
+param stageName string
 param authIssuer string
 param authAudience string
-@secure()
-param authKey string
-param authLifetime int = 10080
+param authLifetime int
 param monitoringLokiUrl string
-param monitoringLokiUser string
-@secure()
-param monitoringLokiPass string
-param monitoringMetricsEnabled bool = true
-@secure()
-param connectionStringSharedDb string
-@secure()
-param botToken string
-@secure()
-param mcpKey string
-param enableTestHandlers bool = false
-param enableTelegramIntegration bool = true
+param monitoringMetricsEnabled bool
+param enableTestHandlers bool
+param enableTelegramIntegration bool
 
 var location = resourceGroup().location
 var containerImage = 'ghcr.io/gerrkoff/dark-deeds/app:${webAppImageTag}'
 var planName = 'dd-${stageName}-plan'
 var webAppName = 'dd-${stageName}-web'
+var keyVaultName = 'dd-${stageName}-kv'
 
 // App Service Plan (Linux)
 resource plan 'Microsoft.Web/serverfarms@2023-12-01' = {
@@ -59,6 +49,10 @@ resource webApp 'Microsoft.Web/sites@2023-12-01' = {
             acrUseManagedIdentityCreds: false
             appSettings: [
                 {
+                    name: 'ConnectionStrings__SharedDb'
+                    value: '@Microsoft.KeyVault(VaultName=${keyVaultName};SecretName=connectionStringSharedDb)'
+                }
+                {
                     name: 'Auth__Issuer'
                     value: authIssuer
                 }
@@ -68,7 +62,7 @@ resource webApp 'Microsoft.Web/sites@2023-12-01' = {
                 }
                 {
                     name: 'Auth__Key'
-                    value: authKey
+                    value: '@Microsoft.KeyVault(VaultName=${keyVaultName};SecretName=authKey)'
                 }
                 {
                     name: 'Auth__Lifetime'
@@ -80,11 +74,11 @@ resource webApp 'Microsoft.Web/sites@2023-12-01' = {
                 }
                 {
                     name: 'Monitoring__LokiUser'
-                    value: monitoringLokiUser
+                    value: '@Microsoft.KeyVault(VaultName=${keyVaultName};SecretName=monitoringLokiUser)'
                 }
                 {
                     name: 'Monitoring__LokiPass'
-                    value: monitoringLokiPass
+                    value: '@Microsoft.KeyVault(VaultName=${keyVaultName};SecretName=monitoringLokiPass)'
                 }
                 {
                     name: 'Monitoring__MetricsEnabled'
@@ -92,11 +86,11 @@ resource webApp 'Microsoft.Web/sites@2023-12-01' = {
                 }
                 {
                     name: 'Bot'
-                    value: botToken
+                    value: '@Microsoft.KeyVault(VaultName=${keyVaultName};SecretName=botToken)'
                 }
                 {
                     name: 'McpKey'
-                    value: mcpKey
+                    value: '@Microsoft.KeyVault(VaultName=${keyVaultName};SecretName=mcpKey)'
                 }
                 {
                     name: 'EnableTestHandlers'
@@ -111,18 +105,39 @@ resource webApp 'Microsoft.Web/sites@2023-12-01' = {
     }
 }
 
-// Connection string configured separately to enable Configuration.GetConnectionString usage
-resource webAppConfig 'Microsoft.Web/sites/config@2023-12-01' = {
-    name: 'connectionstrings'
-    parent: webApp
+// Key Vault for secrets (classic access policy granting web app identity get/list)
+resource keyVault 'Microsoft.KeyVault/vaults@2023-07-01' = {
+    name: keyVaultName
+    location: location
     properties: {
-        sharedDb: {
-            type: 'Custom'
-            value: connectionStringSharedDb
+        tenantId: subscription().tenantId
+        sku: {
+            name: 'standard'
+            family: 'A'
         }
+        accessPolicies: [] // added after webApp identity known
+        enabledForTemplateDeployment: true
+    }
+}
+
+// Separate access policy for web app identity (dependsOn ensures identity is created first)
+resource keyVaultAccessPolicy 'Microsoft.KeyVault/vaults/accessPolicies@2023-07-01' = {
+    name: 'add'
+    parent: keyVault
+    properties: {
+        accessPolicies: [
+            {
+                tenantId: subscription().tenantId
+                objectId: webApp.identity.principalId
+                permissions: {
+                    secrets: [ 'Get', 'List' ]
+                }
+            }
+        ]
     }
 }
 
 // Output helpful values
 output webAppHostname string = webApp.properties.defaultHostName
 output webAppId string = webApp.id
+output keyVaultUri string = keyVault.properties.vaultUri

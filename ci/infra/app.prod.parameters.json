@@ -5,17 +5,11 @@
     "stageName": { "value": "prod" },
     "appServicePlanSku": { "value": "B1" },
 
-    "authIssuer": { "value": "" },
-    "authAudience": { "value": "" },
-    "authKey": { "value": "" },
+    "authIssuer": { "value": "https://issuer.example" },
+    "authAudience": { "value": "dark-deeds-api" },
     "authLifetime": { "value": 10080 },
-    "monitoringLokiUrl": { "value": "" },
-    "monitoringLokiUser": { "value": "" },
-    "monitoringLokiPass": { "value": "" },
+    "monitoringLokiUrl": { "value": "https://loki.example" },
     "monitoringMetricsEnabled": { "value": true },
-    "connectionStringSharedDb": { "value": "" },
-    "botToken": { "value": "" },
-    "mcpKey": { "value": "" },
     "enableTestHandlers": { "value": false },
     "enableTelegramIntegration": { "value": true }
   }
