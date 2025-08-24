@@ -153,16 +153,30 @@ resource keyVaultSecretsUserRole 'Microsoft.Authorization/roleAssignments@2022-0
     }
 }
 
-// Optional custom domain bindings (requires DNS CNAME/TXT verification beforehand)
-resource hostNameBindings 'Microsoft.Web/sites/hostNameBindings@2023-12-01' = [
+// Managed certificates first (may be Pending on first deployment)
+resource managedCertificates 'Microsoft.Web/certificates@2023-12-01' = [
     for domain in customDomains: {
+        name: 'managed-${domain}'
+        location: location
+        properties: {
+            canonicalName: domain
+            serverFarmId: plan.id
+        }
+    }
+]
+
+// Hostname bindings with attempted immediate SSL binding. If cert not yet issued, deployment can fail.
+resource hostNameBindings 'Microsoft.Web/sites/hostNameBindings@2023-12-01' = [
+    for (domain, i) in customDomains: {
         parent: webApp
         name: domain
         properties: {
             siteName: webApp.name
             hostNameType: 'Verified'
-            // To enable HTTPS with existing cert later, add sslState & thumbprint fields here.
+            sslState: 'SniEnabled'
+        thumbprint: managedCertificates[i]!.properties.thumbprint
         }
+        dependsOn: [ managedCertificates ]
     }
 ]
 
