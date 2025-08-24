@@ -85,10 +85,10 @@ public class Startup(IConfiguration configuration)
         app.UseMetrics();
         app.UseExceptionHandler(x => x.Run(new ProblemDetailsExceptionHandler(env.IsProduction()).Handle));
 
-        if (!isAutoForwarded)
-        {
+        // if (!isAutoForwarded)
+        // {
             app.UseForwardedHeaders(new ForwardedHeadersOptions { ForwardedHeaders = ForwardedHeaders.All });
-        }
+        // }
 
         app.UseHsts();
 
