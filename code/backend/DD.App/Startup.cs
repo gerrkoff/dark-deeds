@@ -15,8 +15,7 @@ namespace DD.App;
 
 public class Startup(IConfiguration configuration)
 {
-    private readonly bool isAutoForwarded = string.Equals(Environment.GetEnvironmentVariable("ASPNETCORE_FORWARDEDHEADERS_ENABLED"), "true", StringComparison.OrdinalIgnoreCase);
-
+    // private readonly bool isAutoForwarded = string.Equals(Environment.GetEnvironmentVariable("ASPNETCORE_FORWARDEDHEADERS_ENABLED"), "true", StringComparison.OrdinalIgnoreCase);
     private IConfiguration Configuration { get; } = configuration;
 
     public void ConfigureServices(IServiceCollection services)
@@ -87,9 +86,9 @@ public class Startup(IConfiguration configuration)
 
         // if (!isAutoForwarded)
         // {
-            app.UseForwardedHeaders(new ForwardedHeadersOptions { ForwardedHeaders = ForwardedHeaders.All });
-        // }
+        app.UseForwardedHeaders(new ForwardedHeadersOptions { ForwardedHeaders = ForwardedHeaders.All });
 
+        // }
         app.UseHsts();
 
         if (!env.IsProduction())
