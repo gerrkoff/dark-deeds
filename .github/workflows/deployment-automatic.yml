@@ -103,26 +103,44 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Trigger Drone job
-        id: operation
-        run: |
-          OUTPUT=$(./ci/workflows/drone-job-trigger.sh \
-            "deploy-production" \
-            "${{ needs.get-version.outputs.version }}" \
-            "${{ github.ref_name }}" \
-            "${{ secrets.DRONE_SERVER }}" \
-            "${{ secrets.DRONE_TOKEN }}" \
-            "${{ github.repository }}")
-          echo "$OUTPUT"
-          echo "$OUTPUT" | tail -1 >> $GITHUB_OUTPUT
+      # Original Drone production deployment (disabled)
+      # - name: Trigger Drone job
+      #   id: operation
+      #   run: |
+      #     OUTPUT=$(./ci/workflows/drone-job-trigger.sh \
+      #       "deploy-production" \
+      #       "${{ needs.get-version.outputs.version }}" \
+      #       "${{ github.ref_name }}" \
+      #       "${{ secrets.DRONE_SERVER }}" \
+      #       "${{ secrets.DRONE_TOKEN }}" \
+      #       "${{ github.repository }}")
+      #     echo "$OUTPUT"
+      #     echo "$OUTPUT" | tail -1 >> $GITHUB_OUTPUT
 
-      - name: Wait for Drone job to complete
+      # Original Drone wait step (disabled)
+      # - name: Wait for Drone job to complete
+      #   run: |
+      #     ./ci/workflows/drone-job-wait.sh \
+      #       "${{ steps.operation.outputs.build_number }}" \
+      #       "${{ secrets.DRONE_SERVER }}" \
+      #       "${{ secrets.DRONE_TOKEN }}" \
+      #       "${{ github.repository }}"
+
+      - name: Azure CLI login
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Deploy Bicep template to prod
         run: |
-          ./ci/workflows/drone-job-wait.sh \
-            "${{ steps.operation.outputs.build_number }}" \
-            "${{ secrets.DRONE_SERVER }}" \
-            "${{ secrets.DRONE_TOKEN }}" \
-            "${{ github.repository }}"
+          echo "Deploying version: ${{ needs.get-version.outputs.version }}"
+          az deployment group create \
+            -g dd-prod-rg \
+            -f ci/infra/app.bicep \
+            -p @ci/infra/app.prod.parameters.json \
+            webAppImageTag="${{ needs.get-version.outputs.version }}"
 
       - name: Update deployment version tracking
         run: |
