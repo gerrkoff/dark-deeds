@@ -185,6 +185,3 @@ output webAppHostname string = webApp.properties.defaultHostName
 output webAppId string = webApp.id
 output keyVaultUri string = keyVault.properties.vaultUri
 output customDomainVerificationId string = webApp.properties.customDomainVerificationId
-
-// TODO: dark-deeds.com
-// TODO: actions
