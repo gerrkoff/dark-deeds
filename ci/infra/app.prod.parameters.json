@@ -1,0 +1,17 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "stageName": { "value": "prod" },
+    "appServicePlanSku": { "value": "B1" },
+
+    "authIssuer": { "value": "dark-deeds-prod-issuer" },
+    "authAudience": { "value": "dark-deeds-prod-audience" },
+    "authLifetime": { "value": 10080 },
+    "monitoringLokiUrl": { "value": "https://logs-prod-eu-west-0.grafana.net" },
+    "monitoringMetricsEnabled": { "value": true },
+    "enableTestHandlers": { "value": false },
+    "enableTelegramIntegration": { "value": true },
+    "customDomains": { "value": ["az.dark-deeds.com"] }
+  }
+}

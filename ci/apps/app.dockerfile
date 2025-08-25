@@ -43,4 +43,6 @@ COPY --from=builder-fe /code/frontend/dist /app/wwwroot/
 
 ENV ASPNETCORE_ENVIRONMENT=Production
 
+EXPOSE 80
+
 ENTRYPOINT ["dotnet", "DD.App.dll"]
