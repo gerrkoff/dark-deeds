@@ -61,7 +61,7 @@ public class PreCompressedStaticMiddleware(RequestDelegate next, IWebHostEnviron
 
         var originalPhysical = Path.Combine(webRoot, path.TrimStart('/'));
         string? chosenFile = null;
-        string encoding = string.Empty;
+        var encoding = string.Empty;
 
         if (prefersBrotli)
         {
