@@ -115,6 +115,9 @@ jobs:
             "${{ github.repository }}"
 
   deploy-production-az:
+    permissions:
+      id-token: write   # OIDC only for this job
+      contents: read    # Needed for checkout in this job (explicit due to custom permissions block)
     runs-on: ubuntu-latest
     needs: [get-version, run-e2e-tests]
     if: ${{ success() && github.event_name == 'workflow_run' }}
