@@ -12,7 +12,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
       - name: Deploy staging with latest version
         run: |
           OUTPUT=$(./ci/workflows/drone-job-trigger.sh \
@@ -25,7 +24,6 @@ jobs:
           echo "$OUTPUT"
           echo "$OUTPUT" | tail -1 >> $GITHUB_OUTPUT
         id: deploy-operation
-
       - name: Wait for staging deployment to complete
         run: |
           ./ci/workflows/drone-job-wait.sh \
@@ -33,12 +31,10 @@ jobs:
             "${{ secrets.DRONE_SERVER }}" \
             "${{ secrets.DRONE_TOKEN }}" \
             "${{ github.repository }}"
-
       - name: Wait before running load tests
         run: |
           echo "Waiting 30 seconds before starting load tests..."
           sleep 30
-
       - name: Trigger load tests
         run: |
           OUTPUT=$(./ci/workflows/drone-job-trigger.sh \
@@ -51,7 +47,6 @@ jobs:
           echo "$OUTPUT"
           echo "$OUTPUT" | tail -1 >> $GITHUB_OUTPUT
         id: load-tests-operation
-
       - name: Wait for load tests to complete
         run: |
           ./ci/workflows/drone-job-wait.sh \
