@@ -81,6 +81,7 @@ public class Startup(IConfiguration configuration)
             endpoints.MapClientsCustomRoutes(Configuration);
             endpoints.MapTaskServiceCustomRoutes();
         });
+        app.UseMiddleware<PreCompressedStaticMiddleware>();
         app.UseDefaultFiles();
         app.UseStaticFiles(new StaticFileOptions
         {
