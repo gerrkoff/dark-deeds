@@ -18,11 +18,11 @@ public static class StartupExtensions
         });
         services.Configure<GzipCompressionProviderOptions>(o =>
         {
-            o.Level = CompressionLevel.Fastest;
+            o.Level = CompressionLevel.Optimal;
         });
         services.Configure<BrotliCompressionProviderOptions>(o =>
         {
-            o.Level = CompressionLevel.Fastest;
+            o.Level = CompressionLevel.Optimal;
         });
     }
 
