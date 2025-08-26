@@ -1,6 +1,5 @@
 using System.IO.Compression;
 using DD.App.Dto;
-using DD.App.Middlewares;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.OpenApi.Models;
 
@@ -13,15 +12,18 @@ public static class StartupExtensions
         services.AddResponseCompression(options =>
         {
             options.EnableForHttps = true;
-            options.Providers.Add<GzipCompressionProvider>();
             options.Providers.Add<BrotliCompressionProvider>();
-            options.MimeTypes = ["application/json"]; // other assets pre-compressed
+            options.Providers.Add<GzipCompressionProvider>();
+            options.MimeTypes = ResponseCompressionDefaults.MimeTypes;
         });
         services.Configure<GzipCompressionProviderOptions>(o =>
         {
-            o.Level = CompressionLevel.Fastest; // or Optimal if acceptable CPU tradeoff
+            o.Level = CompressionLevel.Fastest;
         });
-        services.Configure<BrotliCompressionProviderOptions>(o => { o.Level = CompressionLevel.Fastest; });
+        services.Configure<BrotliCompressionProviderOptions>(o =>
+        {
+            o.Level = CompressionLevel.Fastest;
+        });
     }
 
     public static void AddSwagger(this IServiceCollection services)
@@ -68,10 +70,5 @@ public static class StartupExtensions
                 ctx.Context.Response.Headers.Append("Cache-Control", $"public, max-age={maxAge}");
             },
         });
-    }
-
-    public static void UsePreCompressedStatic(this IApplicationBuilder app)
-    {
-        app.UseMiddleware<PreCompressedStaticMiddleware>();
     }
 }
