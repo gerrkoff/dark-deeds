@@ -12,6 +12,6 @@
     "monitoringMetricsEnabled": { "value": true },
     "enableTestHandlers": { "value": false },
     "enableTelegramIntegration": { "value": true },
-    "customDomains": { "value": ["az.dark-deeds.com"] }
+    "customDomains": { "value": ["dark-deeds.com","az.dark-deeds.com"] }
   }
 }
