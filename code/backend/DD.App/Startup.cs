@@ -81,15 +81,8 @@ public class Startup(IConfiguration configuration)
             endpoints.MapClientsCustomRoutes(Configuration);
             endpoints.MapTaskServiceCustomRoutes();
         });
-        app.UseMiddleware<PreCompressedStaticMiddleware>();
+        app.UsePreCompressedStatic();
         app.UseDefaultFiles();
-        app.UseStaticFiles(new StaticFileOptions
-        {
-            OnPrepareResponse = ctx =>
-            {
-                var maxAge = ctx.File.Name.Equals("index.html", StringComparison.Ordinal) ? 300 : 31536000;
-                ctx.Context.Response.Headers.Append("Cache-Control", $"public, max-age={maxAge}");
-            },
-        });
+        app.UseStaticWithNotCachedIndex();
     }
 }

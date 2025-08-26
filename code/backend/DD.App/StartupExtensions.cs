@@ -1,5 +1,6 @@
 using System.IO.Compression;
 using DD.App.Dto;
+using DD.App.Middlewares;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.OpenApi.Models;
 
@@ -55,5 +56,22 @@ public static class StartupExtensions
                 },
             });
         });
+    }
+
+    public static void UseStaticWithNotCachedIndex(this IApplicationBuilder app)
+    {
+        app.UseStaticFiles(new StaticFileOptions
+        {
+            OnPrepareResponse = ctx =>
+            {
+                var maxAge = ctx.File.Name.Equals("index.html", StringComparison.Ordinal) ? 300 : 31536000;
+                ctx.Context.Response.Headers.Append("Cache-Control", $"public, max-age={maxAge}");
+            },
+        });
+    }
+
+    public static void UsePreCompressedStatic(this IApplicationBuilder app)
+    {
+        app.UseMiddleware<PreCompressedStaticMiddleware>();
     }
 }
