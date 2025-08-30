@@ -1,0 +1,44 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/dotnet
+{
+	"name": "C# (.NET)",
+	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
+	"image": "mcr.microsoft.com/devcontainers/dotnet:1-8.0",
+	"features": {
+		"ghcr.io/devcontainers/features/dotnet:2": {
+			"version": "8.0"
+		},
+		"ghcr.io/devcontainers/features/node:1": {
+			"version": "22"
+		}
+	},
+	// Run a quick verification and start required compose services after the container is created.
+	// Note: This command requires Docker to be available inside the devcontainer or on the host
+	// where the devcontainer can access the Docker socket.
+	"postCreateCommand": "dotnet --info && node --version && npm --version && docker compose -f ../dev/docker-compose.yml up -d"
+	// Mount the host Docker socket so docker commands inside the devcontainer can talk to the host Docker.
+	// If you prefer not to mount the socket, remove the 'mounts' entry and run the compose commands from your host.
+	,
+	"mounts": [
+		"source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind"
+	]
+	// Features to add to the dev container. More info: https://containers.dev/features.
+	// "features": {},
+
+	// Use 'forwardPorts' to make a list of ports inside the container available locally.
+	// "forwardPorts": [5000, 5001],
+	// "portsAttributes": {
+	//		"5001": {
+	//			"protocol": "https"
+	//		}
+	// }
+
+	// Use 'postCreateCommand' to run commands after the container is created.
+	// "postCreateCommand": "dotnet restore",
+
+	// Configure tool-specific properties.
+	// "customizations": {},
+
+	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
+	// "remoteUser": "root"
+}

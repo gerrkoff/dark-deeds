@@ -8,6 +8,7 @@ services:
       - MONGO_INITDB_ROOT_PASSWORD=password
     volumes:
       - mongo-db-volume:/data/db
+    restart: unless-stopped
     ports:
       - "27017:27017"
 
@@ -16,6 +17,8 @@ services:
     platform: linux/x86_64
     ports:
       - "4444:4444"
+  restart: unless-stopped
 
 volumes:
   mongo-db-volume:
+    name: dark_deeds_mongo_db_volume

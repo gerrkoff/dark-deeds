@@ -15,7 +15,7 @@ public class BaseTest
 {
     protected static readonly Uri Url = new(Environment.GetEnvironmentVariable("URL") ?? "http://localhost:3000");
     private static readonly Uri BackendUrl = new(Environment.GetEnvironmentVariable("BE_URL") ?? "http://localhost:5000");
-    private static readonly Uri SeleniumGridUrl = new(Environment.GetEnvironmentVariable("SELENIUM_GRID_URL") ?? "http://localhost:4444");
+    private static readonly Uri SeleniumGridUrl = new(Environment.GetEnvironmentVariable("SELENIUM_GRID_URL") ?? "http://test-e2e-chrome:4444");
     private static readonly string ArtifactsPath = Environment.GetEnvironmentVariable("ARTIFACTS_PATH") ?? "artifacts";
     private static readonly bool IsContainer = Environment.GetEnvironmentVariable("CONTAINER") == "true";
     private static readonly Random Random = new();
