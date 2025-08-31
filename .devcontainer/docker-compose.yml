@@ -21,18 +21,18 @@ services:
     # Use "forwardPorts" in **devcontainer.json** to forward an app port locally.
     # (Adding the "ports" property to this file will not forward from a Codespace.)
 
-  # mongo-db:
-  #   image: mongo:4.4
-  #   environment:
-  #     - MONGO_INITDB_ROOT_USERNAME=user
-  #     - MONGO_INITDB_ROOT_PASSWORD=password
-  #   volumes:
-  #     - mongo-db-volume:/data/db
+  mongo-db:
+    image: mongo:4.4
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=user
+      - MONGO_INITDB_ROOT_PASSWORD=password
+    volumes:
+      - mongo-db-volume:/data/db
 
-  # test-e2e-chrome:
-  #   image: selenium/standalone-chrome:127.0-20240813
-  #   platform: linux/x86_64
+  test-e2e-chrome:
+    image: selenium/standalone-chrome:127.0-20240813
+    platform: linux/x86_64
 
-# volumes:
-#   mongo-db-volume:
-#     name: dark_deeds_mongo_db_volume
+volumes:
+  mongo-db-volume:
+    name: dark_deeds_mongo_db_volume
