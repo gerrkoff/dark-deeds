@@ -45,17 +45,21 @@
         "ms-azuretools.vscode-azure-mcp-server",
         "mongodb.mongodb-vscode"
       ]
-    }
-    // "jetbrains": {
-    //   "settings": {
-    //     "com.intellij:app:HttpConfigurable.use_proxy_pac": true
-    //   }
-    // },
-    // // Configure properties specific to VS Code.
+    },
+     "jetbrains": {
+       "settings": {
+         "com.intellij:app:HttpConfigurable.use_proxy_pac": true
+       },
+       "plugins": [
+         "com.github.copilot",
+         "com.intellij.resharper.azure",
+         "com.intellij.resharper.HeapAllocationsViewer"
+       ]
+     }
   },
   "runArgs": [
-    "--network=host",
-    "--name=dd-dev-container"
+    "--network=host"
+    // "--name=dd-dev-container"
   ]
   // "forwardPorts": [3000, 5000],
   // "portsAttributes": {
