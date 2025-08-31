@@ -37,32 +37,24 @@
   },
 
   "customizations": {
+    "vscode": {
+      "settings": {},
+      "extensions": [
+        "eamodio.gitlens",
+        "oderwat.indent-rainbow",
+        "editorconfig.editorconfig",
+        "esbenp.prettier-vscode",
+        "clinyong.vscode-css-modules",
+        "ms-azuretools.vscode-bicep",
+        "ms-azuretools.vscode-azure-mcp-server"
+      ]
+    }
     // "jetbrains": {
     //   "settings": {
     //     "com.intellij:app:HttpConfigurable.use_proxy_pac": true
     //   }
     // },
     // // Configure properties specific to VS Code.
-    // "vscode": {
-    //   // Set *default* container specific settings.json values on container create.
-    //   "settings": {
-    //     "mssql.connections": [
-    //       {
-    //         "server": "localhost,1433",
-    //         "database": "",
-    //         "authenticationType": "SqlLogin",
-    //         "user": "sa",
-    //         "password": "P@ssw0rd",
-    //         "emptyPasswordInput": false,
-    //         "savePassword": false,
-    //         "profileName": "mssql-container"
-    //       }
-    //     ]
-    //   },
-
-    //   // Add the IDs of extensions you want installed when the container is created.
-    //   "extensions": ["ms-dotnettools.csharp", "ms-mssql.mssql"]
-    // }
   },
 
   "forwardPorts": [3000, 5000],
