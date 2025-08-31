@@ -42,7 +42,8 @@
         "esbenp.prettier-vscode",
         "clinyong.vscode-css-modules",
         "ms-azuretools.vscode-bicep",
-        "ms-azuretools.vscode-azure-mcp-server"
+        "ms-azuretools.vscode-azure-mcp-server",
+        "mongodb.mongodb-vscode"
       ]
     }
     // "jetbrains": {
