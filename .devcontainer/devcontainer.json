@@ -7,10 +7,7 @@
   "build": {
     "dockerfile": "dockerfile"
   },
-  // TODO: check this
-  // "runArgs": ["--name", "dark-deeds-container"],
   "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
-
   "features": {
     "ghcr.io/devcontainers/features/git:1": {
       "version": "latest",
@@ -35,7 +32,6 @@
       "version": "latest"
     }
   },
-
   "customizations": {
     "vscode": {
       "settings": {},
@@ -56,16 +52,22 @@
     // },
     // // Configure properties specific to VS Code.
   },
-
-  "forwardPorts": [3000, 5000],
-  "portsAttributes": {
-    "5000": {
-      "protocol": "https"
-    },
-    "3000": {
-      "protocol": "https"
-    }
-  }
+  "runArgs": [
+    "--network=host",
+    "--name=dd-dev-container"
+  ]
+  // "forwardPorts": [3000, 5000],
+  // "portsAttributes": {
+  //   "5000": {
+  //     "protocol": "https"
+  //   },
+  //   "3000": {
+  //     "protocol": "https"
+  //   }
+  // },
+  // "runArgs": [
+  //   "--network=dark-deeds-dev-network"
+  // ],
 
   // "postCreateCommand": "bash .devcontainer/mssql/postCreateCommand.sh 'P@ssw0rd' './bin/Debug/' './.devcontainer/mssql/'",
 
