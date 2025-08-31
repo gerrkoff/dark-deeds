@@ -21,4 +21,3 @@ services:
 
 volumes:
   mongo-db-volume:
-    name: dark_deeds_mongo_db_volume
