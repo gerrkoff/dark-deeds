@@ -1,0 +1,77 @@
+// https://aka.ms/devcontainer.json
+// https://containers.dev/templates.html
+// https://containers.dev/features
+// https://containers.dev/guide/prebuild
+{
+  "name": "dark-deeds",
+  "build": {
+    "dockerfile": "dockerfile"
+  },
+  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+  "features": {
+    "ghcr.io/devcontainers/features/git:1": {
+      "version": "latest",
+      "ppa": "false"
+    },
+    "ghcr.io/devcontainers/features/common-utils:2": {
+      "installZsh": true,
+      "installOhMyZsh": true,
+      "configureZshAsDefaultShell": true
+    },
+    "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {},
+    "ghcr.io/devcontainers/features/dotnet:2": {
+        "version": "8.0"
+    },
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "22.18.0"
+    },
+    "ghcr.io/devcontainers/features/azure-cli:1": {
+      "installBicep": true
+    },
+    "ghcr.io/itsmechlark/features/act:1": {
+      "version": "latest"
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "settings": {},
+      "extensions": [
+        "eamodio.gitlens",
+        "oderwat.indent-rainbow",
+        "editorconfig.editorconfig",
+        "esbenp.prettier-vscode",
+        "clinyong.vscode-css-modules",
+        "ms-azuretools.vscode-bicep",
+        "ms-azuretools.vscode-azure-mcp-server",
+        "mongodb.mongodb-vscode"
+      ]
+    },
+     "jetbrains": {
+       "settings": {
+         "com.intellij:app:HttpConfigurable.use_proxy_pac": true
+       },
+       "plugins": [
+         "com.github.copilot",
+         "com.intellij.resharper.azure",
+         "com.intellij.resharper.HeapAllocationsViewer"
+       ]
+     }
+  },
+  "runArgs": [
+    "--network=host"
+    // "--name=dd-dev-container"
+  ],
+  // "forwardPorts": [3000, 5000],
+  // "portsAttributes": {
+  //   "5000": {
+  //     "protocol": "https"
+  //   },
+  //   "3000": {
+  //     "protocol": "https"
+  //   }
+  // },
+  // "runArgs": [
+  //   "--network=dark-deeds-dev-network"
+  // ],
+  "initializeCommand": "./infra/up.sh"
+}

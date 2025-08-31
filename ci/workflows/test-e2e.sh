@@ -16,6 +16,7 @@ echo "BE_URL: $BE_URL"
 
 echo "----------- Removing previous containers and networks..."
 docker rm -f dd-test-e2e-chrome
+docker rm -f dd-test-e2e
 docker network rm dd-test-e2e-network
 
 echo "----------- Starting Selenium Grid..."

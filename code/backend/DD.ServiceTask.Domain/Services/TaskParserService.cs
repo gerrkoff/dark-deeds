@@ -51,7 +51,9 @@ public class TaskParserService(IDateService dateService) : ITaskParserService
                 case '?':
                     if (isProbable)
                     {
-                        return ResetToSimpleAndReturn(task, ref type, ref isProbable);
+                        type = TaskTypeDto.Simple;
+                        isProbable = false;
+                        return task;
                     }
 
                     isProbable = true;
@@ -60,7 +62,9 @@ public class TaskParserService(IDateService dateService) : ITaskParserService
                 case '!':
                     if (type != TaskTypeDto.Simple)
                     {
-                        return ResetToSimpleAndReturn(task, ref type, ref isProbable);
+                        type = TaskTypeDto.Simple;
+                        isProbable = false;
+                        return task;
                     }
 
                     type = TaskTypeDto.Additional;
@@ -69,7 +73,9 @@ public class TaskParserService(IDateService dateService) : ITaskParserService
                 case '*':
                     if (type != TaskTypeDto.Simple)
                     {
-                        return ResetToSimpleAndReturn(task, ref type, ref isProbable);
+                        type = TaskTypeDto.Simple;
+                        isProbable = false;
+                        return task;
                     }
 
                     type = TaskTypeDto.Routine;
@@ -78,7 +84,9 @@ public class TaskParserService(IDateService dateService) : ITaskParserService
                 case '%':
                     if (type != TaskTypeDto.Simple)
                     {
-                        return ResetToSimpleAndReturn(task, ref type, ref isProbable);
+                        type = TaskTypeDto.Simple;
+                        isProbable = false;
+                        return task;
                     }
 
                     type = TaskTypeDto.Weekly;
@@ -87,13 +95,6 @@ public class TaskParserService(IDateService dateService) : ITaskParserService
         }
 
         return flagsRx.Replace(task, string.Empty);
-    }
-
-    private static string ResetToSimpleAndReturn(string task, ref TaskTypeDto type, ref bool isProbable)
-    {
-        type = TaskTypeDto.Simple;
-        isProbable = false;
-        return task;
     }
 
     private static string ParseTime(string task, out int hour, out int minutes, out bool withTime)
