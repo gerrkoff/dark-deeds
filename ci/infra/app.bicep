@@ -168,17 +168,17 @@ resource managedCertificates 'Microsoft.Web/certificates@2023-12-01' = [
 // Dynamic hostname bindings with sequential creation to avoid conflicts
 @batchSize(1)
 resource hostNameBindings 'Microsoft.Web/sites/hostNameBindings@2023-12-01' = [
-  for (domain, i) in customDomains: {
-    parent: webApp
-    name: domain
-    properties: {
-      siteName: webApp.name
-      hostNameType: 'Verified'
-      sslState: 'SniEnabled'
-      thumbprint: managedCertificates[i].properties.thumbprint
+    for (domain, i) in customDomains: {
+        parent: webApp
+        name: domain
+        properties: {
+        siteName: webApp.name
+        hostNameType: 'Verified'
+        sslState: 'SniEnabled'
+        thumbprint: managedCertificates[i].properties.thumbprint
     }
     dependsOn: [ managedCertificates ]
-  }
+}
 ]
 
 // Output helpful values
