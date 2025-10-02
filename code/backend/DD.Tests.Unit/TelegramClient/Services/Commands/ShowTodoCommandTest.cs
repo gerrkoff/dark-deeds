@@ -1,10 +1,8 @@
-using System.Diagnostics.CodeAnalysis;
 using DD.TelegramClient.Domain.Models.Commands;
 using Xunit;
 
 namespace DD.Tests.Unit.TelegramClient.Services.Commands;
 
-[SuppressMessage("Naming", "CA1707:Identifiers should not contain underscores", Justification = "Tests")]
 public class ShowTodoCommandTest
 {
     [Fact]

@@ -31,7 +31,8 @@ public class TaskServiceNotifierBackgroundService(
     public async Task StopAsync(CancellationToken cancellationToken)
     {
         channelProvider.Complete();
-        if (_backgroundTask != null) await _backgroundTask;
+        if (_backgroundTask != null)
+            await _backgroundTask;
     }
 
     public async Task AddTaskUpdated(TasksUpdatedDto updatedTasks)

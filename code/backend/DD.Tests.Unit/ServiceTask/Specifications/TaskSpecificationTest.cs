@@ -1,4 +1,3 @@
-using System.Diagnostics.CodeAnalysis;
 using DD.ServiceTask.Domain.Entities;
 using DD.ServiceTask.Domain.Entities.Enums;
 using DD.ServiceTask.Domain.Specifications;
@@ -6,7 +5,6 @@ using Xunit;
 
 namespace DD.Tests.Unit.ServiceTask.Specifications;
 
-[SuppressMessage("Naming", "CA1707:Identifiers should not contain underscores", Justification = "Tests")]
 public class TaskSpecificationTest
 {
     [Fact]

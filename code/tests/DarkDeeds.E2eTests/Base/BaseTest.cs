@@ -59,7 +59,6 @@ public class BaseTest
         return testUser;
     }
 
-    [SuppressMessage("Reliability", "CA2000:Dispose objects before losing scope", Justification = "HttpClientHandler is disposed at the end of the tests")]
     protected static HttpClient CreateHttpClient()
     {
         var handler = new HttpClientHandler

@@ -6,7 +6,6 @@ using Xunit;
 namespace DD.Tests.Unit.ServiceTask.Specifications;
 
 [SuppressMessage("ReSharper", "ParameterOnlyUsedForPreconditionCheck.Local", Justification = "Tests")]
-[SuppressMessage("Naming", "CA1707:Identifiers should not contain underscores", Justification = "Tests")]
 public class UserOwnedSpecificationTest
 {
     [Fact]
