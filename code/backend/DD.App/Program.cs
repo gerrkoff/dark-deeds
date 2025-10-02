@@ -10,7 +10,6 @@ public static class Program
     {
         Logging.RunSafe(() => CreateHostBuilder(args).Build().Run(), Meta.Version);
     }
-    
 
     private static IHostBuilder CreateHostBuilder(string[] args)
     {
