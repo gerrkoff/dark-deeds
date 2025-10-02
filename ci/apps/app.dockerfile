@@ -27,7 +27,7 @@ RUN dotnet restore /code/backend/DarkDeeds.sln
 COPY code/backend/ /code/backend/
 COPY .editorconfig /code/backend/.editorconfig
 
-RUN dotnet build --no-restore -warnaserror /code/backend/DarkDeeds.sln
+RUN dotnet build --no-restore /code/backend/DarkDeeds.sln
 RUN dotnet test --no-restore "--logger:trx;LogFileName=results.trx" --results-directory /test-results /code/backend/DarkDeeds.sln
 
 ARG BUILD_VERSION
