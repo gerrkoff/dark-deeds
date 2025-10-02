@@ -2,7 +2,6 @@ import { useCallback } from 'react'
 import { useAppDispatch, useAppSelector } from '../hooks'
 import { overviewTabsExpandedSelector } from '../settings/redux/settings-selectors'
 import { NoDateSection } from './components/NoDateSection'
-import { WeeklySection } from './components/WeeklySection'
 import { OverviewModel } from './models/OverviewModel'
 import { overviewModelSelector, overviewTaskRoutinesSelector } from './redux/overview-selectors'
 import { toggleOverviewTab } from '../settings/redux/settings-slice'
@@ -47,18 +46,11 @@ function Overview() {
             <div>
                 <SectionToggle
                     className="mb-2"
-                    label="No date / Weekly"
+                    label="No date"
                     isInitExpanded={isNoDateExpanded}
                     onToggle={handleNoDateToggle}
                 >
-                    <div className="row g-2">
-                        <div className="col-12 col-md-6">
-                            <NoDateSection tasks={model.noDate} isDebug={isDebugEnabled} saveTasks={saveTasks} />
-                        </div>
-                        <div className="col-12 col-md-6">
-                            <WeeklySection tasks={model.weekly} isDebug={isDebugEnabled} saveTasks={saveTasks} />
-                        </div>
-                    </div>
+                    <NoDateSection tasks={model.noDate} isDebug={isDebugEnabled} saveTasks={saveTasks} />
                 </SectionToggle>
 
                 {model.expired.length > 0 && (

@@ -2,7 +2,6 @@ import { dateService, DateService } from '../../common/services/DateService'
 import { DayCardModel } from '../../day-card/models/DayCardModel'
 import { TaskModel } from '../../tasks/models/TaskModel'
 import { OverviewModel } from '../models/OverviewModel'
-import { TaskTypeEnum } from '../../tasks/models/TaskTypeEnum'
 
 export class OverviewService {
     constructor(private dateService: DateService) {}
@@ -10,7 +9,6 @@ export class OverviewService {
     getModel(tasks: TaskModel[], isCompletedShown: boolean): OverviewModel {
         const model: OverviewModel = {
             noDate: [],
-            weekly: [],
             expired: [],
             current: [],
             future: [],
@@ -29,13 +27,6 @@ export class OverviewService {
 
         for (const task of tasks) {
             if (task.deleted || (!isCompletedShown && task.completed)) {
-                continue
-            }
-
-            // Weekly tasks without a date are shown in weekly section.
-            // Weekly tasks WITH a date should appear only in their day card (not duplicated in weekly section).
-            if (task.type === TaskTypeEnum.Weekly && task.date === null) {
-                model.weekly.push(task)
                 continue
             }
 
@@ -62,7 +53,6 @@ export class OverviewService {
         }
 
         model.noDate.sort((a, b) => a.order - b.order)
-        model.weekly.sort((a, b) => a.order - b.order)
         model.expired.forEach(day => day.tasks.sort((a, b) => a.order - b.order))
         model.current.forEach(day => day.tasks.sort((a, b) => a.order - b.order))
         model.future.forEach(day => day.tasks.sort((a, b) => a.order - b.order))

@@ -18,13 +18,10 @@ public class TaskSpecification : UserOwnedSpecification<TaskEntity, ITaskSpecifi
     // important
     public ITaskSpecification FilterActual(DateTime from)
     {
-        var weekEnd = from.AddDays(7);
-
         Filters.Add(x =>
+            (!x.IsCompleted && x.Type != TaskType.Additional && x.Type != TaskType.Routine && x.Type != TaskType.Weekly) ||
             !x.Date.HasValue ||
-            (x.Type == TaskType.Simple && !x.IsCompleted) ||
-            (x.Type != TaskType.Weekly && x.Date >= from) ||
-            (x.Type == TaskType.Weekly && x.Date >= from && x.Date < weekEnd));
+            x.Date >= from);
 
         return this;
     }
