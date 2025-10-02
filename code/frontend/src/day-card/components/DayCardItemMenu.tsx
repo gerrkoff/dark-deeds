@@ -38,11 +38,7 @@ function DayCardItemMenu({
     const toggleCompletedLabel = task.completed ? 'Uncomplete' : 'Complete'
 
     return (
-        <FloatingPanel
-            position={position}
-            anchorElement={anchorElement}
-            onClose={onClose}
-        >
+        <FloatingPanel position={position} anchorElement={anchorElement} onClose={onClose}>
             <div className="list-group">
                 <button
                     type="button"
@@ -62,12 +58,9 @@ function DayCardItemMenu({
                 </button>
                 <button
                     type="button"
-                    className={clsx(
-                        'list-group-item list-group-item-action d-flex align-items-center',
-                        {
-                            'bg-danger': isDeletePending,
-                        },
-                    )}
+                    className={clsx('list-group-item list-group-item-action d-flex align-items-center', {
+                        'bg-danger': isDeletePending,
+                    })}
                     onClick={deleteTask}
                     data-test-id="btn-delete-item"
                 >

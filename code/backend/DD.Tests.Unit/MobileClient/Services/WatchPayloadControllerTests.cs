@@ -7,7 +7,6 @@ using Xunit;
 
 namespace DD.Tests.Unit.MobileClient.Services;
 
-[SuppressMessage("Naming", "CA1707:Identifiers should not contain underscores", Justification = "Tests")]
 [SuppressMessage("ReSharper", "ParameterOnlyUsedForPreconditionCheck.Local", Justification = "Tests")]
 public class WatchPayloadControllerTests
 {

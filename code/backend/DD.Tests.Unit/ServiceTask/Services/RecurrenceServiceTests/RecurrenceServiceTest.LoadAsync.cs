@@ -1,4 +1,3 @@
-using System.Diagnostics.CodeAnalysis;
 using DD.ServiceTask.Domain.Entities;
 using DD.ServiceTask.Domain.Services;
 using DD.ServiceTask.Domain.Specifications;
@@ -8,7 +7,6 @@ using MocksCreator = DD.Tests.Unit.ServiceTask.Mocks.MocksCreator;
 
 namespace DD.Tests.Unit.ServiceTask.Services.RecurrenceServiceTests;
 
-[SuppressMessage("Naming", "CA1707:Identifiers should not contain underscores", Justification = "Tests")]
 public partial class RecurrenceServiceTest
 {
     private readonly Mock<ISpecificationFactory> _specFactoryMock = new();

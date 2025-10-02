@@ -35,11 +35,7 @@ export function useDayCardDndItemContext({
                 draggedTaskPayload = task
             },
 
-            handleItemDragOver(
-                e: DragEvent,
-                uid: DropZoneIdType,
-                direction: 'above' | 'below',
-            ): void {
+            handleItemDragOver(e: DragEvent, uid: DropZoneIdType, direction: 'above' | 'below'): void {
                 if (!draggedTaskPayload) {
                     return
                 }
@@ -53,27 +49,15 @@ export function useDayCardDndItemContext({
 
                 e.preventDefault()
 
-                setDropzoneHighlightedTaskUid(
-                    itemIndex === tasks.length
-                        ? dropZoneBottomId
-                        : tasks[itemIndex].uid,
-                )
+                setDropzoneHighlightedTaskUid(itemIndex === tasks.length ? dropZoneBottomId : tasks[itemIndex].uid)
             },
 
-            handleItemDrop(
-                e: DragEvent,
-                dropZoneId: DropZoneIdType,
-                direction: 'above' | 'below',
-            ): void {
+            handleItemDrop(e: DragEvent, dropZoneId: DropZoneIdType, direction: 'above' | 'below'): void {
                 if (!draggedTaskPayload) {
                     return
                 }
 
-                const itemIndex = findCorrespondingIndex(
-                    tasks,
-                    dropZoneId,
-                    direction,
-                )
+                const itemIndex = findCorrespondingIndex(tasks, dropZoneId, direction)
 
                 if (!canDrop(tasks, draggedTaskPayload, itemIndex)) {
                     return
@@ -98,13 +82,7 @@ export function useDayCardDndItemContext({
                 onSaveTasks([updatedItem])
             },
         }),
-        [
-            onSaveTasks,
-            onTransformDrop,
-            setDraggedTaskUid,
-            setDropzoneHighlightedTaskUid,
-            tasks,
-        ],
+        [onSaveTasks, onTransformDrop, setDraggedTaskUid, setDropzoneHighlightedTaskUid, tasks],
     )
 
     return { context }
@@ -114,32 +92,21 @@ export function clearDraggedTask(): void {
     draggedTaskPayload = null
 }
 
-function canDrop(
-    tasks: TaskModel[],
-    draggedTask: TaskModel,
-    droppingIndex: number,
-): boolean {
+function canDrop(tasks: TaskModel[], draggedTask: TaskModel, droppingIndex: number): boolean {
     const draggedItemIndex = tasks.findIndex(x => x.uid === draggedTask.uid)
 
     if (draggedItemIndex === -1) {
         return true
     }
 
-    if (
-        droppingIndex === draggedItemIndex ||
-        droppingIndex - draggedItemIndex === 1
-    ) {
+    if (droppingIndex === draggedItemIndex || droppingIndex - draggedItemIndex === 1) {
         return false
     }
 
     return true
 }
 
-function findCorrespondingIndex(
-    tasks: TaskModel[],
-    uid: DropZoneIdType,
-    direction: DropZoneDirectionType,
-): number {
+function findCorrespondingIndex(tasks: TaskModel[], uid: DropZoneIdType, direction: DropZoneDirectionType): number {
     if (uid === dropZoneBottomId) {
         if (direction === 'above') {
             return tasks.length

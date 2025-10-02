@@ -1,4 +1,3 @@
-using System.Diagnostics.CodeAnalysis;
 using DD.ServiceTask.Domain.Services;
 using DD.Shared.Details.Abstractions.Dto;
 using Moq;
@@ -6,7 +5,6 @@ using Xunit;
 
 namespace DD.Tests.Unit.ServiceTask.Services;
 
-[SuppressMessage("Naming", "CA1707:Identifiers should not contain underscores", Justification = "Tests")]
 public class TaskParserServiceTest : BaseTest
 {
     // These tests should be synced with FE TaskConverter.convertStringToModel tests

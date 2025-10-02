@@ -1,12 +1,6 @@
 import * as signalR from '@microsoft/signalr'
-import {
-    baseUrlProvider,
-    BaseUrlProvider,
-} from '../../common/api/BaseUrlProvider'
-import {
-    storageService,
-    StorageService,
-} from '../../common/services/StorageService'
+import { baseUrlProvider, BaseUrlProvider } from '../../common/api/BaseUrlProvider'
+import { storageService, StorageService } from '../../common/services/StorageService'
 import { TaskModel } from '../models/TaskModel'
 import { taskMapper, TaskMapper } from '../services/TaskMapper'
 
@@ -86,9 +80,7 @@ export class TaskHubApi {
     onUpdate(callback: (tasks: TaskModel[]) => void) {
         this.guardConnection(this.connection)
 
-        this.connection.on('update', tasks =>
-            callback(this.mapper.mapToModel(tasks)),
-        )
+        this.connection.on('update', tasks => callback(this.mapper.mapToModel(tasks)))
     }
 
     offUpdate(callback: (tasks: TaskModel[]) => void) {
@@ -109,17 +101,11 @@ export class TaskHubApi {
         this.connection.off('heartbeat', callback)
     }
 
-    private guardConnection(
-        connection: signalR.HubConnection | null,
-    ): asserts connection is signalR.HubConnection {
+    private guardConnection(connection: signalR.HubConnection | null): asserts connection is signalR.HubConnection {
         if (!connection) {
             throw new Error('Hub connection is not initialized')
         }
     }
 }
 
-export const taskHubApi = new TaskHubApi(
-    baseUrlProvider,
-    storageService,
-    taskMapper,
-)
+export const taskHubApi = new TaskHubApi(baseUrlProvider, storageService, taskMapper)

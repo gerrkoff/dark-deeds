@@ -7,11 +7,7 @@ interface Props {
     onDebugEnabledToggle: (isEnabled: boolean) => void
 }
 
-function AppInfoCard({
-    appVersion,
-    isDebugEnabled,
-    onDebugEnabledToggle,
-}: Props) {
+function AppInfoCard({ appVersion, isDebugEnabled, onDebugEnabledToggle }: Props) {
     return (
         <>
             <Card className="mb-2 me-2">
@@ -28,15 +24,10 @@ function AppInfoCard({
                             className="form-check-input"
                             type="checkbox"
                             checked={isDebugEnabled}
-                            onChange={e =>
-                                onDebugEnabledToggle(e.target.checked)
-                            }
+                            onChange={e => onDebugEnabledToggle(e.target.checked)}
                             id="debugEnabledCheckbox"
                         />
-                        <label
-                            className="form-check-label"
-                            htmlFor="debugEnabledCheckbox"
-                        >
+                        <label className="form-check-label" htmlFor="debugEnabledCheckbox">
                             Debug mode
                         </label>
                     </div>

@@ -9,14 +9,7 @@ interface Props {
     children: React.ReactNode
 }
 
-function Card({
-    elementRef,
-    dataTestId,
-    style = {},
-    isDimmed = false,
-    className = '',
-    children,
-}: Props) {
+function Card({ elementRef, dataTestId, style = {}, isDimmed = false, className = '', children }: Props) {
     return (
         <div
             ref={elementRef}

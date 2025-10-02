@@ -68,11 +68,7 @@ function DayCardItem({
     )
 }
 
-function textColor(
-    task: TaskModel,
-    isHighlighted: boolean,
-    isDragging: boolean,
-): string {
+function textColor(task: TaskModel, isHighlighted: boolean, isDragging: boolean): string {
     if (isHighlighted || isDragging) {
         return ''
     }
@@ -81,10 +77,7 @@ function textColor(
         return 'text-secondary'
     }
 
-    if (
-        task.type === TaskTypeEnum.Routine ||
-        task.type === TaskTypeEnum.Weekly
-    ) {
+    if (task.type === TaskTypeEnum.Routine || task.type === TaskTypeEnum.Weekly) {
         return 'text-secondary-emphasis'
     }
 

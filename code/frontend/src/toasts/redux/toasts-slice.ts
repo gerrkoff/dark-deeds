@@ -17,12 +17,9 @@ export const toastsSlice = createSlice({
     reducers: {
         addToast: (state, action: PayloadAction<AddToastModel>) => {
             if (action.payload.category) {
-                const index = state.toasts.findIndex(
-                    x => x.category === action.payload.category,
-                )
+                const index = state.toasts.findIndex(x => x.category === action.payload.category)
                 if (index !== -1) {
-                    state.toasts[index].counter =
-                        state.toasts[index].counter + 1
+                    state.toasts[index].counter = state.toasts[index].counter + 1
                     return
                 }
             }

@@ -3,8 +3,7 @@ import { useAppSelector } from '../../hooks'
 import { localSettingsService } from '../services/LocalSettingsService'
 
 export function useLocalSettingsTracking() {
-    const { isLocalSettingsLoaded, overviewTabsExpanded, isDebugEnabled } =
-        useAppSelector(state => state.settings)
+    const { isLocalSettingsLoaded, overviewTabsExpanded, isDebugEnabled } = useAppSelector(state => state.settings)
 
     useEffect(() => {
         if (!isLocalSettingsLoaded) {

@@ -1,11 +1,9 @@
-using System.Diagnostics.CodeAnalysis;
 using DD.Shared.Details.Abstractions.Dto;
 using DD.Shared.Details.Services;
 using Xunit;
 
 namespace DD.Tests.Unit.SharedDetails.Common;
 
-[SuppressMessage("Naming", "CA1707:Identifiers should not contain underscores", Justification = "Tests")]
 public class TaskPrinterTests
 {
     [Fact]

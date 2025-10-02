@@ -1,9 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import {
-    loadSharedSettings,
-    saveSharedSettings,
-    startTelegram,
-} from './settings-thunk'
+import { loadSharedSettings, saveSharedSettings, startTelegram } from './settings-thunk'
 import { OverviewTabEnum } from '../models/OverviewTabEnum'
 import { SettingsLocalDto } from '../models/SettingsLocalDto'
 
@@ -42,9 +38,7 @@ export const settingsSlice = createSlice({
             state.isLocalSettingsLoaded = true
         },
         toggleOverviewTab: (state, action: PayloadAction<OverviewTabEnum>) => {
-            state.overviewTabsExpanded = state.overviewTabsExpanded.includes(
-                action.payload,
-            )
+            state.overviewTabsExpanded = state.overviewTabsExpanded.includes(action.payload)
                 ? state.overviewTabsExpanded.filter(x => x !== action.payload)
                 : [...state.overviewTabsExpanded, action.payload]
         },
@@ -89,11 +83,6 @@ export const settingsSlice = createSlice({
     },
 })
 
-export const {
-    toggleCompletedShown,
-    loadLocalSettings,
-    toggleOverviewTab,
-    toggleDebugEnabled,
-} = settingsSlice.actions
+export const { toggleCompletedShown, loadLocalSettings, toggleOverviewTab, toggleDebugEnabled } = settingsSlice.actions
 
 export default settingsSlice.reducer

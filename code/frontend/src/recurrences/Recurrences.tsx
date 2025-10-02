@@ -1,10 +1,6 @@
 import { useCallback, useEffect } from 'react'
 import { useAppDispatch, useAppSelector } from '../hooks'
-import {
-    createRecurrences,
-    loadRecurrences,
-    saveRecurrences,
-} from './redux/recurrences-thunk'
+import { createRecurrences, loadRecurrences, saveRecurrences } from './redux/recurrences-thunk'
 import { RecurrenceList } from './components/RecurrenceList'
 import { Card } from '../common/components/Card'
 import { Loader } from '../common/components/Loader'
@@ -20,18 +16,13 @@ import { addToast } from '../toasts/redux/toasts-slice'
 function Recurrences() {
     const dispatch = useAppDispatch()
 
-    const {
-        recurrences,
-        hasChangesPending,
-        isLoadPending,
-        isCreatePending,
-        isSavePending,
-    } = useAppSelector(state => state.recurrences)
+    const { recurrences, hasChangesPending, isLoadPending, isCreatePending, isSavePending } = useAppSelector(
+        state => state.recurrences,
+    )
 
     const recurrenceGroups = useAppSelector(recurrenceGroupsSelector)
 
-    const { editRecurrenceModalContext, openEditRecurrenceModal } =
-        useEditRecurrenceModal()
+    const { editRecurrenceModalContext, openEditRecurrenceModal } = useEditRecurrenceModal()
 
     useEffect(() => {
         dispatch(loadRecurrences())
@@ -41,10 +32,7 @@ function Recurrences() {
         openEditRecurrenceModal(null)
     }, [openEditRecurrenceModal])
 
-    const handleSave = useCallback(
-        () => dispatch(saveRecurrences(recurrences)),
-        [dispatch, recurrences],
-    )
+    const handleSave = useCallback(() => dispatch(saveRecurrences(recurrences)), [dispatch, recurrences])
 
     const handleUpdate = useCallback(
         (recurrence: PlannedRecurrenceModel) => {
@@ -82,10 +70,7 @@ function Recurrences() {
                         </div>
                         <div className="col-md-9">
                             <Card>
-                                <RecurrenceList
-                                    recurrenceGroups={recurrenceGroups}
-                                    onEdit={openEditRecurrenceModal}
-                                />
+                                <RecurrenceList recurrenceGroups={recurrenceGroups} onEdit={openEditRecurrenceModal} />
                             </Card>
                         </div>
                     </div>
@@ -93,10 +78,7 @@ function Recurrences() {
             </div>
 
             {editRecurrenceModalContext && (
-                <EditRecurrenceModal
-                    context={editRecurrenceModalContext}
-                    onUpdate={handleUpdate}
-                />
+                <EditRecurrenceModal context={editRecurrenceModalContext} onUpdate={handleUpdate} />
             )}
         </>
     )

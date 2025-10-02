@@ -1,4 +1,3 @@
-using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 using DD.ServiceTask.Domain.Entities;
 using DD.ServiceTask.Domain.Entities.Enums;
@@ -8,7 +7,6 @@ using Xunit;
 
 namespace DD.Tests.Unit.ServiceTask.Services.RecurrenceCreatorServiceTests;
 
-[SuppressMessage("Naming", "CA1707:Identifiers should not contain underscores", Justification = "Tests")]
 public partial class RecurrenceCreatorServiceTest
 {
     [Fact]
@@ -26,7 +24,7 @@ public partial class RecurrenceCreatorServiceTest
     [Fact]
     public async Task CreateAsync_CreateTaskForRecurrence()
     {
-        var someDate = DateTime.Now.Date;
+        var someDate = DateTime.UtcNow.Date;
         _dateServiceMock.SetupGet(x => x.Now).Returns(someDate);
 
         var service = Service(new PlannedRecurrenceEntity

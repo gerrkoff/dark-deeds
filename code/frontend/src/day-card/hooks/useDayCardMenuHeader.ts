@@ -13,21 +13,13 @@ interface Props {
     openTaskEditModalForDate: (date: Date) => void
 }
 
-export function useDayCardMenuHeader({
-    containerRef,
-    openTaskEditModalForDate,
-}: Props): Output {
-    const [context, setContext] = useState<DayCardHeaderMenuContext | null>(
-        null,
-    )
+export function useDayCardMenuHeader({ containerRef, openTaskEditModalForDate }: Props): Output {
+    const [context, setContext] = useState<DayCardHeaderMenuContext | null>(null)
 
     const openMenu = useCallback(
         (e: React.MouseEvent<HTMLElement>, date: Date) => {
             setContext(old => {
-                if (
-                    !containerRef.current ||
-                    !(e.target instanceof HTMLElement)
-                ) {
+                if (!containerRef.current || !(e.target instanceof HTMLElement)) {
                     return old
                 }
 
@@ -35,12 +27,10 @@ export function useDayCardMenuHeader({
                     return null
                 }
 
-                const containerRect =
-                    containerRef.current.getBoundingClientRect()
+                const containerRect = containerRef.current.getBoundingClientRect()
                 const targetRect = e.target.getBoundingClientRect()
                 const x = targetRect.left - containerRect.left
-                const y =
-                    targetRect.top - containerRect.top + targetRect.height + 4
+                const y = targetRect.top - containerRect.top + targetRect.height + 4
 
                 return {
                     date,

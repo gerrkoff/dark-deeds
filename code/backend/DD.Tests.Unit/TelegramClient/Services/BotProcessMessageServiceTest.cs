@@ -1,4 +1,3 @@
-using System.Diagnostics.CodeAnalysis;
 using DD.Shared.Details.Abstractions.Dto;
 using DD.TelegramClient.Domain.Dto;
 using DD.TelegramClient.Domain.Models.Commands;
@@ -9,7 +8,6 @@ using Xunit;
 
 namespace DD.Tests.Unit.TelegramClient.Services;
 
-[SuppressMessage("Naming", "CA1707:Identifiers should not contain underscores", Justification = "Tests")]
 public class BotProcessMessageServiceTest
 {
     private static UpdateDto UpdateEmpty => new()

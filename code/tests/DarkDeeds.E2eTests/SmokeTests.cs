@@ -115,7 +115,9 @@ public class SmokeTests(ITestOutputHelper output) : UserLoginTest
     [Fact]
     public Task TimezoneTest()
     {
+#pragma warning disable RS0030
         var now = DateTime.Now;
+#pragma warning restore RS0030
         var originalTaskText = RandomizeText("timezone task");
         var taskTextWithDate = $"{now.Month:D2}{now.Day:D2} " + originalTaskText;
         return Test(driver =>

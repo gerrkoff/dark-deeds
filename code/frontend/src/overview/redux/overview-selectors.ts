@@ -8,10 +8,6 @@ export const overviewTaskRoutinesSelector = createSelector(
 )
 
 export const overviewModelSelector = createSelector(
-    [
-        (state: RootState) => state.overview.tasks,
-        (state: RootState) => state.settings.isCompletedShown,
-    ],
-    (tasks, isCompletedShow) =>
-        overviewService.getModel(tasks, isCompletedShow),
+    [(state: RootState) => state.overview.tasks, (state: RootState) => state.settings.isCompletedShown],
+    (tasks, isCompletedShow) => overviewService.getModel(tasks, isCompletedShow),
 )

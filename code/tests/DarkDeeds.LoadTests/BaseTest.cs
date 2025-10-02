@@ -1,4 +1,3 @@
-using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Net;
 using System.Net.Mime;
@@ -14,7 +13,6 @@ using Xunit;
 namespace DarkDeeds.LoadTests;
 
 [Collection("Performance Tests")]
-[SuppressMessage("Design", "CA1063:Implement IDisposable Correctly", Justification = "It's implemented correctly. It's just not needed to call GC.SuppressFinalize(this) in this case.")]
 public abstract class BaseTest : IDisposable
 {
     protected static readonly Uri Url = new($"https://{Domain}");

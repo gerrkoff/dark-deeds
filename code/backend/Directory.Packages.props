@@ -5,9 +5,9 @@
 
   <!-- Centralized package versions -->
   <ItemGroup>
-    <PackageVersion Include="StyleCop.Analyzers" Version="1.2.0-beta.556" />
-    <PackageVersion Include="Swashbuckle.AspNetCore" Version="7.2.0" />
+    <PackageVersion Include="gerrkoff.CodingStandards" Version="0.1.1" />
     <PackageVersion Include="GerrKoff.Monitoring" Version="0.7.1" />
+    <PackageVersion Include="Swashbuckle.AspNetCore" Version="7.2.0" />
     <PackageVersion Include="Microsoft.Extensions.Configuration.Abstractions" Version="9.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.0" />
     <PackageVersion Include="AspNetCore.Identity.Mongo" Version="9.1.0" />
@@ -25,11 +25,7 @@
     <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.18" />
   </ItemGroup>
 
-  <!-- Global analyzer reference (no version here, version defined above) -->
   <ItemGroup>
-    <PackageReference Include="StyleCop.Analyzers">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
+    <PackageReference Include="gerrkoff.CodingStandards" />
   </ItemGroup>
 </Project>

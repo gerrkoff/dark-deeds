@@ -1,10 +1,7 @@
 import { api, Api } from '../../common/api/Api'
 import { PlannedRecurrenceDto } from '../models/PlannedRecurrenceDto'
 import { PlannedRecurrenceModel } from '../models/PlannedRecurrenceModel'
-import {
-    recurrenceMapper,
-    RecurrenceMapper,
-} from '../services/RecurrenceMapper'
+import { recurrenceMapper, RecurrenceMapper } from '../services/RecurrenceMapper'
 
 export class RecurrencesApi {
     constructor(
@@ -13,27 +10,17 @@ export class RecurrencesApi {
     ) {}
 
     public createRecurrences(timezoneOffset: number): Promise<number> {
-        return this.api.post<unknown, number>(
-            `api/task/recurrences/create?timezoneOffset=${timezoneOffset}`,
-            null,
-        )
+        return this.api.post<unknown, number>(`api/task/recurrences/create?timezoneOffset=${timezoneOffset}`, null)
     }
 
     public async loadRecurrences(): Promise<PlannedRecurrenceModel[]> {
-        const result = await this.api.get<PlannedRecurrenceDto[]>(
-            'api/task/recurrences',
-        )
+        const result = await this.api.get<PlannedRecurrenceDto[]>('api/task/recurrences')
         return this.mapper.mapToModel(result)
     }
 
-    public saveRecurrences(
-        recurrences: PlannedRecurrenceModel[],
-    ): Promise<number> {
+    public saveRecurrences(recurrences: PlannedRecurrenceModel[]): Promise<number> {
         const data = this.mapper.mapToDto(recurrences)
-        return this.api.post<PlannedRecurrenceDto[], number>(
-            'api/task/recurrences',
-            data,
-        )
+        return this.api.post<PlannedRecurrenceDto[], number>('api/task/recurrences', data)
     }
 }
 

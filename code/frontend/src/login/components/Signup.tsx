@@ -36,8 +36,7 @@ function Signup({
         signup()
     }
 
-    const isSubmitEnabled =
-        username && password && passwordConfirmation && !isLogInPending
+    const isSubmitEnabled = username && password && passwordConfirmation && !isLogInPending
 
     const isPasswordConfirmationValid = password === passwordConfirmation
 

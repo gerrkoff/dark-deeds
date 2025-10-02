@@ -122,7 +122,8 @@ public class RecurrenceCreatorService(
         }
         catch (Exception e)
         {
-            if (e is not (OverflowException or FormatException)) throw;
+            if (e is not (OverflowException or FormatException))
+                throw;
 
             Log.FailedToParseMonthWorkDay(logger, plannedRecurrence.Uid, plannedRecurrence.EveryMonthDay);
 

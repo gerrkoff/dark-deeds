@@ -1,5 +1,4 @@
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Text.Json;
 using DarkDeeds.E2eTests.Common;
@@ -59,7 +58,6 @@ public class BaseTest
         return testUser;
     }
 
-    [SuppressMessage("Reliability", "CA2000:Dispose objects before losing scope", Justification = "HttpClientHandler is disposed at the end of the tests")]
     protected static HttpClient CreateHttpClient()
     {
         var handler = new HttpClientHandler

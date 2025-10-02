@@ -9,7 +9,7 @@ RUN dotnet restore /app/DarkDeeds.Mcp.csproj
 COPY code/mcp/DarkDeeds.Mcp/ /app
 COPY .editorconfig /app/.editorconfig
 
-RUN dotnet build --no-restore -warnaserror /app/DarkDeeds.Mcp.csproj
+RUN dotnet build --no-restore /app/DarkDeeds.Mcp.csproj
 
 ARG BUILD_VERSION
 

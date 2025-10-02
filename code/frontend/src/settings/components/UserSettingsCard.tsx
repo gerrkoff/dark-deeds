@@ -35,16 +35,11 @@ function UserSettingsCard({
                                     className="form-check-input"
                                     type="checkbox"
                                     checked={isShowCompletedEnabled}
-                                    onChange={e =>
-                                        changeShowCompleted(e.target.checked)
-                                    }
+                                    onChange={e => changeShowCompleted(e.target.checked)}
                                     id="showCompletedCheckbox"
                                     disabled={isSaveSettingsPending}
                                 />
-                                <label
-                                    className="form-check-label"
-                                    htmlFor="showCompletedCheckbox"
-                                >
+                                <label className="form-check-label" htmlFor="showCompletedCheckbox">
                                     Show completed tasks
                                 </label>
                             </div>

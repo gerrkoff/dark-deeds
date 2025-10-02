@@ -6,10 +6,7 @@ import { TelegramIntegrationCard } from './components/TelegramIntegrationCard'
 import { UserInfoCard } from './components/UserInfoCard'
 import { UserSettingsCard } from './components/UserSettingsCard'
 import { saveSharedSettings, startTelegram } from './redux/settings-thunk'
-import {
-    toggleCompletedShown,
-    toggleDebugEnabled,
-} from './redux/settings-slice'
+import { toggleCompletedShown, toggleDebugEnabled } from './redux/settings-slice'
 
 function Settings() {
     const dispatch = useAppDispatch()
@@ -29,10 +26,7 @@ function Settings() {
 
     const { signOut } = useSignOut()
 
-    const handleStartTelegram = useCallback(
-        () => dispatch(startTelegram()),
-        [dispatch],
-    )
+    const handleStartTelegram = useCallback(() => dispatch(startTelegram()), [dispatch])
 
     const handleShowCompletedChange = useCallback(
         (isEnabled: boolean) => {
@@ -73,9 +67,7 @@ function Settings() {
             <div className="col-md-6">
                 <TelegramIntegrationCard
                     generateStartIntegrationLink={handleStartTelegram}
-                    isGenerateStartIntegrationLinkPending={
-                        isStartTelegramPending
-                    }
+                    isGenerateStartIntegrationLinkPending={isStartTelegramPending}
                     startIntegrationLink={startTelegramLink}
                 />
                 <AppInfoCard

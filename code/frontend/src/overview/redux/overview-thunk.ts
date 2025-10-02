@@ -7,12 +7,9 @@ import { taskSaveService } from '../../tasks/services/TaskSaveService'
 import { updateTasks } from './overview-slice'
 import { taskSyncService } from '../../tasks/services/TaskSyncService'
 
-export const reloadOverviewTasks = createAsyncThunk(
-    'overview/reloadTasks',
-    (): Promise<TaskModel[]> => {
-        return taskApi.loadTasks(dateService.monday(dateService.today()))
-    },
-)
+export const reloadOverviewTasks = createAsyncThunk('overview/reloadTasks', (): Promise<TaskModel[]> => {
+    return taskApi.loadTasks(dateService.monday(dateService.today()))
+})
 
 export const updateAndSyncTasks =
     (tasks: TaskModel[]): AppThunk =>

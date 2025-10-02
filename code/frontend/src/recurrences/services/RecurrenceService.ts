@@ -37,20 +37,12 @@ export class RecurrenceService {
 
     private printRepeatativePart(recurrence: PlannedRecurrenceModel): string {
         // Monthly
-        if (
-            recurrence.everyMonthDay !== null &&
-            recurrence.everyNthDay === null &&
-            recurrence.everyWeekday === null
-        ) {
+        if (recurrence.everyMonthDay !== null && recurrence.everyNthDay === null && recurrence.everyWeekday === null) {
             return `monthly on ${this.printMonthDays(recurrence.everyMonthDay)}`
         }
 
         // Weekly
-        if (
-            recurrence.everyWeekday !== null &&
-            recurrence.everyNthDay === null &&
-            recurrence.everyMonthDay === null
-        ) {
+        if (recurrence.everyWeekday !== null && recurrence.everyNthDay === null && recurrence.everyMonthDay === null) {
             const weekdayList = this.evalWeekdayList(recurrence.everyWeekday)
 
             if (
@@ -68,11 +60,7 @@ export class RecurrenceService {
         }
 
         // Daily
-        if (
-            recurrence.everyNthDay === 1 &&
-            recurrence.everyMonthDay === null &&
-            recurrence.everyWeekday === null
-        ) {
+        if (recurrence.everyNthDay === 1 && recurrence.everyMonthDay === null && recurrence.everyWeekday === null) {
             return `daily`
         }
 
@@ -80,24 +68,16 @@ export class RecurrenceService {
         if (recurrence.everyNthDay !== null) {
             result += this.printNthDays(recurrence.everyNthDay)
 
-            if (
-                recurrence.everyMonthDay !== null ||
-                recurrence.everyWeekday !== null
-            ) {
+            if (recurrence.everyMonthDay !== null || recurrence.everyWeekday !== null) {
                 result += ' '
             }
         }
 
-        if (
-            recurrence.everyMonthDay !== null ||
-            recurrence.everyWeekday !== null
-        ) {
+        if (recurrence.everyMonthDay !== null || recurrence.everyWeekday !== null) {
             result += 'on '
 
             if (recurrence.everyWeekday !== null) {
-                const weekdayList = this.evalWeekdayList(
-                    recurrence.everyWeekday,
-                )
+                const weekdayList = this.evalWeekdayList(recurrence.everyWeekday)
                 result += this.printWeekDays(weekdayList)
 
                 if (recurrence.everyMonthDay !== null) {

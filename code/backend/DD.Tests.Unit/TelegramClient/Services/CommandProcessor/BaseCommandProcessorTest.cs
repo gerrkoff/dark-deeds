@@ -1,4 +1,3 @@
-using System.Diagnostics.CodeAnalysis;
 using DD.TelegramClient.Domain.Models.Commands;
 using DD.TelegramClient.Domain.Services;
 using DD.TelegramClient.Domain.Services.CommandProcessor;
@@ -8,7 +7,6 @@ using Xunit;
 
 namespace DD.Tests.Unit.TelegramClient.Services.CommandProcessor;
 
-[SuppressMessage("Naming", "CA1707:Identifiers should not contain underscores", Justification = "Tests")]
 public class BaseCommandProcessorTest
 {
     [Fact]

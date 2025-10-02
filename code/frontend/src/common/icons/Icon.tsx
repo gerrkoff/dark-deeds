@@ -10,14 +10,7 @@ interface Props extends IconProps {
     children: React.ReactNode
 }
 
-function Icon({
-    children,
-    className = '',
-    size = 16,
-    style = {},
-    dataTestId,
-    viewBox = '0 0 16 16',
-}: Props) {
+function Icon({ children, className = '', size = 16, style = {}, dataTestId, viewBox = '0 0 16 16' }: Props) {
     return (
         <svg
             xmlns="http://www.w3.org/2000/svg"

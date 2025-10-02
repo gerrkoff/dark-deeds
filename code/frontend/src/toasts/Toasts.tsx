@@ -16,10 +16,7 @@ function Toasts() {
     )
 
     return (
-        <div
-            className="position-fixed top-0 end-0 p-3 toast-container"
-            style={{ zIndex: 11 }}
-        >
+        <div className="position-fixed top-0 end-0 p-3 toast-container" style={{ zIndex: 11 }}>
             {toasts.map(x => (
                 <Toast key={x.id} toast={x} onClose={onToastClose} />
             ))}

@@ -3,12 +3,9 @@ import { PlannedRecurrenceModel } from '../models/PlannedRecurrenceModel'
 import { recurrencesApi } from '../api/RecurrencesApi'
 import { dateService } from '../../common/services/DateService'
 
-export const loadRecurrences = createAsyncThunk(
-    'recurrences/load',
-    async (): Promise<PlannedRecurrenceModel[]> => {
-        return await recurrencesApi.loadRecurrences()
-    },
-)
+export const loadRecurrences = createAsyncThunk('recurrences/load', async (): Promise<PlannedRecurrenceModel[]> => {
+    return await recurrencesApi.loadRecurrences()
+})
 
 export const saveRecurrences = createAsyncThunk(
     'recurrences/save',
@@ -17,11 +14,6 @@ export const saveRecurrences = createAsyncThunk(
     },
 )
 
-export const createRecurrences = createAsyncThunk(
-    'recurrences/create',
-    async (): Promise<number> => {
-        return await recurrencesApi.createRecurrences(
-            dateService.getTimezoneOffset(),
-        )
-    },
-)
+export const createRecurrences = createAsyncThunk('recurrences/create', async (): Promise<number> => {
+    return await recurrencesApi.createRecurrences(dateService.getTimezoneOffset())
+})

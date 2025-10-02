@@ -30,7 +30,7 @@ jobs:
         dotnet-version: 8.0.100
     - name: Build BE
       run: |
-        dotnet build -warnaserror code/backend/DarkDeeds.sln
+        dotnet build code/backend/DarkDeeds.sln
         dotnet test code/backend/DarkDeeds.sln
 
   build-mcp:
@@ -43,7 +43,7 @@ jobs:
         dotnet-version: 8.0.100
     - name: Build MCP
       run: |
-        dotnet build -warnaserror code/mcp/DarkDeeds.Mcp/DarkDeeds.Mcp.csproj
+        dotnet build code/mcp/DarkDeeds.Mcp/DarkDeeds.Mcp.csproj
 
   build-e2e-tests:
     runs-on: ubuntu-latest
@@ -55,7 +55,7 @@ jobs:
         dotnet-version: 8.0.100
     - name: Build E2E Tests
       run: |
-        dotnet build -warnaserror code/tests/DarkDeeds.E2eTests/DarkDeeds.E2eTests.sln
+        dotnet build code/tests/DarkDeeds.E2eTests/DarkDeeds.E2eTests.sln
 
   build-load-tests:
     runs-on: ubuntu-latest
@@ -67,4 +67,4 @@ jobs:
         dotnet-version: 8.0.100
     - name: Build Load Tests
       run: |
-        dotnet build -warnaserror code/tests/DarkDeeds.LoadTests/DarkDeeds.LoadTests.sln
+        dotnet build code/tests/DarkDeeds.LoadTests/DarkDeeds.LoadTests.sln

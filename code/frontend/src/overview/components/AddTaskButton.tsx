@@ -49,12 +49,7 @@ function AddTaskButton({ saveTasks }: Props) {
                 </button>
             </div>
 
-            {taskEditModalContext && (
-                <EditTaskModal
-                    context={taskEditModalContext}
-                    onSave={saveTasks}
-                />
-            )}
+            {taskEditModalContext && <EditTaskModal context={taskEditModalContext} onSave={saveTasks} />}
         </>
     )
 }

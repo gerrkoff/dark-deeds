@@ -1,15 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-    <AnalysisLevel>latest-all</AnalysisLevel>
-    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <NoWarn>CA1305;CA1024</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="gerrkoff.CodingStandards" Version="0.1.1" />
     <PackageReference Include="Selenium.WebDriver.ChromeDriver" Version="130.0.6723.9100" />
     <PackageReference Include="System.Security.Permissions" Version="4.6.0" />
     <PackageReference Include="xunit" Version="2.4.1" />
@@ -17,10 +13,6 @@
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.3.0" />
     <PackageReference Include="Selenium.Support" Version="3.141.0" />
     <PackageReference Include="Selenium.WebDriver" Version="3.141.0" />
-    <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.556">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
   </ItemGroup>
 
 </Project>

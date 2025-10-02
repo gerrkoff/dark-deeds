@@ -25,20 +25,14 @@ function EditTaskModal({ context, onSave }: Props) {
         }
     }, [context.task, context.date])
 
-    const editModel = useMemo(
-        () => taskConvertService.convertStringToModel(task),
-        [task],
-    )
+    const editModel = useMemo(() => taskConvertService.convertStringToModel(task), [task])
 
     const handleSave = useCallback(() => {
         setTask('')
         if (editModel !== null) {
             onSave([
                 context.task
-                    ? taskConvertService.mergeTaskWithModel(
-                          editModel,
-                          context.task,
-                      )
+                    ? taskConvertService.mergeTaskWithModel(editModel, context.task)
                     : taskConvertService.createTaskFromModel(editModel),
             ])
             close()
