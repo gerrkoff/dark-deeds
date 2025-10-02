@@ -5,18 +5,14 @@ export class TaskSaveService {
     getTasksToSync(tasks: TaskModel[], updatedTasks: TaskModel[]): TaskModel[] {
         this.updateTasksMap(tasks)
 
-        const tasksToSync = new Map<string, TaskModel>(
-            updatedTasks.map(x => [x.uid, this.fixVersion(x)]),
-        )
+        const tasksToSync = new Map<string, TaskModel>(updatedTasks.map(x => [x.uid, this.fixVersion(x)]))
 
         // Use a unified key for weekly tasks so their ordering is normalized together
         const tasksByDateMap = new Map<number | null, TaskModel[]>()
         const affectedDates = new Set<number | null>()
 
         const getKey = (task: TaskModel): number | null =>
-            task.type === TaskTypeEnum.Weekly && task.date === null
-                ? -1
-                : task.date
+            task.type === TaskTypeEnum.Weekly && task.date === null ? -1 : task.date
 
         for (const taskToSync of updatedTasks) {
             const key = getKey(taskToSync)
@@ -65,10 +61,7 @@ export class TaskSaveService {
         return [...tasksToSync.values()]
     }
 
-    private getTasksOnDate(
-        tasksByDate: Map<number | null, TaskModel[]>,
-        date: number | null,
-    ): TaskModel[] {
+    private getTasksOnDate(tasksByDate: Map<number | null, TaskModel[]>, date: number | null): TaskModel[] {
         if (!tasksByDate.has(date)) {
             tasksByDate.set(date, [])
         }
@@ -91,9 +84,7 @@ export class TaskSaveService {
         }
 
         this.lastTasks = tasks
-        this.lastTasksMap = new Map<string, TaskModel>(
-            tasks.map(x => [x.uid, x]),
-        )
+        this.lastTasksMap = new Map<string, TaskModel>(tasks.map(x => [x.uid, x]))
     }
 
     private fixVersion(task: TaskModel): TaskModel {

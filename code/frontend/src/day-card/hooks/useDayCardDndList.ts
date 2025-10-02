@@ -1,8 +1,5 @@
 import { useEffect, useRef } from 'react'
-import {
-    DayCardItemDndContext,
-    dropZoneBottomId,
-} from '../models/DayCardDndContext'
+import { DayCardItemDndContext, dropZoneBottomId } from '../models/DayCardDndContext'
 
 interface Output {
     listRef: React.RefObject<HTMLUListElement>
@@ -14,10 +11,7 @@ interface Props {
     itemDndContext: DayCardItemDndContext
 }
 
-export function useDayCardDndList({
-    handleListDragLeave,
-    itemDndContext,
-}: Props): Output {
+export function useDayCardDndList({ handleListDragLeave, itemDndContext }: Props): Output {
     const listRef = useRef<HTMLUListElement>(null)
     const lastItemRef = useRef<HTMLLIElement>(null)
 

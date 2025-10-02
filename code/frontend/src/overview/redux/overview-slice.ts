@@ -48,9 +48,7 @@ export const overviewSlice = createSlice({
             }
         },
         syncTasks: (state, action: PayloadAction<TasksSyncModel>) => {
-            const taskIndexMap = new Map<string, number>(
-                state.tasks.map((x, i) => [x.uid, i]),
-            )
+            const taskIndexMap = new Map<string, number>(state.tasks.map((x, i) => [x.uid, i]))
 
             for (const task of action.payload.tasks) {
                 const index = taskIndexMap.get(task.uid) ?? -1
@@ -120,7 +118,6 @@ export const overviewSlice = createSlice({
     },
 })
 
-export const { updateTasks, syncTasks, toggleRoutineTaskDate, cleanup } =
-    overviewSlice.actions
+export const { updateTasks, syncTasks, toggleRoutineTaskDate, cleanup } = overviewSlice.actions
 
 export default overviewSlice.reducer

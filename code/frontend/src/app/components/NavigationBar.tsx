@@ -10,11 +10,7 @@ function NavigationBar({ applicationTab, switchTo }: Props) {
     return (
         <nav className="navbar navbar-expand-sm fixed-bottom bg-dark-subtle">
             <div className="container-fluid">
-                <a
-                    className="navbar-brand"
-                    href="#"
-                    onClick={() => switchTo('overview')}
-                >
+                <a className="navbar-brand" href="#" onClick={() => switchTo('overview')}>
                     Home
                 </a>
                 <button

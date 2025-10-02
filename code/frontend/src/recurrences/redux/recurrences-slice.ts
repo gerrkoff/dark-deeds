@@ -1,10 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { PlannedRecurrenceModel } from '../models/PlannedRecurrenceModel'
-import {
-    createRecurrences,
-    loadRecurrences,
-    saveRecurrences,
-} from './recurrences-thunk'
+import { createRecurrences, loadRecurrences, saveRecurrences } from './recurrences-thunk'
 import { equals } from '../../common/utils/equals'
 
 export interface RecurrencesState {
@@ -27,18 +23,11 @@ export const recurrencesSlice = createSlice({
     name: 'recurrences',
     initialState,
     reducers: {
-        updateRecurrences: (
-            state,
-            action: PayloadAction<PlannedRecurrenceModel[]>,
-        ) => {
+        updateRecurrences: (state, action: PayloadAction<PlannedRecurrenceModel[]>) => {
             for (const item of action.payload) {
-                const index = state.recurrences.findIndex(
-                    t => t.uid === item.uid,
-                )
+                const index = state.recurrences.findIndex(t => t.uid === item.uid)
                 if (index !== -1) {
-                    state.hasChangesPending =
-                        state.hasChangesPending ||
-                        !equals(state.recurrences[index], item)
+                    state.hasChangesPending = state.hasChangesPending || !equals(state.recurrences[index], item)
                     state.recurrences[index] = {
                         ...item,
                     }

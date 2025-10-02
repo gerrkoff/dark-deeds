@@ -1,8 +1,5 @@
 import { useEffect, useRef } from 'react'
-import {
-    DayCardItemDndContext,
-    DropZoneDirectionType,
-} from '../models/DayCardDndContext'
+import { DayCardItemDndContext, DropZoneDirectionType } from '../models/DayCardDndContext'
 import { TaskModel } from '../../tasks/models/TaskModel'
 
 interface Output {
@@ -76,10 +73,7 @@ export function useDayCardDndItem({ task, itemDndContext }: Props): Output {
     }
 }
 
-function getDirection(
-    e: DragEvent,
-    element: HTMLElement,
-): DropZoneDirectionType {
+function getDirection(e: DragEvent, element: HTMLElement): DropZoneDirectionType {
     const rect = element.getBoundingClientRect()
     return e.clientY - rect.top < rect.height / 2 ? 'above' : 'below'
 }

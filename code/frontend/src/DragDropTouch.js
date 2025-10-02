@@ -153,9 +153,7 @@ var DragDropTouch
                     ts = this._touchstart.bind(this),
                     tm = this._touchmove.bind(this),
                     te = this._touchend.bind(this),
-                    opt = supportsPassive
-                        ? { passive: false, capture: false }
-                        : false
+                    opt = supportsPassive ? { passive: false, capture: false } : false
                 d.addEventListener('touchstart', ts, opt)
                 d.addEventListener('touchmove', tm, opt)
                 d.addEventListener('touchend', te)
@@ -205,13 +203,8 @@ var DragDropTouch
 
                         // show context menu if the user hasn't started dragging after a while
                         setTimeout(function () {
-                            if (
-                                _this._dragSource == src &&
-                                _this._img == null
-                            ) {
-                                if (
-                                    _this._dispatchEvent(e, 'contextmenu', src)
-                                ) {
+                            if (_this._dragSource == src && _this._img == null) {
+                                if (_this._dispatchEvent(e, 'contextmenu', src)) {
                                     _this._reset()
                                 }
                             }
@@ -232,10 +225,7 @@ var DragDropTouch
                 this._reset()
                 return
             }
-            if (
-                this._shouldHandleMove(e) ||
-                this._shouldHandlePressHoldMove(e)
-            ) {
+            if (this._shouldHandleMove(e) || this._shouldHandlePressHoldMove(e)) {
                 // see if target wants to handle move
                 var target = this._getTarget(e)
                 if (this._dispatchEvent(e, 'mousemove', target)) {
@@ -246,11 +236,7 @@ var DragDropTouch
                     return
                 }
                 // start dragging
-                if (
-                    this._dragSource &&
-                    !this._img &&
-                    this._shouldStartDragging(e)
-                ) {
+                if (this._dragSource && !this._img && this._shouldStartDragging(e)) {
                     this._dispatchEvent(e, 'dragstart', this._dragSource)
                     this._createImage(e)
                     this._dispatchEvent(e, 'dragenter', target)
@@ -262,20 +248,12 @@ var DragDropTouch
                         e.preventDefault() // prevent scrolling
                     }
                     if (target != this._lastTarget) {
-                        this._dispatchEvent(
-                            this._lastTouch,
-                            'dragleave',
-                            this._lastTarget,
-                        )
+                        this._dispatchEvent(this._lastTouch, 'dragleave', this._lastTarget)
                         this._dispatchEvent(e, 'dragenter', target)
                         this._lastTarget = target
                     }
                     this._moveImage(e)
-                    this._isDropZone = this._dispatchEvent(
-                        e,
-                        'dragover',
-                        target,
-                    )
+                    this._isDropZone = this._dispatchEvent(e, 'dragover', target)
                 }
             }
         }
@@ -307,18 +285,10 @@ var DragDropTouch
                 this._destroyImage()
                 if (this._dragSource) {
                     if (e.type.indexOf('cancel') < 0 && this._isDropZone) {
-                        this._dispatchEvent(
-                            this._lastTouch,
-                            'drop',
-                            this._lastTarget,
-                        )
+                        this._dispatchEvent(this._lastTouch, 'drop', this._lastTarget)
                     }
                     window._isDragEnabled = false // === PATCH <<< ===
-                    this._dispatchEvent(
-                        this._lastTouch,
-                        'dragend',
-                        this._dragSource,
-                    )
+                    this._dispatchEvent(this._lastTouch, 'dragend', this._dragSource)
                     this._reset()
                 }
             }
@@ -336,13 +306,7 @@ var DragDropTouch
 
         // allow to handle moves that involve many touches for press & hold
         DragDropTouch.prototype._shouldHandlePressHoldMove = function (e) {
-            return (
-                DragDropTouch._ISPRESSHOLDMODE &&
-                this._isDragEnabled &&
-                e &&
-                e.touches &&
-                e.touches.length
-            )
+            return DragDropTouch._ISPRESSHOLDMODE && this._isDragEnabled && e && e.touches && e.touches.length
         }
 
         // reset data if user drags without pressing & holding
@@ -359,8 +323,7 @@ var DragDropTouch
             var delta = this._getDelta(e)
             return (
                 delta > DragDropTouch._THRESHOLD ||
-                (DragDropTouch._ISPRESSHOLDMODE &&
-                    delta >= DragDropTouch._PRESSHOLDTHRESHOLD)
+                (DragDropTouch._ISPRESSHOLDMODE && delta >= DragDropTouch._PRESSHOLDTHRESHOLD)
             )
         }
 
@@ -393,9 +356,7 @@ var DragDropTouch
                 return 0
             }
             var p = this._getPoint(e)
-            return (
-                Math.abs(p.x - this._ptDown.x) + Math.abs(p.y - this._ptDown.y)
-            )
+            return Math.abs(p.x - this._ptDown.x) + Math.abs(p.y - this._ptDown.y)
         }
         // get the element at a given touch event
         DragDropTouch.prototype._getTarget = function (e) {
@@ -545,7 +506,6 @@ var DragDropTouch
     // synthesize and dispatch an event
     // returns true if the event has been handled (e.preventDefault == true)
     DragDropTouch._kbdProps = 'altKey,ctrlKey,metaKey,shiftKey'.split(',')
-    DragDropTouch._ptProps =
-        'pageX,pageY,clientX,clientY,screenX,screenY'.split(',')
+    DragDropTouch._ptProps = 'pageX,pageY,clientX,clientY,screenX,screenY'.split(',')
     DragDropTouch_1.DragDropTouch = DragDropTouch
 })(DragDropTouch || (DragDropTouch = {}))

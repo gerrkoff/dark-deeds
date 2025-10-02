@@ -3,10 +3,7 @@ import { useAppDispatch } from '../../hooks'
 import { switchToTab } from '../../app/redux/app-slice'
 import { loadSharedSettings } from '../../settings/redux/settings-thunk'
 import { taskHubApi } from '../../tasks/api/TaskHubApi'
-import {
-    taskHubConnected,
-    taskHubConnecting,
-} from '../../status-panel/redux/status-panel-slice'
+import { taskHubConnected, taskHubConnecting } from '../../status-panel/redux/status-panel-slice'
 import { setUser } from '../redux/login-slice'
 import { useTasksSynchronization } from '../../tasks/hooks/useTasksSynchronization'
 import { cleanup } from '../../overview/redux/overview-slice'

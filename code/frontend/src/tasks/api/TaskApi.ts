@@ -12,19 +12,14 @@ export class TaskApi {
     ) {}
 
     async loadTasks(from: Date): Promise<TaskModel[]> {
-        const params = new Map<string, string>([
-            ['from', this.dateService.changeFromLocalToUtc(from).toISOString()],
-        ])
+        const params = new Map<string, string>([['from', this.dateService.changeFromLocalToUtc(from).toISOString()]])
         const result = await this.api.get<TaskDto[]>('api/task/tasks', params)
         return this.mapper.mapToModel(result)
     }
 
     async saveTasks(tasks: TaskModel[]): Promise<TaskModel[]> {
         const data = this.mapper.mapToDto(tasks)
-        const result = await this.api.post<TaskDto[], TaskDto[]>(
-            'api/task/tasks',
-            data,
-        )
+        const result = await this.api.post<TaskDto[], TaskDto[]>('api/task/tasks', data)
         return this.mapper.mapToModel(result)
     }
 }

@@ -18,20 +18,13 @@ interface Props {
     openTaskEditModal: (task: TaskModel) => void
 }
 
-export function useDayCardMenuItem({
-    containerRef,
-    saveTasks,
-    openTaskEditModal,
-}: Props): Output {
+export function useDayCardMenuItem({ containerRef, saveTasks, openTaskEditModal }: Props): Output {
     const [context, setContext] = useState<DayCardItemMenuContext | null>(null)
 
     const openMenu = useCallback(
         (e: React.MouseEvent<HTMLElement>, task: TaskModel) => {
             setContext(old => {
-                if (
-                    !containerRef.current ||
-                    !(e.target instanceof HTMLElement)
-                ) {
+                if (!containerRef.current || !(e.target instanceof HTMLElement)) {
                     return old
                 }
 
@@ -39,12 +32,10 @@ export function useDayCardMenuItem({
                     return null
                 }
 
-                const containerRect =
-                    containerRef.current.getBoundingClientRect()
+                const containerRect = containerRef.current.getBoundingClientRect()
                 const targetRect = e.target.getBoundingClientRect()
                 const x = targetRect.left - containerRect.left
-                const y =
-                    targetRect.top - containerRect.top + targetRect.height + 4
+                const y = targetRect.top - containerRect.top + targetRect.height + 4
 
                 return {
                     task,

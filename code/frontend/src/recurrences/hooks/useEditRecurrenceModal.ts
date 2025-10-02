@@ -13,15 +13,12 @@ export function useEditRecurrenceModal(): Output {
         recurrence: PlannedRecurrenceModel | null
     } | null>(null)
 
-    const openEditRecurrenceModal = useCallback(
-        (recurrence: PlannedRecurrenceModel | null) => {
-            setContext({
-                isShown: true,
-                recurrence,
-            })
-        },
-        [],
-    )
+    const openEditRecurrenceModal = useCallback((recurrence: PlannedRecurrenceModel | null) => {
+        setContext({
+            isShown: true,
+            recurrence,
+        })
+    }, [])
 
     const editRecurrenceModalContext = useMemo(() => {
         if (context === null) {

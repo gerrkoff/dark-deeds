@@ -18,23 +18,11 @@ function groupByLabel(recurrences: PlannedRecurrenceModel[]) {
     recurrences
         .filter(r => !r.isDeleted)
         .forEach(r => {
-            if (
-                r.everyMonthDay !== null &&
-                r.everyNthDay === null &&
-                r.everyWeekday === null
-            ) {
+            if (r.everyMonthDay !== null && r.everyNthDay === null && r.everyWeekday === null) {
                 monthly.push(r)
-            } else if (
-                r.everyWeekday !== null &&
-                r.everyNthDay === null &&
-                r.everyMonthDay === null
-            ) {
+            } else if (r.everyWeekday !== null && r.everyNthDay === null && r.everyMonthDay === null) {
                 weekly.push(r)
-            } else if (
-                r.everyWeekday === null &&
-                r.everyNthDay !== null &&
-                r.everyMonthDay === null
-            ) {
+            } else if (r.everyWeekday === null && r.everyNthDay !== null && r.everyMonthDay === null) {
                 nthDay.push(r)
             } else {
                 others.push(r)
@@ -68,28 +56,21 @@ function groupByLabel(recurrences: PlannedRecurrenceModel[]) {
     return groups
 }
 
-function prepareNthDayList(
-    recurrences: PlannedRecurrenceModel[],
-): PlannedRecurrenceModel[] {
+function prepareNthDayList(recurrences: PlannedRecurrenceModel[]): PlannedRecurrenceModel[] {
     recurrences.sort((a, b) => (a.everyNthDay ?? 0) - (b.everyNthDay ?? 0))
 
     return recurrences
 }
 
-function prepareMonthlyList(
-    recurrences: PlannedRecurrenceModel[],
-): PlannedRecurrenceModel[] {
-    const getFirstDay = (r: PlannedRecurrenceModel) =>
-        r.everyMonthDay?.split(',').map(d => parseInt(d))[0] ?? 0
+function prepareMonthlyList(recurrences: PlannedRecurrenceModel[]): PlannedRecurrenceModel[] {
+    const getFirstDay = (r: PlannedRecurrenceModel) => r.everyMonthDay?.split(',').map(d => parseInt(d))[0] ?? 0
 
     recurrences.sort((a, b) => getFirstDay(a) - getFirstDay(b))
 
     return recurrences
 }
 
-function prepareWeeklyList(
-    recurrences: PlannedRecurrenceModel[],
-): PlannedRecurrenceGroupModel[] {
+function prepareWeeklyList(recurrences: PlannedRecurrenceModel[]): PlannedRecurrenceGroupModel[] {
     const weekdayList: PlannedRecurrenceGroupModel[] = [
         { label: 'Monday', recurrences: [] },
         { label: 'Tuesday', recurrences: [] },

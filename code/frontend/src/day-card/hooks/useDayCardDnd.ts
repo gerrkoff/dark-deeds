@@ -1,13 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { TaskModel } from '../../tasks/models/TaskModel'
-import {
-    DayCardItemDndContext,
-    DropZoneIdType,
-} from '../models/DayCardDndContext'
-import {
-    clearDraggedTask,
-    useDayCardDndItemContext,
-} from './useDayCardDndItemContext'
+import { DayCardItemDndContext, DropZoneIdType } from '../models/DayCardDndContext'
+import { clearDraggedTask, useDayCardDndItemContext } from './useDayCardDndItemContext'
 
 interface Output {
     draggedTaskUid: string | null
@@ -22,14 +16,9 @@ interface Props {
     onTransformDrop: (task: TaskModel) => TaskModel
 }
 
-export function useDayCardDnd({
-    tasks,
-    onSaveTasks,
-    onTransformDrop,
-}: Props): Output {
+export function useDayCardDnd({ tasks, onSaveTasks, onTransformDrop }: Props): Output {
     const [draggedTaskUid, setDraggedTaskUid] = useState<string | null>(null)
-    const [dropzoneHighlightedTaskUid, setDropzoneHighlightedTaskUid] =
-        useState<DropZoneIdType | null>(null)
+    const [dropzoneHighlightedTaskUid, setDropzoneHighlightedTaskUid] = useState<DropZoneIdType | null>(null)
 
     useEffect(() => {
         const handleDrop = () => {

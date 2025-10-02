@@ -33,9 +33,7 @@ export function useTokenRenewal() {
         const checkAndRenewTokenIfNeeded = async () => {
             const timeToExpire = user.expiresAt - Date.now()
 
-            console.log(
-                `[${new Date().toISOString()}] Token expires in ${msToTimeString(timeToExpire)}`,
-            )
+            console.log(`[${new Date().toISOString()}] Token expires in ${msToTimeString(timeToExpire)}`)
 
             if (timeToExpire < oneDayMs) {
                 const renewedToken = await loginApi.renewToken()
@@ -43,9 +41,7 @@ export function useTokenRenewal() {
                 const user = authService.getCurrentUser()
                 dispatch(setUser(user))
 
-                const newTimeToExpire = user
-                    ? user.expiresAt - Date.now()
-                    : Number.POSITIVE_INFINITY
+                const newTimeToExpire = user ? user.expiresAt - Date.now() : Number.POSITIVE_INFINITY
                 dispatch(
                     addToast({
                         text: `Token renewed, expires in ${msToTimeString(newTimeToExpire)}`,

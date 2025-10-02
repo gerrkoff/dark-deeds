@@ -19,11 +19,7 @@ export class OverviewService {
         const futureStart = new Date(currentStart)
         futureStart.setDate(currentStart.getDate() + 14)
 
-        for (
-            const iDate = new Date(currentStart);
-            iDate < futureStart;
-            iDate.setDate(iDate.getDate() + 1)
-        ) {
+        for (const iDate = new Date(currentStart); iDate < futureStart; iDate.setDate(iDate.getDate() + 1)) {
             const day: DayCardModel = {
                 date: new Date(iDate),
                 tasks: [],
@@ -50,11 +46,7 @@ export class OverviewService {
 
             const taskDate = new Date(task.date)
             const days: DayCardModel[] =
-                taskDate < currentStart
-                    ? model.expired
-                    : taskDate >= futureStart
-                      ? model.future
-                      : model.current
+                taskDate < currentStart ? model.expired : taskDate >= futureStart ? model.future : model.current
 
             let day = days.find(x => x.date.valueOf() === task.date)
 
@@ -71,12 +63,8 @@ export class OverviewService {
 
         model.noDate.sort((a, b) => a.order - b.order)
         model.weekly.sort((a, b) => a.order - b.order)
-        model.expired.forEach(day =>
-            day.tasks.sort((a, b) => a.order - b.order),
-        )
-        model.current.forEach(day =>
-            day.tasks.sort((a, b) => a.order - b.order),
-        )
+        model.expired.forEach(day => day.tasks.sort((a, b) => a.order - b.order))
+        model.current.forEach(day => day.tasks.sort((a, b) => a.order - b.order))
         model.future.forEach(day => day.tasks.sort((a, b) => a.order - b.order))
 
         model.expired.sort((a, b) => a.date.valueOf() - b.date.valueOf())

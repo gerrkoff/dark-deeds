@@ -42,9 +42,7 @@ function TelegramIntegrationCard({
 
                     {startIntegrationLink && (
                         <div>
-                            <a href={startIntegrationLink}>
-                                {startIntegrationLink}
-                            </a>
+                            <a href={startIntegrationLink}>{startIntegrationLink}</a>
                         </div>
                     )}
                 </div>

@@ -4,10 +4,7 @@ import { overviewTabsExpandedSelector } from '../settings/redux/settings-selecto
 import { NoDateSection } from './components/NoDateSection'
 import { WeeklySection } from './components/WeeklySection'
 import { OverviewModel } from './models/OverviewModel'
-import {
-    overviewModelSelector,
-    overviewTaskRoutinesSelector,
-} from './redux/overview-selectors'
+import { overviewModelSelector, overviewTaskRoutinesSelector } from './redux/overview-selectors'
 import { toggleOverviewTab } from '../settings/redux/settings-slice'
 import { OverviewTabEnum } from '../settings/models/OverviewTabEnum'
 import { AddTaskButton } from './components/AddTaskButton'
@@ -22,40 +19,21 @@ function Overview() {
 
     const model: OverviewModel = useAppSelector(overviewModelSelector)
 
-    const {
-        isNoDateExpanded,
-        isExpiredExpanded,
-        isCurrentExpanded,
-        isFutureExpanded,
-    } = useAppSelector(overviewTabsExpandedSelector)
+    const { isNoDateExpanded, isExpiredExpanded, isCurrentExpanded, isFutureExpanded } =
+        useAppSelector(overviewTabsExpandedSelector)
 
     const { isDebugEnabled } = useAppSelector(state => state.settings)
 
     const routineTaskDatesShown = useAppSelector(overviewTaskRoutinesSelector)
 
-    const handleNoDateToggle = useCallback(
-        () => dispatch(toggleOverviewTab(OverviewTabEnum.NoDate)),
-        [dispatch],
-    )
+    const handleNoDateToggle = useCallback(() => dispatch(toggleOverviewTab(OverviewTabEnum.NoDate)), [dispatch])
 
-    const handleExpiredToggle = useCallback(
-        () => dispatch(toggleOverviewTab(OverviewTabEnum.Expired)),
-        [dispatch],
-    )
+    const handleExpiredToggle = useCallback(() => dispatch(toggleOverviewTab(OverviewTabEnum.Expired)), [dispatch])
 
-    const handleCurrentToggle = useCallback(
-        () => dispatch(toggleOverviewTab(OverviewTabEnum.Current)),
-        [dispatch],
-    )
-    const handleFutureToggle = useCallback(
-        () => dispatch(toggleOverviewTab(OverviewTabEnum.Future)),
-        [dispatch],
-    )
+    const handleCurrentToggle = useCallback(() => dispatch(toggleOverviewTab(OverviewTabEnum.Current)), [dispatch])
+    const handleFutureToggle = useCallback(() => dispatch(toggleOverviewTab(OverviewTabEnum.Future)), [dispatch])
 
-    const handleRoutineToggle = useCallback(
-        (date: Date) => dispatch(toggleRoutineTaskDate(date.valueOf())),
-        [dispatch],
-    )
+    const handleRoutineToggle = useCallback((date: Date) => dispatch(toggleRoutineTaskDate(date.valueOf())), [dispatch])
 
     const saveTasks = useCallback(
         (tasks: TaskModel[]) => {
@@ -75,18 +53,10 @@ function Overview() {
                 >
                     <div className="row g-2">
                         <div className="col-12 col-md-6">
-                            <NoDateSection
-                                tasks={model.noDate}
-                                isDebug={isDebugEnabled}
-                                saveTasks={saveTasks}
-                            />
+                            <NoDateSection tasks={model.noDate} isDebug={isDebugEnabled} saveTasks={saveTasks} />
                         </div>
                         <div className="col-12 col-md-6">
-                            <WeeklySection
-                                tasks={model.weekly}
-                                isDebug={isDebugEnabled}
-                                saveTasks={saveTasks}
-                            />
+                            <WeeklySection tasks={model.weekly} isDebug={isDebugEnabled} saveTasks={saveTasks} />
                         </div>
                     </div>
                 </SectionToggle>

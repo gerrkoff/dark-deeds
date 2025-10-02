@@ -14,14 +14,7 @@ interface Props {
     onToggle: () => void
 }
 
-function SectionToggle({
-    className,
-    label,
-    isInitExpanded,
-    dataTestId,
-    onToggle,
-    children,
-}: Props) {
+function SectionToggle({ className, label, isInitExpanded, dataTestId, onToggle, children }: Props) {
     const uuid = useMemo(() => uuidv4(), [])
     const collapseToggleRef = useRef<HTMLButtonElement>(null)
     const collapseElementRef = useRef<HTMLDivElement>(null)
@@ -38,10 +31,7 @@ function SectionToggle({
         <div className={className}>
             <button
                 ref={collapseToggleRef}
-                className={clsx(
-                    'btn btn-sm d-flex align-items-center mb-1',
-                    styles.toggle,
-                )}
+                className={clsx('btn btn-sm d-flex align-items-center mb-1', styles.toggle)}
                 type="button"
                 data-bs-toggle="collapse"
                 data-bs-target={`#${uuid}`}
@@ -53,12 +43,7 @@ function SectionToggle({
                 <IconChevronRight className={styles.collapsed} size={12} />
                 <span className="ms-1">{label}</span>
             </button>
-            <div
-                ref={collapseElementRef}
-                className="collapse"
-                id={uuid}
-                data-test-id={dataTestId}
-            >
+            <div ref={collapseElementRef} className="collapse" id={uuid} data-test-id={dataTestId}>
                 {children}
             </div>
         </div>

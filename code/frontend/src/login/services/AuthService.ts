@@ -1,7 +1,4 @@
-import {
-    storageService,
-    StorageService,
-} from '../../common/services/StorageService'
+import { storageService, StorageService } from '../../common/services/StorageService'
 import { UserModel } from '../models/UserModel'
 import { parseJwt } from '../../common/utils/parseJwt'
 

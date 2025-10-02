@@ -41,9 +41,7 @@ export const loginSlice = createSlice({
             state.logInError = null
             if (action.payload.result === SigninResultEnum.Success) {
                 state.logInError = null
-            } else if (
-                action.payload.result === SigninResultEnum.WrongUsernamePassword
-            ) {
+            } else if (action.payload.result === SigninResultEnum.WrongUsernamePassword) {
                 state.logInError = 'Wrong username or password'
             } else {
                 state.logInError = 'Unknown error, try again later'
@@ -62,17 +60,11 @@ export const loginSlice = createSlice({
             state.isLogInPending = false
             if (action.payload.result === SignupResultEnum.Success) {
                 state.logInError = null
-            } else if (
-                action.payload.result === SignupResultEnum.InvalidUsername
-            ) {
+            } else if (action.payload.result === SignupResultEnum.InvalidUsername) {
                 state.logInError = 'Username is invalid'
-            } else if (
-                action.payload.result === SignupResultEnum.PasswordInsecure
-            ) {
+            } else if (action.payload.result === SignupResultEnum.PasswordInsecure) {
                 state.logInError = 'Password is insecure'
-            } else if (
-                action.payload.result === SignupResultEnum.UsernameAlreadyExists
-            ) {
+            } else if (action.payload.result === SignupResultEnum.UsernameAlreadyExists) {
                 state.logInError = 'User already exists'
             } else {
                 state.logInError = 'Unknown error, try again later'

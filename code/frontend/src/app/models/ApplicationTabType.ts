@@ -1,6 +1,1 @@
-export type ApplicationTabType =
-    | ''
-    | 'overview'
-    | 'recurrent'
-    | 'settings'
-    | 'login'
+export type ApplicationTabType = '' | 'overview' | 'recurrent' | 'settings' | 'login'

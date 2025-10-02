@@ -9,13 +9,7 @@ interface Props {
     onClose: () => void
 }
 
-function FloatingPanel({
-    className,
-    anchorElement,
-    position: { x, y },
-    onClose,
-    children,
-}: Props) {
+function FloatingPanel({ className, anchorElement, position: { x, y }, onClose, children }: Props) {
     const ref = useRef<HTMLDivElement>(null)
 
     useEffect(() => {

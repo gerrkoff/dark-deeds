@@ -18,7 +18,5 @@ test('[getWeekdayName] positive', () => {
 
 test('[monday] positive', () => {
     const service = new DateService()
-    expect(service.monday(new Date(2018, 9, 17)).valueOf()).toBe(
-        new Date(2018, 9, 15).valueOf(),
-    )
+    expect(service.monday(new Date(2018, 9, 17)).valueOf()).toBe(new Date(2018, 9, 15).valueOf())
 })

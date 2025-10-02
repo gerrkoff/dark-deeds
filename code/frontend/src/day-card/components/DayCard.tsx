@@ -22,40 +22,19 @@ interface Props {
     onRoutineToggle: (date: Date) => void
 }
 
-function DayCard({
-    dayCardModel,
-    isDebug,
-    isRoutineShown,
-    saveTasks,
-    onRoutineToggle,
-}: Props) {
+function DayCard({ dayCardModel, isDebug, isRoutineShown, saveTasks, onRoutineToggle }: Props) {
     const cardRef = useRef<HTMLDivElement>(null)
 
-    const {
-        taskEditModalContext,
-        openTaskEditModal,
-        openTaskEditModalForDate,
-    } = useEditTaskModal()
+    const { taskEditModalContext, openTaskEditModal, openTaskEditModalForDate } = useEditTaskModal()
 
-    const {
-        itemMenuContext,
-        openItemMenu,
-        closeItemMenu,
-        deleteTask,
-        editTask,
-        toggleTaskCompleted,
-    } = useDayCardMenuItem({
-        containerRef: cardRef,
-        saveTasks,
-        openTaskEditModal,
-    })
+    const { itemMenuContext, openItemMenu, closeItemMenu, deleteTask, editTask, toggleTaskCompleted } =
+        useDayCardMenuItem({
+            containerRef: cardRef,
+            saveTasks,
+            openTaskEditModal,
+        })
 
-    const {
-        headerMenuContext,
-        openHeaderMenu,
-        closeHeaderMenu,
-        onAddTaskForDate,
-    } = useDayCardMenuHeader({
+    const { headerMenuContext, openHeaderMenu, closeHeaderMenu, onAddTaskForDate } = useDayCardMenuHeader({
         containerRef: cardRef,
         openTaskEditModalForDate,
     })
@@ -63,18 +42,13 @@ function DayCard({
     const isExpired = dayCardModel.date < dateService.today()
 
     const transformDrop = useCallback(
-        (task: TaskModel) =>
-            taskTransformService.toDated(task, dayCardModel.date),
+        (task: TaskModel) => taskTransformService.toDated(task, dayCardModel.date),
         [dayCardModel.date],
     )
 
     return (
         <>
-            <Card
-                elementRef={cardRef}
-                isDimmed={isExpired}
-                className={styles.card}
-            >
+            <Card elementRef={cardRef} isDimmed={isExpired} className={styles.card}>
                 <DayCardHeader
                     dayCardModel={dayCardModel}
                     isHighlighted={headerMenuContext !== null}
@@ -112,12 +86,7 @@ function DayCard({
                 )}
             </Card>
 
-            {taskEditModalContext && (
-                <EditTaskModal
-                    context={taskEditModalContext}
-                    onSave={saveTasks}
-                />
-            )}
+            {taskEditModalContext && <EditTaskModal context={taskEditModalContext} onSave={saveTasks} />}
         </>
     )
 }

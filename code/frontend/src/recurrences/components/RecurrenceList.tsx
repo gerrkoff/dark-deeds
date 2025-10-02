@@ -25,19 +25,12 @@ function RecurrenceList({ recurrenceGroups, onEdit }: Props) {
                 {recurrenceGroups.map(group => (
                     <Fragment key={group.label}>
                         <tr>
-                            <td
-                                colSpan={2}
-                                className="bg-dark text-center text-secondary"
-                            >
+                            <td colSpan={2} className="bg-dark text-center text-secondary">
                                 {group.label}
                             </td>
                         </tr>
                         {group.recurrences.map(recurrence => (
-                            <RecurrenceItem
-                                key={recurrence.uid}
-                                recurrence={recurrence}
-                                onEdit={onEdit}
-                            />
+                            <RecurrenceItem key={recurrence.uid} recurrence={recurrence} onEdit={onEdit} />
                         ))}
                     </Fragment>
                 ))}

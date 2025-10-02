@@ -34,11 +34,7 @@ export const statusPanelSlice = createSlice({
     },
 })
 
-export const {
-    toggleSaveTaskPending,
-    taskHubConnected,
-    taskHubDisconnected,
-    taskHubConnecting,
-} = statusPanelSlice.actions
+export const { toggleSaveTaskPending, taskHubConnected, taskHubDisconnected, taskHubConnecting } =
+    statusPanelSlice.actions
 
 export default statusPanelSlice.reducer

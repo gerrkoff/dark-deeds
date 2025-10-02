@@ -16,9 +16,7 @@ export class TaskSyncService {
     }
 
     unsubscribeStatusUpdate(callback: StatusUpdateSubscription) {
-        this.statusUpdateSubscriptions = this.statusUpdateSubscriptions.filter(
-            x => x !== callback,
-        )
+        this.statusUpdateSubscriptions = this.statusUpdateSubscriptions.filter(x => x !== callback)
     }
 
     private saveFinishSubscriptions: SaveFinishSubscription[] = []
@@ -28,9 +26,7 @@ export class TaskSyncService {
     }
 
     unsubscribeSaveFinish(callback: SaveFinishSubscription) {
-        this.saveFinishSubscriptions = this.saveFinishSubscriptions.filter(
-            x => x !== callback,
-        )
+        this.saveFinishSubscriptions = this.saveFinishSubscriptions.filter(x => x !== callback)
     }
 
     inProgress = false
@@ -74,9 +70,7 @@ export class TaskSyncService {
             let savedTasks: TaskModel[] = []
 
             try {
-                savedTasks = await this.taskApi.saveTasks([
-                    ...this.tasksInFlight.values(),
-                ])
+                savedTasks = await this.taskApi.saveTasks([...this.tasksInFlight.values()])
             } catch (error) {
                 console.error('Failed to save tasks:', error)
                 wait = true
@@ -86,9 +80,7 @@ export class TaskSyncService {
                 this.tasksInFlight.delete(task.uid)
             }
 
-            this.saveFinishSubscriptions.forEach(x =>
-                x(this.tasksInFlight.size),
-            )
+            this.saveFinishSubscriptions.forEach(x => x(this.tasksInFlight.size))
 
             for (const [uid, task] of this.tasksInFlight) {
                 if (!this.tasksToSave.has(uid)) {

@@ -16,8 +16,7 @@ export function useTasksSynchronization(): Output {
 
     const processTasksOnlineUpdate = useCallback(
         (tasks: TaskModel[]) => {
-            const { tasksToNotify, versionsToNotify } =
-                taskSyncService.updateTasks(tasks)
+            const { tasksToNotify, versionsToNotify } = taskSyncService.updateTasks(tasks)
 
             console.log(`[${new Date().toISOString()}] Tasks online update:`, {
                 tasks,

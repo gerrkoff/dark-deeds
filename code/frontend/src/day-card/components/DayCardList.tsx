@@ -28,19 +28,11 @@ function DayCardList({
     onTransformDrop,
 }: Props) {
     const shownTasks = useMemo(
-        () =>
-            isRoutineShown
-                ? tasks
-                : tasks.filter(task => task.type !== TaskTypeEnum.Routine),
+        () => (isRoutineShown ? tasks : tasks.filter(task => task.type !== TaskTypeEnum.Routine)),
         [isRoutineShown, tasks],
     )
 
-    const {
-        draggedTaskUid,
-        dropzoneHighlightedTaskUid,
-        handleListDragLeave,
-        itemDndContext,
-    } = useDayCardDnd({
+    const { draggedTaskUid, dropzoneHighlightedTaskUid, handleListDragLeave, itemDndContext } = useDayCardDnd({
         tasks: shownTasks,
         onSaveTasks,
         onTransformDrop,
@@ -53,13 +45,7 @@ function DayCardList({
 
     return (
         <>
-            <ul
-                ref={listRef}
-                className={clsx(
-                    'flex-grow-1 d-flex flex-column ps-4 mt-1 mb-0',
-                    styles.list,
-                )}
-            >
+            <ul ref={listRef} className={clsx('flex-grow-1 d-flex flex-column ps-4 mt-1 mb-0', styles.list)}>
                 {shownTasks.map(task => (
                     <DayCardItem
                         key={task.uid}
@@ -76,10 +62,8 @@ function DayCardList({
                     ref={lastItemRef}
                     className={clsx(
                         'd-inline flex-grow-1',
-                        dropzoneHighlightedTaskUid !== dropZoneBottomId &&
-                            styles.item,
-                        dropzoneHighlightedTaskUid === dropZoneBottomId &&
-                            'border-top border-primary',
+                        dropzoneHighlightedTaskUid !== dropZoneBottomId && styles.item,
+                        dropzoneHighlightedTaskUid === dropZoneBottomId && 'border-top border-primary',
                     )}
                     style={{
                         boxSizing: 'initial',

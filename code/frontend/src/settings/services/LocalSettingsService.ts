@@ -1,7 +1,4 @@
-import {
-    storageService,
-    StorageService,
-} from '../../common/services/StorageService'
+import { storageService, StorageService } from '../../common/services/StorageService'
 import { OverviewTabEnum } from '../models/OverviewTabEnum'
 import { SettingsLocalDto } from '../models/SettingsLocalDto'
 

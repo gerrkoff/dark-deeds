@@ -12,9 +12,7 @@ export class Api {
     get<T>(api: string, params?: Map<string, string>): Promise<T> {
         if (params !== undefined) {
             let paramString = ''
-            params.forEach(
-                (value, key) => (paramString += '&' + key + '=' + value),
-            )
+            params.forEach((value, key) => (paramString += '&' + key + '=' + value))
             paramString = '?' + paramString.substring(1)
             api = api + paramString
         }
@@ -22,8 +20,7 @@ export class Api {
         return this.sendRequest(`GET ${api}`, () =>
             fetch(this.baseUrlProvider.getBaseUrl() + api, {
                 headers: {
-                    Authorization:
-                        'Bearer ' + this.storageService.loadAccessToken(),
+                    Authorization: 'Bearer ' + this.storageService.loadAccessToken(),
                 },
             }),
         )
@@ -34,8 +31,7 @@ export class Api {
             fetch(this.baseUrlProvider.getBaseUrl() + api, {
                 body: JSON.stringify(data),
                 headers: {
-                    Authorization:
-                        'Bearer ' + this.storageService.loadAccessToken(),
+                    Authorization: 'Bearer ' + this.storageService.loadAccessToken(),
                     'Content-Type': 'application/json',
                 },
                 method: 'POST',
@@ -44,10 +40,7 @@ export class Api {
     }
 
     // TODO!
-    private async sendRequest<T>(
-        apiName: string,
-        requestCreator: () => Promise<Response>,
-    ): Promise<T> {
+    private async sendRequest<T>(apiName: string, requestCreator: () => Promise<Response>): Promise<T> {
         const prefix = `API ${apiName} |`
         let result
         try {
@@ -58,8 +51,7 @@ export class Api {
         }
 
         const contentType = result.headers.get('content-type')
-        const isJson =
-            contentType && contentType.indexOf('application/json') !== -1
+        const isJson = contentType && contentType.indexOf('application/json') !== -1
         const isPlain = contentType && contentType.indexOf('text/plain') !== -1
         const noContent = !contentType
 
@@ -76,10 +68,7 @@ export class Api {
             } else {
                 console.error(prefix, `${result.status} | ${result.statusText}`)
             }
-            console.error(
-                'Response body: ',
-                isJson ? await result.json() : await result.text(),
-            )
+            console.error('Response body: ', isJson ? await result.json() : await result.text())
             throw new Error(this.DEFAULT_ERROR_MESSAGE)
         }
     }

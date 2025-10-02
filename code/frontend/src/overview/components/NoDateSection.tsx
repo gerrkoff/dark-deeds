@@ -19,30 +19,17 @@ function NoDateSection({ tasks, isDebug, saveTasks }: Props) {
 
     const { taskEditModalContext, openTaskEditModal } = useEditTaskModal()
 
-    const {
-        itemMenuContext,
-        openItemMenu,
-        closeItemMenu,
-        deleteTask,
-        editTask,
-        toggleTaskCompleted,
-    } = useDayCardMenuItem({
-        containerRef: cardRef,
-        saveTasks,
-        openTaskEditModal,
-    })
+    const { itemMenuContext, openItemMenu, closeItemMenu, deleteTask, editTask, toggleTaskCompleted } =
+        useDayCardMenuItem({
+            containerRef: cardRef,
+            saveTasks,
+            openTaskEditModal,
+        })
 
-    const transformDrop = useCallback(
-        (task: TaskModel) => taskTransformService.toNoDate(task),
-        [],
-    )
+    const transformDrop = useCallback((task: TaskModel) => taskTransformService.toNoDate(task), [])
 
     return (
-        <Card
-            elementRef={cardRef}
-            style={{ fontSize: '0.8rem', minHeight: '70px' }}
-            dataTestId="card-no-date"
-        >
+        <Card elementRef={cardRef} style={{ fontSize: '0.8rem', minHeight: '70px' }} dataTestId="card-no-date">
             <DayCardList
                 tasks={tasks}
                 isDebug={isDebug}
@@ -63,12 +50,7 @@ function NoDateSection({ tasks, isDebug, saveTasks }: Props) {
                 />
             )}
 
-            {taskEditModalContext && (
-                <EditTaskModal
-                    context={taskEditModalContext}
-                    onSave={saveTasks}
-                />
-            )}
+            {taskEditModalContext && <EditTaskModal context={taskEditModalContext} onSave={saveTasks} />}
         </Card>
     )
 }

@@ -1,8 +1,4 @@
-import {
-    dateService,
-    DateService,
-    Time,
-} from '../../common/services/DateService'
+import { dateService, DateService, Time } from '../../common/services/DateService'
 import { uuidv4 } from '../../common/utils/uuidv4'
 import { TaskModel } from '../../tasks/models/TaskModel'
 import { TaskTypeEnum } from '../../tasks/models/TaskTypeEnum'
@@ -124,9 +120,7 @@ export class TaskConvertService {
             s += date.getFullYear().toString()
         }
 
-        s += `${this.str2digits(
-            date.getMonth() + 1,
-        )}${this.str2digits(date.getDate())}`
+        s += `${this.str2digits(date.getMonth() + 1)}${this.str2digits(date.getDate())}`
 
         return s
     }
@@ -215,8 +209,7 @@ class StringConvertingResult {
 
     extractWeekShift(text: string): string {
         const shift = parseInt(text[1], undefined)
-        this.day =
-            this.now.getDate() + ((1 + 7 - this.now.getDay()) % 7) + shift - 1
+        this.day = this.now.getDate() + ((1 + 7 - this.now.getDay()) % 7) + shift - 1
         this.month = this.now.getMonth() + 1
         return text.slice(2)
     }
@@ -278,9 +271,7 @@ class StringConvertingResult {
 
     getModel(text: string): TaskEditModel {
         return {
-            date: this.hasDate
-                ? new Date(this.year, this.month - 1, this.day)
-                : null,
+            date: this.hasDate ? new Date(this.year, this.month - 1, this.day) : null,
             type: this.type,
             title: text,
             isProbable: this.isProbable,

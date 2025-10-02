@@ -13,10 +13,7 @@ export class TaskTransformService {
     toNoDate(task: TaskModel): TaskModel {
         return {
             ...task,
-            type:
-                task.type === TaskTypeEnum.Weekly
-                    ? TaskTypeEnum.Simple
-                    : task.type,
+            type: task.type === TaskTypeEnum.Weekly ? TaskTypeEnum.Simple : task.type,
             date: null,
         }
     }

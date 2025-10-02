@@ -16,9 +16,7 @@ export class TaskMapper {
             title: x.title,
             type: x.type,
             version: x.version,
-            date: x.date
-                ? this.dateService.changeFromLocalToUtc(new Date(x.date))
-                : null,
+            date: x.date ? this.dateService.changeFromLocalToUtc(new Date(x.date)) : null,
         }))
     }
 
@@ -33,9 +31,7 @@ export class TaskMapper {
             title: x.title,
             type: x.type,
             version: x.version,
-            date: x.date
-                ? this.dateService.changeFromUtcToLocal(x.date).valueOf()
-                : null,
+            date: x.date ? this.dateService.changeFromUtcToLocal(x.date).valueOf() : null,
         }))
     }
 }

@@ -35,10 +35,7 @@ function RecurrenceActions({
                     style={{ width: '120px' }}
                     data-test-id="btn-add-recurrence"
                 >
-                    <IconPlusLg
-                        className="ms-2"
-                        style={{ minWidth: '25px', paddingBottom: '3px' }}
-                    />
+                    <IconPlusLg className="ms-2" style={{ minWidth: '25px', paddingBottom: '3px' }} />
                     Add
                 </button>
             </div>
@@ -85,10 +82,7 @@ function RecurrenceActions({
                     onClick={onLoad}
                     style={{ width: '120px' }}
                 >
-                    <IconArrowRepeat
-                        className="ms-2"
-                        style={{ minWidth: '25px', paddingBottom: '3px' }}
-                    />
+                    <IconArrowRepeat className="ms-2" style={{ minWidth: '25px', paddingBottom: '3px' }} />
                     Load
                 </button>
             </div>

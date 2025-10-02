@@ -60,12 +60,7 @@ function App() {
                 {applicationTab === 'recurrent' && <Recurrences />}
                 {applicationTab === 'settings' && <Settings />}
 
-                {applicationTab !== 'login' && (
-                    <NavigationBar
-                        applicationTab={applicationTab}
-                        switchTo={switctToTab}
-                    />
-                )}
+                {applicationTab !== 'login' && <NavigationBar applicationTab={applicationTab} switchTo={switctToTab} />}
             </>
         </div>
     )

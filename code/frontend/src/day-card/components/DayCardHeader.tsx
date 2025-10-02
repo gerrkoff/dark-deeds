@@ -11,19 +11,9 @@ interface Props {
     onRoutineToggle: (date: Date) => void
 }
 
-function DayCardHeader({
-    dayCardModel,
-    isHighlighted,
-    isRoutineShown,
-    onOpenHeaderMenu,
-    onRoutineToggle,
-}: Props) {
-    const hasRoutine = dayCardModel.tasks.some(
-        x => x.type === TaskTypeEnum.Routine,
-    )
-    const routineRemainingCount = dayCardModel.tasks.filter(
-        x => x.type === TaskTypeEnum.Routine && !x.completed,
-    ).length
+function DayCardHeader({ dayCardModel, isHighlighted, isRoutineShown, onOpenHeaderMenu, onRoutineToggle }: Props) {
+    const hasRoutine = dayCardModel.tasks.some(x => x.type === TaskTypeEnum.Routine)
+    const routineRemainingCount = dayCardModel.tasks.filter(x => x.type === TaskTypeEnum.Routine && !x.completed).length
 
     const date = taskConvertService.toDateLabel(dayCardModel.date)
 
@@ -44,8 +34,7 @@ function DayCardHeader({
                 <span
                     className={clsx('d-inline-block ps-3 pe-3 rounded-1', {
                         'text-bg-secondary': isRoutineShown,
-                        'text-secondary':
-                            routineRemainingCount === 0 && !isRoutineShown,
+                        'text-secondary': routineRemainingCount === 0 && !isRoutineShown,
                     })}
                     style={{ cursor: 'pointer' }}
                     onClick={() => onRoutineToggle(dayCardModel.date)}

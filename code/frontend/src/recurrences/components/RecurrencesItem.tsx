@@ -8,17 +8,13 @@ interface Props {
 }
 
 function RecurrenceItem({ recurrence, onEdit }: Props) {
-    const { task, schedule, borders } = useMemo(
-        () => recurrenceService.print(recurrence),
-        [recurrence],
-    )
+    const { task, schedule, borders } = useMemo(() => recurrenceService.print(recurrence), [recurrence])
 
     return (
         <tr onClick={() => onEdit(recurrence)}>
             <td className="bg-dark-subtle">{task}</td>
             <td className="bg-dark-subtle">
-                {schedule}{' '}
-                <span className="text-secondary ps-2">{borders}</span>
+                {schedule} <span className="text-secondary ps-2">{borders}</span>
             </td>
         </tr>
     )

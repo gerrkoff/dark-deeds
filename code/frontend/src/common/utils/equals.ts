@@ -5,8 +5,7 @@ export function equals<T extends object>(x: T, y: T): boolean {
 
     for (const key of Object.keys(x)) {
         if (
-            JSON.stringify((x as Record<string, unknown>)[key]) !==
-            JSON.stringify((y as Record<string, unknown>)[key])
+            JSON.stringify((x as Record<string, unknown>)[key]) !== JSON.stringify((y as Record<string, unknown>)[key])
         ) {
             return false
         }

@@ -34,11 +34,7 @@ function Signin({
     const isSubmitEnabled = username && password && !isLogInPending
 
     return (
-        <form
-            className="p-3"
-            onSubmit={handleSubmit}
-            data-test-id="form-signin"
-        >
+        <form className="p-3" onSubmit={handleSubmit} data-test-id="form-signin">
             <div className="form-floating mb-3">
                 <input
                     type="text"

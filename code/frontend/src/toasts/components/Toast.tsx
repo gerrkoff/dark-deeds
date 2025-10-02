@@ -10,15 +10,11 @@ interface Props {
 function Toast({ toast, onClose }: Props) {
     return (
         <div
-            className={clsx(
-                'toast show align-items-center border-0',
-                styles.show,
-                {
-                    'bg-primary': toast.type === 'primary',
-                    'bg-success': toast.type === 'success',
-                    'bg-info': toast.type === 'info',
-                },
-            )}
+            className={clsx('toast show align-items-center border-0', styles.show, {
+                'bg-primary': toast.type === 'primary',
+                'bg-success': toast.type === 'success',
+                'bg-info': toast.type === 'info',
+            })}
         >
             <div className="d-flex">
                 <div className="toast-body">

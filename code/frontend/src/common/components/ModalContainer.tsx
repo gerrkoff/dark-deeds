@@ -98,12 +98,7 @@ function ModalContainer({
     return (
         <div
             ref={containerRef}
-            className={clsx(
-                'modal fade',
-                { show },
-                { 'd-block': visible },
-                { 'd-none': !visible },
-            )}
+            className={clsx('modal fade', { show }, { 'd-block': visible }, { 'd-none': !visible })}
             style={{
                 backgroundColor: 'rgba(0, 0, 0, 0.5)',
                 position: isMobile ? 'absolute' : undefined,
@@ -118,11 +113,7 @@ function ModalContainer({
                     <form onSubmit={handleSubmit}>
                         <div className="modal-body">{children}</div>
                         <div className="modal-footer">
-                            <button
-                                type="button"
-                                className="btn btn-secondary"
-                                onClick={close}
-                            >
+                            <button type="button" className="btn btn-secondary" onClick={close}>
                                 Close
                             </button>
                             {isDeleteVisible && (
@@ -137,11 +128,7 @@ function ModalContainer({
                                     Delete
                                 </button>
                             )}
-                            <button
-                                type="submit"
-                                className="btn btn-primary"
-                                disabled={!isSaveEnabled}
-                            >
+                            <button type="submit" className="btn btn-primary" disabled={!isSaveEnabled}>
                                 Save changes
                             </button>
                         </div>

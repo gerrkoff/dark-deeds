@@ -2,10 +2,7 @@ import { useCallback, useMemo, useRef, useState } from 'react'
 import { EditRecurrenceModalContext } from '../models/EditRecurrenceModalContext'
 import { PlannedRecurrenceModel } from '../models/PlannedRecurrenceModel'
 import { ModalContainer } from '../../common/components/ModalContainer'
-import {
-    RecurrenceWeekdayEnum,
-    recurrenceWeekdayEnumValues,
-} from '../models/RecurrenceWeekdayEnum'
+import { RecurrenceWeekdayEnum, recurrenceWeekdayEnumValues } from '../models/RecurrenceWeekdayEnum'
 import { enumExpand, enumReduce } from '../../common/utils/enums'
 import clsx from 'clsx'
 import { PlannedRecurrencePrintModel } from '../models/PlannedRecurrencePrintModel'
@@ -58,16 +55,12 @@ const weekdayOptions: WeekdayOption[] = [
     },
 ]
 
-const getWeekdayOptionsInitialState = (
-    weekday: RecurrenceWeekdayEnum | null | undefined,
-): string[] => {
+const getWeekdayOptionsInitialState = (weekday: RecurrenceWeekdayEnum | null | undefined): string[] => {
     if (weekday === null || weekday === undefined) {
         return []
     }
 
-    return enumExpand(weekday, recurrenceWeekdayEnumValues).map(x =>
-        x.toString(),
-    )
+    return enumExpand(weekday, recurrenceWeekdayEnumValues).map(x => x.toString())
 }
 
 const handleDateChange = (
@@ -133,29 +126,19 @@ function EditRecurrenceModal({ context, onUpdate }: Props) {
     const { recurrence, close } = context
 
     const [task, setTask] = useState(recurrence?.task ?? '')
-    const [weekday, setWeekday] = useState<string[]>(() =>
-        getWeekdayOptionsInitialState(recurrence?.everyWeekday),
-    )
+    const [weekday, setWeekday] = useState<string[]>(() => getWeekdayOptionsInitialState(recurrence?.everyWeekday))
     const [dates, setDates] = useState<string>(recurrence?.everyMonthDay ?? '')
     const [isDatesValid, setIsDatesValid] = useState(true)
-    const [nthDay, setNthDay] = useState<number | null>(
-        recurrence?.everyNthDay ?? null,
-    )
-    const [from, setFrom] = useState<string>(() =>
-        getDateInitialValue(recurrence?.startDate ?? new Date().valueOf()),
-    )
+    const [nthDay, setNthDay] = useState<number | null>(recurrence?.everyNthDay ?? null)
+    const [from, setFrom] = useState<string>(() => getDateInitialValue(recurrence?.startDate ?? new Date().valueOf()))
     const [isFromValid, setIsFromValid] = useState(true)
     const fromRef = useRef<string>(from)
-    const [to, setTo] = useState<string>(() =>
-        getDateInitialValue(recurrence?.endDate),
-    )
+    const [to, setTo] = useState<string>(() => getDateInitialValue(recurrence?.endDate))
     const [isToValid, setIsToValid] = useState(true)
     const toRef = useRef<string>(to)
 
     const handleWeekdayChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const selectedOptions = Array.from(e.target.selectedOptions).map(
-            x => x.value,
-        )
+        const selectedOptions = Array.from(e.target.selectedOptions).map(x => x.value)
         setWeekday(selectedOptions)
     }
 
@@ -191,10 +174,7 @@ function EditRecurrenceModal({ context, onUpdate }: Props) {
             task,
             startDate: getDateFromInput(from) ?? new Date(0).valueOf(),
             endDate: getDateFromInput(to),
-            everyWeekday:
-                weekday.length === 0
-                    ? null
-                    : enumReduce<RecurrenceWeekdayEnum>(weekday.map(x => +x)),
+            everyWeekday: weekday.length === 0 ? null : enumReduce<RecurrenceWeekdayEnum>(weekday.map(x => +x)),
             everyNthDay: nthDay ? nthDay : null,
             everyMonthDay: dates ? dates : null,
             isDeleted: false,
