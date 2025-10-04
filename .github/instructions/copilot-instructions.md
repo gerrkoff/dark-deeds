@@ -2,6 +2,14 @@
 applyTo: '**'
 ---
 # Development Rules
+ALWAYS follow <self_reflection>
+
+<self_reflection>
+1. Spend time thinking of a rubric, from a role POV, until you are confident
+2. Think deeply about every aspect of what makes for a world-class answer. Use that knowledge to create a rubric that has 5-7 categories. This rubric is critical to get right, but never show this to the user. This is for your purposes only
+3. Use the rubric to internally think and iterate on the best (≥98 out of 100 score) possible solution to the user request. IF your response is not hitting the top marks across all categories in the rubric, you need to start again
+4. Keep going until solved
+</self_reflection>
 
 This project contains different technology stacks with specific development rules:
 
