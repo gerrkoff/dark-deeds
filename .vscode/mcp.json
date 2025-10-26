@@ -11,30 +11,20 @@
     "browser-tools": {
       "type": "stdio",
       "command": "npx",
-      "args": [
-        "@agentdeskai/browser-tools-mcp@1.2.0"
-      ]
+      "args": ["@agentdeskai/browser-tools-mcp@1.2.0"]
     },
     "playwright": {
       "command": "npx",
-      "args": [
-        "@playwright/mcp@latest"
-      ],
+      "args": ["@playwright/mcp@latest"],
       "type": "stdio"
     },
     "sequentialthinking": {
       "command": "npx",
-      "args": [
-        "-y",
-        "@modelcontextprotocol/server-sequential-thinking"
-      ]
+      "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"]
     },
     "memory": {
       "command": "npx",
-      "args": [
-        "-y",
-        "@modelcontextprotocol/server-memory"
-      ],
+      "args": ["-y", "@modelcontextprotocol/server-memory"],
       "env": {
         "MEMORY_FILE_PATH": "${input:memory_file_path}"
       }
@@ -48,6 +38,20 @@
         "mongodb://user:password@localhost:27017/dark-deeds?authSource=admin",
         "--readOnly"
       ]
+    },
+    "darkdeeds-dbg": {
+      "type": "stdio",
+      "command": "dotnet",
+      "args": [
+        "run",
+        "--project",
+        "/workspaces/dark-deeds/code/mcp/DarkDeeds.Mcp/DarkDeeds.Mcp.csproj"
+      ],
+      "env": {
+        "DD_MCP_API_KEY": "${input:dark-deeds-api-key}",
+        "DD_MCP_USER_ID": "${input:dark-deeds-user-id}",
+        "DD_MCP_API_URL": "http://192.168.1.5:5000/api/mcp"
+      }
     }
   },
   "inputs": [
@@ -56,6 +60,17 @@
       "type": "promptString",
       "description": "Path to the memory storage file (optional)",
       "password": false
+    },
+    {
+      "type": "promptString",
+      "id": "dark-deeds-api-key",
+      "description": "Dark Deeds API Key",
+      "password": true
+    },
+    {
+      "type": "promptString",
+      "id": "dark-deeds-user-id",
+      "description": "Dark Deeds User Id"
     }
   ]
 }

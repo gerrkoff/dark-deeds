@@ -8,5 +8,7 @@ public interface ITaskServiceApp
 
     Task<IEnumerable<TaskDto>> SaveTasksAsync(ICollection<TaskDto> tasks, string userId);
 
+    Task<IEnumerable<TaskDto>> UpdateTasksAsync(ICollection<TaskUpdateDto> updates, string userId);
+
     Task<TaskDto> ParseTask(string text);
 }

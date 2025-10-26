@@ -21,4 +21,22 @@ internal static partial class Log
         Level = LogLevel.Warning,
         Message = "Tried to delete non existing task. TaskUid: {TaskUid}")]
     public static partial void TriedToDeleteNonExistingTask(ILogger logger, string taskUid);
+
+    [LoggerMessage(
+        EventId = 1004,
+        Level = LogLevel.Warning,
+        Message = "Tried to update non existing task. TaskUid: {TaskUid}")]
+    public static partial void TriedToUpdateNonExistingTask(ILogger logger, string taskUid);
+
+    [LoggerMessage(
+        EventId = 1005,
+        Level = LogLevel.Warning,
+        Message = "Tried to update deleted task. TaskUid: {TaskUid}")]
+    public static partial void TriedToUpdateDeletedTask(ILogger logger, string taskUid);
+
+    [LoggerMessage(
+        EventId = 1006,
+        Level = LogLevel.Warning,
+        Message = "Update task version conflict. TaskUid: {TaskUid}")]
+    public static partial void UpdateTaskVersionConflict(ILogger logger, string taskUid);
 }
