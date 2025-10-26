@@ -31,6 +31,8 @@ public interface ITaskService
     Task<IEnumerable<TaskDto>> LoadTasksByDateAsync(string userId, DateTime from, DateTime till);
 
     Task<IEnumerable<TaskDto>> SaveTasksAsync(ICollection<TaskDto> tasks, string userId);
+
+    Task<IEnumerable<TaskDto>> UpdateTasksAsync(ICollection<TaskUpdateDto> updates, string userId);
 }
 
 public class TaskService(
@@ -86,6 +88,55 @@ public class TaskService(
         }
 
         return savedTasks;
+    }
+
+    public async Task<IEnumerable<TaskDto>> UpdateTasksAsync(ICollection<TaskUpdateDto> updates, string userId)
+    {
+        var updatedTasks = new List<TaskDto>();
+
+        foreach (var update in updates)
+        {
+            var entity = await tasksRepository.GetByIdAsync(update.Uid);
+
+            if (entity == null)
+            {
+                Log.TriedToUpdateNonExistingTask(logger, update.Uid);
+                continue;
+            }
+
+            if (entity.DeletedAt != null)
+            {
+                Log.TriedToUpdateDeletedTask(logger, update.Uid);
+                continue;
+            }
+
+            if (!string.Equals(entity.UserId, userId, StringComparison.Ordinal))
+            {
+                Log.TriedToUpdateForeignTask(logger, update.Uid, userId);
+                continue;
+            }
+
+            entity.Order = update.Order;
+            var (success, _) = await tasksRepository.TryUpdateVersionAsync(entity);
+            if (!success)
+            {
+                Log.UpdateTaskVersionConflict(logger, update.Uid);
+                continue;
+            }
+
+            updatedTasks.Add(mapper.Map<TaskDto>(entity));
+        }
+
+        if (updatedTasks.Count > 0)
+        {
+            await notifierService.TaskUpdated(new TasksUpdatedDto
+            {
+                Tasks = updatedTasks,
+                UserId = userId,
+            });
+        }
+
+        return updatedTasks;
     }
 
     private async Task<TaskDto?> SaveTaskByUidAsync(TaskDto taskToSave, string userId)

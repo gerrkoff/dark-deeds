@@ -4,7 +4,7 @@ using ModelContextProtocol.Server;
 namespace DarkDeeds.Mcp.Prompts;
 
 [McpServerPromptType]
-public static class DarkDeedsPrompt
+public static class BasicPrompt
 {
     [McpServerPrompt(Name = "basic")]
     [Description("Default Dark Deeds task management prompt - general purpose assistant for task planning and management")]

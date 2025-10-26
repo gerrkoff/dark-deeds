@@ -19,6 +19,11 @@ public class TaskServiceApp(
         return taskService.SaveTasksAsync(tasks, userId);
     }
 
+    public Task<IEnumerable<TaskDto>> UpdateTasksAsync(ICollection<TaskUpdateDto> updates, string userId)
+    {
+        return taskService.UpdateTasksAsync(updates, userId);
+    }
+
     public Task<TaskDto> ParseTask(string text)
     {
         return Task.FromResult(taskParserService.ParseTask(text));
