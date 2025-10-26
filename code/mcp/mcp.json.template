@@ -1,6 +1,19 @@
 {
 	"servers": {
-		"darkdeeds-dbg": {
+    "darkdeeds-dbg": {
+        "type": "stdio",
+        "command": "dotnet",
+        "args": [
+            "run",
+            "--project",
+            "/workspaces/dark-deeds/code/mcp/DarkDeeds.Mcp/DarkDeeds.Mcp.csproj"
+        ],
+        "env": {
+            "DD_MCP_API_KEY": "${input:dark-deeds-api-key}",
+            "DD_MCP_USER_ID": "${input:dark-deeds-user-id}",
+            "DD_MCP_API_URL": "http://192.168.1.5:5000/api/mcp"
+        },
+        "darkdeeds": {
 			"type": "stdio",
 			"command": "docker",
 			"args": [
