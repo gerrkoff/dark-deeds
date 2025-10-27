@@ -39,14 +39,14 @@
         "--readOnly"
       ]
     },
+    "chrome-devtools": {
+      "command": "npx",
+      "args": ["chrome-devtools-mcp@latest"]
+    },
     "darkdeeds-dbg": {
       "type": "stdio",
       "command": "dotnet",
-      "args": [
-        "run",
-        "--project",
-        "/workspaces/dark-deeds/code/mcp/DarkDeeds.Mcp/DarkDeeds.Mcp.csproj"
-      ],
+      "args": ["run", "--project", "/workspaces/dark-deeds/code/mcp/DarkDeeds.Mcp/DarkDeeds.Mcp.csproj"],
       "env": {
         "DD_MCP_API_KEY": "${input:dark-deeds-api-key}",
         "DD_MCP_USER_ID": "${input:dark-deeds-user-id}",
