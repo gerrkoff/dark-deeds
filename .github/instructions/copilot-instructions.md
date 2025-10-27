@@ -88,6 +88,10 @@ Balance efficiency with transparency:
 - Use clear variable names, proper formatting, and comments where helpful for reviewers
 </tool_preambles>
 
+## Project Context
+
+For an understanding of the project's purpose, domain concepts, and key features, see [project-overview.instructions.md](project-overview.instructions.md)
+
 ## Technology Stack Rules
 
 This project contains different technology stacks with specific development rules:
