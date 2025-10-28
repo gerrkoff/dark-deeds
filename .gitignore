@@ -12,6 +12,7 @@ build
 ci/results
 *.sln.DotSettings.user
 .vscode/memory
+.playwright-mcp
 
 UserInterfaceState.xcuserstate
 

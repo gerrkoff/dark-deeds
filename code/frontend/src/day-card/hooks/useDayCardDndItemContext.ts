@@ -1,34 +1,45 @@
-import { useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import { TaskModel } from '../../tasks/models/TaskModel'
 import {
     DayCardItemDndContext,
-    dropZoneBottomId,
+    dropZoneBottomIdPrefix,
     DropZoneDirectionType,
     DropZoneIdType,
 } from '../models/DayCardDndContext'
+import { DayCardDndGlobalContext } from './useDayCardDndGlobalContext'
 
 interface Output {
-    context: DayCardItemDndContext
+    draggedTaskUid: string | null
+    dropzoneHighlightedTaskUid: DropZoneIdType | null
+    handleListDragLeave: () => void
+    itemDndContext: DayCardItemDndContext
 }
 
 interface Props {
     tasks: TaskModel[]
+    bottomDropZoneId: string
     onSaveTasks: (tasks: TaskModel[]) => void
     onTransformDrop: (task: TaskModel) => TaskModel
-    setDraggedTaskUid: (uid: string | null) => void
-    setDropzoneHighlightedTaskUid: (uid: DropZoneIdType | null) => void
+    globalDndContext: DayCardDndGlobalContext
 }
 
 let draggedTaskPayload: TaskModel | null = null
 
 export function useDayCardDndItemContext({
     tasks,
+    bottomDropZoneId,
     onSaveTasks,
     onTransformDrop,
-    setDraggedTaskUid,
-    setDropzoneHighlightedTaskUid,
+    globalDndContext,
 }: Props): Output {
-    const context = useMemo(
+    const { draggedTaskUid, dropzoneHighlightedTaskUid, setDraggedTaskUid, setDropzoneHighlightedTaskUid } =
+        globalDndContext
+
+    const handleListDragLeave = useCallback(() => {
+        setDropzoneHighlightedTaskUid(null)
+    }, [setDropzoneHighlightedTaskUid])
+
+    const itemDndContext = useMemo(
         () => ({
             handleItemDragStart(task: TaskModel): void {
                 setDraggedTaskUid(task.uid)
@@ -49,7 +60,8 @@ export function useDayCardDndItemContext({
 
                 e.preventDefault()
 
-                setDropzoneHighlightedTaskUid(itemIndex === tasks.length ? dropZoneBottomId : tasks[itemIndex].uid)
+                const highlightUid = itemIndex === tasks.length ? bottomDropZoneId : tasks[itemIndex].uid
+                setDropzoneHighlightedTaskUid(highlightUid)
             },
 
             handleItemDrop(e: DragEvent, dropZoneId: DropZoneIdType, direction: 'above' | 'below'): void {
@@ -81,11 +93,18 @@ export function useDayCardDndItemContext({
 
                 onSaveTasks([updatedItem])
             },
+
+            bottomDropZoneId,
         }),
-        [onSaveTasks, onTransformDrop, setDraggedTaskUid, setDropzoneHighlightedTaskUid, tasks],
+        [bottomDropZoneId, onSaveTasks, onTransformDrop, setDraggedTaskUid, setDropzoneHighlightedTaskUid, tasks],
     )
 
-    return { context }
+    return {
+        draggedTaskUid,
+        dropzoneHighlightedTaskUid,
+        handleListDragLeave,
+        itemDndContext,
+    }
 }
 
 export function clearDraggedTask(): void {
@@ -107,7 +126,7 @@ function canDrop(tasks: TaskModel[], draggedTask: TaskModel, droppingIndex: numb
 }
 
 function findCorrespondingIndex(tasks: TaskModel[], uid: DropZoneIdType, direction: DropZoneDirectionType): number {
-    if (uid === dropZoneBottomId) {
+    if (uid.startsWith(dropZoneBottomIdPrefix)) {
         if (direction === 'above') {
             return tasks.length
         } else {

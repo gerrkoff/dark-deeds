@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import { DayCardItemDndContext, dropZoneBottomId } from '../models/DayCardDndContext'
+import { DayCardItemDndContext } from '../models/DayCardDndContext'
 
 interface Output {
     listRef: React.RefObject<HTMLUListElement>
@@ -36,14 +36,14 @@ export function useDayCardDndList({ handleListDragLeave, itemDndContext }: Props
             return
         }
 
-        const { handleItemDragOver, handleItemDrop } = itemDndContext
+        const { handleItemDragOver, handleItemDrop, bottomDropZoneId } = itemDndContext
 
         const handleDragOver = (e: DragEvent) => {
-            handleItemDragOver(e, dropZoneBottomId, 'above')
+            handleItemDragOver(e, bottomDropZoneId, 'above')
         }
 
         const handleDrop = (e: DragEvent) => {
-            handleItemDrop(e, dropZoneBottomId, 'above')
+            handleItemDrop(e, bottomDropZoneId, 'above')
         }
 
         element.addEventListener('dragover', handleDragOver)

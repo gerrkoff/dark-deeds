@@ -3,16 +3,19 @@ import { DayCardItem } from './DayCardItem'
 import { TaskTypeEnum } from '../../tasks/models/TaskTypeEnum'
 import clsx from 'clsx'
 import styles from './DayCard.module.css'
-import { useDayCardDnd } from '../hooks/useDayCardDnd'
+import { useDayCardDndItemContext } from '../hooks/useDayCardDndItemContext'
 import { useDayCardDndList } from '../hooks/useDayCardDndList'
 import { memo, useMemo } from 'react'
-import { dropZoneBottomId } from '../models/DayCardDndContext'
+import { DayCardDndGlobalContext } from '../hooks/useDayCardDndGlobalContext'
+import { dropZoneBottomIdPrefix } from '../models/DayCardDndContext'
+import { uuidv4 } from '../../common/utils/uuidv4'
 
 interface Props {
     tasks: TaskModel[]
     openedMenuTaskUid: string | null
     isDebug: boolean
     isRoutineShown: boolean
+    globalDndContext: DayCardDndGlobalContext
     onOpenTaskMenu: (e: React.MouseEvent<HTMLElement>, task: TaskModel) => void
     onSaveTasks: (tasks: TaskModel[]) => void
     onTransformDrop: (task: TaskModel) => TaskModel
@@ -23,20 +26,25 @@ function DayCardList({
     openedMenuTaskUid,
     isDebug,
     isRoutineShown,
+    globalDndContext,
     onOpenTaskMenu,
     onSaveTasks,
     onTransformDrop,
 }: Props) {
+    const bottomDropZoneId = useMemo(() => `${dropZoneBottomIdPrefix}-${uuidv4()}`, [])
     const shownTasks = useMemo(
         () => (isRoutineShown ? tasks : tasks.filter(task => task.type !== TaskTypeEnum.Routine)),
         [isRoutineShown, tasks],
     )
 
-    const { draggedTaskUid, dropzoneHighlightedTaskUid, handleListDragLeave, itemDndContext } = useDayCardDnd({
-        tasks: shownTasks,
-        onSaveTasks,
-        onTransformDrop,
-    })
+    const { draggedTaskUid, dropzoneHighlightedTaskUid, handleListDragLeave, itemDndContext } =
+        useDayCardDndItemContext({
+            tasks: shownTasks,
+            bottomDropZoneId,
+            onSaveTasks,
+            onTransformDrop,
+            globalDndContext,
+        })
 
     const { listRef, lastItemRef } = useDayCardDndList({
         handleListDragLeave,
@@ -62,8 +70,8 @@ function DayCardList({
                     ref={lastItemRef}
                     className={clsx(
                         'd-inline flex-grow-1',
-                        dropzoneHighlightedTaskUid !== dropZoneBottomId && styles.item,
-                        dropzoneHighlightedTaskUid === dropZoneBottomId && 'border-top border-primary',
+                        dropzoneHighlightedTaskUid !== bottomDropZoneId && styles.item,
+                        dropzoneHighlightedTaskUid === bottomDropZoneId && 'border-top border-primary',
                     )}
                     style={{
                         boxSizing: 'initial',
