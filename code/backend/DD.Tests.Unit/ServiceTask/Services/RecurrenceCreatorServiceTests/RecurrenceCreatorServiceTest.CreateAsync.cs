@@ -1,4 +1,3 @@
-using System.Linq.Expressions;
 using DD.ServiceTask.Domain.Entities;
 using DD.ServiceTask.Domain.Entities.Enums;
 using DD.Shared.Details.Abstractions.Dto;
@@ -63,10 +62,20 @@ public partial class RecurrenceCreatorServiceTest
 
         await service.CreateAsync(0, "userId");
 
-        _plannedRecurrenceRepoMock.Verify(x => x.TryUpdateVersionPropsAsync(
-            It.Is<PlannedRecurrenceEntity>(
-                y => y.Recurrences.Any(z => z.DateTime == now && z.TaskUid == "uid")),
-            It.IsAny<Expression<Func<PlannedRecurrenceEntity, object>>[]>()));
+        // Verify that TryAddRecurrenceAsync was called for the date
+        _plannedRecurrenceRepoMock.Verify(
+            x => x.TryAddRecurrenceAsync(
+                It.IsAny<string>(),
+                It.Is<RecurrenceEntity>(r => r.DateTime == now)),
+            Times.AtLeastOnce);
+
+        // Verify that TryUpdateRecurrenceTaskUidAsync was called with the task UID
+        _plannedRecurrenceRepoMock.Verify(
+            x => x.TryUpdateRecurrenceTaskUidAsync(
+                It.IsAny<string>(),
+                now,
+                "uid"),
+            Times.AtLeastOnce);
     }
 
     [Fact]

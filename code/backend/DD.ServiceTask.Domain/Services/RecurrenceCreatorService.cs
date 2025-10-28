@@ -36,26 +36,34 @@ public class RecurrenceCreatorService(
             .FilterNotDeleted();
         var plannedRecurrences = await plannedRecurrenceRepository.GetBySpecAsync(spec);
 
-        foreach (var item in plannedRecurrences)
+        foreach (var plannedRecurrence in plannedRecurrences)
         {
-            var plannedRecurrence = item;
             var dates = EvaluateRecurrenceDatesWithinPeriod(plannedRecurrence, timezoneOffset);
             foreach (var date in dates)
             {
-                var alreadyExists = plannedRecurrence.Recurrences.Any(x => x.DateTime == date);
-
-                if (alreadyExists)
-                    continue;
-
-                var task = CreateTaskFromRecurrence(plannedRecurrence, date);
-                await taskRepository.UpsertAsync(task);
-                plannedRecurrence = await SaveRecurrence(
-                    plannedRecurrence,
+                // Try to atomically add the recurrence for this date
+                // This prevents race conditions - only one thread will successfully add it
+                var recurrenceAdded = await plannedRecurrenceRepository.TryAddRecurrenceAsync(
+                    plannedRecurrence.Uid,
                     new RecurrenceEntity
                     {
                         DateTime = date,
-                        TaskUid = task.Uid,
+                        TaskUid = string.Empty, // Will be updated after task creation
                     });
+
+                if (!recurrenceAdded)
+                {
+                    // Another thread already added this date, skip it
+                    continue;
+                }
+
+                // Now we have exclusive ownership of this date, create the task
+                var task = CreateTaskFromRecurrence(plannedRecurrence, date);
+                await taskRepository.UpsertAsync(task);
+
+                // Update the TaskUid in the recurrence
+                await UpdateRecurrenceTaskUid(plannedRecurrence.Uid, date, task.Uid);
+
                 createdRecurrencesCount++;
                 Notify(task, userId);
             }
@@ -138,23 +146,17 @@ public class RecurrenceCreatorService(
         return dayList.Contains(date.Day);
     }
 
-    private async Task<PlannedRecurrenceEntity> SaveRecurrence(
-        PlannedRecurrenceEntity entity,
-        RecurrenceEntity recurrence)
+    private async Task UpdateRecurrenceTaskUid(string plannedRecurrenceUid, DateTime date, string taskUid)
     {
-        var entityToSave = entity;
-        bool success;
-        do
-        {
-            entityToSave.Recurrences.Add(recurrence);
-            (success, var currentEntity) = await plannedRecurrenceRepository
-                .TryUpdateVersionPropsAsync(entityToSave, x => x.Recurrences);
-            if (!success)
-                entityToSave = currentEntity;
-        }
-        while (!success && entityToSave != null);
+        var success = await plannedRecurrenceRepository.TryUpdateRecurrenceTaskUidAsync(
+            plannedRecurrenceUid,
+            date,
+            taskUid);
 
-        return entityToSave ?? throw new InvalidOperationException("Can't save recurrence");
+        if (!success)
+        {
+            Log.FailedToUpdateRecurrenceTaskUid(logger, plannedRecurrenceUid, date, taskUid);
+        }
     }
 
     private void Notify(TaskEntity task, string userId)
