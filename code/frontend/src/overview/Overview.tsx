@@ -12,7 +12,7 @@ import { SectionToggle } from '../common/components/SectionToggle'
 import { DayCardsSection } from '../day-card/components/DayCardsSection'
 import { updateAndSyncTasks } from './redux/overview-thunk'
 import { toggleRoutineTaskDate } from './redux/overview-slice'
-import { useDayCardDndGlobal } from '../day-card/hooks/useDayCardDndGlobal'
+import { useDayCardDndGlobalContext } from '../day-card/hooks/useDayCardDndGlobalContext'
 
 function Overview() {
     const dispatch = useAppDispatch()
@@ -26,7 +26,7 @@ function Overview() {
 
     const routineTaskDatesShown = useAppSelector(overviewTaskRoutinesSelector)
 
-    const dndGlobalState = useDayCardDndGlobal()
+    const globalDndContext = useDayCardDndGlobalContext()
 
     const handleNoDateToggle = useCallback(() => dispatch(toggleOverviewTab(OverviewTabEnum.NoDate)), [dispatch])
 
@@ -56,7 +56,7 @@ function Overview() {
                     <NoDateSection
                         tasks={model.noDate}
                         isDebug={isDebugEnabled}
-                        dndGlobalState={dndGlobalState}
+                        globalDndContext={globalDndContext}
                         saveTasks={saveTasks}
                     />
                 </SectionToggle>
@@ -72,7 +72,7 @@ function Overview() {
                             dayCards={model.expired}
                             isDebug={isDebugEnabled}
                             routineTaskDatesShown={routineTaskDatesShown}
-                            dndGlobalState={dndGlobalState}
+                            globalDndContext={globalDndContext}
                             saveTasks={saveTasks}
                             onRoutineToggle={handleRoutineToggle}
                         />
@@ -91,7 +91,7 @@ function Overview() {
                         daysInRowCount={7}
                         isDebug={isDebugEnabled}
                         routineTaskDatesShown={routineTaskDatesShown}
-                        dndGlobalState={dndGlobalState}
+                        globalDndContext={globalDndContext}
                         saveTasks={saveTasks}
                         onRoutineToggle={handleRoutineToggle}
                     />
@@ -108,7 +108,7 @@ function Overview() {
                             dayCards={model.future}
                             isDebug={isDebugEnabled}
                             routineTaskDatesShown={routineTaskDatesShown}
-                            dndGlobalState={dndGlobalState}
+                            globalDndContext={globalDndContext}
                             saveTasks={saveTasks}
                             onRoutineToggle={handleRoutineToggle}
                         />

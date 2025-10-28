@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { clearDraggedTask } from './useDayCardDndItemContext'
 import { DropZoneIdType } from '../models/DayCardDndContext'
 
-export interface DayCardDndGlobalState {
+export interface DayCardDndGlobalContext {
     draggedTaskUid: string | null
     dropzoneHighlightedTaskUid: DropZoneIdType | null
     setDraggedTaskUid: (uid: string | null) => void
@@ -14,7 +14,7 @@ export interface DayCardDndGlobalState {
  * Should be used once at the top level (e.g., in Overview component).
  * Manages document-level events and provides debounced state updates.
  */
-export function useDayCardDndGlobal(): DayCardDndGlobalState {
+export function useDayCardDndGlobalContext(): DayCardDndGlobalContext {
     const [draggedTaskUid, setDraggedTaskUid] = useState<string | null>(null)
     const [dropzoneHighlightedTaskUid, setDropzoneHighlightedTaskUidState] = useState<DropZoneIdType | null>(null)
 

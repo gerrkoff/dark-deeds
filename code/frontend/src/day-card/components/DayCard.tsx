@@ -13,18 +13,18 @@ import { useDayCardMenuItem } from '../hooks/useDayCardMenuItem'
 import { useDayCardMenuHeader } from '../hooks/useDayCardMenuHeader'
 import { dateService } from '../../common/services/DateService'
 import { taskTransformService } from '../../common/services/TaskTransformService'
-import { DayCardDndGlobalState } from '../hooks/useDayCardDndGlobal'
+import { DayCardDndGlobalContext } from '../hooks/useDayCardDndGlobalContext'
 
 interface Props {
     dayCardModel: DayCardModel
     isDebug: boolean
     isRoutineShown: boolean
-    dndGlobalState: DayCardDndGlobalState
+    globalDndContext: DayCardDndGlobalContext
     saveTasks: (tasks: TaskModel[]) => void
     onRoutineToggle: (date: Date) => void
 }
 
-function DayCard({ dayCardModel, isDebug, isRoutineShown, dndGlobalState, saveTasks, onRoutineToggle }: Props) {
+function DayCard({ dayCardModel, isDebug, isRoutineShown, globalDndContext, saveTasks, onRoutineToggle }: Props) {
     const cardRef = useRef<HTMLDivElement>(null)
 
     const { taskEditModalContext, openTaskEditModal } = useEditTaskModal()
@@ -63,7 +63,7 @@ function DayCard({ dayCardModel, isDebug, isRoutineShown, dndGlobalState, saveTa
                     tasks={dayCardModel.tasks}
                     isDebug={isDebug}
                     isRoutineShown={isRoutineShown}
-                    dndGlobalState={dndGlobalState}
+                    globalDndContext={globalDndContext}
                     openedMenuTaskUid={itemMenuContext?.task.uid ?? null}
                     onOpenTaskMenu={openItemMenu}
                     onSaveTasks={saveTasks}

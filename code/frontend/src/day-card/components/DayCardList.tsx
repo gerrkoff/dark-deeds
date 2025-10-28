@@ -7,14 +7,14 @@ import { useDayCardDndItemContext } from '../hooks/useDayCardDndItemContext'
 import { useDayCardDndList } from '../hooks/useDayCardDndList'
 import { memo, useMemo } from 'react'
 import { dropZoneBottomId } from '../models/DayCardDndContext'
-import { DayCardDndGlobalState } from '../hooks/useDayCardDndGlobal'
+import { DayCardDndGlobalContext } from '../hooks/useDayCardDndGlobalContext'
 
 interface Props {
     tasks: TaskModel[]
     openedMenuTaskUid: string | null
     isDebug: boolean
     isRoutineShown: boolean
-    dndGlobalState: DayCardDndGlobalState
+    globalDndContext: DayCardDndGlobalContext
     onOpenTaskMenu: (e: React.MouseEvent<HTMLElement>, task: TaskModel) => void
     onSaveTasks: (tasks: TaskModel[]) => void
     onTransformDrop: (task: TaskModel) => TaskModel
@@ -25,7 +25,7 @@ function DayCardList({
     openedMenuTaskUid,
     isDebug,
     isRoutineShown,
-    dndGlobalState,
+    globalDndContext,
     onOpenTaskMenu,
     onSaveTasks,
     onTransformDrop,
@@ -40,7 +40,7 @@ function DayCardList({
             tasks: shownTasks,
             onSaveTasks,
             onTransformDrop,
-            dndGlobalState,
+            globalDndContext,
         })
 
     const { listRef, lastItemRef } = useDayCardDndList({

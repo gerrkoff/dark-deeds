@@ -6,7 +6,7 @@ import {
     DropZoneDirectionType,
     DropZoneIdType,
 } from '../models/DayCardDndContext'
-import { DayCardDndGlobalState } from './useDayCardDndGlobal'
+import { DayCardDndGlobalContext } from './useDayCardDndGlobalContext'
 
 interface Output {
     draggedTaskUid: string | null
@@ -19,14 +19,14 @@ interface Props {
     tasks: TaskModel[]
     onSaveTasks: (tasks: TaskModel[]) => void
     onTransformDrop: (task: TaskModel) => TaskModel
-    dndGlobalState: DayCardDndGlobalState
+    globalDndContext: DayCardDndGlobalContext
 }
 
 let draggedTaskPayload: TaskModel | null = null
 
-export function useDayCardDndItemContext({ tasks, onSaveTasks, onTransformDrop, dndGlobalState }: Props): Output {
+export function useDayCardDndItemContext({ tasks, onSaveTasks, onTransformDrop, globalDndContext }: Props): Output {
     const { draggedTaskUid, dropzoneHighlightedTaskUid, setDraggedTaskUid, setDropzoneHighlightedTaskUid } =
-        dndGlobalState
+        globalDndContext
 
     const handleListDragLeave = useCallback(() => {
         setDropzoneHighlightedTaskUid(null)
