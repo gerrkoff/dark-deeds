@@ -2,7 +2,7 @@ import { useCallback, useMemo } from 'react'
 import { TaskModel } from '../../tasks/models/TaskModel'
 import {
     DayCardItemDndContext,
-    dropZoneBottomId,
+    dropZoneBottomIdPrefix,
     DropZoneDirectionType,
     DropZoneIdType,
 } from '../models/DayCardDndContext'
@@ -17,6 +17,7 @@ interface Output {
 
 interface Props {
     tasks: TaskModel[]
+    bottomDropZoneId: string
     onSaveTasks: (tasks: TaskModel[]) => void
     onTransformDrop: (task: TaskModel) => TaskModel
     globalDndContext: DayCardDndGlobalContext
@@ -24,7 +25,13 @@ interface Props {
 
 let draggedTaskPayload: TaskModel | null = null
 
-export function useDayCardDndItemContext({ tasks, onSaveTasks, onTransformDrop, globalDndContext }: Props): Output {
+export function useDayCardDndItemContext({
+    tasks,
+    bottomDropZoneId,
+    onSaveTasks,
+    onTransformDrop,
+    globalDndContext,
+}: Props): Output {
     const { draggedTaskUid, dropzoneHighlightedTaskUid, setDraggedTaskUid, setDropzoneHighlightedTaskUid } =
         globalDndContext
 
@@ -53,7 +60,7 @@ export function useDayCardDndItemContext({ tasks, onSaveTasks, onTransformDrop, 
 
                 e.preventDefault()
 
-                const highlightUid = itemIndex === tasks.length ? dropZoneBottomId : tasks[itemIndex].uid
+                const highlightUid = itemIndex === tasks.length ? bottomDropZoneId : tasks[itemIndex].uid
                 setDropzoneHighlightedTaskUid(highlightUid)
             },
 
@@ -86,8 +93,10 @@ export function useDayCardDndItemContext({ tasks, onSaveTasks, onTransformDrop, 
 
                 onSaveTasks([updatedItem])
             },
+
+            bottomDropZoneId,
         }),
-        [onSaveTasks, onTransformDrop, setDraggedTaskUid, setDropzoneHighlightedTaskUid, tasks],
+        [bottomDropZoneId, onSaveTasks, onTransformDrop, setDraggedTaskUid, setDropzoneHighlightedTaskUid, tasks],
     )
 
     return {
@@ -117,7 +126,7 @@ function canDrop(tasks: TaskModel[], draggedTask: TaskModel, droppingIndex: numb
 }
 
 function findCorrespondingIndex(tasks: TaskModel[], uid: DropZoneIdType, direction: DropZoneDirectionType): number {
-    if (uid === dropZoneBottomId) {
+    if (uid.startsWith(dropZoneBottomIdPrefix)) {
         if (direction === 'above') {
             return tasks.length
         } else {

@@ -6,8 +6,9 @@ import styles from './DayCard.module.css'
 import { useDayCardDndItemContext } from '../hooks/useDayCardDndItemContext'
 import { useDayCardDndList } from '../hooks/useDayCardDndList'
 import { memo, useMemo } from 'react'
-import { dropZoneBottomId } from '../models/DayCardDndContext'
 import { DayCardDndGlobalContext } from '../hooks/useDayCardDndGlobalContext'
+import { dropZoneBottomIdPrefix } from '../models/DayCardDndContext'
+import { uuidv4 } from '../../common/utils/uuidv4'
 
 interface Props {
     tasks: TaskModel[]
@@ -30,6 +31,7 @@ function DayCardList({
     onSaveTasks,
     onTransformDrop,
 }: Props) {
+    const bottomDropZoneId = useMemo(() => `${dropZoneBottomIdPrefix}-${uuidv4()}`, [])
     const shownTasks = useMemo(
         () => (isRoutineShown ? tasks : tasks.filter(task => task.type !== TaskTypeEnum.Routine)),
         [isRoutineShown, tasks],
@@ -38,6 +40,7 @@ function DayCardList({
     const { draggedTaskUid, dropzoneHighlightedTaskUid, handleListDragLeave, itemDndContext } =
         useDayCardDndItemContext({
             tasks: shownTasks,
+            bottomDropZoneId,
             onSaveTasks,
             onTransformDrop,
             globalDndContext,
@@ -67,8 +70,8 @@ function DayCardList({
                     ref={lastItemRef}
                     className={clsx(
                         'd-inline flex-grow-1',
-                        dropzoneHighlightedTaskUid !== dropZoneBottomId && styles.item,
-                        dropzoneHighlightedTaskUid === dropZoneBottomId && 'border-top border-primary',
+                        dropzoneHighlightedTaskUid !== bottomDropZoneId && styles.item,
+                        dropzoneHighlightedTaskUid === bottomDropZoneId && 'border-top border-primary',
                     )}
                     style={{
                         boxSizing: 'initial',
