@@ -9,6 +9,9 @@ export interface DayCardDndGlobalContext {
     setDropzoneHighlightedTaskUid: (uid: DropZoneIdType | null) => void
 }
 
+let prevDropzoneHighlightedTaskUid: DropZoneIdType | null = null
+let pendingNullUpdateTimeout: NodeJS.Timeout | null = null
+
 /**
  * Global drag and drop state management hook.
  * Should be used once at the top level (e.g., in Overview component).
@@ -19,7 +22,28 @@ export function useDayCardDndGlobalContext(): DayCardDndGlobalContext {
     const [dropzoneHighlightedTaskUid, setDropzoneHighlightedTaskUidState] = useState<DropZoneIdType | null>(null)
 
     const setDropzoneHighlightedTaskUid = useCallback((uid: DropZoneIdType | null) => {
-        debouncedSetValue(uid, setDropzoneHighlightedTaskUidState)
+        if (uid === null) {
+            // Debounce null updates: only start timer if not already running
+            if (prevDropzoneHighlightedTaskUid !== uid && pendingNullUpdateTimeout === null) {
+                pendingNullUpdateTimeout = setTimeout(() => {
+                    setDropzoneHighlightedTaskUidState(null)
+                    prevDropzoneHighlightedTaskUid = null
+                    pendingNullUpdateTimeout = null
+                }, 8)
+            }
+        } else {
+            // Cancel pending null update immediately for any non-null value
+            if (pendingNullUpdateTimeout !== null) {
+                clearTimeout(pendingNullUpdateTimeout)
+                pendingNullUpdateTimeout = null
+            }
+
+            // Skip state update if value hasn't changed
+            if (prevDropzoneHighlightedTaskUid !== uid) {
+                setDropzoneHighlightedTaskUidState(uid)
+                prevDropzoneHighlightedTaskUid = uid
+            }
+        }
     }, [])
 
     useEffect(() => {
@@ -44,7 +68,6 @@ export function useDayCardDndGlobalContext(): DayCardDndGlobalContext {
         return () => {
             document.removeEventListener('drop', handleDrop)
             document.removeEventListener('dragend', handleDragEnd)
-            clearDebouncedSetValue()
         }
     }, [setDropzoneHighlightedTaskUid])
 
@@ -53,32 +76,5 @@ export function useDayCardDndGlobalContext(): DayCardDndGlobalContext {
         dropzoneHighlightedTaskUid,
         setDraggedTaskUid,
         setDropzoneHighlightedTaskUid,
-    }
-}
-
-// Debouncing logic to reduce unnecessary state updates during drag operations
-let dropzoneHighlightUpdateTimer: ReturnType<typeof setTimeout> | undefined
-let lastDropzoneHighlightValue: DropZoneIdType | null | undefined
-
-function debouncedSetValue(value: DropZoneIdType | null, setter: (value: DropZoneIdType | null) => void): void {
-    if (!dropzoneHighlightUpdateTimer) {
-        dropzoneHighlightUpdateTimer = setTimeout(() => {
-            const lastValue = lastDropzoneHighlightValue
-            if (lastValue !== undefined) {
-                setter(lastValue)
-            }
-            dropzoneHighlightUpdateTimer = undefined
-            lastDropzoneHighlightValue = undefined
-        }, 16)
-    }
-
-    lastDropzoneHighlightValue = value
-}
-
-function clearDebouncedSetValue(): void {
-    if (dropzoneHighlightUpdateTimer) {
-        clearTimeout(dropzoneHighlightUpdateTimer)
-        dropzoneHighlightUpdateTimer = undefined
-        lastDropzoneHighlightValue = undefined
     }
 }
