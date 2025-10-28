@@ -1,33 +1,31 @@
 import { useCallback, useEffect, useState } from 'react'
-import { TaskModel } from '../../tasks/models/TaskModel'
-import { DayCardItemDndContext, DropZoneIdType } from '../models/DayCardDndContext'
-import { clearDraggedTask, useDayCardDndItemContext } from './useDayCardDndItemContext'
+import { clearDraggedTask } from './useDayCardDndItemContext'
+import { DropZoneIdType } from '../models/DayCardDndContext'
 
-interface Output {
+export interface DayCardDndGlobalState {
     draggedTaskUid: string | null
     dropzoneHighlightedTaskUid: DropZoneIdType | null
-    handleListDragLeave: () => void
-    itemDndContext: DayCardItemDndContext
+    setDraggedTaskUid: (uid: string | null) => void
+    setDropzoneHighlightedTaskUid: (uid: DropZoneIdType | null) => void
 }
 
-interface Props {
-    tasks: TaskModel[]
-    onSaveTasks: (tasks: TaskModel[]) => void
-    onTransformDrop: (task: TaskModel) => TaskModel
-}
-
-export function useDayCardDnd({ tasks, onSaveTasks, onTransformDrop }: Props): Output {
+/**
+ * Global drag and drop state management hook.
+ * Should be used once at the top level (e.g., in Overview component).
+ * Manages document-level events and provides debounced state updates.
+ */
+export function useDayCardDndGlobal(): DayCardDndGlobalState {
     const [draggedTaskUid, setDraggedTaskUid] = useState<string | null>(null)
-    const [dropzoneHighlightedTaskUid, setDropzoneHighlightedTaskUid] = useState<DropZoneIdType | null>(null)
+    const [dropzoneHighlightedTaskUid, setDropzoneHighlightedTaskUidState] = useState<DropZoneIdType | null>(null)
 
-    const setupDropzoneHighlightedTaskUid = useCallback((dropzoneHighlightedTaskUid: DropZoneIdType | null) => {
-        debouncedSetValue(dropzoneHighlightedTaskUid, setDropzoneHighlightedTaskUid)
+    const setDropzoneHighlightedTaskUid = useCallback((uid: DropZoneIdType | null) => {
+        debouncedSetValue(uid, setDropzoneHighlightedTaskUidState)
     }, [])
 
     useEffect(() => {
         const handleDrop = () => {
             setDraggedTaskUid(null)
-            setupDropzoneHighlightedTaskUid(null)
+            setDropzoneHighlightedTaskUid(null)
             clearDraggedTask()
         }
 
@@ -36,7 +34,7 @@ export function useDayCardDnd({ tasks, onSaveTasks, onTransformDrop }: Props): O
                 return
             }
             setDraggedTaskUid(null)
-            setupDropzoneHighlightedTaskUid(null)
+            setDropzoneHighlightedTaskUid(null)
             clearDraggedTask()
         }
 
@@ -48,28 +46,17 @@ export function useDayCardDnd({ tasks, onSaveTasks, onTransformDrop }: Props): O
             document.removeEventListener('dragend', handleDragEnd)
             clearDebouncedSetValue()
         }
-    }, [setupDropzoneHighlightedTaskUid])
-
-    const handleListDragLeave = useCallback(() => {
-        setupDropzoneHighlightedTaskUid(null)
-    }, [setupDropzoneHighlightedTaskUid])
-
-    const { context: itemDndContext } = useDayCardDndItemContext({
-        tasks,
-        onSaveTasks,
-        onTransformDrop,
-        setDraggedTaskUid,
-        setDropzoneHighlightedTaskUid: setupDropzoneHighlightedTaskUid,
-    })
+    }, [setDropzoneHighlightedTaskUid])
 
     return {
         draggedTaskUid,
         dropzoneHighlightedTaskUid,
-        handleListDragLeave,
-        itemDndContext,
+        setDraggedTaskUid,
+        setDropzoneHighlightedTaskUid,
     }
 }
 
+// Debouncing logic to reduce unnecessary state updates during drag operations
 let dropzoneHighlightUpdateTimer: ReturnType<typeof setTimeout> | undefined
 let lastDropzoneHighlightValue: DropZoneIdType | null | undefined
 

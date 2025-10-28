@@ -3,12 +3,14 @@ import { memo, useMemo } from 'react'
 import clsx from 'clsx'
 import { DayCard } from './DayCard'
 import { TaskModel } from '../../tasks/models/TaskModel'
+import { DayCardDndGlobalState } from '../hooks/useDayCardDndGlobal'
 
 interface Props {
     dayCards: DayCardModel[]
     daysInRowCount?: number
     isDebug: boolean
     routineTaskDatesShown: Set<number>
+    dndGlobalState: DayCardDndGlobalState
     saveTasks: (tasks: TaskModel[]) => void
     onRoutineToggle: (date: Date) => void
 }
@@ -18,6 +20,7 @@ function DayCardsSection({
     daysInRowCount,
     isDebug,
     routineTaskDatesShown,
+    dndGlobalState,
     saveTasks,
     onRoutineToggle,
 }: Props) {
@@ -45,6 +48,7 @@ function DayCardsSection({
                                 dayCardModel={day}
                                 isDebug={isDebug}
                                 isRoutineShown={routineTaskDatesShown.has(day.date.valueOf())}
+                                dndGlobalState={dndGlobalState}
                                 saveTasks={saveTasks}
                                 onRoutineToggle={onRoutineToggle}
                             />

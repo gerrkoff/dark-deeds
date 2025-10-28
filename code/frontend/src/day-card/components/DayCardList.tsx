@@ -3,16 +3,18 @@ import { DayCardItem } from './DayCardItem'
 import { TaskTypeEnum } from '../../tasks/models/TaskTypeEnum'
 import clsx from 'clsx'
 import styles from './DayCard.module.css'
-import { useDayCardDnd } from '../hooks/useDayCardDnd'
+import { useDayCardDndItemContext } from '../hooks/useDayCardDndItemContext'
 import { useDayCardDndList } from '../hooks/useDayCardDndList'
 import { memo, useMemo } from 'react'
 import { dropZoneBottomId } from '../models/DayCardDndContext'
+import { DayCardDndGlobalState } from '../hooks/useDayCardDndGlobal'
 
 interface Props {
     tasks: TaskModel[]
     openedMenuTaskUid: string | null
     isDebug: boolean
     isRoutineShown: boolean
+    dndGlobalState: DayCardDndGlobalState
     onOpenTaskMenu: (e: React.MouseEvent<HTMLElement>, task: TaskModel) => void
     onSaveTasks: (tasks: TaskModel[]) => void
     onTransformDrop: (task: TaskModel) => TaskModel
@@ -23,6 +25,7 @@ function DayCardList({
     openedMenuTaskUid,
     isDebug,
     isRoutineShown,
+    dndGlobalState,
     onOpenTaskMenu,
     onSaveTasks,
     onTransformDrop,
@@ -32,11 +35,13 @@ function DayCardList({
         [isRoutineShown, tasks],
     )
 
-    const { draggedTaskUid, dropzoneHighlightedTaskUid, handleListDragLeave, itemDndContext } = useDayCardDnd({
-        tasks: shownTasks,
-        onSaveTasks,
-        onTransformDrop,
-    })
+    const { draggedTaskUid, dropzoneHighlightedTaskUid, handleListDragLeave, itemDndContext } =
+        useDayCardDndItemContext({
+            tasks: shownTasks,
+            onSaveTasks,
+            onTransformDrop,
+            dndGlobalState,
+        })
 
     const { listRef, lastItemRef } = useDayCardDndList({
         handleListDragLeave,

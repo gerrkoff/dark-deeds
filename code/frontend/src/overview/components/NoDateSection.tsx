@@ -7,14 +7,16 @@ import { EditTaskModal } from '../../edit-task/EditTaskModal'
 import { useEditTaskModal } from '../../edit-task/hooks/useEditTaskModal'
 import { useDayCardMenuItem } from '../../day-card/hooks/useDayCardMenuItem'
 import { taskTransformService } from '../../common/services/TaskTransformService'
+import { DayCardDndGlobalState } from '../../day-card/hooks/useDayCardDndGlobal'
 
 interface Props {
     tasks: TaskModel[]
     isDebug: boolean
+    dndGlobalState: DayCardDndGlobalState
     saveTasks: (tasks: TaskModel[]) => void
 }
 
-function NoDateSection({ tasks, isDebug, saveTasks }: Props) {
+function NoDateSection({ tasks, isDebug, dndGlobalState, saveTasks }: Props) {
     const cardRef = useRef<HTMLDivElement>(null)
 
     const { taskEditModalContext, openTaskEditModal } = useEditTaskModal()
@@ -34,6 +36,7 @@ function NoDateSection({ tasks, isDebug, saveTasks }: Props) {
                 tasks={tasks}
                 isDebug={isDebug}
                 isRoutineShown={true}
+                dndGlobalState={dndGlobalState}
                 openedMenuTaskUid={itemMenuContext?.task.uid ?? null}
                 onOpenTaskMenu={openItemMenu}
                 onSaveTasks={saveTasks}
