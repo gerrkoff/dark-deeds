@@ -20,10 +20,14 @@ export function useDayCardDnd({ tasks, onSaveTasks, onTransformDrop }: Props): O
     const [draggedTaskUid, setDraggedTaskUid] = useState<string | null>(null)
     const [dropzoneHighlightedTaskUid, setDropzoneHighlightedTaskUid] = useState<DropZoneIdType | null>(null)
 
+    const setupDropzoneHighlightedTaskUid = useCallback((dropzoneHighlightedTaskUid: DropZoneIdType | null) => {
+        debouncedSetValue(dropzoneHighlightedTaskUid, setDropzoneHighlightedTaskUid)
+    }, [])
+
     useEffect(() => {
         const handleDrop = () => {
             setDraggedTaskUid(null)
-            setDropzoneHighlightedTaskUid(null)
+            setupDropzoneHighlightedTaskUid(null)
             clearDraggedTask()
         }
 
@@ -32,7 +36,7 @@ export function useDayCardDnd({ tasks, onSaveTasks, onTransformDrop }: Props): O
                 return
             }
             setDraggedTaskUid(null)
-            setDropzoneHighlightedTaskUid(null)
+            setupDropzoneHighlightedTaskUid(null)
             clearDraggedTask()
         }
 
@@ -40,21 +44,22 @@ export function useDayCardDnd({ tasks, onSaveTasks, onTransformDrop }: Props): O
         document.addEventListener('dragend', handleDragEnd)
 
         return () => {
-            document.addEventListener('drop', handleDrop)
+            document.removeEventListener('drop', handleDrop)
             document.removeEventListener('dragend', handleDragEnd)
+            clearDebouncedSetValue()
         }
-    }, [])
+    }, [setupDropzoneHighlightedTaskUid])
 
     const handleListDragLeave = useCallback(() => {
-        setDropzoneHighlightedTaskUid(null)
-    }, [])
+        setupDropzoneHighlightedTaskUid(null)
+    }, [setupDropzoneHighlightedTaskUid])
 
     const { context: itemDndContext } = useDayCardDndItemContext({
         tasks,
         onSaveTasks,
         onTransformDrop,
         setDraggedTaskUid,
-        setDropzoneHighlightedTaskUid,
+        setDropzoneHighlightedTaskUid: setupDropzoneHighlightedTaskUid,
     })
 
     return {
@@ -62,5 +67,31 @@ export function useDayCardDnd({ tasks, onSaveTasks, onTransformDrop }: Props): O
         dropzoneHighlightedTaskUid,
         handleListDragLeave,
         itemDndContext,
+    }
+}
+
+let dropzoneHighlightUpdateTimer: ReturnType<typeof setTimeout> | undefined
+let lastDropzoneHighlightValue: DropZoneIdType | null | undefined
+
+function debouncedSetValue(value: DropZoneIdType | null, setter: (value: DropZoneIdType | null) => void): void {
+    if (!dropzoneHighlightUpdateTimer) {
+        dropzoneHighlightUpdateTimer = setTimeout(() => {
+            const lastValue = lastDropzoneHighlightValue
+            if (lastValue !== undefined) {
+                setter(lastValue)
+            }
+            dropzoneHighlightUpdateTimer = undefined
+            lastDropzoneHighlightValue = undefined
+        }, 16)
+    }
+
+    lastDropzoneHighlightValue = value
+}
+
+function clearDebouncedSetValue(): void {
+    if (dropzoneHighlightUpdateTimer) {
+        clearTimeout(dropzoneHighlightUpdateTimer)
+        dropzoneHighlightUpdateTimer = undefined
+        lastDropzoneHighlightValue = undefined
     }
 }
