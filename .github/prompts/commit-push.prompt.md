@@ -102,48 +102,50 @@ You have been triggered by a request to commit and push current changes. This pr
 ## Commit Message Format
 
 <commit_message_format>
+**Format**:
 ```
-<type>: Brief summary of changes (imperative mood)
+<type>: Brief summary (imperative mood)
 
-- Detailed point about first major change
-- Explanation of second change
-- Why these changes were made
-- Any important context or decisions
-
-Examples or additional notes if needed.
+Optional body for larger commits with multiple files/changes
 ```
 
 **Guidelines**:
-- Start summary with capital letter
+- **Scale message to change size**:
+  - Small change (1-3 files): Single line summary only
+  - Medium change (4-10 files): Summary + 2-4 bullet points
+  - Large change (10+ files or significant refactor): Summary + detailed body
+- Start with capital letter
 - Use imperative mood: "Fix bug" not "Fixed bug"
 - Don't end summary with period
 - Keep summary under 72 characters
-- Separate summary and body with blank line
-- Wrap body at 72 characters
-- Use bullet points for multiple changes
-- Explain WHY, not just WHAT
+- Body: Use bullet points, keep brief and focused
 
 **Examples**:
 
+Small commit:
 ```
 Fix version script to use SemVer 2.0 compatible format
-
-- Replace all non-alphanumeric characters with dots instead of dashes
-- Ensures .NET version-suffix compatibility with SemVer 2.0
-- Fixes build errors for branches with dots in names (e.g., dependabot branches)
-- Example: dependabot/npm_and_yarn/code/frontend/vite-5.4.20 -> dependabot.npm.and.yarn.code.frontend.vite.5.4.20
 ```
 
+Medium commit:
 ```
 Add user authentication with JWT tokens
 
 - Implement JWT token generation and validation
 - Add login and registration endpoints
-- Create authentication middleware for protected routes
-- Store refresh tokens in secure HTTP-only cookies
+- Create authentication middleware
+```
 
-This provides secure authentication mechanism for the application
-and enables user session management across requests.
+Large commit:
+```
+Refactor task service architecture
+
+- Extract repository pattern for data access
+- Implement service layer with business logic
+- Add dependency injection for all services
+- Create DTOs for API contracts
+- Update controllers to use new service layer
+- Add comprehensive unit tests for new services
 ```
 </commit_message_format>
 
@@ -200,7 +202,9 @@ If the changes are complex or ambiguous:
 1. Confirm successful completion
 2. Show the branch name
 3. Mention the commit hash
-4. Provide next steps (e.g., PR creation link)
+4. **Provide GitHub Pull Request creation link**: `https://github.com/<owner>/<repo>/compare/<branch-name>?expand=1`
+   - Format: `https://github.com/gerrkoff/dark-deeds/compare/<branch-name>?expand=1`
+   - This allows user to immediately create a PR from the new branch
 
 **If User Provides Specific Instructions**:
 - User may specify branch name: use it exactly

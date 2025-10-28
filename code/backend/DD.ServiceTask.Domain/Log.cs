@@ -39,4 +39,10 @@ internal static partial class Log
         Level = LogLevel.Warning,
         Message = "Update task version conflict. TaskUid: {TaskUid}")]
     public static partial void UpdateTaskVersionConflict(ILogger logger, string taskUid);
+
+    [LoggerMessage(
+        EventId = 1007,
+        Level = LogLevel.Warning,
+        Message = "Failed to update recurrence TaskUid. PlannedRecurrenceUid: {PlannedRecurrenceUid}, Date: {Date}, TaskUid: {TaskUid}")]
+    public static partial void FailedToUpdateRecurrenceTaskUid(ILogger logger, string plannedRecurrenceUid, DateTime date, string taskUid);
 }
