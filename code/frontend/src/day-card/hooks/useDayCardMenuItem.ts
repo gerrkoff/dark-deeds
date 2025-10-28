@@ -2,6 +2,7 @@ import { useCallback, useState } from 'react'
 import { TaskModel } from '../../tasks/models/TaskModel'
 import { DayCardItemMenuContext } from '../models/DayCardItemMenuContext'
 import { useChangeHandlers } from '../../tasks/hooks/useChangeHandlers'
+import { TaskEditModalContent } from '../../edit-task/models/TaskEditModalContext'
 
 interface Output {
     itemMenuContext: DayCardItemMenuContext | null
@@ -10,12 +11,13 @@ interface Output {
     toggleTaskCompleted: (task: TaskModel) => void
     deleteTask: (task: TaskModel) => void
     editTask: (task: TaskModel) => void
+    followUpTask: (task: TaskModel) => void
 }
 
 interface Props {
     containerRef: React.RefObject<HTMLDivElement>
     saveTasks: (tasks: TaskModel[]) => void
-    openTaskEditModal: (task: TaskModel) => void
+    openTaskEditModal: (content: TaskEditModalContent) => void
 }
 
 export function useDayCardMenuItem({ containerRef, saveTasks, openTaskEditModal }: Props): Output {
@@ -64,9 +66,19 @@ export function useDayCardMenuItem({ containerRef, saveTasks, openTaskEditModal 
     const editTask = useCallback(
         (task: TaskModel) => {
             closeMenu()
-            openTaskEditModal(task)
+            openTaskEditModal({ type: 'EDIT', task })
         },
         [closeMenu, openTaskEditModal],
+    )
+
+    const followUpTask = useCallback(
+        (task: TaskModel) => {
+            const updatedTask = { ...task, completed: true }
+            saveTasks([updatedTask])
+            closeMenu()
+            openTaskEditModal({ type: 'NEW_FROM_TASK', task })
+        },
+        [saveTasks, closeMenu, openTaskEditModal],
     )
 
     return {
@@ -76,5 +88,6 @@ export function useDayCardMenuItem({ containerRef, saveTasks, openTaskEditModal 
         toggleTaskCompleted,
         deleteTask,
         editTask,
+        followUpTask,
     }
 }

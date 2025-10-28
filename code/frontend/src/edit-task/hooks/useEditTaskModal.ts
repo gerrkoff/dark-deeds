@@ -1,37 +1,24 @@
 import { useCallback, useMemo, useState } from 'react'
-import { TaskModel } from '../../tasks/models/TaskModel'
-import { TaskEditModalContext } from '../models/TaskEditModalContext'
+import { TaskEditModalContext, TaskEditModalContent } from '../models/TaskEditModalContext'
 
 interface Output {
     taskEditModalContext: TaskEditModalContext | null
-    openTaskEditModal: (task: TaskModel | null) => void
-    openTaskEditModalForDate: (date: Date) => void
+    openTaskEditModal: (content: TaskEditModalContent) => void
 }
 
+type InternalContext = { content: TaskEditModalContent; isShown: boolean } | null
+
 export function useEditTaskModal(): Output {
-    const [context, setContext] = useState<{
-        isShown: boolean
-        task: TaskModel | null
-        date: Date | null
-    } | null>(null)
+    const [context, setContext] = useState<InternalContext>(null)
 
-    const openTaskEditModal = useCallback((task: TaskModel | null) => {
+    const openTaskEditModal = useCallback((content: TaskEditModalContent) => {
         setContext({
             isShown: true,
-            task,
-            date: null,
+            content,
         })
     }, [])
 
-    const openTaskEditModalForDate = useCallback((date: Date) => {
-        setContext({
-            isShown: true,
-            task: null,
-            date,
-        })
-    }, [])
-
-    const taskEditModalContext = useMemo(() => {
+    const taskEditModalContext = useMemo((): TaskEditModalContext | null => {
         if (context === null) {
             return null
         }
@@ -54,6 +41,5 @@ export function useEditTaskModal(): Output {
     return {
         taskEditModalContext,
         openTaskEditModal,
-        openTaskEditModalForDate,
     }
 }

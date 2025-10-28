@@ -15,15 +15,17 @@ function EditTaskModal({ context, onSave }: Props) {
 
     const [task, setTask] = useState('')
 
-    const { close } = context
+    const { close, content } = context
 
     useEffect(() => {
-        if (context.task) {
-            setTask(taskConvertService.convertTaskToString(context.task))
-        } else if (context.date) {
-            setTask(`${taskConvertService.convertDateToString(context.date)} `)
+        if (content.type === 'EDIT' || content.type === 'NEW_FROM_TASK') {
+            setTask(taskConvertService.convertTaskToString(content.task))
+        } else if (content.type === 'NEW_FROM_DATE') {
+            setTask(`${taskConvertService.convertDateToString(content.date)} `)
+        } else if (content.type === 'NEW') {
+            setTask('')
         }
-    }, [context.task, context.date])
+    }, [content])
 
     const editModel = useMemo(() => taskConvertService.convertStringToModel(task), [task])
 
@@ -31,23 +33,24 @@ function EditTaskModal({ context, onSave }: Props) {
         setTask('')
         if (editModel !== null) {
             onSave([
-                context.task
-                    ? taskConvertService.mergeTaskWithModel(editModel, context.task)
+                content.type === 'EDIT'
+                    ? taskConvertService.mergeTaskWithModel(editModel, content.task)
                     : taskConvertService.createTaskFromModel(editModel),
             ])
             close()
         }
-    }, [editModel, onSave, context.task, close])
+    }, [editModel, onSave, content, close])
 
     const handleTaskChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setTask(e.target.value)
     }
 
     const label = useMemo(() => {
-        return context.task
-            ? `Edit: ${taskConvertService.convertTaskToString(context.task)}`
-            : 'Add task: 1231 2359 December 31, 23:59'
-    }, [context.task])
+        if (content.type === 'EDIT') {
+            return `Edit: ${taskConvertService.convertTaskToString(content.task)}`
+        }
+        return 'Add task: 1231 2359 December 31, 23:59'
+    }, [content])
 
     return (
         <ModalContainer

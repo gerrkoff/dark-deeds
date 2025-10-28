@@ -1,5 +1,6 @@
 import { useCallback, useState } from 'react'
 import { DayCardHeaderMenuContext } from '../models/DayCardHeaderMenuContext'
+import { TaskEditModalContent } from '../../edit-task/models/TaskEditModalContext'
 
 interface Output {
     headerMenuContext: DayCardHeaderMenuContext | null
@@ -10,10 +11,10 @@ interface Output {
 
 interface Props {
     containerRef: React.RefObject<HTMLDivElement>
-    openTaskEditModalForDate: (date: Date) => void
+    openTaskEditModal: (content: TaskEditModalContent) => void
 }
 
-export function useDayCardMenuHeader({ containerRef, openTaskEditModalForDate }: Props): Output {
+export function useDayCardMenuHeader({ containerRef, openTaskEditModal }: Props): Output {
     const [context, setContext] = useState<DayCardHeaderMenuContext | null>(null)
 
     const openMenu = useCallback(
@@ -47,9 +48,9 @@ export function useDayCardMenuHeader({ containerRef, openTaskEditModalForDate }:
     const addTaskForDate = useCallback(
         (date: Date) => {
             closeMenu()
-            openTaskEditModalForDate(date)
+            openTaskEditModal({ type: 'NEW_FROM_DATE', date })
         },
-        [closeMenu, openTaskEditModalForDate],
+        [closeMenu, openTaskEditModal],
     )
 
     return {

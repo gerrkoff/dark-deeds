@@ -25,9 +25,9 @@ interface Props {
 function DayCard({ dayCardModel, isDebug, isRoutineShown, saveTasks, onRoutineToggle }: Props) {
     const cardRef = useRef<HTMLDivElement>(null)
 
-    const { taskEditModalContext, openTaskEditModal, openTaskEditModalForDate } = useEditTaskModal()
+    const { taskEditModalContext, openTaskEditModal } = useEditTaskModal()
 
-    const { itemMenuContext, openItemMenu, closeItemMenu, deleteTask, editTask, toggleTaskCompleted } =
+    const { itemMenuContext, openItemMenu, closeItemMenu, deleteTask, editTask, toggleTaskCompleted, followUpTask } =
         useDayCardMenuItem({
             containerRef: cardRef,
             saveTasks,
@@ -36,7 +36,7 @@ function DayCard({ dayCardModel, isDebug, isRoutineShown, saveTasks, onRoutineTo
 
     const { headerMenuContext, openHeaderMenu, closeHeaderMenu, onAddTaskForDate } = useDayCardMenuHeader({
         containerRef: cardRef,
-        openTaskEditModalForDate,
+        openTaskEditModal,
     })
 
     const isExpired = dayCardModel.date < dateService.today()
@@ -74,6 +74,7 @@ function DayCard({ dayCardModel, isDebug, isRoutineShown, saveTasks, onRoutineTo
                         onToggleCompleted={toggleTaskCompleted}
                         onDelete={deleteTask}
                         onEdit={editTask}
+                        onFollowUp={followUpTask}
                     />
                 )}
 
