@@ -15,7 +15,7 @@ function AddTaskButton({ saveTasks }: Props) {
     useEffect(() => {
         const onKeydown = (event: KeyboardEvent) => {
             if (isKeyEnter(event) && (event.ctrlKey || event.metaKey)) {
-                openTaskEditModal(null)
+                openTaskEditModal({ type: 'NEW' })
             }
         }
 
@@ -43,7 +43,7 @@ function AddTaskButton({ saveTasks }: Props) {
                         minWidth: '42px',
                         borderRadius: '50%',
                     }}
-                    onClick={() => openTaskEditModal(null)}
+                    onClick={() => openTaskEditModal({ type: 'NEW' })}
                 >
                     <IconPlusLg />
                 </button>

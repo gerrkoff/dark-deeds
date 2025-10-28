@@ -19,7 +19,7 @@ function NoDateSection({ tasks, isDebug, saveTasks }: Props) {
 
     const { taskEditModalContext, openTaskEditModal } = useEditTaskModal()
 
-    const { itemMenuContext, openItemMenu, closeItemMenu, deleteTask, editTask, toggleTaskCompleted } =
+    const { itemMenuContext, openItemMenu, closeItemMenu, deleteTask, editTask, toggleTaskCompleted, followUpTask } =
         useDayCardMenuItem({
             containerRef: cardRef,
             saveTasks,
@@ -47,6 +47,7 @@ function NoDateSection({ tasks, isDebug, saveTasks }: Props) {
                     onToggleCompleted={toggleTaskCompleted}
                     onDelete={deleteTask}
                     onEdit={editTask}
+                    onFollowUp={followUpTask}
                 />
             )}
 
