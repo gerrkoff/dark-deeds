@@ -202,9 +202,16 @@ If the changes are complex or ambiguous:
 1. Confirm successful completion
 2. Show the branch name
 3. Mention the commit hash
-4. **Provide GitHub Pull Request creation link**: `https://github.com/<owner>/<repo>/compare/<branch-name>?expand=1`
-   - Format: `https://github.com/gerrkoff/dark-deeds/compare/<branch-name>?expand=1`
-   - This allows user to immediately create a PR from the new branch
+4. **Provide GitHub Pull Request creation link with pre-filled title and body**:
+   - Format: `https://github.com/gerrkoff/dark-deeds/compare/<branch-name>?expand=1&title=<pr-title>&body=<pr-body>`
+   - **Title format**: `[<type>] <Commit summary without type prefix>`
+     - Example: `[feat] Add auto-scroll for drag and drop on touch devices`
+     - The type should match the branch type (feat, fix, chore, etc.)
+   - **Body format**: Include the commit message body (bullet points if present)
+     - URL-encode the title and body properly
+     - Use `%0A` for newlines in the body
+     - Use `%2D` for dashes in bullet points or just `-`
+   - This allows user to immediately create a PR with pre-filled information
 
 **If User Provides Specific Instructions**:
 - User may specify branch name: use it exactly
