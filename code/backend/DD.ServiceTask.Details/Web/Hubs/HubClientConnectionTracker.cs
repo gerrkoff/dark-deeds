@@ -1,8 +1,8 @@
 using System.Collections.Concurrent;
 
-namespace DD.ServiceTask.Details.Infrastructure;
+namespace DD.ServiceTask.Details.Web.Hubs;
 
-public interface IClientConnectionTracker
+public interface IHubClientConnectionTracker
 {
     void AddConnection(string connectionId, string? clientId);
 
@@ -11,7 +11,7 @@ public interface IClientConnectionTracker
     IReadOnlyList<string> GetConnectionIdsByClientId(string clientId);
 }
 
-internal sealed class ClientConnectionTracker : IClientConnectionTracker
+internal sealed class HubClientConnectionTracker : IHubClientConnectionTracker
 {
     private readonly ConcurrentDictionary<string, string> _connectionToClient = new();
 
