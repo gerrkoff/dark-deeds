@@ -11,6 +11,8 @@ import { TaskModel } from '../models/TaskModel'
 import { taskSyncService } from '../services/TaskSyncService'
 import { useTasksSynchronization } from './useTasksSynchronization'
 import { addToast } from '../../toasts/redux/toasts-slice'
+import { updateTaskVersions } from '../../overview/redux/overview-slice'
+import { TaskVersionModel } from '../models/TaskVersionModel'
 
 export function useTasksHub() {
     const dispatch = useAppDispatch()
@@ -57,7 +59,7 @@ export function useTasksHub() {
             }
         }
 
-        const handleTaskSaveFinish = (notSaved: number) => {
+        const handleTaskSaveFinish = (notSaved: number, savedTasks: TaskVersionModel[]) => {
             if (notSaved > 0) {
                 dispatch(
                     addToast({
@@ -65,6 +67,10 @@ export function useTasksHub() {
                         category: 'task-save-failed',
                     }),
                 )
+            }
+
+            if (savedTasks.length > 0) {
+                dispatch(updateTaskVersions(savedTasks))
             }
         }
 

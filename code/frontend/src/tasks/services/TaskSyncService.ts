@@ -1,9 +1,10 @@
 import { delay } from '../../common/utils/delay'
 import { taskApi, TaskApi } from '../api/TaskApi'
 import { TaskModel } from '../models/TaskModel'
+import { TaskVersionModel } from '../models/TaskVersionModel'
 
 export type StatusUpdateSubscription = (isSynchronizing: boolean) => void
-export type SaveFinishSubscription = (notSaved: number) => void
+export type SaveFinishSubscription = (notSaved: number, savedTasks: TaskVersionModel[]) => void
 
 export class TaskSyncService {
     constructor(private taskApi: TaskApi) {}
@@ -75,11 +76,27 @@ export class TaskSyncService {
                 wait = true
             }
 
+            // Update versions in tasksToSave if task was modified while in flight
+            for (const savedTask of savedTasks) {
+                const taskToSave = this.tasksToSave.get(savedTask.uid)
+                if (taskToSave) {
+                    this.tasksToSave.set(savedTask.uid, {
+                        ...taskToSave,
+                        version: savedTask.version,
+                    })
+                }
+            }
+
             for (const task of savedTasks) {
                 this.tasksInFlight.delete(task.uid)
             }
 
-            this.saveFinishSubscriptions.forEach(x => x(this.tasksInFlight.size))
+            this.saveFinishSubscriptions.forEach(x =>
+                x(
+                    this.tasksInFlight.size,
+                    savedTasks.map(task => ({ uid: task.uid, version: task.version })),
+                ),
+            )
 
             for (const [uid, task] of this.tasksInFlight) {
                 if (!this.tasksToSave.has(uid)) {

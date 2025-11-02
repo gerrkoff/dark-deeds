@@ -3,6 +3,7 @@ import type { PayloadAction } from '@reduxjs/toolkit'
 import { TaskModel } from '../../tasks/models/TaskModel'
 import { reloadOverviewTasks } from './overview-thunk'
 import { TasksSyncModel } from '../../tasks/models/TasksSyncModel'
+import { TaskVersionModel } from '../../tasks/models/TaskVersionModel'
 
 export interface OverviewState {
     tasks: TaskModel[]
@@ -72,6 +73,16 @@ export const overviewSlice = createSlice({
                 }
             }
         },
+        updateTaskVersions: (state, action: PayloadAction<TaskVersionModel[]>) => {
+            const taskIndexMap = new Map<string, number>(state.tasks.map((x, i) => [x.uid, i]))
+
+            for (const task of action.payload) {
+                const index = taskIndexMap.get(task.uid) ?? -1
+                if (index !== -1) {
+                    state.tasks[index].version = task.version
+                }
+            }
+        },
         cleanup: state => {
             state.tasks = []
         },
@@ -97,6 +108,6 @@ export const overviewSlice = createSlice({
     },
 })
 
-export const { updateTasks, syncTasks, toggleRoutineTaskDate, cleanup } = overviewSlice.actions
+export const { updateTasks, syncTasks, updateTaskVersions, toggleRoutineTaskDate, cleanup } = overviewSlice.actions
 
 export default overviewSlice.reducer
