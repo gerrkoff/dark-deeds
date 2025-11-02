@@ -71,27 +71,6 @@ export const overviewSlice = createSlice({
                     state.tasks.push(task)
                 }
             }
-
-            for (const task of action.payload.versions) {
-                const index = taskIndexMap.get(task.uid) ?? -1
-                if (index !== -1) {
-                    if (task.version <= state.tasks[index].version) {
-                        console.warn(
-                            'Sync Versions Collision',
-                            {
-                                existing: state.tasks[index].version,
-                                incoming: task.version,
-                            },
-                            {
-                                existing: { ...state.tasks[index] },
-                                incoming: { ...task },
-                            },
-                        )
-                    }
-
-                    state.tasks[index].version = task.version
-                }
-            }
         },
         cleanup: state => {
             state.tasks = []

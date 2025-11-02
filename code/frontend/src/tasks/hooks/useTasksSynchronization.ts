@@ -7,7 +7,7 @@ import { reloadOverviewTasks } from '../../overview/redux/overview-thunk'
 import { unwrapResult } from '@reduxjs/toolkit'
 
 interface Output {
-    processTasksOnlineUpdate: (tasks: TaskModel[]) => void
+    processTasksOnlineUpdate: (tasks: TaskModel[]) => TaskModel[]
     reloadTasks: () => void
 }
 
@@ -16,20 +16,20 @@ export function useTasksSynchronization(): Output {
 
     const processTasksOnlineUpdate = useCallback(
         (tasks: TaskModel[]) => {
-            const { tasksToNotify, versionsToNotify } = taskSyncService.updateTasks(tasks)
+            const tasksConflicted = taskSyncService.processTasksOnlineUpdate(tasks)
 
             console.log(`[${new Date().toISOString()}] Tasks online update:`, {
                 tasks,
-                tasksToNotify,
-                versionsToNotify,
+                tasksConflicted,
             })
 
             dispatch(
                 syncTasks({
-                    tasks: tasksToNotify,
-                    versions: versionsToNotify,
+                    tasks,
                 }),
             )
+
+            return tasksConflicted
         },
         [dispatch],
     )

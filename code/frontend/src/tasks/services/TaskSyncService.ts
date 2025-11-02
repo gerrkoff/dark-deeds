@@ -1,7 +1,6 @@
 import { delay } from '../../common/utils/delay'
 import { taskApi, TaskApi } from '../api/TaskApi'
 import { TaskModel } from '../models/TaskModel'
-import { TaskVersionModel } from '../models/TaskVersionModel'
 
 export type StatusUpdateSubscription = (isSynchronizing: boolean) => void
 export type SaveFinishSubscription = (notSaved: number) => void
@@ -94,42 +93,29 @@ export class TaskSyncService {
         }
     }
 
-    updateTasks(updatedTasks: TaskModel[]): {
-        tasksToNotify: TaskModel[]
-        versionsToNotify: TaskVersionModel[]
-    } {
-        const tasksToNotify: TaskModel[] = []
-        const versionsToNotify: TaskVersionModel[] = []
+    processTasksOnlineUpdate(updatedTasks: TaskModel[]): TaskModel[] {
+        const tasksConflicted: TaskModel[] = []
 
         for (const updatedTask of updatedTasks) {
             const taskToSave = this.tasksToSave.get(updatedTask.uid)
             const taskInFlight = this.tasksInFlight.get(updatedTask.uid)
 
+            // If task is in save queue and incoming version is newer - conflict!
             if (taskToSave && updatedTask.version > taskToSave.version) {
-                taskToSave.version = updatedTask.version
-                versionsToNotify.push({
-                    uid: updatedTask.uid,
-                    version: updatedTask.version,
-                })
+                this.tasksToSave.delete(updatedTask.uid)
+                tasksConflicted.push(updatedTask)
+                continue
             }
 
+            // If task is in flight and incoming version is newer - conflict!
             if (taskInFlight && updatedTask.version > taskInFlight.version) {
-                taskInFlight.version = updatedTask.version
-                versionsToNotify.push({
-                    uid: updatedTask.uid,
-                    version: updatedTask.version,
-                })
-            }
-
-            if (!taskToSave && !taskInFlight) {
-                tasksToNotify.push(updatedTask)
+                this.tasksInFlight.delete(updatedTask.uid)
+                tasksConflicted.push(updatedTask)
+                continue
             }
         }
 
-        return {
-            tasksToNotify,
-            versionsToNotify,
-        }
+        return tasksConflicted
     }
 }
 

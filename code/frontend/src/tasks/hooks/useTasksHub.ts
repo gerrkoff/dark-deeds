@@ -7,6 +7,7 @@ import {
     toggleSaveTaskPending,
 } from '../../status-panel/redux/status-panel-slice'
 import { taskHubApi } from '../api/TaskHubApi'
+import { TaskModel } from '../models/TaskModel'
 import { taskSyncService } from '../services/TaskSyncService'
 import { useTasksSynchronization } from './useTasksSynchronization'
 import { addToast } from '../../toasts/redux/toasts-slice'
@@ -42,6 +43,20 @@ export function useTasksHub() {
             /* Do nothing */
         }
 
+        const handleTasksUpdate = (tasks: TaskModel[]) => {
+            const conflictedTasks = processTasksOnlineUpdate(tasks)
+
+            if (conflictedTasks.length > 0) {
+                for (const task of conflictedTasks) {
+                    dispatch(
+                        addToast({
+                            text: `Task "${task.title}" was updated by another client`,
+                        }),
+                    )
+                }
+            }
+        }
+
         const handleTaskSaveFinish = (notSaved: number) => {
             if (notSaved > 0) {
                 dispatch(
@@ -56,13 +71,13 @@ export function useTasksHub() {
         taskHubApi.onClose(handleHubClose)
         taskHubApi.onReconnecting(handleHubReconnecting)
         taskHubApi.onReconnected(handleHubReconnected)
-        taskHubApi.onUpdate(processTasksOnlineUpdate)
+        taskHubApi.onUpdate(handleTasksUpdate)
         taskHubApi.onHeartbeat(handleHeartbeat)
         taskSyncService.subscribeStatusUpdate(handleUpdateStatus)
         taskSyncService.subscribeSaveFinish(handleTaskSaveFinish)
 
         return () => {
-            taskHubApi.offUpdate(processTasksOnlineUpdate)
+            taskHubApi.offUpdate(handleTasksUpdate)
             taskHubApi.offHeartbeat(handleHeartbeat)
             taskSyncService.unsubscribeStatusUpdate(handleUpdateStatus)
             taskSyncService.unsubscribeSaveFinish(handleTaskSaveFinish)
