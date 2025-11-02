@@ -58,6 +58,7 @@ export class TaskSyncService {
     private async saveTasks(): Promise<void> {
         while (this.tasksToSave.size > 0) {
             this.tasksInFlight = this.tasksToSave
+            const tasksInFlightCount = this.tasksInFlight.size
             this.tasksToSave = new Map<string, TaskModel>()
             let wait = false
 
@@ -87,7 +88,7 @@ export class TaskSyncService {
 
             this.saveFinishSubscriptions.forEach(x =>
                 x(
-                    this.tasksInFlight.size,
+                    tasksInFlightCount - savedTasks.length,
                     savedTasks.map(task => ({ uid: task.uid, version: task.version })),
                 ),
             )
