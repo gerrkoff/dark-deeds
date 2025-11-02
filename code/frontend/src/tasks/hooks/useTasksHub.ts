@@ -10,8 +10,6 @@ import { taskHubApi } from '../api/TaskHubApi'
 import { TaskModel } from '../models/TaskModel'
 import { taskSyncService } from '../services/TaskSyncService'
 import { useTasksSynchronization } from './useTasksSynchronization'
-import { addToast } from '../../toasts/redux/toasts-slice'
-import { updateTaskVersions } from '../../overview/redux/overview-slice'
 import { TaskVersionModel } from '../models/TaskVersionModel'
 
 export function useTasksHub() {
@@ -21,7 +19,7 @@ export function useTasksHub() {
         taskHubApi.init()
     }, [])
 
-    const { processTasksOnlineUpdate, reloadTasks } = useTasksSynchronization()
+    const { processTasksOnlineUpdate, processTaskSaveFinish, reloadTasks } = useTasksSynchronization()
 
     useEffect(() => {
         const handleHubClose = () => {
@@ -46,32 +44,11 @@ export function useTasksHub() {
         }
 
         const handleTasksUpdate = (tasks: TaskModel[]) => {
-            const conflictedTasks = processTasksOnlineUpdate(tasks)
-
-            if (conflictedTasks.length > 0) {
-                for (const task of conflictedTasks) {
-                    dispatch(
-                        addToast({
-                            text: `Task "${task.title}" was updated by another client`,
-                        }),
-                    )
-                }
-            }
+            processTasksOnlineUpdate(tasks)
         }
 
         const handleTaskSaveFinish = (notSaved: number, savedTasks: TaskVersionModel[]) => {
-            if (notSaved > 0) {
-                dispatch(
-                    addToast({
-                        text: `Failed to save ${notSaved} tasks`,
-                        category: 'task-save-failed',
-                    }),
-                )
-            }
-
-            if (savedTasks.length > 0) {
-                dispatch(updateTaskVersions(savedTasks))
-            }
+            processTaskSaveFinish(notSaved, savedTasks)
         }
 
         taskHubApi.onClose(handleHubClose)
@@ -88,5 +65,5 @@ export function useTasksHub() {
             taskSyncService.unsubscribeStatusUpdate(handleUpdateStatus)
             taskSyncService.unsubscribeSaveFinish(handleTaskSaveFinish)
         }
-    }, [dispatch, processTasksOnlineUpdate, reloadTasks])
+    }, [dispatch, processTasksOnlineUpdate, processTaskSaveFinish, reloadTasks])
 }
