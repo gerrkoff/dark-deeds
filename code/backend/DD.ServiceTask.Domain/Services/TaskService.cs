@@ -30,9 +30,9 @@ public interface ITaskService
     /// <returns>Tasks.</returns>
     Task<IEnumerable<TaskDto>> LoadTasksByDateAsync(string userId, DateTime from, DateTime till);
 
-    Task<IEnumerable<TaskDto>> SaveTasksAsync(ICollection<TaskDto> tasks, string userId);
+    Task<IEnumerable<TaskDto>> SaveTasksAsync(ICollection<TaskDto> tasks, string userId, string? clientId);
 
-    Task<IEnumerable<TaskDto>> UpdateTasksAsync(ICollection<TaskUpdateDto> updates, string userId);
+    Task<IEnumerable<TaskDto>> UpdateTasksAsync(ICollection<TaskUpdateDto> updates, string userId, string? clientId);
 }
 
 public class TaskService(
@@ -67,7 +67,7 @@ public class TaskService(
         return mapper.Map<IList<TaskDto>>(tasks);
     }
 
-    public async Task<IEnumerable<TaskDto>> SaveTasksAsync(ICollection<TaskDto> tasks, string userId)
+    public async Task<IEnumerable<TaskDto>> SaveTasksAsync(ICollection<TaskDto> tasks, string userId, string? clientId)
     {
         var savedTasks = new List<TaskDto>();
 
@@ -84,13 +84,14 @@ public class TaskService(
             {
                 Tasks = savedTasks,
                 UserId = userId,
+                ClientId = clientId,
             });
         }
 
         return savedTasks;
     }
 
-    public async Task<IEnumerable<TaskDto>> UpdateTasksAsync(ICollection<TaskUpdateDto> updates, string userId)
+    public async Task<IEnumerable<TaskDto>> UpdateTasksAsync(ICollection<TaskUpdateDto> updates, string userId, string? clientId)
     {
         var updatedTasks = new List<TaskDto>();
 
@@ -133,6 +134,7 @@ public class TaskService(
             {
                 Tasks = updatedTasks,
                 UserId = userId,
+                ClientId = clientId,
             });
         }
 

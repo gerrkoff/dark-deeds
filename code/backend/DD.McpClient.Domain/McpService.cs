@@ -33,7 +33,7 @@ public sealed class McpService(
     public async Task<string> UpdateTasksOrderAsync(ICollection<TaskUpdateDto> updates, string userId)
     {
         Log.UpdateTasksOrder(logger, updates.Count);
-        var tasks = await taskServiceApp.UpdateTasksAsync(updates, userId);
+        var tasks = await taskServiceApp.UpdateTasksAsync(updates, userId, clientId: null);
         return JsonSerializer.Serialize(tasks, JsonOptions);
     }
 }

@@ -1,4 +1,5 @@
 using DD.ServiceTask.Details.Data;
+using DD.ServiceTask.Details.Infrastructure;
 using DD.ServiceTask.Details.Subscriptions;
 using DD.ServiceTask.Details.Web.Hubs;
 using DD.ServiceTask.Domain;
@@ -30,6 +31,7 @@ public static class Setup
     {
         services.AddHostedService<HubHeartbeat<TaskHub>>();
         services.AddTransient<IUserIdProvider, HubUserIdProvider>();
+        services.AddSingleton<IClientConnectionTracker, ClientConnectionTracker>();
         services.AddSignalR()
             .AddHubOptions<TaskHub>(options => options.EnableDetailedErrors = true);
     }

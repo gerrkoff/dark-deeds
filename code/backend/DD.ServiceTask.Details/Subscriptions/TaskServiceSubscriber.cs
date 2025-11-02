@@ -1,3 +1,4 @@
+using DD.ServiceTask.Details.Infrastructure;
 using DD.ServiceTask.Details.Web.Hubs;
 using DD.Shared.Details.Abstractions;
 using DD.Shared.Details.Abstractions.Dto;
@@ -5,11 +6,18 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace DD.ServiceTask.Details.Subscriptions;
 
-public class TaskServiceSubscriber(IHubContext<TaskHub> hubContext) : ITaskServiceSubscriber
+public class TaskServiceSubscriber(
+    IHubContext<TaskHub> hubContext,
+    IClientConnectionTracker clientConnectionTracker) : ITaskServiceSubscriber
 {
     public Task TasksUpdated(TasksUpdatedDto tasksUpdated)
     {
-        return hubContext.Clients.User(tasksUpdated.UserId)
+        var excludeConnectionIds = !string.IsNullOrWhiteSpace(tasksUpdated.ClientId)
+            ? clientConnectionTracker.GetConnectionIdsByClientId(tasksUpdated.ClientId)
+            : [];
+
+        return hubContext.Clients
+            .AllExcept(excludeConnectionIds)
             .SendAsync("update", tasksUpdated.Tasks);
     }
 }

@@ -22,7 +22,7 @@ public class CreateTaskCommandProcessor(
     {
         var userId = await telegramService.GetUserId(command.UserChatId);
         command.Task.Uid = Guid.NewGuid().ToString();
-        await taskServiceApp.SaveTasksAsync([command.Task], userId);
+        await taskServiceApp.SaveTasksAsync([command.Task], userId, clientId: null);
         await _botSendMessageService.SendTextAsync(command.UserChatId, "Task created");
     }
 }
