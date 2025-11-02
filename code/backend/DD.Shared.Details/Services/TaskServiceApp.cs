@@ -14,14 +14,14 @@ public class TaskServiceApp(
         return taskService.LoadTasksByDateAsync(userId, from, till);
     }
 
-    public Task<IEnumerable<TaskDto>> SaveTasksAsync(ICollection<TaskDto> tasks, string userId)
+    public Task<IEnumerable<TaskDto>> SaveTasksAsync(ICollection<TaskDto> tasks, string userId, string? clientId)
     {
-        return taskService.SaveTasksAsync(tasks, userId);
+        return taskService.SaveTasksAsync(tasks, userId, clientId);
     }
 
-    public Task<IEnumerable<TaskDto>> UpdateTasksAsync(ICollection<TaskUpdateDto> updates, string userId)
+    public Task<IEnumerable<TaskDto>> UpdateTasksAsync(ICollection<TaskUpdateDto> updates, string userId, string? clientId)
     {
-        return taskService.UpdateTasksAsync(updates, userId);
+        return taskService.UpdateTasksAsync(updates, userId, clientId);
     }
 
     public Task<TaskDto> ParseTask(string text)

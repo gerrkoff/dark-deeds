@@ -30,6 +30,7 @@ public static class Setup
     {
         services.AddHostedService<HubHeartbeat<TaskHub>>();
         services.AddTransient<IUserIdProvider, HubUserIdProvider>();
+        services.AddSingleton<IHubClientConnectionTracker, HubClientConnectionTracker>();
         services.AddSignalR()
             .AddHubOptions<TaskHub>(options => options.EnableDetailedErrors = true);
     }

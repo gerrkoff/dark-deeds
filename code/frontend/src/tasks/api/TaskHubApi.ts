@@ -1,5 +1,6 @@
 import * as signalR from '@microsoft/signalr'
 import { baseUrlProvider, BaseUrlProvider } from '../../common/api/BaseUrlProvider'
+import { clientIdentityService, ClientIdentityService } from '../../common/services/ClientIdentityService'
 import { storageService, StorageService } from '../../common/services/StorageService'
 import { TaskModel } from '../models/TaskModel'
 import { taskMapper, TaskMapper } from '../services/TaskMapper'
@@ -11,6 +12,7 @@ export class TaskHubApi {
         private baseUrlProvider: BaseUrlProvider,
         private storage: StorageService,
         private mapper: TaskMapper,
+        private clientIdentityService: ClientIdentityService,
     ) {}
 
     init() {
@@ -18,8 +20,11 @@ export class TaskHubApi {
             return
         }
 
+        const clientId = this.clientIdentityService.getClientId()
+        const hubUrl = `${this.baseUrlProvider.getBaseUrl()}ws/task/task?clientId=${encodeURIComponent(clientId)}`
+
         this.connection = new signalR.HubConnectionBuilder()
-            .withUrl(this.baseUrlProvider.getBaseUrl() + 'ws/task/task', {
+            .withUrl(hubUrl, {
                 accessTokenFactory: () => {
                     const accessToken = this.storage.loadAccessToken()
 
@@ -108,4 +113,4 @@ export class TaskHubApi {
     }
 }
 
-export const taskHubApi = new TaskHubApi(baseUrlProvider, storageService, taskMapper)
+export const taskHubApi = new TaskHubApi(baseUrlProvider, storageService, taskMapper, clientIdentityService)

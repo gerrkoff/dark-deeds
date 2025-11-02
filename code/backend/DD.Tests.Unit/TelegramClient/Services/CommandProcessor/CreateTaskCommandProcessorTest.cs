@@ -36,7 +36,8 @@ public class CreateTaskCommandProcessorTest
         sendMessageMock.Verify(x => x.SendTextAsync(100, "Task created"));
         taskServiceMock.Verify(x => x.SaveTasksAsync(
             It.Is<ICollection<TaskDto>>(y => y.Any(e => e.Title == "Task")),
-            "userid"));
+            "userid",
+            It.IsAny<string?>()));
     }
 
     private static (
@@ -51,7 +52,7 @@ public class CreateTaskCommandProcessorTest
             .Returns(Task.FromResult("userid"));
 
         var taskServiceMock = new Mock<ITaskServiceApp>();
-        taskServiceMock.Setup(x => x.SaveTasksAsync(It.Is<ICollection<TaskDto>>(v => v.Contains(task)), "userid"))
+        taskServiceMock.Setup(x => x.SaveTasksAsync(It.Is<ICollection<TaskDto>>(v => v.Contains(task)), "userid", It.IsAny<string?>()))
             .Returns(Task.FromResult((IEnumerable<TaskDto>)tasks));
 
         var sendMessageMock = new Mock<IBotSendMessageService>();

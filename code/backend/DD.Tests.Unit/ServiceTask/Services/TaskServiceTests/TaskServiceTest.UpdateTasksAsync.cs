@@ -29,7 +29,7 @@ public partial class TaskServiceTest
             new TaskUpdateDto { Uid = uid2, Order = 20 },
         };
 
-        var result = (await service.UpdateTasksAsync(updates, userId)).ToList();
+        var result = (await service.UpdateTasksAsync(updates, userId, clientId: null)).ToList();
 
         Assert.Equal(2, result.Count);
         Assert.Contains(result, x => x.Uid == uid1 && x.Order == 10);
@@ -65,7 +65,7 @@ public partial class TaskServiceTest
             new TaskUpdateDto { Uid = existingUid, Order = 20 },
         };
 
-        var result = (await service.UpdateTasksAsync(updates, userId)).ToList();
+        var result = (await service.UpdateTasksAsync(updates, userId, clientId: null)).ToList();
 
         Assert.Single(result);
         Assert.Equal(existingUid, result[0].Uid);
@@ -103,7 +103,7 @@ public partial class TaskServiceTest
             new TaskUpdateDto { Uid = activeUid, Order = 20 },
         };
 
-        var result = (await service.UpdateTasksAsync(updates, userId)).ToList();
+        var result = (await service.UpdateTasksAsync(updates, userId, clientId: null)).ToList();
 
         Assert.Single(result);
         Assert.Equal(activeUid, result[0].Uid);
@@ -135,7 +135,7 @@ public partial class TaskServiceTest
             new TaskUpdateDto { Uid = ownUid, Order = 20 },
         };
 
-        var result = (await service.UpdateTasksAsync(updates, userId)).ToList();
+        var result = (await service.UpdateTasksAsync(updates, userId, clientId: null)).ToList();
 
         Assert.Single(result);
         Assert.Equal(ownUid, result[0].Uid);
@@ -168,7 +168,7 @@ public partial class TaskServiceTest
             new TaskUpdateDto { Uid = successUid, Order = 20 },
         };
 
-        var result = (await service.UpdateTasksAsync(updates, userId)).ToList();
+        var result = (await service.UpdateTasksAsync(updates, userId, clientId: null)).ToList();
 
         Assert.Single(result);
         Assert.Equal(successUid, result[0].Uid);
@@ -187,7 +187,7 @@ public partial class TaskServiceTest
 
         var updates = Array.Empty<TaskUpdateDto>();
 
-        var result = (await service.UpdateTasksAsync(updates, userId)).ToList();
+        var result = (await service.UpdateTasksAsync(updates, userId, clientId: null)).ToList();
 
         Assert.Empty(result);
         _repoMock.VerifyNoOtherCalls();
@@ -214,7 +214,7 @@ public partial class TaskServiceTest
             new TaskUpdateDto { Uid = uid2, Order = 20 },
         };
 
-        var result = (await service.UpdateTasksAsync(updates, userId)).ToList();
+        var result = (await service.UpdateTasksAsync(updates, userId, clientId: null)).ToList();
 
         Assert.Empty(result);
         _repoMock.Verify(x => x.GetByIdAsync(uid1), Times.Once);
@@ -239,7 +239,7 @@ public partial class TaskServiceTest
 
         var updates = new[] { new TaskUpdateDto { Uid = uid, Order = newOrder } };
 
-        var result = (await service.UpdateTasksAsync(updates, userId)).ToList();
+        var result = (await service.UpdateTasksAsync(updates, userId, clientId: null)).ToList();
 
         Assert.Single(result);
         Assert.Equal(uid, result[0].Uid);
@@ -266,7 +266,7 @@ public partial class TaskServiceTest
 
         var updates = new[] { new TaskUpdateDto { Uid = uid, Order = 10 } };
 
-        await service.UpdateTasksAsync(updates, userId);
+        await service.UpdateTasksAsync(updates, userId, clientId: null);
 
         _notifierServiceMock.Verify(
             x => x.TaskUpdated(
@@ -286,7 +286,7 @@ public partial class TaskServiceTest
 
         var updates = new[] { new TaskUpdateDto { Uid = nonExistentUid, Order = 10 } };
 
-        await service.UpdateTasksAsync(updates, userId);
+        await service.UpdateTasksAsync(updates, userId, clientId: null);
 
         _notifierServiceMock.Verify(x => x.TaskUpdated(It.IsAny<TasksUpdatedDto>()), Times.Never);
     }
@@ -338,7 +338,7 @@ public partial class TaskServiceTest
             new TaskUpdateDto { Uid = successUid2, Order = 60 },
         };
 
-        var result = (await service.UpdateTasksAsync(updates, userId)).ToList();
+        var result = (await service.UpdateTasksAsync(updates, userId, clientId: null)).ToList();
 
         Assert.Equal(2, result.Count);
         Assert.Contains(result, x => x.Uid == successUid1 && x.Order == 20);

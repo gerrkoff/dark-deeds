@@ -1,13 +1,16 @@
 import { useCallback } from 'react'
 import { useAppDispatch } from '../../hooks'
-import { syncTasks } from '../../overview/redux/overview-slice'
+import { syncTasks, updateTaskVersions } from '../../overview/redux/overview-slice'
 import { TaskModel } from '../models/TaskModel'
 import { taskSyncService } from '../services/TaskSyncService'
 import { reloadOverviewTasks } from '../../overview/redux/overview-thunk'
 import { unwrapResult } from '@reduxjs/toolkit'
+import { addToast } from '../../toasts/redux/toasts-slice'
+import { TaskVersionModel } from '../models/TaskVersionModel'
 
 interface Output {
     processTasksOnlineUpdate: (tasks: TaskModel[]) => void
+    processTaskSaveFinish: (notSaved: number, savedTasks: TaskVersionModel[]) => void
     reloadTasks: () => void
 }
 
@@ -16,20 +19,28 @@ export function useTasksSynchronization(): Output {
 
     const processTasksOnlineUpdate = useCallback(
         (tasks: TaskModel[]) => {
-            const { tasksToNotify, versionsToNotify } = taskSyncService.updateTasks(tasks)
+            const tasksConflicted = taskSyncService.processTasksOnlineUpdate(tasks)
 
             console.log(`[${new Date().toISOString()}] Tasks online update:`, {
                 tasks,
-                tasksToNotify,
-                versionsToNotify,
+                tasksConflicted,
             })
 
             dispatch(
                 syncTasks({
-                    tasks: tasksToNotify,
-                    versions: versionsToNotify,
+                    tasks,
                 }),
             )
+
+            if (tasksConflicted.length > 0) {
+                for (const task of tasksConflicted) {
+                    dispatch(
+                        addToast({
+                            text: `Task "${task.title}" was updated by another client`,
+                        }),
+                    )
+                }
+            }
         },
         [dispatch],
     )
@@ -40,8 +51,27 @@ export function useTasksSynchronization(): Output {
         processTasksOnlineUpdate(tasks)
     }, [dispatch, processTasksOnlineUpdate])
 
+    const processTaskSaveFinish = useCallback(
+        (notSaved: number, savedTasks: TaskVersionModel[]) => {
+            if (notSaved > 0) {
+                dispatch(
+                    addToast({
+                        text: `Failed to save ${notSaved} tasks`,
+                        category: 'task-save-failed',
+                    }),
+                )
+            }
+
+            if (savedTasks.length > 0) {
+                dispatch(updateTaskVersions(savedTasks))
+            }
+        },
+        [dispatch],
+    )
+
     return {
         processTasksOnlineUpdate,
+        processTaskSaveFinish,
         reloadTasks,
     }
 }
