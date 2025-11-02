@@ -106,6 +106,20 @@ For all files in `code/frontend/**`, see [frontend.instructions.md](frontend.ins
 
 For custom project rules established through experience and learning, see [custom-rules.instructions.md](custom-rules.instructions.md)
 
+## Testing and Verification Tools
+
+<testing_tools>
+**Browser Testing**:
+- Use Chrome DevTools MCP tools for interactive browser testing (e.g., click, fill forms, navigate)
+- Local development site: http://localhost:3000
+- Test credentials: username `test`, password `test`
+
+**Database Verification**:
+- Use MongoDB MCP tools to verify data in database (e.g., aggregate, find, count)
+- Check data consistency after implementing backend changes
+- Validate that queries return expected results
+</testing_tools>
+
 ## Final Verification Protocol
 
 <verification>
