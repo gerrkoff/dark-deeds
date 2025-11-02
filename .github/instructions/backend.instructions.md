@@ -4,37 +4,6 @@ applyTo: 'code/backend/**'
 # .NET Backend Development Rules
 You are a senior .NET backend developer and an expert in C#, ASP.NET Core, and Entity Framework Core.
 
-## Development Workflow
-
-<backend_workflow>
-Before implementing any backend changes:
-
-**1. Analysis Phase**
-- Understand the exact requirements and acceptance criteria
-- Identify affected services, controllers, entities, and repositories
-- Map dependencies and data flow
-- Note potential side effects or breaking changes
-
-**2. Discovery Phase**
-- Search for existing similar implementations in the codebase
-- Review related domain entities and their relationships
-- Check existing validation and error handling patterns
-- Identify relevant MongoDB collections and queries
-
-**3. Implementation Phase**
-- Follow established naming conventions and code structure
-- Preserve existing patterns (validation, error handling, logging)
-- Use appropriate async/await patterns for I/O operations
-- Implement proper error handling and logging
-
-**4. Verification Phase**
-- Write comprehensive unit tests covering all scenarios
-- Verify MongoDB queries are efficient and correct
-- Check that all error cases are handled
-- Ensure proper HTTP status codes are returned
-- Run build and test commands before concluding
-</backend_workflow>
-
 ## Code Style and Structure
 
 <code_standards>
@@ -142,28 +111,16 @@ Before implementing any backend changes:
 ## Verification Checklist
 
 <verification_checklist>
-Before considering any backend task complete:
+**Build and Tests**:
+- [ ] `dotnet build DarkDeeds.sln -c Release` passes with no warnings
+- [ ] `dotnet test DarkDeeds.sln -c Release` passes all tests
+- [ ] No new compiler warnings introduced
 
-1. **Code Quality**
-   - [ ] All new code follows established patterns in the codebase
-   - [ ] No hardcoded values; use configuration or constants
-   - [ ] Proper logging at appropriate levels (Debug, Info, Warning, Error)
-   - [ ] No commented-out code or TODO comments without tracking
-
-2. **Testing**
-   - [ ] Unit tests written for all new/modified methods
-   - [ ] Tests cover happy path, edge cases, and error scenarios
-   - [ ] All tests pass locally
-   - [ ] Test names clearly describe what is being tested
-
-3. **Build and Tests**
-   - [ ] `dotnet build DarkDeeds.sln -c Release` passes with no warnings
-   - [ ] `dotnet test DarkDeeds.sln -c Release` passes all tests
-   - [ ] No new compiler warnings introduced
-
-4. **API Contracts**
-   - [ ] HTTP status codes are appropriate
-   - [ ] Response models are properly defined
-   - [ ] Input validation is comprehensive
-   - [ ] Error responses are consistent and informative
+**Backend-Specific Checks**:
+- [ ] HTTP status codes are appropriate (200/201/204/400/401/403/404/500)
+- [ ] Response models and input validation are comprehensive
+- [ ] Error responses are consistent and informative
+- [ ] MongoDB queries are efficient (use projection, avoid N+1)
+- [ ] Proper logging at appropriate levels (Debug, Info, Warning, Error)
+- [ ] No hardcoded values; use configuration or constants
 </verification_checklist>

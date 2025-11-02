@@ -4,38 +4,6 @@ applyTo: 'code/frontend/**'
 # React Frontend Development Rules
 You are an expert React and TypeScript developer. Generate modern, production-ready React components following these guidelines:
 
-## Development Workflow
-
-<frontend_workflow>
-Before implementing any frontend changes:
-
-**1. Analysis Phase**
-- Understand the UI/UX requirements and user interactions
-- Identify affected components, hooks, and state management
-- Map data flow and component hierarchy
-- Note potential accessibility and performance considerations
-
-**2. Discovery Phase**
-- Search for similar component patterns in the codebase
-- Review existing styling conventions and UI component libraries
-- Check state management patterns (Context, custom hooks, etc.)
-- Identify reusable utilities and helpers
-
-**3. Implementation Phase**
-- Follow established naming conventions and file structure
-- Preserve existing patterns (component composition, hook usage, error handling)
-- Implement proper TypeScript types and interfaces
-- Use appropriate React hooks and lifecycle management
-- Ensure accessibility standards are met
-
-**4. Verification Phase**
-- Write component tests covering user interactions and edge cases
-- Verify responsive design across different viewports
-- Check accessibility with proper ARIA attributes
-- Ensure proper error states and loading indicators
-- Run build, lint, and test commands before concluding
-</frontend_workflow>
-
 ## Component Structure
 
 <component_standards>
@@ -157,41 +125,20 @@ Before implementing any frontend changes:
 ## Verification Checklist
 
 <verification_checklist>
-Before considering any frontend task complete:
+**Build and Lint**:
+- [ ] `npm run build` passes with no errors or warnings
+- [ ] `npm run fmt:check` passes (or `npm run fmt` was run)
+- [ ] `npm run test:run` passes all tests
+- [ ] No TypeScript errors
 
-1. **Code Quality**
-   - [ ] All new code follows established patterns in the codebase
-   - [ ] TypeScript types are properly defined (no `any` types)
-   - [ ] Components are properly memoized if needed
-   - [ ] No console.log or debugging code left in
-
-2. **Functionality**
-   - [ ] All user interactions work as expected
-   - [ ] Loading and error states are handled
-   - [ ] Forms validate properly and show appropriate feedback
-   - [ ] Navigation works correctly
-
-3. **Accessibility**
-   - [ ] Semantic HTML is used where appropriate
-   - [ ] ARIA labels are present for non-semantic elements
-   - [ ] Keyboard navigation works (Tab, Enter, Escape)
-   - [ ] Focus management is proper in modals/dynamic content
-
-4. **Styling**
-   - [ ] Responsive design works on mobile, tablet, and desktop
-   - [ ] Visual consistency with design system
-   - [ ] Hover and focus states are visible
-   - [ ] Color contrast meets WCAG standards
-
-5. **Testing**
-   - [ ] Component tests written for key functionality
-   - [ ] Tests cover user interactions and edge cases
-   - [ ] All tests pass locally
-   - [ ] Test names are descriptive
-
-6. **Build and Lint**
-   - [ ] `npm run build` passes with no errors or warnings
-   - [ ] `npm run fmt:check` passes (or `npm run fmt` was run)
-   - [ ] `npm run test:run` passes all tests
-   - [ ] No TypeScript errors
+**Frontend-Specific Checks**:
+- [ ] TypeScript types are properly defined (no `any` types)
+- [ ] Components are properly memoized if needed
+- [ ] No console.log or debugging code left in
+- [ ] Semantic HTML is used where appropriate
+- [ ] ARIA labels are present for non-semantic elements
+- [ ] Keyboard navigation works (Tab, Enter, Escape)
+- [ ] Responsive design works on mobile, tablet, and desktop
+- [ ] Visual consistency with design system
+- [ ] Hover and focus states are visible
 </verification_checklist>
