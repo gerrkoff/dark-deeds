@@ -21,24 +21,11 @@ export const overviewSlice = createSlice({
     name: 'overview',
     initialState,
     reducers: {
+        // local changes
         updateTasks: (state, action: PayloadAction<TaskModel[]>) => {
             for (const task of action.payload) {
                 const index = state.tasks.findIndex(t => t.uid === task.uid)
                 if (index !== -1) {
-                    if (task.version < state.tasks[index].version) {
-                        console.warn(
-                            'Update Tasks Collision',
-                            {
-                                existing: state.tasks[index].version,
-                                incoming: task.version,
-                            },
-                            {
-                                existing: { ...state.tasks[index] },
-                                incoming: { ...task },
-                            },
-                        )
-                    }
-
                     state.tasks[index] = {
                         ...task,
                         version: state.tasks[index].version,
@@ -48,25 +35,13 @@ export const overviewSlice = createSlice({
                 }
             }
         },
+        // from online sync
         syncTasks: (state, action: PayloadAction<TasksSyncModel>) => {
             const taskIndexMap = new Map<string, number>(state.tasks.map((x, i) => [x.uid, i]))
 
             for (const task of action.payload.tasks) {
                 const index = taskIndexMap.get(task.uid) ?? -1
                 if (index !== -1) {
-                    if (task.version < state.tasks[index].version) {
-                        console.warn(
-                            'Sync Tasks Collision',
-                            {
-                                existing: state.tasks[index].version,
-                                incoming: task.version,
-                            },
-                            {
-                                existing: { ...state.tasks[index] },
-                                incoming: { ...task },
-                            },
-                        )
-                    }
                     state.tasks[index] = task
                 } else {
                     state.tasks.push(task)
