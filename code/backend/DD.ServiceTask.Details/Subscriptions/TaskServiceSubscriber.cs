@@ -1,4 +1,3 @@
-using DD.ServiceTask.Details.Infrastructure;
 using DD.ServiceTask.Details.Web.Hubs;
 using DD.Shared.Details.Abstractions;
 using DD.Shared.Details.Abstractions.Dto;
@@ -8,12 +7,12 @@ namespace DD.ServiceTask.Details.Subscriptions;
 
 public class TaskServiceSubscriber(
     IHubContext<TaskHub> hubContext,
-    IClientConnectionTracker clientConnectionTracker) : ITaskServiceSubscriber
+    IHubClientConnectionTracker hubClientConnectionTracker) : ITaskServiceSubscriber
 {
     public Task TasksUpdated(TasksUpdatedDto tasksUpdated)
     {
         var excludeConnectionIds = !string.IsNullOrWhiteSpace(tasksUpdated.ClientId)
-            ? clientConnectionTracker.GetConnectionIdsByClientId(tasksUpdated.ClientId)
+            ? hubClientConnectionTracker.GetConnectionIdsByClientId(tasksUpdated.ClientId)
             : [];
 
         return hubContext.Clients

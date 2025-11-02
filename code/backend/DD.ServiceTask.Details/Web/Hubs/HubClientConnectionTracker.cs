@@ -30,15 +30,10 @@ internal sealed class HubClientConnectionTracker : IHubClientConnectionTracker
 
     public IReadOnlyList<string> GetConnectionIdsByClientId(string clientId)
     {
-        var connections = new List<string>();
-
-        foreach (var kvp in _connectionToClient)
-        {
-            if (kvp.Value == clientId)
-            {
-                connections.Add(kvp.Key);
-            }
-        }
+        var connections = _connectionToClient
+            .Where(kvp => kvp.Value == clientId)
+            .Select(kvp => kvp.Key)
+            .ToList();
 
         return connections;
     }

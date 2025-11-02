@@ -1,16 +1,15 @@
-using DD.ServiceTask.Details.Infrastructure;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 
 namespace DD.ServiceTask.Details.Web.Hubs;
 
 [Authorize]
-public class TaskHub(IClientConnectionTracker clientConnectionTracker) : Hub
+public class TaskHub(IHubClientConnectionTracker hubClientConnectionTracker) : Hub
 {
     public override async Task OnConnectedAsync()
     {
         var clientId = Context.GetHttpContext()?.Request.Query["clientId"].FirstOrDefault();
-        clientConnectionTracker.AddConnection(Context.ConnectionId, clientId);
+        hubClientConnectionTracker.AddConnection(Context.ConnectionId, clientId);
 
         var userId = Context.UserIdentifier;
         if (!string.IsNullOrWhiteSpace(userId))
@@ -21,7 +20,7 @@ public class TaskHub(IClientConnectionTracker clientConnectionTracker) : Hub
 
     public override Task OnDisconnectedAsync(Exception? exception)
     {
-        clientConnectionTracker.RemoveConnection(Context.ConnectionId);
+        hubClientConnectionTracker.RemoveConnection(Context.ConnectionId);
         return base.OnDisconnectedAsync(exception);
     }
 }
