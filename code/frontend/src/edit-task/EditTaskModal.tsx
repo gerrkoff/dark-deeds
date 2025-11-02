@@ -4,6 +4,7 @@ import { taskConvertService } from './services/TaskConvertService'
 import { TaskEditModalContext } from './models/TaskEditModalContext'
 import { EditTaskHelper } from './components/EditTaskHelper'
 import { ModalContainer } from '../common/components/ModalContainer'
+import { useTaskConflictDetection } from './hooks/useTaskConflictDetection'
 
 interface Props {
     context: TaskEditModalContext
@@ -16,6 +17,8 @@ function EditTaskModal({ context, onSave }: Props) {
     const [task, setTask] = useState('')
 
     const { close, content } = context
+
+    const { conflictTask } = useTaskConflictDetection(content)
 
     useEffect(() => {
         if (content.type === 'EDIT' || content.type === 'NEW_FROM_TASK') {
@@ -47,10 +50,11 @@ function EditTaskModal({ context, onSave }: Props) {
 
     const label = useMemo(() => {
         if (content.type === 'EDIT') {
-            return `Edit: ${taskConvertService.convertTaskToString(content.task)}`
+            const taskToShow = conflictTask ?? content.task
+            return `Edit: ${taskConvertService.convertTaskToString(taskToShow)}`
         }
         return 'Add task: 1231 2359 December 31, 23:59'
-    }, [content])
+    }, [content, conflictTask])
 
     return (
         <ModalContainer
@@ -58,6 +62,7 @@ function EditTaskModal({ context, onSave }: Props) {
             onSave={handleSave}
             autoFocusInputRef={inputRef}
             isSaveEnabled={task.length > 0}
+            hasWarning={conflictTask !== null}
         >
             <div className="form-floating mb-3">
                 <input

@@ -7,9 +7,10 @@ import {
     toggleSaveTaskPending,
 } from '../../status-panel/redux/status-panel-slice'
 import { taskHubApi } from '../api/TaskHubApi'
+import { TaskModel } from '../models/TaskModel'
 import { taskSyncService } from '../services/TaskSyncService'
 import { useTasksSynchronization } from './useTasksSynchronization'
-import { addToast } from '../../toasts/redux/toasts-slice'
+import { TaskVersionModel } from '../models/TaskVersionModel'
 
 export function useTasksHub() {
     const dispatch = useAppDispatch()
@@ -18,7 +19,7 @@ export function useTasksHub() {
         taskHubApi.init()
     }, [])
 
-    const { processTasksOnlineUpdate, reloadTasks } = useTasksSynchronization()
+    const { processTasksOnlineUpdate, processTaskSaveFinish, reloadTasks } = useTasksSynchronization()
 
     useEffect(() => {
         const handleHubClose = () => {
@@ -42,30 +43,27 @@ export function useTasksHub() {
             /* Do nothing */
         }
 
-        const handleTaskSaveFinish = (notSaved: number) => {
-            if (notSaved > 0) {
-                dispatch(
-                    addToast({
-                        text: `Failed to save ${notSaved} tasks`,
-                        category: 'task-save-failed',
-                    }),
-                )
-            }
+        const handleTasksUpdate = (tasks: TaskModel[]) => {
+            processTasksOnlineUpdate(tasks)
+        }
+
+        const handleTaskSaveFinish = (notSaved: number, savedTasks: TaskVersionModel[]) => {
+            processTaskSaveFinish(notSaved, savedTasks)
         }
 
         taskHubApi.onClose(handleHubClose)
         taskHubApi.onReconnecting(handleHubReconnecting)
         taskHubApi.onReconnected(handleHubReconnected)
-        taskHubApi.onUpdate(processTasksOnlineUpdate)
+        taskHubApi.onUpdate(handleTasksUpdate)
         taskHubApi.onHeartbeat(handleHeartbeat)
         taskSyncService.subscribeStatusUpdate(handleUpdateStatus)
         taskSyncService.subscribeSaveFinish(handleTaskSaveFinish)
 
         return () => {
-            taskHubApi.offUpdate(processTasksOnlineUpdate)
+            taskHubApi.offUpdate(handleTasksUpdate)
             taskHubApi.offHeartbeat(handleHeartbeat)
             taskSyncService.unsubscribeStatusUpdate(handleUpdateStatus)
             taskSyncService.unsubscribeSaveFinish(handleTaskSaveFinish)
         }
-    }, [dispatch, processTasksOnlineUpdate, reloadTasks])
+    }, [dispatch, processTasksOnlineUpdate, processTaskSaveFinish, reloadTasks])
 }

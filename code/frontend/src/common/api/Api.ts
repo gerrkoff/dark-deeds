@@ -1,3 +1,4 @@
+import { clientIdentityService, ClientIdentityService } from '../services/ClientIdentityService'
 import { storageService, StorageService } from '../services/StorageService'
 import { baseUrlProvider, BaseUrlProvider } from './BaseUrlProvider'
 
@@ -7,6 +8,7 @@ export class Api {
     constructor(
         private baseUrlProvider: BaseUrlProvider,
         private storageService: StorageService,
+        private clientIdentityService: ClientIdentityService,
     ) {}
 
     get<T>(api: string, params?: Map<string, string>): Promise<T> {
@@ -21,6 +23,7 @@ export class Api {
             fetch(this.baseUrlProvider.getBaseUrl() + api, {
                 headers: {
                     Authorization: 'Bearer ' + this.storageService.loadAccessToken(),
+                    'X-Client-Id': this.clientIdentityService.getClientId(),
                 },
             }),
         )
@@ -33,6 +36,7 @@ export class Api {
                 headers: {
                     Authorization: 'Bearer ' + this.storageService.loadAccessToken(),
                     'Content-Type': 'application/json',
+                    'X-Client-Id': this.clientIdentityService.getClientId(),
                 },
                 method: 'POST',
             }),
@@ -74,4 +78,4 @@ export class Api {
     }
 }
 
-export const api = new Api(baseUrlProvider, storageService)
+export const api = new Api(baseUrlProvider, storageService, clientIdentityService)

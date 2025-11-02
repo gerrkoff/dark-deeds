@@ -4,7 +4,7 @@ import { TaskModel } from '../models/TaskModel'
 import { TaskVersionModel } from '../models/TaskVersionModel'
 
 export type StatusUpdateSubscription = (isSynchronizing: boolean) => void
-export type SaveFinishSubscription = (notSaved: number) => void
+export type SaveFinishSubscription = (notSaved: number, savedTasks: TaskVersionModel[]) => void
 
 export class TaskSyncService {
     constructor(private taskApi: TaskApi) {}
@@ -35,13 +35,7 @@ export class TaskSyncService {
 
     sync(tasks: TaskModel[]) {
         for (const task of tasks) {
-            const taskToSave = this.tasksToSave.get(task.uid)
-            const version = taskToSave ? taskToSave.version : task.version
-
-            this.tasksToSave.set(task.uid, {
-                ...task,
-                version,
-            })
+            this.tasksToSave.set(task.uid, { ...task })
         }
 
         this.schedule()
@@ -64,6 +58,7 @@ export class TaskSyncService {
     private async saveTasks(): Promise<void> {
         while (this.tasksToSave.size > 0) {
             this.tasksInFlight = this.tasksToSave
+            const tasksInFlightCount = this.tasksInFlight.size
             this.tasksToSave = new Map<string, TaskModel>()
             let wait = false
 
@@ -76,11 +71,27 @@ export class TaskSyncService {
                 wait = true
             }
 
+            // Update versions in tasksToSave if task was modified while in flight
+            for (const savedTask of savedTasks) {
+                const taskToSave = this.tasksToSave.get(savedTask.uid)
+                if (taskToSave) {
+                    this.tasksToSave.set(savedTask.uid, {
+                        ...taskToSave,
+                        version: savedTask.version,
+                    })
+                }
+            }
+
             for (const task of savedTasks) {
                 this.tasksInFlight.delete(task.uid)
             }
 
-            this.saveFinishSubscriptions.forEach(x => x(this.tasksInFlight.size))
+            this.saveFinishSubscriptions.forEach(x =>
+                x(
+                    tasksInFlightCount - savedTasks.length,
+                    savedTasks.map(task => ({ uid: task.uid, version: task.version })),
+                ),
+            )
 
             for (const [uid, task] of this.tasksInFlight) {
                 if (!this.tasksToSave.has(uid)) {
@@ -94,42 +105,29 @@ export class TaskSyncService {
         }
     }
 
-    updateTasks(updatedTasks: TaskModel[]): {
-        tasksToNotify: TaskModel[]
-        versionsToNotify: TaskVersionModel[]
-    } {
-        const tasksToNotify: TaskModel[] = []
-        const versionsToNotify: TaskVersionModel[] = []
+    processTasksOnlineUpdate(updatedTasks: TaskModel[]): TaskModel[] {
+        const tasksConflicted: TaskModel[] = []
 
         for (const updatedTask of updatedTasks) {
             const taskToSave = this.tasksToSave.get(updatedTask.uid)
             const taskInFlight = this.tasksInFlight.get(updatedTask.uid)
 
+            // If task is in save queue and incoming version is newer - conflict!
             if (taskToSave && updatedTask.version > taskToSave.version) {
-                taskToSave.version = updatedTask.version
-                versionsToNotify.push({
-                    uid: updatedTask.uid,
-                    version: updatedTask.version,
-                })
+                this.tasksToSave.delete(updatedTask.uid)
+                tasksConflicted.push(updatedTask)
+                continue
             }
 
+            // If task is in flight and incoming version is newer - conflict!
             if (taskInFlight && updatedTask.version > taskInFlight.version) {
-                taskInFlight.version = updatedTask.version
-                versionsToNotify.push({
-                    uid: updatedTask.uid,
-                    version: updatedTask.version,
-                })
-            }
-
-            if (!taskToSave && !taskInFlight) {
-                tasksToNotify.push(updatedTask)
+                this.tasksInFlight.delete(updatedTask.uid)
+                tasksConflicted.push(updatedTask)
+                continue
             }
         }
 
-        return {
-            tasksToNotify,
-            versionsToNotify,
-        }
+        return tasksConflicted
     }
 }
 

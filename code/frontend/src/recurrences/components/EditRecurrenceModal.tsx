@@ -215,6 +215,7 @@ function EditRecurrenceModal({ context, onUpdate }: Props) {
             onSave={handleSave}
             onDelete={handleDelete}
             isSaveEnabled={isValid}
+            hasWarning={false}
         >
             <div className="form-floating mb-3">
                 <input

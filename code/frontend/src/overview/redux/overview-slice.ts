@@ -3,6 +3,7 @@ import type { PayloadAction } from '@reduxjs/toolkit'
 import { TaskModel } from '../../tasks/models/TaskModel'
 import { reloadOverviewTasks } from './overview-thunk'
 import { TasksSyncModel } from '../../tasks/models/TasksSyncModel'
+import { TaskVersionModel } from '../../tasks/models/TaskVersionModel'
 
 export interface OverviewState {
     tasks: TaskModel[]
@@ -20,24 +21,11 @@ export const overviewSlice = createSlice({
     name: 'overview',
     initialState,
     reducers: {
+        // local changes
         updateTasks: (state, action: PayloadAction<TaskModel[]>) => {
             for (const task of action.payload) {
                 const index = state.tasks.findIndex(t => t.uid === task.uid)
                 if (index !== -1) {
-                    if (task.version < state.tasks[index].version) {
-                        console.warn(
-                            'Update Tasks Collision',
-                            {
-                                existing: state.tasks[index].version,
-                                incoming: task.version,
-                            },
-                            {
-                                existing: { ...state.tasks[index] },
-                                incoming: { ...task },
-                            },
-                        )
-                    }
-
                     state.tasks[index] = {
                         ...task,
                         version: state.tasks[index].version,
@@ -47,48 +35,25 @@ export const overviewSlice = createSlice({
                 }
             }
         },
+        // from online sync
         syncTasks: (state, action: PayloadAction<TasksSyncModel>) => {
             const taskIndexMap = new Map<string, number>(state.tasks.map((x, i) => [x.uid, i]))
 
             for (const task of action.payload.tasks) {
                 const index = taskIndexMap.get(task.uid) ?? -1
                 if (index !== -1) {
-                    if (task.version < state.tasks[index].version) {
-                        console.warn(
-                            'Sync Tasks Collision',
-                            {
-                                existing: state.tasks[index].version,
-                                incoming: task.version,
-                            },
-                            {
-                                existing: { ...state.tasks[index] },
-                                incoming: { ...task },
-                            },
-                        )
-                    }
                     state.tasks[index] = task
                 } else {
                     state.tasks.push(task)
                 }
             }
+        },
+        updateTaskVersions: (state, action: PayloadAction<TaskVersionModel[]>) => {
+            const taskIndexMap = new Map<string, number>(state.tasks.map((x, i) => [x.uid, i]))
 
-            for (const task of action.payload.versions) {
+            for (const task of action.payload) {
                 const index = taskIndexMap.get(task.uid) ?? -1
                 if (index !== -1) {
-                    if (task.version <= state.tasks[index].version) {
-                        console.warn(
-                            'Sync Versions Collision',
-                            {
-                                existing: state.tasks[index].version,
-                                incoming: task.version,
-                            },
-                            {
-                                existing: { ...state.tasks[index] },
-                                incoming: { ...task },
-                            },
-                        )
-                    }
-
                     state.tasks[index].version = task.version
                 }
             }
@@ -118,6 +83,6 @@ export const overviewSlice = createSlice({
     },
 })
 
-export const { updateTasks, syncTasks, toggleRoutineTaskDate, cleanup } = overviewSlice.actions
+export const { updateTasks, syncTasks, updateTaskVersions, toggleRoutineTaskDate, cleanup } = overviewSlice.actions
 
 export default overviewSlice.reducer

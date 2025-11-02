@@ -5,11 +5,18 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace DD.ServiceTask.Details.Subscriptions;
 
-public class TaskServiceSubscriber(IHubContext<TaskHub> hubContext) : ITaskServiceSubscriber
+public class TaskServiceSubscriber(
+    IHubContext<TaskHub> hubContext,
+    IHubClientConnectionTracker hubClientConnectionTracker) : ITaskServiceSubscriber
 {
     public Task TasksUpdated(TasksUpdatedDto tasksUpdated)
     {
-        return hubContext.Clients.User(tasksUpdated.UserId)
+        var excludeConnectionIds = !string.IsNullOrWhiteSpace(tasksUpdated.ClientId)
+            ? hubClientConnectionTracker.GetConnectionIdsByClientId(tasksUpdated.ClientId)
+            : [];
+
+        return hubContext.Clients
+            .GroupExcept(tasksUpdated.UserId, excludeConnectionIds)
             .SendAsync("update", tasksUpdated.Tasks);
     }
 }

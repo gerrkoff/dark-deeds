@@ -11,6 +11,7 @@ interface Props {
     onDelete?: () => void
     autoFocusInputRef?: React.RefObject<HTMLInputElement>
     children: React.ReactNode
+    hasWarning: boolean
 }
 
 const isStartAnimationEnabled = !isTouchDevice()
@@ -23,6 +24,7 @@ function ModalContainer({
     onDelete,
     autoFocusInputRef,
     children,
+    hasWarning,
 }: Props) {
     const containerRef = useRef<HTMLDivElement>(null)
     const [visible, setVisible] = useState(!isStartAnimationEnabled)
@@ -128,7 +130,14 @@ function ModalContainer({
                                     Delete
                                 </button>
                             )}
-                            <button type="submit" className="btn btn-primary" disabled={!isSaveEnabled}>
+                            <button
+                                type="submit"
+                                className={clsx('btn', {
+                                    'btn-primary': !hasWarning,
+                                    'btn-warning': hasWarning,
+                                })}
+                                disabled={!isSaveEnabled}
+                            >
                                 Save changes
                             </button>
                         </div>

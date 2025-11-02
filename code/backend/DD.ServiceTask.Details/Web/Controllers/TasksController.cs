@@ -22,6 +22,7 @@ public class TasksController(
     [HttpPost]
     public Task<IEnumerable<TaskDto>> Post([FromBody] ICollection<TaskDto> tasks)
     {
-        return taskService.SaveTasksAsync(tasks, userAuth.UserId());
+        var clientId = Request.Headers["X-Client-Id"].FirstOrDefault();
+        return taskService.SaveTasksAsync(tasks, userAuth.UserId(), clientId);
     }
 }
