@@ -35,13 +35,7 @@ export class TaskSyncService {
 
     sync(tasks: TaskModel[]) {
         for (const task of tasks) {
-            const taskToSave = this.tasksToSave.get(task.uid)
-            const version = taskToSave ? taskToSave.version : task.version
-
-            this.tasksToSave.set(task.uid, {
-                ...task,
-                version,
-            })
+            this.tasksToSave.set(task.uid, { ...task })
         }
 
         this.schedule()
