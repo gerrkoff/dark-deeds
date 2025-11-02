@@ -17,7 +17,7 @@ public class TaskServiceSubscriber(
             : [];
 
         return hubContext.Clients
-            .AllExcept(excludeConnectionIds)
+            .GroupExcept(tasksUpdated.UserId, excludeConnectionIds)
             .SendAsync("update", tasksUpdated.Tasks);
     }
 }
