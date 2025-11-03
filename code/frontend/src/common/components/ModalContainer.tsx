@@ -9,7 +9,6 @@ interface Props {
     isSaveEnabled: boolean
     onSave: () => void
     onDelete?: () => void
-    autoFocusInputRef?: React.RefObject<HTMLInputElement>
     children: React.ReactNode
     hasWarning: boolean
 }
@@ -22,13 +21,13 @@ function ModalContainer({
     isSaveEnabled,
     onSave,
     onDelete,
-    autoFocusInputRef,
     children,
     hasWarning,
 }: Props) {
     const containerRef = useRef<HTMLDivElement>(null)
     const [visible, setVisible] = useState(!isStartAnimationEnabled)
     const [show, setShow] = useState(!isStartAnimationEnabled)
+    const savedScrollPosition = useRef<number>(0)
 
     useEffect(() => {
         if (!isMobile) {
@@ -45,7 +44,9 @@ function ModalContainer({
         if (isShown) {
             setVisible(true)
             setTimeout(() => setShow(true), 16)
-            if (!isMobile) {
+            if (isMobile) {
+                savedScrollPosition.current = window.scrollY || window.pageYOffset
+            } else {
                 document.body.style.overflow = 'hidden'
             }
         } else {
@@ -54,7 +55,9 @@ function ModalContainer({
                 setVisible(false)
                 cleanup()
             }, 150)
-            if (!isMobile) {
+            if (isMobile) {
+                window.scrollTo(0, savedScrollPosition.current)
+            } else {
                 document.body.style.overflow = ''
             }
         }
@@ -76,10 +79,6 @@ function ModalContainer({
             close()
         }
     }
-
-    useEffect(() => {
-        setTimeout(() => autoFocusInputRef?.current?.focus(), 16)
-    }, [autoFocusInputRef])
 
     const [isDeletePending, setIsDeletePending] = useState(false)
 

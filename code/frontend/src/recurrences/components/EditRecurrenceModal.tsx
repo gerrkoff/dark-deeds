@@ -121,8 +121,6 @@ const getDateFromInput = (value: string): number | null => {
 const isMobile = isTouchDevice()
 
 function EditRecurrenceModal({ context, onUpdate }: Props) {
-    const inputRef = useRef<HTMLInputElement>(null)
-
     const { recurrence, close } = context
 
     const [task, setTask] = useState(recurrence?.task ?? '')
@@ -211,7 +209,6 @@ function EditRecurrenceModal({ context, onUpdate }: Props) {
     return (
         <ModalContainer
             context={context}
-            autoFocusInputRef={inputRef}
             onSave={handleSave}
             onDelete={handleDelete}
             isSaveEnabled={isValid}
@@ -220,7 +217,6 @@ function EditRecurrenceModal({ context, onUpdate }: Props) {
             <div className="form-floating mb-3">
                 <input
                     autoFocus
-                    ref={inputRef}
                     type="text"
                     className="form-control"
                     id="taskInput"
