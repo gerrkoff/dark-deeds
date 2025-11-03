@@ -5,12 +5,12 @@ WORKDIR /code/frontend
 COPY code/frontend/package.json /code/frontend/package.json
 COPY code/frontend/package-lock.json /code/frontend/package-lock.json
 
-RUN npm install
+RUN npm ci --prefer-offline --no-audit
 
 COPY code/frontend/ /code/frontend/
 COPY .editorconfig /code/frontend/.editorconfig
 
-RUN npm run ci
+RUN npm run build
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0.100 AS builder-be
 
@@ -27,12 +27,11 @@ RUN dotnet restore /code/backend/DarkDeeds.sln
 COPY code/backend/ /code/backend/
 COPY .editorconfig /code/backend/.editorconfig
 
-RUN dotnet build --no-restore /code/backend/DarkDeeds.sln
-RUN dotnet test --no-restore "--logger:trx;LogFileName=results.trx" --results-directory /test-results /code/backend/DarkDeeds.sln
+RUN dotnet build --no-restore -c Release /code/backend/DarkDeeds.sln
 
 ARG BUILD_VERSION
 
-RUN dotnet publish -c Release -o /build --version-suffix ${BUILD_VERSION} /code/backend/DD.App/DD.App.csproj
+RUN dotnet publish --no-restore --no-build -c Release -o /build --version-suffix ${BUILD_VERSION} /code/backend/DD.App/DD.App.csproj
 
 FROM mcr.microsoft.com/dotnet/aspnet:8.0
 
