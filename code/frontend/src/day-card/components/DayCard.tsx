@@ -50,7 +50,12 @@ function DayCard({ dayCardModel, isDebug, isRoutineShown, globalDndContext, save
 
     return (
         <>
-            <Card elementRef={cardRef} isDimmed={isExpired} className={styles.card}>
+            <Card
+                elementRef={cardRef}
+                isDimmed={isExpired}
+                className={styles.card}
+                dataAppId={`card-day-${dayCardModel.date.valueOf()}`}
+            >
                 <DayCardHeader
                     dayCardModel={dayCardModel}
                     isHighlighted={headerMenuContext !== null}
