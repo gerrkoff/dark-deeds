@@ -13,6 +13,7 @@ import { DayCardsSection } from '../day-card/components/DayCardsSection'
 import { updateAndSyncTasks } from './redux/overview-thunk'
 import { toggleRoutineTaskDate } from './redux/overview-slice'
 import { useDayCardDndGlobalContext } from '../day-card/hooks/useDayCardDndGlobalContext'
+import { useScrollToToday } from './hooks/useScrollToToday'
 
 function Overview() {
     const dispatch = useAppDispatch()
@@ -27,6 +28,8 @@ function Overview() {
     const routineTaskDatesShown = useAppSelector(overviewTaskRoutinesSelector)
 
     const globalDndContext = useDayCardDndGlobalContext()
+
+    useScrollToToday()
 
     const handleNoDateToggle = useCallback(() => dispatch(toggleOverviewTab(OverviewTabEnum.NoDate)), [dispatch])
 
