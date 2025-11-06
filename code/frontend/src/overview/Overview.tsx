@@ -3,7 +3,11 @@ import { useAppDispatch, useAppSelector } from '../hooks'
 import { overviewTabsExpandedSelector } from '../settings/redux/settings-selectors'
 import { NoDateSection } from './components/NoDateSection'
 import { OverviewModel } from './models/OverviewModel'
-import { overviewModelSelector, overviewTaskRoutinesSelector } from './redux/overview-selectors'
+import {
+    overviewModelSelector,
+    overviewTaskRoutinesSelector,
+    isInitialLoadCompleteSelector,
+} from './redux/overview-selectors'
 import { toggleOverviewTab } from '../settings/redux/settings-slice'
 import { OverviewTabEnum } from '../settings/models/OverviewTabEnum'
 import { AddTaskButton } from './components/AddTaskButton'
@@ -13,7 +17,6 @@ import { DayCardsSection } from '../day-card/components/DayCardsSection'
 import { updateAndSyncTasks } from './redux/overview-thunk'
 import { toggleRoutineTaskDate } from './redux/overview-slice'
 import { useDayCardDndGlobalContext } from '../day-card/hooks/useDayCardDndGlobalContext'
-import { useScrollToToday } from './hooks/useScrollToToday'
 
 function Overview() {
     const dispatch = useAppDispatch()
@@ -27,9 +30,9 @@ function Overview() {
 
     const routineTaskDatesShown = useAppSelector(overviewTaskRoutinesSelector)
 
-    const globalDndContext = useDayCardDndGlobalContext()
+    const isInitialLoadComplete = useAppSelector(isInitialLoadCompleteSelector)
 
-    useScrollToToday()
+    const globalDndContext = useDayCardDndGlobalContext()
 
     const handleNoDateToggle = useCallback(() => dispatch(toggleOverviewTab(OverviewTabEnum.NoDate)), [dispatch])
 
@@ -76,6 +79,7 @@ function Overview() {
                             isDebug={isDebugEnabled}
                             routineTaskDatesShown={routineTaskDatesShown}
                             globalDndContext={globalDndContext}
+                            isInitialLoadComplete={isInitialLoadComplete}
                             saveTasks={saveTasks}
                             onRoutineToggle={handleRoutineToggle}
                         />
@@ -95,6 +99,7 @@ function Overview() {
                         isDebug={isDebugEnabled}
                         routineTaskDatesShown={routineTaskDatesShown}
                         globalDndContext={globalDndContext}
+                        isInitialLoadComplete={isInitialLoadComplete}
                         saveTasks={saveTasks}
                         onRoutineToggle={handleRoutineToggle}
                     />
@@ -112,6 +117,7 @@ function Overview() {
                             isDebug={isDebugEnabled}
                             routineTaskDatesShown={routineTaskDatesShown}
                             globalDndContext={globalDndContext}
+                            isInitialLoadComplete={isInitialLoadComplete}
                             saveTasks={saveTasks}
                             onRoutineToggle={handleRoutineToggle}
                         />

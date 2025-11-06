@@ -11,6 +11,7 @@ import { DayCardHeaderMenu } from './DayCardHeaderMenu'
 import styles from './DayCard.module.css'
 import { useDayCardMenuItem } from '../hooks/useDayCardMenuItem'
 import { useDayCardMenuHeader } from '../hooks/useDayCardMenuHeader'
+import { useScrollToTodayCard } from '../hooks/useScrollToTodayCard'
 import { dateService } from '../../common/services/DateService'
 import { taskTransformService } from '../../common/services/TaskTransformService'
 import { DayCardDndGlobalContext } from '../hooks/useDayCardDndGlobalContext'
@@ -20,11 +21,20 @@ interface Props {
     isDebug: boolean
     isRoutineShown: boolean
     globalDndContext: DayCardDndGlobalContext
+    isInitialLoadComplete: boolean
     saveTasks: (tasks: TaskModel[]) => void
     onRoutineToggle: (date: Date) => void
 }
 
-function DayCard({ dayCardModel, isDebug, isRoutineShown, globalDndContext, saveTasks, onRoutineToggle }: Props) {
+function DayCard({
+    dayCardModel,
+    isDebug,
+    isRoutineShown,
+    globalDndContext,
+    isInitialLoadComplete,
+    saveTasks,
+    onRoutineToggle,
+}: Props) {
     const cardRef = useRef<HTMLDivElement>(null)
 
     const { taskEditModalContext, openTaskEditModal } = useEditTaskModal()
@@ -41,6 +51,8 @@ function DayCard({ dayCardModel, isDebug, isRoutineShown, globalDndContext, save
         openTaskEditModal,
     })
 
+    useScrollToTodayCard(dayCardModel.date, cardRef, isInitialLoadComplete)
+
     const isExpired = dayCardModel.date < dateService.today()
 
     const transformDrop = useCallback(
@@ -50,12 +62,7 @@ function DayCard({ dayCardModel, isDebug, isRoutineShown, globalDndContext, save
 
     return (
         <>
-            <Card
-                elementRef={cardRef}
-                isDimmed={isExpired}
-                className={styles.card}
-                dataAppId={`card-day-${dayCardModel.date.valueOf()}`}
-            >
+            <Card elementRef={cardRef} isDimmed={isExpired} className={styles.card}>
                 <DayCardHeader
                     dayCardModel={dayCardModel}
                     isHighlighted={headerMenuContext !== null}
