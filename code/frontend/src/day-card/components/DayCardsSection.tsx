@@ -11,6 +11,7 @@ interface Props {
     isDebug: boolean
     routineTaskDatesShown: Set<number>
     globalDndContext: DayCardDndGlobalContext
+    isInitialLoadComplete: boolean
     saveTasks: (tasks: TaskModel[]) => void
     onRoutineToggle: (date: Date) => void
 }
@@ -21,6 +22,7 @@ function DayCardsSection({
     isDebug,
     routineTaskDatesShown,
     globalDndContext,
+    isInitialLoadComplete,
     saveTasks,
     onRoutineToggle,
 }: Props) {
@@ -49,6 +51,7 @@ function DayCardsSection({
                                 isDebug={isDebug}
                                 isRoutineShown={routineTaskDatesShown.has(day.date.valueOf())}
                                 globalDndContext={globalDndContext}
+                                isInitialLoadComplete={isInitialLoadComplete}
                                 saveTasks={saveTasks}
                                 onRoutineToggle={onRoutineToggle}
                             />

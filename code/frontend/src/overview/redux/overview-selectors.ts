@@ -11,3 +11,5 @@ export const overviewModelSelector = createSelector(
     [(state: RootState) => state.overview.tasks, (state: RootState) => state.settings.isCompletedShown],
     (tasks, isCompletedShow) => overviewService.getModel(tasks, isCompletedShow),
 )
+
+export const isInitialLoadCompleteSelector = (state: RootState) => state.overview.isInitialLoadComplete

@@ -5,12 +5,11 @@ interface Props {
     style?: React.CSSProperties
     className?: string
     dataTestId?: string
-    dataAppId?: string
     isDimmed?: boolean
     children: React.ReactNode
 }
 
-function Card({ elementRef, dataTestId, dataAppId, style = {}, isDimmed = false, className = '', children }: Props) {
+function Card({ elementRef, dataTestId, style = {}, isDimmed = false, className = '', children }: Props) {
     return (
         <div
             ref={elementRef}
@@ -20,7 +19,6 @@ function Card({ elementRef, dataTestId, dataAppId, style = {}, isDimmed = false,
             })}
             style={style}
             data-test-id={dataTestId}
-            data-app-id={dataAppId}
         >
             {children}
         </div>

@@ -9,12 +9,14 @@ export interface OverviewState {
     tasks: TaskModel[]
     routineTaskDatesShown: number[]
     isLoadTasksPending: boolean
+    isInitialLoadComplete: boolean
 }
 
 const initialState: OverviewState = {
     tasks: [],
     routineTaskDatesShown: [],
     isLoadTasksPending: false,
+    isInitialLoadComplete: false,
 }
 
 export const overviewSlice = createSlice({
@@ -79,6 +81,7 @@ export const overviewSlice = createSlice({
         })
         builder.addCase(reloadOverviewTasks.fulfilled, state => {
             state.isLoadTasksPending = false
+            state.isInitialLoadComplete = true
         })
     },
 })
