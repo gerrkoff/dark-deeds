@@ -27,11 +27,10 @@ RUN dotnet restore /code/backend/DarkDeeds.sln
 COPY code/backend/ /code/backend/
 COPY .editorconfig /code/backend/.editorconfig
 
-RUN dotnet build --no-restore -c Release /code/backend/DarkDeeds.sln
-
 ARG BUILD_VERSION
 
-RUN dotnet publish --no-restore --no-build -c Release -o /build --version-suffix ${BUILD_VERSION} /code/backend/DD.App/DD.App.csproj
+RUN dotnet build --no-restore -c Release --version-suffix ${BUILD_VERSION} /code/backend/DarkDeeds.sln
+RUN dotnet publish --no-restore --no-build -c Release -o /build /code/backend/DD.App/DD.App.csproj
 
 FROM mcr.microsoft.com/dotnet/aspnet:8.0
 
