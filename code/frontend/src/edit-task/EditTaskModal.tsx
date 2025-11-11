@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { TaskModel } from '../tasks/models/TaskModel'
 import { taskConvertService } from './services/TaskConvertService'
 import { TaskEditModalContext } from './models/TaskEditModalContext'
@@ -13,6 +13,7 @@ interface Props {
 
 function EditTaskModal({ context, onSave }: Props) {
     const [task, setTask] = useState('')
+    const inputRef = useRef<HTMLInputElement>(null)
 
     const { close, content } = context
 
@@ -58,12 +59,14 @@ function EditTaskModal({ context, onSave }: Props) {
         <ModalContainer
             context={context}
             onSave={handleSave}
+            autoFocusInputRef={inputRef}
             isSaveEnabled={task.length > 0}
             hasWarning={conflictTask !== null}
         >
             <div className="form-floating mb-3">
                 <input
                     autoFocus
+                    ref={inputRef}
                     type="text"
                     className="form-control"
                     id="taskInput"

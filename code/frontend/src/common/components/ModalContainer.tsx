@@ -9,6 +9,7 @@ interface Props {
     isSaveEnabled: boolean
     onSave: () => void
     onDelete?: () => void
+    autoFocusInputRef?: React.RefObject<HTMLInputElement>
     children: React.ReactNode
     hasWarning: boolean
 }
@@ -21,6 +22,7 @@ function ModalContainer({
     isSaveEnabled,
     onSave,
     onDelete,
+    autoFocusInputRef,
     children,
     hasWarning,
 }: Props) {
@@ -79,6 +81,17 @@ function ModalContainer({
             close()
         }
     }
+
+    // Manual focus on desktop only (after modal animation completes)
+    // On mobile devices, native autoFocus works fine
+    useEffect(() => {
+        if (!isMobile && autoFocusInputRef) {
+            const timer = setTimeout(() => {
+                autoFocusInputRef.current?.focus()
+            }, 16)
+            return () => clearTimeout(timer)
+        }
+    }, [autoFocusInputRef])
 
     const [isDeletePending, setIsDeletePending] = useState(false)
 
