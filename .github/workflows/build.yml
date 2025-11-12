@@ -78,4 +78,4 @@ jobs:
             BUILD_VERSION=${{ needs.get-version.outputs.version }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          platforms: linux/amd64
+          platforms: linux/amd64,linux/arm64
