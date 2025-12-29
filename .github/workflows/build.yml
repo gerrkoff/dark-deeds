@@ -35,11 +35,15 @@ jobs:
       packages: write
     strategy:
       matrix:
-        dockerfile:
-          - app.dockerfile
-          - tests-e2e.dockerfile
-          - tests-load.dockerfile
-          - mcp.dockerfile
+        include:
+          - dockerfile: app.dockerfile
+            platforms: linux/amd64
+          - dockerfile: tests-e2e.dockerfile
+            platforms: linux/amd64
+          - dockerfile: tests-load.dockerfile
+            platforms: linux/amd64
+          - dockerfile: mcp.dockerfile
+            platforms: linux/arm64
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -78,4 +82,4 @@ jobs:
             BUILD_VERSION=${{ needs.get-version.outputs.version }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          platforms: linux/amd64
+          platforms: ${{ matrix.platforms }}
