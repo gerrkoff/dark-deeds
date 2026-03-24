@@ -18,7 +18,6 @@ public static class Setup
     private static void AddMobileClientInfrastructure(this IServiceCollection services)
     {
         services.AddScoped<ITaskServiceApp, TaskServiceApp>();
-        services.AddAutoMapper(typeof(ModelsMapping));
     }
 
     private static void AddMobileClientData(this IServiceCollection services)

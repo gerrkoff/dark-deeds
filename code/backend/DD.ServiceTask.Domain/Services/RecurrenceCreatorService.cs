@@ -1,8 +1,8 @@
-using AutoMapper;
 using DD.ServiceTask.Domain.Entities;
 using DD.ServiceTask.Domain.Entities.Enums;
 using DD.ServiceTask.Domain.Infrastructure;
 using DD.ServiceTask.Domain.Infrastructure.EntityRepository;
+using DD.ServiceTask.Domain.Mapping;
 using DD.ServiceTask.Domain.Specifications;
 using DD.Shared.Details.Abstractions.Dto;
 using Microsoft.Extensions.Logging;
@@ -21,7 +21,6 @@ public class RecurrenceCreatorService(
     ILogger<RecurrenceCreatorService> logger,
     ITaskParserService taskParserService,
     INotifierService notifierService,
-    IMapper mapper,
     ISpecificationFactory specFactory)
     : IRecurrenceCreatorService
 {
@@ -161,7 +160,7 @@ public class RecurrenceCreatorService(
 
     private void Notify(TaskEntity task, string userId)
     {
-        var dto = mapper.Map<TaskDto>(task);
+        var dto = task.ToDto();
         notifierService.TaskUpdated(new TasksUpdatedDto
         {
             Tasks = [dto],
@@ -179,7 +178,7 @@ public class RecurrenceCreatorService(
     private TaskEntity CreateTaskFromRecurrence(PlannedRecurrenceEntity plannedRecurrence, DateTime date)
     {
         var dto = taskParserService.ParseTask(plannedRecurrence.Task, ignoreDate: true);
-        var task = mapper.Map<TaskEntity>(dto);
+        var task = dto.ToEntity();
         task.Date = date;
         task.UserId = plannedRecurrence.UserId;
         task.Uid = Guid.NewGuid().ToString();

@@ -28,7 +28,6 @@ public partial class TaskServiceTest : BaseTest
         return new TaskService(
             _repoMock.Object,
             _loggerMock.Object,
-            Mapper,
             _notifierServiceMock.Object,
             _specFactoryMock.Object);
     }

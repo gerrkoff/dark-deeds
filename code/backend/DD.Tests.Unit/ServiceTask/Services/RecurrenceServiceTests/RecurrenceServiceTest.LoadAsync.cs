@@ -29,7 +29,7 @@ public partial class RecurrenceServiceTest
             EndDate = new DateTime(1, DateTimeKind.Unspecified),
         });
 
-        var service = new RecurrenceService(repoMock.Object, BaseTest.Mapper, _specFactoryMock.Object);
+        var service = new RecurrenceService(repoMock.Object, _specFactoryMock.Object);
 
         var result = (await service.LoadAsync(userId)).ToList();
 

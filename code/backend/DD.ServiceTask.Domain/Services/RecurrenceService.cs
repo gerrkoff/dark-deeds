@@ -1,9 +1,8 @@
-﻿using AutoMapper;
-using DD.ServiceTask.Domain.Dto;
-using DD.ServiceTask.Domain.DtoExtensions;
+﻿using DD.ServiceTask.Domain.Dto;
 using DD.ServiceTask.Domain.Entities;
 using DD.ServiceTask.Domain.Exceptions;
 using DD.ServiceTask.Domain.Infrastructure.EntityRepository;
+using DD.ServiceTask.Domain.Mapping;
 using DD.ServiceTask.Domain.Specifications;
 
 namespace DD.ServiceTask.Domain.Services;
@@ -17,7 +16,6 @@ public interface IRecurrenceService
 
 public class RecurrenceService(
     IPlannedRecurrenceRepository plannedRecurrenceRepository,
-    IMapper mapper,
     ISpecificationFactory specFactory)
     : IRecurrenceService
 {
@@ -29,7 +27,7 @@ public class RecurrenceService(
 
         var recurrences = await plannedRecurrenceRepository.GetBySpecAsync(spec);
 
-        return mapper.Map<IList<PlannedRecurrenceDto>>(recurrences).ToUtcDate();
+        return recurrences.Select(r => r.ToDto()).ToList();
     }
 
     public async Task<int> SaveAsync(ICollection<PlannedRecurrenceDto> recurrences, string userId)
@@ -57,7 +55,7 @@ public class RecurrenceService(
         var entity = await plannedRecurrenceRepository.GetByIdAsync(dto.Uid);
         if (entity == null)
         {
-            entity = mapper.Map<PlannedRecurrenceEntity>(dto);
+            entity = dto.ToEntity();
             entity.UserId = userId;
             await plannedRecurrenceRepository.UpsertAsync(entity);
             return true;

@@ -1,7 +1,6 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using AspNetCore.Identity.Mongo;
-using DD.ServiceAuth.Details.Web;
 using DD.ServiceAuth.Domain;
 using DD.ServiceAuth.Domain.Entities;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -17,7 +16,6 @@ public static class Setup
 {
     public static void AddAuthService(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddAuthServiceWeb();
         services.AddAuthServiceDomain();
         services.AddAuthServiceData(configuration);
     }
@@ -69,11 +67,6 @@ public static class Setup
                     },
                 };
             });
-    }
-
-    private static void AddAuthServiceWeb(this IServiceCollection services)
-    {
-        services.AddAutoMapper(typeof(ModelsMapping));
     }
 
     private static void AddAuthServiceData(this IServiceCollection services, IConfiguration configuration)

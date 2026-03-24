@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using DD.ServiceAuth.Domain.Dto;
+﻿using DD.ServiceAuth.Domain.Dto;
 using DD.ServiceAuth.Domain.Services;
 using DD.Shared.Details.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -11,8 +10,7 @@ namespace DD.ServiceAuth.Details.Web.Controllers;
 [Route("api/auth/[controller]")]
 public class AccountController(
     IUserAuth userAuth,
-    IAuthService authService,
-    IMapper mapper)
+    IAuthService authService)
     : ControllerBase
 {
     [AllowAnonymous]
@@ -33,11 +31,16 @@ public class AccountController(
     [HttpGet]
     public CurrentUserDto Current()
     {
-        var currentUser = userAuth.IsAuthenticated()
-            ? mapper.Map<CurrentUserDto>(userAuth.AuthToken())
-            : new CurrentUserDto();
+        if (!userAuth.IsAuthenticated())
+            return new CurrentUserDto();
 
-        return currentUser;
+        var token = userAuth.AuthToken();
+        return new CurrentUserDto
+        {
+            Username = token.DisplayName,
+            UserAuthenticated = !string.IsNullOrEmpty(token.Username),
+            Expires = token.Expires,
+        };
     }
 
     [HttpPost(nameof(Renew))]

@@ -1,5 +1,4 @@
 using System.Diagnostics.CodeAnalysis;
-using AutoMapper;
 using DD.WebClientBff.Domain.Dto;
 using DD.WebClientBff.Domain.Entities;
 using DD.WebClientBff.Domain.Infrastructure;
@@ -14,8 +13,7 @@ public interface IUserSettingsService
 }
 
 internal sealed class UserSettingsService(
-    IUserSettingsRepository settingsRepository,
-    IMapper mapper)
+    IUserSettingsRepository settingsRepository)
     : IUserSettingsService
 {
     public async Task SaveAsync(UserSettingsDto userSettings, string userId)
@@ -24,8 +22,7 @@ internal sealed class UserSettingsService(
 
         if (entity == null)
         {
-            entity = mapper.Map<UserSettingsEntity>(userSettings);
-            entity.UserId = userId;
+            entity = new UserSettingsEntity { ShowCompleted = userSettings.ShowCompleted, UserId = userId };
         }
         else
         {
@@ -41,7 +38,7 @@ internal sealed class UserSettingsService(
 
         return entity == null
             ? new UserSettingsDto()
-            : mapper.Map<UserSettingsDto>(entity);
+            : new UserSettingsDto { ShowCompleted = entity.ShowCompleted };
     }
 
     [SuppressMessage("Globalization", "CA1309:Use ordinal string comparison", Justification = "IQueryable")]
