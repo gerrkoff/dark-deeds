@@ -1,7 +1,7 @@
-﻿using AutoMapper;
-using DD.ServiceTask.Domain.Entities;
+﻿using DD.ServiceTask.Domain.Entities;
 using DD.ServiceTask.Domain.Infrastructure;
 using DD.ServiceTask.Domain.Infrastructure.EntityRepository;
+using DD.ServiceTask.Domain.Mapping;
 using DD.ServiceTask.Domain.Specifications;
 using DD.Shared.Details.Abstractions.Dto;
 using Microsoft.Extensions.Logging;
@@ -38,7 +38,6 @@ public interface ITaskService
 public class TaskService(
     ITaskRepository tasksRepository,
     ILogger<TaskService> logger,
-    IMapper mapper,
     INotifierService notifierService,
     ISpecificationFactory specFactory)
     : ITaskService
@@ -52,7 +51,7 @@ public class TaskService(
 
         var tasks = await tasksRepository.GetBySpecAsync(spec);
 
-        return mapper.Map<IList<TaskDto>>(tasks);
+        return tasks.Select(t => t.ToDto()).ToList();
     }
 
     public async Task<IEnumerable<TaskDto>> LoadTasksByDateAsync(string userId, DateTime from, DateTime till)
@@ -64,7 +63,7 @@ public class TaskService(
 
         var tasks = await tasksRepository.GetBySpecAsync(spec);
 
-        return mapper.Map<IList<TaskDto>>(tasks);
+        return tasks.Select(t => t.ToDto()).ToList();
     }
 
     public async Task<IEnumerable<TaskDto>> SaveTasksAsync(ICollection<TaskDto> tasks, string userId, string? clientId)
@@ -125,7 +124,7 @@ public class TaskService(
                 continue;
             }
 
-            updatedTasks.Add(mapper.Map<TaskDto>(entity));
+            updatedTasks.Add(entity.ToDto());
         }
 
         if (updatedTasks.Count > 0)
@@ -167,19 +166,19 @@ public class TaskService(
         }
         else if (entity == null)
         {
-            entity = mapper.Map<TaskEntity>(taskToSave);
+            entity = taskToSave.ToEntity();
             entity.UserId = userId;
             entity.Version = 1;
             await tasksRepository.UpsertAsync(entity);
         }
         else
         {
-            entity = mapper.Map(taskToSave, entity);
+            taskToSave.ApplyTo(entity);
             var (success, _) = await tasksRepository.TryUpdateVersionAsync(entity);
             if (!success)
                 return null;
         }
 
-        return mapper.Map<TaskDto>(entity);
+        return entity.ToDto();
     }
 }

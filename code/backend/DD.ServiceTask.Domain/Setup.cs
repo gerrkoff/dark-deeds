@@ -1,4 +1,3 @@
-using DD.ServiceTask.Domain.Mapping;
 using DD.ServiceTask.Domain.Services;
 using DD.ServiceTask.Domain.Specifications;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,7 +16,5 @@ public static class Setup
         services.AddScoped<ITaskSpecification, TaskSpecification>();
         services.AddScoped<IPlannedRecurrenceSpecification, PlannedRecurrenceSpecification>();
         services.AddScoped<ISpecificationFactory, SpecificationFactory>();
-
-        services.AddAutoMapper(typeof(ModelsMappingProfile));
     }
 }

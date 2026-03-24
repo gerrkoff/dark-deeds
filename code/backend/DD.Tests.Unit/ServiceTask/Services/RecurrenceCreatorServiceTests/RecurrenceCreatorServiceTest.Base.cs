@@ -36,7 +36,6 @@ public partial class RecurrenceCreatorServiceTest : BaseTest
             _loggerMock.Object,
             _taskParserServiceMock.Object,
             _notifierServiceMock.Object,
-            Mapper,
             _specFactoryMock.Object);
     }
 }

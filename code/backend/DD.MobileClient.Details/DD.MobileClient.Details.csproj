@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -18,10 +18,6 @@
     <ProjectReference Include="..\DD.Shared.Data\DD.Shared.Data.csproj" />
     <ProjectReference Include="..\DD.Shared.Web\DD.Shared.Web.csproj" />
     <ProjectReference Include="..\DD.ServiceTask.Domain\DD.ServiceTask.Domain.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="AutoMapper" />
   </ItemGroup>
 
 </Project>
