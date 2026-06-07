@@ -5,8 +5,18 @@ import { storageService, StorageService } from '../../common/services/StorageSer
 import { TaskModel } from '../models/TaskModel'
 import { taskMapper, TaskMapper } from '../services/TaskMapper'
 
+const MAX_RECONNECT_DELAY_MS = 30000
+
 export class TaskHubApi {
     private connection: signalR.HubConnection | null = null
+
+    private shouldBeConnected = false
+    private reconnectAttempt = 0
+    private reconnectTimer: ReturnType<typeof setTimeout> | null = null
+
+    private closeHandler: (() => void) | null = null
+    private reconnectingHandler: (() => void) | null = null
+    private reconnectedHandler: (() => void) | null = null
 
     constructor(
         private baseUrlProvider: BaseUrlProvider,
@@ -36,8 +46,9 @@ export class TaskHubApi {
                 },
             })
             .configureLogging(signalR.LogLevel.Information)
-            .withAutomaticReconnect()
             .build()
+
+        this.connection.onclose(() => this.handleConnectionClosed())
     }
 
     isConnected(): boolean {
@@ -51,6 +62,10 @@ export class TaskHubApi {
     async start(): Promise<void> {
         this.guardConnection(this.connection)
 
+        this.shouldBeConnected = true
+        this.clearReconnectTimer()
+        this.reconnectAttempt = 0
+
         if (this.connection.state !== signalR.HubConnectionState.Disconnected) {
             return
         }
@@ -61,25 +76,89 @@ export class TaskHubApi {
     async stop(): Promise<void> {
         this.guardConnection(this.connection)
 
+        this.shouldBeConnected = false
+        this.clearReconnectTimer()
+
         await this.connection.stop()
     }
 
-    onClose(callback: () => void) {
+    // Force an immediate reconnect attempt (e.g. browser back online or tab visible),
+    // bypassing the backoff wait.
+    reconnectNow(): void {
+        if (!this.shouldBeConnected || this.connection === null) {
+            return
+        }
+
+        if (this.connection.state !== signalR.HubConnectionState.Disconnected) {
+            return
+        }
+
+        this.clearReconnectTimer()
+        this.reconnectAttempt = 0
+        void this.tryReconnect()
+    }
+
+    private handleConnectionClosed(): void {
+        if (!this.shouldBeConnected) {
+            this.closeHandler?.()
+            return
+        }
+
+        this.reconnectingHandler?.()
+        this.scheduleReconnect()
+    }
+
+    private scheduleReconnect(): void {
+        this.clearReconnectTimer()
+
+        const delay = Math.min(MAX_RECONNECT_DELAY_MS, 1000 * 2 ** this.reconnectAttempt)
+        this.reconnectTimer = setTimeout(() => void this.tryReconnect(), delay)
+    }
+
+    private async tryReconnect(): Promise<void> {
         this.guardConnection(this.connection)
 
-        this.connection.onclose(callback)
+        if (!this.shouldBeConnected || this.connection.state !== signalR.HubConnectionState.Disconnected) {
+            return
+        }
+
+        try {
+            await this.connection.start()
+        } catch (error) {
+            console.error('Task hub reconnect failed:', error)
+            this.reconnectAttempt++
+            if (this.shouldBeConnected) {
+                this.scheduleReconnect()
+            }
+            return
+        }
+
+        if (!this.shouldBeConnected) {
+            await this.connection.stop()
+            return
+        }
+
+        this.reconnectAttempt = 0
+        this.reconnectedHandler?.()
+    }
+
+    private clearReconnectTimer(): void {
+        if (this.reconnectTimer !== null) {
+            clearTimeout(this.reconnectTimer)
+            this.reconnectTimer = null
+        }
+    }
+
+    onClose(callback: () => void) {
+        this.closeHandler = callback
     }
 
     onReconnecting(callback: () => void) {
-        this.guardConnection(this.connection)
-
-        this.connection.onreconnecting(callback)
+        this.reconnectingHandler = callback
     }
 
     onReconnected(callback: () => void) {
-        this.guardConnection(this.connection)
-
-        this.connection.onreconnected(callback)
+        this.reconnectedHandler = callback
     }
 
     onUpdate(callback: (tasks: TaskModel[]) => void) {
