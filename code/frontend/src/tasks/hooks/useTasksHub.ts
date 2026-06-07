@@ -65,8 +65,12 @@ export function useTasksHub() {
             processTasksOnlineUpdate(tasks)
         }
 
-        const handleTaskSaveFinish = (notSaved: number, savedTasks: TaskVersionModel[]) => {
-            processTaskSaveFinish(notSaved, savedTasks)
+        const handleTaskSaveFinish = (
+            notSaved: number,
+            savedTasks: TaskVersionModel[],
+            conflictedTasks: TaskModel[],
+        ) => {
+            processTaskSaveFinish(notSaved, savedTasks, conflictedTasks)
         }
 
         taskHubApi.onClose(handleHubClose)

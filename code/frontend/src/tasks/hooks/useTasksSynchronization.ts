@@ -10,7 +10,7 @@ import { TaskVersionModel } from '../models/TaskVersionModel'
 
 interface Output {
     processTasksOnlineUpdate: (tasks: TaskModel[]) => void
-    processTaskSaveFinish: (notSaved: number, savedTasks: TaskVersionModel[]) => void
+    processTaskSaveFinish: (notSaved: number, savedTasks: TaskVersionModel[], conflictedTasks: TaskModel[]) => void
     reloadTasks: () => void
 }
 
@@ -52,12 +52,25 @@ export function useTasksSynchronization(): Output {
     }, [dispatch, processTasksOnlineUpdate])
 
     const processTaskSaveFinish = useCallback(
-        (notSaved: number, savedTasks: TaskVersionModel[]) => {
+        (notSaved: number, savedTasks: TaskVersionModel[], conflictedTasks: TaskModel[]) => {
             if (notSaved > 0) {
                 dispatch(
                     addToast({
                         text: `Failed to save ${notSaved} tasks`,
                         category: 'task-save-failed',
+                    }),
+                )
+            }
+
+            if (conflictedTasks.length > 0) {
+                console.warn(
+                    `[${new Date().toISOString()}] Lost task updates (version conflict, not saved):`,
+                    conflictedTasks,
+                )
+                dispatch(
+                    addToast({
+                        text: `Lost ${conflictedTasks.length} task update(s)`,
+                        category: 'task-save-conflict',
                     }),
                 )
             }

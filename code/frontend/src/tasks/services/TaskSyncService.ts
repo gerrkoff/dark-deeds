@@ -4,7 +4,11 @@ import { TaskModel } from '../models/TaskModel'
 import { TaskVersionModel } from '../models/TaskVersionModel'
 
 export type StatusUpdateSubscription = (isSynchronizing: boolean) => void
-export type SaveFinishSubscription = (notSaved: number, savedTasks: TaskVersionModel[]) => void
+export type SaveFinishSubscription = (
+    notSaved: number,
+    savedTasks: TaskVersionModel[],
+    conflictedTasks: TaskModel[],
+) => void
 
 export class TaskSyncService {
     constructor(private taskApi: TaskApi) {}
@@ -86,10 +90,24 @@ export class TaskSyncService {
                 this.tasksInFlight.delete(task.uid)
             }
 
+            // On HTTP success, tasks still in flight were rejected by the backend on a version
+            // conflict. Report only the ones that are NOT queued again in tasksToSave: their
+            // change was neither saved nor is pending a retry, and no newer version arrived to
+            // reconcile it (otherwise the hub update would have removed them from tasksInFlight).
+            // They are dropped; reconciliation comes later via the hub or a reload on reconnect.
+            const conflictedTasks = failed
+                ? []
+                : [...this.tasksInFlight.values()].filter(task => !this.tasksToSave.has(task.uid))
+
+            // Two reporting channels: `notSaved` counts a transport failure (whole batch threw,
+            // will be retried), while `conflictedTasks` carries lost updates on an HTTP success.
+            // On the transport-failure branch savedTasks is always empty, so the count is simply
+            // the in-flight size.
             this.saveFinishSubscriptions.forEach(x =>
                 x(
-                    failed ? tasksInFlightCount - savedTasks.length : 0,
+                    failed ? tasksInFlightCount : 0,
                     savedTasks.map(task => ({ uid: task.uid, version: task.version })),
+                    conflictedTasks,
                 ),
             )
 
@@ -103,11 +121,6 @@ export class TaskSyncService {
 
                 await delay(5000)
             }
-
-            // On HTTP success, tasks missing from the response were rejected by the backend
-            // on a version conflict. Retrying with the same stale version can never succeed,
-            // so they are dropped here; the newer version arrives via the hub (or a reload on
-            // reconnect) and overwrites local state.
         }
     }
 

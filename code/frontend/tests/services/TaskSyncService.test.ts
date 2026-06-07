@@ -52,27 +52,34 @@ test('[saveTasks] does not retry a task rejected by the backend on version confl
     const saveTasks = vi.fn().mockResolvedValue([])
     const service = new TaskSyncService(createApi(saveTasks))
 
+    const conflicted: TaskModel[][] = []
+    service.subscribeSaveFinish((_notSaved, _savedTasks, conflictedTasks) => conflicted.push(conflictedTasks))
+
     const idle = waitForIdle(service)
     service.sync([createTask({ uid: '1', version: 0 })])
     await idle
 
     expect(saveTasks).toHaveBeenCalledTimes(1)
     expect(service.tasksToSave.size).toBe(0)
+    expect(conflicted).toHaveLength(1)
+    expect(conflicted[0].map(task => task.uid)).toEqual(['1'])
 })
 
 test('[saveTasks] reports saved versions and no failures on success', async () => {
     const saveTasks = vi.fn().mockResolvedValue([createTask({ uid: '1', version: 1 })])
     const service = new TaskSyncService(createApi(saveTasks))
 
-    const finishes: { notSaved: number; saved: TaskVersionModel[] }[] = []
-    service.subscribeSaveFinish((notSaved, savedTasks) => finishes.push({ notSaved, saved: savedTasks }))
+    const finishes: { notSaved: number; saved: TaskVersionModel[]; conflicted: TaskModel[] }[] = []
+    service.subscribeSaveFinish((notSaved, savedTasks, conflictedTasks) =>
+        finishes.push({ notSaved, saved: savedTasks, conflicted: conflictedTasks }),
+    )
 
     const idle = waitForIdle(service)
     service.sync([createTask({ uid: '1', version: 0 })])
     await idle
 
     expect(saveTasks).toHaveBeenCalledTimes(1)
-    expect(finishes).toEqual([{ notSaved: 0, saved: [{ uid: '1', version: 1 }] }])
+    expect(finishes).toEqual([{ notSaved: 0, saved: [{ uid: '1', version: 1 }], conflicted: [] }])
     expect(service.tasksToSave.size).toBe(0)
 })
 
@@ -80,12 +87,17 @@ test('[saveTasks] drops the conflicted task while keeping the saved one out of t
     const saveTasks = vi.fn().mockResolvedValue([createTask({ uid: 'a', version: 1 })])
     const service = new TaskSyncService(createApi(saveTasks))
 
+    const conflicted: TaskModel[][] = []
+    service.subscribeSaveFinish((_notSaved, _savedTasks, conflictedTasks) => conflicted.push(conflictedTasks))
+
     const idle = waitForIdle(service)
     service.sync([createTask({ uid: 'a', version: 0 }), createTask({ uid: 'b', version: 0 })])
     await idle
 
     expect(saveTasks).toHaveBeenCalledTimes(1)
     expect(service.tasksToSave.size).toBe(0)
+    expect(conflicted).toHaveLength(1)
+    expect(conflicted[0].map(task => task.uid)).toEqual(['b'])
 })
 
 test('[saveTasks] re-queues and retries after a delay on transport error', async () => {
@@ -108,4 +120,36 @@ test('[saveTasks] re-queues and retries after a delay on transport error', async
 
     errorSpy.mockRestore()
     vi.useRealTimers()
+})
+
+test('[saveTasks] does not report a conflicted task while a re-edit is still queued', async () => {
+    let reEdited = false
+    const ref: { service?: TaskSyncService } = {}
+    const saveTasks = vi.fn().mockImplementation(async () => {
+        // Simulate the user re-editing the task while the save is in flight - it gets
+        // queued in tasksToSave and must not be reported as lost on this cycle.
+        if (!reEdited) {
+            reEdited = true
+            ref.service?.sync([createTask({ uid: '1', version: 0 })])
+        }
+        return []
+    })
+    const service = new TaskSyncService(createApi(saveTasks))
+    ref.service = service
+
+    const conflicted: TaskModel[][] = []
+    service.subscribeSaveFinish((_notSaved, _savedTasks, conflictedTasks) =>
+        conflicted.push(conflictedTasks.map(task => ({ ...task }))),
+    )
+
+    const idle = waitForIdle(service)
+    service.sync([createTask({ uid: '1', version: 0 })])
+    await idle
+
+    expect(saveTasks).toHaveBeenCalledTimes(2)
+    // First cycle: re-edit is queued, so nothing reported. Second cycle: it has settled
+    // (no longer in tasksToSave) and is reported as a dropped conflict.
+    expect(conflicted[0]).toEqual([])
+    expect(conflicted[1].map(task => task.uid)).toEqual(['1'])
+    expect(service.tasksToSave.size).toBe(0)
 })
