@@ -60,7 +60,7 @@ export class TaskSyncService {
             this.tasksInFlight = this.tasksToSave
             const tasksInFlightCount = this.tasksInFlight.size
             this.tasksToSave = new Map<string, TaskModel>()
-            let wait = false
+            let failed = false
 
             let savedTasks: TaskModel[] = []
 
@@ -68,7 +68,7 @@ export class TaskSyncService {
                 savedTasks = await this.taskApi.saveTasks([...this.tasksInFlight.values()])
             } catch (error) {
                 console.error('Failed to save tasks:', error)
-                wait = true
+                failed = true
             }
 
             // Update versions in tasksToSave if task was modified while in flight
@@ -88,20 +88,26 @@ export class TaskSyncService {
 
             this.saveFinishSubscriptions.forEach(x =>
                 x(
-                    tasksInFlightCount - savedTasks.length,
+                    failed ? tasksInFlightCount - savedTasks.length : 0,
                     savedTasks.map(task => ({ uid: task.uid, version: task.version })),
                 ),
             )
 
-            for (const [uid, task] of this.tasksInFlight) {
-                if (!this.tasksToSave.has(uid)) {
-                    this.tasksToSave.set(uid, task)
+            if (failed) {
+                // Transport error - re-queue everything still in flight and retry after a delay.
+                for (const [uid, task] of this.tasksInFlight) {
+                    if (!this.tasksToSave.has(uid)) {
+                        this.tasksToSave.set(uid, task)
+                    }
                 }
-            }
 
-            if (wait) {
                 await delay(5000)
             }
+
+            // On HTTP success, tasks missing from the response were rejected by the backend
+            // on a version conflict. Retrying with the same stale version can never succeed,
+            // so they are dropped here; the newer version arrives via the hub (or a reload on
+            // reconnect) and overwrites local state.
         }
     }
 
