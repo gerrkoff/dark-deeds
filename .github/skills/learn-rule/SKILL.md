@@ -1,9 +1,10 @@
 ---
-mode: 'agent'
+name: learn-rule
+description: Capture a new custom project rule from a correction. Use when the developer corrects a behavior and wants to establish a durable rule, formulating it and adding it to .github/instructions/custom-rules.instructions.md.
 ---
 # Custom Rule Learning Protocol
 
-You have been triggered by a learning request. The developer has identified a behavior that needs correction and wants to establish a new custom rule to prevent similar issues in the future.
+This skill is triggered by a learning request. The developer has identified a behavior that needs correction and wants to establish a new custom rule to prevent similar issues in the future.
 
 ## Your Task
 

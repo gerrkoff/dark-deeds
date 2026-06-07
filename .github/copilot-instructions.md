@@ -1,6 +1,3 @@
----
-applyTo: '**'
----
 # Development Rules
 
 ## Core Workflow
@@ -90,21 +87,38 @@ Balance efficiency with transparency:
 
 ## Project Context
 
-For an understanding of the project's purpose, domain concepts, and key features, see [project-overview.instructions.md](project-overview.instructions.md)
+For an understanding of the project's purpose, domain concepts, and key features, see [project-overview.instructions.md](instructions/project-overview.instructions.md)
 
 ## Technology Stack Rules
 
 This project contains different technology stacks with specific development rules:
 
 ### Backend (.NET) Rules
-For all files in `code/backend/**`, see [backend.instructions.md](backend.instructions.md)
+For all files in `code/backend/**`, see [backend.instructions.md](instructions/backend.instructions.md)
 
 ### Frontend (React) Rules
-For all files in `code/frontend/**`, see [frontend.instructions.md](frontend.instructions.md)
+For all files in `code/frontend/**`, see [frontend.instructions.md](instructions/frontend.instructions.md)
 
 ## Project-Specific Rules
 
-For custom project rules established through experience and learning, see [custom-rules.instructions.md](custom-rules.instructions.md)
+For custom project rules established through experience and learning, see [custom-rules.instructions.md](instructions/custom-rules.instructions.md)
+
+## Local Development Environment
+
+<local_development>
+The application can be run locally for manual or browser-based verification. `DD.App` is an all-in-one host (monolith) that exposes both the REST API and the SignalR hub on port `5000` and only depends on MongoDB; RabbitMQ and Consul are replaced by in-process implementations.
+
+**Prerequisites**: Docker, .NET 8 SDK, Node.js 22.
+
+**Startup steps** (run from the repository root):
+1. **MongoDB**: `docker compose -f infra/docker-compose.yml up -d mongo-db` (listens on `27017`)
+2. **Backend**: `dotnet run --project code/backend/DD.App` (serves REST + SignalR hub on `http://localhost:5000`, uses the `Development` profile from `launchSettings.json`)
+3. **Frontend**: `cd code/frontend && npm run dev` (Vite dev server on `http://localhost:3000`)
+
+**Notes**:
+- The frontend dev build targets the backend at `http://<hostname>:5000` (see `code/frontend/src/common/api/BaseUrlProvider.ts`).
+- Open `http://localhost:3000` in the browser to use the app.
+</local_development>
 
 ## Testing and Verification Tools
 
@@ -133,8 +147,8 @@ Before concluding ANY multi-step task (feature, refactor, fix, rule addition):
 5. Fix any warnings immediately—do not conclude with warnings present
 
 **Technology-Specific Verification**:
-- For backend changes in `code/backend/**`: Follow the `<verification_checklist>` in [backend.instructions.md](backend.instructions.md)
-- For frontend changes in `code/frontend/**`: Follow the `<verification_checklist>` in [frontend.instructions.md](frontend.instructions.md)
+- For backend changes in `code/backend/**`: Follow the `<verification_checklist>` in [backend.instructions.md](instructions/backend.instructions.md)
+- For frontend changes in `code/frontend/**`: Follow the `<verification_checklist>` in [frontend.instructions.md](instructions/frontend.instructions.md)
 
 **Success Criteria**:
 - All build commands exit with code 0
