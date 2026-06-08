@@ -10,6 +10,11 @@ export type SaveFinishSubscription = (
     conflictedTasks: TaskModel[],
 ) => void
 
+export interface OnlineUpdateResult {
+    tasksConflicted: TaskModel[]
+    tasksToApply: TaskModel[]
+}
+
 export class TaskSyncService {
     constructor(private taskApi: TaskApi) {}
 
@@ -124,29 +129,34 @@ export class TaskSyncService {
         }
     }
 
-    processTasksOnlineUpdate(updatedTasks: TaskModel[]): TaskModel[] {
+    processTasksOnlineUpdate(updatedTasks: TaskModel[]): OnlineUpdateResult {
         const tasksConflicted: TaskModel[] = []
+        const tasksToApply: TaskModel[] = []
 
         for (const updatedTask of updatedTasks) {
-            const taskToSave = this.tasksToSave.get(updatedTask.uid)
-            const taskInFlight = this.tasksInFlight.get(updatedTask.uid)
+            const pendingTask = this.tasksToSave.get(updatedTask.uid) ?? this.tasksInFlight.get(updatedTask.uid)
 
-            // If task is in save queue and incoming version is newer - conflict!
-            if (taskToSave && updatedTask.version > taskToSave.version) {
-                this.tasksToSave.delete(updatedTask.uid)
-                tasksConflicted.push(updatedTask)
+            if (pendingTask === undefined) {
+                // Not pending locally - apply the incoming snapshot as-is.
+                tasksToApply.push(updatedTask)
                 continue
             }
 
-            // If task is in flight and incoming version is newer - conflict!
-            if (taskInFlight && updatedTask.version > taskInFlight.version) {
+            if (updatedTask.version > pendingTask.version) {
+                // Backend has a newer version than our pending edit - backend wins: drop the
+                // local edit, report the conflict and overwrite local state.
+                this.tasksToSave.delete(updatedTask.uid)
                 this.tasksInFlight.delete(updatedTask.uid)
                 tasksConflicted.push(updatedTask)
+                tasksToApply.push(updatedTask)
                 continue
             }
+
+            // Our pending edit is as new as the incoming snapshot (same version) - keep the
+            // local edit and skip the incoming task so the unsaved change is not reverted.
         }
 
-        return tasksConflicted
+        return { tasksConflicted, tasksToApply }
     }
 }
 

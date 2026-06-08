@@ -153,3 +153,50 @@ test('[saveTasks] does not report a conflicted task while a re-edit is still que
     expect(conflicted[1].map(task => task.uid)).toEqual(['1'])
     expect(service.tasksToSave.size).toBe(0)
 })
+
+test('[processTasksOnlineUpdate] applies an incoming task that is not pending locally', () => {
+    const service = new TaskSyncService(createApi(vi.fn()))
+
+    const incoming = createTask({ uid: '1', version: 5, title: 'from server' })
+    const result = service.processTasksOnlineUpdate([incoming])
+
+    expect(result.tasksConflicted).toEqual([])
+    expect(result.tasksToApply).toEqual([incoming])
+})
+
+test('[processTasksOnlineUpdate] skips an incoming task with the same version as a pending edit', () => {
+    const service = new TaskSyncService(createApi(vi.fn()))
+    service.tasksToSave.set('1', createTask({ uid: '1', version: 5, title: 'local edit' }))
+
+    const incoming = createTask({ uid: '1', version: 5, title: 'from server' })
+    const result = service.processTasksOnlineUpdate([incoming])
+
+    expect(result.tasksConflicted).toEqual([])
+    expect(result.tasksToApply).toEqual([])
+    expect(service.tasksToSave.has('1')).toBe(true)
+})
+
+test('[processTasksOnlineUpdate] applies and reports a conflict when the incoming version is newer', () => {
+    const service = new TaskSyncService(createApi(vi.fn()))
+    service.tasksToSave.set('1', createTask({ uid: '1', version: 5, title: 'local edit' }))
+
+    const incoming = createTask({ uid: '1', version: 6, title: 'from server' })
+    const result = service.processTasksOnlineUpdate([incoming])
+
+    expect(result.tasksConflicted).toEqual([incoming])
+    expect(result.tasksToApply).toEqual([incoming])
+    expect(service.tasksToSave.has('1')).toBe(false)
+})
+
+test('[processTasksOnlineUpdate] drops an in-flight task from both maps on conflict', () => {
+    const service = new TaskSyncService(createApi(vi.fn()))
+    service.tasksInFlight.set('1', createTask({ uid: '1', version: 5 }))
+    service.tasksToSave.set('1', createTask({ uid: '1', version: 5 }))
+
+    const incoming = createTask({ uid: '1', version: 6 })
+    const result = service.processTasksOnlineUpdate([incoming])
+
+    expect(result.tasksConflicted).toEqual([incoming])
+    expect(service.tasksToSave.has('1')).toBe(false)
+    expect(service.tasksInFlight.has('1')).toBe(false)
+})

@@ -19,16 +19,17 @@ export function useTasksSynchronization(): Output {
 
     const processTasksOnlineUpdate = useCallback(
         (tasks: TaskModel[]) => {
-            const tasksConflicted = taskSyncService.processTasksOnlineUpdate(tasks)
+            const { tasksConflicted, tasksToApply } = taskSyncService.processTasksOnlineUpdate(tasks)
 
             console.log(`[${new Date().toISOString()}] Tasks online update:`, {
                 tasks,
                 tasksConflicted,
+                tasksToApply,
             })
 
             dispatch(
                 syncTasks({
-                    tasks,
+                    tasks: tasksToApply,
                 }),
             )
 
