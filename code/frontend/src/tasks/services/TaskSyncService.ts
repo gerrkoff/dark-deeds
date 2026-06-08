@@ -69,9 +69,9 @@ export class TaskSyncService {
             this.tasksInFlight = this.tasksToSave
             const tasksInFlightCount = this.tasksInFlight.size
             this.tasksToSave = new Map<string, TaskModel>()
-            let failed = false
 
             let savedTasks: TaskModel[] = []
+            let failed = false
 
             try {
                 savedTasks = await this.taskApi.saveTasks([...this.tasksInFlight.values()])
@@ -80,7 +80,22 @@ export class TaskSyncService {
                 failed = true
             }
 
-            // Update versions in tasksToSave if task was modified while in flight
+            if (failed) {
+                // Transport error - nothing was saved. Report the failure count (drives the
+                // "failed to save" toast), re-queue the whole in-flight batch and retry later.
+                this.saveFinishSubscriptions.forEach(x => x(tasksInFlightCount, [], []))
+
+                for (const [uid, task] of this.tasksInFlight) {
+                    if (!this.tasksToSave.has(uid)) {
+                        this.tasksToSave.set(uid, task)
+                    }
+                }
+
+                await delay(5000)
+                continue
+            }
+
+            // Update versions in tasksToSave if a saved task was modified again while in flight.
             for (const savedTask of savedTasks) {
                 const taskToSave = this.tasksToSave.get(savedTask.uid)
                 if (taskToSave) {
@@ -91,41 +106,27 @@ export class TaskSyncService {
                 }
             }
 
-            for (const task of savedTasks) {
-                this.tasksInFlight.delete(task.uid)
-            }
-
-            // On HTTP success, tasks still in flight were rejected by the backend on a version
-            // conflict. Report only the ones that are NOT queued again in tasksToSave: their
-            // change was neither saved nor is pending a retry, and no newer version arrived to
-            // reconcile it (otherwise the hub update would have removed them from tasksInFlight).
+            // In-flight tasks the backend did not return were rejected on a version conflict.
+            // Report those that were not saved and are not queued again in tasksToSave (no pending
+            // re-edit): their change is lost and no newer version has arrived to reconcile it yet.
             // They are dropped; reconciliation comes later via the hub or a reload on reconnect.
-            const conflictedTasks = failed
-                ? []
-                : [...this.tasksInFlight.values()].filter(task => !this.tasksToSave.has(task.uid))
+            const savedUids = new Set(savedTasks.map(task => task.uid))
+            const conflictedTasks = [...this.tasksInFlight.values()].filter(
+                task => !savedUids.has(task.uid) && !this.tasksToSave.has(task.uid),
+            )
 
-            // Two reporting channels: `notSaved` counts a transport failure (whole batch threw,
-            // will be retried), while `conflictedTasks` carries lost updates on an HTTP success.
-            // On the transport-failure branch savedTasks is always empty, so the count is simply
-            // the in-flight size.
             this.saveFinishSubscriptions.forEach(x =>
                 x(
-                    failed ? tasksInFlightCount : 0,
+                    0,
                     savedTasks.map(task => ({ uid: task.uid, version: task.version })),
                     conflictedTasks,
                 ),
             )
 
-            if (failed) {
-                // Transport error - re-queue everything still in flight and retry after a delay.
-                for (const [uid, task] of this.tasksInFlight) {
-                    if (!this.tasksToSave.has(uid)) {
-                        this.tasksToSave.set(uid, task)
-                    }
-                }
-
-                await delay(5000)
-            }
+            // The in-flight batch is done: saved tasks persisted, dropped conflicts abandoned,
+            // re-edits tracked in tasksToSave. Drain it so concurrent reloads/hub updates never
+            // see stale entries as pending.
+            this.tasksInFlight = new Map<string, TaskModel>()
         }
     }
 

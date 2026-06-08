@@ -210,3 +210,20 @@ test('[getPendingUids] returns unique uids from both queues', () => {
 
     expect(service.getPendingUids().sort()).toEqual(['a', 'b', 'c'])
 })
+
+test('[saveTasks] removes a dropped conflict from the in-flight map (no double-report on reload)', async () => {
+    const saveTasks = vi.fn().mockResolvedValue([])
+    const service = new TaskSyncService(createApi(saveTasks))
+
+    const idle = waitForIdle(service)
+    service.sync([createTask({ uid: '1', version: 0 })])
+    await idle
+
+    // The dropped task must no longer count as pending...
+    expect(service.getPendingUids()).toEqual([])
+
+    // ...so a later higher-version snapshot is applied silently, not re-reported as a conflict.
+    const result = service.processTasksOnlineUpdate([createTask({ uid: '1', version: 1 })])
+    expect(result.tasksConflicted).toEqual([])
+    expect(result.tasksToApply.map(task => task.uid)).toEqual(['1'])
+})
