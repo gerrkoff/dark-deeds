@@ -50,6 +50,25 @@ export const overviewSlice = createSlice({
                 }
             }
         },
+        // from a full reload: the snapshot is authoritative, so tasks that are neither in the
+        // snapshot nor pending locally (keepUids) are stale (e.g. deleted on another client
+        // while offline) and get removed, then the snapshot is merged in.
+        reconcileTasks: (state, action: PayloadAction<{ tasks: TaskModel[]; keepUids: string[] }>) => {
+            const keep = new Set(action.payload.keepUids)
+            state.tasks = state.tasks.filter(task => keep.has(task.uid))
+
+            const taskIndexMap = new Map<string, number>(state.tasks.map((x, i) => [x.uid, i]))
+
+            for (const task of action.payload.tasks) {
+                const index = taskIndexMap.get(task.uid) ?? -1
+                if (index !== -1) {
+                    state.tasks[index] = task
+                } else {
+                    state.tasks.push(task)
+                    taskIndexMap.set(task.uid, state.tasks.length - 1)
+                }
+            }
+        },
         updateTaskVersions: (state, action: PayloadAction<TaskVersionModel[]>) => {
             const taskIndexMap = new Map<string, number>(state.tasks.map((x, i) => [x.uid, i]))
 
@@ -86,6 +105,7 @@ export const overviewSlice = createSlice({
     },
 })
 
-export const { updateTasks, syncTasks, updateTaskVersions, toggleRoutineTaskDate, cleanup } = overviewSlice.actions
+export const { updateTasks, syncTasks, reconcileTasks, updateTaskVersions, toggleRoutineTaskDate, cleanup } =
+    overviewSlice.actions
 
 export default overviewSlice.reducer

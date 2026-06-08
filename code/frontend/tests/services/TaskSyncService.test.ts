@@ -200,3 +200,13 @@ test('[processTasksOnlineUpdate] drops an in-flight task from both maps on confl
     expect(service.tasksToSave.has('1')).toBe(false)
     expect(service.tasksInFlight.has('1')).toBe(false)
 })
+
+test('[getPendingUids] returns unique uids from both queues', () => {
+    const service = new TaskSyncService(createApi(vi.fn()))
+    service.tasksToSave.set('a', createTask({ uid: 'a' }))
+    service.tasksToSave.set('b', createTask({ uid: 'b' }))
+    service.tasksInFlight.set('b', createTask({ uid: 'b' }))
+    service.tasksInFlight.set('c', createTask({ uid: 'c' }))
+
+    expect(service.getPendingUids().sort()).toEqual(['a', 'b', 'c'])
+})

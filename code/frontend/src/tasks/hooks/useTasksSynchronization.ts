@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
 import { useAppDispatch } from '../../hooks'
-import { syncTasks, updateTaskVersions } from '../../overview/redux/overview-slice'
+import { reconcileTasks, syncTasks, updateTaskVersions } from '../../overview/redux/overview-slice'
 import { TaskModel } from '../models/TaskModel'
 import { taskSyncService } from '../services/TaskSyncService'
 import { reloadOverviewTasks } from '../../overview/redux/overview-thunk'
@@ -16,6 +16,19 @@ interface Output {
 
 export function useTasksSynchronization(): Output {
     const dispatch = useAppDispatch()
+
+    const reportConflicts = useCallback(
+        (tasksConflicted: TaskModel[]) => {
+            for (const task of tasksConflicted) {
+                dispatch(
+                    addToast({
+                        text: `Task "${task.title}" was updated by another client`,
+                    }),
+                )
+            }
+        },
+        [dispatch],
+    )
 
     const processTasksOnlineUpdate = useCallback(
         (tasks: TaskModel[]) => {
@@ -33,24 +46,34 @@ export function useTasksSynchronization(): Output {
                 }),
             )
 
-            if (tasksConflicted.length > 0) {
-                for (const task of tasksConflicted) {
-                    dispatch(
-                        addToast({
-                            text: `Task "${task.title}" was updated by another client`,
-                        }),
-                    )
-                }
-            }
+            reportConflicts(tasksConflicted)
         },
-        [dispatch],
+        [dispatch, reportConflicts],
     )
 
     const reloadTasks = useCallback(async () => {
         const reloadOverviewTasksResult = await dispatch(reloadOverviewTasks())
-        const tasks = unwrapResult(reloadOverviewTasksResult)
-        processTasksOnlineUpdate(tasks)
-    }, [dispatch, processTasksOnlineUpdate])
+        const snapshot = unwrapResult(reloadOverviewTasksResult)
+
+        const { tasksConflicted, tasksToApply } = taskSyncService.processTasksOnlineUpdate(snapshot)
+        const keepUids = [...new Set([...snapshot.map(task => task.uid), ...taskSyncService.getPendingUids()])]
+
+        console.log(`[${new Date().toISOString()}] Tasks reload:`, {
+            snapshot,
+            tasksConflicted,
+            tasksToApply,
+            keepUids,
+        })
+
+        dispatch(
+            reconcileTasks({
+                tasks: tasksToApply,
+                keepUids,
+            }),
+        )
+
+        reportConflicts(tasksConflicted)
+    }, [dispatch, reportConflicts])
 
     const processTaskSaveFinish = useCallback(
         (notSaved: number, savedTasks: TaskVersionModel[], conflictedTasks: TaskModel[]) => {

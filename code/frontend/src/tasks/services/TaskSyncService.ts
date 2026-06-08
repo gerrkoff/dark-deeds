@@ -129,6 +129,10 @@ export class TaskSyncService {
         }
     }
 
+    getPendingUids(): string[] {
+        return [...new Set([...this.tasksToSave.keys(), ...this.tasksInFlight.keys()])]
+    }
+
     processTasksOnlineUpdate(updatedTasks: TaskModel[]): OnlineUpdateResult {
         const tasksConflicted: TaskModel[] = []
         const tasksToApply: TaskModel[] = []
