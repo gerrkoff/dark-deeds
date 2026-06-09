@@ -19,6 +19,46 @@ public static class DriverLowLevelExtensions
         driver.Wait().Until(ExpectedConditions.InvisibilityOfElementLocated(By.XPath(xpath)));
     }
 
+    // A busy indicator (e.g. the "saving"/"loading" spinner) can appear and disappear within a
+    // few milliseconds when the backend responds fast (e.g. over a local network). The fixed
+    // polling interval of WebDriverWait then misses the flash entirely, so a plain "wait until
+    // appeared" times out even though the operation succeeded. This waits until the indicator is
+    // reliably gone: it returns as soon as the element has appeared and then disappeared, or once
+    // it has stayed absent long enough to be sure the (synchronously triggered) operation has
+    // already finished. It still fails if the indicator stays present until the timeout.
+    public static void WaitUntilTransientCompleted(this RemoteWebDriver driver, string xpath)
+    {
+        var timeout = TimeSpan.FromSeconds(15);
+        var settle = TimeSpan.FromMilliseconds(150);
+        var poll = TimeSpan.FromMilliseconds(20);
+
+        var deadline = DateTime.UtcNow + timeout;
+        var everSeen = false;
+        DateTime? absentSince = null;
+
+        while (DateTime.UtcNow < deadline)
+        {
+            if (driver.ElementExists(xpath))
+            {
+                everSeen = true;
+                absentSince = null;
+            }
+            else
+            {
+                if (everSeen)
+                    return;
+
+                absentSince ??= DateTime.UtcNow;
+                if (DateTime.UtcNow - absentSince >= settle)
+                    return;
+            }
+
+            Thread.Sleep(poll);
+        }
+
+        throw new WebDriverTimeoutException($"Transient element '{xpath}' was still present after {timeout.TotalSeconds:0}s");
+    }
+
     public static IWebElement GetElement(this RemoteWebDriver driver, string xpath)
     {
         driver.Wait().Until(ExpectedConditions.ElementExists(By.XPath(xpath)));

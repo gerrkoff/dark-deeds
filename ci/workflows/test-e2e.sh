@@ -1,6 +1,6 @@
 #!/bin/bash
 if [ $# -le 0 ]; then
-  echo "How to call: ./ci/workflows/test-e2e.sh http://192.168.0.1:5000"
+  echo "How to call: ./ci/workflows/test-e2e.sh http://192.168.1.5:3000 http://192.168.1.5:5000"
   exit 1
 fi
 
