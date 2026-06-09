@@ -21,8 +21,7 @@ public static class DriverExtensions
 
     public static void WaitUntilSavingFinished(this RemoteWebDriver driver)
     {
-        driver.WaitUntilAppeared(X.Root().SavingStatus());
-        driver.WaitUntilDisappeared(X.Root().SavingStatus());
+        driver.WaitUntilTransientCompleted(X.Root().SavingStatus());
     }
 
     public static void DeleteTask(this RemoteWebDriver driver, IWebElement taskElement)
@@ -57,8 +56,7 @@ public static class DriverExtensions
     public static void NavigateToRecurrences(this RemoteWebDriver driver)
     {
         driver.GetElement(X.Navbar().Recurrences()).Click();
-        driver.WaitUntilAppeared(X.Root().Loader());
-        driver.WaitUntilDisappeared(X.Root().Loader());
+        driver.WaitUntilTransientCompleted(X.Root().Loader());
     }
 
     public static void SignOut(this RemoteWebDriver driver)
@@ -75,15 +73,13 @@ public static class DriverExtensions
         driver.GetElement(X.EditRecurrenceModal().SubmitButton()).Click();
         driver.WaitUntilDisappeared(X.EditTaskModal());
         driver.GetElement(X.RecurrencesPage().SaveRecurrencesButton()).Click();
-        driver.WaitUntilAppeared(X.RecurrencesPage().SaveRecurrencesButton().Loader());
-        driver.WaitUntilDisappeared(X.RecurrencesPage().SaveRecurrencesButton().Loader());
+        driver.WaitUntilTransientCompleted(X.RecurrencesPage().SaveRecurrencesButton().Loader());
     }
 
     public static void CreateTaskRecurrences(this RemoteWebDriver driver)
     {
         driver.GetElement(X.RecurrencesPage().CreateRecurrencesButton()).Click();
-        driver.WaitUntilAppeared(X.RecurrencesPage().CreateRecurrencesButton().Loader());
-        driver.WaitUntilDisappeared(X.RecurrencesPage().CreateRecurrencesButton().Loader());
+        driver.WaitUntilTransientCompleted(X.RecurrencesPage().CreateRecurrencesButton().Loader());
     }
 
     public static void SwitchToTab(this RemoteWebDriver driver, int tabIndex)
