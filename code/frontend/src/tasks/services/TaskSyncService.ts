@@ -4,7 +4,16 @@ import { TaskModel } from '../models/TaskModel'
 import { TaskVersionModel } from '../models/TaskVersionModel'
 
 export type StatusUpdateSubscription = (isSynchronizing: boolean) => void
-export type SaveFinishSubscription = (notSaved: number, savedTasks: TaskVersionModel[]) => void
+export type SaveFinishSubscription = (
+    notSaved: number,
+    savedTasks: TaskVersionModel[],
+    conflictedTasks: TaskModel[],
+) => void
+
+export interface OnlineUpdateResult {
+    tasksConflicted: TaskModel[]
+    tasksToApply: TaskModel[]
+}
 
 export class TaskSyncService {
     constructor(private taskApi: TaskApi) {}
@@ -60,18 +69,33 @@ export class TaskSyncService {
             this.tasksInFlight = this.tasksToSave
             const tasksInFlightCount = this.tasksInFlight.size
             this.tasksToSave = new Map<string, TaskModel>()
-            let wait = false
 
             let savedTasks: TaskModel[] = []
+            let failed = false
 
             try {
                 savedTasks = await this.taskApi.saveTasks([...this.tasksInFlight.values()])
             } catch (error) {
                 console.error('Failed to save tasks:', error)
-                wait = true
+                failed = true
             }
 
-            // Update versions in tasksToSave if task was modified while in flight
+            if (failed) {
+                // Transport error - nothing was saved. Report the failure count (drives the
+                // "failed to save" toast), re-queue the whole in-flight batch and retry later.
+                this.saveFinishSubscriptions.forEach(x => x(tasksInFlightCount, [], []))
+
+                for (const [uid, task] of this.tasksInFlight) {
+                    if (!this.tasksToSave.has(uid)) {
+                        this.tasksToSave.set(uid, task)
+                    }
+                }
+
+                await delay(5000)
+                continue
+            }
+
+            // Update versions in tasksToSave if a saved task was modified again while in flight.
             for (const savedTask of savedTasks) {
                 const taskToSave = this.tasksToSave.get(savedTask.uid)
                 if (taskToSave) {
@@ -82,52 +106,62 @@ export class TaskSyncService {
                 }
             }
 
-            for (const task of savedTasks) {
-                this.tasksInFlight.delete(task.uid)
-            }
+            // In-flight tasks the backend did not return were rejected on a version conflict.
+            // Report those that were not saved and are not queued again in tasksToSave (no pending
+            // re-edit): their change is lost and no newer version has arrived to reconcile it yet.
+            // They are dropped; reconciliation comes later via the hub or a reload on reconnect.
+            const savedUids = new Set(savedTasks.map(task => task.uid))
+            const conflictedTasks = [...this.tasksInFlight.values()].filter(
+                task => !savedUids.has(task.uid) && !this.tasksToSave.has(task.uid),
+            )
 
             this.saveFinishSubscriptions.forEach(x =>
                 x(
-                    tasksInFlightCount - savedTasks.length,
+                    0,
                     savedTasks.map(task => ({ uid: task.uid, version: task.version })),
+                    conflictedTasks,
                 ),
             )
 
-            for (const [uid, task] of this.tasksInFlight) {
-                if (!this.tasksToSave.has(uid)) {
-                    this.tasksToSave.set(uid, task)
-                }
-            }
-
-            if (wait) {
-                await delay(5000)
-            }
+            // The in-flight batch is done: saved tasks persisted, dropped conflicts abandoned,
+            // re-edits tracked in tasksToSave. Drain it so concurrent reloads/hub updates never
+            // see stale entries as pending.
+            this.tasksInFlight = new Map<string, TaskModel>()
         }
     }
 
-    processTasksOnlineUpdate(updatedTasks: TaskModel[]): TaskModel[] {
+    getPendingUids(): string[] {
+        return [...new Set([...this.tasksToSave.keys(), ...this.tasksInFlight.keys()])]
+    }
+
+    processTasksOnlineUpdate(updatedTasks: TaskModel[]): OnlineUpdateResult {
         const tasksConflicted: TaskModel[] = []
+        const tasksToApply: TaskModel[] = []
 
         for (const updatedTask of updatedTasks) {
-            const taskToSave = this.tasksToSave.get(updatedTask.uid)
-            const taskInFlight = this.tasksInFlight.get(updatedTask.uid)
+            const pendingTask = this.tasksToSave.get(updatedTask.uid) ?? this.tasksInFlight.get(updatedTask.uid)
 
-            // If task is in save queue and incoming version is newer - conflict!
-            if (taskToSave && updatedTask.version > taskToSave.version) {
-                this.tasksToSave.delete(updatedTask.uid)
-                tasksConflicted.push(updatedTask)
+            if (pendingTask === undefined) {
+                // Not pending locally - apply the incoming snapshot as-is.
+                tasksToApply.push(updatedTask)
                 continue
             }
 
-            // If task is in flight and incoming version is newer - conflict!
-            if (taskInFlight && updatedTask.version > taskInFlight.version) {
+            if (updatedTask.version > pendingTask.version) {
+                // Backend has a newer version than our pending edit - backend wins: drop the
+                // local edit, report the conflict and overwrite local state.
+                this.tasksToSave.delete(updatedTask.uid)
                 this.tasksInFlight.delete(updatedTask.uid)
                 tasksConflicted.push(updatedTask)
+                tasksToApply.push(updatedTask)
                 continue
             }
+
+            // Our pending edit is as new as the incoming snapshot (same version) - keep the
+            // local edit and skip the incoming task so the unsaved change is not reverted.
         }
 
-        return tasksConflicted
+        return { tasksConflicted, tasksToApply }
     }
 }
 

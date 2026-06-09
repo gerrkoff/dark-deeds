@@ -19,6 +19,24 @@ export function useTasksHub() {
         taskHubApi.init()
     }, [])
 
+    useEffect(() => {
+        const handleReconnectNow = () => taskHubApi.reconnectNow()
+
+        const handleVisibility = () => {
+            if (document.visibilityState === 'visible') {
+                taskHubApi.reconnectNow()
+            }
+        }
+
+        window.addEventListener('online', handleReconnectNow)
+        document.addEventListener('visibilitychange', handleVisibility)
+
+        return () => {
+            window.removeEventListener('online', handleReconnectNow)
+            document.removeEventListener('visibilitychange', handleVisibility)
+        }
+    }, [])
+
     const { processTasksOnlineUpdate, processTaskSaveFinish, reloadTasks } = useTasksSynchronization()
 
     useEffect(() => {
@@ -47,8 +65,12 @@ export function useTasksHub() {
             processTasksOnlineUpdate(tasks)
         }
 
-        const handleTaskSaveFinish = (notSaved: number, savedTasks: TaskVersionModel[]) => {
-            processTaskSaveFinish(notSaved, savedTasks)
+        const handleTaskSaveFinish = (
+            notSaved: number,
+            savedTasks: TaskVersionModel[],
+            conflictedTasks: TaskModel[],
+        ) => {
+            processTaskSaveFinish(notSaved, savedTasks, conflictedTasks)
         }
 
         taskHubApi.onClose(handleHubClose)
