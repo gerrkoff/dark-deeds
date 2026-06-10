@@ -21,9 +21,13 @@ docker network rm dd-test-e2e-network
 
 echo "----------- Starting Selenium Grid..."
 docker network create dd-test-e2e-network
+# TZ defines the browser timezone, which drives the app's "today". Kept non-UTC so the
+# tests actually exercise timezone handling. The test container itself needs no timezone:
+# TimezoneTest reads "today" from the browser, not from the test host clock.
 docker run -d \
   --network dd-test-e2e-network \
   --platform linux/x86_64 \
+  -e TZ=America/New_York \
   --name dd-test-e2e-chrome \
   selenium/standalone-chrome:127.0-20240813
 
@@ -39,7 +43,6 @@ rm -rf ci/results
 docker build -t dd-test-e2e -f ci/apps/tests-e2e.dockerfile . || exit $?
 docker run -t --rm \
   --network dd-test-e2e-network \
-  -e TZ=America/New_York \
   -e ARTIFACTS_PATH='/app/artifacts' \
   -e CONTAINER='true' \
   -e URL="$FE_URL" \
