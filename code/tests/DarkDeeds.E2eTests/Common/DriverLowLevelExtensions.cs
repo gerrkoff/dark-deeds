@@ -1,3 +1,4 @@
+using System.Globalization;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Remote;
 using OpenQA.Selenium.Support.Extensions;
@@ -92,6 +93,14 @@ public static class DriverLowLevelExtensions
     public static void CreateTab(this RemoteWebDriver driver)
     {
         driver.ExecuteJavaScript("window.open()");
+    }
+
+    public static DateTime GetBrowserDate(this RemoteWebDriver driver)
+    {
+        var date = driver.ExecuteJavaScript<string>(
+            "const d = new Date();" +
+            "return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');");
+        return DateTime.ParseExact(date, "yyyy-MM-dd", CultureInfo.InvariantCulture);
     }
 
     private static WebDriverWait Wait(this RemoteWebDriver driver, int timeoutInSeconds = 15)

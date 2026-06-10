@@ -115,13 +115,14 @@ public class SmokeTests(ITestOutputHelper output) : UserLoginTest
     [Fact]
     public Task TimezoneTest()
     {
-#pragma warning disable RS0030
-        var now = DateTime.Now;
-#pragma warning restore RS0030
         var originalTaskText = RandomizeText("timezone task");
-        var taskTextWithDate = $"{now.Month:D2}{now.Day:D2} " + originalTaskText;
         return Test(driver =>
         {
+            // The overview is rendered in the browser's timezone (configured on the Selenium grid),
+            // so "today" must be read from the browser rather than from the test host clock.
+            var now = driver.GetBrowserDate();
+            var taskTextWithDate = $"{now.Month:D2}{now.Day:D2} " + originalTaskText;
+
             var expiredDaysCount = ((int)now.DayOfWeek + 6) % 7;
             var currentExpiredDaysCount = driver.CountElements(X.OverviewPage().CurrentSection().Block(1).Expired());
             Assert.Equal(expiredDaysCount, currentExpiredDaysCount);
