@@ -39,6 +39,7 @@ export function useCurrentUser(): Output {
                 addToast({
                     text: 'Your session has expired. Please sign in again.',
                     category: 'session-expired',
+                    autoDismissMs: 6000,
                 }),
             )
         })
