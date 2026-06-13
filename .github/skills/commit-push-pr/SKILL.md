@@ -1,5 +1,5 @@
 ---
-name: commit-push
+name: commit-push-pr
 description: Commit and push the current changes. Use when asked to commit and push, create a branch with conventional naming, write a descriptive commit message, and push to the remote with a pre-filled pull request link.
 ---
 # Commit and Push Protocol
