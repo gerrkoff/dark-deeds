@@ -10,6 +10,7 @@ export interface OverviewState {
     routineTaskDatesShown: number[]
     isLoadTasksPending: boolean
     isInitialLoadComplete: boolean
+    isTasksCacheHydrated: boolean
 }
 
 const initialState: OverviewState = {
@@ -17,6 +18,7 @@ const initialState: OverviewState = {
     routineTaskDatesShown: [],
     isLoadTasksPending: false,
     isInitialLoadComplete: false,
+    isTasksCacheHydrated: false,
 }
 
 export const overviewSlice = createSlice({
@@ -79,8 +81,18 @@ export const overviewSlice = createSlice({
                 }
             }
         },
+        // from the offline cache on startup: show the last known tasks immediately, before the
+        // server reload reconciles them. This is the moment data first appears (from cache or an
+        // empty cache), so it marks the initial load complete - the reload always happens later.
+        hydrateTasks: (state, action: PayloadAction<TaskModel[]>) => {
+            state.tasks = action.payload
+            state.isTasksCacheHydrated = true
+            state.isInitialLoadComplete = true
+        },
         cleanup: state => {
             state.tasks = []
+            state.isTasksCacheHydrated = false
+            state.isInitialLoadComplete = false
         },
         toggleRoutineTaskDate: (state, action: PayloadAction<number>) => {
             const index = state.routineTaskDatesShown.indexOf(action.payload)
@@ -100,12 +112,18 @@ export const overviewSlice = createSlice({
         })
         builder.addCase(reloadOverviewTasks.fulfilled, state => {
             state.isLoadTasksPending = false
-            state.isInitialLoadComplete = true
         })
     },
 })
 
-export const { updateTasks, syncTasks, reconcileTasks, updateTaskVersions, toggleRoutineTaskDate, cleanup } =
-    overviewSlice.actions
+export const {
+    updateTasks,
+    syncTasks,
+    reconcileTasks,
+    hydrateTasks,
+    updateTaskVersions,
+    toggleRoutineTaskDate,
+    cleanup,
+} = overviewSlice.actions
 
 export default overviewSlice.reducer

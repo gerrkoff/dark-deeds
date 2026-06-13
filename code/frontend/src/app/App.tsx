@@ -12,6 +12,7 @@ import { localSettingsService } from '../settings/services/LocalSettingsService'
 import { useLocalSettingsTracking } from '../settings/hooks/useLocalSettingsTracking'
 import { StatusPanel } from '../status-panel/StatusPanel'
 import { useTasksHub } from '../tasks/hooks/useTasksHub'
+import { useTasksCacheTracking } from '../tasks/hooks/useTasksCacheTracking'
 import { useCurrentUser } from '../login/hooks/useCurrentUser'
 import { useTokenRenewal } from '../login/hooks/useTokenRenewal'
 import { Recurrences } from '../recurrences/Recurrences'
@@ -29,6 +30,8 @@ function App() {
     useLocalSettingsTracking()
 
     useTasksHub()
+
+    useTasksCacheTracking()
 
     useEffect(() => {
         loadCurrentUser()

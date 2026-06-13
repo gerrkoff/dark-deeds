@@ -1,6 +1,6 @@
 export interface AddToastModel {
     type?: 'info' | 'success' | 'primary'
     text: string
-    category?: 'task-save-failed' | 'task-save-conflict'
+    category?: 'task-save-failed' | 'task-save-conflict' | 'session-expired'
     autoDismissMs?: number
 }

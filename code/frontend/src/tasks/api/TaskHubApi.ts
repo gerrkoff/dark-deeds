@@ -70,7 +70,16 @@ export class TaskHubApi {
             return
         }
 
-        await this.connection.start()
+        try {
+            await this.connection.start()
+        } catch (error) {
+            // Offline at startup - do not fail the app; arm the reconnect loop and let it retry
+            // in the background. onReconnected fires once the connection is finally established.
+            // A 401 (invalid/expired token) is handled separately by the REST layer, which logs
+            // the user out and stops this loop via stop().
+            console.error('Task hub connect failed:', error)
+            this.scheduleReconnect()
+        }
     }
 
     async stop(): Promise<void> {
