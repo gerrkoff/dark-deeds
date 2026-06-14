@@ -110,29 +110,50 @@ The application can be run locally for manual or browser-based verification. `DD
 
 **Prerequisites**: Docker, .NET 8 SDK, Node.js 22.
 
-**Startup steps** (run from the repository root):
-1. **MongoDB**: `docker compose -f infra/docker-compose.yml up -d mongo-db` (listens on `27017`)
-2. **Backend**: `dotnet run --project code/backend/DD.App` (serves REST + SignalR hub on `http://localhost:5000`, uses the `Development` profile from `launchSettings.json`)
-3. **Frontend**: `cd code/frontend && npm run dev` (Vite dev server on `http://localhost:3000`)
+**Components** (three separate processes, all started from the repository root):
 
-**Notes**:
-- The frontend dev build targets the backend at `http://<hostname>:5000` (see `code/frontend/src/common/api/BaseUrlProvider.ts`).
-- Open `http://localhost:3000` in the browser to use the app.
+| Component | How it runs | Port | Readiness check |
+| --- | --- | --- | --- |
+| MongoDB | Docker container `dd-mongo-db-1` via the `infra` scripts | `27017` | `nc -z localhost 27017` |
+| Backend (`DD.App`) | `dotnet run --project code/backend/DD.App` (uses the `DarkDeeds.Backend.App` launch profile (`ASPNETCORE_ENVIRONMENT=Development`), binds `0.0.0.0:5000`) | `5000` | `curl -fsS http://localhost:5000/healthcheck` → `Healthy` |
+| Frontend (Vite) | `cd code/frontend && npm run dev` (`strictPort: 3000`) | `3000` | `curl -fsS http://localhost:3000/` → HTTP 200 |
+
+**Important rules**:
+- **MongoDB is managed through the `infra` scripts** (Docker Compose project `dd`). Start it with `./infra/up.sh` and stop it with `./infra/down.sh`. Do **not** run a second `docker compose ... up mongo-db` without `-p dd` — that creates a duplicate container fighting for port `27017`.
+- **Never start a server as a sync command piped to `head`/`tail`** (e.g. `dotnet run ... | head`). That ties the server's lifetime to the pipe so it dies immediately, which is what causes the "start it again and again" loop. Start the backend and frontend as **detached background processes** (bash tool with `mode:"async", detach:true`), redirect output to a log file (e.g. `/tmp/dd-backend.log`, `/tmp/dd-frontend.log`), and **record the returned PID** so you can stop them later.
+- The frontend dev build targets the backend at `http://<hostname>:5000` (see `code/frontend/src/common/api/BaseUrlProvider.ts`). When you open `http://localhost:3000`, the backend must be reachable at `http://localhost:5000`.
 </local_development>
 
-## Testing and Verification Tools
+## Browser / Manual Testing Workflow
 
-<testing_tools>
-**Browser Testing**:
-- Use Chrome DevTools MCP tools for interactive browser testing (e.g., click, fill forms, navigate)
-- Local development site: http://localhost:3000
-- Test credentials: username `test`, password `test`
+<browser_testing_workflow>
+Whenever you need to exercise the running app (Chrome DevTools MCP, manual REST calls, data checks), follow this exact lifecycle. **Always set the app up yourself and tear it down afterwards** — do not assume servers are already running, and never leave them running when you finish.
 
-**Database Verification**:
-- Use MongoDB MCP tools to verify data in database (e.g., aggregate, find, count)
-- Check data consistency after implementing backend changes
-- Validate that queries return expected results
-</testing_tools>
+**1. Ensure MongoDB is up.**
+- Check: `docker ps --filter name=dd-mongo-db --filter status=running --format '{{.Names}}'` (or `nc -z localhost 27017`).
+- If it is **not** running, start it via the infra scripts from the repository root: `./infra/up.sh` (idempotent — only starts what is missing; Docker Compose project `dd`).
+
+**2. Start the backend and the frontend (two separate apps), detached.**
+- Backend: `dotnet run --project code/backend/DD.App` — run detached, log to `/tmp/dd-backend.log`, capture the PID.
+- Frontend: `cd code/frontend && npm run dev` — run detached, log to `/tmp/dd-frontend.log`, capture the PID.
+- Wait until each is ready before testing:
+  - Backend: poll `curl -fsS http://localhost:5000/healthcheck` until it returns `Healthy`.
+  - Frontend: poll `curl -fsS http://localhost:3000/` until it returns HTTP 200.
+
+**3. If a server fails to start because its port is already in use** (Kestrel "address already in use" on `5000`, or Vite `strictPort` error on `3000`):
+- Do **not** hunt for and kill processes yourself.
+- **Ask the user** (via the `ask_user` tool) to stop the app they already have running on that port.
+- Only if the user confirms they have **nothing** running there, *then* investigate: identify the process (`lsof -i :5000` / `lsof -i :3000`, `ps`), report what you found, and resolve it (e.g. `kill <PID>` for a confirmed stale process) before retrying.
+
+**4. Run your tests.**
+- **Browser**: use Chrome DevTools MCP tools (navigate, click, fill, read console/network). App URL: `http://localhost:3000`. Test credentials: username `test`, password `test`.
+- **Database**: use MongoDB MCP tools (aggregate, find, count) to verify data after backend changes.
+
+**5. Tear down when finished.**
+- Stop the **backend and frontend you started** with `kill <PID>` for each captured PID, then verify the ports are free (`nc -z localhost 5000` and `nc -z localhost 3000` should both fail).
+- **Leave MongoDB running** (it is shared infra managed by Docker; stop it only with `./infra/down.sh`, and only if explicitly asked).
+- Rationale: the user may want to run or test the app themselves, so never leave your backend/frontend processes occupying ports `5000`/`3000`.
+</browser_testing_workflow>
 
 ## Final Verification Protocol
 
