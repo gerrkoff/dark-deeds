@@ -115,7 +115,7 @@ The application can be run locally for manual or browser-based verification. `DD
 | Component | How it runs | Port | Readiness check |
 | --- | --- | --- | --- |
 | MongoDB | Docker container `dd-mongo-db-1` via the `infra` scripts | `27017` | `nc -z localhost 27017` |
-| Backend (`DD.App`) | `dotnet run --project code/backend/DD.App` (uses the `Development` launch profile, binds `0.0.0.0:5000`) | `5000` | `curl -fsS http://localhost:5000/healthcheck` → `Healthy` |
+| Backend (`DD.App`) | `dotnet run --project code/backend/DD.App` (uses the `DarkDeeds.Backend.App` launch profile (`ASPNETCORE_ENVIRONMENT=Development`), binds `0.0.0.0:5000`) | `5000` | `curl -fsS http://localhost:5000/healthcheck` → `Healthy` |
 | Frontend (Vite) | `cd code/frontend && npm run dev` (`strictPort: 3000`) | `3000` | `curl -fsS http://localhost:3000/` → HTTP 200 |
 
 **Important rules**:
