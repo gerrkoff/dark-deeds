@@ -46,6 +46,11 @@ export class TaskSyncService {
     tasksToSave = new Map<string, TaskModel>()
     tasksInFlight = new Map<string, TaskModel>()
 
+    // The user the current pending edits belong to. Set on login (restoreOutbox) and cleared on
+    // reset. While null (logged out / not initialized) the outbox is not persisted, so a save that
+    // completes after logout cannot wipe the previous user's preserved outbox.
+    private owner: string | null = null
+
     sync(tasks: TaskModel[]) {
         for (const task of tasks) {
             this.tasksToSave.set(task.uid, { ...task })
@@ -55,11 +60,12 @@ export class TaskSyncService {
         this.schedule()
     }
 
-    // Restores the persisted outbox after a reload/restart and replays it. The edited content is
-    // already shown from the tasks cache (hydrateTasks); this re-queues the unsaved changes so
-    // they are sent again once the backend is reachable.
-    restoreOutbox() {
-        const tasks = this.outboxStore.load()
+    // Restores the persisted outbox for the given user after a reload/restart and replays it. The
+    // edited content is already shown from the tasks cache (hydrateTasks); this re-queues the
+    // unsaved changes so they are sent again once the backend is reachable.
+    restoreOutbox(owner: string) {
+        this.owner = owner
+        const tasks = this.outboxStore.load(owner)
 
         if (tasks.length === 0) {
             return
@@ -74,22 +80,34 @@ export class TaskSyncService {
         this.schedule()
     }
 
-    // Drops all pending state and the persisted outbox (e.g. on logout) so a different user's
-    // session never replays the previous user's unsaved edits.
+    // Drops the in-memory pending state and forgets the active user (e.g. on session expiry). The
+    // persisted outbox is intentionally left untouched: it is owner-scoped, so the same user
+    // replays it on re-login (no edits lost), while a different user ignores it.
     reset() {
         this.tasksToSave = new Map<string, TaskModel>()
         this.tasksInFlight = new Map<string, TaskModel>()
+        this.owner = null
+    }
+
+    // Full wipe for an explicit sign-out: drop the in-memory state and the persisted outbox so the
+    // user's unsaved edits do not linger in local storage after they intentionally leave.
+    clear() {
+        this.reset()
         this.outboxStore.clear()
     }
 
     private persistOutbox() {
+        if (this.owner === null) {
+            return
+        }
+
         // tasksToSave wins over tasksInFlight for the same uid (it holds a newer re-edit).
         const outbox = [...new Map([...this.tasksInFlight, ...this.tasksToSave]).values()]
 
         if (outbox.length === 0) {
             this.outboxStore.clear()
         } else {
-            this.outboxStore.save(outbox)
+            this.outboxStore.save(outbox, this.owner)
         }
     }
 

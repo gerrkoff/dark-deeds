@@ -38,17 +38,19 @@ function createApi(saveTasks: TaskApi['saveTasks']): TaskApi {
 }
 
 function createOutboxStore(): OutboxCacheService {
-    let tasks: TaskModel[] = []
+    let stored: { owner: string; tasks: TaskModel[] } | null = null
     return {
-        load: () => tasks,
-        save: (value: TaskModel[]) => {
-            tasks = value
+        load: (owner: string) => (stored !== null && stored.owner === owner ? stored.tasks : []),
+        save: (tasks: TaskModel[], owner: string) => {
+            stored = { owner, tasks }
         },
         clear: () => {
-            tasks = []
+            stored = null
         },
     } as unknown as OutboxCacheService
 }
+
+const OWNER = 'user-a'
 
 function waitForIdle(service: TaskSyncService): Promise<void> {
     return new Promise(resolve => {
@@ -245,22 +247,37 @@ test('[saveTasks] removes a dropped conflict from the in-flight map (no double-r
 test('[sync] persists the queued tasks to the outbox', () => {
     const store = createOutboxStore()
     const service = new TaskSyncService(createApi(vi.fn().mockResolvedValue([])), store)
+    service.restoreOutbox(OWNER)
 
     service.sync([createTask({ uid: '1', version: 0 })])
 
-    expect(store.load().map(t => t.uid)).toEqual(['1'])
+    expect(store.load(OWNER).map(t => t.uid)).toEqual(['1'])
+})
+
+test('[sync] does not persist while logged out (owner cleared), preserving the saved outbox', async () => {
+    const store = createOutboxStore()
+    store.save([createTask({ uid: 'keep', version: 0 })], OWNER)
+    const service = new TaskSyncService(createApi(vi.fn().mockResolvedValue([])), store)
+    // No restoreOutbox - owner is null, as it is after reset() on logout.
+
+    const idle = waitForIdle(service)
+    service.sync([createTask({ uid: 'new', version: 0 })])
+    await idle
+
+    expect(store.load(OWNER).map(t => t.uid)).toEqual(['keep'])
 })
 
 test('[saveTasks] clears the outbox after a successful save', async () => {
     const store = createOutboxStore()
     const saveTasks = vi.fn().mockResolvedValue([createTask({ uid: '1', version: 1 })])
     const service = new TaskSyncService(createApi(saveTasks), store)
+    service.restoreOutbox(OWNER)
 
     const idle = waitForIdle(service)
     service.sync([createTask({ uid: '1', version: 0 })])
     await idle
 
-    expect(store.load()).toEqual([])
+    expect(store.load(OWNER)).toEqual([])
 })
 
 test('[saveTasks] keeps the outbox after a transport failure', async () => {
@@ -272,35 +289,48 @@ test('[saveTasks] keeps the outbox after a transport failure', async () => {
         .mockRejectedValueOnce(new Error('network'))
         .mockResolvedValueOnce([createTask({ uid: '1', version: 1 })])
     const service = new TaskSyncService(createApi(saveTasks), store)
+    service.restoreOutbox(OWNER)
 
     const idle = waitForIdle(service)
     service.sync([createTask({ uid: '1', version: 0 })])
 
     // After the failed attempt the task is still pending and must remain in the outbox.
     await vi.advanceTimersByTimeAsync(0)
-    expect(store.load().map(t => t.uid)).toEqual(['1'])
+    expect(store.load(OWNER).map(t => t.uid)).toEqual(['1'])
 
     await vi.advanceTimersByTimeAsync(5000)
     await idle
-    expect(store.load()).toEqual([])
+    expect(store.load(OWNER)).toEqual([])
 
     errorSpy.mockRestore()
     vi.useRealTimers()
 })
 
-test('[restoreOutbox] re-queues persisted tasks and replays them', async () => {
+test("[restoreOutbox] re-queues the owner's persisted tasks and replays them", async () => {
     const store = createOutboxStore()
-    store.save([createTask({ uid: '1', version: 2, title: 'offline edit' })])
+    store.save([createTask({ uid: '1', version: 2, title: 'offline edit' })], OWNER)
     const saveTasks = vi.fn().mockResolvedValue([createTask({ uid: '1', version: 3 })])
     const service = new TaskSyncService(createApi(saveTasks), store)
 
     const idle = waitForIdle(service)
-    service.restoreOutbox()
+    service.restoreOutbox(OWNER)
     await idle
 
     expect(saveTasks).toHaveBeenCalledTimes(1)
     expect(saveTasks.mock.calls[0][0].map((t: TaskModel) => t.uid)).toEqual(['1'])
-    expect(store.load()).toEqual([])
+    expect(store.load(OWNER)).toEqual([])
+})
+
+test('[restoreOutbox] ignores an outbox that belongs to a different user', () => {
+    const store = createOutboxStore()
+    store.save([createTask({ uid: '1', version: 2 })], 'other-user')
+    const saveTasks = vi.fn()
+    const service = new TaskSyncService(createApi(saveTasks), store)
+
+    service.restoreOutbox(OWNER)
+
+    expect(saveTasks).not.toHaveBeenCalled()
+    expect(service.getPendingUids()).toEqual([])
 })
 
 test('[restoreOutbox] does nothing when the outbox is empty', () => {
@@ -308,32 +338,50 @@ test('[restoreOutbox] does nothing when the outbox is empty', () => {
     const saveTasks = vi.fn()
     const service = new TaskSyncService(createApi(saveTasks), store)
 
-    service.restoreOutbox()
+    service.restoreOutbox(OWNER)
 
     expect(saveTasks).not.toHaveBeenCalled()
 })
 
-test('[reset] clears both queues and the persisted outbox', () => {
+test('[reset] clears the in-memory queues but preserves the owner-scoped outbox', () => {
     const store = createOutboxStore()
     const service = new TaskSyncService(createApi(vi.fn()), store)
+    service.restoreOutbox(OWNER)
     service.tasksToSave.set('a', createTask({ uid: 'a' }))
     service.tasksInFlight.set('b', createTask({ uid: 'b' }))
-    store.save([createTask({ uid: 'a' })])
+    store.save([createTask({ uid: 'a' })], OWNER)
 
     service.reset()
 
     expect(service.tasksToSave.size).toBe(0)
     expect(service.tasksInFlight.size).toBe(0)
-    expect(store.load()).toEqual([])
+    // Preserved so the same user replays it on re-login (e.g. after session expiry).
+    expect(store.load(OWNER).map(t => t.uid)).toEqual(['a'])
+})
+
+test('[clear] wipes the in-memory queues and the persisted outbox (explicit sign-out)', () => {
+    const store = createOutboxStore()
+    const service = new TaskSyncService(createApi(vi.fn()), store)
+    service.restoreOutbox(OWNER)
+    service.tasksToSave.set('a', createTask({ uid: 'a' }))
+    service.tasksInFlight.set('b', createTask({ uid: 'b' }))
+    store.save([createTask({ uid: 'a' })], OWNER)
+
+    service.clear()
+
+    expect(service.tasksToSave.size).toBe(0)
+    expect(service.tasksInFlight.size).toBe(0)
+    expect(store.load(OWNER)).toEqual([])
 })
 
 test('[processTasksOnlineUpdate] updates the outbox when a pending task is dropped on conflict', () => {
     const store = createOutboxStore()
     const service = new TaskSyncService(createApi(vi.fn()), store)
+    service.restoreOutbox(OWNER)
     service.tasksToSave.set('1', createTask({ uid: '1', version: 5 }))
-    store.save([createTask({ uid: '1', version: 5 })])
+    store.save([createTask({ uid: '1', version: 5 })], OWNER)
 
     service.processTasksOnlineUpdate([createTask({ uid: '1', version: 6 })])
 
-    expect(store.load()).toEqual([])
+    expect(store.load(OWNER)).toEqual([])
 })

@@ -23,20 +23,20 @@ export function useCurrentUser(): Output {
 
     const { reloadTasks } = useTasksSynchronization()
 
-    const resetToLogin = useCallback(() => {
-        taskSyncService.reset()
-        tasksCacheService.clear()
+    const goToLogin = useCallback(() => {
         dispatch(setUser(null))
         dispatch(cleanup())
         dispatch(switchToTab('login'))
     }, [dispatch])
 
-    // The server rejects requests with 401 when the stored token is invalid or expired - log the
-    // user out instead of silently showing stale cached tasks.
+    // The server rejects requests with 401 when the stored token is invalid or expired. Log the
+    // user out, but keep the owner-scoped outbox so the same user replays unsaved edits on
+    // re-login (no data lost on involuntary session expiry).
     useEffect(() => {
         api.setUnauthorizedHandler(() => {
             void taskHubApi.stop()
-            resetToLogin()
+            taskSyncService.reset()
+            goToLogin()
             dispatch(
                 addToast({
                     text: 'Your session has expired. Please sign in again.',
@@ -45,7 +45,7 @@ export function useCurrentUser(): Output {
                 }),
             )
         })
-    }, [dispatch, resetToLogin])
+    }, [dispatch, goToLogin])
 
     const loadCurrentUser = useCallback(async () => {
         try {
@@ -59,8 +59,8 @@ export function useCurrentUser(): Output {
 
             dispatch(switchToTab('overview'))
             api.resetUnauthorized()
-            dispatch(hydrateTasks(tasksCacheService.load()))
-            taskSyncService.restoreOutbox()
+            dispatch(hydrateTasks(tasksCacheService.load(user.username)))
+            taskSyncService.restoreOutbox(user.username)
             dispatch(loadSharedSettings())
             reloadTasks()
             dispatch(taskHubConnecting())
@@ -74,10 +74,14 @@ export function useCurrentUser(): Output {
         }
     }, [dispatch, reloadTasks])
 
+    // Explicit sign-out: the user is intentionally leaving, so purge all of their locally stored
+    // data (cached tasks and the pending outbox), not just the in-memory state.
     const unloadCurrentUser = useCallback(async () => {
         await taskHubApi.stop()
-        resetToLogin()
-    }, [resetToLogin])
+        taskSyncService.clear()
+        tasksCacheService.clear()
+        goToLogin()
+    }, [goToLogin])
 
     return { loadCurrentUser, unloadCurrentUser }
 }
