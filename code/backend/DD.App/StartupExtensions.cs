@@ -66,9 +66,10 @@ public static class StartupExtensions
         {
             OnPrepareResponse = ctx =>
             {
-                var notCached = ctx.File.Name is "index.html" or "sw.js";
-                var maxAge = notCached ? 300 : 31536000;
-                ctx.Context.Response.Headers.Append("Cache-Control", $"public, max-age={maxAge}");
+                var cacheControl = ctx.File.Name is "index.html" or "sw.js"
+                    ? "no-cache"
+                    : "public, max-age=31536000";
+                ctx.Context.Response.Headers.Append("Cache-Control", cacheControl);
             },
         });
     }
