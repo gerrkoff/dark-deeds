@@ -30,6 +30,7 @@ export const toastsSlice = createSlice({
                 text: action.payload.text,
                 category: action.payload.category ?? '',
                 counter: 0,
+                autoDismissMs: action.payload.autoDismissMs ?? null,
             })
         },
         removeToast: (state, action: PayloadAction<string>) => {

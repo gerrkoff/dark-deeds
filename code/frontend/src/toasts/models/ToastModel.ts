@@ -4,4 +4,5 @@ export interface ToastModel {
     text: string
     category: '' | 'task-save-failed' | 'task-save-conflict'
     counter: number
+    autoDismissMs: number | null
 }
