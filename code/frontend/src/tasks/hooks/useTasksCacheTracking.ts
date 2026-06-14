@@ -5,13 +5,12 @@ import { tasksCacheService } from '../services/TasksCacheService'
 export function useTasksCacheTracking() {
     const isTasksCacheHydrated = useAppSelector(state => state.overview.isTasksCacheHydrated)
     const tasks = useAppSelector(state => state.overview.tasks)
-    const username = useAppSelector(state => state.login.user?.username)
 
     useEffect(() => {
-        if (!isTasksCacheHydrated || username === undefined) {
+        if (!isTasksCacheHydrated) {
             return
         }
 
-        tasksCacheService.save(tasks, username)
-    }, [tasks, isTasksCacheHydrated, username])
+        tasksCacheService.save(tasks)
+    }, [tasks, isTasksCacheHydrated])
 }

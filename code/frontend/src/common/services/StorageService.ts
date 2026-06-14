@@ -3,6 +3,7 @@ export class StorageService {
     private readonly settingsKey = 'settings'
     private readonly tasksKey = 'tasks'
     private readonly outboxKey = 'outbox'
+    private readonly dataOwnerKey = 'dataOwner'
 
     clearAccessToken() {
         localStorage.removeItem(this.accessTokenKey)
@@ -22,6 +23,10 @@ export class StorageService {
 
     saveSettings(value: string) {
         localStorage.setItem(this.settingsKey, value)
+    }
+
+    clearSettings() {
+        localStorage.removeItem(this.settingsKey)
     }
 
     loadTasks(): string | null {
@@ -46,6 +51,28 @@ export class StorageService {
 
     clearOutbox() {
         localStorage.removeItem(this.outboxKey)
+    }
+
+    loadDataOwner(): string | null {
+        return localStorage.getItem(this.dataOwnerKey)
+    }
+
+    saveDataOwner(value: string) {
+        localStorage.setItem(this.dataOwnerKey, value)
+    }
+
+    clearDataOwner() {
+        localStorage.removeItem(this.dataOwnerKey)
+    }
+
+    // Removes every user-scoped entry, including the owner marker (but not the access token, which
+    // already belongs to the user being loaded). Used when switching users or signing out so one
+    // user's data never leaks into another user's session.
+    clearUserData() {
+        this.clearTasks()
+        this.clearOutbox()
+        this.clearSettings()
+        this.clearDataOwner()
     }
 }
 

@@ -38,28 +38,19 @@ beforeEach(() => {
     storage = createStorageStub()
 })
 
-const OWNER = 'user-a'
-
 test('[load] returns empty array when nothing is persisted', () => {
     const service = new OutboxCacheService(storage)
 
-    expect(service.load(OWNER)).toEqual([])
+    expect(service.load()).toEqual([])
 })
 
-test('[save] then [load] round-trips tasks for the same owner', () => {
+test('[save] then [load] round-trips tasks', () => {
     const service = new OutboxCacheService(storage)
     const tasks = [createTask({ uid: 'a' }), createTask({ uid: 'b' })]
 
-    service.save(tasks, OWNER)
+    service.save(tasks)
 
-    expect(service.load(OWNER)).toEqual(tasks)
-})
-
-test('[load] returns empty array for a different owner', () => {
-    const service = new OutboxCacheService(storage)
-    service.save([createTask({ uid: 'a' })], OWNER)
-
-    expect(service.load('user-b')).toEqual([])
+    expect(service.load()).toEqual(tasks)
 })
 
 test('[load] returns empty array and logs on malformed data', () => {
@@ -67,7 +58,7 @@ test('[load] returns empty array and logs on malformed data', () => {
     storage.saveOutbox('not json')
     const service = new OutboxCacheService(storage)
 
-    expect(service.load(OWNER)).toEqual([])
+    expect(service.load()).toEqual([])
     expect(errorSpy).toHaveBeenCalled()
 
     errorSpy.mockRestore()
@@ -75,9 +66,9 @@ test('[load] returns empty array and logs on malformed data', () => {
 
 test('[clear] removes persisted tasks', () => {
     const service = new OutboxCacheService(storage)
-    service.save([createTask()], OWNER)
+    service.save([createTask()])
 
     service.clear()
 
-    expect(service.load(OWNER)).toEqual([])
+    expect(service.load()).toEqual([])
 })

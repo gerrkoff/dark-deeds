@@ -7,8 +7,6 @@ import { Overview } from '../overview/Overview'
 import { Settings } from '../settings/Settings'
 import { Login } from '../login/Login'
 import { fetchBuildInfo } from './redux/app-thunk'
-import { loadLocalSettings } from '../settings/redux/settings-slice'
-import { localSettingsService } from '../settings/services/LocalSettingsService'
 import { useLocalSettingsTracking } from '../settings/hooks/useLocalSettingsTracking'
 import { StatusPanel } from '../status-panel/StatusPanel'
 import { useTasksHub } from '../tasks/hooks/useTasksHub'
@@ -36,7 +34,6 @@ function App() {
     useEffect(() => {
         loadCurrentUser()
         dispatch(fetchBuildInfo())
-        dispatch(loadLocalSettings(localSettingsService.load()))
     }, [dispatch, loadCurrentUser])
 
     const switctToTab = useCallback(

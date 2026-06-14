@@ -46,11 +46,6 @@ export class TaskSyncService {
     tasksToSave = new Map<string, TaskModel>()
     tasksInFlight = new Map<string, TaskModel>()
 
-    // The user the current pending edits belong to. Set on login (restoreOutbox) and cleared on
-    // reset. While null (logged out / not initialized) the outbox is not persisted, so a save that
-    // completes after logout cannot wipe the previous user's preserved outbox.
-    private owner: string | null = null
-
     sync(tasks: TaskModel[]) {
         for (const task of tasks) {
             this.tasksToSave.set(task.uid, { ...task })
@@ -60,12 +55,11 @@ export class TaskSyncService {
         this.schedule()
     }
 
-    // Restores the persisted outbox for the given user after a reload/restart and replays it. The
-    // edited content is already shown from the tasks cache (hydrateTasks); this re-queues the
-    // unsaved changes so they are sent again once the backend is reachable.
-    restoreOutbox(owner: string) {
-        this.owner = owner
-        const tasks = this.outboxStore.load(owner)
+    // Restores the persisted outbox after a reload/restart and replays it. The edited content is
+    // already shown from the tasks cache (hydrateTasks); this re-queues the unsaved changes so they
+    // are sent again once the backend is reachable.
+    restoreOutbox() {
+        const tasks = this.outboxStore.load()
 
         if (tasks.length === 0) {
             return
@@ -80,34 +74,23 @@ export class TaskSyncService {
         this.schedule()
     }
 
-    // Drops the in-memory pending state and forgets the active user (e.g. on session expiry). The
-    // persisted outbox is intentionally left untouched: it is owner-scoped, so the same user
-    // replays it on re-login (no edits lost), while a different user ignores it.
+    // Drops the in-memory pending state (e.g. on session expiry or sign-out). The persisted outbox
+    // is intentionally left untouched so the same user replays it on re-login; a different user has
+    // it wiped on login by the data-owner guard. No save rewrites the outbox after this, so the
+    // now-empty queues never overwrite it.
     reset() {
         this.tasksToSave = new Map<string, TaskModel>()
         this.tasksInFlight = new Map<string, TaskModel>()
-        this.owner = null
-    }
-
-    // Full wipe for an explicit sign-out: drop the in-memory state and the persisted outbox so the
-    // user's unsaved edits do not linger in local storage after they intentionally leave.
-    clear() {
-        this.reset()
-        this.outboxStore.clear()
     }
 
     private persistOutbox() {
-        if (this.owner === null) {
-            return
-        }
-
         // tasksToSave wins over tasksInFlight for the same uid (it holds a newer re-edit).
         const outbox = [...new Map([...this.tasksInFlight, ...this.tasksToSave]).values()]
 
         if (outbox.length === 0) {
             this.outboxStore.clear()
         } else {
-            this.outboxStore.save(outbox, this.owner)
+            this.outboxStore.save(outbox)
         }
     }
 
@@ -143,7 +126,11 @@ export class TaskSyncService {
 
             if (failed) {
                 // Transport error - nothing was saved. Report the failure count (drives the
-                // "failed to save" toast), re-queue the whole in-flight batch and retry later.
+                // "failed to save" toast), move the whole in-flight batch back to tasksToSave and
+                // clear tasksInFlight, so every iteration ends with it empty (like the success
+                // path). The outbox is NOT rewritten here: the edits only moved between the queues,
+                // so its merged content is unchanged from enqueue - skipping the write also keeps a
+                // concurrent reset() (session expiry) from overwriting the preserved outbox.
                 this.saveFinishSubscriptions.forEach(x => x(tasksInFlightCount, [], []))
 
                 for (const [uid, task] of this.tasksInFlight) {
@@ -152,7 +139,7 @@ export class TaskSyncService {
                     }
                 }
 
-                this.persistOutbox()
+                this.tasksInFlight = new Map<string, TaskModel>()
                 await delay(5000)
                 continue
             }

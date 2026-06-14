@@ -26,9 +26,6 @@ function createStorageStub(): StorageService {
         saveTasks: (v: string) => {
             value = v
         },
-        clearTasks: () => {
-            value = null
-        },
     } as unknown as StorageService
 }
 
@@ -38,28 +35,19 @@ beforeEach(() => {
     storage = createStorageStub()
 })
 
-const OWNER = 'user-a'
-
 test('[load] returns empty array when nothing is cached', () => {
     const service = new TasksCacheService(storage)
 
-    expect(service.load(OWNER)).toEqual([])
+    expect(service.load()).toEqual([])
 })
 
-test('[save] then [load] round-trips tasks for the same owner', () => {
+test('[save] then [load] round-trips tasks', () => {
     const service = new TasksCacheService(storage)
     const tasks = [createTask({ uid: 'a', title: 'A' }), createTask({ uid: 'b', title: 'B' })]
 
-    service.save(tasks, OWNER)
+    service.save(tasks)
 
-    expect(service.load(OWNER)).toEqual(tasks)
-})
-
-test('[load] returns empty array for a different owner', () => {
-    const service = new TasksCacheService(storage)
-    service.save([createTask({ uid: 'a' })], OWNER)
-
-    expect(service.load('user-b')).toEqual([])
+    expect(service.load()).toEqual(tasks)
 })
 
 test('[load] returns empty array and logs on malformed cache', () => {
@@ -67,17 +55,8 @@ test('[load] returns empty array and logs on malformed cache', () => {
     storage.saveTasks('not json')
     const service = new TasksCacheService(storage)
 
-    expect(service.load(OWNER)).toEqual([])
+    expect(service.load()).toEqual([])
     expect(errorSpy).toHaveBeenCalled()
 
     errorSpy.mockRestore()
-})
-
-test('[clear] removes cached tasks', () => {
-    const service = new TasksCacheService(storage)
-    service.save([createTask()], OWNER)
-
-    service.clear()
-
-    expect(service.load(OWNER)).toEqual([])
 })

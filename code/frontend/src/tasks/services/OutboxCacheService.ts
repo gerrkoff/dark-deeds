@@ -1,15 +1,10 @@
 import { storageService, StorageService } from '../../common/services/StorageService'
 import { TaskModel } from '../models/TaskModel'
 
-interface OutboxPayload {
-    owner: string
-    tasks: TaskModel[]
-}
-
 export class OutboxCacheService {
     constructor(private storage: StorageService) {}
 
-    load(owner: string): TaskModel[] {
+    load(): TaskModel[] {
         const serialized = this.storage.loadOutbox()
 
         if (serialized === null) {
@@ -17,21 +12,15 @@ export class OutboxCacheService {
         }
 
         try {
-            const payload = JSON.parse(serialized) as OutboxPayload
-            // Owner-scoped: only replay the outbox for the user who created it. A different user
-            // must never re-send the previous user's unsaved edits.
-            if (payload.owner !== owner) {
-                return []
-            }
-            return payload.tasks ?? []
+            return JSON.parse(serialized) as TaskModel[]
         } catch (error) {
             console.error('Failed to parse outbox:', error)
             return []
         }
     }
 
-    save(tasks: TaskModel[], owner: string) {
-        this.storage.saveOutbox(JSON.stringify({ owner, tasks }))
+    save(tasks: TaskModel[]) {
+        this.storage.saveOutbox(JSON.stringify(tasks))
     }
 
     clear() {
