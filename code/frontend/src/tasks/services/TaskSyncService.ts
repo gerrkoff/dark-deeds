@@ -2,6 +2,7 @@ import { delay } from '../../common/utils/delay'
 import { taskApi, TaskApi } from '../api/TaskApi'
 import { TaskModel } from '../models/TaskModel'
 import { TaskVersionModel } from '../models/TaskVersionModel'
+import { outboxCacheService, OutboxCacheService } from './OutboxCacheService'
 
 export type StatusUpdateSubscription = (isSynchronizing: boolean) => void
 export type SaveFinishSubscription = (
@@ -16,7 +17,10 @@ export interface OnlineUpdateResult {
 }
 
 export class TaskSyncService {
-    constructor(private taskApi: TaskApi) {}
+    constructor(
+        private taskApi: TaskApi,
+        private outboxStore: OutboxCacheService,
+    ) {}
 
     private statusUpdateSubscriptions: StatusUpdateSubscription[] = []
 
@@ -47,7 +51,46 @@ export class TaskSyncService {
             this.tasksToSave.set(task.uid, { ...task })
         }
 
+        this.persistOutbox()
         this.schedule()
+    }
+
+    // Restores the persisted outbox after a reload/restart and replays it. The edited content is
+    // already shown from the tasks cache (hydrateTasks); this re-queues the unsaved changes so
+    // they are sent again once the backend is reachable.
+    restoreOutbox() {
+        const tasks = this.outboxStore.load()
+
+        if (tasks.length === 0) {
+            return
+        }
+
+        for (const task of tasks) {
+            if (!this.tasksToSave.has(task.uid)) {
+                this.tasksToSave.set(task.uid, { ...task })
+            }
+        }
+
+        this.schedule()
+    }
+
+    // Drops all pending state and the persisted outbox (e.g. on logout) so a different user's
+    // session never replays the previous user's unsaved edits.
+    reset() {
+        this.tasksToSave = new Map<string, TaskModel>()
+        this.tasksInFlight = new Map<string, TaskModel>()
+        this.outboxStore.clear()
+    }
+
+    private persistOutbox() {
+        // tasksToSave wins over tasksInFlight for the same uid (it holds a newer re-edit).
+        const outbox = [...new Map([...this.tasksInFlight, ...this.tasksToSave]).values()]
+
+        if (outbox.length === 0) {
+            this.outboxStore.clear()
+        } else {
+            this.outboxStore.save(outbox)
+        }
     }
 
     private async schedule(): Promise<void> {
@@ -91,6 +134,7 @@ export class TaskSyncService {
                     }
                 }
 
+                this.persistOutbox()
                 await delay(5000)
                 continue
             }
@@ -127,6 +171,7 @@ export class TaskSyncService {
             // re-edits tracked in tasksToSave. Drain it so concurrent reloads/hub updates never
             // see stale entries as pending.
             this.tasksInFlight = new Map<string, TaskModel>()
+            this.persistOutbox()
         }
     }
 
@@ -161,8 +206,13 @@ export class TaskSyncService {
             // local edit and skip the incoming task so the unsaved change is not reverted.
         }
 
+        if (tasksConflicted.length > 0) {
+            // Conflicts were dropped from the pending maps - keep the persisted outbox in sync.
+            this.persistOutbox()
+        }
+
         return { tasksConflicted, tasksToApply }
     }
 }
 
-export const taskSyncService = new TaskSyncService(taskApi)
+export const taskSyncService = new TaskSyncService(taskApi, outboxCacheService)

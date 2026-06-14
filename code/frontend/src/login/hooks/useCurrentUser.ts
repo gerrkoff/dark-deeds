@@ -9,6 +9,7 @@ import { useTasksSynchronization } from '../../tasks/hooks/useTasksSynchronizati
 import { cleanup, hydrateTasks } from '../../overview/redux/overview-slice'
 import { authService } from '../services/AuthService'
 import { tasksCacheService } from '../../tasks/services/TasksCacheService'
+import { taskSyncService } from '../../tasks/services/TaskSyncService'
 import { addToast } from '../../toasts/redux/toasts-slice'
 import { api } from '../../common/api/Api'
 
@@ -23,6 +24,7 @@ export function useCurrentUser(): Output {
     const { reloadTasks } = useTasksSynchronization()
 
     const resetToLogin = useCallback(() => {
+        taskSyncService.reset()
         tasksCacheService.clear()
         dispatch(setUser(null))
         dispatch(cleanup())
@@ -58,6 +60,7 @@ export function useCurrentUser(): Output {
             dispatch(switchToTab('overview'))
             api.resetUnauthorized()
             dispatch(hydrateTasks(tasksCacheService.load()))
+            taskSyncService.restoreOutbox()
             dispatch(loadSharedSettings())
             reloadTasks()
             dispatch(taskHubConnecting())
