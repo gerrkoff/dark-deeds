@@ -82,6 +82,7 @@ export function useTasksSynchronization(): Output {
                     addToast({
                         text: `Failed to save ${notSaved} tasks`,
                         category: 'task-save-failed',
+                        autoDismissMs: 6000,
                     }),
                 )
             }
