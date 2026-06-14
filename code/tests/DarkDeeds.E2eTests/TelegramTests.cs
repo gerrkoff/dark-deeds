@@ -2,6 +2,7 @@ using System.Globalization;
 using System.Net.Mime;
 using System.Text;
 using System.Text.Json;
+using DarkDeeds.E2eTests.Backend;
 using DarkDeeds.E2eTests.Base;
 using DarkDeeds.E2eTests.Common;
 using DarkDeeds.E2eTests.Components;
@@ -30,7 +31,7 @@ public class TelegramTests : BaseTest
 
     private static async Task<int> GetTestChatId(string userId)
     {
-        using var client = CreateHttpClient();
+        using var client = BackendApi.CreateHttpClient();
         var url = new Uri($"api/test/GetTestChatIdForUser?userId={userId}", UriKind.Relative);
         var result = await client.PostAsync(url, null!);
         result.EnsureSuccessStatusCode();
@@ -40,7 +41,7 @@ public class TelegramTests : BaseTest
 
     private static async Task SendCommand(string text, int chatId)
     {
-        using var client = CreateHttpClient();
+        using var client = BackendApi.CreateHttpClient();
         var payload = new
         {
             update_id = 0,

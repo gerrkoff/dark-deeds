@@ -11,8 +11,15 @@ echo
 echo "----------- Params:"
 FE_URL="${1}"
 BE_URL="${2:-$1}"
-echo "URL: $URL"
+# Two URLs => frontend and backend are hosted separately.
+if [ -n "${2}" ]; then
+  PROD_BUILD_TESTS='false'
+else
+  PROD_BUILD_TESTS='true'
+fi
+echo "URL: $FE_URL"
 echo "BE_URL: $BE_URL"
+echo "PROD_BUILD_TESTS: $PROD_BUILD_TESTS"
 
 echo "----------- Removing previous containers and networks..."
 docker rm -f dd-test-e2e-chrome
@@ -47,6 +54,7 @@ docker run -t --rm \
   -e CONTAINER='true' \
   -e URL="$FE_URL" \
   -e BE_URL="$BE_URL" \
+  -e PROD_BUILD_TESTS="$PROD_BUILD_TESTS" \
   -e SELENIUM_GRID_URL='http://dd-test-e2e-chrome:4444' \
   -v "$(pwd)"/ci/results:/app/artifacts \
   --name dd-test-e2e \
