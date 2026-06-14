@@ -20,6 +20,12 @@ public static class DriverLowLevelExtensions
         driver.Wait().Until(ExpectedConditions.InvisibilityOfElementLocated(By.XPath(xpath)));
     }
 
+    public static void WaitUntilServiceWorkerControls(this RemoteWebDriver driver)
+    {
+        driver.Wait().Until(_ => driver.ExecuteJavaScript<bool>(
+            "return 'serviceWorker' in navigator && navigator.serviceWorker.controller != null;"));
+    }
+
     // A busy indicator (e.g. the "saving"/"loading" spinner) can appear and disappear within a
     // few milliseconds when the backend responds fast (e.g. over a local network). The fixed
     // polling interval of WebDriverWait then misses the flash entirely, so a plain "wait until

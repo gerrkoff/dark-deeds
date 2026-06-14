@@ -11,7 +11,7 @@ vi.mock('../../src/common/api/BaseUrlProvider', () => ({
     },
 }))
 
-import overviewReducer, { reconcileTasks } from '../../src/overview/redux/overview-slice'
+import overviewReducer, { cleanup, hydrateTasks, reconcileTasks } from '../../src/overview/redux/overview-slice'
 import { OverviewState } from '../../src/overview/redux/overview-slice'
 import { TaskModel } from '../../src/tasks/models/TaskModel'
 
@@ -67,4 +67,28 @@ test('[reconcileTasks] adds new tasks from the snapshot', () => {
     const next = overviewReducer(state, reconcileTasks({ tasks: [createTask({ uid: 'new' })], keepUids: ['new'] }))
 
     expect(next.tasks.map(task => task.uid)).toEqual(['new'])
+})
+
+test('[hydrateTasks] replaces tasks and marks the cache hydrated', () => {
+    const state = createState([createTask({ uid: 'old' })])
+
+    const next = overviewReducer(state, hydrateTasks([createTask({ uid: 'cached', title: 'from cache' })]))
+
+    expect(next.tasks.map(task => task.uid)).toEqual(['cached'])
+    expect(next.isTasksCacheHydrated).toBe(true)
+    expect(next.isInitialLoadComplete).toBe(true)
+})
+
+test('[cleanup] clears tasks and resets the hydrated and initial-load flags', () => {
+    const state = {
+        ...createState([createTask({ uid: 'a' })]),
+        isTasksCacheHydrated: true,
+        isInitialLoadComplete: true,
+    }
+
+    const next = overviewReducer(state, cleanup())
+
+    expect(next.tasks).toEqual([])
+    expect(next.isTasksCacheHydrated).toBe(false)
+    expect(next.isInitialLoadComplete).toBe(false)
 })

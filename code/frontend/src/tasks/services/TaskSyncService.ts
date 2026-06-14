@@ -2,6 +2,7 @@ import { delay } from '../../common/utils/delay'
 import { taskApi, TaskApi } from '../api/TaskApi'
 import { TaskModel } from '../models/TaskModel'
 import { TaskVersionModel } from '../models/TaskVersionModel'
+import { outboxCacheService, OutboxCacheService } from './OutboxCacheService'
 
 export type StatusUpdateSubscription = (isSynchronizing: boolean) => void
 export type SaveFinishSubscription = (
@@ -16,7 +17,10 @@ export interface OnlineUpdateResult {
 }
 
 export class TaskSyncService {
-    constructor(private taskApi: TaskApi) {}
+    constructor(
+        private taskApi: TaskApi,
+        private outboxStore: OutboxCacheService,
+    ) {}
 
     private statusUpdateSubscriptions: StatusUpdateSubscription[] = []
 
@@ -47,7 +51,45 @@ export class TaskSyncService {
             this.tasksToSave.set(task.uid, { ...task })
         }
 
+        this.persistOutbox()
         this.schedule()
+    }
+
+    // Restores the persisted outbox after a reload/restart and replays it. The edited content is
+    // already shown from the tasks cache (hydrateTasks); this re-queues the unsaved changes so they
+    // are sent again once the backend is reachable.
+    restoreOutbox() {
+        const tasks = this.outboxStore.load()
+
+        if (tasks.length === 0) {
+            return
+        }
+
+        for (const task of tasks) {
+            this.tasksToSave.set(task.uid, { ...task })
+        }
+
+        this.schedule()
+    }
+
+    // Drops the in-memory pending state (e.g. on session expiry or sign-out). The persisted outbox
+    // is intentionally left untouched so the same user replays it on re-login; a different user has
+    // it wiped on login by the data-owner guard. No save rewrites the outbox after this, so the
+    // now-empty queues never overwrite it.
+    reset() {
+        this.tasksToSave = new Map<string, TaskModel>()
+        this.tasksInFlight = new Map<string, TaskModel>()
+    }
+
+    private persistOutbox() {
+        // tasksToSave wins over tasksInFlight for the same uid (it holds a newer re-edit).
+        const outbox = [...new Map([...this.tasksInFlight, ...this.tasksToSave]).values()]
+
+        if (outbox.length === 0) {
+            this.outboxStore.clear()
+        } else {
+            this.outboxStore.save(outbox)
+        }
     }
 
     private async schedule(): Promise<void> {
@@ -82,7 +124,11 @@ export class TaskSyncService {
 
             if (failed) {
                 // Transport error - nothing was saved. Report the failure count (drives the
-                // "failed to save" toast), re-queue the whole in-flight batch and retry later.
+                // "failed to save" toast), move the whole in-flight batch back to tasksToSave and
+                // clear tasksInFlight, so every iteration ends with it empty (like the success
+                // path). The outbox is NOT rewritten here: the edits only moved between the queues,
+                // so its merged content is unchanged from enqueue - skipping the write also keeps a
+                // concurrent reset() (session expiry) from overwriting the preserved outbox.
                 this.saveFinishSubscriptions.forEach(x => x(tasksInFlightCount, [], []))
 
                 for (const [uid, task] of this.tasksInFlight) {
@@ -91,6 +137,7 @@ export class TaskSyncService {
                     }
                 }
 
+                this.tasksInFlight = new Map<string, TaskModel>()
                 await delay(5000)
                 continue
             }
@@ -127,6 +174,7 @@ export class TaskSyncService {
             // re-edits tracked in tasksToSave. Drain it so concurrent reloads/hub updates never
             // see stale entries as pending.
             this.tasksInFlight = new Map<string, TaskModel>()
+            this.persistOutbox()
         }
     }
 
@@ -161,8 +209,13 @@ export class TaskSyncService {
             // local edit and skip the incoming task so the unsaved change is not reverted.
         }
 
+        if (tasksConflicted.length > 0) {
+            // Conflicts were dropped from the pending maps - keep the persisted outbox in sync.
+            this.persistOutbox()
+        }
+
         return { tasksConflicted, tasksToApply }
     }
 }
 
-export const taskSyncService = new TaskSyncService(taskApi)
+export const taskSyncService = new TaskSyncService(taskApi, outboxCacheService)

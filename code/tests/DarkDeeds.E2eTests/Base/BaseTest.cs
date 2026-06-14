@@ -1,6 +1,6 @@
 using System.Diagnostics;
 using System.Reflection;
-using System.Text.Json;
+using DarkDeeds.E2eTests.Backend;
 using DarkDeeds.E2eTests.Common;
 using DarkDeeds.E2eTests.Models;
 using OpenQA.Selenium.Chrome;
@@ -13,7 +13,6 @@ namespace DarkDeeds.E2eTests.Base;
 public class BaseTest
 {
     protected static readonly Uri Url = new(Environment.GetEnvironmentVariable("URL") ?? "http://localhost:3000");
-    private static readonly Uri BackendUrl = new(Environment.GetEnvironmentVariable("BE_URL") ?? "http://localhost:5000");
     private static readonly Uri SeleniumGridUrl = new(Environment.GetEnvironmentVariable("SELENIUM_GRID_URL") ?? "http://localhost:4444");
     private static readonly string ArtifactsPath = Environment.GetEnvironmentVariable("ARTIFACTS_PATH") ?? "artifacts";
     private static readonly bool IsContainer = Environment.GetEnvironmentVariable("CONTAINER") == "true";
@@ -51,25 +50,11 @@ public class BaseTest
 
     protected static async Task<TestUserDto> CreateUserAndLogin(RemoteWebDriver driver)
     {
-        var testUser = await CreateUser();
+        var testUser = await BackendApi.CreateUserAsync();
         driver.SignIn(testUser.Username, testUser.Password);
         driver.WaitUntilUserLoaded();
 
         return testUser;
-    }
-
-    protected static HttpClient CreateHttpClient()
-    {
-        var handler = new HttpClientHandler
-        {
-            ClientCertificateOptions = ClientCertificateOption.Manual,
-            ServerCertificateCustomValidationCallback = (_, _, _, _) => true,
-        };
-
-        return new HttpClient(handler)
-        {
-            BaseAddress = BackendUrl,
-        };
     }
 
     private static RemoteWebDriver CreateDriver()
@@ -92,17 +77,5 @@ public class BaseTest
 
         driver.Navigate().GoToUrl(Url);
         return driver;
-    }
-
-    private static async Task<TestUserDto> CreateUser()
-    {
-        using var client = CreateHttpClient();
-        var result = await client.PostAsync(new Uri("api/test/CreateTestUser", UriKind.Relative), null);
-        result.EnsureSuccessStatusCode();
-        var content = await result.Content.ReadAsStringAsync();
-        var user = JsonSerializer.Deserialize<TestUserDto>(content, JsonOptions.I);
-
-        ArgumentNullException.ThrowIfNull(user);
-        return user;
     }
 }

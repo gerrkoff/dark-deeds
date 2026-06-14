@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using DarkDeeds.E2eTests.Backend;
 using DarkDeeds.E2eTests.Base;
 using DarkDeeds.E2eTests.Common;
 using DarkDeeds.E2eTests.Components;
@@ -15,7 +16,7 @@ public class SmokeTests(ITestOutputHelper output) : UserLoginTest
     [Fact]
     public async Task GetBuildVersionTest()
     {
-        using var httpClient = CreateHttpClient();
+        using var httpClient = BackendApi.CreateHttpClient();
         var url = new Uri("api/be/build-info", UriKind.Relative);
         var result = await httpClient.GetStringAsync(url);
         var version = (string)JObject.Parse(result)["appVersion"];

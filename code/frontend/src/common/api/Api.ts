@@ -5,11 +5,26 @@ import { baseUrlProvider, BaseUrlProvider } from './BaseUrlProvider'
 export class Api {
     private readonly DEFAULT_ERROR_MESSAGE = 'An error has occured.'
 
+    private unauthorizedHandler: (() => void) | null = null
+    private unauthorizedHandled = false
+
     constructor(
         private baseUrlProvider: BaseUrlProvider,
         private storageService: StorageService,
         private clientIdentityService: ClientIdentityService,
     ) {}
+
+    // Registers a global handler invoked when the server rejects a request with 401 (invalid or
+    // expired token). It fires at most once per session (see resetUnauthorized) so a burst of
+    // 401s does not trigger repeated logouts.
+    setUnauthorizedHandler(handler: () => void) {
+        this.unauthorizedHandler = handler
+    }
+
+    // Re-arms the 401 handler for a new session. Call this when a session is (re)established.
+    resetUnauthorized() {
+        this.unauthorizedHandled = false
+    }
 
     get<T>(api: string, params?: Map<string, string>): Promise<T> {
         if (params !== undefined) {
@@ -58,6 +73,11 @@ export class Api {
         const isJson = contentType && contentType.indexOf('application/json') !== -1
         const isPlain = contentType && contentType.indexOf('text/plain') !== -1
         const noContent = !contentType
+
+        if (result.status === 401 && !this.unauthorizedHandled) {
+            this.unauthorizedHandled = true
+            this.unauthorizedHandler?.()
+        }
 
         if (result.ok && noContent) {
             return Object() as T

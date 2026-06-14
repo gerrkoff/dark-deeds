@@ -52,8 +52,16 @@ export function useTasksSynchronization(): Output {
     )
 
     const reloadTasks = useCallback(async () => {
-        const reloadOverviewTasksResult = await dispatch(reloadOverviewTasks())
-        const snapshot = unwrapResult(reloadOverviewTasksResult)
+        let snapshot: TaskModel[]
+        try {
+            const reloadOverviewTasksResult = await dispatch(reloadOverviewTasks())
+            snapshot = unwrapResult(reloadOverviewTasksResult)
+        } catch (error) {
+            // Offline or backend unreachable - keep the cached/in-memory tasks and let the
+            // reconnect loop retry the reload later.
+            console.error('Failed to reload tasks:', error)
+            return
+        }
 
         const { tasksConflicted, tasksToApply } = taskSyncService.processTasksOnlineUpdate(snapshot)
         const keepUids = [...new Set([...snapshot.map(task => task.uid), ...taskSyncService.getPendingUids()])]
