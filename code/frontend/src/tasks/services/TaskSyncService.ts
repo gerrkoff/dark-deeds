@@ -61,14 +61,8 @@ export class TaskSyncService {
     restoreOutbox() {
         const tasks = this.outboxStore.load()
 
-        if (tasks.length === 0) {
-            return
-        }
-
         for (const task of tasks) {
-            if (!this.tasksToSave.has(task.uid)) {
-                this.tasksToSave.set(task.uid, { ...task })
-            }
+            this.tasksToSave.set(task.uid, { ...task })
         }
 
         this.schedule()
