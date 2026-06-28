@@ -1,4 +1,3 @@
-using DD.Shared.Details.Abstractions.Dto;
 using DD.TelegramClient.Domain.Dto;
 using DD.TelegramClient.Domain.Models.Commands;
 using DD.TelegramClient.Domain.Services;
@@ -68,8 +67,7 @@ public class BotProcessMessageServiceTest
     [Fact]
     public async Task BotProcessMessageServiceTest_RunCreateTaskCommand()
     {
-        var task = new TaskDto();
-        var command = new CreateTaskCommand(task);
+        var command = new CreateTaskCommand("Some task");
         var commandParserMock = CreateCommandParserMock(command);
         var commandMock = new Mock<ICreateTaskCommandProcessor>();
         var botSendMessageServiceMock = new Mock<IBotSendMessageService>();
