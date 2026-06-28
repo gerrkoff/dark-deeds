@@ -13,7 +13,7 @@ export default defineConfig({
         react(),
         VitePWA({
             registerType: 'autoUpdate',
-            injectRegister: 'inline',
+            injectRegister: 'auto',
             manifest: false,
             workbox: {
                 globPatterns: ['**/*.{js,css,html,ico,svg,png,json,woff,woff2}'],
