@@ -206,9 +206,20 @@ test('[convertStringToModel] day after tomorrow next month task through exclamat
 })
 
 // #15
+test('[convertStringToModel] this week monday task through exclamation mark', () => {
+    const service = createService(new Date(2019, 6, 31))
+    const result = service.convertStringToModel('!1 Test')
+
+    expect(result.title).toBe('Test')
+    expect(result.type).toBe(TaskTypeEnum.Simple)
+    expect(result.date?.valueOf()).toBe(dt(2019, 6, 29))
+    expect(result.time).toBeNull()
+})
+
+// #15.1
 test('[convertStringToModel] next monday task through exclamation mark', () => {
     const service = createService(new Date(2019, 6, 28))
-    const result = service.convertStringToModel('!1 Test')
+    const result = service.convertStringToModel('!!1 Test')
 
     expect(result.title).toBe('Test')
     expect(result.type).toBe(TaskTypeEnum.Simple)
@@ -219,7 +230,7 @@ test('[convertStringToModel] next monday task through exclamation mark', () => {
 // #16
 test('[convertStringToModel] next wednesday task through exclamation mark', () => {
     const service = createService(new Date(2019, 6, 28))
-    const result = service.convertStringToModel('!3 Test')
+    const result = service.convertStringToModel('!!3 Test')
 
     expect(result.title).toBe('Test')
     expect(result.type).toBe(TaskTypeEnum.Simple)
@@ -230,11 +241,22 @@ test('[convertStringToModel] next wednesday task through exclamation mark', () =
 // #17
 test('[convertStringToModel] next friday next month task through exclamation mark', () => {
     const service = createService(new Date(2019, 6, 28))
-    const result = service.convertStringToModel('!5 Test')
+    const result = service.convertStringToModel('!!5 Test')
 
     expect(result.title).toBe('Test')
     expect(result.type).toBe(TaskTypeEnum.Simple)
     expect(result.date?.valueOf()).toBe(dt(2019, 7, 2))
+    expect(result.time).toBeNull()
+})
+
+// #17.1
+test('[convertStringToModel] week after next monday task through exclamation mark', () => {
+    const service = createService(new Date(2019, 6, 28))
+    const result = service.convertStringToModel('!!!1 Test')
+
+    expect(result.title).toBe('Test')
+    expect(result.type).toBe(TaskTypeEnum.Simple)
+    expect(result.date?.valueOf()).toBe(dt(2019, 7, 5))
     expect(result.time).toBeNull()
 })
 

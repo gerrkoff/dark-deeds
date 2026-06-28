@@ -222,7 +222,7 @@ public class TaskParserService(IDateService dateService) : ITaskParserService
         var dateWithYearRx = new Regex(@"^\d{8}\s");
         var dateRx = new Regex(@"^\d{4}\s");
         var todayShiftRx = new Regex(@"^!+\s");
-        var weekShiftRx = new Regex(@"^![1-7]\s");
+        var weekShiftRx = new Regex(@"^!+[1-7]\s");
         year = 0;
         month = 0;
         day = 0;
@@ -263,10 +263,12 @@ public class TaskParserService(IDateService dateService) : ITaskParserService
 
     private string ParseWeekShift(string task, out int dayAdjustment)
     {
-        var dayShift = int.Parse(task[1].ToString(), CultureInfo.InvariantCulture);
-        var nextSundayShift = (7 - (int)dateService.Today.DayOfWeek) % 7;
-        dayAdjustment = nextSundayShift + dayShift;
-        return task[3..];
+        var weekCount = new Regex("^!+").Match(task).Length;
+        var weekday = int.Parse(task[weekCount].ToString(), CultureInfo.InvariantCulture);
+        var todayWeekday = (int)dateService.Today.DayOfWeek;
+        var thisWeekMondayShift = todayWeekday == 0 ? -6 : 1 - todayWeekday;
+        dayAdjustment = thisWeekMondayShift + (weekday - 1) + 7 * (weekCount - 1);
+        return task[(weekCount + 2)..];
     }
 
     private static string ParseTodayShift(string task, out int dayAdjustment)
