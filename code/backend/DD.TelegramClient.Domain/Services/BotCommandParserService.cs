@@ -1,4 +1,3 @@
-using DD.Shared.Details.Abstractions;
 using DD.TelegramClient.Domain.Models.Commands;
 
 namespace DD.TelegramClient.Domain.Services;
@@ -10,8 +9,7 @@ public interface IBotCommandParserService
 
 public class BotCommandParserService(
     ITelegramService telegramService,
-    IDateService dateService,
-    ITaskServiceApp taskServiceApp)
+    IDateService dateService)
     : IBotCommandParserService
 {
     private const string TodoCommand = "/todo";
@@ -31,7 +29,7 @@ public class BotCommandParserService(
 
         return command.StartsWith('/')
             ? null
-            : new CreateTaskCommand(await taskServiceApp.ParseTask(command));
+            : new CreateTaskCommand(command);
     }
 
     private static bool CheckAndTrimCommand(string command, string text, out string args)

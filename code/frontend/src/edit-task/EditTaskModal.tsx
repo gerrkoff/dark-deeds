@@ -1,7 +1,9 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { TaskModel } from '../tasks/models/TaskModel'
 import { taskConvertService } from './services/TaskConvertService'
+import { MAX_RANGE_DAYS, MIN_RANGE_DAYS, taskRangeService } from './services/TaskRangeService'
 import { TaskEditModalContext } from './models/TaskEditModalContext'
+import { TaskEditModel, TaskSingleEditModel } from './models/TaskEditModel'
 import { EditTaskHelper } from './components/EditTaskHelper'
 import { ModalContainer } from '../common/components/ModalContainer'
 import { useTaskConflictDetection } from './hooks/useTaskConflictDetection'
@@ -9,6 +11,35 @@ import { useTaskConflictDetection } from './hooks/useTaskConflictDetection'
 interface Props {
     context: TaskEditModalContext
     onSave: (task: TaskModel[]) => void
+}
+
+// Collapses a range-capable model to a single-date model. The one place dateTo is dropped.
+function toSingleModel(model: TaskEditModel): TaskSingleEditModel {
+    return {
+        date: model.date,
+        type: model.type,
+        title: model.title,
+        isProbable: model.isProbable,
+        time: model.time,
+    }
+}
+
+function getError(model: TaskEditModel | TaskSingleEditModel): string | null {
+    const dayCount = 'dateTo' in model ? taskRangeService.getRangeDayCount(model) : null
+
+    if (dayCount === null) {
+        return null
+    }
+
+    if (dayCount < MIN_RANGE_DAYS) {
+        return 'Invalid date range: the end date must be after the start date'
+    }
+
+    if (dayCount > MAX_RANGE_DAYS) {
+        return `Date range is too large: maximum ${MAX_RANGE_DAYS} days`
+    }
+
+    return null
 }
 
 function EditTaskModal({ context, onSave }: Props) {
@@ -31,17 +62,28 @@ function EditTaskModal({ context, onSave }: Props) {
 
     const editModel = useMemo(() => taskConvertService.convertStringToModel(task), [task])
 
+    // EDIT collapses to a single-date model so a typed range is ignored (variant A). Create keeps
+    // the range-capable model; the helper itself renders a range only when dateTo is set.
+    const helperModel = useMemo(
+        () => (content.type === 'EDIT' ? toSingleModel(editModel) : editModel),
+        [editModel, content],
+    )
+
+    const error = useMemo(() => getError(helperModel), [helperModel])
+
     const handleSave = useCallback(() => {
-        setTask('')
-        if (editModel !== null) {
-            onSave([
-                content.type === 'EDIT'
-                    ? taskConvertService.mergeTaskWithModel(editModel, content.task)
-                    : taskConvertService.createTaskFromModel(editModel),
-            ])
-            close()
+        if (error !== null) {
+            return
         }
-    }, [editModel, onSave, content, close])
+
+        setTask('')
+        onSave(
+            content.type === 'EDIT'
+                ? [taskConvertService.mergeTaskWithModel(editModel, content.task)]
+                : taskConvertService.createTasksFromModel(editModel),
+        )
+        close()
+    }, [editModel, onSave, content, close, error])
 
     const handleTaskChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setTask(e.target.value)
@@ -60,8 +102,8 @@ function EditTaskModal({ context, onSave }: Props) {
             context={context}
             onSave={handleSave}
             autoFocusInputRef={inputRef}
-            isSaveEnabled={task.length > 0}
-            hasWarning={conflictTask !== null}
+            isSaveEnabled={task.length > 0 && error === null}
+            hasWarning={conflictTask !== null || error !== null}
         >
             <div className="form-floating mb-3">
                 <input
@@ -76,7 +118,8 @@ function EditTaskModal({ context, onSave }: Props) {
                 />
                 <label htmlFor="taskInput">{label}</label>
             </div>
-            {editModel && <EditTaskHelper task={editModel} />}
+            <EditTaskHelper task={helperModel} />
+            {error && <p className="text-danger mb-0 mt-2">{error}</p>}
         </ModalContainer>
     )
 }

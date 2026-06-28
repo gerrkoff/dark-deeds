@@ -21,8 +21,14 @@ public class CreateTaskCommandProcessor(
     protected override async Task ProcessCoreAsync(CreateTaskCommand command)
     {
         var userId = await telegramService.GetUserId(command.UserChatId);
-        command.Task.Uid = Guid.NewGuid().ToString();
-        await taskServiceApp.SaveTasksAsync([command.Task], userId, clientId: null);
-        await _botSendMessageService.SendTextAsync(command.UserChatId, "Task created");
+        var tasks = await taskServiceApp.ParseTasks(command.Text);
+
+        foreach (var task in tasks)
+            task.Uid = Guid.NewGuid().ToString();
+
+        await taskServiceApp.SaveTasksAsync([.. tasks], userId, clientId: null);
+        await _botSendMessageService.SendTextAsync(
+            command.UserChatId,
+            tasks.Count == 1 ? "Task created" : $"{tasks.Count} tasks created");
     }
 }

@@ -24,8 +24,8 @@ public class TaskServiceApp(
         return taskService.UpdateTasksAsync(updates, userId, clientId);
     }
 
-    public Task<TaskDto> ParseTask(string text)
+    public Task<IReadOnlyList<TaskDto>> ParseTasks(string text)
     {
-        return Task.FromResult(taskParserService.ParseTask(text));
+        return Task.FromResult(taskParserService.ParseTasks(text));
     }
 }

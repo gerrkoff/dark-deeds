@@ -28,7 +28,7 @@ public partial class RecurrenceCreatorServiceTest : BaseTest
         _specFactoryMock.Setup(x => x.Create<IPlannedRecurrenceSpecification, PlannedRecurrenceEntity>()).Returns(_plannedRecurrenceSpecMock.Object);
 
         _plannedRecurrenceRepoMock = MocksCreator.RepoRecurrence(values);
-        _taskParserServiceMock.Setup(x => x.ParseTask(It.IsAny<string>(), It.IsAny<bool>())).Returns(new TaskDto { Title = "Task" });
+        _taskParserServiceMock.Setup(x => x.ParseTaskTemplate(It.IsAny<string>())).Returns(new TaskDto { Title = "Task" });
         return new(
             _taskRepoMock.Object,
             _plannedRecurrenceRepoMock.Object,

@@ -1,36 +1,132 @@
 using System.Globalization;
 using System.Text.RegularExpressions;
+using DD.ServiceTask.Domain.Exceptions;
 using DD.Shared.Details.Abstractions.Dto;
 
 namespace DD.ServiceTask.Domain.Services;
 
 public interface ITaskParserService
 {
-    TaskDto ParseTask(string task, bool ignoreDate = false);
+    IReadOnlyList<TaskDto> ParseTasks(string task);
+
+    TaskDto ParseTaskTemplate(string task);
 }
 
 public class TaskParserService(IDateService dateService) : ITaskParserService
 {
-    public TaskDto ParseTask(string task, bool ignoreDate = false)
-    {
-        var taskDto = new TaskDto();
-        int year = 0, month = 0, day = 0, dayAdjustment = 0;
-        var withDate = false;
+    private const int MinRangeDays = 2;
+    private const int MaxRangeDays = 31;
 
-        if (!ignoreDate)
-            task = ParseDate(task, out year, out month, out day, out withDate, out dayAdjustment);
+    public IReadOnlyList<TaskDto> ParseTasks(string task)
+    {
+        if (TryParseDateRange(task, out var startDate, out var endDate, out var remaining))
+        {
+            ValidateRange(startDate, endDate);
+
+            var template = ParseTaskTemplate(remaining);
+            var tasks = new List<TaskDto>();
+            for (var date = startDate; date <= endDate; date = date.AddDays(1))
+                tasks.Add(CloneWithDate(template, date));
+
+            return tasks;
+        }
+
+        return [ParseSingle(task)];
+    }
+
+    // Parses a dateless task template: time + flags + title only, without any date.
+    public TaskDto ParseTaskTemplate(string task)
+    {
         task = ParseTime(task, out var hour, out var minutes, out var withTime);
         task = ParseFlags(task, out var isProbable, out var type);
 
-        taskDto.Title = task;
-        taskDto.Type = type;
-        taskDto.IsProbable = isProbable;
-        if (withDate)
-            taskDto.Date = CreateDateTime(year, month, day, dayAdjustment);
+        var taskDto = new TaskDto
+        {
+            Title = task,
+            Type = type,
+            IsProbable = isProbable,
+        };
         if (withTime)
             taskDto.Time = hour * 60 + minutes;
 
         return taskDto;
+    }
+
+    private TaskDto ParseSingle(string task)
+    {
+        task = ParseDate(task, out var year, out var month, out var day, out var withDate, out var dayAdjustment);
+
+        var taskDto = ParseTaskTemplate(task);
+        if (withDate)
+            taskDto.Date = CreateDateTime(year, month, day, dayAdjustment);
+
+        return taskDto;
+    }
+
+    private bool TryParseDateRange(string task, out DateTime startDate, out DateTime endDate, out string remaining)
+    {
+        var rangeRx = new Regex(@"^(\d{8}|\d{4})-(\d{8}|\d{4})\s");
+        var match = rangeRx.Match(task);
+
+        startDate = default;
+        endDate = default;
+        remaining = task;
+
+        if (!match.Success)
+            return false;
+
+        ParseStringDate(match.Groups[1].Value, out var startYear, out var startMonth, out var startDay);
+        ParseStringDate(match.Groups[2].Value, out var endYear, out var endMonth, out var endDay);
+
+        startDate = CreateDateTime(startYear, startMonth, startDay, 0);
+        endDate = CreateDateTime(endYear, endMonth, endDay, 0);
+        remaining = task[match.Length..];
+        return true;
+    }
+
+    // Parses a numeric date token in either MMDD (current year) or YYYYMMDD form.
+    // Shared by the single-date path (ParseDate) and the date-range path (TryParseDateRange).
+    private void ParseStringDate(string token, out int year, out int month, out int day)
+    {
+        if (token.Length == 8)
+        {
+            year = int.Parse(token[..4], CultureInfo.InvariantCulture);
+            month = int.Parse(token[4..6], CultureInfo.InvariantCulture);
+            day = int.Parse(token[6..8], CultureInfo.InvariantCulture);
+        }
+        else
+        {
+            year = dateService.Today.Year;
+            month = int.Parse(token[..2], CultureInfo.InvariantCulture);
+            day = int.Parse(token[2..4], CultureInfo.InvariantCulture);
+        }
+    }
+
+    private static void ValidateRange(DateTime startDate, DateTime endDate)
+    {
+        // A range must span at least two days (i.e. produce at least two tasks) and at most
+        // MaxRangeDays. A reversed range yields a negative count, which is also below MinRangeDays.
+        var dayCount = (endDate - startDate).Days + 1;
+        if (dayCount is < MinRangeDays or > MaxRangeDays)
+            throw ServiceException.InvalidDateRange(MaxRangeDays);
+    }
+
+    private static TaskDto CloneWithDate(TaskDto template, DateTime date)
+    {
+        return new TaskDto
+        {
+            Id = template.Id,
+            Date = date,
+            Time = template.Time,
+            Title = template.Title,
+            Order = template.Order,
+            Completed = template.Completed,
+            IsProbable = template.IsProbable,
+            Deleted = template.Deleted,
+            Type = template.Type,
+            Version = template.Version,
+            Uid = template.Uid,
+        };
     }
 
     private static string ParseFlags(string task, out bool isProbable, out TaskTypeDto type)
@@ -127,7 +223,6 @@ public class TaskParserService(IDateService dateService) : ITaskParserService
         var dateRx = new Regex(@"^\d{4}\s");
         var todayShiftRx = new Regex(@"^!+\s");
         var weekShiftRx = new Regex(@"^![1-7]\s");
-        var date = string.Empty;
         year = 0;
         month = 0;
         day = 0;
@@ -136,15 +231,15 @@ public class TaskParserService(IDateService dateService) : ITaskParserService
 
         if (dateWithYearRx.IsMatch(task))
         {
-            date = task[4..8];
-            year = int.Parse(task[..4], CultureInfo.InvariantCulture);
+            ParseStringDate(task[..8], out year, out month, out day);
             task = task[9..];
+            withDate = true;
         }
         else if (dateRx.IsMatch(task))
         {
-            date = task[..4];
-            year = dateService.Today.Year;
+            ParseStringDate(task[..4], out year, out month, out day);
             task = task[5..];
+            withDate = true;
         }
         else if (todayShiftRx.IsMatch(task))
         {
@@ -160,13 +255,6 @@ public class TaskParserService(IDateService dateService) : ITaskParserService
             year = dateService.Today.Year;
             month = dateService.Today.Month;
             day = dateService.Today.Day;
-            withDate = true;
-        }
-
-        if (!string.IsNullOrEmpty(date))
-        {
-            month = int.Parse(date[..2], CultureInfo.InvariantCulture);
-            day = int.Parse(date[2..4], CultureInfo.InvariantCulture);
             withDate = true;
         }
 

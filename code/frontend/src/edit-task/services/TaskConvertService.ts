@@ -2,7 +2,7 @@ import { dateService, DateService, Time } from '../../common/services/DateServic
 import { uuidv4 } from '../../common/utils/uuidv4'
 import { TaskModel } from '../../tasks/models/TaskModel'
 import { TaskTypeEnum } from '../../tasks/models/TaskTypeEnum'
-import { TaskEditModel } from '../models/TaskEditModel'
+import { TaskEditModel, TaskSingleEditModel } from '../models/TaskEditModel'
 
 export class TaskConvertService {
     constructor(private dateService: DateService) {}
@@ -17,7 +17,7 @@ export class TaskConvertService {
         return this.convertModelToString(model)
     }
 
-    createTaskFromModel(result: TaskEditModel): TaskModel {
+    private createTaskFromModel(result: TaskSingleEditModel): TaskModel {
         return {
             uid: uuidv4(),
             title: result.title,
@@ -32,7 +32,23 @@ export class TaskConvertService {
         }
     }
 
-    mergeTaskWithModel(result: TaskEditModel, task: TaskModel): TaskModel {
+    createTasksFromModel(result: TaskEditModel): TaskModel[] {
+        if (result.date === null || result.dateTo === null) {
+            return [this.createTaskFromModel(result)]
+        }
+
+        const tasks: TaskModel[] = []
+        const date = new Date(result.date)
+
+        while (date.getTime() <= result.dateTo.getTime()) {
+            tasks.push(this.createTaskFromModel({ ...result, date: new Date(date) }))
+            date.setDate(date.getDate() + 1)
+        }
+
+        return tasks
+    }
+
+    mergeTaskWithModel(result: TaskSingleEditModel, task: TaskModel): TaskModel {
         return {
             ...task,
             title: result.title,
@@ -46,15 +62,15 @@ export class TaskConvertService {
     convertStringToModel(text: string): TaskEditModel {
         const result = new StringConvertingResult(this.dateService.today())
 
-        if (/^\d{8}\s/.test(text)) {
+        if (/^(\d{8}|\d{4})-(\d{8}|\d{4})\s/.test(text)) {
             result.setHasDate()
-            text = result.extractYear(text)
-            text = result.extractMonth(text)
-            text = result.extractDay(text)
+            text = result.extractDateRange(text)
+        } else if (/^\d{8}\s/.test(text)) {
+            result.setHasDate()
+            text = result.extractDate(text, 8)
         } else if (/^\d{4}\s/.test(text)) {
             result.setHasDate()
-            text = result.extractMonth(text)
-            text = result.extractDay(text)
+            text = result.extractDate(text, 4)
         } else if (/^!+\s/.test(text)) {
             result.setHasDate()
             text = result.extractTodayShift(text)
@@ -80,7 +96,7 @@ export class TaskConvertService {
         return result.getModel(text)
     }
 
-    convertModelToString(model: TaskEditModel): string {
+    private convertModelToString(model: TaskSingleEditModel): string {
         let s = ''
 
         if (model.date !== null) {
@@ -139,7 +155,7 @@ export class TaskConvertService {
         return s
     }
 
-    private convertTaskToModel(task: TaskModel | null): TaskEditModel | null {
+    private convertTaskToModel(task: TaskModel | null): TaskSingleEditModel | null {
         if (task === null) {
             return null
         }
@@ -175,23 +191,63 @@ class StringConvertingResult {
     private type: TaskTypeEnum = TaskTypeEnum.Simple
     private isProbable = false
 
+    private hasRange = false
+    private yearTo = 0
+    private monthTo = 0
+    private dayTo = 1
+
     constructor(private now: Date) {
         this.year = this.now.getFullYear()
     }
 
-    extractYear(text: string): string {
-        this.year = Number(text.substr(0, 4))
-        return text.slice(4)
+    // Extracts a leading date token of the given length (4 = MMDD, 8 = YYYYMMDD) and
+    // returns the remaining text. Shares the token parser with the date-range endpoints.
+    extractDate(text: string, length: number): string {
+        const parsed = this.parseStringDate(text.substr(0, length))
+        this.year = parsed.year
+        this.month = parsed.month
+        this.day = parsed.day
+        return text.slice(length)
     }
 
-    extractMonth(text: string): string {
-        this.month = Number(text.substr(0, 2))
-        return text.slice(2)
+    // Range form "<start>-<end>": each endpoint is parsed independently as a standalone
+    // date (8 digits = explicit year, 4 digits = current year) via parseStringDate.
+    extractDateRange(text: string): string {
+        const match = /^(\d{8}|\d{4})-(\d{8}|\d{4})\s/.exec(text)
+
+        if (match === null) {
+            return text
+        }
+
+        const start = this.parseStringDate(match[1])
+        const end = this.parseStringDate(match[2])
+
+        this.year = start.year
+        this.month = start.month
+        this.day = start.day
+        this.yearTo = end.year
+        this.monthTo = end.month
+        this.dayTo = end.day
+        this.hasRange = true
+
+        return text.slice(match[0].length)
     }
 
-    extractDay(text: string): string {
-        this.day = Number(text.substr(0, 2))
-        return text.slice(2)
+    // Parses a numeric date token in either MMDD (current year) or YYYYMMDD form.
+    private parseStringDate(token: string): { year: number; month: number; day: number } {
+        if (token.length === 8) {
+            return {
+                year: Number(token.substr(0, 4)),
+                month: Number(token.substr(4, 2)),
+                day: Number(token.substr(6, 2)),
+            }
+        }
+
+        return {
+            year: this.now.getFullYear(),
+            month: Number(token.substr(0, 2)),
+            day: Number(token.substr(2, 2)),
+        }
     }
 
     extractTodayShift(text: string): string {
@@ -272,6 +328,7 @@ class StringConvertingResult {
     getModel(text: string): TaskEditModel {
         return {
             date: this.hasDate ? new Date(this.year, this.month - 1, this.day) : null,
+            dateTo: this.hasRange ? new Date(this.yearTo, this.monthTo - 1, this.dayTo) : null,
             type: this.type,
             title: text,
             isProbable: this.isProbable,

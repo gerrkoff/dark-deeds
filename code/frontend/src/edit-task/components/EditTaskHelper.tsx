@@ -1,14 +1,23 @@
 import { dateService } from '../../common/services/DateService'
 import { TaskTypeEnum } from '../../tasks/models/TaskTypeEnum'
-import { TaskEditModel } from '../models/TaskEditModel'
+import { TaskEditModel, TaskSingleEditModel } from '../models/TaskEditModel'
 import { taskConvertService } from '../services/TaskConvertService'
+import { taskRangeService } from '../services/TaskRangeService'
 
 interface Props {
-    task: TaskEditModel
+    task: TaskEditModel | TaskSingleEditModel
 }
 
 function EditTaskHelper({ task }: Props) {
-    const date = task.date ? taskConvertService.toDateLabel(task.date) : ''
+    const range =
+        'dateTo' in task && task.dateTo !== null
+            ? { endDate: task.dateTo, taskCount: taskRangeService.getRangeDayCount(task) }
+            : null
+    const date = task.date
+        ? range
+            ? `${taskConvertService.toDateLabel(task.date)} – ${taskConvertService.toDateLabel(range.endDate)}`
+            : taskConvertService.toDateLabel(task.date)
+        : ''
     const time = task.time ? dateService.toTimeLabel(task.time) : ''
     const type = getType(task.type)
     const isProbable = task.isProbable ? 'Probable' : ''
@@ -23,6 +32,12 @@ function EditTaskHelper({ task }: Props) {
             {date && (
                 <>
                     Date: {date}
+                    <br />
+                </>
+            )}
+            {range && range.taskCount !== null && range.taskCount > 1 && (
+                <>
+                    Tasks: {range.taskCount}
                     <br />
                 </>
             )}

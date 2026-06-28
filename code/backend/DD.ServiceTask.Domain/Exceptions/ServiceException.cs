@@ -21,4 +21,9 @@ public class ServiceException : Exception
     {
         return new ServiceException($"{name} is invalid for this operation");
     }
+
+    public static ServiceException InvalidDateRange(int maxDays)
+    {
+        return new ServiceException($"Date range is invalid or exceeds the maximum of {maxDays} days");
+    }
 }

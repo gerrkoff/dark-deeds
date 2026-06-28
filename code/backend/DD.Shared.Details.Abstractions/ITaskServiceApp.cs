@@ -10,5 +10,5 @@ public interface ITaskServiceApp
 
     Task<IEnumerable<TaskDto>> UpdateTasksAsync(ICollection<TaskUpdateDto> updates, string userId, string? clientId);
 
-    Task<TaskDto> ParseTask(string text);
+    Task<IReadOnlyList<TaskDto>> ParseTasks(string text);
 }

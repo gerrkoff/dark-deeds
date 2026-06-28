@@ -177,7 +177,7 @@ public class RecurrenceCreatorService(
 
     private TaskEntity CreateTaskFromRecurrence(PlannedRecurrenceEntity plannedRecurrence, DateTime date)
     {
-        var dto = taskParserService.ParseTask(plannedRecurrence.Task, ignoreDate: true);
+        var dto = taskParserService.ParseTaskTemplate(plannedRecurrence.Task);
         var task = dto.ToEntity();
         task.Date = date;
         task.UserId = plannedRecurrence.UserId;

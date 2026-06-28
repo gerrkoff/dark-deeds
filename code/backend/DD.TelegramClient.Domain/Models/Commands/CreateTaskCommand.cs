@@ -1,10 +1,8 @@
-using DD.Shared.Details.Abstractions.Dto;
-
 namespace DD.TelegramClient.Domain.Models.Commands;
 
-public class CreateTaskCommand(TaskDto task) : BotCommand
+public class CreateTaskCommand(string text) : BotCommand
 {
-    public TaskDto Task { get; } = task;
+    public string Text { get; } = text;
 
     public override string ToString()
     {
