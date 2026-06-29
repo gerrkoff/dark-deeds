@@ -1,5 +1,6 @@
 import clsx from 'clsx'
-import React from 'react'
+import React, { useRef } from 'react'
+import { isKeyEnter } from '../../common/utils/keys'
 
 interface Props {
     switchToSignin: () => void
@@ -9,7 +10,7 @@ interface Props {
     setPassword: (password: string) => void
     passwordConfirmation: string
     setPasswordConfirmation: (passwordConfirmation: string) => void
-    signup: () => void
+    signup: (username: string, password: string) => void
     isLogInPending: boolean
     logInError: string | null
 }
@@ -26,27 +27,55 @@ function Signup({
     isLogInPending,
     logInError,
 }: Props) {
+    const usernameRef = useRef<HTMLInputElement>(null)
+    const passwordRef = useRef<HTMLInputElement>(null)
+    const passwordConfirmationRef = useRef<HTMLInputElement>(null)
+
     const handleSwitchToSignin = (e: React.MouseEvent) => {
         e.preventDefault()
         switchToSignin()
     }
 
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault()
-        signup()
-    }
-
-    const isSubmitEnabled = username && password && passwordConfirmation && !isLogInPending
-
     const isPasswordConfirmationValid = password === passwordConfirmation
 
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault()
+        const submittedUsername = usernameRef.current?.value ?? username
+        const submittedPassword = passwordRef.current?.value ?? password
+        const submittedConfirmation = passwordConfirmationRef.current?.value ?? passwordConfirmation
+        setUsername(submittedUsername)
+        setPassword(submittedPassword)
+        setPasswordConfirmation(submittedConfirmation)
+        if (
+            !submittedUsername ||
+            !submittedPassword ||
+            !submittedConfirmation ||
+            submittedPassword !== submittedConfirmation ||
+            isLogInPending
+        )
+            return
+        signup(submittedUsername, submittedPassword)
+    }
+
+    const isSubmitEnabled = !isLogInPending
+
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLFormElement>) => {
+        if (isKeyEnter(e) && !isLogInPending) {
+            e.preventDefault()
+            e.currentTarget.requestSubmit()
+        }
+    }
+
     return (
-        <form className="p-3" onSubmit={handleSubmit}>
+        <form className="p-3" onSubmit={handleSubmit} onKeyDown={handleKeyDown}>
             <div className="form-floating mb-3">
                 <input
+                    ref={usernameRef}
                     type="text"
                     className="form-control"
                     id="username"
+                    name="username"
+                    autoComplete="username"
                     placeholder="Username"
                     value={username}
                     onChange={e => setUsername(e.target.value)}
@@ -55,9 +84,12 @@ function Signup({
             </div>
             <div className="form-floating mb-3">
                 <input
+                    ref={passwordRef}
                     type="password"
                     className="form-control"
                     id="password"
+                    name="password"
+                    autoComplete="new-password"
                     placeholder="Password"
                     value={password}
                     onChange={e => setPassword(e.target.value)}
@@ -66,11 +98,14 @@ function Signup({
             </div>
             <div className="form-floating mb-3">
                 <input
+                    ref={passwordConfirmationRef}
                     type="password"
                     className={clsx('form-control', {
                         'is-invalid': !isPasswordConfirmationValid,
                     })}
                     id="passwordConfirmation"
+                    name="passwordConfirmation"
+                    autoComplete="new-password"
                     placeholder="Confirm password"
                     value={passwordConfirmation}
                     onChange={e => setPasswordConfirmation(e.target.value)}
