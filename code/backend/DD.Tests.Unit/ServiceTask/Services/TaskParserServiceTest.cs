@@ -224,11 +224,25 @@ public class TaskParserServiceTest : BaseTest
 
     // #15
     [Fact]
+    public void ParseTasks_ReturnThisWeekMondayTaskThroughExclamationMark()
+    {
+        var service = new TaskParserService(DateServiceMock(2019, 7, 31));
+
+        var result = service.ParseTasks("!1 Test").Single();
+
+        Assert.Equal("Test", result.Title);
+        Assert.Equal(TaskTypeDto.Simple, result.Type);
+        Assert.Equal(new DateTime(2019, 7, 29, 0, 0, 0), result.Date);
+        Assert.Null(result.Time);
+    }
+
+    // #15.1
+    [Fact]
     public void ParseTasks_ReturnNextMondayTaskThroughExclamationMark()
     {
         var service = new TaskParserService(DateServiceMock(2019, 7, 28));
 
-        var result = service.ParseTasks("!1 Test").Single();
+        var result = service.ParseTasks("!!1 Test").Single();
 
         Assert.Equal("Test", result.Title);
         Assert.Equal(TaskTypeDto.Simple, result.Type);
@@ -242,7 +256,7 @@ public class TaskParserServiceTest : BaseTest
     {
         var service = new TaskParserService(DateServiceMock(2019, 7, 28));
 
-        var result = service.ParseTasks("!3 Test").Single();
+        var result = service.ParseTasks("!!3 Test").Single();
 
         Assert.Equal("Test", result.Title);
         Assert.Equal(TaskTypeDto.Simple, result.Type);
@@ -256,11 +270,25 @@ public class TaskParserServiceTest : BaseTest
     {
         var service = new TaskParserService(DateServiceMock(2019, 7, 28));
 
-        var result = service.ParseTasks("!5 Test").Single();
+        var result = service.ParseTasks("!!5 Test").Single();
 
         Assert.Equal("Test", result.Title);
         Assert.Equal(TaskTypeDto.Simple, result.Type);
         Assert.Equal(new DateTime(2019, 8, 2, 0, 0, 0), result.Date);
+        Assert.Null(result.Time);
+    }
+
+    // #17.1
+    [Fact]
+    public void ParseTasks_ReturnWeekAfterNextMondayTaskThroughExclamationMark()
+    {
+        var service = new TaskParserService(DateServiceMock(2019, 7, 28));
+
+        var result = service.ParseTasks("!!!1 Test").Single();
+
+        Assert.Equal("Test", result.Title);
+        Assert.Equal(TaskTypeDto.Simple, result.Type);
+        Assert.Equal(new DateTime(2019, 8, 5, 0, 0, 0), result.Date);
         Assert.Null(result.Time);
     }
 

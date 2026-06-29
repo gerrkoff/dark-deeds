@@ -74,7 +74,7 @@ export class TaskConvertService {
         } else if (/^!+\s/.test(text)) {
             result.setHasDate()
             text = result.extractTodayShift(text)
-        } else if (/^![1-7]\s/.test(text)) {
+        } else if (/^!+[1-7]\s/.test(text)) {
             result.setHasDate()
             text = result.extractWeekShift(text)
         }
@@ -264,10 +264,13 @@ class StringConvertingResult {
     }
 
     extractWeekShift(text: string): string {
-        const shift = parseInt(text[1], undefined)
-        this.day = this.now.getDate() + ((1 + 7 - this.now.getDay()) % 7) + shift - 1
+        const weekCount = /^!+/.exec(text)?.[0].length ?? 0
+        const weekday = parseInt(text[weekCount], 10)
+        const todayWeekday = this.now.getDay()
+        const thisWeekMondayShift = todayWeekday === 0 ? -6 : 1 - todayWeekday
+        this.day = this.now.getDate() + thisWeekMondayShift + (weekday - 1) + 7 * (weekCount - 1)
         this.month = this.now.getMonth() + 1
-        return text.slice(2)
+        return text.slice(weekCount + 1)
     }
 
     extractHour(text: string): string {
