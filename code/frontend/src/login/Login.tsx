@@ -33,8 +33,8 @@ function Login() {
     }, [dispatch])
 
     const handleSignin = useCallback(
-        async (username: string, password: string) => {
-            const actionResult = await dispatch(signin({ username, password }))
+        async (submittedUsername: string, submittedPassword: string) => {
+            const actionResult = await dispatch(signin({ username: submittedUsername, password: submittedPassword }))
             const loginResult = unwrapResult(actionResult)
 
             if (loginResult.result === SigninResultEnum.Success) {
@@ -45,8 +45,8 @@ function Login() {
     )
 
     const handleSignup = useCallback(
-        async (username: string, password: string) => {
-            const actionResult = await dispatch(signup({ username, password }))
+        async (submittedUsername: string, submittedPassword: string) => {
+            const actionResult = await dispatch(signup({ username: submittedUsername, password: submittedPassword }))
             const logInResult = unwrapResult(actionResult)
 
             if (logInResult.result === SignupResultEnum.Success) {
