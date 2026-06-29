@@ -1,4 +1,5 @@
-import React from 'react'
+import { useRef } from 'react'
+import { isKeyEnter } from '../../common/utils/keys'
 
 interface Props {
     switchToSignup: () => void
@@ -6,7 +7,7 @@ interface Props {
     setUsername: (username: string) => void
     password: string
     setPassword: (password: string) => void
-    signin: () => void
+    signin: (username: string, password: string) => void
     isLogInPending: boolean
     logInError: string | null
 }
@@ -21,6 +22,9 @@ function Signin({
     isLogInPending,
     logInError,
 }: Props) {
+    const usernameRef = useRef<HTMLInputElement>(null)
+    const passwordRef = useRef<HTMLInputElement>(null)
+
     const handleSwitchToSignup = (e: React.MouseEvent) => {
         e.preventDefault()
         switchToSignup()
@@ -28,18 +32,33 @@ function Signin({
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault()
-        signin()
+        const submittedUsername = usernameRef.current?.value ?? username
+        const submittedPassword = passwordRef.current?.value ?? password
+        setUsername(submittedUsername)
+        setPassword(submittedPassword)
+        if (!submittedUsername || !submittedPassword || isLogInPending) return
+        signin(submittedUsername, submittedPassword)
     }
 
-    const isSubmitEnabled = username && password && !isLogInPending
+    const isSubmitEnabled = !isLogInPending
+
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLFormElement>) => {
+        if (isKeyEnter(e) && !isLogInPending) {
+            e.preventDefault()
+            e.currentTarget.requestSubmit()
+        }
+    }
 
     return (
-        <form className="p-3" onSubmit={handleSubmit} data-test-id="form-signin">
+        <form className="p-3" onSubmit={handleSubmit} onKeyDown={handleKeyDown} data-test-id="form-signin">
             <div className="form-floating mb-3">
                 <input
+                    ref={usernameRef}
                     type="text"
                     className="form-control"
                     id="username"
+                    name="username"
+                    autoComplete="username"
                     placeholder="Username"
                     value={username}
                     onChange={e => setUsername(e.target.value)}
@@ -48,9 +67,12 @@ function Signin({
             </div>
             <div className="form-floating mb-3">
                 <input
+                    ref={passwordRef}
                     type="password"
                     className="form-control"
                     id="password"
+                    name="password"
+                    autoComplete="current-password"
                     placeholder="Password"
                     value={password}
                     onChange={e => setPassword(e.target.value)}

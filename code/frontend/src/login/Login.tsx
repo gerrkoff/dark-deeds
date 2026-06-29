@@ -32,23 +32,29 @@ function Login() {
         dispatch(resetLogInError())
     }, [dispatch])
 
-    const handleSignin = useCallback(async () => {
-        const actionResult = await dispatch(signin({ username, password }))
-        const loginResult = unwrapResult(actionResult)
+    const handleSignin = useCallback(
+        async (submittedUsername: string, submittedPassword: string) => {
+            const actionResult = await dispatch(signin({ username: submittedUsername, password: submittedPassword }))
+            const loginResult = unwrapResult(actionResult)
 
-        if (loginResult.result === SigninResultEnum.Success) {
-            signIn(loginResult.token)
-        }
-    }, [dispatch, signIn, password, username])
+            if (loginResult.result === SigninResultEnum.Success) {
+                signIn(loginResult.token)
+            }
+        },
+        [dispatch, signIn],
+    )
 
-    const handleSignup = useCallback(async () => {
-        const actionResult = await dispatch(signup({ username, password }))
-        const logInResult = unwrapResult(actionResult)
+    const handleSignup = useCallback(
+        async (submittedUsername: string, submittedPassword: string) => {
+            const actionResult = await dispatch(signup({ username: submittedUsername, password: submittedPassword }))
+            const logInResult = unwrapResult(actionResult)
 
-        if (logInResult.result === SignupResultEnum.Success) {
-            signIn(logInResult.token)
-        }
-    }, [dispatch, signIn, password, username])
+            if (logInResult.result === SignupResultEnum.Success) {
+                signIn(logInResult.token)
+            }
+        },
+        [dispatch, signIn],
+    )
 
     return (
         <Card className="container" style={{ maxWidth: '500px' }}>
