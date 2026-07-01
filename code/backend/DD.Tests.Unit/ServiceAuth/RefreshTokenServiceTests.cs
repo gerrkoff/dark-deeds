@@ -117,6 +117,7 @@ public class RefreshTokenServiceTests
 
         // Assert
         Assert.NotNull(verifiedRenewed);
+        Assert.NotEqual(original, renewed);
         Assert.Equal(UserId, verifiedRenewed.UserId);
         Assert.Equal(ClientId, verifiedRenewed.ClientId);
     }
@@ -163,8 +164,12 @@ public class RefreshTokenServiceTests
     {
         var parts = token.Split('.');
         var signature = parts[2];
-        var lastChar = signature[^1];
-        parts[2] = signature[..^1] + (lastChar == 'A' ? 'B' : 'A');
+
+        // Tamper the first base64url char: all of its bits are significant, so the decoded
+        // signature bytes always change. The last char carries padding bits, so flipping it
+        // can leave the decoded bytes unchanged and the signature still valid.
+        var firstChar = signature[0];
+        parts[2] = (firstChar == 'A' ? 'B' : 'A') + signature[1..];
         return string.Join('.', parts);
     }
 }

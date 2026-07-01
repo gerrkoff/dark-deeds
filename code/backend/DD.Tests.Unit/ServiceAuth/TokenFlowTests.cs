@@ -80,6 +80,7 @@ public class TokenFlowTests
 
         var refreshedAccessToken = CreateAccessToken(refreshData.UserId);
         Assert.Equal(UserId, ReadValidatedSubject(refreshedAccessToken));
+        Assert.NotEqual(accessToken, refreshedAccessToken);
     }
 
     private string CreateAccessToken(string userId)

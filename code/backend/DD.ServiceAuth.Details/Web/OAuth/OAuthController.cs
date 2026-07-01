@@ -82,11 +82,9 @@ public sealed class OAuthController(
         }
 
         var html = ConsentPage.Render(
-            ResponseTypeCode,
             clientId ?? string.Empty,
             redirectUri!,
             codeChallenge,
-            CodeChallengeMethodS256,
             state,
             scope ?? string.Empty);
 

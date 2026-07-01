@@ -10,19 +10,15 @@ internal static class ConsentPage
         "CA1054:URI-like parameters should not be strings",
         Justification = "OAuth redirect_uri is echoed verbatim into a hidden form field and must not be URI-normalized.")]
     public static string Render(
-        string responseType,
         string clientId,
         string redirectUri,
         string codeChallenge,
-        string codeChallengeMethod,
         string state,
         string scope)
     {
-        var encResponseType = WebUtility.HtmlEncode(responseType);
         var encClientId = WebUtility.HtmlEncode(clientId);
         var encRedirectUri = WebUtility.HtmlEncode(redirectUri);
         var encCodeChallenge = WebUtility.HtmlEncode(codeChallenge);
-        var encCodeChallengeMethod = WebUtility.HtmlEncode(codeChallengeMethod);
         var encState = WebUtility.HtmlEncode(state);
         var encScope = WebUtility.HtmlEncode(scope);
 
@@ -50,13 +46,10 @@ internal static class ConsentPage
                      <p>The application <strong>{{encClientId}}</strong> is requesting access to your Dark Deeds account.</p>
                      <p class="scopes">Requested scopes: {{encScope}}</p>
                      <form method="post" action="/authorize">
-                         <input type="hidden" name="response_type" value="{{encResponseType}}">
                          <input type="hidden" name="client_id" value="{{encClientId}}">
                          <input type="hidden" name="redirect_uri" value="{{encRedirectUri}}">
                          <input type="hidden" name="code_challenge" value="{{encCodeChallenge}}">
-                         <input type="hidden" name="code_challenge_method" value="{{encCodeChallengeMethod}}">
                          <input type="hidden" name="state" value="{{encState}}">
-                         <input type="hidden" name="scope" value="{{encScope}}">
                          <label for="username">Username</label>
                          <input id="username" type="text" name="username" autocomplete="username" required>
                          <label for="password">Password</label>
