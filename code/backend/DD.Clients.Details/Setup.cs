@@ -47,11 +47,6 @@ public static class Setup
             "bot",
             $"api/tlgm/bot/{configuration["Bot"]}",
             new { controller = "Bot", action = "Process" });
-
-        endpoints.MapControllerRoute(
-            "mcp",
-            $"api/mcp/{configuration["McpKey"]}/{{action}}",
-            new { controller = "Mcp" });
     }
 
     private static void AddTelegramClientData(this IServiceCollection services)

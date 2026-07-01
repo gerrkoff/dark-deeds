@@ -138,12 +138,12 @@ inside Ralph's build/test loop.)
 - Modify: `.github/workflows/ci.yml`, `.github/workflows/build.yml`
 - Modify: `code/mcp/mcp.json.template`
 
-- [ ] Delete the standalone `code/mcp/DarkDeeds.Mcp` project, `code/mcp/build.sh`, and `ci/apps/mcp.dockerfile`
-- [ ] Delete `McpController.cs` and remove the `mcp` custom-route registration from `DD.Clients.Details/Setup.cs` (keep `AddMcpClientDomain` and `IMcpService`)
-- [ ] Remove the `McpKey` setting from `appsettings.json` and the `McpKey` / `mcpKey` KeyVault entry from `ci/infra/app.bicep`
-- [ ] Remove the `build-mcp` job from `.github/workflows/ci.yml` and the `mcp.dockerfile` entry from the image matrix in `.github/workflows/build.yml`
-- [ ] Replace `code/mcp/mcp.json.template` with a remote HTTP MCP client example (server URL `https://<host>/mcp`, a note that OAuth is auto-discovered, and a static `Authorization: Bearer` header fallback)
-- [ ] Verify `dotnet build code/backend/DarkDeeds.sln -c Release` succeeds with no warnings
+- [x] Delete the standalone `code/mcp/DarkDeeds.Mcp` project, `code/mcp/build.sh`, and `ci/apps/mcp.dockerfile` (also removed the leftover untracked `code/mcp/DarkDeeds.Mcp/{.idea,bin,obj}` and the project's own `DarkDeeds.Mcp.sln`; `code/mcp/` now holds only `mcp.json.template`)
+- [x] Delete `McpController.cs` and remove the `mcp` custom-route registration from `DD.Clients.Details/Setup.cs` (keep `AddMcpClientDomain` and `IMcpService`) (the `bot` custom route and `AddMcpHttpServer`/`AddMcpClientDomain` remain; `McpClient/` now contains only the in-process `Tools/`)
+- [x] Remove the `McpKey` setting from `appsettings.json` and the `McpKey` / `mcpKey` KeyVault entry from `ci/infra/app.bicep`
+- [x] Remove the `build-mcp` job from `.github/workflows/ci.yml` and the `mcp.dockerfile` entry from the image matrix in `.github/workflows/build.yml`
+- [x] Replace `code/mcp/mcp.json.template` with a remote HTTP MCP client example (server URL `https://<host>/mcp`, a note that OAuth is auto-discovered, and a static `Authorization: Bearer` header fallback) (NOTE: written as JSONC with two `http` server entries — `darkdeeds` for OAuth auto-discovery and `darkdeeds-static` carrying `Authorization: Bearer ${input:dark-deeds-access-token}` — plus a `promptString` input for the token; validated to parse)
+- [x] Verify `dotnet build code/backend/DarkDeeds.sln -c Release` succeeds with no warnings (0 warnings/0 errors; `dotnet test` also green at 164 passed after removing `McpController`)
 
 ### Task 6: Unit-test the OAuth primitives and token flow
 

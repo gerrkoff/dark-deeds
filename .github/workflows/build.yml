@@ -42,8 +42,6 @@ jobs:
             platforms: linux/amd64
           - dockerfile: tests-load.dockerfile
             platforms: linux/amd64
-          - dockerfile: mcp.dockerfile
-            platforms: linux/arm64
     steps:
       - name: Checkout code
         uses: actions/checkout@v4

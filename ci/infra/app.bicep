@@ -86,10 +86,6 @@ resource webApp 'Microsoft.Web/sites@2023-12-01' = {
                     value: '@Microsoft.KeyVault(VaultName=${keyVaultName};SecretName=botToken)'
                 }
                 {
-                    name: 'McpKey'
-                    value: '@Microsoft.KeyVault(VaultName=${keyVaultName};SecretName=mcpKey)'
-                }
-                {
                     name: 'EnableTestHandlers'
                     value: toLower(string(enableTestHandlers))
                 }
