@@ -81,7 +81,7 @@ public class Startup(IConfiguration configuration)
             endpoints.MapControllers();
             endpoints.MapClientsCustomRoutes(Configuration);
             endpoints.MapTaskServiceCustomRoutes();
-            endpoints.MapMcp("/mcp");
+            endpoints.MapMcp("/mcp").RequireAuthorization();
         });
         app.UseDefaultFiles();
         app.UseStaticWithNotCachedIndex();

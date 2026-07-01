@@ -123,11 +123,11 @@ inside Ralph's build/test loop.)
 - Modify: `code/backend/DD.ServiceAuth.Details/Setup.cs`
 - Modify: `code/backend/DD.Clients.Details/Setup.cs` or `code/backend/DD.App/Startup.cs`
 
-- [ ] Add a `PackageReference` to `ModelContextProtocol.AspNetCore` in `DD.ServiceAuth.Details.csproj` (it does not receive the package transitively)
-- [ ] In `DD.ServiceAuth.Details/Setup.cs`, chain `.AddMcp(options => options.ResourceMetadata = new() { AuthorizationServers = { <self base URL> }, ScopesSupported = [...] })` onto the existing authentication builder, and set `DefaultChallengeScheme = McpAuthenticationDefaults.AuthenticationScheme` and `DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme`
-- [ ] Change the `MapMcp("/mcp")` registration to `.RequireAuthorization()` so unauthenticated calls are challenged with `401`
-- [ ] Confirm the `.well-known/*`, `/authorize`, `/token`, and `/register` endpoints remain anonymous under the global `AuthorizeFilter` (they are `[AllowAnonymous]`)
-- [ ] Verify `dotnet build code/backend/DarkDeeds.sln -c Release` succeeds with no warnings
+- [x] Add a `PackageReference` to `ModelContextProtocol.AspNetCore` in `DD.ServiceAuth.Details.csproj` (it does not receive the package transitively)
+- [x] In `DD.ServiceAuth.Details/Setup.cs`, chain `.AddMcp(options => options.ResourceMetadata = new() { AuthorizationServers = { <self base URL> }, ScopesSupported = [...] })` onto the existing authentication builder, and set `DefaultChallengeScheme = McpAuthenticationDefaults.AuthenticationScheme` and `DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme` (DEVIATION: `AuthorizationServers` is set per-request via the SDK's `options.Events.OnResourceMetadataRequest` event, deriving the base URL from the request (`{scheme}://{host}{pathBase}`, matching `OAuthController.BaseUrl()`), NOT a static URL — this app has no configured base URL by design (issuer/base URL are request-derived at runtime), so a startup-time literal would be wrong in at least one environment. `ScopesSupported` is read from the `OAuth:ScopesSupported` config section rather than hardcoded, and `ResourceMetadata.Resource` is left null so the handler infers it from the request via the default `/.well-known/oauth-protected-resource` endpoint)
+- [x] Change the `MapMcp("/mcp")` registration to `.RequireAuthorization()` so unauthenticated calls are challenged with `401`
+- [x] Confirm the `.well-known/*`, `/authorize`, `/token`, and `/register` endpoints remain anonymous under the global `AuthorizeFilter` (they are `[AllowAnonymous]`) (CONFIRMED: `OAuthController` carries a class-level `[AllowAnonymous]` covering `GET /.well-known/oauth-authorization-server`, `/authorize`, `/token`, and `/register`; `GET /.well-known/oauth-protected-resource` is served by the MCP auth request handler, which short-circuits before authorization)
+- [x] Verify `dotnet build code/backend/DarkDeeds.sln -c Release` succeeds with no warnings
 
 ### Task 5: Retire the old MCP mechanism
 
