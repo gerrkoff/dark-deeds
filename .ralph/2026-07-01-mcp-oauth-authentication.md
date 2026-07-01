@@ -152,11 +152,11 @@ inside Ralph's build/test loop.)
 - Create: `code/backend/DD.Tests.Unit/ServiceAuth/AuthCodeServiceTests.cs`
 - Create: `code/backend/DD.Tests.Unit/ServiceAuth/RefreshTokenServiceTests.cs`
 
-- [ ] Test `IPkceService.Verify` accepts a correct S256 verifier/challenge pair and rejects a wrong one
-- [ ] Test `IAuthCodeService` round-trips a valid code and rejects tampered, expired, and `redirect_uri`/`clientId`-mismatched codes
-- [ ] Test `IRefreshTokenService` issues a verifiable token, rejects tampered and expired tokens, and that the refresh grant yields a new usable token
-- [ ] Test the token composition: a valid authorization code produces an access JWT (validatable with the existing `Auth` key) plus a refresh token, and that refresh token in turn mints a new access JWT
-- [ ] Verify `dotnet test code/backend/DarkDeeds.sln -c Release` passes
+- [x] Test `IPkceService.Verify` accepts a correct S256 verifier/challenge pair and rejects a wrong one (uses the RFC 7636 Appendix B reference vector plus a computed pair, wrong-challenge/wrong-verifier, and empty-input cases)
+- [x] Test `IAuthCodeService` round-trips a valid code and rejects tampered, expired, and `redirect_uri`/`clientId`-mismatched codes (also rejects a foreign-key signature and malformed/empty codes; expired codes are crafted with a back-dated `NotBefore`+`Expires` because the SDK forbids `Expires <= NotBefore` at issue time)
+- [x] Test `IRefreshTokenService` issues a verifiable token, rejects tampered and expired tokens, and that the refresh grant yields a new usable token (expired token crafted via a back-dated validity window since the real `IssueAsync` throws on a negative TTL; `RefreshGrant_IssuesNewVerifiableToken` verifies then re-issues a still-verifiable token)
+- [x] Test the token composition: a valid authorization code produces an access JWT (validatable with the existing `Auth` key) plus a refresh token, and that refresh token in turn mints a new access JWT (DEVIATION: added a 4th test file `DD.Tests.Unit/ServiceAuth/TokenFlowTests.cs` for this composition-level test rather than folding it into the three primitive-level files; the access-token step exercises `TokenService.SerializeWithLifetime`, mirroring `AuthService.CreateAccessTokenAsync` without needing a `UserManager`/DB. DEVIATION: to access the `internal` OAuth service classes, added a `ProjectReference` from `DD.Tests.Unit.csproj` to `DD.ServiceAuth.Domain` and an `<InternalsVisibleTo Include="DD.Tests.Unit" />` to `DD.ServiceAuth.Domain.csproj` — the plan's Files list omitted these but they are required to compile the tests)
+- [x] Verify `dotnet test code/backend/DarkDeeds.sln -c Release` passes (191 passed / 0 failed, up from 164; `dotnet build -c Release` clean at 0 warnings/0 errors)
 
 ### Task 7: Final validation
 
