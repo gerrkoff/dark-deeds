@@ -15,6 +15,8 @@ public interface IAuthService
 
     Task<string> GetUserIdAsync(string username);
 
+    Task<string?> CreateAccessTokenAsync(string userId, int lifetimeMinutes);
+
     string RenewToken(AuthToken authToken);
 }
 
@@ -89,6 +91,12 @@ internal sealed class AuthService(
                    ?? throw new InvalidOperationException();
 
         return user.Id.ToString();
+    }
+
+    public async Task<string?> CreateAccessTokenAsync(string userId, int lifetimeMinutes)
+    {
+        var user = await userManager.FindByIdAsync(userId);
+        return user is null ? null : tokenService.SerializeWithLifetime(ToAuthToken(user), lifetimeMinutes);
     }
 
     public string RenewToken(AuthToken authToken)
