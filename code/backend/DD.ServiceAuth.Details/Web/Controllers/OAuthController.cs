@@ -34,7 +34,7 @@ public sealed class OAuthController(IOAuthFlowService oauthFlowService)
         [FromQuery(Name = "state")] string? state,
         [FromQuery(Name = "scope")] string? scope)
     {
-        if (!IsLoopbackRedirectUri(redirectUri))
+        if (!IsAllowedRedirectUri(redirectUri))
         {
             return BadRequest(OAuthErrorDto.RedirectUriNotLoopback);
         }
@@ -76,7 +76,7 @@ public sealed class OAuthController(IOAuthFlowService oauthFlowService)
         [FromForm(Name = "code_challenge")] string? codeChallenge,
         [FromForm(Name = "state")] string? state)
     {
-        if (!IsLoopbackRedirectUri(redirectUri))
+        if (!IsAllowedRedirectUri(redirectUri))
         {
             return BadRequest(OAuthErrorDto.RedirectUriNotLoopback);
         }
@@ -157,7 +157,7 @@ public sealed class OAuthController(IOAuthFlowService oauthFlowService)
     public IActionResult Register([FromBody] ClientRegistrationRequestDto? request)
     {
         var redirectUris = request?.RedirectUris;
-        if (redirectUris is null || redirectUris.Count == 0 || redirectUris.Any(uri => !IsLoopbackRedirectUri(uri)))
+        if (redirectUris is null || redirectUris.Count == 0 || redirectUris.Any(uri => !IsAllowedRedirectUri(uri)))
         {
             return BadRequest(OAuthErrorDto.RegistrationRedirectUrisNotLoopback);
         }
@@ -167,12 +167,21 @@ public sealed class OAuthController(IOAuthFlowService oauthFlowService)
         return StatusCode(StatusCodes.Status201Created, response);
     }
 
-    private static bool IsLoopbackRedirectUri([NotNullWhen(true)] string? redirectUri)
+    private static bool IsAllowedRedirectUri([NotNullWhen(true)] string? redirectUri)
     {
         if (string.IsNullOrEmpty(redirectUri) ||
             !Uri.TryCreate(redirectUri, UriKind.Absolute, out var uri))
         {
             return false;
+        }
+
+        // VS Code registers this well-known Microsoft redirect helper alongside its loopback
+        // address, so allow it explicitly; otherwise dynamic client registration (which sends the
+        // whole redirect_uris set at once) and the browser consent flow fail. PKCE still protects
+        // the code exchange for this non-loopback redirect.
+        if (string.Equals(redirectUri, OAuthConstants.VsCodeRedirectUri, StringComparison.Ordinal))
+        {
+            return true;
         }
 
         if (!string.Equals(uri.Scheme, Uri.UriSchemeHttp, StringComparison.Ordinal) &&

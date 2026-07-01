@@ -7,7 +7,7 @@ public sealed record OAuthErrorDto(
     [property: JsonPropertyName("error_description")] string ErrorDescription)
 {
     public static OAuthErrorDto RedirectUriNotLoopback { get; } =
-        new("invalid_request", "redirect_uri must be a loopback address.");
+        new("invalid_request", "redirect_uri must be a loopback address or the VS Code redirect URI.");
 
     public static OAuthErrorDto ClientIdRequired { get; } =
         new("invalid_request", "client_id is required.");
@@ -40,7 +40,7 @@ public sealed record OAuthErrorDto(
         new("unsupported_grant_type", "grant_type must be 'authorization_code' or 'refresh_token'.");
 
     public static OAuthErrorDto RegistrationRedirectUrisNotLoopback { get; } =
-        new("invalid_redirect_uri", "All redirect_uris must be loopback addresses.");
+        new("invalid_redirect_uri", "All redirect_uris must be loopback addresses or the VS Code redirect URI.");
 
     public static OAuthErrorDto InvalidAuthorizationCode { get; } =
         new("invalid_grant", "The authorization code or PKCE verifier is invalid.");

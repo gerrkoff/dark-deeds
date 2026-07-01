@@ -13,4 +13,6 @@ public static class OAuthConstants
     public const string ActionAllow = "allow";
 
     public const string AccessDeniedError = "access_denied";
+
+    public const string VsCodeRedirectUri = "https://vscode.dev/redirect";
 }
