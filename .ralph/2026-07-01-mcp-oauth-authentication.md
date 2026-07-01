@@ -95,12 +95,12 @@ inside Ralph's build/test loop.)
 - Modify: `code/backend/DD.ServiceAuth.Domain/Setup.cs`
 - Modify: `code/backend/DD.App/appsettings.json`
 
-- [ ] Add an `OAuthSettings` options class (access-token TTL in minutes, refresh-token TTL in days, supported scopes) bound from an `OAuth` configuration section, with `[Required]` data annotations and `ValidateOnStart`, mirroring how `AuthSettings` is bound in `DD.ServiceAuth.Details/Setup.cs`
-- [ ] Add an `OAuth` section with default TTLs and scopes to `appsettings.json` (derive issuer/base URL from the incoming request at runtime, so no per-environment secret is needed)
-- [ ] Add a method to `TokenService`/`ITokenService` that mints an access token with an explicit (short) lifetime, reusing the existing claims and `Auth` signing key (keep the current `Serialize` behaviour intact)
-- [ ] Implement `IPkceService.Verify(codeVerifier, codeChallenge)` using SHA-256 + base64url ("S256")
-- [ ] Implement `IAuthCodeService` to issue and verify a short-lived signed authorization code embedding `userId`, `clientId`, `redirectUri`, and `codeChallenge` (reject on bad signature, expiry, or redirect/clientId mismatch)
-- [ ] Implement `IRefreshTokenService` (stateless: issue and verify a signed refresh token carrying `userId`, `clientId`, and expiry), with an interface shaped so a future stateful store can replace it; register all new services + the `OAuthSettings` binding in `DD.ServiceAuth.Domain/Setup.cs`, then verify `dotnet build code/backend/DarkDeeds.sln -c Release` (no warnings)
+- [x] Add an `OAuthSettings` options class (access-token TTL in minutes, refresh-token TTL in days, supported scopes) bound from an `OAuth` configuration section, with `[Required]` data annotations and `ValidateOnStart`, mirroring how `AuthSettings` is bound in `DD.ServiceAuth.Details/Setup.cs` (NOTE: `ScopesSupported` typed as `IReadOnlyList<string>` rather than an array to satisfy CA1819)
+- [x] Add an `OAuth` section with default TTLs and scopes to `appsettings.json` (derive issuer/base URL from the incoming request at runtime, so no per-environment secret is needed)
+- [x] Add a method to `TokenService`/`ITokenService` that mints an access token with an explicit (short) lifetime, reusing the existing claims and `Auth` signing key (keep the current `Serialize` behaviour intact) (implemented as `SerializeWithLifetime`; `Serialize` now delegates to it, keeping behaviour identical)
+- [x] Implement `IPkceService.Verify(codeVerifier, codeChallenge)` using SHA-256 + base64url ("S256")
+- [x] Implement `IAuthCodeService` to issue and verify a short-lived signed authorization code embedding `userId`, `clientId`, `redirectUri`, and `codeChallenge` (reject on bad signature, expiry, or redirect/clientId mismatch)
+- [x] Implement `IRefreshTokenService` (stateless: issue and verify a signed refresh token carrying `userId`, `clientId`, and expiry), with an interface shaped so a future stateful store can replace it; register all new services + the `OAuthSettings` binding in `DD.ServiceAuth.Domain/Setup.cs`, then verify `dotnet build code/backend/DarkDeeds.sln -c Release` (no warnings) (NOTE: interface made async (`IssueAsync`/`VerifyAsync`) so a future stateful MongoDB store is a drop-in replacement; `AddAuthServiceDomain` now takes `IConfiguration` and the Domain csproj gained `Microsoft.Extensions.Configuration.Abstractions` + `Microsoft.Extensions.Options.ConfigurationExtensions`/`DataAnnotations` for the binding)
 
 ### Task 3: Add OAuth discovery, consent, token, and registration endpoints
 

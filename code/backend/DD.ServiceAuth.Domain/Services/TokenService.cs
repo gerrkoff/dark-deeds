@@ -11,6 +11,8 @@ namespace DD.ServiceAuth.Domain.Services;
 public interface ITokenService
 {
     string Serialize(AuthTokenBuildInfo authToken);
+
+    string SerializeWithLifetime(AuthTokenBuildInfo authToken, int lifetimeMinutes);
 }
 
 internal sealed class TokenService(
@@ -22,12 +24,17 @@ internal sealed class TokenService(
 
     public string Serialize(AuthTokenBuildInfo authToken)
     {
+        return SerializeWithLifetime(authToken, _authSettings.Lifetime);
+    }
+
+    public string SerializeWithLifetime(AuthTokenBuildInfo authToken, int lifetimeMinutes)
+    {
         var keyBytes = Encoding.ASCII.GetBytes(_authSettings.Key);
         var claims = claimsService.FromToken(authToken);
         var tokenDescriptor = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity(claims),
-            Expires = DateTime.UtcNow.AddMinutes(_authSettings.Lifetime),
+            Expires = DateTime.UtcNow.AddMinutes(lifetimeMinutes),
             Issuer = _authSettings.Issuer,
             Audience = _authSettings.Audience,
             SigningCredentials = new SigningCredentials(

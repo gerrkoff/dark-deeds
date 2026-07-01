@@ -16,7 +16,7 @@ public static class Setup
 {
     public static void AddAuthService(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddAuthServiceDomain();
+        services.AddAuthServiceDomain(configuration);
         services.AddAuthServiceData(configuration);
     }
 
