@@ -64,6 +64,11 @@ public sealed class OAuthController(
             return BadRequest(new OAuthError("invalid_request", "redirect_uri must be a loopback address."));
         }
 
+        if (string.IsNullOrEmpty(clientId))
+        {
+            return BadRequest(new OAuthError("invalid_request", "client_id is required."));
+        }
+
         if (!string.Equals(responseType, ResponseTypeCode, StringComparison.Ordinal))
         {
             return BadRequest(new OAuthError("unsupported_response_type", "response_type must be 'code'."));
@@ -82,7 +87,7 @@ public sealed class OAuthController(
         }
 
         var html = ConsentPage.Render(
-            clientId ?? string.Empty,
+            clientId,
             redirectUri!,
             codeChallenge,
             state,
@@ -104,6 +109,11 @@ public sealed class OAuthController(
         if (!IsLoopbackRedirectUri(redirectUri))
         {
             return BadRequest(new OAuthError("invalid_request", "redirect_uri must be a loopback address."));
+        }
+
+        if (string.IsNullOrEmpty(clientId))
+        {
+            return BadRequest(new OAuthError("invalid_request", "client_id is required."));
         }
 
         if (string.IsNullOrEmpty(codeChallenge) || string.IsNullOrEmpty(state))
@@ -132,7 +142,7 @@ public sealed class OAuthController(
         var code = authCodeService.Issue(new AuthCodeData
         {
             UserId = userId,
-            ClientId = clientId ?? string.Empty,
+            ClientId = clientId,
             RedirectUri = redirectUri!,
             CodeChallenge = codeChallenge,
         });
