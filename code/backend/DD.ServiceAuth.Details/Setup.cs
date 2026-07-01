@@ -50,6 +50,7 @@ public static class Setup
             .AddJwtBearer(options =>
             {
                 options.RequireHttpsMetadata = false;
+                options.MapInboundClaims = false;
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuer = true,
