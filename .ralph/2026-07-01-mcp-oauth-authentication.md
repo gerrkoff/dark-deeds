@@ -160,10 +160,10 @@ inside Ralph's build/test loop.)
 
 ### Task 7: Final validation
 
-- [ ] Run `dotnet build code/backend/DarkDeeds.sln -c Release` and confirm 0 warnings
-- [ ] Run `dotnet test code/backend/DarkDeeds.sln -c Release` and confirm all tests pass
-- [ ] Run `rg -n "McpKey" code ci` and confirm it returns no results
-- [ ] Run `rg -n "api/mcp/|DarkDeeds\.Mcp" code .github ci` and confirm it returns no results
+- [x] Run `dotnet build code/backend/DarkDeeds.sln -c Release` and confirm 0 warnings (Build succeeded: 0 Warning(s), 0 Error(s))
+- [x] Run `dotnet test code/backend/DarkDeeds.sln -c Release` and confirm all tests pass (Passed! Failed: 0, Passed: 191, Skipped: 0)
+- [x] Run `rg -n "McpKey" code ci` and confirm it returns no results (no matches; `rg` is not on PATH here so the equivalent ripgrep-backed search tool was used — same .gitignore-respecting semantics)
+- [x] Run `rg -n "api/mcp/|DarkDeeds\.Mcp" code .github ci` and confirm it returns no results (no matches; the kept in-process client is `DD.McpClient.Domain`, which does not match `DarkDeeds\.Mcp`)
 
 ## Notes
 
