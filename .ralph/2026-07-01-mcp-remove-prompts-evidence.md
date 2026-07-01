@@ -52,10 +52,10 @@ warnings.)
 - Delete: `code/mcp/DarkDeeds.Mcp/Prompts/WeeklyOrderPrompt.cs`
 - Modify: `code/mcp/DarkDeeds.Mcp/Program.cs`
 
-- [ ] Delete the entire `code/mcp/DarkDeeds.Mcp/Prompts/` directory (both prompt files)
-- [ ] Remove the `.WithPromptsFromAssembly()` call from the MCP server builder chain in `Program.cs`
-- [ ] Run `rg -n "WithPromptsFromAssembly|Prompts" code/mcp/DarkDeeds.Mcp` and confirm it returns no results
-- [ ] Verify `dotnet build code/mcp/DarkDeeds.Mcp/DarkDeeds.Mcp.csproj -c Release` succeeds with no warnings
+- [x] Delete the entire `code/mcp/DarkDeeds.Mcp/Prompts/` directory (both prompt files)
+- [x] Remove the `.WithPromptsFromAssembly()` call from the MCP server builder chain in `Program.cs`
+- [x] Run `rg -n "WithPromptsFromAssembly|Prompts" code/mcp/DarkDeeds.Mcp` and confirm it returns no results
+- [x] Verify `dotnet build code/mcp/DarkDeeds.Mcp/DarkDeeds.Mcp.csproj -c Release` succeeds with no warnings
 
 ### Task 2: Require and send a justification from the MCP write tool
 
