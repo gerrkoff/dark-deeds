@@ -175,11 +175,17 @@ public sealed class OAuthController(IOAuthFlowService oauthFlowService)
             return false;
         }
 
-        // VS Code registers this well-known Microsoft redirect helper alongside its loopback
-        // address, so allow it explicitly; otherwise dynamic client registration (which sends the
-        // whole redirect_uris set at once) and the browser consent flow fail. PKCE still protects
-        // the code exchange for this non-loopback redirect.
-        if (string.Equals(redirectUri, OAuthConstants.VsCodeRedirectUri, StringComparison.Ordinal))
+        // VS Code registers well-known Microsoft redirect helpers (stable + Insiders) alongside its
+        // loopback addresses, and dynamic client registration sends the whole redirect_uris set at
+        // once, so allow these exact URIs; otherwise registration and the browser consent flow fail.
+        // PKCE still protects the code exchange for these non-loopback redirects.
+        string[] allowedExternalRedirectUris =
+        [
+            "https://vscode.dev/redirect",
+            "https://insiders.vscode.dev/redirect",
+        ];
+
+        if (allowedExternalRedirectUris.Contains(redirectUri, StringComparer.Ordinal))
         {
             return true;
         }
