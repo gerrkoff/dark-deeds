@@ -92,10 +92,10 @@ warnings.)
 
 ### Task 5: Final validation
 
-- [ ] Run `dotnet build code/backend/DarkDeeds.sln -c Release` and confirm 0 warnings
-- [ ] Run `dotnet test code/backend/DarkDeeds.sln -c Release` and confirm all tests pass
-- [ ] Run `dotnet build code/mcp/DarkDeeds.Mcp/DarkDeeds.Mcp.csproj -c Release` and confirm 0 warnings
-- [ ] Run `rg -n "WithPromptsFromAssembly|DarkDeeds\.Mcp\.Prompts" code/mcp` and confirm it returns no results
+- [x] Run `dotnet build code/backend/DarkDeeds.sln -c Release` and confirm 0 warnings
+- [x] Run `dotnet test code/backend/DarkDeeds.sln -c Release` and confirm all tests pass
+- [x] Run `dotnet build code/mcp/DarkDeeds.Mcp/DarkDeeds.Mcp.csproj -c Release` and confirm 0 warnings
+- [x] Run `rg -n "WithPromptsFromAssembly|DarkDeeds\.Mcp\.Prompts" code/mcp` and confirm it returns no results
 
 ## Notes
 
