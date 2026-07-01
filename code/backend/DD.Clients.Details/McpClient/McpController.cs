@@ -21,8 +21,9 @@ public class McpController(IMcpService mcpService) : ControllerBase
     [HttpPost]
     public Task<string> UpdateTasksOrder(
         [Required] string userId,
+        [Required] string justification,
         [FromBody] ICollection<TaskUpdateDto> updates)
     {
-        return mcpService.UpdateTasksOrderAsync(updates, userId);
+        return mcpService.UpdateTasksOrderAsync(updates, userId, justification);
     }
 }

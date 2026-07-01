@@ -73,11 +73,11 @@ warnings.)
 - Modify: `code/backend/DD.McpClient.Domain/Log.cs`
 - Modify: `code/backend/DD.Clients.Details/McpClient/McpController.cs`
 
-- [ ] Add a `string justification` parameter to `IMcpService.UpdateTasksOrderAsync` and its `McpService` implementation
-- [ ] In `McpService.UpdateTasksOrderAsync`, throw an `ArgumentException` when `justification` is null or whitespace, so an empty rationale is never accepted (the `McpController` is not an `[ApiController]`, so do not rely on `[Required]` model validation)
-- [ ] Update the source-generated `Log.UpdateTasksOrder` (`LoggerMessage`, EventId 5002) to include the `justification` text in the logged message, and pass it at the call site
-- [ ] Add a `[Required] string justification` query parameter to `McpController.UpdateTasksOrder` and forward it into `mcpService.UpdateTasksOrderAsync`
-- [ ] Verify `dotnet build code/backend/DarkDeeds.sln -c Release` succeeds with no warnings
+- [x] Add a `string justification` parameter to `IMcpService.UpdateTasksOrderAsync` and its `McpService` implementation
+- [x] In `McpService.UpdateTasksOrderAsync`, throw an `ArgumentException` when `justification` is null or whitespace, so an empty rationale is never accepted (the `McpController` is not an `[ApiController]`, so do not rely on `[Required]` model validation)
+- [x] Update the source-generated `Log.UpdateTasksOrder` (`LoggerMessage`, EventId 5002) to include the `justification` text in the logged message, and pass it at the call site
+- [x] Add a `[Required] string justification` query parameter to `McpController.UpdateTasksOrder` and forward it into `mcpService.UpdateTasksOrderAsync`
+- [x] Verify `dotnet build code/backend/DarkDeeds.sln -c Release` succeeds with no warnings
 
 ### Task 4: Cover the changed write path with a unit test
 
