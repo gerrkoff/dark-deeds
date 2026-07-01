@@ -19,11 +19,22 @@ public class McpController(IMcpService mcpService) : ControllerBase
     }
 
     [HttpPost]
-    public Task<string> UpdateTasksOrder(
+    public async Task<IActionResult> UpdateTasksOrder(
         [Required] string userId,
         [Required] string justification,
         [FromBody] ICollection<TaskUpdateDto> updates)
     {
-        return mcpService.UpdateTasksOrderAsync(updates, userId, justification);
+        if (string.IsNullOrWhiteSpace(userId))
+        {
+            return BadRequest("userId must be provided.");
+        }
+
+        if (string.IsNullOrWhiteSpace(justification))
+        {
+            return BadRequest("justification must be provided.");
+        }
+
+        var result = await mcpService.UpdateTasksOrderAsync(updates, userId, justification);
+        return Content(result);
     }
 }
