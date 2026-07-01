@@ -84,11 +84,11 @@ warnings.)
 **Files:**
 - Create: `code/backend/DD.Tests.Unit/McpClient/McpServiceTests.cs`
 
-- [ ] Add an xUnit test class that uses Moq to mock `ITaskServiceApp` and `ILogger<McpService>` (follow the AAA + `MethodName_Scenario_ExpectedResult` conventions used elsewhere in `DD.Tests.Unit`)
-- [ ] Test that `UpdateTasksOrderAsync` with a non-empty justification forwards the updates and userId to `ITaskServiceApp.UpdateTasksAsync` and returns the serialized result
-- [ ] Test that `UpdateTasksOrderAsync` throws `ArgumentException` when justification is null/empty/whitespace
-- [ ] Test that `LoadTasksByDateAsync` forwards from/till/userId and serializes the result
-- [ ] Verify `dotnet test code/backend/DarkDeeds.sln -c Release` passes
+- [x] Add an xUnit test class that uses Moq to mock `ITaskServiceApp` and `ILogger<McpService>` (follow the AAA + `MethodName_Scenario_ExpectedResult` conventions used elsewhere in `DD.Tests.Unit`)
+- [x] Test that `UpdateTasksOrderAsync` with a non-empty justification forwards the updates and userId to `ITaskServiceApp.UpdateTasksAsync` and returns the serialized result
+- [x] Test that `UpdateTasksOrderAsync` throws `ArgumentException` when justification is null/empty/whitespace
+- [x] Test that `LoadTasksByDateAsync` forwards from/till/userId and serializes the result
+- [x] Verify `dotnet test code/backend/DarkDeeds.sln -c Release` passes
 
 ### Task 5: Final validation
 
