@@ -12,4 +12,8 @@
     <ProjectReference Include="..\DD.McpClient.Domain\DD.McpClient.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="ModelContextProtocol.AspNetCore" />
+  </ItemGroup>
+
 </Project>

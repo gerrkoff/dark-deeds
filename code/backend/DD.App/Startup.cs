@@ -26,6 +26,7 @@ public class Startup(IConfiguration configuration)
         services.AddAuthService(Configuration);
         services.AddDdAuthentication(Configuration);
         services.AddClients(Configuration);
+        services.AddMcpHttpServer();
 
         // shared
         services.AddSharedDetails();
@@ -80,6 +81,7 @@ public class Startup(IConfiguration configuration)
             endpoints.MapControllers();
             endpoints.MapClientsCustomRoutes(Configuration);
             endpoints.MapTaskServiceCustomRoutes();
+            endpoints.MapMcp("/mcp");
         });
         app.UseDefaultFiles();
         app.UseStaticWithNotCachedIndex();

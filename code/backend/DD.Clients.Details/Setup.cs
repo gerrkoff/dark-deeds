@@ -1,3 +1,4 @@
+using DD.Clients.Details.McpClient.Tools;
 using DD.Clients.Details.MobileClient.Data;
 using DD.Clients.Details.TelegramClient.Data;
 using DD.Clients.Details.WebClientBff.Data;
@@ -29,6 +30,15 @@ public static class Setup
         services.AddWebClientBffData();
 
         services.AddMcpClientDomain();
+    }
+
+    public static void AddMcpHttpServer(this IServiceCollection services)
+    {
+        services
+            .AddMcpServer()
+            .WithHttpTransport()
+            .WithTools<LoadTasksTool>()
+            .WithTools<UpdateTasksOrderTool>();
     }
 
     public static void MapClientsCustomRoutes(this IEndpointRouteBuilder endpoints, IConfiguration configuration)
