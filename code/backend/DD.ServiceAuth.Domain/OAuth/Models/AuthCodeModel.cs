@@ -1,8 +1,8 @@
 using System.Diagnostics.CodeAnalysis;
 
-namespace DD.ServiceAuth.Domain.Services;
+namespace DD.ServiceAuth.Domain.OAuth.Models;
 
-public sealed record AuthCodeData
+public sealed record AuthCodeModel
 {
     public required string UserId { get; init; }
 

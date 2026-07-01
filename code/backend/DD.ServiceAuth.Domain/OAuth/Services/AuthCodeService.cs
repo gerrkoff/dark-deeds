@@ -2,20 +2,21 @@ using System.Diagnostics.CodeAnalysis;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using DD.ServiceAuth.Domain.OAuth.Models;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
-namespace DD.ServiceAuth.Domain.Services;
+namespace DD.ServiceAuth.Domain.OAuth.Services;
 
 public interface IAuthCodeService
 {
-    string Issue(AuthCodeData data);
+    Task<string> IssueAsync(AuthCodeModel model);
 
     [SuppressMessage(
         "Design",
         "CA1054:URI-like parameters should not be strings",
         Justification = "OAuth redirect_uri must be compared by exact string match, not URI-normalized.")]
-    AuthCodeData? Verify(string code, string clientId, string redirectUri);
+    Task<AuthCodeModel?> VerifyAsync(string code, string clientId, string redirectUri);
 }
 
 internal sealed class AuthCodeService(IOptions<AuthSettings> authSettings) : IAuthCodeService
@@ -29,16 +30,16 @@ internal sealed class AuthCodeService(IOptions<AuthSettings> authSettings) : IAu
 
     private readonly AuthSettings _authSettings = authSettings.Value;
 
-    public string Issue(AuthCodeData data)
+    public Task<string> IssueAsync(AuthCodeModel model)
     {
         var keyBytes = Encoding.ASCII.GetBytes(_authSettings.Key);
         var claims = new List<Claim>
         {
             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-            new(JwtRegisteredClaimNames.Sub, data.UserId),
-            new(ClientIdClaim, data.ClientId),
-            new(RedirectUriClaim, data.RedirectUri),
-            new(CodeChallengeClaim, data.CodeChallenge),
+            new(JwtRegisteredClaimNames.Sub, model.UserId),
+            new(ClientIdClaim, model.ClientId),
+            new(RedirectUriClaim, model.RedirectUri),
+            new(CodeChallengeClaim, model.CodeChallenge),
         };
 
         var tokenDescriptor = new SecurityTokenDescriptor
@@ -54,10 +55,10 @@ internal sealed class AuthCodeService(IOptions<AuthSettings> authSettings) : IAu
 
         var tokenHandler = new JwtSecurityTokenHandler();
         var token = tokenHandler.CreateToken(tokenDescriptor);
-        return tokenHandler.WriteToken(token);
+        return Task.FromResult(tokenHandler.WriteToken(token));
     }
 
-    public AuthCodeData? Verify(string code, string clientId, string redirectUri)
+    public async Task<AuthCodeModel?> VerifyAsync(string code, string clientId, string redirectUri)
     {
         if (string.IsNullOrEmpty(code))
         {
@@ -78,41 +79,34 @@ internal sealed class AuthCodeService(IOptions<AuthSettings> authSettings) : IAu
             ClockSkew = TimeSpan.Zero,
         };
 
-        try
-        {
-            var principal = tokenHandler.ValidateToken(code, validationParameters, out _);
-
-            var userId = principal.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
-            var tokenClientId = principal.FindFirst(ClientIdClaim)?.Value;
-            var tokenRedirectUri = principal.FindFirst(RedirectUriClaim)?.Value;
-            var codeChallenge = principal.FindFirst(CodeChallengeClaim)?.Value;
-
-            if (userId is null || tokenClientId is null || tokenRedirectUri is null || codeChallenge is null)
-            {
-                return null;
-            }
-
-            if (!string.Equals(tokenClientId, clientId, StringComparison.Ordinal) ||
-                !string.Equals(tokenRedirectUri, redirectUri, StringComparison.Ordinal))
-            {
-                return null;
-            }
-
-            return new AuthCodeData
-            {
-                UserId = userId,
-                ClientId = tokenClientId,
-                RedirectUri = tokenRedirectUri,
-                CodeChallenge = codeChallenge,
-            };
-        }
-        catch (SecurityTokenException)
+        var result = await tokenHandler.ValidateTokenAsync(code, validationParameters);
+        if (!result.IsValid)
         {
             return null;
         }
-        catch (ArgumentException)
+
+        var userId = result.ClaimsIdentity.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
+        var tokenClientId = result.ClaimsIdentity.FindFirst(ClientIdClaim)?.Value;
+        var tokenRedirectUri = result.ClaimsIdentity.FindFirst(RedirectUriClaim)?.Value;
+        var codeChallenge = result.ClaimsIdentity.FindFirst(CodeChallengeClaim)?.Value;
+
+        if (userId is null || tokenClientId is null || tokenRedirectUri is null || codeChallenge is null)
         {
             return null;
         }
+
+        if (!string.Equals(tokenClientId, clientId, StringComparison.Ordinal) ||
+            !string.Equals(tokenRedirectUri, redirectUri, StringComparison.Ordinal))
+        {
+            return null;
+        }
+
+        return new AuthCodeModel
+        {
+            UserId = userId,
+            ClientId = tokenClientId,
+            RedirectUri = tokenRedirectUri,
+            CodeChallenge = codeChallenge,
+        };
     }
 }

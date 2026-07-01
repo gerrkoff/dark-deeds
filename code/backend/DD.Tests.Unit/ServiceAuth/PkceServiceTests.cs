@@ -1,6 +1,6 @@
 using System.Security.Cryptography;
 using System.Text;
-using DD.ServiceAuth.Domain.Services;
+using DD.ServiceAuth.Domain.OAuth.Services;
 using Xunit;
 
 namespace DD.Tests.Unit.ServiceAuth;

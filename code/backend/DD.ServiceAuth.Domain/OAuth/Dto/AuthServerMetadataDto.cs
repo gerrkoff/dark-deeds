@@ -1,8 +1,8 @@
 using System.Text.Json.Serialization;
 
-namespace DD.ServiceAuth.Details.Web.OAuth;
+namespace DD.ServiceAuth.Domain.OAuth.Dto;
 
-public sealed record AuthServerMetadata(
+public sealed record AuthServerMetadataDto(
     [property: JsonPropertyName("issuer")] string Issuer,
     [property: JsonPropertyName("authorization_endpoint")] string AuthorizationEndpoint,
     [property: JsonPropertyName("token_endpoint")] string TokenEndpoint,

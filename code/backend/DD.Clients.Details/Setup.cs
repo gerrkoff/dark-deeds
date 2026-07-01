@@ -30,10 +30,7 @@ public static class Setup
         services.AddWebClientBffData();
 
         services.AddMcpClientDomain();
-    }
 
-    public static void AddMcpHttpServer(this IServiceCollection services)
-    {
         services
             .AddMcpServer()
             .WithHttpTransport()
@@ -47,6 +44,8 @@ public static class Setup
             "bot",
             $"api/tlgm/bot/{configuration["Bot"]}",
             new { controller = "Bot", action = "Process" });
+
+        endpoints.MapMcp("/mcp").RequireAuthorization();
     }
 
     private static void AddTelegramClientData(this IServiceCollection services)

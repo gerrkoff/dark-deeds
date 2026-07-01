@@ -1,7 +1,7 @@
 using System.Security.Cryptography;
 using System.Text;
 
-namespace DD.ServiceAuth.Domain.Services;
+namespace DD.ServiceAuth.Domain.OAuth.Services;
 
 public interface IPkceService
 {

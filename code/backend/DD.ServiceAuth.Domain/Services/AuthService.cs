@@ -96,7 +96,7 @@ internal sealed class AuthService(
     public async Task<string?> CreateAccessTokenAsync(string userId, int lifetimeMinutes)
     {
         var user = await userManager.FindByIdAsync(userId);
-        return user is null ? null : tokenService.SerializeWithLifetime(ToAuthToken(user), lifetimeMinutes);
+        return user is null ? null : tokenService.Serialize(ToAuthToken(user), lifetimeMinutes);
     }
 
     public string RenewToken(AuthToken authToken)

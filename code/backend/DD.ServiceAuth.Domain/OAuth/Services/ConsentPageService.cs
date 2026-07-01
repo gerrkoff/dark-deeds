@@ -1,15 +1,29 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Net;
 
-namespace DD.ServiceAuth.Details.Web.OAuth;
+namespace DD.ServiceAuth.Domain.OAuth.Services;
 
-internal static class ConsentPage
+public interface IConsentPageService
 {
     [SuppressMessage(
         "Design",
         "CA1054:URI-like parameters should not be strings",
         Justification = "OAuth redirect_uri is echoed verbatim into a hidden form field and must not be URI-normalized.")]
-    public static string Render(
+    string Render(
+        string clientId,
+        string redirectUri,
+        string codeChallenge,
+        string state,
+        string scope);
+}
+
+internal sealed class ConsentPageService : IConsentPageService
+{
+    [SuppressMessage(
+        "Design",
+        "CA1054:URI-like parameters should not be strings",
+        Justification = "OAuth redirect_uri is echoed verbatim into a hidden form field and must not be URI-normalized.")]
+    public string Render(
         string clientId,
         string redirectUri,
         string codeChallenge,

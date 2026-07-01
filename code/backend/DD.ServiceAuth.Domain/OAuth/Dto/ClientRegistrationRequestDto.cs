@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace DD.ServiceAuth.Details.Web.OAuth;
+namespace DD.ServiceAuth.Domain.OAuth.Dto;
 
-public sealed record ClientRegistrationRequest(
+public sealed record ClientRegistrationRequestDto(
     [property: JsonPropertyName("redirect_uris")] IReadOnlyList<string>? RedirectUris);

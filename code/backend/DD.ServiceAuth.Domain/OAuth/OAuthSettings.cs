@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace DD.ServiceAuth.Domain;
+namespace DD.ServiceAuth.Domain.OAuth;
 
 public class OAuthSettings
 {

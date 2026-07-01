@@ -1,3 +1,5 @@
+using DD.ServiceAuth.Domain.OAuth;
+using DD.ServiceAuth.Domain.OAuth.Services;
 using DD.ServiceAuth.Domain.Services;
 using DD.Shared.Details.Abstractions;
 using Microsoft.Extensions.Configuration;
@@ -19,7 +21,10 @@ public static class Setup
         services.AddScoped<ITestService, TestService>();
         services.AddTransient<IClaimsService, ClaimsService>();
         services.AddTransient<IPkceService, PkceService>();
+        services.AddTransient<IConsentPageService, ConsentPageService>();
+        services.AddTransient<IRedirectUriBuilder, RedirectUriBuilder>();
         services.AddScoped<IAuthCodeService, AuthCodeService>();
         services.AddScoped<IRefreshTokenService, RefreshTokenService>();
+        services.AddScoped<IOAuthFlowService, OAuthFlowService>();
     }
 }

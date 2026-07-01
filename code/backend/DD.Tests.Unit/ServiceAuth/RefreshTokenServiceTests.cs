@@ -2,7 +2,9 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using DD.ServiceAuth.Domain;
-using DD.ServiceAuth.Domain.Services;
+using DD.ServiceAuth.Domain.OAuth;
+using DD.ServiceAuth.Domain.OAuth.Models;
+using DD.ServiceAuth.Domain.OAuth.Services;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Xunit;
@@ -29,7 +31,7 @@ public class RefreshTokenServiceTests
     {
         // Arrange
         var service = CreateService();
-        var data = new RefreshTokenData(UserId, ClientId);
+        var data = new RefreshTokenModel(UserId, ClientId);
 
         // Act
         var token = await service.IssueAsync(data);
@@ -46,7 +48,7 @@ public class RefreshTokenServiceTests
     {
         // Arrange
         var service = CreateService();
-        var token = await service.IssueAsync(new RefreshTokenData(UserId, ClientId));
+        var token = await service.IssueAsync(new RefreshTokenModel(UserId, ClientId));
         var tampered = TamperSignature(token);
 
         // Act
@@ -107,12 +109,12 @@ public class RefreshTokenServiceTests
     {
         // Arrange
         var service = CreateService();
-        var original = await service.IssueAsync(new RefreshTokenData(UserId, ClientId));
+        var original = await service.IssueAsync(new RefreshTokenModel(UserId, ClientId));
 
         // Act - simulate the refresh grant: verify the presented token, then mint a new one.
         var verifiedOriginal = await service.VerifyAsync(original);
         Assert.NotNull(verifiedOriginal);
-        var renewed = await service.IssueAsync(new RefreshTokenData(verifiedOriginal.UserId, verifiedOriginal.ClientId));
+        var renewed = await service.IssueAsync(new RefreshTokenModel(verifiedOriginal.UserId, verifiedOriginal.ClientId));
         var verifiedRenewed = await service.VerifyAsync(renewed);
 
         // Assert

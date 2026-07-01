@@ -1,16 +1,17 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using DD.ServiceAuth.Domain.OAuth.Models;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
-namespace DD.ServiceAuth.Domain.Services;
+namespace DD.ServiceAuth.Domain.OAuth.Services;
 
 public interface IRefreshTokenService
 {
-    Task<string> IssueAsync(RefreshTokenData data);
+    Task<string> IssueAsync(RefreshTokenModel model);
 
-    Task<RefreshTokenData?> VerifyAsync(string refreshToken);
+    Task<RefreshTokenModel?> VerifyAsync(string refreshToken);
 }
 
 internal sealed class RefreshTokenService(
@@ -25,14 +26,14 @@ internal sealed class RefreshTokenService(
     private readonly AuthSettings _authSettings = authSettings.Value;
     private readonly OAuthSettings _oauthSettings = oauthSettings.Value;
 
-    public Task<string> IssueAsync(RefreshTokenData data)
+    public Task<string> IssueAsync(RefreshTokenModel model)
     {
         var keyBytes = Encoding.ASCII.GetBytes(_authSettings.Key);
         var claims = new List<Claim>
         {
             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-            new(JwtRegisteredClaimNames.Sub, data.UserId),
-            new(ClientIdClaim, data.ClientId),
+            new(JwtRegisteredClaimNames.Sub, model.UserId),
+            new(ClientIdClaim, model.ClientId),
         };
 
         var tokenDescriptor = new SecurityTokenDescriptor
@@ -51,7 +52,7 @@ internal sealed class RefreshTokenService(
         return Task.FromResult(tokenHandler.WriteToken(token));
     }
 
-    public async Task<RefreshTokenData?> VerifyAsync(string refreshToken)
+    public async Task<RefreshTokenModel?> VerifyAsync(string refreshToken)
     {
         if (string.IsNullOrEmpty(refreshToken))
         {
@@ -86,6 +87,6 @@ internal sealed class RefreshTokenService(
             return null;
         }
 
-        return new RefreshTokenData(userId, clientId);
+        return new RefreshTokenModel(userId, clientId);
     }
 }

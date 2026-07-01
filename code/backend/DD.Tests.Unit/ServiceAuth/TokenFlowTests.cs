@@ -1,6 +1,9 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using DD.ServiceAuth.Domain;
+using DD.ServiceAuth.Domain.OAuth;
+using DD.ServiceAuth.Domain.OAuth.Models;
+using DD.ServiceAuth.Domain.OAuth.Services;
 using DD.ServiceAuth.Domain.Services;
 using DD.Shared.Details.Abstractions.Models;
 using Microsoft.Extensions.Options;
@@ -13,7 +16,7 @@ namespace DD.Tests.Unit.ServiceAuth;
 // verifier yields an access JWT (validatable with the Auth signing key) and a refresh
 // token, and that refresh token in turn mints another usable access JWT. The access-token
 // step mirrors AuthService.CreateAccessTokenAsync, which delegates to
-// ITokenService.SerializeWithLifetime.
+// ITokenService.Serialize with an explicit lifetime.
 public class TokenFlowTests
 {
     private const string CodeVerifier = "dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk";
@@ -55,7 +58,7 @@ public class TokenFlowTests
     public async Task AuthorizationCode_ComposesAccessAndRefreshTokens_AndRefreshMintsAnotherAccessToken()
     {
         // Arrange - the authorization server issued a code embedding the PKCE challenge.
-        var code = _authCodeService.Issue(new AuthCodeData
+        var code = await _authCodeService.IssueAsync(new AuthCodeModel
         {
             UserId = UserId,
             ClientId = ClientId,
@@ -64,12 +67,12 @@ public class TokenFlowTests
         });
 
         // Act & Assert - authorization_code grant.
-        var codeData = _authCodeService.Verify(code, ClientId, RedirectUri);
+        var codeData = await _authCodeService.VerifyAsync(code, ClientId, RedirectUri);
         Assert.NotNull(codeData);
         Assert.True(_pkceService.Verify(CodeVerifier, codeData.CodeChallenge));
 
         var accessToken = CreateAccessToken(codeData.UserId);
-        var refreshToken = await _refreshTokenService.IssueAsync(new RefreshTokenData(codeData.UserId, ClientId));
+        var refreshToken = await _refreshTokenService.IssueAsync(new RefreshTokenModel(codeData.UserId, ClientId));
 
         Assert.Equal(UserId, ReadValidatedSubject(accessToken));
         Assert.False(string.IsNullOrEmpty(refreshToken));
@@ -92,7 +95,7 @@ public class TokenFlowTests
             DisplayName = "Test User",
         };
 
-        return _tokenService.SerializeWithLifetime(buildInfo, AccessTokenLifetimeMinutes);
+        return _tokenService.Serialize(buildInfo, AccessTokenLifetimeMinutes);
     }
 
     private string ReadValidatedSubject(string accessToken)

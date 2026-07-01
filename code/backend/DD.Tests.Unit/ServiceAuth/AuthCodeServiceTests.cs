@@ -2,7 +2,8 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using DD.ServiceAuth.Domain;
-using DD.ServiceAuth.Domain.Services;
+using DD.ServiceAuth.Domain.OAuth.Models;
+using DD.ServiceAuth.Domain.OAuth.Services;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Xunit;
@@ -32,14 +33,14 @@ public class AuthCodeServiceTests
     }
 
     [Fact]
-    public void IssueThenVerify_ValidCode_RoundTripsData()
+    public async Task IssueThenVerify_ValidCode_RoundTripsData()
     {
         // Arrange
         var data = CreateData();
 
         // Act
-        var code = _service.Issue(data);
-        var verified = _service.Verify(code, ClientId, RedirectUri);
+        var code = await _service.IssueAsync(data);
+        var verified = await _service.VerifyAsync(code, ClientId, RedirectUri);
 
         // Assert
         Assert.NotNull(verified);
@@ -50,21 +51,21 @@ public class AuthCodeServiceTests
     }
 
     [Fact]
-    public void Verify_TamperedSignature_ReturnsNull()
+    public async Task VerifyAsync_TamperedSignature_ReturnsNull()
     {
         // Arrange
-        var code = _service.Issue(CreateData());
+        var code = await _service.IssueAsync(CreateData());
         var tampered = TamperSignature(code);
 
         // Act
-        var verified = _service.Verify(tampered, ClientId, RedirectUri);
+        var verified = await _service.VerifyAsync(tampered, ClientId, RedirectUri);
 
         // Assert
         Assert.Null(verified);
     }
 
     [Fact]
-    public void Verify_CodeSignedWithDifferentKey_ReturnsNull()
+    public async Task VerifyAsync_CodeSignedWithDifferentKey_ReturnsNull()
     {
         // Arrange
         var foreignCode = IssueWith(
@@ -73,46 +74,46 @@ public class AuthCodeServiceTests
             DateTime.UtcNow.AddMinutes(5));
 
         // Act
-        var verified = _service.Verify(foreignCode, ClientId, RedirectUri);
+        var verified = await _service.VerifyAsync(foreignCode, ClientId, RedirectUri);
 
         // Assert
         Assert.Null(verified);
     }
 
     [Fact]
-    public void Verify_ExpiredCode_ReturnsNull()
+    public async Task VerifyAsync_ExpiredCode_ReturnsNull()
     {
         // Arrange
         var expiredCode = IssueWith(_authSettings.Key, CreateData(), DateTime.UtcNow.AddMinutes(-5));
 
         // Act
-        var verified = _service.Verify(expiredCode, ClientId, RedirectUri);
+        var verified = await _service.VerifyAsync(expiredCode, ClientId, RedirectUri);
 
         // Assert
         Assert.Null(verified);
     }
 
     [Fact]
-    public void Verify_ClientIdMismatch_ReturnsNull()
+    public async Task VerifyAsync_ClientIdMismatch_ReturnsNull()
     {
         // Arrange
-        var code = _service.Issue(CreateData());
+        var code = await _service.IssueAsync(CreateData());
 
         // Act
-        var verified = _service.Verify(code, "another-client", RedirectUri);
+        var verified = await _service.VerifyAsync(code, "another-client", RedirectUri);
 
         // Assert
         Assert.Null(verified);
     }
 
     [Fact]
-    public void Verify_RedirectUriMismatch_ReturnsNull()
+    public async Task VerifyAsync_RedirectUriMismatch_ReturnsNull()
     {
         // Arrange
-        var code = _service.Issue(CreateData());
+        var code = await _service.IssueAsync(CreateData());
 
         // Act
-        var verified = _service.Verify(code, ClientId, "http://127.0.0.1:5000/other");
+        var verified = await _service.VerifyAsync(code, ClientId, "http://127.0.0.1:5000/other");
 
         // Assert
         Assert.Null(verified);
@@ -122,18 +123,18 @@ public class AuthCodeServiceTests
     [InlineData(null)]
     [InlineData("")]
     [InlineData("not-a-jwt")]
-    public void Verify_MalformedCode_ReturnsNull(string? code)
+    public async Task VerifyAsync_MalformedCode_ReturnsNull(string? code)
     {
         // Act
-        var verified = _service.Verify(code!, ClientId, RedirectUri);
+        var verified = await _service.VerifyAsync(code!, ClientId, RedirectUri);
 
         // Assert
         Assert.Null(verified);
     }
 
-    private static AuthCodeData CreateData()
+    private static AuthCodeModel CreateData()
     {
-        return new AuthCodeData
+        return new AuthCodeModel
         {
             UserId = "user-42",
             ClientId = ClientId,
@@ -142,15 +143,15 @@ public class AuthCodeServiceTests
         };
     }
 
-    private static string IssueWith(string key, AuthCodeData data, DateTime expires)
+    private static string IssueWith(string key, AuthCodeModel model, DateTime expires)
     {
         var claims = new List<Claim>
         {
             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-            new(JwtRegisteredClaimNames.Sub, data.UserId),
-            new("client_id", data.ClientId),
-            new("redirect_uri", data.RedirectUri),
-            new("code_challenge", data.CodeChallenge),
+            new(JwtRegisteredClaimNames.Sub, model.UserId),
+            new("client_id", model.ClientId),
+            new("redirect_uri", model.RedirectUri),
+            new("code_challenge", model.CodeChallenge),
         };
 
         var tokenDescriptor = new SecurityTokenDescriptor

@@ -1,8 +1,8 @@
 using System.Text.Json.Serialization;
 
-namespace DD.ServiceAuth.Details.Web.OAuth;
+namespace DD.ServiceAuth.Domain.OAuth.Dto;
 
-public sealed record TokenResponse(
+public sealed record TokenResponseDto(
     [property: JsonPropertyName("access_token")] string AccessToken,
     [property: JsonPropertyName("token_type")] string TokenType,
     [property: JsonPropertyName("expires_in")] int ExpiresIn,
