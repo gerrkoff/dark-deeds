@@ -23,20 +23,32 @@ public class McpServiceTests
     public async Task UpdateTasksOrderAsync_WithJustification_ForwardsUpdatesAndReturnsSerializedResult()
     {
         // Arrange
+        const string justification = "Reordered by priority";
         var updates = new List<TaskUpdateDto> { new() { Uid = "uid-1", Order = 2 } };
         IEnumerable<TaskDto> resultTasks =
             [new() { Uid = "uid-1", Order = 2, Type = TaskTypeDto.Routine }];
         taskServiceAppMock
             .Setup(x => x.UpdateTasksAsync(updates, "user-1", null))
             .ReturnsAsync(resultTasks);
+        loggerMock
+            .Setup(x => x.IsEnabled(It.IsAny<LogLevel>()))
+            .Returns(true);
         var service = CreateService();
 
         // Act
-        var result = await service.UpdateTasksOrderAsync(updates, "user-1", "Reordered by priority");
+        var result = await service.UpdateTasksOrderAsync(updates, "user-1", justification);
 
         // Assert
         taskServiceAppMock.Verify(x => x.UpdateTasksAsync(updates, "user-1", null), Times.Once);
         Assert.Equal(Serialize(resultTasks), result);
+        loggerMock.Verify(
+            x => x.Log(
+                LogLevel.Information,
+                It.IsAny<EventId>(),
+                It.Is<It.IsAnyType>((state, _) => state.ToString()!.Contains(justification)),
+                It.IsAny<Exception?>(),
+                It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
+            Times.Once);
     }
 
     [Theory]
