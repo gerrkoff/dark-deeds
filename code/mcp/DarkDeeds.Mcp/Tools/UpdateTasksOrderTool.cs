@@ -15,7 +15,9 @@ public static class UpdateTasksOrderTool
     public static async Task<string> Do(
         IMcpServer server,
         [Description("Array of task updates with UID and new order")]
-        TaskUpdateInput[] updates)
+        TaskUpdateInput[] updates,
+        [Description("Explain why this new ordering is correct. State the concrete evidence and reasoning that justify reordering the user's tasks this way.")]
+        string justification)
     {
         var logger = server.AsClientLoggerProvider().CreateLogger(nameof(UpdateTasksOrderTool));
 
@@ -28,7 +30,7 @@ public static class UpdateTasksOrderTool
             var userId = EnvHelper.GetUserId();
             var apiKey = EnvHelper.GetApiKey();
 
-            var url = $"{apiUrl}/{apiKey}/UpdateTasksOrder?userId={userId}";
+            var url = $"{apiUrl}/{apiKey}/UpdateTasksOrder?userId={userId}&justification={Uri.EscapeDataString(justification)}";
 
             var response = await httpClient.PostAsJsonAsync(url, updates);
 

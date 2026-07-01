@@ -62,9 +62,9 @@ warnings.)
 **Files:**
 - Modify: `code/mcp/DarkDeeds.Mcp/Tools/UpdateTasksOrderTool.cs`
 
-- [ ] Add a required `string justification` parameter to `UpdateTasksOrderTool.Do`, decorated with `[Description(...)]` instructing the agent to explain why this reordering is correct (so the MCP framework presents it as a required argument)
-- [ ] Append `&justification=` to the request URL using `Uri.EscapeDataString(justification)` so free-text is safely URL-encoded
-- [ ] Verify `dotnet build code/mcp/DarkDeeds.Mcp/DarkDeeds.Mcp.csproj -c Release` succeeds with no warnings
+- [x] Add a required `string justification` parameter to `UpdateTasksOrderTool.Do`, decorated with `[Description(...)]` instructing the agent to explain why this reordering is correct (so the MCP framework presents it as a required argument)
+- [x] Append `&justification=` to the request URL using `Uri.EscapeDataString(justification)` so free-text is safely URL-encoded
+- [x] Verify `dotnet build code/mcp/DarkDeeds.Mcp/DarkDeeds.Mcp.csproj -c Release` succeeds with no warnings
 
 ### Task 3: Accept, log, and enforce the justification in the backend
 
