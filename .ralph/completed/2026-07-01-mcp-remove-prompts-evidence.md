@@ -52,19 +52,19 @@ warnings.)
 - Delete: `code/mcp/DarkDeeds.Mcp/Prompts/WeeklyOrderPrompt.cs`
 - Modify: `code/mcp/DarkDeeds.Mcp/Program.cs`
 
-- [ ] Delete the entire `code/mcp/DarkDeeds.Mcp/Prompts/` directory (both prompt files)
-- [ ] Remove the `.WithPromptsFromAssembly()` call from the MCP server builder chain in `Program.cs`
-- [ ] Run `rg -n "WithPromptsFromAssembly|Prompts" code/mcp/DarkDeeds.Mcp` and confirm it returns no results
-- [ ] Verify `dotnet build code/mcp/DarkDeeds.Mcp/DarkDeeds.Mcp.csproj -c Release` succeeds with no warnings
+- [x] Delete the entire `code/mcp/DarkDeeds.Mcp/Prompts/` directory (both prompt files)
+- [x] Remove the `.WithPromptsFromAssembly()` call from the MCP server builder chain in `Program.cs`
+- [x] Run `rg -n "WithPromptsFromAssembly|Prompts" code/mcp/DarkDeeds.Mcp` and confirm it returns no results
+- [x] Verify `dotnet build code/mcp/DarkDeeds.Mcp/DarkDeeds.Mcp.csproj -c Release` succeeds with no warnings
 
 ### Task 2: Require and send a justification from the MCP write tool
 
 **Files:**
 - Modify: `code/mcp/DarkDeeds.Mcp/Tools/UpdateTasksOrderTool.cs`
 
-- [ ] Add a required `string justification` parameter to `UpdateTasksOrderTool.Do`, decorated with `[Description(...)]` instructing the agent to explain why this reordering is correct (so the MCP framework presents it as a required argument)
-- [ ] Append `&justification=` to the request URL using `Uri.EscapeDataString(justification)` so free-text is safely URL-encoded
-- [ ] Verify `dotnet build code/mcp/DarkDeeds.Mcp/DarkDeeds.Mcp.csproj -c Release` succeeds with no warnings
+- [x] Add a required `string justification` parameter to `UpdateTasksOrderTool.Do`, decorated with `[Description(...)]` instructing the agent to explain why this reordering is correct (so the MCP framework presents it as a required argument)
+- [x] Append `&justification=` to the request URL using `Uri.EscapeDataString(justification)` so free-text is safely URL-encoded
+- [x] Verify `dotnet build code/mcp/DarkDeeds.Mcp/DarkDeeds.Mcp.csproj -c Release` succeeds with no warnings
 
 ### Task 3: Accept, log, and enforce the justification in the backend
 
@@ -73,29 +73,29 @@ warnings.)
 - Modify: `code/backend/DD.McpClient.Domain/Log.cs`
 - Modify: `code/backend/DD.Clients.Details/McpClient/McpController.cs`
 
-- [ ] Add a `string justification` parameter to `IMcpService.UpdateTasksOrderAsync` and its `McpService` implementation
-- [ ] In `McpService.UpdateTasksOrderAsync`, throw an `ArgumentException` when `justification` is null or whitespace, so an empty rationale is never accepted (the `McpController` is not an `[ApiController]`, so do not rely on `[Required]` model validation)
-- [ ] Update the source-generated `Log.UpdateTasksOrder` (`LoggerMessage`, EventId 5002) to include the `justification` text in the logged message, and pass it at the call site
-- [ ] Add a `[Required] string justification` query parameter to `McpController.UpdateTasksOrder` and forward it into `mcpService.UpdateTasksOrderAsync`
-- [ ] Verify `dotnet build code/backend/DarkDeeds.sln -c Release` succeeds with no warnings
+- [x] Add a `string justification` parameter to `IMcpService.UpdateTasksOrderAsync` and its `McpService` implementation
+- [x] In `McpService.UpdateTasksOrderAsync`, throw an `ArgumentException` when `justification` is null or whitespace, so an empty rationale is never accepted (the `McpController` is not an `[ApiController]`, so do not rely on `[Required]` model validation)
+- [x] Update the source-generated `Log.UpdateTasksOrder` (`LoggerMessage`, EventId 5002) to include the `justification` text in the logged message, and pass it at the call site
+- [x] Add a `[Required] string justification` query parameter to `McpController.UpdateTasksOrder` and forward it into `mcpService.UpdateTasksOrderAsync`
+- [x] Verify `dotnet build code/backend/DarkDeeds.sln -c Release` succeeds with no warnings
 
 ### Task 4: Cover the changed write path with a unit test
 
 **Files:**
 - Create: `code/backend/DD.Tests.Unit/McpClient/McpServiceTests.cs`
 
-- [ ] Add an xUnit test class that uses Moq to mock `ITaskServiceApp` and `ILogger<McpService>` (follow the AAA + `MethodName_Scenario_ExpectedResult` conventions used elsewhere in `DD.Tests.Unit`)
-- [ ] Test that `UpdateTasksOrderAsync` with a non-empty justification forwards the updates and userId to `ITaskServiceApp.UpdateTasksAsync` and returns the serialized result
-- [ ] Test that `UpdateTasksOrderAsync` throws `ArgumentException` when justification is null/empty/whitespace
-- [ ] Test that `LoadTasksByDateAsync` forwards from/till/userId and serializes the result
-- [ ] Verify `dotnet test code/backend/DarkDeeds.sln -c Release` passes
+- [x] Add an xUnit test class that uses Moq to mock `ITaskServiceApp` and `ILogger<McpService>` (follow the AAA + `MethodName_Scenario_ExpectedResult` conventions used elsewhere in `DD.Tests.Unit`)
+- [x] Test that `UpdateTasksOrderAsync` with a non-empty justification forwards the updates and userId to `ITaskServiceApp.UpdateTasksAsync` and returns the serialized result
+- [x] Test that `UpdateTasksOrderAsync` throws `ArgumentException` when justification is null/empty/whitespace
+- [x] Test that `LoadTasksByDateAsync` forwards from/till/userId and serializes the result
+- [x] Verify `dotnet test code/backend/DarkDeeds.sln -c Release` passes
 
 ### Task 5: Final validation
 
-- [ ] Run `dotnet build code/backend/DarkDeeds.sln -c Release` and confirm 0 warnings
-- [ ] Run `dotnet test code/backend/DarkDeeds.sln -c Release` and confirm all tests pass
-- [ ] Run `dotnet build code/mcp/DarkDeeds.Mcp/DarkDeeds.Mcp.csproj -c Release` and confirm 0 warnings
-- [ ] Run `rg -n "WithPromptsFromAssembly|DarkDeeds\.Mcp\.Prompts" code/mcp` and confirm it returns no results
+- [x] Run `dotnet build code/backend/DarkDeeds.sln -c Release` and confirm 0 warnings
+- [x] Run `dotnet test code/backend/DarkDeeds.sln -c Release` and confirm all tests pass
+- [x] Run `dotnet build code/mcp/DarkDeeds.Mcp/DarkDeeds.Mcp.csproj -c Release` and confirm 0 warnings
+- [x] Run `rg -n "WithPromptsFromAssembly|DarkDeeds\.Mcp\.Prompts" code/mcp` and confirm it returns no results
 
 ## Notes
 

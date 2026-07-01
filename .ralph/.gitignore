@@ -1,0 +1,3 @@
+*.progress.txt
+*.debug.txt
+*.base-branch

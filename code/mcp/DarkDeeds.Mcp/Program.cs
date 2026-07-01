@@ -14,8 +14,7 @@ builder.Services
     .AddHttpClient()
     .AddMcpServer()
     .WithStdioServerTransport()
-    .WithToolsFromAssembly()
-    .WithPromptsFromAssembly();
+    .WithToolsFromAssembly();
 
 var host = builder.Build();
 
