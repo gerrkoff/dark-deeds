@@ -55,10 +55,10 @@ dotnet test code/backend/DarkDeeds.sln -c Release
 - Modify: `code/backend/DD.ServiceAuth.Domain/Services/TokenService.cs`
 - Modify: `code/backend/DD.ServiceAuth.Domain/Services/AuthService.cs`
 
-- [ ] In `OAuthConstants`, add `public const string AccessTokenAudience = "dd-oauth-access";` with a short comment explaining it is the audience that scopes OAuth access tokens to the MCP resource (public because the JwtBearer setup in `DD.ServiceAuth.Details` must reference it).
-- [ ] In `ITokenService.Serialize` and `TokenService.Serialize`, add an optional `string? audience = null` parameter and set the descriptor `Audience = audience ?? _authSettings.Audience` (mirrors the existing optional `lifetimeMinutes`).
-- [ ] In `AuthService.CreateAccessTokenAsync`, pass `OAuthConstants.AccessTokenAudience` as the audience to `tokenService.Serialize` (add `using DD.ServiceAuth.Domain.OAuth;` if needed). The sign-in/sign-up/renew paths keep the default `Auth:Audience`.
-- [ ] Verify the fast checks pass.
+- [x] In `OAuthConstants`, add `public const string AccessTokenAudience = "dd-oauth-access";` with a short comment explaining it is the audience that scopes OAuth access tokens to the MCP resource (public because the JwtBearer setup in `DD.ServiceAuth.Details` must reference it).
+- [x] In `ITokenService.Serialize` and `TokenService.Serialize`, add an optional `string? audience = null` parameter and set the descriptor `Audience = audience ?? _authSettings.Audience` (mirrors the existing optional `lifetimeMinutes`).
+- [x] In `AuthService.CreateAccessTokenAsync`, pass `OAuthConstants.AccessTokenAudience` as the audience to `tokenService.Serialize` (add `using DD.ServiceAuth.Domain.OAuth;` if needed). The sign-in/sign-up/renew paths keep the default `Auth:Audience`.
+- [x] Verify the fast checks pass.
 
 ### Task 2: Validate `/mcp` with a dedicated MCP bearer scheme
 

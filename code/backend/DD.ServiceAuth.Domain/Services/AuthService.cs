@@ -1,6 +1,7 @@
 ﻿using DD.ServiceAuth.Domain.Dto;
 using DD.ServiceAuth.Domain.Entities;
 using DD.ServiceAuth.Domain.Enums;
+using DD.ServiceAuth.Domain.OAuth;
 using DD.Shared.Details.Abstractions.Models;
 using Microsoft.AspNetCore.Identity;
 using SignInResult = DD.ServiceAuth.Domain.Enums.SignInResult;
@@ -96,7 +97,9 @@ internal sealed class AuthService(
     public async Task<string?> CreateAccessTokenAsync(string userId, int lifetimeMinutes)
     {
         var user = await userManager.FindByIdAsync(userId);
-        return user is null ? null : tokenService.Serialize(ToAuthToken(user), lifetimeMinutes);
+        return user is null
+            ? null
+            : tokenService.Serialize(ToAuthToken(user), lifetimeMinutes, OAuthConstants.AccessTokenAudience);
     }
 
     public string RenewToken(AuthToken authToken)

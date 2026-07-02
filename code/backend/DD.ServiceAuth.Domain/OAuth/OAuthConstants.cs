@@ -13,4 +13,8 @@ public static class OAuthConstants
     public const string ActionAllow = "allow";
 
     public const string AccessDeniedError = "access_denied";
+
+    // Audience that scopes OAuth-issued access tokens to the MCP resource (the /mcp endpoint).
+    // Public because the JwtBearer setup in DD.ServiceAuth.Details must reference it.
+    public const string AccessTokenAudience = "dd-oauth-access";
 }
