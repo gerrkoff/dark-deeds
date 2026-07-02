@@ -129,11 +129,11 @@ cd code/frontend && npm run ci
 - Create: `code/frontend/src/oauth/api/OAuthApi.ts`
 - Create: `code/frontend/tests/oauth/parseOAuthAuthorizeRequest.test.ts`
 
-- [ ] Define `interface OAuthAuthorizeRequest { clientId, redirectUri, codeChallenge, state, scope }` and a result union `{ status: 'redirect'; redirectUrl: string } | { status: 'needs-login' } | { status: 'error' }`
-- [ ] Implement `parseOAuthAuthorizeRequest(search: string): OAuthAuthorizeRequest | null` returning the typed request only when `response_type=code` and `client_id`, `redirect_uri`, `code_challenge`, `state` are all present, else `null`
-- [ ] Implement `OAuthApi.authorize(action: 'allow' | 'deny', request: OAuthAuthorizeRequest)` that `fetch`es `POST ${baseUrlProvider.getBaseUrl()}authorize` with JSON body `{ action, clientId, redirectUri, codeChallenge, state }` and `Authorization: Bearer ${storageService.loadAccessToken()}`; return `{ status: 'redirect', redirectUrl }` on 200, `{ status: 'needs-login' }` on 401, `{ status: 'error' }` otherwise; export an `oauthApi` singleton (mirror the `loginApi` pattern)
-- [ ] Add vitest cases for the parser: a valid query returns the parsed request; a missing/blank required param returns `null`; a normal app URL (no OAuth params) returns `null`
-- [ ] Verify `cd code/frontend && npm run ci` passes (run `npm run fmt` first if `fmt:check` fails)
+- [x] Define `interface OAuthAuthorizeRequest { clientId, redirectUri, codeChallenge, state, scope }` and a result union `{ status: 'redirect'; redirectUrl: string } | { status: 'needs-login' } | { status: 'error' }`
+- [x] Implement `parseOAuthAuthorizeRequest(search: string): OAuthAuthorizeRequest | null` returning the typed request only when `response_type=code` and `client_id`, `redirect_uri`, `code_challenge`, `state` are all present, else `null`
+- [x] Implement `OAuthApi.authorize(action: 'allow' | 'deny', request: OAuthAuthorizeRequest)` that `fetch`es `POST ${baseUrlProvider.getBaseUrl()}authorize` with JSON body `{ action, clientId, redirectUri, codeChallenge, state }` and `Authorization: Bearer ${storageService.loadAccessToken()}`; return `{ status: 'redirect', redirectUrl }` on 200, `{ status: 'needs-login' }` on 401, `{ status: 'error' }` otherwise; export an `oauthApi` singleton (mirror the `loginApi` pattern)
+- [x] Add vitest cases for the parser: a valid query returns the parsed request; a missing/blank required param returns `null`; a normal app URL (no OAuth params) returns `null`
+- [x] Verify `cd code/frontend && npm run ci` passes (run `npm run fmt` first if `fmt:check` fails)
 
 ### Task 6: Make the Signin signup link optional (frontend)
 
