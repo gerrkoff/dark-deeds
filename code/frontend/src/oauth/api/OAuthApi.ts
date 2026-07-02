@@ -10,31 +10,35 @@ export class OAuthApi {
     ) {}
 
     async authorize(action: 'allow' | 'deny', request: OAuthAuthorizeRequest): Promise<OAuthAuthorizeResult> {
-        const response = await fetch(`${this.baseUrlProvider.getBaseUrl()}authorize`, {
-            body: JSON.stringify({
-                action,
-                clientId: request.clientId,
-                redirectUri: request.redirectUri,
-                codeChallenge: request.codeChallenge,
-                state: request.state,
-            }),
-            headers: {
-                Authorization: 'Bearer ' + this.storageService.loadAccessToken(),
-                'Content-Type': 'application/json',
-            },
-            method: 'POST',
-        })
+        try {
+            const response = await fetch(`${this.baseUrlProvider.getBaseUrl()}authorize`, {
+                body: JSON.stringify({
+                    action,
+                    clientId: request.clientId,
+                    redirectUri: request.redirectUri,
+                    codeChallenge: request.codeChallenge,
+                    state: request.state,
+                }),
+                headers: {
+                    Authorization: 'Bearer ' + this.storageService.loadAccessToken(),
+                    'Content-Type': 'application/json',
+                },
+                method: 'POST',
+            })
 
-        if (response.status === 401) {
-            return { status: 'needs-login' }
-        }
+            if (response.status === 401) {
+                return { status: 'needs-login' }
+            }
 
-        if (!response.ok) {
+            if (!response.ok) {
+                return { status: 'error' }
+            }
+
+            const body = (await response.json()) as { redirectUrl: string }
+            return { status: 'redirect', redirectUrl: body.redirectUrl }
+        } catch {
             return { status: 'error' }
         }
-
-        const body = (await response.json()) as { redirectUrl: string }
-        return { status: 'redirect', redirectUrl: body.redirectUrl }
     }
 }
 
