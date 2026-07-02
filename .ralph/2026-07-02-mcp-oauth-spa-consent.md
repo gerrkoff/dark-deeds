@@ -160,9 +160,9 @@ cd code/frontend && npm run ci
 **Files:**
 - Modify: `code/frontend/src/main.tsx`
 
-- [ ] Compute `const oauthRequest = parseOAuthAuthorizeRequest(window.location.search)` before rendering
-- [ ] Render `<OAuthConsent request={oauthRequest} />` inside the existing `<Provider store={store}>` when `oauthRequest` is non-null, otherwise render `<App />` exactly as today (normal app behavior must be unchanged when there are no OAuth params)
-- [ ] Verify `cd code/frontend && npm run ci` passes
+- [x] Compute `const oauthRequest = parseOAuthAuthorizeRequest(window.location.search)` before rendering
+- [x] Render `<OAuthConsent request={oauthRequest} />` inside the existing `<Provider store={store}>` when `oauthRequest` is non-null, otherwise render `<App />` exactly as today (normal app behavior must be unchanged when there are no OAuth params)
+- [x] Verify `cd code/frontend && npm run ci` passes
 
 ### Task 9: Final validation
 

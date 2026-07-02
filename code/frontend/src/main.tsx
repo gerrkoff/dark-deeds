@@ -5,6 +5,8 @@ import { store } from './store.ts'
 import { Provider } from 'react-redux'
 import './DragDropTouch.js'
 import { dragDropAutoScroll } from './DragDropAutoScroll'
+import { parseOAuthAuthorizeRequest } from './oauth/parseOAuthAuthorizeRequest'
+import { OAuthConsent } from './oauth/OAuthConsent'
 
 // Initialize auto-scroll for drag and drop on touch devices
 // Comment out the line below to disable auto-scroll
@@ -12,12 +14,12 @@ dragDropAutoScroll.init()
 
 const root = document.getElementById('root')
 
+const oauthRequest = parseOAuthAuthorizeRequest(window.location.search)
+
 if (root) {
     createRoot(root).render(
         <StrictMode>
-            <Provider store={store}>
-                <App />
-            </Provider>
+            <Provider store={store}>{oauthRequest ? <OAuthConsent request={oauthRequest} /> : <App />}</Provider>
         </StrictMode>,
     )
 }
