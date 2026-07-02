@@ -9,10 +9,12 @@ using DD.TelegramClient.Domain;
 using DD.TelegramClient.Domain.Infrastructure;
 using DD.WebClientBff.Domain;
 using DD.WebClientBff.Domain.Infrastructure;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using ModelContextProtocol.AspNetCore.Authentication;
 
 namespace DD.Clients.Details;
 
@@ -45,7 +47,13 @@ public static class Setup
             $"api/tlgm/bot/{configuration["Bot"]}",
             new { controller = "Bot", action = "Process" });
 
-        endpoints.MapMcp("/mcp").RequireAuthorization();
+        // Challenge /mcp with the MCP scheme (401 + protected-resource metadata for client
+        // auto-discovery); other endpoints keep the standard JwtBearer challenge.
+        var mcpAuthPolicy = new AuthorizationPolicyBuilder(McpAuthenticationDefaults.AuthenticationScheme)
+            .RequireAuthenticatedUser()
+            .Build();
+
+        endpoints.MapMcp("/mcp").RequireAuthorization(mcpAuthPolicy);
     }
 
     private static void AddTelegramClientData(this IServiceCollection services)

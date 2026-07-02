@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using ModelContextProtocol.AspNetCore.Authentication;
 using ModelContextProtocol.Authentication;
 
 namespace DD.ServiceAuth.Details;
@@ -45,7 +44,7 @@ public static class Setup
         services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = McpAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             })
             .AddJwtBearer(options =>
             {
@@ -79,6 +78,9 @@ public static class Setup
             })
             .AddMcp(options =>
             {
+                // Only the /mcp endpoint challenges with this scheme (see MapMcp policy); token
+                // validation itself is delegated to JwtBearer so /mcp accepts the same access token.
+                options.ForwardAuthenticate = JwtBearerDefaults.AuthenticationScheme;
                 options.ResourceMetadata = new ProtectedResourceMetadata
                 {
                     ScopesSupported = scopesSupported,

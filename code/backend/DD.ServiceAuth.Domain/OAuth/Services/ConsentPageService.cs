@@ -59,7 +59,7 @@ internal sealed class ConsentPageService : IConsentPageService
                      <h1>Authorize access</h1>
                      <p>The application <strong>{{encClientId}}</strong> is requesting access to your Dark Deeds account.</p>
                      <p class="scopes">Requested scopes: {{encScope}}</p>
-                     <form method="post" action="/authorize">
+                     <form method="post">
                          <input type="hidden" name="client_id" value="{{encClientId}}">
                          <input type="hidden" name="redirect_uri" value="{{encRedirectUri}}">
                          <input type="hidden" name="code_challenge" value="{{encCodeChallenge}}">
