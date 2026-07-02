@@ -3,6 +3,7 @@ using System.Text;
 using AspNetCore.Identity.Mongo;
 using DD.ServiceAuth.Domain;
 using DD.ServiceAuth.Domain.Entities;
+using DD.ServiceAuth.Domain.OAuth;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
@@ -15,6 +16,8 @@ namespace DD.ServiceAuth.Details;
 
 public static class Setup
 {
+    private const string McpJwtBearerScheme = "McpBearer";
+
     public static void AddAuthService(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddAuthServiceDomain(configuration);
@@ -79,11 +82,30 @@ public static class Setup
                     },
                 };
             })
+            .AddJwtBearer(McpJwtBearerScheme, options =>
+            {
+                // Identical to the default scheme but scoped to the OAuth access-token audience,
+                // so /mcp only accepts tokens minted through the OAuth flow. No /ws query-token
+                // event here: the MCP endpoint is reached only via the Authorization header.
+                options.RequireHttpsMetadata = false;
+                options.MapInboundClaims = false;
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidIssuer = authSettings.Issuer,
+                    ValidateAudience = true,
+                    ValidAudience = OAuthConstants.AccessTokenAudience,
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(authSettings.Key)),
+                    ValidateLifetime = true,
+                };
+            })
             .AddMcp(options =>
             {
                 // Only the /mcp endpoint challenges with this scheme (see MapMcp policy); token
-                // validation itself is delegated to JwtBearer so /mcp accepts the same access token.
-                options.ForwardAuthenticate = JwtBearerDefaults.AuthenticationScheme;
+                // validation is delegated to the McpBearer scheme, so /mcp only accepts access
+                // tokens carrying the dd-oauth-access audience (login tokens are rejected there).
+                options.ForwardAuthenticate = McpJwtBearerScheme;
                 options.ResourceMetadata = new ProtectedResourceMetadata
                 {
                     ScopesSupported = scopesSupported,

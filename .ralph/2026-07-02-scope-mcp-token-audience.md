@@ -65,11 +65,11 @@ dotnet test code/backend/DarkDeeds.sln -c Release
 **Files:**
 - Modify: `code/backend/DD.ServiceAuth.Details/Setup.cs`
 
-- [ ] Add `using DD.ServiceAuth.Domain.OAuth;` to `Setup.cs` (so `OAuthConstants.AccessTokenAudience` resolves) and a `private const string McpJwtBearerScheme = "McpBearer";` to the `Setup` class.
-- [ ] Register a second `.AddJwtBearer(McpJwtBearerScheme, options => …)` with the same `RequireHttpsMetadata`, `MapInboundClaims = false`, signing key, `ValidIssuer = authSettings.Issuer`, and `ValidateLifetime` as the default scheme, but `ValidAudience = OAuthConstants.AccessTokenAudience`. Do NOT add the `/ws` `OnMessageReceived` query-token event to this scheme.
-- [ ] Change the `.AddMcp(...)` `options.ForwardAuthenticate` from `JwtBearerDefaults.AuthenticationScheme` to `McpJwtBearerScheme`.
-- [ ] Update the stale comment above `ForwardAuthenticate` (it currently says `/mcp` accepts the same access token) to explain `/mcp` now only accepts the `dd-oauth-access` audience.
-- [ ] Verify the fast checks pass.
+- [x] Add `using DD.ServiceAuth.Domain.OAuth;` to `Setup.cs` (so `OAuthConstants.AccessTokenAudience` resolves) and a `private const string McpJwtBearerScheme = "McpBearer";` to the `Setup` class.
+- [x] Register a second `.AddJwtBearer(McpJwtBearerScheme, options => …)` with the same `RequireHttpsMetadata`, `MapInboundClaims = false`, signing key, `ValidIssuer = authSettings.Issuer`, and `ValidateLifetime` as the default scheme, but `ValidAudience = OAuthConstants.AccessTokenAudience`. Do NOT add the `/ws` `OnMessageReceived` query-token event to this scheme.
+- [x] Change the `.AddMcp(...)` `options.ForwardAuthenticate` from `JwtBearerDefaults.AuthenticationScheme` to `McpJwtBearerScheme`.
+- [x] Update the stale comment above `ForwardAuthenticate` (it currently says `/mcp` accepts the same access token) to explain `/mcp` now only accepts the `dd-oauth-access` audience.
+- [x] Verify the fast checks pass.
 
 ### Task 3: Cover the audience split with unit tests
 
