@@ -13,6 +13,8 @@
     "enableTestHandlers": { "value": false },
     "enableTelegramIntegration": { "value": true },
     "customDomains": { "value": ["dark-deeds.com","az.dark-deeds.com"] },
-    "oauthIssuerBaseUrl": { "value": "https://dark-deeds.com" }
+    "oauthIssuerBaseUrl": { "value": "https://dark-deeds.com" },
+    "oauthAccessTokenLifetimeMinutes": { "value": 60 },
+    "oauthRefreshTokenLifetimeDays": { "value": 30 }
   }
 }

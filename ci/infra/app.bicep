@@ -13,6 +13,8 @@ param enableTestHandlers bool
 param enableTelegramIntegration bool
 param customDomains array = []
 param oauthIssuerBaseUrl string = ''
+param oauthAccessTokenLifetimeMinutes int
+param oauthRefreshTokenLifetimeDays int
 
 var location = resourceGroup().location
 var containerImage = 'ghcr.io/gerrkoff/dark-deeds/app:${webAppImageTag}'
@@ -69,6 +71,14 @@ resource webApp 'Microsoft.Web/sites@2023-12-01' = {
                 {
                     name: 'OAuth__IssuerBaseUrl'
                     value: oauthIssuerBaseUrl
+                }
+                {
+                    name: 'OAuth__AccessTokenLifetimeMinutes'
+                    value: string(oauthAccessTokenLifetimeMinutes)
+                }
+                {
+                    name: 'OAuth__RefreshTokenLifetimeDays'
+                    value: string(oauthRefreshTokenLifetimeDays)
                 }
                 {
                     name: 'Monitoring__LokiUrl'
