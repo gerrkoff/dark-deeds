@@ -10,7 +10,7 @@ namespace DD.ServiceAuth.Domain.Services;
 
 public interface ITokenService
 {
-    string Serialize(AuthTokenBuildInfo authToken, int? lifetimeMinutes = null);
+    string Serialize(AuthTokenBuildInfo authToken, int? lifetimeMinutes = null, string? audience = null);
 }
 
 internal sealed class TokenService(
@@ -20,7 +20,7 @@ internal sealed class TokenService(
 {
     private readonly AuthSettings _authSettings = authSettings.Value;
 
-    public string Serialize(AuthTokenBuildInfo authToken, int? lifetimeMinutes = null)
+    public string Serialize(AuthTokenBuildInfo authToken, int? lifetimeMinutes = null, string? audience = null)
     {
         var keyBytes = Encoding.ASCII.GetBytes(_authSettings.Key);
         var claims = claimsService.FromToken(authToken);
@@ -29,7 +29,7 @@ internal sealed class TokenService(
             Subject = new ClaimsIdentity(claims),
             Expires = DateTime.UtcNow.AddMinutes(lifetimeMinutes ?? _authSettings.Lifetime),
             Issuer = _authSettings.Issuer,
-            Audience = _authSettings.Audience,
+            Audience = audience ?? _authSettings.Audience,
             SigningCredentials = new SigningCredentials(
                 new SymmetricSecurityKey(keyBytes),
                 SecurityAlgorithms.HmacSha256Signature),

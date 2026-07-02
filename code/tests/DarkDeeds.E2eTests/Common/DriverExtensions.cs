@@ -37,14 +37,14 @@ public static class DriverExtensions
         driver.ScrollToElement(dayHeaderElement);
         dayHeaderElement.Click();
         driver.GetElement(X.TaskMenu().AddButton()).Click();
-        driver.GetElement(X.EditTaskModal().Input()).SendKeys(task);
+        driver.GetInteractableElement(X.EditTaskModal().Input()).SendKeys(task);
         driver.GetElement(X.EditTaskModal().SubmitButton()).Click();
     }
 
     public static void CreateTaskViaAddButton(this RemoteWebDriver driver, string task)
     {
         driver.GetElement(X.OverviewPage().AddTaskButton()).Click();
-        driver.GetElement(X.EditTaskModal().Input()).SendKeys(task);
+        driver.GetInteractableElement(X.EditTaskModal().Input()).SendKeys(task);
         driver.GetElement(X.EditTaskModal().SubmitButton()).Click();
     }
 
@@ -68,7 +68,7 @@ public static class DriverExtensions
     public static void CreateRecurrence(this RemoteWebDriver driver, string recurrenceTask)
     {
         driver.GetElement(X.RecurrencesPage().AddRecurrenceButton()).Click();
-        driver.GetElement(X.EditRecurrenceModal().TaskInput()).SendKeys(recurrenceTask);
+        driver.GetInteractableElement(X.EditRecurrenceModal().TaskInput()).SendKeys(recurrenceTask);
         driver.GetElement(X.EditRecurrenceModal().WeekdaysInputOption(7)).Click();
         driver.GetElement(X.EditRecurrenceModal().SubmitButton()).Click();
         driver.WaitUntilDisappeared(X.EditTaskModal());
