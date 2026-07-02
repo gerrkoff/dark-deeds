@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DD.ServiceAuth.Domain.OAuth;
 
-public class OAuthSettings
+internal sealed class OAuthSettings
 {
     [Range(1, int.MaxValue)]
     public int AccessTokenLifetimeMinutes { get; init; }

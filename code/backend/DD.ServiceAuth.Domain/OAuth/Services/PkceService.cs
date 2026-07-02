@@ -3,7 +3,7 @@ using System.Text;
 
 namespace DD.ServiceAuth.Domain.OAuth.Services;
 
-public interface IPkceService
+internal interface IPkceService
 {
     bool Verify(string codeVerifier, string codeChallenge);
 }

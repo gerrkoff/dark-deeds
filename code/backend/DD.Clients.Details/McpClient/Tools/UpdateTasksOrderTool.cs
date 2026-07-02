@@ -7,7 +7,7 @@ using ModelContextProtocol.Server;
 namespace DD.Clients.Details.McpClient.Tools;
 
 [McpServerToolType]
-public sealed class UpdateTasksOrderTool
+internal sealed class UpdateTasksOrderTool
 {
     [McpServerTool(Name = "UpdateTasksOrder")]
     [Description("Updates the order of multiple tasks in Dark Deeds App.")]

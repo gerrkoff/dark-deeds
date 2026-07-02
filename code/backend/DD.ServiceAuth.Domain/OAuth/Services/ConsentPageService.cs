@@ -3,7 +3,7 @@ using System.Net;
 
 namespace DD.ServiceAuth.Domain.OAuth.Services;
 
-public interface IConsentPageService
+internal interface IConsentPageService
 {
     [SuppressMessage(
         "Design",

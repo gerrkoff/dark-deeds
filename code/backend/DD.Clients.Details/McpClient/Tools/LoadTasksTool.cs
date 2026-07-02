@@ -6,7 +6,7 @@ using ModelContextProtocol.Server;
 namespace DD.Clients.Details.McpClient.Tools;
 
 [McpServerToolType]
-public sealed class LoadTasksTool
+internal sealed class LoadTasksTool
 {
     [McpServerTool(Name = "LoadTasks")]
     [Description("Loads tasks (in JSON) from Dark Deeds App for a date range.")]

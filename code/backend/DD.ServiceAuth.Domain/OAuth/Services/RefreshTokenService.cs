@@ -7,7 +7,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace DD.ServiceAuth.Domain.OAuth.Services;
 
-public interface IRefreshTokenService
+internal interface IRefreshTokenService
 {
     Task<string> IssueAsync(RefreshTokenModel model);
 

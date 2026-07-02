@@ -8,7 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace DD.ServiceAuth.Domain.OAuth.Services;
 
-public interface IAuthCodeService
+internal interface IAuthCodeService
 {
     Task<string> IssueAsync(AuthCodeModel model);
 

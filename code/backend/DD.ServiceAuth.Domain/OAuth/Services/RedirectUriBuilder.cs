@@ -6,7 +6,7 @@ namespace DD.ServiceAuth.Domain.OAuth.Services;
     "Design",
     "CA1054:URI-like parameters should not be strings",
     Justification = "OAuth redirect_uri must be preserved and appended to as an exact string, not URI-normalized.")]
-public interface IRedirectUriBuilder
+internal interface IRedirectUriBuilder
 {
     string BuildSuccess(string redirectUri, string code, string state);
 

@@ -2,7 +2,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace DD.ServiceAuth.Domain.OAuth.Models;
 
-public sealed record AuthCodeModel
+internal sealed record AuthCodeModel
 {
     public required string UserId { get; init; }
 
