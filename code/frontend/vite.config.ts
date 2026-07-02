@@ -8,6 +8,9 @@ export default defineConfig({
         host: true,
         port: 3000,
         strictPort: true,
+        // Allow the Selenium Grid container (infra/docker-compose.yml) to load the
+        // dev server via host.docker.internal when running e2e tests locally.
+        allowedHosts: ['host.docker.internal'],
     },
     plugins: [
         react(),
