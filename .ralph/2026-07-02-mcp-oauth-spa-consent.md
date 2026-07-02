@@ -140,8 +140,8 @@ cd code/frontend && npm run ci
 **Files:**
 - Modify: `code/frontend/src/login/components/Signin.tsx`
 
-- [ ] Add an optional `hideSignup?: boolean` prop; when true, render the sign-in form only (omit the "Sign up here" link) and make `switchToSignup` optional / guard its use so it is not required in that mode; leave the existing `Login` caller unchanged (prop defaults to showing signup)
-- [ ] Verify `cd code/frontend && npm run ci` passes
+- [x] Add an optional `hideSignup?: boolean` prop; when true, render the sign-in form only (omit the "Sign up here" link) and make `switchToSignup` optional / guard its use so it is not required in that mode; leave the existing `Login` caller unchanged (prop defaults to showing signup)
+- [x] Verify `cd code/frontend && npm run ci` passes
 
 ### Task 7: Build the OAuthConsent flow component (frontend)
 
