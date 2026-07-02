@@ -18,15 +18,6 @@ public sealed record OAuthErrorDto(
     public static OAuthErrorDto PkceChallengeRequired { get; } =
         new("invalid_request", "A PKCE code_challenge with code_challenge_method=S256 is required.");
 
-    public static OAuthErrorDto CodeChallengeAndStateRequired { get; } =
-        new("invalid_request", "code_challenge and state are required.");
-
-    public static OAuthErrorDto UsernameRequired { get; } =
-        new("invalid_request", "username is required.");
-
-    public static OAuthErrorDto PasswordRequired { get; } =
-        new("invalid_request", "password is required.");
-
     public static OAuthErrorDto AuthorizationCodeFieldsRequired { get; } =
         new("invalid_request", "code, redirect_uri, client_id and code_verifier are required.");
 

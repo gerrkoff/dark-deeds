@@ -115,10 +115,10 @@ cd code/frontend && npm run ci
 - Modify: `code/backend/DD.ServiceAuth.Domain/Setup.cs`
 - Modify: `code/backend/DD.ServiceAuth.Domain/OAuth/Dto/OAuthErrorDto.cs`
 
-- [ ] Delete `ConsentPageService.cs` (the `IConsentPageService` interface and `ConsentPageService` class)
-- [ ] Remove `services.AddTransient<IConsentPageService, ConsentPageService>();` from `Setup.cs`
-- [ ] Remove the now-unused `OAuthErrorDto` entries `UsernameRequired`, `PasswordRequired`, and `CodeChallengeAndStateRequired` (confirm each is unreferenced via a repo search before deleting)
-- [ ] Verify the fast checks pass with 0 warnings
+- [x] Delete `ConsentPageService.cs` (the `IConsentPageService` interface and `ConsentPageService` class)
+- [x] Remove `services.AddTransient<IConsentPageService, ConsentPageService>();` from `Setup.cs`
+- [x] Remove the now-unused `OAuthErrorDto` entries `UsernameRequired`, `PasswordRequired`, and `CodeChallengeAndStateRequired` (confirm each is unreferenced via a repo search before deleting)
+- [x] Verify the fast checks pass with 0 warnings
 
 ### Task 5: Add the OAuth request parser, models, and completion API (frontend)
 

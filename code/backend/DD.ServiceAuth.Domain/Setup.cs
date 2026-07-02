@@ -21,7 +21,6 @@ public static class Setup
         services.AddScoped<ITestService, TestService>();
         services.AddTransient<IClaimsService, ClaimsService>();
         services.AddTransient<IPkceService, PkceService>();
-        services.AddTransient<IConsentPageService, ConsentPageService>();
         services.AddTransient<IOAuthUrlService, OAuthUrlService>();
         services.AddScoped<IAuthCodeService, AuthCodeService>();
         services.AddScoped<IRefreshTokenService, RefreshTokenService>();
