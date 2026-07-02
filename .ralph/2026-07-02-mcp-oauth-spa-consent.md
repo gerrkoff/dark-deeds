@@ -166,13 +166,13 @@ cd code/frontend && npm run ci
 
 ### Task 9: Final validation
 
-- [ ] Build the whole backend solution with 0 warnings: `dotnet build code/backend/DarkDeeds.sln -c Release`
-- [ ] Run the full backend unit suite: `dotnet test code/backend/DarkDeeds.sln -c Release`
-- [ ] Run the full frontend gate: `cd code/frontend && npm run ci`
-- [ ] Bring up the full local stack (see the local-run workflow in `.github/copilot-instructions.md`) as detached background processes (never piped to `head`/`tail`), recording each PID: MongoDB via `./infra/up.sh`; the backend `dotnet run --project code/backend/DD.App` on `:5000` (wait for `curl -fsS http://localhost:5000/healthcheck` => `Healthy`); the frontend `cd code/frontend && npm run dev` on `:3000` (wait for HTTP 200)
-- [ ] curl smoke on `:5000`: `GET "/authorize?response_type=code&client_id=x&redirect_uri=http://127.0.0.1:33418&code_challenge=abc&code_challenge_method=S256&state=xyz"` returns 302 with `Location` starting `http://localhost:3000/?` and preserving the query; then `POST /api/auth/account/signin` (test/test) to obtain a JWT, and `POST /authorize` with that Bearer and `{"action":"allow", ...}` returns `{ redirectUrl }` containing `code=` and `state=`, while `{"action":"deny", ...}` returns a `redirectUrl` containing `error=access_denied`
-- [ ] Run the e2e suite against the local stack and confirm ALL pass: `dotnet test code/tests/DarkDeeds.E2eTests` (defaults `URL=http://localhost:3000` / `BE_URL=http://localhost:5000`; uses a local ChromeDriver, so Chrome must be installed)
-- [ ] Fix any failure and re-run until the backend build/tests, the frontend `npm run ci`, the curl smokes, and the whole e2e suite are ALL green; then tear down the backend and frontend you started (stop each by PID; leave MongoDB running)
+- [x] Build the whole backend solution with 0 warnings: `dotnet build code/backend/DarkDeeds.sln -c Release`
+- [x] Run the full backend unit suite: `dotnet test code/backend/DarkDeeds.sln -c Release`
+- [x] Run the full frontend gate: `cd code/frontend && npm run ci`
+- [x] Bring up the full local stack (see the local-run workflow in `.github/copilot-instructions.md`) as detached background processes (never piped to `head`/`tail`), recording each PID: MongoDB via `./infra/up.sh`; the backend `dotnet run --project code/backend/DD.App` on `:5000` (wait for `curl -fsS http://localhost:5000/healthcheck` => `Healthy`); the frontend `cd code/frontend && npm run dev` on `:3000` (wait for HTTP 200)
+- [x] curl smoke on `:5000`: `GET "/authorize?response_type=code&client_id=x&redirect_uri=http://127.0.0.1:33418&code_challenge=abc&code_challenge_method=S256&state=xyz"` returns 302 with `Location` starting `http://localhost:3000/?` and preserving the query; then `POST /api/auth/account/signin` (test/test) to obtain a JWT, and `POST /authorize` with that Bearer and `{"action":"allow", ...}` returns `{ redirectUrl }` containing `code=` and `state=`, while `{"action":"deny", ...}` returns a `redirectUrl` containing `error=access_denied`
+- [x] Run the e2e suite against the local stack and confirm ALL pass: `dotnet test code/tests/DarkDeeds.E2eTests` (defaults `URL=http://localhost:3000` / `BE_URL=http://localhost:5000`; uses a local ChromeDriver, so Chrome must be installed)
+- [x] Fix any failure and re-run until the backend build/tests, the frontend `npm run ci`, the curl smokes, and the whole e2e suite are ALL green; then tear down the backend and frontend you started (stop each by PID; leave MongoDB running)
 
 ## Notes
 
