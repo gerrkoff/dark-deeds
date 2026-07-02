@@ -77,10 +77,10 @@ dotnet test code/backend/DarkDeeds.sln -c Release
 - Modify: `code/backend/DD.Tests.Unit/ServiceAuth/TokenFlowTests.cs`
 - Create: `code/backend/DD.Tests.Unit/ServiceAuth/TokenServiceTests.cs`
 
-- [ ] In `TokenFlowTests`, serialize the access token with `OAuthConstants.AccessTokenAudience` and validate it with `ValidAudience = OAuthConstants.AccessTokenAudience`, so the test mirrors `AuthService.CreateAccessTokenAsync`.
-- [ ] Add a `TokenServiceTests` test asserting `Serialize(buildInfo, audience: OAuthConstants.AccessTokenAudience)` produces a JWT whose `aud` claim equals `dd-oauth-access`.
-- [ ] Add a `TokenServiceTests` test asserting `Serialize(buildInfo)` with no audience produces a JWT whose `aud` claim equals the configured `Auth:Audience`.
-- [ ] Verify the fast checks pass.
+- [x] In `TokenFlowTests`, serialize the access token with `OAuthConstants.AccessTokenAudience` and validate it with `ValidAudience = OAuthConstants.AccessTokenAudience`, so the test mirrors `AuthService.CreateAccessTokenAsync`.
+- [x] Add a `TokenServiceTests` test asserting `Serialize(buildInfo, audience: OAuthConstants.AccessTokenAudience)` produces a JWT whose `aud` claim equals `dd-oauth-access`.
+- [x] Add a `TokenServiceTests` test asserting `Serialize(buildInfo)` with no audience produces a JWT whose `aud` claim equals the configured `Auth:Audience`.
+- [x] Verify the fast checks pass.
 
 ### Task 4: Verify the audience split against a live backend
 

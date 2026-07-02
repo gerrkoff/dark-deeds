@@ -16,7 +16,8 @@ namespace DD.Tests.Unit.ServiceAuth;
 // verifier yields an access JWT (validatable with the Auth signing key) and a refresh
 // token, and that refresh token in turn mints another usable access JWT. The access-token
 // step mirrors AuthService.CreateAccessTokenAsync, which delegates to
-// ITokenService.Serialize with an explicit lifetime.
+// ITokenService.Serialize with an explicit lifetime and the MCP access-token audience
+// (dd-oauth-access).
 public class TokenFlowTests
 {
     private const string CodeVerifier = "dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk";
@@ -96,7 +97,7 @@ public class TokenFlowTests
             DisplayName = "Test User",
         };
 
-        return _tokenService.Serialize(buildInfo, AccessTokenLifetimeMinutes);
+        return _tokenService.Serialize(buildInfo, AccessTokenLifetimeMinutes, OAuthConstants.AccessTokenAudience);
     }
 
     private string ReadValidatedSubject(string accessToken)
@@ -107,7 +108,7 @@ public class TokenFlowTests
             ValidateIssuer = true,
             ValidIssuer = _authSettings.Issuer,
             ValidateAudience = true,
-            ValidAudience = _authSettings.Audience,
+            ValidAudience = OAuthConstants.AccessTokenAudience,
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_authSettings.Key)),
             ValidateLifetime = true,
