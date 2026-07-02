@@ -7,6 +7,7 @@
     <ProjectReference Include="..\DD.WebClientBff.Domain\DD.WebClientBff.Domain.csproj" />
     <ProjectReference Include="..\DD.MobileClient.Domain\DD.MobileClient.Domain.csproj" />
     <ProjectReference Include="..\DD.McpClient.Domain\DD.McpClient.Domain.csproj" />
+    <ProjectReference Include="..\DD.ServiceAuth.Domain\DD.ServiceAuth.Domain.csproj" />
   </ItemGroup>
 
   <ItemGroup>

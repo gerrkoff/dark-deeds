@@ -12,6 +12,9 @@ param monitoringMetricsEnabled bool
 param enableTestHandlers bool
 param enableTelegramIntegration bool
 param customDomains array = []
+param oauthIssuerBaseUrl string = ''
+param oauthAccessTokenLifetimeMinutes int
+param oauthRefreshTokenLifetimeDays int
 
 var location = resourceGroup().location
 var containerImage = 'ghcr.io/gerrkoff/dark-deeds/app:${webAppImageTag}'
@@ -66,6 +69,18 @@ resource webApp 'Microsoft.Web/sites@2023-12-01' = {
                     value: string(authLifetime)
                 }
                 {
+                    name: 'OAuth__IssuerBaseUrl'
+                    value: oauthIssuerBaseUrl
+                }
+                {
+                    name: 'OAuth__AccessTokenLifetimeMinutes'
+                    value: string(oauthAccessTokenLifetimeMinutes)
+                }
+                {
+                    name: 'OAuth__RefreshTokenLifetimeDays'
+                    value: string(oauthRefreshTokenLifetimeDays)
+                }
+                {
                     name: 'Monitoring__LokiUrl'
                     value: monitoringLokiUrl
                 }
@@ -84,10 +99,6 @@ resource webApp 'Microsoft.Web/sites@2023-12-01' = {
                 {
                     name: 'Bot'
                     value: '@Microsoft.KeyVault(VaultName=${keyVaultName};SecretName=botToken)'
-                }
-                {
-                    name: 'McpKey'
-                    value: '@Microsoft.KeyVault(VaultName=${keyVaultName};SecretName=mcpKey)'
                 }
                 {
                     name: 'EnableTestHandlers'

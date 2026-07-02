@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using ModelContextProtocol.Authentication;
 
 namespace DD.ServiceAuth.Details;
 
@@ -16,7 +17,7 @@ public static class Setup
 {
     public static void AddAuthService(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddAuthServiceDomain();
+        services.AddAuthServiceDomain(configuration);
         services.AddAuthServiceData(configuration);
     }
 
@@ -37,10 +38,21 @@ public static class Setup
         var authSettings = configuration.GetSection("Auth").Get<AuthSettings>()
                            ?? throw new InvalidOperationException("Auth settings are not configured");
 
-        services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+        var scopesSupported = configuration.GetSection("OAuth:ScopesSupported").Get<string[]>()
+                              ?? throw new InvalidOperationException("OAuth scopes are not configured");
+
+        var issuerBaseUrl = configuration["OAuth:IssuerBaseUrl"]
+                            ?? throw new InvalidOperationException("OAuth issuer base URL is not configured");
+
+        services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
             .AddJwtBearer(options =>
             {
                 options.RequireHttpsMetadata = false;
+                options.MapInboundClaims = false;
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuer = true,
@@ -65,6 +77,32 @@ public static class Setup
 
                         return Task.CompletedTask;
                     },
+                };
+            })
+            .AddMcp(options =>
+            {
+                // Only the /mcp endpoint challenges with this scheme (see MapMcp policy); token
+                // validation itself is delegated to JwtBearer so /mcp accepts the same access token.
+                options.ForwardAuthenticate = JwtBearerDefaults.AuthenticationScheme;
+                options.ResourceMetadata = new ProtectedResourceMetadata
+                {
+                    ScopesSupported = scopesSupported,
+                };
+                options.Events.OnResourceMetadataRequest = context =>
+                {
+                    if (context.ResourceMetadata is not null)
+                    {
+                        context.ResourceMetadata.AuthorizationServers = [issuerBaseUrl];
+
+                        // The SDK derives Resource from the (client-controlled) request host; re-anchor
+                        // it to the trusted issuer base so discovery never advertises a spoofed host.
+                        if (Uri.TryCreate(context.ResourceMetadata.Resource, UriKind.Absolute, out var resourceUri))
+                        {
+                            context.ResourceMetadata.Resource = $"{issuerBaseUrl}{resourceUri.PathAndQuery}";
+                        }
+                    }
+
+                    return Task.CompletedTask;
                 };
             });
     }
