@@ -149,11 +149,11 @@ cd code/frontend && npm run ci
 - Create: `code/frontend/src/oauth/OAuthConsent.tsx`
 - Create: `code/frontend/src/oauth/components/AuthorizePrompt.tsx`
 
-- [ ] `AuthorizePrompt`: a styled `Card` showing the requesting `clientId` and the signed-in `username`, with **Authorize** and **Deny** buttons and a submitting/disabled state (Bootstrap classes consistent with `Signin`)
-- [ ] `OAuthConsent`: take the parsed `OAuthAuthorizeRequest` as a prop; local phase state `login | authorize | submitting`; initialize to `authorize` when `authService.getCurrentUser()` returns a user, else `login`
-- [ ] Login phase: render `Signin` with `hideSignup`, wired to local username/password state, the existing `signin` login thunk, and the `login` slice `isLogInPending`/`logInError`; on `SigninResultEnum.Success` call `storageService.saveAccessToken(token)` and switch to `authorize`
-- [ ] Authorize phase: render `AuthorizePrompt`; Authorize => `oauthApi.authorize('allow', request)`, Deny => `oauthApi.authorize('deny', request)`; on `redirect` do `window.location.assign(redirectUrl)`; on `needs-login` switch back to `login`; on `error` show an inline alert
-- [ ] Verify `cd code/frontend && npm run ci` passes
+- [x] `AuthorizePrompt`: a styled `Card` showing the requesting `clientId` and the signed-in `username`, with **Authorize** and **Deny** buttons and a submitting/disabled state (Bootstrap classes consistent with `Signin`)
+- [x] `OAuthConsent`: take the parsed `OAuthAuthorizeRequest` as a prop; local phase state `login | authorize | submitting`; initialize to `authorize` when `authService.getCurrentUser()` returns a user, else `login`
+- [x] Login phase: render `Signin` with `hideSignup`, wired to local username/password state, the existing `signin` login thunk, and the `login` slice `isLogInPending`/`logInError`; on `SigninResultEnum.Success` call `storageService.saveAccessToken(token)` and switch to `authorize`
+- [x] Authorize phase: render `AuthorizePrompt`; Authorize => `oauthApi.authorize('allow', request)`, Deny => `oauthApi.authorize('deny', request)`; on `redirect` do `window.location.assign(redirectUrl)`; on `needs-login` switch back to `login`; on `error` show an inline alert
+- [x] Verify `cd code/frontend && npm run ci` passes
 
 ### Task 8: Branch the app bootstrap into the OAuth consent flow (frontend)
 
