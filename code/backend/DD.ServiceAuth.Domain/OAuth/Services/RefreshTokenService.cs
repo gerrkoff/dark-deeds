@@ -19,8 +19,6 @@ internal sealed class RefreshTokenService(
     IOptions<OAuthSettings> oauthSettings)
     : IRefreshTokenService
 {
-    private const string TokenIssuer = "dd-oauth";
-    private const string TokenAudience = "dd-oauth-refresh";
     private const string ClientIdClaim = "client_id";
 
     private readonly AuthSettings _authSettings = authSettings.Value;
@@ -40,8 +38,8 @@ internal sealed class RefreshTokenService(
         {
             Subject = new ClaimsIdentity(claims),
             Expires = DateTime.UtcNow.AddDays(_oauthSettings.RefreshTokenLifetimeDays),
-            Issuer = TokenIssuer,
-            Audience = TokenAudience,
+            Issuer = OAuthTokenKinds.Issuer,
+            Audience = OAuthTokenKinds.RefreshTokenAudience,
             SigningCredentials = new SigningCredentials(
                 new SymmetricSecurityKey(keyBytes),
                 SecurityAlgorithms.HmacSha256Signature),
@@ -64,9 +62,9 @@ internal sealed class RefreshTokenService(
         var validationParameters = new TokenValidationParameters
         {
             ValidateIssuer = true,
-            ValidIssuer = TokenIssuer,
+            ValidIssuer = OAuthTokenKinds.Issuer,
             ValidateAudience = true,
-            ValidAudience = TokenAudience,
+            ValidAudience = OAuthTokenKinds.RefreshTokenAudience,
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(keyBytes),
             ValidateLifetime = true,

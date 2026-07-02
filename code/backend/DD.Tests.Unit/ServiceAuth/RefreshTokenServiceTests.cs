@@ -13,8 +13,6 @@ namespace DD.Tests.Unit.ServiceAuth;
 
 public class RefreshTokenServiceTests
 {
-    private const string TokenIssuer = "dd-oauth";
-    private const string RefreshAudience = "dd-oauth-refresh";
     private const string UserId = "user-42";
     private const string ClientId = "client-1";
 
@@ -151,8 +149,8 @@ public class RefreshTokenServiceTests
             NotBefore = expires.AddMinutes(-10),
             IssuedAt = expires.AddMinutes(-10),
             Expires = expires,
-            Issuer = TokenIssuer,
-            Audience = RefreshAudience,
+            Issuer = OAuthTokenKinds.Issuer,
+            Audience = OAuthTokenKinds.RefreshTokenAudience,
             SigningCredentials = new SigningCredentials(
                 new SymmetricSecurityKey(Encoding.ASCII.GetBytes(key)),
                 SecurityAlgorithms.HmacSha256Signature),

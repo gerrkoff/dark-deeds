@@ -21,8 +21,6 @@ public interface IAuthCodeService
 
 internal sealed class AuthCodeService(IOptions<AuthSettings> authSettings) : IAuthCodeService
 {
-    private const string TokenIssuer = "dd-oauth";
-    private const string TokenAudience = "dd-oauth-authcode";
     private const int LifetimeMinutes = 5;
     private const string ClientIdClaim = "client_id";
     private const string RedirectUriClaim = "redirect_uri";
@@ -46,8 +44,8 @@ internal sealed class AuthCodeService(IOptions<AuthSettings> authSettings) : IAu
         {
             Subject = new ClaimsIdentity(claims),
             Expires = DateTime.UtcNow.AddMinutes(LifetimeMinutes),
-            Issuer = TokenIssuer,
-            Audience = TokenAudience,
+            Issuer = OAuthTokenKinds.Issuer,
+            Audience = OAuthTokenKinds.AuthorizationCodeAudience,
             SigningCredentials = new SigningCredentials(
                 new SymmetricSecurityKey(keyBytes),
                 SecurityAlgorithms.HmacSha256Signature),
@@ -70,9 +68,9 @@ internal sealed class AuthCodeService(IOptions<AuthSettings> authSettings) : IAu
         var validationParameters = new TokenValidationParameters
         {
             ValidateIssuer = true,
-            ValidIssuer = TokenIssuer,
+            ValidIssuer = OAuthTokenKinds.Issuer,
             ValidateAudience = true,
-            ValidAudience = TokenAudience,
+            ValidAudience = OAuthTokenKinds.AuthorizationCodeAudience,
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(keyBytes),
             ValidateLifetime = true,

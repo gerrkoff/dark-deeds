@@ -2,6 +2,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using DD.ServiceAuth.Domain;
+using DD.ServiceAuth.Domain.OAuth;
 using DD.ServiceAuth.Domain.OAuth.Models;
 using DD.ServiceAuth.Domain.OAuth.Services;
 using Microsoft.Extensions.Options;
@@ -12,8 +13,6 @@ namespace DD.Tests.Unit.ServiceAuth;
 
 public class AuthCodeServiceTests
 {
-    private const string TokenIssuer = "dd-oauth";
-    private const string AuthCodeAudience = "dd-oauth-authcode";
     private const string ClientId = "client-1";
     private const string RedirectUri = "http://127.0.0.1:5000/callback";
 
@@ -160,8 +159,8 @@ public class AuthCodeServiceTests
             NotBefore = expires.AddMinutes(-10),
             IssuedAt = expires.AddMinutes(-10),
             Expires = expires,
-            Issuer = TokenIssuer,
-            Audience = AuthCodeAudience,
+            Issuer = OAuthTokenKinds.Issuer,
+            Audience = OAuthTokenKinds.AuthorizationCodeAudience,
             SigningCredentials = new SigningCredentials(
                 new SymmetricSecurityKey(Encoding.ASCII.GetBytes(key)),
                 SecurityAlgorithms.HmacSha256Signature),
