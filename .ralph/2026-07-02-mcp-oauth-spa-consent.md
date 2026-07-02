@@ -78,12 +78,12 @@ cd code/frontend && npm run ci
 - Modify: `code/backend/DD.Tests.Unit/ServiceAuth/TokenFlowTests.cs`
 - Modify: `code/backend/DD.Tests.Unit/ServiceAuth/RefreshTokenServiceTests.cs`
 
-- [ ] Add `[Required] public required string ConsentRedirectBaseUrl { get; init; }` to `OAuthSettings` (mirror the `IssuerBaseUrl` `CA1056` suppression)
-- [ ] In `appsettings.json` add `"ConsentRedirectBaseUrl": "http://localhost:3000"` under the `OAuth` section (dev default)
-- [ ] In `ci/infra/app.bicep` add `param oauthConsentRedirectBaseUrl string = ''` and an `OAuth__ConsentRedirectBaseUrl` app-setting entry set to that param (mirror `OAuth__IssuerBaseUrl`)
-- [ ] In `ci/infra/app.prod.parameters.json` add `"oauthConsentRedirectBaseUrl": { "value": "https://dark-deeds.com" }` (same origin as the issuer in prod)
-- [ ] Set `ConsentRedirectBaseUrl = "http://localhost:3000"` in both `OAuthSettings` initializers in `TokenFlowTests.cs` and `RefreshTokenServiceTests.cs` (the new member is `required`, so the test project will not compile otherwise)
-- [ ] Verify the fast checks pass with 0 warnings
+- [x] Add `[Required] public required string ConsentRedirectBaseUrl { get; init; }` to `OAuthSettings` (mirror the `IssuerBaseUrl` `CA1056` suppression)
+- [x] In `appsettings.json` add `"ConsentRedirectBaseUrl": "http://localhost:3000"` under the `OAuth` section (dev default)
+- [x] In `ci/infra/app.bicep` add `param oauthConsentRedirectBaseUrl string = ''` and an `OAuth__ConsentRedirectBaseUrl` app-setting entry set to that param (mirror `OAuth__IssuerBaseUrl`)
+- [x] In `ci/infra/app.prod.parameters.json` add `"oauthConsentRedirectBaseUrl": { "value": "https://dark-deeds.com" }` (same origin as the issuer in prod)
+- [x] Set `ConsentRedirectBaseUrl = "http://localhost:3000"` in both `OAuthSettings` initializers in `TokenFlowTests.cs` and `RefreshTokenServiceTests.cs` (the new member is `required`, so the test project will not compile otherwise)
+- [x] Verify the fast checks pass with 0 warnings
 
 ### Task 2: Add the OAuth consent completion DTOs
 

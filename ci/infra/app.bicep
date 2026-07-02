@@ -13,6 +13,7 @@ param enableTestHandlers bool
 param enableTelegramIntegration bool
 param customDomains array = []
 param oauthIssuerBaseUrl string = ''
+param oauthConsentRedirectBaseUrl string = ''
 param oauthAccessTokenLifetimeMinutes int
 param oauthRefreshTokenLifetimeDays int
 
@@ -71,6 +72,10 @@ resource webApp 'Microsoft.Web/sites@2023-12-01' = {
                 {
                     name: 'OAuth__IssuerBaseUrl'
                     value: oauthIssuerBaseUrl
+                }
+                {
+                    name: 'OAuth__ConsentRedirectBaseUrl'
+                    value: oauthConsentRedirectBaseUrl
                 }
                 {
                     name: 'OAuth__AccessTokenLifetimeMinutes'
