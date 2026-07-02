@@ -99,12 +99,12 @@ dotnet test code/backend/DarkDeeds.sln -c Release
 **Files:**
 - (no source changes — mandated final gate)
 
-- [ ] Build the whole backend solution with no warnings: `dotnet build code/backend/DarkDeeds.sln -c Release`.
-- [ ] Run the full backend unit suite: `dotnet test code/backend/DarkDeeds.sln -c Release`.
-- [ ] Run the full frontend gate: `cd code/frontend && npm run ci`.
-- [ ] Bring up the full local stack: MongoDB via `./infra/up.sh`, backend `dotnet run --project code/backend/DD.App` on `:5000` (detached; wait for `curl -fsS http://localhost:5000/healthcheck` => `Healthy`), frontend `cd code/frontend && npm run dev` on `:3000` (detached; wait for HTTP 200). Start the servers as detached background processes, never piped to `head`/`tail`.
-- [ ] Run the e2e suite against the local stack and confirm **ALL** tests pass: `dotnet test code/tests/DarkDeeds.E2eTests` (defaults `URL=http://localhost:3000` / `BE_URL=http://localhost:5000`; uses a local ChromeDriver, so Chrome must be installed).
-- [ ] Fix any e2e failure and re-run until the whole e2e suite is green, then tear down the backend and frontend you started (stop each by PID; leave MongoDB running).
+- [x] Build the whole backend solution with no warnings: `dotnet build code/backend/DarkDeeds.sln -c Release`.
+- [x] Run the full backend unit suite: `dotnet test code/backend/DarkDeeds.sln -c Release`.
+- [x] Run the full frontend gate: `cd code/frontend && npm run ci`.
+- [x] Bring up the full local stack: MongoDB via `./infra/up.sh`, backend `dotnet run --project code/backend/DD.App` on `:5000` (detached; wait for `curl -fsS http://localhost:5000/healthcheck` => `Healthy`), frontend `cd code/frontend && npm run dev` on `:3000` (detached; wait for HTTP 200). Start the servers as detached background processes, never piped to `head`/`tail`.
+- [x] Run the e2e suite against the local stack and confirm **ALL** tests pass: `dotnet test code/tests/DarkDeeds.E2eTests` (defaults `URL=http://localhost:3000` / `BE_URL=http://localhost:5000`; uses a local ChromeDriver, so Chrome must be installed).
+- [x] Fix any e2e failure and re-run until the whole e2e suite is green, then tear down the backend and frontend you started (stop each by PID; leave MongoDB running).
 
 ## Notes
 

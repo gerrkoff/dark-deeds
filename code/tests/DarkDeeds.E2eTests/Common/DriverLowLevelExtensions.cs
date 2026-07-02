@@ -72,6 +72,14 @@ public static class DriverLowLevelExtensions
         return driver.FindElementByXPath(xpath);
     }
 
+    // A freshly opened modal animates in, so its input can already exist in the DOM while still
+    // being non-interactable for a few frames. Typing into it then throws ElementNotInteractable.
+    // This waits until the element is visible and enabled before returning it.
+    public static IWebElement GetInteractableElement(this RemoteWebDriver driver, string xpath)
+    {
+        return driver.Wait().Until(ExpectedConditions.ElementToBeClickable(By.XPath(xpath)));
+    }
+
     public static int CountElements(this RemoteWebDriver driver, string xpath)
     {
         return driver.FindElements(By.XPath(xpath)).Count;
