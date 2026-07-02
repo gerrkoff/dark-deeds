@@ -129,6 +129,7 @@ public class RefreshTokenServiceTests
             AccessTokenLifetimeMinutes = 60,
             RefreshTokenLifetimeDays = 30,
             ScopesSupported = ["mcp"],
+            IssuerBaseUrl = "http://localhost:5000",
         };
 
         return new RefreshTokenService(Options.Create(_authSettings), Options.Create(oauthSettings));

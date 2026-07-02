@@ -39,6 +39,7 @@ public class TokenFlowTests
         AccessTokenLifetimeMinutes = AccessTokenLifetimeMinutes,
         RefreshTokenLifetimeDays = 30,
         ScopesSupported = ["mcp"],
+        IssuerBaseUrl = "http://localhost:5000",
     };
 
     private readonly AuthCodeService _authCodeService;

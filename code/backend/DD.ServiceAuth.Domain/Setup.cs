@@ -22,7 +22,7 @@ public static class Setup
         services.AddTransient<IClaimsService, ClaimsService>();
         services.AddTransient<IPkceService, PkceService>();
         services.AddTransient<IConsentPageService, ConsentPageService>();
-        services.AddTransient<IRedirectUriBuilder, RedirectUriBuilder>();
+        services.AddTransient<IOAuthUrlService, OAuthUrlService>();
         services.AddScoped<IAuthCodeService, AuthCodeService>();
         services.AddScoped<IRefreshTokenService, RefreshTokenService>();
         services.AddScoped<IOAuthFlowService, OAuthFlowService>();

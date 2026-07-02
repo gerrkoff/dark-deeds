@@ -14,7 +14,7 @@ namespace DD.ServiceAuth.Domain.OAuth.Services;
     Justification = "OAuth issuer/redirect URIs are exchanged as exact strings and must not be URI-normalized.")]
 public interface IOAuthFlowService
 {
-    AuthServerMetadataDto BuildMetadata(string issuerBaseUrl);
+    AuthServerMetadataDto BuildMetadata();
 
     string RenderConsentPage(string clientId, string redirectUri, string codeChallenge, string state, string scope);
 
@@ -48,14 +48,15 @@ internal sealed class OAuthFlowService(
     IPkceService pkceService,
     IRefreshTokenService refreshTokenService,
     IConsentPageService consentPageService,
-    IRedirectUriBuilder redirectUriBuilder,
+    IOAuthUrlService oauthUrlService,
     IOptions<OAuthSettings> oauthSettings)
     : IOAuthFlowService
 {
     private readonly OAuthSettings _oauthSettings = oauthSettings.Value;
 
-    public AuthServerMetadataDto BuildMetadata(string issuerBaseUrl)
+    public AuthServerMetadataDto BuildMetadata()
     {
+        var issuerBaseUrl = _oauthSettings.IssuerBaseUrl;
         return new AuthServerMetadataDto(
             issuerBaseUrl,
             $"{issuerBaseUrl}/authorize",
@@ -84,7 +85,7 @@ internal sealed class OAuthFlowService(
     {
         if (!string.Equals(action, OAuthConstants.ActionAllow, StringComparison.Ordinal))
         {
-            return redirectUriBuilder.BuildError(redirectUri, OAuthConstants.AccessDeniedError, state);
+            return oauthUrlService.BuildErrorRedirect(redirectUri, OAuthConstants.AccessDeniedError, state);
         }
 
         var signInResult = await authService.SignInAsync(new SignInInfoDto
@@ -95,7 +96,7 @@ internal sealed class OAuthFlowService(
 
         if (signInResult.Result != SignInResult.Success)
         {
-            return redirectUriBuilder.BuildError(redirectUri, OAuthConstants.AccessDeniedError, state);
+            return oauthUrlService.BuildErrorRedirect(redirectUri, OAuthConstants.AccessDeniedError, state);
         }
 
         var userId = await authService.GetUserIdAsync(username);
@@ -107,7 +108,7 @@ internal sealed class OAuthFlowService(
             CodeChallenge = codeChallenge,
         });
 
-        return redirectUriBuilder.BuildSuccess(redirectUri, code, state);
+        return oauthUrlService.BuildSuccessRedirect(redirectUri, code, state);
     }
 
     public async Task<OAuthResult<TokenResponseDto>> ExchangeAuthorizationCodeAsync(

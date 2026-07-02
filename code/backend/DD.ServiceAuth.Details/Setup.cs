@@ -41,6 +41,9 @@ public static class Setup
         var scopesSupported = configuration.GetSection("OAuth:ScopesSupported").Get<string[]>()
                               ?? throw new InvalidOperationException("OAuth scopes are not configured");
 
+        var issuerBaseUrl = configuration["OAuth:IssuerBaseUrl"]
+                            ?? throw new InvalidOperationException("OAuth issuer base URL is not configured");
+
         services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -89,9 +92,14 @@ public static class Setup
                 {
                     if (context.ResourceMetadata is not null)
                     {
-                        var request = context.HttpContext.Request;
-                        var baseUrl = $"{request.Scheme}://{request.Host}{request.PathBase}";
-                        context.ResourceMetadata.AuthorizationServers = [baseUrl];
+                        context.ResourceMetadata.AuthorizationServers = [issuerBaseUrl];
+
+                        // The SDK derives Resource from the (client-controlled) request host; re-anchor
+                        // it to the trusted issuer base so discovery never advertises a spoofed host.
+                        if (Uri.TryCreate(context.ResourceMetadata.Resource, UriKind.Absolute, out var resourceUri))
+                        {
+                            context.ResourceMetadata.Resource = $"{issuerBaseUrl}{resourceUri.PathAndQuery}";
+                        }
                     }
 
                     return Task.CompletedTask;

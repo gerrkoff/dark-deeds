@@ -12,6 +12,7 @@ param monitoringMetricsEnabled bool
 param enableTestHandlers bool
 param enableTelegramIntegration bool
 param customDomains array = []
+param oauthIssuerBaseUrl string = ''
 
 var location = resourceGroup().location
 var containerImage = 'ghcr.io/gerrkoff/dark-deeds/app:${webAppImageTag}'
@@ -64,6 +65,10 @@ resource webApp 'Microsoft.Web/sites@2023-12-01' = {
                 {
                     name: 'Auth__Lifetime'
                     value: string(authLifetime)
+                }
+                {
+                    name: 'OAuth__IssuerBaseUrl'
+                    value: oauthIssuerBaseUrl
                 }
                 {
                     name: 'Monitoring__LokiUrl'

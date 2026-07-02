@@ -14,14 +14,15 @@ namespace DD.ServiceAuth.Details.Web.Controllers;
     "Design",
     "CA1054:URI-like parameters should not be strings",
     Justification = "OAuth redirect_uri must be preserved and compared as an exact string, not URI-normalized.")]
-public sealed class OAuthController(IOAuthFlowService oauthFlowService)
+public sealed class OAuthController(
+    IOAuthFlowService oauthFlowService,
+    IOAuthUrlService oauthUrlService)
     : ControllerBase
 {
     [HttpGet("/.well-known/oauth-authorization-server")]
     public IActionResult Metadata()
     {
-        var issuerBaseUrl = $"{Request.Scheme}://{Request.Host}{Request.PathBase}";
-        return Ok(oauthFlowService.BuildMetadata(issuerBaseUrl));
+        return Ok(oauthFlowService.BuildMetadata());
     }
 
     [HttpGet("/authorize")]
@@ -34,7 +35,7 @@ public sealed class OAuthController(IOAuthFlowService oauthFlowService)
         [FromQuery(Name = "state")] string? state,
         [FromQuery(Name = "scope")] string? scope)
     {
-        if (!IsAllowedRedirectUri(redirectUri))
+        if (!oauthUrlService.IsAllowedRedirectUri(redirectUri))
         {
             return BadRequest(OAuthErrorDto.RedirectUriNotLoopback);
         }
@@ -76,7 +77,7 @@ public sealed class OAuthController(IOAuthFlowService oauthFlowService)
         [FromForm(Name = "code_challenge")] string? codeChallenge,
         [FromForm(Name = "state")] string? state)
     {
-        if (!IsAllowedRedirectUri(redirectUri))
+        if (!oauthUrlService.IsAllowedRedirectUri(redirectUri))
         {
             return BadRequest(OAuthErrorDto.RedirectUriNotLoopback);
         }
@@ -157,7 +158,7 @@ public sealed class OAuthController(IOAuthFlowService oauthFlowService)
     public IActionResult Register([FromBody] ClientRegistrationRequestDto? request)
     {
         var redirectUris = request?.RedirectUris;
-        if (redirectUris is null || redirectUris.Count == 0 || redirectUris.Any(uri => !IsAllowedRedirectUri(uri)))
+        if (redirectUris is null || redirectUris.Count == 0 || redirectUris.Any(uri => !oauthUrlService.IsAllowedRedirectUri(uri)))
         {
             return BadRequest(OAuthErrorDto.RegistrationRedirectUrisNotLoopback);
         }
@@ -165,38 +166,6 @@ public sealed class OAuthController(IOAuthFlowService oauthFlowService)
         var response = oauthFlowService.Register(redirectUris);
 
         return StatusCode(StatusCodes.Status201Created, response);
-    }
-
-    private static bool IsAllowedRedirectUri([NotNullWhen(true)] string? redirectUri)
-    {
-        if (string.IsNullOrEmpty(redirectUri) ||
-            !Uri.TryCreate(redirectUri, UriKind.Absolute, out var uri))
-        {
-            return false;
-        }
-
-        // VS Code registers well-known Microsoft redirect helpers (stable + Insiders) alongside its
-        // loopback addresses, and dynamic client registration sends the whole redirect_uris set at
-        // once, so allow these exact URIs; otherwise registration and the browser consent flow fail.
-        // PKCE still protects the code exchange for these non-loopback redirects.
-        string[] allowedExternalRedirectUris =
-        [
-            "https://vscode.dev/redirect",
-            "https://insiders.vscode.dev/redirect",
-        ];
-
-        if (allowedExternalRedirectUris.Contains(redirectUri, StringComparer.Ordinal))
-        {
-            return true;
-        }
-
-        if (!string.Equals(uri.Scheme, Uri.UriSchemeHttp, StringComparison.Ordinal) &&
-            !string.Equals(uri.Scheme, Uri.UriSchemeHttps, StringComparison.Ordinal))
-        {
-            return false;
-        }
-
-        return string.IsNullOrEmpty(uri.Fragment) && uri.IsLoopback;
     }
 
     private IActionResult TokenResult(OAuthResult<TokenResponseDto> result)
