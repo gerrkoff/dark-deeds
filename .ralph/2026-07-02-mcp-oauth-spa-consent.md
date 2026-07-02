@@ -91,9 +91,9 @@ cd code/frontend && npm run ci
 - Create: `code/backend/DD.ServiceAuth.Domain/OAuth/Dto/OAuthAuthorizeRequestDto.cs`
 - Create: `code/backend/DD.ServiceAuth.Domain/OAuth/Dto/OAuthRedirectResponseDto.cs`
 
-- [ ] Add `public sealed record OAuthAuthorizeRequestDto(string? Action, string? ClientId, string? RedirectUri, string? CodeChallenge, string? State);` (nullable members — bound from the SPA's camelCase JSON, validated manually in the controller; add the `CA1054` suppression used by sibling OAuth DTOs for the `RedirectUri` string)
-- [ ] Add `public sealed record OAuthRedirectResponseDto(string RedirectUrl);` (add the `CA1054` suppression consistent with siblings)
-- [ ] Verify the fast checks pass with 0 warnings
+- [x] Add `public sealed record OAuthAuthorizeRequestDto(string? Action, string? ClientId, string? RedirectUri, string? CodeChallenge, string? State);` (nullable members — bound from the SPA's camelCase JSON, validated manually in the controller; add the `CA1054` suppression used by sibling OAuth DTOs for the `RedirectUri` string)
+- [x] Add `public sealed record OAuthRedirectResponseDto(string RedirectUrl);` (add the `CA1054` suppression consistent with siblings)
+- [x] Verify the fast checks pass with 0 warnings
 
 ### Task 3: Rework the /authorize flow to redirect into the SPA and complete via JSON
 
