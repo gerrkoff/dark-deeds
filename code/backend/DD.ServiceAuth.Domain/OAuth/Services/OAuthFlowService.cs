@@ -1,10 +1,8 @@
 using System.Diagnostics.CodeAnalysis;
-using DD.ServiceAuth.Domain.Dto;
 using DD.ServiceAuth.Domain.OAuth.Dto;
 using DD.ServiceAuth.Domain.OAuth.Models;
 using DD.ServiceAuth.Domain.Services;
 using Microsoft.Extensions.Options;
-using SignInResult = DD.ServiceAuth.Domain.Enums.SignInResult;
 
 namespace DD.ServiceAuth.Domain.OAuth.Services;
 
@@ -16,12 +14,11 @@ public interface IOAuthFlowService
 {
     AuthServerMetadataDto BuildMetadata();
 
-    string RenderConsentPage(string clientId, string redirectUri, string codeChallenge, string state, string scope);
+    string BuildConsentRedirect(string queryString);
 
-    Task<string> AuthorizeAsync(
+    Task<string> BuildAuthorizeRedirectAsync(
         string action,
-        string username,
-        string password,
+        string userId,
         string clientId,
         string redirectUri,
         string codeChallenge,
@@ -47,7 +44,6 @@ internal sealed class OAuthFlowService(
     IAuthCodeService authCodeService,
     IPkceService pkceService,
     IRefreshTokenService refreshTokenService,
-    IConsentPageService consentPageService,
     IOAuthUrlService oauthUrlService,
     IOptions<OAuthSettings> oauthSettings)
     : IOAuthFlowService
@@ -69,37 +65,26 @@ internal sealed class OAuthFlowService(
             _oauthSettings.ScopesSupported);
     }
 
-    public string RenderConsentPage(string clientId, string redirectUri, string codeChallenge, string state, string scope)
+    public string BuildConsentRedirect(string queryString)
     {
-        return consentPageService.Render(clientId, redirectUri, codeChallenge, state, scope);
+        return $"{_oauthSettings.ConsentRedirectBaseUrl}/{queryString}";
     }
 
-    public async Task<string> AuthorizeAsync(
+    public async Task<string> BuildAuthorizeRedirectAsync(
         string action,
-        string username,
-        string password,
+        string userId,
         string clientId,
         string redirectUri,
         string codeChallenge,
         string state)
     {
+        // Defense in depth: only "allow" mints an authorization code; any other action yields
+        // access_denied, even though the controller gates authentication and routes deny separately.
         if (!string.Equals(action, OAuthConstants.ActionAllow, StringComparison.Ordinal))
         {
             return oauthUrlService.BuildErrorRedirect(redirectUri, OAuthConstants.AccessDeniedError, state);
         }
 
-        var signInResult = await authService.SignInAsync(new SignInInfoDto
-        {
-            Username = username,
-            Password = password,
-        });
-
-        if (signInResult.Result != SignInResult.Success)
-        {
-            return oauthUrlService.BuildErrorRedirect(redirectUri, OAuthConstants.AccessDeniedError, state);
-        }
-
-        var userId = await authService.GetUserIdAsync(username);
         var code = await authCodeService.IssueAsync(new AuthCodeModel
         {
             UserId = userId,
