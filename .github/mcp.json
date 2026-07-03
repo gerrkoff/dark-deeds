@@ -1,0 +1,19 @@
+{
+  "mcpServers": {
+    "mongodb": {
+      "type": "local",
+      "command": "npx",
+      "args": [
+        "-y",
+        "mongodb-mcp-server",
+        "--connectionString",
+        "mongodb://user:password@localhost:27017/dark-deeds?authSource=admin",
+        "--readOnly"
+      ],
+      "env": {},
+      "tools": [
+        "*"
+      ]
+    }
+  }
+}
