@@ -2,10 +2,6 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace DD.ServiceAuth.Domain.OAuth.Services;
 
-[SuppressMessage(
-    "Design",
-    "CA1054:URI-like parameters should not be strings",
-    Justification = "OAuth issuer and redirect URIs are exchanged as exact strings and must not be URI-normalized.")]
 public interface IOAuthUrlService
 {
     bool IsAllowedRedirectUri([NotNullWhen(true)] string? redirectUri);
@@ -15,10 +11,6 @@ public interface IOAuthUrlService
     string BuildErrorRedirect(string redirectUri, string errorCode, string state);
 }
 
-[SuppressMessage(
-    "Design",
-    "CA1054:URI-like parameters should not be strings",
-    Justification = "OAuth issuer and redirect URIs are exchanged as exact strings and must not be URI-normalized.")]
 internal sealed class OAuthUrlService : IOAuthUrlService
 {
     // VS Code registers well-known Microsoft redirect helpers (stable + Insiders) alongside its

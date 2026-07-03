@@ -1,4 +1,3 @@
-using System.Diagnostics.CodeAnalysis;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -12,10 +11,6 @@ internal interface IAuthCodeService
 {
     Task<string> IssueAsync(AuthCodeModel model);
 
-    [SuppressMessage(
-        "Design",
-        "CA1054:URI-like parameters should not be strings",
-        Justification = "OAuth redirect_uri must be compared by exact string match, not URI-normalized.")]
     Task<AuthCodeModel?> VerifyAsync(string code, string clientId, string redirectUri);
 }
 
