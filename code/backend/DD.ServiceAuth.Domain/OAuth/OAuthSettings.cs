@@ -21,11 +21,4 @@ internal sealed class OAuthSettings
         "CA1056:URI-like properties should not be strings",
         Justification = "OAuth issuer base URL is emitted verbatim in discovery metadata and must not be URI-normalized.")]
     public required string IssuerBaseUrl { get; init; }
-
-    [Required]
-    [SuppressMessage(
-        "Design",
-        "CA1056:URI-like properties should not be strings",
-        Justification = "OAuth consent redirect base URL is emitted verbatim in the authorize redirect and must not be URI-normalized.")]
-    public required string ConsentRedirectBaseUrl { get; init; }
 }

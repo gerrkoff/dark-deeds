@@ -8,10 +8,9 @@ using Xunit;
 
 namespace DD.Tests.Unit.ServiceAuth;
 
-// The SPA-served consent flow rests on two OAuthFlowService contracts: GET /authorize hands off to
-// the styled SPA at the configured base URL (preserving the query), and completion mints an
+// Completion of the SPA-served consent flow rests on one OAuthFlowService contract: it mints an
 // authorization code only for the "allow" action while "deny" yields access_denied without issuing
-// anything. These tests lock down both, using the real OAuth primitives (as TokenFlowTests does).
+// anything. These tests lock that down using the real OAuth primitives (as TokenFlowTests does).
 public class OAuthFlowServiceTests
 {
     private const string UserId = "user-42";
@@ -19,7 +18,6 @@ public class OAuthFlowServiceTests
     private const string RedirectUri = "http://127.0.0.1:5000/callback";
     private const string CodeChallenge = "E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM";
     private const string State = "state-xyz";
-    private const string ConsentRedirectBaseUrl = "http://localhost:3000";
 
     private readonly OAuthFlowService _service;
 
@@ -39,7 +37,6 @@ public class OAuthFlowServiceTests
             RefreshTokenLifetimeDays = 30,
             ScopesSupported = ["mcp"],
             IssuerBaseUrl = "http://localhost:5000",
-            ConsentRedirectBaseUrl = ConsentRedirectBaseUrl,
         });
 
         _service = new OAuthFlowService(
@@ -49,19 +46,6 @@ public class OAuthFlowServiceTests
             new RefreshTokenService(authSettings, oauthSettings),
             new OAuthUrlService(),
             oauthSettings);
-    }
-
-    [Fact]
-    public void BuildConsentRedirect_PrefixesConfiguredBaseUrl_AndPreservesQuery()
-    {
-        // Arrange
-        const string queryString = "?response_type=code&client_id=x&state=y";
-
-        // Act
-        var redirect = _service.BuildConsentRedirect(queryString);
-
-        // Assert
-        Assert.Equal($"{ConsentRedirectBaseUrl}/{queryString}", redirect);
     }
 
     [Fact]

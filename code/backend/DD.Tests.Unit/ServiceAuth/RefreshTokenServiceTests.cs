@@ -130,7 +130,6 @@ public class RefreshTokenServiceTests
             RefreshTokenLifetimeDays = 30,
             ScopesSupported = ["mcp"],
             IssuerBaseUrl = "http://localhost:5000",
-            ConsentRedirectBaseUrl = "http://localhost:3000",
         };
 
         return new RefreshTokenService(Options.Create(_authSettings), Options.Create(oauthSettings));

@@ -42,6 +42,10 @@
     "chrome-devtools": {
       "command": "npx",
       "args": ["chrome-devtools-mcp@latest"]
+    },
+    "darkdeeds-test": {
+      "type": "http",
+      "url": "http://localhost:5000/mcp"
     }
   },
   "inputs": [

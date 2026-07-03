@@ -14,8 +14,6 @@ public interface IOAuthFlowService
 {
     AuthServerMetadataDto BuildMetadata();
 
-    string BuildConsentRedirect(string queryString);
-
     Task<string> BuildAuthorizeRedirectAsync(
         string action,
         string userId,
@@ -63,11 +61,6 @@ internal sealed class OAuthFlowService(
             [OAuthConstants.CodeChallengeMethodS256],
             ["none"],
             _oauthSettings.ScopesSupported);
-    }
-
-    public string BuildConsentRedirect(string queryString)
-    {
-        return $"{_oauthSettings.ConsentRedirectBaseUrl}/{queryString}";
     }
 
     public async Task<string> BuildAuthorizeRedirectAsync(

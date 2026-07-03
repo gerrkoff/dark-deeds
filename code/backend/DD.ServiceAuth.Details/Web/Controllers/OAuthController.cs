@@ -62,7 +62,11 @@ public sealed class OAuthController(
             return BadRequest(OAuthErrorDto.StateRequired);
         }
 
-        return Redirect(oauthFlowService.BuildConsentRedirect(Request.QueryString.Value ?? string.Empty));
+        // Same-origin relative redirect into the SPA (served from wwwroot at "/"). Kept relative so
+        // the consent page stays on the host the client entered; this requires the SPA and the OAuth
+        // endpoints to share an origin, which holds in the deployed monolith but not in the dev split
+        // (SPA on Vite :3000, backend/Swagger on :5000).
+        return Redirect($"/{Request.QueryString.Value}");
     }
 
     [HttpPost("/authorize")]

@@ -41,7 +41,6 @@ public class TokenFlowTests
         RefreshTokenLifetimeDays = 30,
         ScopesSupported = ["mcp"],
         IssuerBaseUrl = "http://localhost:5000",
-        ConsentRedirectBaseUrl = "http://localhost:3000",
     };
 
     private readonly AuthCodeService _authCodeService;
