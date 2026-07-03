@@ -1,4 +1,3 @@
-using System.Diagnostics.CodeAnalysis;
 using DD.ServiceAuth.Domain.OAuth.Dto;
 using DD.ServiceAuth.Domain.OAuth.Models;
 using DD.ServiceAuth.Domain.Services;
@@ -6,10 +5,6 @@ using Microsoft.Extensions.Options;
 
 namespace DD.ServiceAuth.Domain.OAuth.Services;
 
-[SuppressMessage(
-    "Design",
-    "CA1054:URI-like parameters should not be strings",
-    Justification = "OAuth issuer/redirect URIs are exchanged as exact strings and must not be URI-normalized.")]
 public interface IOAuthFlowService
 {
     AuthServerMetadataDto BuildMetadata();
@@ -33,10 +28,6 @@ public interface IOAuthFlowService
     ClientRegistrationResponseDto Register(IReadOnlyList<string> redirectUris);
 }
 
-[SuppressMessage(
-    "Design",
-    "CA1054:URI-like parameters should not be strings",
-    Justification = "OAuth issuer/redirect URIs are exchanged as exact strings and must not be URI-normalized.")]
 internal sealed class OAuthFlowService(
     IAuthService authService,
     IAuthCodeService authCodeService,

@@ -1,4 +1,3 @@
-using System.Diagnostics.CodeAnalysis;
 using DD.ServiceAuth.Domain.OAuth;
 using DD.ServiceAuth.Domain.OAuth.Dto;
 using DD.ServiceAuth.Domain.OAuth.Models;
@@ -11,10 +10,6 @@ using Microsoft.AspNetCore.Mvc;
 namespace DD.ServiceAuth.Details.Web.Controllers;
 
 [AllowAnonymous]
-[SuppressMessage(
-    "Design",
-    "CA1054:URI-like parameters should not be strings",
-    Justification = "OAuth redirect_uri must be preserved and compared as an exact string, not URI-normalized.")]
 public sealed class OAuthController(
     IOAuthFlowService oauthFlowService,
     IOAuthUrlService oauthUrlService,
