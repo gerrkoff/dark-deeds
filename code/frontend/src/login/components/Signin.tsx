@@ -2,7 +2,7 @@ import { useRef } from 'react'
 import { isKeyEnter } from '../../common/utils/keys'
 
 interface Props {
-    switchToSignup: () => void
+    switchToSignup?: () => void
     username: string
     setUsername: (username: string) => void
     password: string
@@ -10,6 +10,7 @@ interface Props {
     signin: (username: string, password: string) => void
     isLogInPending: boolean
     logInError: string | null
+    hideSignup?: boolean
 }
 
 function Signin({
@@ -21,13 +22,14 @@ function Signin({
     signin,
     isLogInPending,
     logInError,
+    hideSignup = false,
 }: Props) {
     const usernameRef = useRef<HTMLInputElement>(null)
     const passwordRef = useRef<HTMLInputElement>(null)
 
     const handleSwitchToSignup = (e: React.MouseEvent) => {
         e.preventDefault()
-        switchToSignup()
+        switchToSignup?.()
     }
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -102,12 +104,14 @@ function Signin({
                     'Sign in'
                 )}
             </button>
-            <div>
-                Haven't got an account yet?{' '}
-                <a href="#" onClick={handleSwitchToSignup}>
-                    Sign up here.
-                </a>
-            </div>
+            {!hideSignup && (
+                <div>
+                    Haven't got an account yet?{' '}
+                    <a href="#" onClick={handleSwitchToSignup}>
+                        Sign up here.
+                    </a>
+                </div>
+            )}
         </form>
     )
 }

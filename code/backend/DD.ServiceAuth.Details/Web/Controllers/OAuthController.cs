@@ -3,6 +3,7 @@ using DD.ServiceAuth.Domain.OAuth;
 using DD.ServiceAuth.Domain.OAuth.Dto;
 using DD.ServiceAuth.Domain.OAuth.Models;
 using DD.ServiceAuth.Domain.OAuth.Services;
+using DD.Shared.Details.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -16,7 +17,8 @@ namespace DD.ServiceAuth.Details.Web.Controllers;
     Justification = "OAuth redirect_uri must be preserved and compared as an exact string, not URI-normalized.")]
 public sealed class OAuthController(
     IOAuthFlowService oauthFlowService,
-    IOAuthUrlService oauthUrlService)
+    IOAuthUrlService oauthUrlService,
+    IUserAuth userAuth)
     : ControllerBase
 {
     [HttpGet("/.well-known/oauth-authorization-server")]
@@ -32,8 +34,7 @@ public sealed class OAuthController(
         [FromQuery(Name = "redirect_uri")] string? redirectUri,
         [FromQuery(Name = "code_challenge")] string? codeChallenge,
         [FromQuery(Name = "code_challenge_method")] string? codeChallengeMethod,
-        [FromQuery(Name = "state")] string? state,
-        [FromQuery(Name = "scope")] string? scope)
+        [FromQuery(Name = "state")] string? state)
     {
         if (!oauthUrlService.IsAllowedRedirectUri(redirectUri))
         {
@@ -61,57 +62,59 @@ public sealed class OAuthController(
             return BadRequest(OAuthErrorDto.StateRequired);
         }
 
-        var html = oauthFlowService.RenderConsentPage(
-            clientId, redirectUri, codeChallenge, state, scope ?? string.Empty);
-
-        return Content(html, "text/html; charset=utf-8");
+        // Same-origin relative redirect into the SPA (served from wwwroot at "/"). Kept relative so
+        // the consent page stays on the host the client entered; this requires the SPA and the OAuth
+        // endpoints to share an origin, which holds in the deployed monolith but not in the dev split
+        // (SPA on Vite :3000, backend/Swagger on :5000). LocalRedirect enforces the local-URL
+        // invariant, so the user-controlled query string can never turn into an open redirect.
+        return LocalRedirect($"/{Request.QueryString.Value}");
     }
 
     [HttpPost("/authorize")]
-    public async Task<IActionResult> AuthorizeConsent(
-        [FromForm(Name = "action")] string? action,
-        [FromForm(Name = "username")] string? username,
-        [FromForm(Name = "password")] string? password,
-        [FromForm(Name = "client_id")] string? clientId,
-        [FromForm(Name = "redirect_uri")] string? redirectUri,
-        [FromForm(Name = "code_challenge")] string? codeChallenge,
-        [FromForm(Name = "state")] string? state)
+    public async Task<IActionResult> AuthorizeConsent([FromBody] OAuthAuthorizeRequestDto? request)
     {
-        if (!oauthUrlService.IsAllowedRedirectUri(redirectUri))
+        if (request is null || !oauthUrlService.IsAllowedRedirectUri(request.RedirectUri))
         {
             return BadRequest(OAuthErrorDto.RedirectUriNotLoopback);
         }
 
-        if (string.IsNullOrEmpty(clientId))
+        if (string.IsNullOrEmpty(request.ClientId))
         {
             return BadRequest(OAuthErrorDto.ClientIdRequired);
         }
 
-        if (string.IsNullOrEmpty(codeChallenge) || string.IsNullOrEmpty(state))
+        if (string.IsNullOrEmpty(request.CodeChallenge))
         {
-            return BadRequest(OAuthErrorDto.CodeChallengeAndStateRequired);
+            return BadRequest(OAuthErrorDto.PkceChallengeRequired);
         }
 
-        if (string.IsNullOrEmpty(username))
+        if (string.IsNullOrEmpty(request.State))
         {
-            return BadRequest(OAuthErrorDto.UsernameRequired);
+            return BadRequest(OAuthErrorDto.StateRequired);
         }
 
-        if (string.IsNullOrEmpty(password))
+        if (!string.Equals(request.Action, OAuthConstants.ActionAllow, StringComparison.Ordinal))
         {
-            return BadRequest(OAuthErrorDto.PasswordRequired);
+            var denyRedirect = oauthUrlService.BuildErrorRedirect(
+                request.RedirectUri, OAuthConstants.AccessDeniedError, request.State);
+
+            return Ok(new OAuthRedirectResponseDto(denyRedirect));
         }
 
-        var location = await oauthFlowService.AuthorizeAsync(
-            action ?? string.Empty,
-            username,
-            password,
-            clientId,
-            redirectUri,
-            codeChallenge,
-            state);
+        if (!userAuth.IsAuthenticated())
+        {
+            return Unauthorized();
+        }
 
-        return Redirect(location);
+        var location = await oauthFlowService.BuildAuthorizeRedirectAsync(
+            OAuthConstants.ActionAllow,
+            userAuth.UserId(),
+            request.ClientId,
+            request.RedirectUri,
+            request.CodeChallenge,
+            request.State);
+
+        return Ok(new OAuthRedirectResponseDto(location));
     }
 
     [HttpPost("/token")]
