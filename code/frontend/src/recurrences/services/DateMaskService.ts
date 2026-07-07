@@ -22,23 +22,26 @@ export class DateMaskService {
     }
 
     isValidDate(value: string): boolean {
-        const digits = value.replace(/\D/g, '')
-        if (digits.length !== 8) {
-            return false
-        }
-
-        const [day, month, year] = value.split('/').map(Number)
-        const date = new Date(year, month - 1, day)
-        return date.getDate() === day && date.getMonth() === month - 1 && date.getFullYear() === year
+        return this.parseValidDate(value) !== null
     }
 
     toTimestamp(value: string): number | null {
-        if (!this.isValidDate(value)) {
+        return this.parseValidDate(value)?.valueOf() ?? null
+    }
+
+    private parseValidDate(value: string): Date | null {
+        const digits = value.replace(/\D/g, '')
+        if (digits.length !== 8) {
             return null
         }
 
         const [day, month, year] = value.split('/').map(Number)
-        return new Date(year, month - 1, day).valueOf()
+        const date = new Date(year, month - 1, day)
+        if (date.getDate() !== day || date.getMonth() !== month - 1 || date.getFullYear() !== year) {
+            return null
+        }
+
+        return date
     }
 
     fromTimestamp(dateNumber: number | null | undefined): string {

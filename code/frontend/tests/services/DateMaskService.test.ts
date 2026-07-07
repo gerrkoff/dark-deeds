@@ -90,6 +90,10 @@ test('[fromTimestamp] returns an empty string for null', () => {
     expect(service().fromTimestamp(null)).toBe('')
 })
 
+test('[fromTimestamp] returns an empty string for undefined', () => {
+    expect(service().fromTimestamp(undefined)).toBe('')
+})
+
 test('[fromTimestamp] returns an empty string for zero', () => {
     expect(service().fromTimestamp(0)).toBe('')
 })
