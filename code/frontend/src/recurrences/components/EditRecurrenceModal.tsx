@@ -7,6 +7,7 @@ import { enumExpand, enumReduce } from '../../common/utils/enums'
 import clsx from 'clsx'
 import { PlannedRecurrencePrintModel } from '../models/PlannedRecurrencePrintModel'
 import { recurrenceService } from '../services/RecurrenceService'
+import { dateMaskService } from '../services/DateMaskService'
 import { uuidv4 } from '../../common/utils/uuidv4'
 import { isTouchDevice } from '../../common/utils/isTouchDevice'
 
@@ -63,61 +64,6 @@ const getWeekdayOptionsInitialState = (weekday: RecurrenceWeekdayEnum | null | u
     return enumExpand(weekday, recurrenceWeekdayEnumValues).map(x => x.toString())
 }
 
-const handleDateChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    prevValue: string,
-): { value: string; isValid: boolean } => {
-    let inputValue = e.target.value.replace(/[^\d/]/g, '')
-    if (e.target.value.length < prevValue.length) {
-        inputValue = inputValue.slice(0, -1)
-    }
-    const sections = inputValue.split('/')
-    const day = sections[0]
-    const month = sections[1]
-    const year = sections[2]
-
-    let value = day
-    if (day && day.length > 1) {
-        value += '/'
-    }
-    if (month) {
-        value += month
-    }
-    if (month && month.length > 1) {
-        value += '/'
-    }
-    if (year) {
-        value += year
-    }
-
-    const date = new Date(Number(year), Number(month) - 1, Number(day))
-    const isValid = !isNaN(date.valueOf())
-
-    return { value, isValid }
-}
-
-const getDateInitialValue = (dateNumber: number | null | undefined): string => {
-    if (!dateNumber) {
-        return ''
-    }
-
-    const date = new Date(dateNumber)
-    return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`
-}
-
-const getDateFromInput = (value: string): number | null => {
-    const sections = value.split('/')
-    const day = sections[0]
-    const month = sections[1]
-    const year = sections[2]
-
-    if (!day || !month || !year) {
-        return null
-    }
-
-    return new Date(Number(year), Number(month) - 1, Number(day)).valueOf()
-}
-
 const isMobile = isTouchDevice()
 
 function EditRecurrenceModal({ context, onUpdate }: Props) {
@@ -130,11 +76,13 @@ function EditRecurrenceModal({ context, onUpdate }: Props) {
     const [dates, setDates] = useState<string>(recurrence?.everyMonthDay ?? '')
     const [isDatesValid, setIsDatesValid] = useState(true)
     const [nthDay, setNthDay] = useState<number | null>(recurrence?.everyNthDay ?? null)
-    const [from, setFrom] = useState<string>(() => getDateInitialValue(recurrence?.startDate ?? new Date().valueOf()))
-    const [isFromValid, setIsFromValid] = useState(true)
+    const [from, setFrom] = useState<string>(() =>
+        dateMaskService.fromTimestamp(recurrence?.startDate ?? new Date().valueOf()),
+    )
+    const [isFromValid, setIsFromValid] = useState(() => dateMaskService.isValidDate(from))
     const fromRef = useRef<string>(from)
-    const [to, setTo] = useState<string>(() => getDateInitialValue(recurrence?.endDate))
-    const [isToValid, setIsToValid] = useState(true)
+    const [to, setTo] = useState<string>(() => dateMaskService.fromTimestamp(recurrence?.endDate))
+    const [isToValid, setIsToValid] = useState(() => dateMaskService.isValidDate(to) || to === '')
     const toRef = useRef<string>(to)
 
     const handleWeekdayChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -155,25 +103,25 @@ function EditRecurrenceModal({ context, onUpdate }: Props) {
     }
 
     const handleFromChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { value, isValid } = handleDateChange(e, fromRef.current)
+        const value = dateMaskService.applyMask(e.target.value, fromRef.current)
         fromRef.current = value
         setFrom(value)
-        setIsFromValid(isValid)
+        setIsFromValid(dateMaskService.isValidDate(value))
     }
 
     const handleToChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { value, isValid } = handleDateChange(e, toRef.current)
+        const value = dateMaskService.applyMask(e.target.value, toRef.current)
         toRef.current = value
         setTo(value)
-        setIsToValid(isValid || value === '')
+        setIsToValid(dateMaskService.isValidDate(value) || value === '')
     }
 
     const editRecurrence: PlannedRecurrenceModel = useMemo(
         () => ({
             uid: '',
             task,
-            startDate: getDateFromInput(from) ?? new Date(0).valueOf(),
-            endDate: getDateFromInput(to),
+            startDate: dateMaskService.toTimestamp(from) ?? new Date(0).valueOf(),
+            endDate: dateMaskService.toTimestamp(to),
             everyWeekday: weekday.length === 0 ? null : enumReduce<RecurrenceWeekdayEnum>(weekday.map(x => +x)),
             everyNthDay: nthDay ? nthDay : null,
             everyMonthDay: dates ? dates : null,

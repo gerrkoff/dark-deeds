@@ -6,6 +6,13 @@ export class DateService {
         return `${date.toLocaleDateString('en-US')} ${this.getWeekdayName(date)}`
     }
 
+    toShortDate(date: Date): string {
+        const day = String(date.getDate()).padStart(2, '0')
+        const month = String(date.getMonth() + 1).padStart(2, '0')
+        const year = date.getFullYear()
+        return `${day}/${month}/${year}`
+    }
+
     toTimeLabel(time: number): string {
         const timeInstance = new Time(time)
         return `${timeInstance.hourString}:${timeInstance.minuteString}`
