@@ -109,12 +109,12 @@ cd code/frontend && npm run ci
 **Files:**
 - Modify: `code/frontend/src/recurrences/components/EditRecurrenceModal.tsx`
 
-- [ ] Import `dateMaskService`; initialize `from` via `dateMaskService.fromTimestamp(recurrence?.startDate ?? new Date().valueOf())` and `to` via `dateMaskService.fromTimestamp(recurrence?.endDate)`.
-- [ ] Initialize the validity flags from the actual initial values (not a bare `true`): `isFromValid` via `useState(() => dateMaskService.isValidDate(from))` and `isToValid` via `useState(() => dateMaskService.isValidDate(to) || to === '')`, so Save can never start enabled with an invalid date.
-- [ ] Rewrite `handleFromChange` to `const value = dateMaskService.applyMask(e.target.value, fromRef.current)` then set `fromRef.current = value`, `setFrom(value)`, `setIsFromValid(dateMaskService.isValidDate(value))`; rewrite `handleToChange` the same way with `setIsToValid(dateMaskService.isValidDate(value) || value === '')`.
-- [ ] In the `editRecurrence` memo use `startDate: dateMaskService.toTimestamp(from) ?? new Date(0).valueOf()` and `endDate: dateMaskService.toTimestamp(to)` (the epoch fallback is an unreachable typed placeholder — Save is gated on `isValid`).
-- [ ] Delete the three now-unused top-level functions `handleDateChange`, `getDateInitialValue`, `getDateFromInput` from the file.
-- [ ] Verify the fast checks pass.
+- [x] Import `dateMaskService`; initialize `from` via `dateMaskService.fromTimestamp(recurrence?.startDate ?? new Date().valueOf())` and `to` via `dateMaskService.fromTimestamp(recurrence?.endDate)`.
+- [x] Initialize the validity flags from the actual initial values (not a bare `true`): `isFromValid` via `useState(() => dateMaskService.isValidDate(from))` and `isToValid` via `useState(() => dateMaskService.isValidDate(to) || to === '')`, so Save can never start enabled with an invalid date.
+- [x] Rewrite `handleFromChange` to `const value = dateMaskService.applyMask(e.target.value, fromRef.current)` then set `fromRef.current = value`, `setFrom(value)`, `setIsFromValid(dateMaskService.isValidDate(value))`; rewrite `handleToChange` the same way with `setIsToValid(dateMaskService.isValidDate(value) || value === '')`.
+- [x] In the `editRecurrence` memo use `startDate: dateMaskService.toTimestamp(from) ?? new Date(0).valueOf()` and `endDate: dateMaskService.toTimestamp(to)` (the epoch fallback is an unreachable typed placeholder — Save is gated on `isValid`).
+- [x] Delete the three now-unused top-level functions `handleDateChange`, `getDateInitialValue`, `getDateFromInput` from the file.
+- [x] Verify the fast checks pass.
 
 ### Task 4: Normalize the recurrence summary date format
 
