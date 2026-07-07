@@ -94,7 +94,7 @@ export class RecurrenceService {
     }
 
     private printDate(date: number): string {
-        return new Date(date).toLocaleDateString()
+        return this.dateService.toShortDate(new Date(date))
     }
 
     private printNthDays(nthDays: number): string {

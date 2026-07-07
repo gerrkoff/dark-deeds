@@ -121,8 +121,8 @@ cd code/frontend && npm run ci
 **Files:**
 - Modify: `code/frontend/src/recurrences/services/RecurrenceService.ts`
 
-- [ ] Change `printDate(date: number)` from `new Date(date).toLocaleDateString()` to `this.dateService.toShortDate(new Date(date))` so the summary's from/until dates render as fixed `dd/mm/yyyy` matching the input.
-- [ ] Verify the fast checks pass.
+- [x] Change `printDate(date: number)` from `new Date(date).toLocaleDateString()` to `this.dateService.toShortDate(new Date(date))` so the summary's from/until dates render as fixed `dd/mm/yyyy` matching the input.
+- [x] Verify the fast checks pass.
 
 ### Task 5: Final validation (full pass + live e2e)
 
