@@ -97,12 +97,12 @@ cd code/frontend && npm run ci
 - Create: `code/frontend/src/recurrences/services/DateMaskService.ts`
 - Create: `code/frontend/tests/services/DateMaskService.test.ts`
 
-- [ ] Create `DateMaskService` (constructor injects `DateService`) with `applyMask(raw: string, prev: string): string`, `isValidDate(value: string): boolean`, `toTimestamp(value: string): number | null`, `fromTimestamp(dateNumber: number | null | undefined): string`, and export `const dateMaskService = new DateMaskService(dateService)`.
-- [ ] Implement `applyMask` per the digit-based algorithm (strip non-digits, cap at 8 digits, insert `/` after day and month, append a trailing `/` after 2 or 4 digits only when NOT deleting).
-- [ ] Implement `isValidDate` (exactly 8 digits + `new Date` round-trip equality) and `toTimestamp` (`isValidDate` ? epoch ms : `null`); implement `fromTimestamp` (nullish or `0` => `''`, else `this.dateService.toShortDate(new Date(dateNumber))`).
-- [ ] Add vitest masking cases: typing `08072026` => `08/07/2026`; auto-slash appears after 2 and after 4 digits while typing; backspace removes exactly one char (`08/07/2026` => `08/07/202`); backspacing over an auto-added slash (`08/` => `08`) does not re-add it or drop a digit; non-digits are stripped; input capped at 8 digits (`0807202699` => `08/07/2026`).
-- [ ] Add vitest validation cases: `isValidDate` accepts `08/07/2026` and `29/02/2024` (leap year); rejects `31/02/2026`, `45/13/2026`, `29/02/2023` (non-leap), `00/01/2026`, `01/00/2026`, `''`, and partial `08/07`; `toTimestamp('08/07/2026')` === `new Date(2026,6,8).valueOf()` and `toTimestamp` returns `null` for invalid/empty; `fromTimestamp(new Date(2026,6,8).valueOf())` => `08/07/2026`, `fromTimestamp(null)` => `''`, `fromTimestamp(0)` => `''`.
-- [ ] Verify the fast checks pass.
+- [x] Create `DateMaskService` (constructor injects `DateService`) with `applyMask(raw: string, prev: string): string`, `isValidDate(value: string): boolean`, `toTimestamp(value: string): number | null`, `fromTimestamp(dateNumber: number | null | undefined): string`, and export `const dateMaskService = new DateMaskService(dateService)`.
+- [x] Implement `applyMask` per the digit-based algorithm (strip non-digits, cap at 8 digits, insert `/` after day and month, append a trailing `/` after 2 or 4 digits only when NOT deleting).
+- [x] Implement `isValidDate` (exactly 8 digits + `new Date` round-trip equality) and `toTimestamp` (`isValidDate` ? epoch ms : `null`); implement `fromTimestamp` (nullish or `0` => `''`, else `this.dateService.toShortDate(new Date(dateNumber))`).
+- [x] Add vitest masking cases: typing `08072026` => `08/07/2026`; auto-slash appears after 2 and after 4 digits while typing; backspace removes exactly one char (`08/07/2026` => `08/07/202`); backspacing over an auto-added slash (`08/` => `08`) does not re-add it or drop a digit; non-digits are stripped; input capped at 8 digits (`0807202699` => `08/07/2026`).
+- [x] Add vitest validation cases: `isValidDate` accepts `08/07/2026` and `29/02/2024` (leap year); rejects `31/02/2026`, `45/13/2026`, `29/02/2023` (non-leap), `00/01/2026`, `01/00/2026`, `''`, and partial `08/07`; `toTimestamp('08/07/2026')` === `new Date(2026,6,8).valueOf()` and `toTimestamp` returns `null` for invalid/empty; `fromTimestamp(new Date(2026,6,8).valueOf())` => `08/07/2026`, `fromTimestamp(null)` => `''`, `fromTimestamp(0)` => `''`.
+- [x] Verify the fast checks pass.
 
 ### Task 3: Wire DateMaskService into EditRecurrenceModal and delete the top-level functions
 
