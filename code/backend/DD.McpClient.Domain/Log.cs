@@ -15,4 +15,10 @@ internal static partial class Log
         Level = LogLevel.Information,
         Message = "Updating tasks order for {count} tasks; justification: {justification}")]
     public static partial void UpdateTasksOrder(ILogger logger, int count, string justification);
+
+    [LoggerMessage(
+        EventId = 5003,
+        Level = LogLevel.Information,
+        Message = "Adding {count} tasks; justification: {justification}")]
+    public static partial void AddTasks(ILogger logger, int count, string justification);
 }

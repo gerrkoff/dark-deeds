@@ -120,19 +120,19 @@ dotnet test code/backend/DarkDeeds.sln -c Release
 - Modify: `code/backend/DD.McpClient.Domain/McpService.cs`
 - Modify: `code/backend/DD.McpClient.Domain/Log.cs`
 
-- [ ] In `Log.cs`, add a `Log.AddTasks` partial method: `EventId = 5003`, `Level = Information`,
+- [x] In `Log.cs`, add a `Log.AddTasks` partial method: `EventId = 5003`, `Level = Information`,
       message including the task count and the justification.
-- [ ] Add `Task<string> AddTasksAsync(ICollection<TaskCreateDto> tasks, string userId, string justification);`
+- [x] Add `Task<string> AddTasksAsync(ICollection<TaskCreateDto> tasks, string userId, string justification);`
       to the `IMcpService` interface.
-- [ ] Implement `AddTasksAsync` in `McpService`: throw `ArgumentException(nameof(justification))`
+- [x] Implement `AddTasksAsync` in `McpService`: throw `ArgumentException(nameof(justification))`
       when `justification` is null/whitespace; throw `ArgumentException(nameof(tasks))` when `tasks`
       is null, empty, contains a null element, or any `Title` is null/whitespace (guard explicitly
       so a bad payload raises a controlled `ArgumentException`, never a `NullReferenceException`).
-- [ ] Map each `TaskCreateDto` to a `TaskDto` with `Uid = Guid.NewGuid().ToString()`, copying
+- [x] Map each `TaskCreateDto` to a `TaskDto` with `Uid = Guid.NewGuid().ToString()`, copying
       `Title`/`Date`/`Time`/`Type`/`IsProbable`; call
       `taskServiceApp.SaveTasksAsync([.. mapped], userId, clientId: null)`; log via `Log.AddTasks`;
       serialize the result with the existing `JsonOptions` and return it.
-- [ ] Verify the fast checks pass.
+- [x] Verify the fast checks pass.
 
 ### Task 4: Add `AddTasksTool` and register it
 
