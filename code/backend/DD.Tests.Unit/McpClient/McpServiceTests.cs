@@ -51,27 +51,6 @@ public class McpServiceTests
             Times.Once);
     }
 
-    [Theory]
-    [InlineData(null)]
-    [InlineData("")]
-    [InlineData("   ")]
-    public async Task UpdateTasksOrderAsync_MissingJustification_ThrowsArgumentException(string? justification)
-    {
-        // Arrange
-        var updates = new List<TaskUpdateDto> { new() { Uid = "uid-1", Order = 1 } };
-        var service = CreateService();
-
-        // Act
-        var exception = await Assert.ThrowsAsync<ArgumentException>(
-            () => service.UpdateTasksOrderAsync(updates, "user-1", justification!));
-
-        // Assert
-        Assert.Equal("justification", exception.ParamName);
-        taskServiceAppMock.Verify(
-            x => x.UpdateTasksAsync(It.IsAny<ICollection<TaskUpdateDto>>(), It.IsAny<string>(), It.IsAny<string?>()),
-            Times.Never);
-    }
-
     [Fact]
     public async Task LoadTasksByDateAsync_WithDateRange_ForwardsArgumentsAndReturnsSerializedResult()
     {
@@ -207,56 +186,6 @@ public class McpServiceTests
                 It.IsAny<Exception?>(),
                 It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
             Times.Once);
-    }
-
-    [Theory]
-    [InlineData(null)]
-    [InlineData("")]
-    [InlineData("   ")]
-    public async Task AddTasksAsync_MissingJustification_ThrowsArgumentException(string? justification)
-    {
-        // Arrange
-        var tasks = new List<TaskCreateDto> { new() { Title = "Buy milk" } };
-        var service = CreateService();
-
-        // Act
-        var exception = await Assert.ThrowsAsync<ArgumentException>(
-            () => service.AddTasksAsync(tasks, "user-1", justification!));
-
-        // Assert
-        Assert.Equal("justification", exception.ParamName);
-        taskServiceAppMock.Verify(
-            x => x.SaveTasksAsync(It.IsAny<ICollection<TaskDto>>(), It.IsAny<string>(), It.IsAny<string?>()),
-            Times.Never);
-    }
-
-    [Theory]
-    [InlineData("null")]
-    [InlineData("empty")]
-    [InlineData("null-element")]
-    [InlineData("whitespace-title")]
-    public async Task AddTasksAsync_InvalidTasks_ThrowsArgumentException(string scenario)
-    {
-        // Arrange
-        ICollection<TaskCreateDto>? tasks = scenario switch
-        {
-            "null" => null,
-            "empty" => [],
-            "null-element" => [null!],
-            "whitespace-title" => [new() { Title = "   " }],
-            _ => throw new ArgumentOutOfRangeException(nameof(scenario)),
-        };
-        var service = CreateService();
-
-        // Act
-        var exception = await Assert.ThrowsAsync<ArgumentException>(
-            () => service.AddTasksAsync(tasks!, "user-1", "Added by agent"));
-
-        // Assert
-        Assert.Equal("tasks", exception.ParamName);
-        taskServiceAppMock.Verify(
-            x => x.SaveTasksAsync(It.IsAny<ICollection<TaskDto>>(), It.IsAny<string>(), It.IsAny<string?>()),
-            Times.Never);
     }
 
     private static string Serialize(IEnumerable<TaskDto> tasks)

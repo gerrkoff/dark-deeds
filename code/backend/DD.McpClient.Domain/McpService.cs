@@ -34,11 +34,6 @@ public sealed class McpService(
 
     public async Task<string> UpdateTasksOrderAsync(ICollection<TaskUpdateDto> updates, string userId, string justification)
     {
-        if (string.IsNullOrWhiteSpace(justification))
-        {
-            throw new ArgumentException("Justification must be provided.", nameof(justification));
-        }
-
         Log.UpdateTasksOrder(logger, updates.Count, justification);
         var tasks = await taskServiceApp.UpdateTasksAsync(updates, userId, clientId: null);
         return JsonSerializer.Serialize(tasks, JsonOptions);
@@ -46,16 +41,6 @@ public sealed class McpService(
 
     public async Task<string> AddTasksAsync(ICollection<TaskCreateDto> tasks, string userId, string justification)
     {
-        if (string.IsNullOrWhiteSpace(justification))
-        {
-            throw new ArgumentException("Justification must be provided.", nameof(justification));
-        }
-
-        if (tasks is null || tasks.Count == 0 || tasks.Any(task => task is null || string.IsNullOrWhiteSpace(task.Title)))
-        {
-            throw new ArgumentException("At least one task with a non-empty title must be provided.", nameof(tasks));
-        }
-
         Log.AddTasks(logger, tasks.Count, justification);
 
         var newTasks = tasks
