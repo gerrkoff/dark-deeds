@@ -155,17 +155,17 @@ dotnet test code/backend/DarkDeeds.sln -c Release
 **Files:**
 - Modify: `code/backend/DD.Tests.Unit/McpClient/McpServiceTests.cs`
 
-- [ ] Happy path: `AddTasksAsync` with one `TaskCreateDto` calls
+- [x] Happy path: `AddTasksAsync` with one `TaskCreateDto` calls
       `SaveTasksAsync(It.Is<...>, "user-1", null)` with a mapped `TaskDto` (non-empty `Uid`;
       matching `Title`/`Date`/`Time`/`Type`/`IsProbable`) captured via a Moq callback, returns the
       serialized saved result, and logs the justification (assert via the logger mock like the
       existing `UpdateTasksOrderAsync` test).
-- [ ] `[Theory]` with `null` / `""` / `"   "` justification => `ArgumentException` with
+- [x] `[Theory]` with `null` / `""` / `"   "` justification => `ArgumentException` with
       `ParamName == "justification"`; assert `SaveTasksAsync` is never called.
-- [ ] Invalid `tasks` collections each => `ArgumentException` with `ParamName == "tasks"` and
+- [x] Invalid `tasks` collections each => `ArgumentException` with `ParamName == "tasks"` and
       `SaveTasksAsync` never called: a `null` collection, an empty collection, a collection with a
       `null` element, and a `TaskCreateDto` with a whitespace `Title`.
-- [ ] Verify the fast checks pass.
+- [x] Verify the fast checks pass.
 
 ### Task 6: Final validation (full local end-to-end run — mandatory)
 
