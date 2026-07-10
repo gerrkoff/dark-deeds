@@ -169,21 +169,21 @@ dotnet test code/backend/DarkDeeds.sln -c Release
 
 ### Task 6: Final validation (full local end-to-end run — mandatory)
 
-- [ ] Build the whole backend solution with **0 warnings**:
+- [x] Build the whole backend solution with **0 warnings**:
       `dotnet build code/backend/DarkDeeds.sln -c Release`.
-- [ ] Run the full backend unit suite: `dotnet test code/backend/DarkDeeds.sln -c Release`.
-- [ ] Run the full frontend gate: `cd code/frontend && npm run ci`.
-- [ ] Bring up the full local stack: `./infra/up.sh` (starts MongoDB **and** the Selenium Grid
+- [x] Run the full backend unit suite: `dotnet test code/backend/DarkDeeds.sln -c Release`.
+- [x] Run the full frontend gate: `cd code/frontend && npm run ci`.
+- [x] Bring up the full local stack: `./infra/up.sh` (starts MongoDB **and** the Selenium Grid
       `test-e2e-chrome` on `:4444`); start the backend detached —
       `dotnet run --project code/backend/DD.App` on `:5000` (wait for
       `curl -fsS http://localhost:5000/healthcheck` => `Healthy`); start the frontend detached —
       `cd code/frontend && npm run dev` on `:3000` (wait for HTTP 200). Never pipe a server through
       `head`/`tail`; capture each PID.
-- [ ] Run the e2e suite through the Selenium Grid, headless, from the repo root:
+- [x] Run the e2e suite through the Selenium Grid, headless, from the repo root:
       `CONTAINER=true SELENIUM_GRID_URL=http://localhost:4444 URL=http://host.docker.internal:3000 BE_URL=http://localhost:5000 dotnet test code/tests/DarkDeeds.E2eTests`
       and confirm ALL run tests pass (expect `Failed: 0, Passed: 11, Skipped: 1` — the skip is the
       `[ProductionBuildFact]` offline test).
-- [ ] Fix any e2e failure and re-run until the whole e2e suite is green, then tear down the backend
+- [x] Fix any e2e failure and re-run until the whole e2e suite is green, then tear down the backend
       and frontend by PID (leave MongoDB and the Selenium Grid running).
 
 ## Notes
