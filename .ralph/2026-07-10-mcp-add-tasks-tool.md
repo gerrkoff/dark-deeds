@@ -105,14 +105,14 @@ dotnet test code/backend/DarkDeeds.sln -c Release
 - Modify: `code/backend/DD.Shared.Details.Abstractions/Dto/TasksUpdatedDto.cs`
 - Modify: `code/backend/DD.Shared.Details.Abstractions/Dto/TaskTypeDto.cs`
 
-- [ ] Add `using System.ComponentModel;` and a `[Description]` on every `TaskDto` property
+- [x] Add `using System.ComponentModel;` and a `[Description]` on every `TaskDto` property
       (`Id`, `Date`, `Time` = minutes-from-midnight, `Title`, `Order`, `Completed`, `IsProbable`,
       `Deleted`, `Type`, `Version`, `Uid`).
-- [ ] Add `[Description]` on `TaskUpdateDto.Uid` and `TaskUpdateDto.Order` (add the `using`).
-- [ ] Add `[Description]` on `TasksUpdatedDto.Tasks`, `.UserId`, `.ClientId` (add the `using`).
-- [ ] Add `[Description]` on each `TaskTypeDto` enum member (`Simple`, `Additional`, `Routine`,
+- [x] Add `[Description]` on `TaskUpdateDto.Uid` and `TaskUpdateDto.Order` (add the `using`).
+- [x] Add `[Description]` on `TasksUpdatedDto.Tasks`, `.UserId`, `.ClientId` (add the `using`).
+- [x] Add `[Description]` on each `TaskTypeDto` enum member (`Simple`, `Additional`, `Routine`,
       `Weekly`) (add the `using`).
-- [ ] Verify the fast checks pass.
+- [x] Verify the fast checks pass.
 
 ### Task 3: Add `AddTasksAsync` to `McpService` (with its log message)
 
