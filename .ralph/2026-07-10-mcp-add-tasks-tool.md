@@ -140,15 +140,15 @@ dotnet test code/backend/DarkDeeds.sln -c Release
 - Create: `code/backend/DD.Clients.Details/McpClient/Tools/AddTasksTool.cs`
 - Modify: `code/backend/DD.Clients.Details/Setup.cs`
 
-- [ ] Create `AddTasksTool` mirroring `UpdateTasksOrderTool`: `internal sealed` class with
+- [x] Create `AddTasksTool` mirroring `UpdateTasksOrderTool`: `internal sealed` class with
       `[McpServerToolType]`, and a static `Do` method with `[McpServerTool(Name = "AddTasks")]` +
       a `[Description]` summarizing the tool.
-- [ ] `Do` parameters: `IMcpService mcpService`, `IUserAuth userAuth`,
+- [x] `Do` parameters: `IMcpService mcpService`, `IUserAuth userAuth`,
       `[Description(...)] ICollection<TaskCreateDto> tasks`, `[Description(...)] string justification`;
       resolve `var userId = userAuth.UserId();` and `return mcpService.AddTasksAsync(tasks, userId, justification);`.
-- [ ] In `DD.Clients.Details/Setup.cs`, register the tool by adding `.WithTools<AddTasksTool>()`
+- [x] In `DD.Clients.Details/Setup.cs`, register the tool by adding `.WithTools<AddTasksTool>()`
       after `.WithTools<UpdateTasksOrderTool>()`.
-- [ ] Verify the fast checks pass.
+- [x] Verify the fast checks pass.
 
 ### Task 5: Add unit tests for `AddTasksAsync`
 

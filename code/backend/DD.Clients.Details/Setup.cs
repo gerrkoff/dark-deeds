@@ -37,7 +37,8 @@ public static class Setup
             .AddMcpServer()
             .WithHttpTransport()
             .WithTools<LoadTasksTool>()
-            .WithTools<UpdateTasksOrderTool>();
+            .WithTools<UpdateTasksOrderTool>()
+            .WithTools<AddTasksTool>();
     }
 
     public static void MapClientsCustomRoutes(this IEndpointRouteBuilder endpoints, IConfiguration configuration)
