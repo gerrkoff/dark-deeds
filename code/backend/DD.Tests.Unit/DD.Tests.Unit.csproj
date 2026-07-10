@@ -8,6 +8,7 @@
     <ProjectReference Include="..\DD.MobileClient.Domain\DD.MobileClient.Domain.csproj" />
     <ProjectReference Include="..\DD.McpClient.Domain\DD.McpClient.Domain.csproj" />
     <ProjectReference Include="..\DD.ServiceAuth.Domain\DD.ServiceAuth.Domain.csproj" />
+    <ProjectReference Include="..\DD.Clients.Details\DD.Clients.Details.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -5,6 +5,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <InternalsVisibleTo Include="DD.Tests.Unit" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\DD.Shared.Details\DD.Shared.Details.csproj" />
     <ProjectReference Include="..\DD.TelegramClient.Domain\DD.TelegramClient.Domain.csproj" />
     <ProjectReference Include="..\DD.WebClientBff.Domain\DD.WebClientBff.Domain.csproj" />
