@@ -11,7 +11,7 @@ internal sealed class UpdateTasksOrderTool
 {
     [McpServerTool(Name = "UpdateTasksOrder")]
     [Description("Updates the order of multiple tasks in Dark Deeds App.")]
-    public static async Task<string> Do(
+    public static Task<string> Do(
         IMcpService mcpService,
         IUserAuth userAuth,
         [Description("Array of task updates with UID and new order")]
@@ -30,6 +30,6 @@ internal sealed class UpdateTasksOrderTool
         }
 
         var userId = userAuth.UserId();
-        return await mcpService.UpdateTasksOrderAsync(updates, userId, justification);
+        return mcpService.UpdateTasksOrderAsync(updates, userId, justification);
     }
 }

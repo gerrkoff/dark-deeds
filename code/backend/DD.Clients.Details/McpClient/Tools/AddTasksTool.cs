@@ -11,7 +11,7 @@ internal sealed class AddTasksTool
 {
     [McpServerTool(Name = "AddTasks")]
     [Description("Adds new tasks to Dark Deeds App.")]
-    public static async Task<string> Do(
+    public static Task<string> Do(
         IMcpService mcpService,
         IUserAuth userAuth,
         [Description("Array of new tasks to create")]
@@ -30,6 +30,6 @@ internal sealed class AddTasksTool
         }
 
         var userId = userAuth.UserId();
-        return await mcpService.AddTasksAsync(tasks, userId, justification);
+        return mcpService.AddTasksAsync(tasks, userId, justification);
     }
 }
