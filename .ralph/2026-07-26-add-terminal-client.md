@@ -167,12 +167,12 @@ Every task must finish with both commands passing and zero warnings. This plan d
 - Create: `code/backend/DD.TerminalClient.Details/Storage/ProfileStore.cs`
 - Create: `code/backend/DD.Tests.Unit/TerminalClient/ProfileStoreTests.cs`
 
-- [ ] Implement macOS Application Support and Linux XDG config/state roots with an explicit override used by tests and self-test.
-- [ ] Seed production, test, and local profiles with the exact base URLs in Approach, while supporting user-created named profiles and `--profile` selection.
-- [ ] Isolate every profile directory and validate profile names against traversal/invalid filename characters.
-- [ ] Require HTTPS except for loopback hosts and normalize base URIs to one trailing slash.
-- [ ] Test seeded profiles, custom profiles, path isolation, root override, invalid names, loopback HTTP, rejected remote HTTP, and URI normalization.
-- [ ] Verify the fast checks pass with zero warnings.
+- [x] Implement macOS Application Support and Linux XDG config/state roots with an explicit override used by tests and self-test.
+- [x] Seed production, test, and local profiles with the exact base URLs in Approach, while supporting user-created named profiles and `--profile` selection.
+- [x] Isolate every profile directory and validate profile names against traversal/invalid filename characters.
+- [x] Require HTTPS except for loopback hosts and normalize base URIs to one trailing slash.
+- [x] Test seeded profiles, custom profiles, path isolation, root override, invalid names, loopback HTTP, rejected remote HTTP, and URI normalization.
+- [x] Verify the fast checks pass with zero warnings.
 
 ### Task 5: Implement atomic state, token storage, and file logging
 
