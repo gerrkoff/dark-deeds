@@ -235,12 +235,12 @@ Every task must finish with both commands passing and zero warnings. This plan d
 - Create: `code/backend/DD.TerminalClient.Domain/Synchronization/TaskSyncEffect.cs`
 - Create: `code/backend/DD.Tests.Unit/TerminalClient/TaskSyncSaveTests.cs`
 
-- [ ] Implement pending and in-flight maps where pending re-edits win by UID and only one batch may be in flight.
-- [ ] Emit atomic cache/outbox persistence before any save effect for every accepted mutation, and restore the persisted outbox on startup.
-- [ ] On transport failure, requeue non-superseded in-flight tasks, leave durable outbox content intact, emit status, and schedule exactly a five-second retry.
-- [ ] On success, apply the REST response immediately, propagate returned versions into newer pending edits, clear completed in-flight entries, and never wait for an origin-suppressed hub echo.
-- [ ] Port every test in `code/frontend/tests/services/TaskSyncService.test.ts` covering enqueue/save/retry/re-edit/reset/outbox/version behavior, and add an explicit no-own-hub-echo test.
-- [ ] Verify the fast checks pass with zero warnings.
+- [x] Implement pending and in-flight maps where pending re-edits win by UID and only one batch may be in flight.
+- [x] Emit atomic cache/outbox persistence before any save effect for every accepted mutation, and restore the persisted outbox on startup.
+- [x] On transport failure, requeue non-superseded in-flight tasks, leave durable outbox content intact, emit status, and schedule exactly a five-second retry.
+- [x] On success, apply the REST response immediately, propagate returned versions into newer pending edits, clear completed in-flight entries, and never wait for an origin-suppressed hub echo.
+- [x] Port every test in `code/frontend/tests/services/TaskSyncService.test.ts` covering enqueue/save/retry/re-edit/reset/outbox/version behavior, and add an explicit no-own-hub-echo test.
+- [x] Verify the fast checks pass with zero warnings.
 
 ### Task 9: Implement conflicts and snapshot reconciliation
 
