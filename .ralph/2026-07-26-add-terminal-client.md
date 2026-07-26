@@ -342,12 +342,12 @@ Every task must finish with both commands passing and zero warnings. This plan d
 - Create: `code/backend/DD.TerminalClient.Domain/Application/ApplicationReducer.cs`
 - Create: `code/backend/DD.Tests.Unit/TerminalClient/TerminalApplicationTests.cs`
 
-- [ ] Register exact adapters and create one single-reader event channel; all input/network/timer callbacks only enqueue events, and every app test has a timeout.
-- [ ] Implement the 12-step startup/reconnect/401 sequence from Approach, including offline cached startup, profile owner guard, buffered snapshot, outbox restore/drain, and token renewal below one day.
-- [ ] Run alternate screen and live refresh under the event-loop owner, coalesce rendering after drained batches, and keep file logging/prompts from writing to the interactive console.
-- [ ] Implement cancellation and fatal-error flow that persists current state, leaves unsaved tasks in outbox, stops hub/timers, and restores cursor/screen in `finally`.
-- [ ] Add fake-console/clock/storage/API/hub tests for startup success, offline startup, reconnect, same/different user, 401, renewal, retry, conflict, resize, quit, and fatal cleanup.
-- [ ] Verify the fast checks pass with zero warnings.
+- [x] Register exact adapters and create one single-reader event channel; all input/network/timer callbacks only enqueue events, and every app test has a timeout.
+- [x] Implement the 12-step startup/reconnect/401 sequence from Approach, including offline cached startup, profile owner guard, buffered snapshot, outbox restore/drain, and token renewal below one day.
+- [x] Run alternate screen and live refresh under the event-loop owner, coalesce rendering after drained batches, and keep file logging/prompts from writing to the interactive console.
+- [x] Implement cancellation and fatal-error flow that persists current state, leaves unsaved tasks in outbox, stops hub/timers, and restores cursor/screen in `finally`.
+- [x] Add fake-console/clock/storage/API/hub tests for startup success, offline startup, reconnect, same/different user, 401, renewal, retry, conflict, resize, quit, and fatal cleanup.
+- [x] Verify the fast checks pass with zero warnings.
 
 ### Task 16: Add unattended real-backend self-test
 

@@ -1,11 +1,13 @@
+using DD.Shared.TaskText;
 using DD.TerminalClient.Domain.Time;
 
 namespace DD.TerminalClient.Details.Time;
 
 // Derives the local calendar date from the injected TimeProvider's UTC clock and the machine time
 // zone. Uses TimeProvider.GetUtcNow() (never the banned DateTime.Now / DateTimeOffset.Now) so a
-// client/SSH time-zone change is reflected and the clock stays substitutable in tests.
-public sealed class SystemLocalDateProvider(TimeProvider timeProvider) : ILocalDateProvider
+// client/SSH time-zone change is reflected and the clock stays substitutable in tests. It serves both
+// the Domain local-date abstraction and the shared parser's date provider from one implementation.
+public sealed class SystemLocalDateProvider(TimeProvider timeProvider) : ILocalDateProvider, ITaskTextDateProvider
 {
     public DateOnly Today
     {

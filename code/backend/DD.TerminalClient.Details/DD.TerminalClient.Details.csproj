@@ -2,6 +2,7 @@
 
   <ItemGroup>
     <InternalsVisibleTo Include="DD.Tests.Unit" />
+    <InternalsVisibleTo Include="DD.TerminalClient" />
   </ItemGroup>
 
   <ItemGroup>

@@ -2,8 +2,9 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <!-- Terminal UI application: user-facing strings are printed directly and are not localized. -->
-    <NoWarn>$(NoWarn);CA1303</NoWarn>
+    <!-- Terminal UI application: user-facing strings are printed directly and are not localized.
+         CA1849 is not meaningful for one-shot console CLI output. -->
+    <NoWarn>$(NoWarn);CA1303;CA1849</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
