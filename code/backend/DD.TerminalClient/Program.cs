@@ -10,7 +10,9 @@ using DD.TerminalClient.Domain.Application;
 using DD.TerminalClient.Domain.Editing;
 using DD.TerminalClient.Domain.Input;
 using DD.TerminalClient.Domain.Overview;
+using DD.TerminalClient.SelfTest;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Spectre.Console;
 
 namespace DD.TerminalClient;
@@ -35,8 +37,9 @@ internal static class Program
 
         if (HasOption(args, "--self-test"))
         {
-            Console.Error.WriteLine($"{ExecutableName}: --self-test is not implemented yet.");
-            return 1;
+            var selfTestProfile = GetOptionValue(args, "--profile") ?? "production";
+            var selfTestStateRoot = GetOptionValue(args, "--state-root");
+            return await RunSelfTestAsync(selfTestProfile, selfTestStateRoot);
         }
 
         if (Console.IsInputRedirected || Console.IsOutputRedirected)
@@ -141,6 +144,118 @@ internal static class Program
         }
 
         return 0;
+    }
+
+    private static async Task<int> RunSelfTestAsync(string profileName, string? stateRoot)
+    {
+        if (!TerminalSelfTest.TryReadCredentials(
+            Environment.GetEnvironmentVariable, out var credentials, out var credentialsError))
+        {
+            Console.Error.WriteLine($"{ExecutableName}: {credentialsError}");
+            return TerminalSelfTest.UsageExitCode;
+        }
+
+        // Isolate all state in a throwaway directory unless the caller pins one, so a self-test run never
+        // touches the user's real profiles, cache, or logs.
+        var ownsTemporaryRoot = string.IsNullOrWhiteSpace(stateRoot);
+        var resolvedRoot = ownsTemporaryRoot
+            ? Path.Combine(Path.GetTempPath(), $"dd-terminal-self-test-{Guid.NewGuid():N}")
+            : stateRoot!;
+
+        var paths = new ApplicationPathProvider(resolvedRoot);
+        if (!new ProfileStore(paths).TryResolve(profileName, out var profile))
+        {
+            Console.Error.WriteLine($"{ExecutableName}: unknown profile '{profileName}'.");
+            return TerminalSelfTest.UsageExitCode;
+        }
+
+        // Distinct client ids so the server does not exclude the observer from the writer's own save
+        // notifications; both connections and the REST client share the one token set after sign-in.
+        var writerClientId = Guid.NewGuid().ToString();
+        var observerClientId = Guid.NewGuid().ToString();
+        var gate = new object();
+        string? currentToken = null;
+
+        string? GetToken()
+        {
+            lock (gate)
+            {
+                return currentToken;
+            }
+        }
+
+        void SetToken(string? value)
+        {
+            lock (gate)
+            {
+                currentToken = value;
+            }
+        }
+
+#pragma warning disable CA2000 // HttpClient owns and disposes the handler chain when it is disposed.
+        using var httpClient = new HttpClient(
+            new TerminalHttpHandler(GetToken, writerClientId) { InnerHandler = new SocketsHttpHandler() })
+        {
+            BaseAddress = profile.BaseUri,
+            Timeout = TimeSpan.FromSeconds(30),
+        };
+#pragma warning restore CA2000
+
+        var dates = new SystemLocalDateProvider(TimeProvider.System);
+        var baseUrl = profile.BaseUri.AbsoluteUri;
+
+        var context = new SelfTestContext
+        {
+            Auth = new AuthApiClient(httpClient),
+            Writer = new TaskApiClient(httpClient, dates),
+            WriterHubFactory = sink => new TaskHubClient(
+                new SignalRTaskHubConnectionFactory(baseUrl, writerClientId),
+                GetToken,
+                sink,
+                NullLogger<TaskHubClient>.Instance),
+            ObserverHubFactory = sink => new TaskHubClient(
+                new SignalRTaskHubConnectionFactory(baseUrl, observerClientId),
+                GetToken,
+                sink,
+                NullLogger<TaskHubClient>.Instance),
+            SetToken = SetToken,
+            Report = Console.Error.WriteLine,
+            Credentials = credentials,
+        };
+
+        using var cts = new CancellationTokenSource();
+        Console.CancelKeyPress += (_, eventArgs) =>
+        {
+            eventArgs.Cancel = true;
+            cts.Cancel();
+        };
+
+        try
+        {
+            return await new TerminalSelfTest(context).RunAsync(cts.Token);
+        }
+        finally
+        {
+            if (ownsTemporaryRoot)
+            {
+                TryDeleteDirectory(resolvedRoot);
+            }
+        }
+    }
+
+    private static void TryDeleteDirectory(string path)
+    {
+        try
+        {
+            if (Directory.Exists(path))
+            {
+                Directory.Delete(path, recursive: true);
+            }
+        }
+        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
+        {
+            // Best effort: a leftover temporary directory is harmless.
+        }
     }
 
     private static string? GetOptionValue(string[] args, string option)

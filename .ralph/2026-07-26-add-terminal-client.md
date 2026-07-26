@@ -356,12 +356,12 @@ Every task must finish with both commands passing and zero warnings. This plan d
 - Create: `code/backend/DD.TerminalClient/SelfTest/TerminalSelfTest.cs`
 - Create: `code/backend/DD.Tests.Unit/TerminalClient/TerminalSelfTestTests.cs`
 
-- [ ] Add `--self-test` that never enters alternate screen, requires `DD_TERMINAL_USERNAME` and `DD_TERMINAL_PASSWORD`, accepts the normal `--profile` plus state-root override, and returns nonzero with secret-safe diagnostics on any failed assertion.
-- [ ] Against the selected real backend, sign in, open writer and observer hub connections with distinct client IDs, load the snapshot, and wait with finite timeouts.
-- [ ] Create a uniquely named No Date task through the writer, assert REST version assignment and observer `update`, update/complete it and assert version increment plus observer update, then soft-delete it and assert observer deletion update.
-- [ ] Use a temporary state root, clean the created task in `finally`, stop both hubs, and never print credentials/JWT; leave enough diagnostics to identify the failed contract stage.
-- [ ] Unit-test success, timeout, cleanup-after-failure, missing environment, redaction, and exit codes with fake adapters.
-- [ ] Verify the fast checks pass with zero warnings.
+- [x] Add `--self-test` that never enters alternate screen, requires `DD_TERMINAL_USERNAME` and `DD_TERMINAL_PASSWORD`, accepts the normal `--profile` plus state-root override, and returns nonzero with secret-safe diagnostics on any failed assertion.
+- [x] Against the selected real backend, sign in, open writer and observer hub connections with distinct client IDs, load the snapshot, and wait with finite timeouts.
+- [x] Create a uniquely named No Date task through the writer, assert REST version assignment and observer `update`, update/complete it and assert version increment plus observer update, then soft-delete it and assert observer deletion update.
+- [x] Use a temporary state root, clean the created task in `finally`, stop both hubs, and never print credentials/JWT; leave enough diagnostics to identify the failed contract stage.
+- [x] Unit-test success, timeout, cleanup-after-failure, missing environment, redaction, and exit codes with fake adapters.
+- [x] Verify the fast checks pass with zero warnings.
 
 ### Task 17: Add publish script, release workflow, and documentation
 
