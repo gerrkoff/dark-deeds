@@ -220,12 +220,12 @@ Every task must finish with both commands passing and zero warnings. This plan d
 - Create: `code/backend/DD.TerminalClient.Details/Realtime/TerminalRetryPolicy.cs`
 - Create: `code/backend/DD.Tests.Unit/TerminalClient/TaskHubClientTests.cs`
 
-- [ ] Connect to the exact hub path with current JWT and the same process client ID used by REST; translate `update`, `heartbeat`, reconnecting, reconnected, closed, and unauthorized conditions into domain events only.
-- [ ] Implement 1, 2, 4, 8, 16, then 30-second reconnect delays, explicit start/stop cancellation, and token-provider refresh without mutating app/UI state from callbacks.
-- [ ] Implement ordered buffering entered before initial/reconnect snapshot loads and replayed only after reconciliation.
-- [ ] Route diagnostics only to the secret-safe file logger.
-- [ ] Test exact URL/query/event names, retry sequence, event translation, buffering order, cancellation, and refreshed token reads behind a testable connection abstraction.
-- [ ] Verify the fast checks pass with zero warnings.
+- [x] Connect to the exact hub path with current JWT and the same process client ID used by REST; translate `update`, `heartbeat`, reconnecting, reconnected, closed, and unauthorized conditions into domain events only.
+- [x] Implement 1, 2, 4, 8, 16, then 30-second reconnect delays, explicit start/stop cancellation, and token-provider refresh without mutating app/UI state from callbacks.
+- [x] Implement ordered buffering entered before initial/reconnect snapshot loads and replayed only after reconciliation.
+- [x] Route diagnostics only to the secret-safe file logger.
+- [x] Test exact URL/query/event names, retry sequence, event translation, buffering order, cancellation, and refreshed token reads behind a testable connection abstraction.
+- [x] Verify the fast checks pass with zero warnings.
 
 ### Task 8: Implement outbox and save state machine
 
