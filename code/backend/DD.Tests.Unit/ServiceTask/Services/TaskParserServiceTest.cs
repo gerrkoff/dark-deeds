@@ -1,6 +1,7 @@
 using DD.ServiceTask.Domain.Exceptions;
 using DD.ServiceTask.Domain.Services;
 using DD.Shared.Details.Abstractions.Dto;
+using DD.Shared.TaskText;
 using Moq;
 using Xunit;
 
@@ -14,7 +15,7 @@ public class TaskParserServiceTest : BaseTest
     [Fact]
     public void ParseTasks_ReturnTaskWithNoDateAndNoTime()
     {
-        var service = new TaskParserService(DateServiceMock());
+        var service = Service();
 
         var result = service.ParseTasks("Test!").Single();
 
@@ -28,7 +29,7 @@ public class TaskParserServiceTest : BaseTest
     [Fact]
     public void ParseTasks_ReturnTaskWithDateAndNoTime()
     {
-        var service = new TaskParserService(DateServiceMock());
+        var service = Service();
 
         var result = service.ParseTasks("1231 Test!").Single();
 
@@ -42,7 +43,7 @@ public class TaskParserServiceTest : BaseTest
     [Fact]
     public void ParseTasks_ReturnTaskWithDateAndNoTime_NotWorkingWithoutSpace()
     {
-        var service = new TaskParserService(DateServiceMock());
+        var service = Service();
 
         var result = service.ParseTasks("0101Test!!!").Single();
 
@@ -56,7 +57,7 @@ public class TaskParserServiceTest : BaseTest
     [Fact]
     public void ParseTasks_ReturnTaskWithDateAndTime()
     {
-        var service = new TaskParserService(DateServiceMock());
+        var service = Service();
 
         var result = service.ParseTasks("1231 2359 Test!").Single();
 
@@ -70,7 +71,7 @@ public class TaskParserServiceTest : BaseTest
     [Fact]
     public void ParseTasks_ReturnTaskWithDateAndTime_NotWorkingWithoutSpace()
     {
-        var service = new TaskParserService(DateServiceMock());
+        var service = Service();
 
         var result = service.ParseTasks("0101 0101Test!!!").Single();
 
@@ -84,7 +85,7 @@ public class TaskParserServiceTest : BaseTest
     [Fact]
     public void ParseTasks_ReturnTaskWithDateAndNoTimeWithYear()
     {
-        var service = new TaskParserService(DateServiceMock());
+        var service = Service();
 
         var result = service.ParseTasks("20170101 Test").Single();
 
@@ -98,7 +99,7 @@ public class TaskParserServiceTest : BaseTest
     [Fact]
     public void ParseTasks_ReturnProbableTask()
     {
-        var service = new TaskParserService(DateServiceMock());
+        var service = Service();
 
         var result = service.ParseTasks("Test! ?").Single();
 
@@ -112,7 +113,7 @@ public class TaskParserServiceTest : BaseTest
     [Fact]
     public void ParseTasks_ReturnAdditionalTaskWithDate()
     {
-        var service = new TaskParserService(DateServiceMock());
+        var service = Service();
 
         var result = service.ParseTasks("0220 Test !").Single();
 
@@ -126,7 +127,7 @@ public class TaskParserServiceTest : BaseTest
     [Fact]
     public void ParseTasks_ReturnAdditionalTaskWithDateAndTime()
     {
-        var service = new TaskParserService(DateServiceMock());
+        var service = Service();
 
         var result = service.ParseTasks("20150220 2359 Test !").Single();
 
@@ -140,7 +141,7 @@ public class TaskParserServiceTest : BaseTest
     [Fact]
     public void ParseTasks_AdditionalAndProbable()
     {
-        var service = new TaskParserService(DateServiceMock());
+        var service = Service();
 
         var result = service.ParseTasks("Test !?").Single();
 
@@ -155,7 +156,7 @@ public class TaskParserServiceTest : BaseTest
     [Fact]
     public void ParseTasks_ProbableAndAdditional()
     {
-        var service = new TaskParserService(DateServiceMock());
+        var service = Service();
 
         var result = service.ParseTasks("Test ?!").Single();
 
@@ -170,7 +171,7 @@ public class TaskParserServiceTest : BaseTest
     [Fact]
     public void ParseTasks_ReturnTodayTaskThroughExclamationMark()
     {
-        var service = new TaskParserService(DateServiceMock());
+        var service = Service();
 
         var result = service.ParseTasks("! Test").Single();
 
@@ -184,7 +185,7 @@ public class TaskParserServiceTest : BaseTest
     [Fact]
     public void ParseTasks_ReturnTomorrowTaskThroughExclamationMark()
     {
-        var service = new TaskParserService(DateServiceMock());
+        var service = Service();
 
         var result = service.ParseTasks("!! Test").Single();
 
@@ -198,7 +199,7 @@ public class TaskParserServiceTest : BaseTest
     [Fact]
     public void ParseTasks_ReturnDayAfterAfterTomorrowTaskThroughExclamationMark()
     {
-        var service = new TaskParserService(DateServiceMock());
+        var service = Service();
 
         var result = service.ParseTasks("!!!! Test").Single();
 
@@ -212,7 +213,7 @@ public class TaskParserServiceTest : BaseTest
     [Fact]
     public void ParseTasks_ReturnDayAfterTomorrowNextMonthTaskThroughExclamationMark()
     {
-        var service = new TaskParserService(DateServiceMock(2019, 1, 31));
+        var service = Service(2019, 1, 31);
 
         var result = service.ParseTasks("!!! Test").Single();
 
@@ -226,7 +227,7 @@ public class TaskParserServiceTest : BaseTest
     [Fact]
     public void ParseTasks_ReturnThisWeekMondayTaskThroughExclamationMark()
     {
-        var service = new TaskParserService(DateServiceMock(2019, 7, 31));
+        var service = Service(2019, 7, 31);
 
         var result = service.ParseTasks("!1 Test").Single();
 
@@ -240,7 +241,7 @@ public class TaskParserServiceTest : BaseTest
     [Fact]
     public void ParseTasks_ReturnNextMondayTaskThroughExclamationMark()
     {
-        var service = new TaskParserService(DateServiceMock(2019, 7, 28));
+        var service = Service(2019, 7, 28);
 
         var result = service.ParseTasks("!!1 Test").Single();
 
@@ -254,7 +255,7 @@ public class TaskParserServiceTest : BaseTest
     [Fact]
     public void ParseTasks_ReturnNextWednesdayTaskThroughExclamationMark()
     {
-        var service = new TaskParserService(DateServiceMock(2019, 7, 28));
+        var service = Service(2019, 7, 28);
 
         var result = service.ParseTasks("!!3 Test").Single();
 
@@ -268,7 +269,7 @@ public class TaskParserServiceTest : BaseTest
     [Fact]
     public void ParseTasks_ReturnNextFridayTaskThroughExclamationMark()
     {
-        var service = new TaskParserService(DateServiceMock(2019, 7, 28));
+        var service = Service(2019, 7, 28);
 
         var result = service.ParseTasks("!!5 Test").Single();
 
@@ -282,7 +283,7 @@ public class TaskParserServiceTest : BaseTest
     [Fact]
     public void ParseTasks_ReturnWeekAfterNextMondayTaskThroughExclamationMark()
     {
-        var service = new TaskParserService(DateServiceMock(2019, 7, 28));
+        var service = Service(2019, 7, 28);
 
         var result = service.ParseTasks("!!!1 Test").Single();
 
@@ -296,7 +297,7 @@ public class TaskParserServiceTest : BaseTest
     [Fact]
     public void ParseTasks_ExclamationMark11IsNotWeekShiftPattern()
     {
-        var service = new TaskParserService(DateServiceMock());
+        var service = Service();
 
         var result = service.ParseTasks("!11 Test").Single();
 
@@ -307,7 +308,7 @@ public class TaskParserServiceTest : BaseTest
     [Fact]
     public void ParseTasks_DateWithExclamation()
     {
-        var service = new TaskParserService(DateServiceMock());
+        var service = Service();
 
         var result = service.ParseTasks("1231! Test").Single();
 
@@ -321,7 +322,7 @@ public class TaskParserServiceTest : BaseTest
     [Fact]
     public void ParseTasks_ReturnRoutineTaskWithDate()
     {
-        var service = new TaskParserService(DateServiceMock());
+        var service = Service();
 
         var result = service.ParseTasks("0220 Test *").Single();
 
@@ -335,7 +336,7 @@ public class TaskParserServiceTest : BaseTest
     [Fact]
     public void ParseTasks_ReturnRoutineTaskWithDateAndTime()
     {
-        var service = new TaskParserService(DateServiceMock());
+        var service = Service();
 
         var result = service.ParseTasks("20150220 2359 Test *").Single();
 
@@ -349,7 +350,7 @@ public class TaskParserServiceTest : BaseTest
     [Fact]
     public void ParseTasks_RoutineAndProbable()
     {
-        var service = new TaskParserService(DateServiceMock());
+        var service = Service();
 
         var result = service.ParseTasks("Test *?").Single();
 
@@ -364,7 +365,7 @@ public class TaskParserServiceTest : BaseTest
     [Fact]
     public void ParseTasks_ProbableAndRoutine()
     {
-        var service = new TaskParserService(DateServiceMock());
+        var service = Service();
 
         var result = service.ParseTasks("Test ?*").Single();
 
@@ -379,7 +380,7 @@ public class TaskParserServiceTest : BaseTest
     [Fact]
     public void ParseTasks_RoutineAndAdditional()
     {
-        var service = new TaskParserService(DateServiceMock());
+        var service = Service();
 
         var result = service.ParseTasks("Test !*").Single();
 
@@ -393,7 +394,7 @@ public class TaskParserServiceTest : BaseTest
     [Fact]
     public void ParseTaskTemplate_TaskWithTime_SkipsDate()
     {
-        var service = new TaskParserService(DateServiceMock());
+        var service = Service();
 
         var result = service.ParseTaskTemplate("1010 Test!");
 
@@ -407,7 +408,7 @@ public class TaskParserServiceTest : BaseTest
     [Fact]
     public void ParseTasks_ReturnWeeklyTask()
     {
-        var service = new TaskParserService(DateServiceMock());
+        var service = Service();
 
         var result = service.ParseTasks("Test %").Single();
 
@@ -422,7 +423,7 @@ public class TaskParserServiceTest : BaseTest
     [Fact]
     public void ParseTasks_WeeklyAndProbable()
     {
-        var service = new TaskParserService(DateServiceMock());
+        var service = Service();
 
         var result = service.ParseTasks("Test %?").Single();
 
@@ -437,7 +438,7 @@ public class TaskParserServiceTest : BaseTest
     [Fact]
     public void ParseTasks_ProbableAndWeekly()
     {
-        var service = new TaskParserService(DateServiceMock());
+        var service = Service();
 
         var result = service.ParseTasks("Test ?%").Single();
 
@@ -452,7 +453,7 @@ public class TaskParserServiceTest : BaseTest
     [Fact]
     public void ParseTasks_WeeklyDuplicateCancels()
     {
-        var service = new TaskParserService(DateServiceMock());
+        var service = Service();
 
         var result = service.ParseTasks("Test %%").Single();
 
@@ -467,7 +468,7 @@ public class TaskParserServiceTest : BaseTest
     [Fact]
     public void ParseTasks_WeeklyAndRoutineConflict()
     {
-        var service = new TaskParserService(DateServiceMock());
+        var service = Service();
 
         var result = service.ParseTasks("Test %*").Single();
 
@@ -482,7 +483,7 @@ public class TaskParserServiceTest : BaseTest
     [Fact]
     public void ParseTasks_ProbableWeeklyProbableConflict()
     {
-        var service = new TaskParserService(DateServiceMock());
+        var service = Service();
 
         var result = service.ParseTasks("Test ?%?").Single();
 
@@ -501,7 +502,7 @@ public class TaskParserServiceTest : BaseTest
     [Fact]
     public void ParseTasks_DateRangeWithoutYear_CreatesTaskPerInclusiveDay()
     {
-        var service = new TaskParserService(DateServiceMock());
+        var service = Service();
 
         var result = service.ParseTasks("0909-0913 venice");
 
@@ -515,7 +516,7 @@ public class TaskParserServiceTest : BaseTest
     [Fact]
     public void ParseTasks_DateRangeWithTimeAndType_AppliesToEveryTask()
     {
-        var service = new TaskParserService(DateServiceMock());
+        var service = Service();
 
         var result = service.ParseTasks("0909-0913 1012 venice !");
 
@@ -534,7 +535,7 @@ public class TaskParserServiceTest : BaseTest
     [Fact]
     public void ParseTasks_DateRangeWithYearOnBothEndpoints_ParsesYears()
     {
-        var service = new TaskParserService(DateServiceMock());
+        var service = Service();
 
         var result = service.ParseTasks("20270909-20270915 venice");
 
@@ -547,7 +548,7 @@ public class TaskParserServiceTest : BaseTest
     [Fact]
     public void ParseTasks_DateRangeWithMixedYearEndpoints_ParsesEachEndpointIndependently()
     {
-        var service = new TaskParserService(DateServiceMock());
+        var service = Service();
 
         var result = service.ParseTasks("0909-20190915 venice");
 
@@ -560,7 +561,7 @@ public class TaskParserServiceTest : BaseTest
     [Fact]
     public void ParseTasks_DateRangeWithoutSpace_NotTreatedAsRange()
     {
-        var service = new TaskParserService(DateServiceMock());
+        var service = Service();
 
         var result = service.ParseTasks("0909-0913venice");
 
@@ -573,7 +574,7 @@ public class TaskParserServiceTest : BaseTest
     [Fact]
     public void ParseTasks_SingleDayRange_Throws()
     {
-        var service = new TaskParserService(DateServiceMock());
+        var service = Service();
 
         Assert.Throws<ServiceException>(() => service.ParseTasks("0909-0909 venice"));
     }
@@ -582,7 +583,7 @@ public class TaskParserServiceTest : BaseTest
     [Fact]
     public void ParseTasks_DateRangeAtLimit_CreatesTasks()
     {
-        var service = new TaskParserService(DateServiceMock());
+        var service = Service();
 
         var result = service.ParseTasks("0901-1001 venice");
 
@@ -595,7 +596,7 @@ public class TaskParserServiceTest : BaseTest
     [Fact]
     public void ParseTasks_DateRangeExceedingLimit_Throws()
     {
-        var service = new TaskParserService(DateServiceMock());
+        var service = Service();
 
         Assert.Throws<ServiceException>(() => service.ParseTasks("0901-1002 venice"));
     }
@@ -604,7 +605,7 @@ public class TaskParserServiceTest : BaseTest
     [Fact]
     public void ParseTasks_MultiYearDateRange_Throws()
     {
-        var service = new TaskParserService(DateServiceMock());
+        var service = Service();
 
         Assert.Throws<ServiceException>(() => service.ParseTasks("20270909-20280913 venice"));
     }
@@ -613,7 +614,7 @@ public class TaskParserServiceTest : BaseTest
     [Fact]
     public void ParseTasks_ReversedDateRange_Throws()
     {
-        var service = new TaskParserService(DateServiceMock());
+        var service = Service();
 
         Assert.Throws<ServiceException>(() => service.ParseTasks("0913-0909 venice"));
     }
@@ -622,7 +623,7 @@ public class TaskParserServiceTest : BaseTest
     [Fact]
     public void ParseTasks_MinimumValidRange_CreatesTwoTasks()
     {
-        var service = new TaskParserService(DateServiceMock());
+        var service = Service();
 
         var result = service.ParseTasks("0910-0911 venice");
 
@@ -631,10 +632,10 @@ public class TaskParserServiceTest : BaseTest
         Assert.Equal(new DateTime(2019, 9, 11), result[1].Date);
     }
 
-    private static IDateService DateServiceMock(int year = 2019, int month = 1, int date = 1)
+    private static TaskParserService Service(int year = 2019, int month = 1, int date = 1)
     {
-        var mock = new Mock<IDateService>();
-        mock.SetupGet(x => x.Today).Returns(new DateTime(year, month, date));
-        return mock.Object;
+        var provider = new Mock<ITaskTextDateProvider>();
+        provider.SetupGet(x => x.Today).Returns(new DateOnly(year, month, date));
+        return new TaskParserService(new TaskTextParser(provider.Object));
     }
 }

@@ -132,12 +132,12 @@ Every task must finish with both commands passing and zero warnings. This plan d
 - Modify: `code/backend/DD.Tests.Unit/ServiceTask/Services/TaskParserServiceTest.cs`
 - Create: `code/backend/DD.Tests.Unit/Shared/TaskTextParserTests.cs`
 
-- [ ] Extract date, range, relative-date, time, flag, 2-31 day validation, and expansion behavior into a BCL-only parser returning `ParsedTaskText` values without `TaskDto`, logging, DI, or service-domain dependencies.
-- [ ] Keep `TaskParserService` as a thin adapter from shared parse results to `TaskDto`, retaining its public interface and existing consumers without changing `// important` code.
-- [ ] Move or duplicate assertions so every existing test in `TaskParserServiceTest.cs` still passes and every numbered parse/range case mirrored by `code/frontend/tests/services/TaskConvertService.test.ts` and `TaskRangeService.test.ts` has an equivalent shared-parser or adapter test.
-- [ ] Add explicit tests for invalid calendar dates, reversed/single-day/over-31-day ranges, mixed-year endpoints, duplicate/conflicting flags, and injected current date.
-- [ ] Register the shared parser through the existing service-domain setup and remove the old duplicated parsing implementation.
-- [ ] Verify the fast checks pass with zero warnings.
+- [x] Extract date, range, relative-date, time, flag, 2-31 day validation, and expansion behavior into a BCL-only parser returning `ParsedTaskText` values without `TaskDto`, logging, DI, or service-domain dependencies.
+- [x] Keep `TaskParserService` as a thin adapter from shared parse results to `TaskDto`, retaining its public interface and existing consumers without changing `// important` code.
+- [x] Move or duplicate assertions so every existing test in `TaskParserServiceTest.cs` still passes and every numbered parse/range case mirrored by `code/frontend/tests/services/TaskConvertService.test.ts` and `TaskRangeService.test.ts` has an equivalent shared-parser or adapter test.
+- [x] Add explicit tests for invalid calendar dates, reversed/single-day/over-31-day ranges, mixed-year endpoints, duplicate/conflicting flags, and injected current date.
+- [x] Register the shared parser through the existing service-domain setup and remove the old duplicated parsing implementation.
+- [x] Verify the fast checks pass with zero warnings.
 
 ### Task 3: Add terminal task models, local date, formatter, and mutations
 
