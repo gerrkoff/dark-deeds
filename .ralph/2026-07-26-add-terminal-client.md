@@ -204,12 +204,12 @@ Every task must finish with both commands passing and zero warnings. This plan d
 - Create: `code/backend/DD.TerminalClient.Details/Api/TaskTransportMapper.cs`
 - Create: `code/backend/DD.Tests.Unit/TerminalClient/HttpClientTests.cs`
 
-- [ ] Implement the exact sign-in, renew, task-load, and task-save routes/response media types from Approach with private auth DTOs and the shared `TaskDto` transport contract.
-- [ ] Send bearer auth and the process client ID, use finite timeouts/cancellation, and classify unauthorized, transport, validation, and unexpected protocol failures without broad catches.
-- [ ] Parse JWT username/expiry only for local session UX; never treat parsing as server validation and never log secrets.
-- [ ] Map `DateOnly` to UTC midnight and server UTC date components back to `DateOnly`; load from current local Monday mapped to UTC midnight.
-- [ ] Add fake-handler tests for exact routes, query, casing, media types, task JSON fields, headers, save response application data, mapping, timeouts, cancellation, and all error classes.
-- [ ] Verify the fast checks pass with zero warnings.
+- [x] Implement the exact sign-in, renew, task-load, and task-save routes/response media types from Approach with private auth DTOs and the shared `TaskDto` transport contract.
+- [x] Send bearer auth and the process client ID, use finite timeouts/cancellation, and classify unauthorized, transport, validation, and unexpected protocol failures without broad catches.
+- [x] Parse JWT username/expiry only for local session UX; never treat parsing as server validation and never log secrets.
+- [x] Map `DateOnly` to UTC midnight and server UTC date components back to `DateOnly`; load from current local Monday mapped to UTC midnight.
+- [x] Add fake-handler tests for exact routes, query, casing, media types, task JSON fields, headers, save response application data, mapping, timeouts, cancellation, and all error classes.
+- [x] Verify the fast checks pass with zero warnings.
 
 ### Task 7: Implement SignalR realtime client
 
