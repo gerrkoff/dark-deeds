@@ -278,12 +278,12 @@ Every task must finish with both commands passing and zero warnings. This plan d
 - Create: `code/backend/DD.TerminalClient.Domain/Navigation/TaskFocusService.cs`
 - Create: `code/backend/DD.Tests.Unit/TerminalClient/TaskNavigationServiceTests.cs`
 
-- [ ] Move Up/Down within a task list, then across previous/next visual rows preferring the same column and clamping task index to the nearest available visible task.
-- [ ] Move Left/Right to the nearest nonempty dated cell in the same visual row without wrapping, preserving approximate task index and skipping empty Current cells.
-- [ ] Implement No Date/Overdue section transitions, initial focus priority, no-visible-task state, UID preservation, and nearest-old-address fallback.
-- [ ] Recompute focus after delete, completed filtering, Routine collapse, explicit move, snapshot removal, and server-wins conflict.
-- [ ] Test uneven columns, empty days, both Current rows, wrapped Future rows, every section boundary, filtered selected tasks, and remote-removal fallback.
-- [ ] Verify the fast checks pass with zero warnings.
+- [x] Move Up/Down within a task list, then across previous/next visual rows preferring the same column and clamping task index to the nearest available visible task.
+- [x] Move Left/Right to the nearest nonempty dated cell in the same visual row without wrapping, preserving approximate task index and skipping empty Current cells.
+- [x] Implement No Date/Overdue section transitions, initial focus priority, no-visible-task state, UID preservation, and nearest-old-address fallback.
+- [x] Recompute focus after delete, completed filtering, Routine collapse, explicit move, snapshot removal, and server-wins conflict.
+- [x] Test uneven columns, empty days, both Current rows, wrapped Future rows, every section boundary, filtered selected tasks, and remote-removal fallback.
+- [x] Verify the fast checks pass with zero warnings.
 
 ### Task 12: Render the Spectre terminal frame
 
