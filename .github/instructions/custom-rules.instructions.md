@@ -20,3 +20,7 @@ Rules specific to this repository. **If a rule is here — follow it. No excepti
 ## Pattern consistency
 
 **Before adding or changing code, preserve the existing patterns in the surrounding file/module** — naming conventions, ordering, error-handling style, validation flow, parsing semantics. Introduce a new pattern only when it is a clear improvement, and document the rationale.
+
+## Terminal client rendering (Spectre.Console)
+
+**When copying or re-emitting Spectre `Segment`s (e.g. clipping the terminal viewport), copy a `SegmentLine` with `list.AddRange(segmentLine)` or `foreach`, never the collection-expression spread `[.. segmentLine]`.** The spread injects `null` padding segments into the copy, which later throw `NullReferenceException` deep inside `Spectre.Console.Rendering.Segment.Merge` when the output is written. An empty `[]` is safe; only spreading a non-empty `SegmentLine` is affected.

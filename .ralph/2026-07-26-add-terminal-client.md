@@ -307,12 +307,12 @@ Every task must finish with both commands passing and zero warnings. This plan d
 - Create: `code/backend/DD.TerminalClient.Domain/Overview/ViewportState.cs`
 - Create: `code/backend/DD.Tests.Unit/TerminalClient/ViewportRenderableTests.cs`
 
-- [ ] Clip rendered Spectre segments by line while preserving styles, reserve fixed header/footer height, and expose top/bottom continuation indicators.
-- [ ] Adjust viewport offset after focus/layout changes so the focused task's complete line remains visible without independent non-task scrolling.
-- [ ] Recompute layout and line metadata on dimension changes and tolerate unavailable window-size APIs by falling back to Spectre profile capabilities.
-- [ ] Below 120x30 render resize-required mode while synchronization continues and `?`/`q` remain accepted.
-- [ ] Test top/middle/bottom clipping, style preservation, focus following, resize transitions, unsupported size APIs, and content shorter than viewport.
-- [ ] Verify the fast checks pass with zero warnings.
+- [x] Clip rendered Spectre segments by line while preserving styles, reserve fixed header/footer height, and expose top/bottom continuation indicators.
+- [x] Adjust viewport offset after focus/layout changes so the focused task's complete line remains visible without independent non-task scrolling.
+- [x] Recompute layout and line metadata on dimension changes and tolerate unavailable window-size APIs by falling back to Spectre profile capabilities.
+- [x] Below 120x30 render resize-required mode while synchronization continues and `?`/`q` remain accepted.
+- [x] Test top/middle/bottom clipping, style preservation, focus following, resize transitions, unsupported size APIs, and content shorter than viewport.
+- [x] Verify the fast checks pass with zero warnings.
 
 ### Task 14: Implement input modes, editor, and keymap
 
