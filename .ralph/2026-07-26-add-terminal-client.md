@@ -293,12 +293,12 @@ Every task must finish with both commands passing and zero warnings. This plan d
 - Create: `code/backend/DD.TerminalClient.Details/Ui/TerminalFrame.cs`
 - Create: `code/backend/DD.Tests.Unit/TerminalClient/OverviewRendererTests.cs`
 
-- [ ] Render fixed header/footer plus Overview content using Spectre `Grid`, `Panel`, and `Text`, with escaped user content rather than raw markup.
-- [ ] Style selected, today, completed, probable, Additional, Routine, Weekly, and timed tasks; show collapsed Routine count and full selected text in the footer.
-- [ ] Render each task as one ellipsized line and produce deterministic line metadata for task addresses without relying on wrapped titles.
-- [ ] Render normal, editor, login, confirmation, help, offline, conflict, and empty-state status content without running prompts inside the live display.
-- [ ] Add TestConsole assertions for empty, normal, dense, long, markup-like, Unicode, each task style, and each UI mode.
-- [ ] Verify the fast checks pass with zero warnings.
+- [x] Render fixed header/footer plus Overview content using Spectre `Grid`, `Panel`, and `Text`, with escaped user content rather than raw markup.
+- [x] Style selected, today, completed, probable, Additional, Routine, Weekly, and timed tasks; show collapsed Routine count and full selected text in the footer.
+- [x] Render each task as one ellipsized line and produce deterministic line metadata for task addresses without relying on wrapped titles.
+- [x] Render normal, editor, login, confirmation, help, offline, conflict, and empty-state status content without running prompts inside the live display.
+- [x] Add TestConsole assertions for empty, normal, dense, long, markup-like, Unicode, each task style, and each UI mode.
+- [x] Verify the fast checks pass with zero warnings.
 
 ### Task 13: Implement viewport and resize behavior
 
