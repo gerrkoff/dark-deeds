@@ -185,12 +185,12 @@ Every task must finish with both commands passing and zero warnings. This plan d
 - Create: `code/backend/DD.TerminalClient.Details/Logging/TerminalFileLoggerProvider.cs`
 - Create: `code/backend/DD.Tests.Unit/TerminalClient/LocalStateStoreTests.cs`
 
-- [ ] Define a schema-versioned state containing data owner, cached tasks, durable outbox, and local completed visibility; add an explicit migration pipeline that never drops an outbox during upgrades.
-- [ ] Implement temporary write, flush-to-disk, and atomic replace while preserving the previous file on failure; malformed or unsupported state must be retained and surfaced as a blocking actionable error.
-- [ ] Store JWT separately, create/tighten token and user-state files to Unix mode `0600`, and keep passwords/tokens/authorization headers out of logs and errors.
-- [ ] Implement bounded per-profile file logging with no console provider during interactive mode.
-- [ ] Test first load, round trip, atomic replacement failure, malformed JSON, unsupported/current/older schema versions, migration with outbox preservation, permissions, and secret redaction.
-- [ ] Verify the fast checks pass with zero warnings.
+- [x] Define a schema-versioned state containing data owner, cached tasks, durable outbox, and local completed visibility; add an explicit migration pipeline that never drops an outbox during upgrades.
+- [x] Implement temporary write, flush-to-disk, and atomic replace while preserving the previous file on failure; malformed or unsupported state must be retained and surfaced as a blocking actionable error.
+- [x] Store JWT separately, create/tighten token and user-state files to Unix mode `0600`, and keep passwords/tokens/authorization headers out of logs and errors.
+- [x] Implement bounded per-profile file logging with no console provider during interactive mode.
+- [x] Test first load, round trip, atomic replacement failure, malformed JSON, unsupported/current/older schema versions, migration with outbox preservation, permissions, and secret redaction.
+- [x] Verify the fast checks pass with zero warnings.
 
 ### Task 6: Implement authentication and REST task clients
 
