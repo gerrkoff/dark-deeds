@@ -249,12 +249,12 @@ Every task must finish with both commands passing and zero warnings. This plan d
 - Create: `code/backend/DD.TerminalClient.Domain/Synchronization/ReconciliationResult.cs`
 - Create: `code/backend/DD.Tests.Unit/TerminalClient/TaskReconcilerTests.cs`
 
-- [ ] Apply incoming tasks with no local pending edit and suppress incoming same/older versions while a local edit is pending.
-- [ ] When an incoming version is newer, drop pending/in-flight copies, apply the server task, persist the reduced outbox, and emit a conflict notification containing task identity/title.
-- [ ] Reconcile full snapshots by processing the same conflict rule, removing cached UIDs absent from both snapshot and pending state, and retaining soft-delete records only as supplied/pending.
-- [ ] Replay buffered hub updates after each successful snapshot and preserve arrival order; on failed snapshot keep the buffer and cached state for retry.
-- [ ] Port every online-update/reconcile case from frontend sync tests and add stale deletion, buffered duplicate version, and reconnect ordering tests.
-- [ ] Verify the fast checks pass with zero warnings.
+- [x] Apply incoming tasks with no local pending edit and suppress incoming same/older versions while a local edit is pending.
+- [x] When an incoming version is newer, drop pending/in-flight copies, apply the server task, persist the reduced outbox, and emit a conflict notification containing task identity/title.
+- [x] Reconcile full snapshots by processing the same conflict rule, removing cached UIDs absent from both snapshot and pending state, and retaining soft-delete records only as supplied/pending.
+- [x] Replay buffered hub updates after each successful snapshot and preserve arrival order; on failed snapshot keep the buffer and cached state for retry.
+- [x] Port every online-update/reconcile case from frontend sync tests and add stale deletion, buffered duplicate version, and reconnect ordering tests.
+- [x] Verify the fast checks pass with zero warnings.
 
 ### Task 10: Build Overview projection
 

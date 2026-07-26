@@ -127,6 +127,31 @@ public sealed class TaskSyncCoordinator
         State.InFlightByUid.Clear();
     }
 
+    // Drop a task the backend won on a version conflict from both queues (a newer server version has
+    // arrived), so the superseded local edit is abandoned and never retried. Returns whether anything
+    // was removed. Used by TaskReconciler; mirrors deleting the Uid from tasksToSave and tasksInFlight
+    // in the frontend processTasksOnlineUpdate. Keeps the coordinator the sole mutator of the maps.
+    public bool DropConflictedEdit(string uid)
+    {
+        ArgumentNullException.ThrowIfNull(uid);
+
+        var removedPending = State.PendingByUid.Remove(uid);
+        var removedInFlight = State.InFlightByUid.Remove(uid);
+        return removedPending || removedInFlight;
+    }
+
+    // The durable outbox contents: the in-flight batch merged with the pending re-edits, pending
+    // winning per Uid because it holds the newest content. Exposed so the reconciler can persist the
+    // reduced outbox after a conflict drops a pending edit, mirroring the frontend persistOutbox().
+    public IReadOnlyList<TerminalTask> BuildOutboxContents()
+    {
+        var merged = new Dictionary<string, TerminalTask>(State.InFlightByUid, StringComparer.Ordinal);
+        foreach (var entry in State.PendingByUid)
+            merged[entry.Key] = entry.Value;
+
+        return [.. merged.Values];
+    }
+
     private void PumpSaving(List<TaskSyncEffect> effects)
     {
         if (State.IsSaving || State.PendingByUid.Count == 0)
@@ -163,10 +188,6 @@ public sealed class TaskSyncCoordinator
 
     private TaskSyncEffect BuildPersistOutbox()
     {
-        var merged = new Dictionary<string, TerminalTask>(State.InFlightByUid, StringComparer.Ordinal);
-        foreach (var entry in State.PendingByUid)
-            merged[entry.Key] = entry.Value;
-
-        return TaskSyncEffect.PersistOutbox([.. merged.Values]);
+        return TaskSyncEffect.PersistOutbox(BuildOutboxContents());
     }
 }
