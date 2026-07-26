@@ -325,12 +325,12 @@ Every task must finish with both commands passing and zero warnings. This plan d
 - Create: `code/backend/DD.TerminalClient.Details/Ui/TerminalInputReader.cs`
 - Create: `code/backend/DD.Tests.Unit/TerminalClient/TerminalInputTests.cs`
 
-- [ ] Implement the exact keymap and allowed modes from Approach, including no-op/status behavior for commands without valid focus/date context.
-- [ ] Implement normal, editor, masked login, delete-confirmation, help, and resize-required reducers so text input cannot trigger normal commands.
-- [ ] Implement printable insertion/paste, cursor movement, Backspace/Delete, Home/End, live shared-parser feedback, Enter commit, and Escape cancel.
-- [ ] Use cancellable Spectre `ReadKeyAsync` behind `IKeyInputSource`; TestConsole key queues and explicit test timeouts must prevent hung test runs.
-- [ ] Test every listed key/alias, mode transition, confirmation, invalid context, editor operation, masked value, parse error, commit, cancel, and cancellation.
-- [ ] Verify the fast checks pass with zero warnings.
+- [x] Implement the exact keymap and allowed modes from Approach, including no-op/status behavior for commands without valid focus/date context.
+- [x] Implement normal, editor, masked login, delete-confirmation, help, and resize-required reducers so text input cannot trigger normal commands.
+- [x] Implement printable insertion/paste, cursor movement, Backspace/Delete, Home/End, live shared-parser feedback, Enter commit, and Escape cancel.
+- [x] Use cancellable Spectre `ReadKeyAsync` behind `IKeyInputSource`; TestConsole key queues and explicit test timeouts must prevent hung test runs.
+- [x] Test every listed key/alias, mode transition, confirmation, invalid context, editor operation, masked value, parse error, commit, cancel, and cancellation.
+- [x] Verify the fast checks pass with zero warnings.
 
 ### Task 15: Wire event loop, startup, and lifecycle
 
