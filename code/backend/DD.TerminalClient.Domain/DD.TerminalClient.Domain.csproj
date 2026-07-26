@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="DD.Tests.Unit" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DD.Shared.TaskText\DD.Shared.TaskText.csproj" />
+    <ProjectReference Include="..\DD.Shared.Details.Abstractions\DD.Shared.Details.Abstractions.csproj" />
+  </ItemGroup>
+
+</Project>
