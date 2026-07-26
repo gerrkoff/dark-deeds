@@ -264,12 +264,12 @@ Every task must finish with both commands passing and zero warnings. This plan d
 - Create: `code/backend/DD.TerminalClient.Domain/Overview/VisualTaskAddress.cs`
 - Create: `code/backend/DD.Tests.Unit/TerminalClient/OverviewProjectionTests.cs`
 
-- [ ] Project full-width No Date, conditional dated Overdue, Current with exactly 14 Monday-based cells in two rows of seven, and Future rows containing only nonempty dates.
-- [ ] Define Overdue as returned unfinished Simple dated tasks before current Monday, without changing the `// important` server filter or inventing unavailable old task types.
-- [ ] Filter deleted tasks, optionally filter completed tasks, collapse Routine tasks per date, sort by order, and include stable section/row/column/task-index addresses consumed by navigation and rendering.
-- [ ] Preserve empty Current day cells in layout while excluding them from focus; wrap Future at seven visible date columns.
-- [ ] Port every test in `code/frontend/tests/services/OverviewService.test.ts` and add timezone/local-Monday, Overdue contract, Routine collapse, completed toggle, and all-empty cases.
-- [ ] Verify the fast checks pass with zero warnings.
+- [x] Project full-width No Date, conditional dated Overdue, Current with exactly 14 Monday-based cells in two rows of seven, and Future rows containing only nonempty dates.
+- [x] Define Overdue as returned unfinished Simple dated tasks before current Monday, without changing the `// important` server filter or inventing unavailable old task types.
+- [x] Filter deleted tasks, optionally filter completed tasks, collapse Routine tasks per date, sort by order, and include stable section/row/column/task-index addresses consumed by navigation and rendering.
+- [x] Preserve empty Current day cells in layout while excluding them from focus; wrap Future at seven visible date columns.
+- [x] Port every test in `code/frontend/tests/services/OverviewService.test.ts` and add timezone/local-Monday, Overdue contract, Routine collapse, completed toggle, and all-empty cases.
+- [x] Verify the fast checks pass with zero warnings.
 
 ### Task 11: Implement spatial navigation and focus fallback
 
