@@ -151,12 +151,12 @@ Every task must finish with both commands passing and zero warnings. This plan d
 - Create: `code/backend/DD.TerminalClient.Domain/Tasks/TaskOrderService.cs`
 - Create: `code/backend/DD.Tests.Unit/TerminalClient/TaskMutationServiceTests.cs`
 
-- [ ] Define the terminal task model with `DateOnly?`, time minutes, task type, probable/completed/deleted flags, order, UID, and version; define persisted outbox items as terminal tasks keyed by UID.
-- [ ] Implement `ILocalDateProvider` and a Details adapter based on `TimeProvider.GetUtcNow()` plus `TimeZoneInfo.Local`, with no banned wall-clock APIs in Domain.
-- [ ] Implement formatting that round-trips shared parser results and terminal tasks into the web-compatible editor string, including single-date edit behavior.
-- [ ] Implement pure create, edit, complete/uncomplete, soft-delete, explicit move, one-day move, and visible-neighbor reorder commands.
-- [ ] Port every test in `code/frontend/tests/services/TaskSaveService.test.ts` to xUnit, including version preservation and contiguous renumbering of all changed tasks in source/destination groups; add hidden-neighbor and No Date cases.
-- [ ] Verify the fast checks pass with zero warnings.
+- [x] Define the terminal task model with `DateOnly?`, time minutes, task type, probable/completed/deleted flags, order, UID, and version; define persisted outbox items as terminal tasks keyed by UID.
+- [x] Implement `ILocalDateProvider` and a Details adapter based on `TimeProvider.GetUtcNow()` plus `TimeZoneInfo.Local`, with no banned wall-clock APIs in Domain.
+- [x] Implement formatting that round-trips shared parser results and terminal tasks into the web-compatible editor string, including single-date edit behavior.
+- [x] Implement pure create, edit, complete/uncomplete, soft-delete, explicit move, one-day move, and visible-neighbor reorder commands.
+- [x] Port every test in `code/frontend/tests/services/TaskSaveService.test.ts` to xUnit, including version preservation and contiguous renumbering of all changed tasks in source/destination groups; add hidden-neighbor and No Date cases.
+- [x] Verify the fast checks pass with zero warnings.
 
 ### Task 4: Implement profile configuration and paths
 
