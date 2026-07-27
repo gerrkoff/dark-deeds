@@ -14,6 +14,11 @@ public sealed record TerminalInputContext
 
     public DateOnly? FocusDate { get; init; }
 
+    // The focused task's Uid, captured when an edit/move/delete modal opens so its later commit targets the
+    // task the user chose rather than whatever the focus has since moved to (a realtime server-wins update
+    // can drop the focused task and slide focus onto a neighbour while the modal is open).
+    public string? FocusUid { get; init; }
+
     public string EditText { get; init; } = string.Empty;
 
     public string MoveText { get; init; } = string.Empty;

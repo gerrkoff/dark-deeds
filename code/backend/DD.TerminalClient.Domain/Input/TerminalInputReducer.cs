@@ -69,13 +69,13 @@ public sealed class TerminalInputReducer(ITaskTextParser parser, TaskTextFormatt
             'a' => OpenEditor(EditorPurpose.AddWithFocusDate, LineEditorState.Empty, context.FocusDate),
             'A' => OpenEditor(EditorPurpose.AddNoDate, LineEditorState.Empty, fallbackDate: null),
             'e' => context.HasFocus
-                ? OpenEditor(EditorPurpose.Edit, LineEditorState.For(context.EditText), fallbackDate: null)
+                ? OpenEditor(EditorPurpose.Edit, LineEditorState.For(context.EditText), fallbackDate: null, context.FocusUid)
                 : Declined(state, "No task selected."),
             'm' => context.HasFocus
-                ? OpenEditor(EditorPurpose.Move, LineEditorState.For(context.MoveText), fallbackDate: null)
+                ? OpenEditor(EditorPurpose.Move, LineEditorState.For(context.MoveText), fallbackDate: null, context.FocusUid)
                 : Declined(state, "No task selected."),
             'd' => context.HasFocus
-                ? EnterMode(state, TerminalUiMode.DeleteConfirmation)
+                ? EnterMode(state, TerminalUiMode.DeleteConfirmation, context.FocusUid)
                 : Declined(state, "No task selected."),
             'r' => context is { HasFocus: true, FocusHasDate: true }
                 ? Raise(state, TerminalCommand.ToggleRoutine)
@@ -178,7 +178,8 @@ public sealed class TerminalInputReducer(ITaskTextParser parser, TaskTextFormatt
         return Raise(state, command);
     }
 
-    private TerminalInputResult OpenEditor(EditorPurpose purpose, LineEditorState editor, DateOnly? fallbackDate)
+    private TerminalInputResult OpenEditor(
+        EditorPurpose purpose, LineEditorState editor, DateOnly? fallbackDate, string? targetUid = null)
     {
         return new TerminalInputResult
         {
@@ -187,6 +188,7 @@ public sealed class TerminalInputReducer(ITaskTextParser parser, TaskTextFormatt
                 Mode = TerminalUiMode.Editor,
                 Purpose = purpose,
                 Editor = editor,
+                TargetUid = targetUid,
                 Feedback = ComputeFeedback(purpose, editor.Text, fallbackDate),
                 FallbackDate = fallbackDate,
             },
@@ -246,7 +248,8 @@ public sealed class TerminalInputReducer(ITaskTextParser parser, TaskTextFormatt
         return new TerminalInputResult { State = state, StatusMessage = message };
     }
 
-    private static TerminalInputResult EnterMode(TerminalInputState state, TerminalUiMode mode)
+    private static TerminalInputResult EnterMode(
+        TerminalInputState state, TerminalUiMode mode, string? targetUid = null)
     {
         return new TerminalInputResult
         {
@@ -255,6 +258,7 @@ public sealed class TerminalInputReducer(ITaskTextParser parser, TaskTextFormatt
                 Mode = mode,
                 Purpose = EditorPurpose.None,
                 Editor = LineEditorState.Empty,
+                TargetUid = targetUid,
                 Feedback = null,
                 FallbackDate = null,
             },

@@ -29,6 +29,11 @@ public sealed record TerminalInputState
 
     public LineEditorState Editor { get; init; } = LineEditorState.Empty;
 
+    // The Uid of the task an edit/move/delete modal acts on, captured when the modal opens so the commit
+    // resolves that exact task instead of the current focus (which a realtime update can move mid-modal).
+    // Null outside those modals.
+    public string? TargetUid { get; init; }
+
     public string? Feedback { get; init; }
 
     public DateOnly? FallbackDate { get; init; }

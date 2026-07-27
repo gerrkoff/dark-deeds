@@ -54,6 +54,10 @@ public sealed record ApplicationEvent
     // For SignInCompleted, the sign-in outcome.
     public SignInOutcome? SignIn { get; private init; }
 
+    // For SnapshotLoaded and SnapshotFailed, the monotonically increasing load generation the completion
+    // belongs to, so the loop can discard a stale result from a superseded (overlapping) snapshot load.
+    public int Generation { get; private init; }
+
     // For SignInFaulted, a secret-safe reason to show the user.
     public string Message { get; private init; } = string.Empty;
 
@@ -83,15 +87,25 @@ public sealed record ApplicationEvent
         return new ApplicationEvent { Kind = ApplicationEventKind.Hub, Hub = hubEvent };
     }
 
-    public static ApplicationEvent SnapshotLoaded(IReadOnlyList<TerminalTask> tasks)
+    public static ApplicationEvent SnapshotLoaded(IReadOnlyList<TerminalTask> tasks, int generation)
     {
         ArgumentNullException.ThrowIfNull(tasks);
-        return new ApplicationEvent { Kind = ApplicationEventKind.SnapshotLoaded, Tasks = tasks };
+        return new ApplicationEvent
+        {
+            Kind = ApplicationEventKind.SnapshotLoaded,
+            Tasks = tasks,
+            Generation = generation,
+        };
     }
 
-    public static ApplicationEvent SnapshotFailed(bool unauthorized)
+    public static ApplicationEvent SnapshotFailed(bool unauthorized, int generation)
     {
-        return new ApplicationEvent { Kind = ApplicationEventKind.SnapshotFailed, Unauthorized = unauthorized };
+        return new ApplicationEvent
+        {
+            Kind = ApplicationEventKind.SnapshotFailed,
+            Unauthorized = unauthorized,
+            Generation = generation,
+        };
     }
 
     public static ApplicationEvent SignInCompleted(SignInOutcome outcome)

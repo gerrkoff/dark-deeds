@@ -36,6 +36,7 @@ internal sealed class TerminalApplication
     private int _priorOutboxCount;
     private IReadOnlyList<TerminalTask>? _preservedOutbox;
     private bool _firstSnapshotDone;
+    private int _snapshotGeneration;
     private bool _renewing;
     private bool _stateLoadFailed;
     private CancellationToken _appToken;
@@ -144,10 +145,10 @@ internal sealed class TerminalApplication
                 HandleHub(applicationEvent.Hub!);
                 break;
             case ApplicationEventKind.SnapshotLoaded:
-                HandleSnapshotLoaded(applicationEvent.Tasks);
+                HandleSnapshotLoaded(applicationEvent.Tasks, applicationEvent.Generation);
                 break;
             case ApplicationEventKind.SnapshotFailed:
-                HandleSnapshotFailed(applicationEvent.Unauthorized);
+                HandleSnapshotFailed(applicationEvent.Unauthorized, applicationEvent.Generation);
                 break;
             case ApplicationEventKind.SignInCompleted:
                 HandleSignInCompleted(applicationEvent.SignIn!);
@@ -301,8 +302,15 @@ internal sealed class TerminalApplication
         }
     }
 
-    private void HandleSnapshotLoaded(IReadOnlyList<TerminalTask> tasks)
+    private void HandleSnapshotLoaded(IReadOnlyList<TerminalTask> tasks, int generation)
     {
+        // Discard a superseded load: a newer snapshot request (a reconnect reload, a retry) has started
+        // since this one, so re-reconciling its stale result could remove tasks the newer state already has.
+        if (generation != _snapshotGeneration)
+        {
+            return;
+        }
+
         ApplyReconciliation(_reconciler.ReconcileSnapshot(tasks));
 
         foreach (var buffered in _hub.DrainBufferedUpdates())
@@ -339,11 +347,19 @@ internal sealed class TerminalApplication
         }
     }
 
-    private void HandleSnapshotFailed(bool unauthorized)
+    private void HandleSnapshotFailed(bool unauthorized, int generation)
     {
+        // A 401 invalidates the whole session regardless of which load observed it, so it is always
+        // honoured; a plain offline failure from a superseded load is discarded so it neither overwrites a
+        // newer load's status nor schedules a duplicate retry.
         if (unauthorized)
         {
             Handle401();
+            return;
+        }
+
+        if (generation != _snapshotGeneration)
+        {
             return;
         }
 
@@ -477,6 +493,7 @@ internal sealed class TerminalApplication
                 Phase = ApplicationPhase.ConfirmDataReset,
                 ConfirmUser = user,
                 ConfirmOwner = _dataOwner,
+                SigningIn = false,
                 StatusMessage = null,
             };
             return;
@@ -487,6 +504,7 @@ internal sealed class TerminalApplication
         State = _deps.Reducer.Recompute(State with
         {
             Phase = ApplicationPhase.Ready,
+            SigningIn = false,
             Input = TerminalInputState.Normal,
             SuspendedInput = null,
             StatusMessage = null,
@@ -525,6 +543,7 @@ internal sealed class TerminalApplication
             Phase = ApplicationPhase.Login,
             LoginStep = LoginStep.Username,
             PendingUsername = null,
+            SigningIn = false,
             Input = TerminalInputState.BeginLogin(),
             StatusMessage = message,
         };
@@ -553,6 +572,7 @@ internal sealed class TerminalApplication
             Phase = ApplicationPhase.Login,
             LoginStep = LoginStep.Username,
             PendingUsername = null,
+            SigningIn = false,
             Input = TerminalInputState.BeginLogin(),
             IsOffline = false,
             IsBuffering = false,
@@ -569,7 +589,7 @@ internal sealed class TerminalApplication
         _sessionCts?.Dispose();
         _sessionCts = CancellationTokenSource.CreateLinkedTokenSource(_appToken);
         State = State with { IsBuffering = true, IsOffline = false };
-        _ = StartHubAndLoadAsync();
+        _ = StartHubAndLoadAsync(++_snapshotGeneration);
     }
 
     private void RestorePersistedOutbox()
@@ -782,7 +802,7 @@ internal sealed class TerminalApplication
         }
     }
 
-    private async Task StartHubAndLoadAsync()
+    private async Task StartHubAndLoadAsync(int generation)
     {
         try
         {
@@ -797,24 +817,28 @@ internal sealed class TerminalApplication
             return;
         }
 
-        await LoadSnapshotAsync();
+        await LoadSnapshotAsync(generation);
     }
 
+    // Starts a fresh snapshot load, tagging it with the next generation so an older overlapping load whose
+    // response arrives later is discarded rather than re-reconciled over newer state. Called only from the
+    // single-reader loop (reload retry tick, hub Reconnected), so the counter is never touched off-thread.
     private void StartSnapshotLoad()
     {
-        _ = LoadSnapshotAsync();
+        _ = LoadSnapshotAsync(++_snapshotGeneration);
     }
 
-    private async Task LoadSnapshotAsync()
+    private async Task LoadSnapshotAsync(int generation)
     {
         try
         {
             var tasks = await _deps.Tasks.LoadTasksAsync(SessionToken);
-            Enqueue(ApplicationEvent.SnapshotLoaded(tasks));
+            Enqueue(ApplicationEvent.SnapshotLoaded(tasks, generation));
         }
         catch (TerminalApiException exception)
         {
-            Enqueue(ApplicationEvent.SnapshotFailed(exception.Kind == TerminalApiErrorKind.Unauthorized));
+            Enqueue(ApplicationEvent.SnapshotFailed(
+                exception.Kind == TerminalApiErrorKind.Unauthorized, generation));
         }
         catch (OperationCanceledException)
         {

@@ -307,6 +307,128 @@ public sealed class ApplicationReducerTests
         Assert.False(afterClose.State.Cache.Single(task => task.Uid == "a").Deleted);
     }
 
+    [Fact]
+    public void Edit_CommitsAgainstTaskCapturedWhenModalOpened_NotTheMovedFocus()
+    {
+        var reducer = NewReducer();
+        var state = FocusOn(Ready(reducer, Task("a", date: null, "A"), Task("b", date: null, "B")), "a");
+
+        // Open the edit modal on task "a" (its Uid is captured now).
+        var opened = reducer.HandleKey(state, Key('e'));
+        Assert.Equal(TerminalUiMode.Editor, opened.State.Input.Mode);
+
+        // A realtime update arrives while the modal is open and slides focus onto task "b".
+        var focusMoved = FocusOn(opened.State, "b");
+
+        // Committing the edit must rename "a" (the captured target), never the now-focused "b".
+        var committed = Feed(reducer, focusMoved, Then(Typed("!"), Enter()));
+
+        Assert.Equal("A!", committed.State.Cache.Single(task => task.Uid == "a").Title);
+        Assert.Equal("B", committed.State.Cache.Single(task => task.Uid == "b").Title);
+    }
+
+    [Fact]
+    public void Delete_CommitsAgainstTaskCapturedWhenConfirmationOpened_NotTheMovedFocus()
+    {
+        var reducer = NewReducer();
+        var state = FocusOn(Ready(reducer, Task("a", date: null, "A"), Task("b", date: null, "B")), "a");
+
+        // Enter delete confirmation on "a", then let focus slide to "b" before the user confirms.
+        var confirming = reducer.HandleKey(state, Key('d'));
+        Assert.Equal(TerminalUiMode.DeleteConfirmation, confirming.State.Input.Mode);
+        var focusMoved = FocusOn(confirming.State, "b");
+
+        var deleted = reducer.HandleKey(focusMoved, Key('y'));
+
+        Assert.True(deleted.State.Cache.Single(task => task.Uid == "a").Deleted);
+        Assert.False(deleted.State.Cache.Single(task => task.Uid == "b").Deleted);
+    }
+
+    [Fact]
+    public void Edit_TargetRemovedWhileModalOpen_DeclinesWithoutMutating()
+    {
+        var reducer = NewReducer();
+        var state = FocusOn(Ready(reducer, Task("a", date: null, "A"), Task("b", date: null, "B")), "a");
+        var opened = reducer.HandleKey(state, Key('e'));
+
+        // A server-wins snapshot drops "a" from the cache while the modal is open; focus falls to "b".
+        var withoutTarget = reducer.Recompute(opened.State with { Cache = [Task("b", date: null, "B")] });
+
+        var committed = Feed(reducer, withoutTarget, Then(Typed("!"), Enter()));
+
+        Assert.False(string.IsNullOrEmpty(committed.State.StatusMessage));
+        Assert.Equal("B", committed.State.Cache.Single(task => task.Uid == "b").Title);
+        Assert.DoesNotContain(committed.Effects, effect => effect.Kind == ApplicationEffectKind.EnqueueTaskChanges);
+    }
+
+    [Fact]
+    public void Move_NonDateText_DeclinesAndKeepsTheDate()
+    {
+        var reducer = NewReducer();
+        var state = Ready(reducer, Task("a", Monday, "A"));
+
+        var result = Feed(reducer, state, Then(Key('m'), Typed("meeting"), Enter()));
+
+        Assert.False(string.IsNullOrEmpty(result.State.StatusMessage));
+        Assert.Equal(Monday, result.State.Cache.Single(task => task.Uid == "a").Date);
+        Assert.DoesNotContain(result.Effects, effect => effect.Kind == ApplicationEffectKind.EnqueueTaskChanges);
+    }
+
+    [Fact]
+    public void Move_DateRange_DeclinesInsteadOfSilentlyPickingTheFirstDay()
+    {
+        var reducer = NewReducer();
+        var state = Ready(reducer, Task("a", Monday, "A"));
+
+        var result = Feed(reducer, state, Then(Key('m'), Typed("0611-0613"), Enter()));
+
+        Assert.False(string.IsNullOrEmpty(result.State.StatusMessage));
+        Assert.Equal(Monday, result.State.Cache.Single(task => task.Uid == "a").Date);
+    }
+
+    [Fact]
+    public void Edit_DateRange_DeclinesInsteadOfSilentlyApplyingTheFirstDay()
+    {
+        var reducer = NewReducer();
+        var state = FocusOn(Ready(reducer, Task("a", Monday, "A")), "a");
+        var opened = reducer.HandleKey(state, Key('e'));
+
+        // Replace the seeded editor buffer with range text, then commit.
+        var ranged = opened.State with
+        {
+            Input = opened.State.Input with { Editor = LineEditorState.For("0611-0613 trip") },
+        };
+        var committed = reducer.HandleKey(ranged, Enter());
+
+        Assert.False(string.IsNullOrEmpty(committed.State.StatusMessage));
+        Assert.Equal("A", committed.State.Cache.Single(task => task.Uid == "a").Title);
+        Assert.DoesNotContain(committed.Effects, effect => effect.Kind == ApplicationEffectKind.EnqueueTaskChanges);
+    }
+
+    [Fact]
+    public void Login_AfterPasswordSubmit_MarksSigningInAndIgnoresASecondSubmit()
+    {
+        var reducer = NewReducer();
+        var login = new ApplicationState
+        {
+            Phase = ApplicationPhase.Login,
+            LoginStep = LoginStep.Password,
+            PendingUsername = "user",
+            Input = TerminalInputState.BeginLogin(),
+            Width = 200,
+            Height = 60,
+        };
+
+        var submitted = Feed(reducer, login, Then(Typed("secret"), Enter()));
+        Assert.True(submitted.State.SigningIn);
+        Assert.Contains(submitted.Effects, effect => effect.Kind == ApplicationEffectKind.SignIn);
+
+        // A second Enter while the sign-in is still in flight must not dispatch another sign-in.
+        var again = reducer.HandleKey(submitted.State, Enter());
+        Assert.True(again.State.SigningIn);
+        Assert.DoesNotContain(again.Effects, effect => effect.Kind == ApplicationEffectKind.SignIn);
+    }
+
     private static ApplicationReducer NewReducer()
     {
         var dates = new FixedDates();

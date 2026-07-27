@@ -156,7 +156,7 @@ internal sealed class TerminalSelfTest
         hub.DrainBufferedUpdates();
     }
 
-    private static async Task StopHubQuietlyAsync(ITaskHubClient? hub)
+    private static async Task StopHubQuietlyAsync(ITaskHubClient? hub, CancellationToken cancellationToken)
     {
         if (hub is null)
         {
@@ -165,7 +165,7 @@ internal sealed class TerminalSelfTest
 
         try
         {
-            await hub.StopAsync(CancellationToken.None);
+            await hub.StopAsync(cancellationToken);
         }
         catch (OperationCanceledException)
         {
@@ -343,22 +343,33 @@ internal sealed class TerminalSelfTest
     private async Task CleanupAsync(
         string? probeUid, string? probeTitle, bool removed, ITaskHubClient? observerHub, ITaskHubClient? writerHub)
     {
+        // Bound every teardown step so an unresponsive backend or wedged transport fails fast instead of
+        // hanging the process (the self-test is an unattended gate), matching the finite-timeout guarantee
+        // the rest of this class already keeps.
+        using var cleanupCts = new CancellationTokenSource(_context.EventTimeout);
+
         if (probeUid is not null && !removed)
         {
             var orphan = new TerminalTask { Uid = probeUid, Title = probeTitle ?? probeUid, Deleted = true };
             try
             {
-                await _context.Writer.SaveTasksAsync([orphan], CancellationToken.None);
+                await _context.Writer.SaveTasksAsync([orphan], cleanupCts.Token);
                 Report("cleanup: removed the probe task");
             }
             catch (TerminalApiException)
             {
                 Report("cleanup: could not remove the probe task");
             }
+            catch (OperationCanceledException)
+            {
+                Report("cleanup: timed out removing the probe task");
+            }
         }
 
-        await StopHubQuietlyAsync(observerHub);
-        await StopHubQuietlyAsync(writerHub);
+        // Stop both hubs independently so a hang stopping one cannot prevent the other from being torn down.
+        await Task.WhenAll(
+            StopHubQuietlyAsync(observerHub, cleanupCts.Token),
+            StopHubQuietlyAsync(writerHub, cleanupCts.Token));
     }
 
     private void AddSecret(string? secret)

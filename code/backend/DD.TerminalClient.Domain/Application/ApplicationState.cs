@@ -80,6 +80,11 @@ public sealed record ApplicationState
 
     public LoginStep LoginStep { get; init; } = LoginStep.Username;
 
+    // True from the moment a password is submitted until sign-in resolves. While set, the login reducer
+    // ignores keys so a second submission cannot start a concurrent sign-in whose out-of-order completion
+    // could bounce an already-authenticated session back to the login screen.
+    public bool SigningIn { get; init; }
+
     public string? PendingUsername { get; init; }
 
     // The user signing in and the previous data owner, shown by the different-user confirmation prompt.

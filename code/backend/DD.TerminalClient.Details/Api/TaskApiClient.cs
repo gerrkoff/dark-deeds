@@ -31,7 +31,7 @@ internal sealed class TaskApiClient(HttpClient httpClient, ILocalDateProvider lo
         EnsureSuccess(response);
         var dtos = await ReadJsonAsync<List<TaskDto>>(response, cancellationToken);
 
-        return dtos.Select(TaskTransportMapper.ToTerminalTask).ToList();
+        return MapTasks(dtos);
     }
 
     public async Task<IReadOnlyList<TerminalTask>> SaveTasksAsync(
@@ -50,7 +50,23 @@ internal sealed class TaskApiClient(HttpClient httpClient, ILocalDateProvider lo
         EnsureSuccess(response);
         var dtos = await ReadJsonAsync<List<TaskDto>>(response, cancellationToken);
 
-        return dtos.Select(TaskTransportMapper.ToTerminalTask).ToList();
+        return MapTasks(dtos);
+    }
+
+    // Maps the deserialized transport array into terminal tasks, translating a malformed element (for
+    // example a null entry inside an otherwise valid JSON array) into a protocol-class TerminalApiException
+    // rather than letting a raw ArgumentException escape a fire-and-forget load/save and stall the loop.
+    private static List<TerminalTask> MapTasks(IReadOnlyList<TaskDto> dtos)
+    {
+        try
+        {
+            return dtos.Select(TaskTransportMapper.ToTerminalTask).ToList();
+        }
+        catch (ArgumentException exception)
+        {
+            throw new TerminalApiException(
+                TerminalApiErrorKind.Protocol, "The server returned a task that could not be read.", exception);
+        }
     }
 
     // The Monday on or before the given day, where the week starts on Monday (DayOfWeek has Sunday = 0).

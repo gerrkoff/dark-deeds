@@ -341,6 +341,21 @@ public sealed class HttpClientTests
     }
 
     [Fact]
+    public async Task LoadTasksAsync_NullTaskInArray_ThrowsProtocol()
+    {
+        // A syntactically valid JSON array can still contain a null element; mapping it must surface as a
+        // protocol-class TerminalApiException rather than a raw ArgumentException that would escape the
+        // fire-and-forget snapshot load unobserved and stall the sync loop.
+        var stub = new StubHttpMessageHandler((_, _) =>
+            Task.FromResult(JsonResponse(HttpStatusCode.OK, "[null]")));
+        var client = new TaskApiClient(CreateHttpClient(stub), DateProvider(new DateOnly(2026, 7, 23)));
+
+        var exception = await Assert.ThrowsAsync<TerminalApiException>(
+            () => client.LoadTasksAsync(CancellationToken.None));
+        Assert.Equal(TerminalApiErrorKind.Protocol, exception.Kind);
+    }
+
+    [Fact]
     public async Task LoadTasksAsync_NetworkFailure_ThrowsTransport()
     {
         var stub = new StubHttpMessageHandler((_, _) =>

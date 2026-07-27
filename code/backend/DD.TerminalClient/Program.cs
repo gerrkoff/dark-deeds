@@ -21,8 +21,22 @@ internal static class Program
 {
     private const string ExecutableName = "dd-terminal";
 
+    // Flags that stand alone, and options that require a following value. Any other token, or a value
+    // option left without its value, is a usage error - reported instead of being silently ignored so a
+    // typo such as "--porfile local" or a value-less "--state-root" can never fall back to the production
+    // profile or the real user state directory.
+    private static readonly string[] KnownFlags = ["--self-test", "--version", "--help", "-h"];
+    private static readonly string[] KnownValueOptions = ["--profile", "--state-root"];
+
     private static async Task<int> Main(string[] args)
     {
+        if (ValidateArgs(args) is { } argumentError)
+        {
+            Console.Error.WriteLine($"{ExecutableName}: {argumentError}");
+            Console.Error.WriteLine($"Run '{ExecutableName} --help' for usage.");
+            return 1;
+        }
+
         if (HasOption(args, "--help") || HasOption(args, "-h"))
         {
             Console.WriteLine(BuildHelpText());
@@ -266,6 +280,33 @@ internal static class Program
             {
                 return args[i + 1];
             }
+        }
+
+        return null;
+    }
+
+    private static string? ValidateArgs(string[] args)
+    {
+        for (var i = 0; i < args.Length; i++)
+        {
+            var arg = args[i];
+            if (Array.Exists(KnownFlags, flag => string.Equals(arg, flag, StringComparison.Ordinal)))
+            {
+                continue;
+            }
+
+            if (Array.Exists(KnownValueOptions, option => string.Equals(arg, option, StringComparison.Ordinal)))
+            {
+                if (i + 1 >= args.Length)
+                {
+                    return $"option '{arg}' requires a value.";
+                }
+
+                i++;
+                continue;
+            }
+
+            return $"unknown option '{arg}'.";
         }
 
         return null;

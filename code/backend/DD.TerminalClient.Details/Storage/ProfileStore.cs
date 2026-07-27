@@ -14,8 +14,13 @@ public sealed class ProfileStore(ApplicationPathProvider paths) : IProfileStore
     private const string ProfilesFolderName = "profiles";
     private const string ProfileFileName = "profile.json";
 
+    // Seeded names are reserved and matched case-insensitively: a profile-name segment maps directly to a
+    // filesystem directory, and on a case-insensitive volume (the default on macOS, a primary target)
+    // "Production" and "production" are the same directory. A case-only variant must therefore resolve to
+    // the same built-in profile and be refused as a custom name, so a custom profile can never alias a
+    // seeded profile's token/state directory while pointing at a different server.
     private static readonly Dictionary<string, string> SeededProfiles =
-        new(StringComparer.Ordinal)
+        new(StringComparer.OrdinalIgnoreCase)
         {
             ["production"] = "https://dark-deeds.com/",
             ["test"] = "https://test.dark-deeds.com/",
@@ -30,7 +35,7 @@ public sealed class ProfileStore(ApplicationPathProvider paths) : IProfileStore
     public IReadOnlyList<TerminalProfile> List()
     {
         var profiles = new List<TerminalProfile>();
-        var names = new HashSet<string>(StringComparer.Ordinal);
+        var names = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
         foreach (var (name, baseUrl) in SeededProfiles)
         {
@@ -65,7 +70,12 @@ public sealed class ProfileStore(ApplicationPathProvider paths) : IProfileStore
     {
         if (SeededProfiles.TryGetValue(name, out var seededUrl))
         {
-            profile = TerminalProfile.Create(name, seededUrl);
+            // Resolve to the canonical seeded name (the built-in key) rather than whatever casing the
+            // caller passed, so every case variant of a built-in profile shares the one storage directory
+            // instead of spawning an alias beside it.
+            var canonical = SeededProfiles.Keys.First(
+                key => string.Equals(key, name, StringComparison.OrdinalIgnoreCase));
+            profile = TerminalProfile.Create(canonical, seededUrl);
             return true;
         }
 

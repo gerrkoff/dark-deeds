@@ -84,6 +84,14 @@ public sealed class ApplicationReducer(
 
     private ApplicationTransition HandleLoginKey(ApplicationState state, ConsoleKeyInfo key)
     {
+        // A sign-in is in flight: ignore every key so the user cannot submit a second, concurrent attempt
+        // whose late completion could overwrite the result of the first (for example returning an
+        // already-authenticated session to login).
+        if (state.SigningIn)
+        {
+            return ApplicationTransition.Of(state);
+        }
+
         var result = inputReducer.Reduce(state.Input, key, TerminalInputContext.None);
 
         if (result.Command == TerminalCommand.SubmitLogin)
@@ -101,7 +109,12 @@ public sealed class ApplicationReducer(
             }
 
             return ApplicationTransition.Of(
-                state with { Input = TerminalInputState.BeginLogin(), StatusMessage = "Signing in..." },
+                state with
+                {
+                    Input = TerminalInputState.BeginLogin(),
+                    SigningIn = true,
+                    StatusMessage = "Signing in...",
+                },
                 ApplicationEffect.SignIn(state.PendingUsername ?? string.Empty, text));
         }
 
@@ -149,9 +162,14 @@ public sealed class ApplicationReducer(
             SuspendedInput = SuspendInputForResize(state),
         };
 
+        // The target captured when the modal opened (the pre-reduce input state still carries it; the
+        // commit resets the input to Normal). A commit uses this, not the live focus, so a realtime update
+        // that moved focus while the modal was open cannot redirect the edit/move/delete to another task.
+        var targetUid = state.Input.TargetUid;
+
         return result.Command == TerminalCommand.None
             ? ApplicationTransition.Of(next)
-            : ExecuteCommand(next, result.Command, result.CommittedText);
+            : ExecuteCommand(next, result.Command, result.CommittedText, targetUid);
     }
 
     // When Help closes over a still-pending suspended interaction, resume that interaction instead of the
@@ -209,7 +227,8 @@ public sealed class ApplicationReducer(
             : input;
     }
 
-    private ApplicationTransition ExecuteCommand(ApplicationState state, TerminalCommand command, string? text)
+    private ApplicationTransition ExecuteCommand(
+        ApplicationState state, TerminalCommand command, string? text, string? targetUid)
     {
         return command switch
         {
@@ -223,7 +242,7 @@ public sealed class ApplicationReducer(
             TerminalCommand.MoveDayBackward => MoveByDay(state, -1),
             TerminalCommand.MoveDayForward => MoveByDay(state, 1),
             TerminalCommand.ToggleComplete => MutateFocused(state, TaskMutationService.ToggleCompleted),
-            TerminalCommand.ConfirmDelete => MutateFocused(state, TaskMutationService.Delete),
+            TerminalCommand.ConfirmDelete => DeleteTarget(state, targetUid),
             TerminalCommand.ToggleCompletedVisibility => ToggleCompletedVisibility(state),
             TerminalCommand.ToggleRoutine => ToggleRoutine(state),
             TerminalCommand.ForceReconnect => ApplicationTransition.Of(
@@ -232,8 +251,8 @@ public sealed class ApplicationReducer(
             TerminalCommand.Quit => ApplicationTransition.Of(state with { Quit = true }),
             TerminalCommand.SubmitAddWithFocusDate => Create(state, text, FindFocused(state)?.Date),
             TerminalCommand.SubmitAddNoDate => Create(state, text, fallback: null),
-            TerminalCommand.SubmitEdit => EditFocused(state, text),
-            TerminalCommand.SubmitMove => MoveFocused(state, text),
+            TerminalCommand.SubmitEdit => EditTarget(state, text, targetUid),
+            TerminalCommand.SubmitMove => MoveTarget(state, text, targetUid),
             TerminalCommand.SubmitLogin => ApplicationTransition.Of(state),
             _ => ApplicationTransition.Of(state),
         };
@@ -309,12 +328,12 @@ public sealed class ApplicationReducer(
         return CommitChanges(state, created, focusUid: created[0].Uid);
     }
 
-    private ApplicationTransition EditFocused(ApplicationState state, string? text)
+    private ApplicationTransition EditTarget(ApplicationState state, string? text, string? targetUid)
     {
-        var focused = FindFocused(state);
-        if (focused is null)
+        var target = FindByUid(state, targetUid);
+        if (target is null)
         {
-            return Decline(state, "No task selected.");
+            return Decline(state, "The task is no longer available.");
         }
 
         IReadOnlyList<ParsedTaskText> parsed;
@@ -327,23 +346,41 @@ public sealed class ApplicationReducer(
             return Decline(state, exception.Message);
         }
 
-        return parsed.Count == 0
-            ? ApplicationTransition.Of(state)
-            : CommitChanges(state, [TaskMutationService.Edit(focused, parsed[0])], focusUid: null);
+        if (parsed.Count == 0)
+        {
+            return ApplicationTransition.Of(state);
+        }
+
+        // An edit renames a single task; a range (many parsed results) has no single-task meaning, so it is
+        // rejected rather than silently applying only the first day's parse.
+        if (parsed.Count > 1)
+        {
+            return Decline(state, "An edit must be a single task, not a date range.");
+        }
+
+        return CommitChanges(state, [TaskMutationService.Edit(target, parsed[0])], focusUid: null);
     }
 
-    private ApplicationTransition MoveFocused(ApplicationState state, string? text)
+    private ApplicationTransition MoveTarget(ApplicationState state, string? text, string? targetUid)
     {
-        var focused = FindFocused(state);
-        if (focused is null)
+        var target = FindByUid(state, targetUid);
+        if (target is null)
         {
-            return Decline(state, "No task selected.");
+            return Decline(state, "The task is no longer available.");
         }
 
         var (ok, date, error) = ParseMoveDate(text);
         return ok
-            ? CommitChanges(state, [TaskMutationService.Move(focused, date)], focusUid: null)
+            ? CommitChanges(state, [TaskMutationService.Move(target, date)], focusUid: null)
             : Decline(state, error ?? "Enter a valid date.");
+    }
+
+    private ApplicationTransition DeleteTarget(ApplicationState state, string? targetUid)
+    {
+        var target = FindByUid(state, targetUid);
+        return target is null
+            ? Decline(state, "The task is no longer available.")
+            : CommitChanges(state, [TaskMutationService.Delete(target)], focusUid: null);
     }
 
     private (bool Ok, DateOnly? Date, string? Error) ParseMoveDate(string? text)
@@ -351,14 +388,27 @@ public sealed class ApplicationReducer(
         var trimmed = (text ?? string.Empty).Trim();
         if (trimmed.Length == 0)
         {
+            // An empty move is the explicit "move to No Date" action.
             return (true, null, null);
         }
 
         try
         {
-            // Reuse the shared date grammar by appending a placeholder title, then keep only the date.
+            // Reuse the shared date grammar by appending a placeholder title, then keep only the date. A
+            // move targets exactly one date, so a range (many parsed results) or free text that carries no
+            // date is rejected rather than silently collapsing to the first day or clearing the date.
             var parsed = parser.Parse(trimmed + " x");
-            return (true, parsed.Count > 0 ? parsed[0].Date : null, null);
+            if (parsed.Count != 1)
+            {
+                return (false, null, "Enter a single date, or leave it empty for No Date.");
+            }
+
+            if (parsed[0].Date is not { } date)
+            {
+                return (false, null, "Enter a valid date, or leave it empty for No Date.");
+            }
+
+            return (true, date, null);
         }
         catch (TaskTextParseException exception)
         {
@@ -491,6 +541,7 @@ public sealed class ApplicationReducer(
             HasFocus = true,
             FocusHasDate = focused.Date is not null,
             FocusDate = focused.Date,
+            FocusUid = focused.Uid,
             EditText = formatter.Format(focused),
             MoveText = string.Empty,
         };
@@ -499,6 +550,16 @@ public sealed class ApplicationReducer(
     private static TerminalTask? FindFocused(ApplicationState state)
     {
         var uid = state.Focus?.Uid;
+        return uid is null
+            ? null
+            : state.Cache.FirstOrDefault(task => string.Equals(task.Uid, uid, StringComparison.Ordinal));
+    }
+
+    // Resolves a modal's captured target task by Uid from the cache. Returns null when the task no longer
+    // exists (a soft-delete keeps it in the cache, so this only misses a task the server has since removed),
+    // so the commit declines instead of touching the wrong task or resurrecting a removed one.
+    private static TerminalTask? FindByUid(ApplicationState state, string? uid)
+    {
         return uid is null
             ? null
             : state.Cache.FirstOrDefault(task => string.Equals(task.Uid, uid, StringComparison.Ordinal));

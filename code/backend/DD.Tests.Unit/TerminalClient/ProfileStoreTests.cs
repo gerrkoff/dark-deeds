@@ -75,6 +75,33 @@ public sealed class ProfileStoreTests : IDisposable
         Assert.Throws<ArgumentException>(() => store.Save(name, "https://example.com/"));
     }
 
+    [Theory]
+    [InlineData("Production")]
+    [InlineData("PRODUCTION")]
+    [InlineData("Local")]
+    public void Save_SeededNameCaseVariant_IsRejected(string name)
+    {
+        // A profile-name segment maps directly to a filesystem directory; on a case-insensitive volume
+        // (the default on macOS) a case variant of a seeded name would alias the built-in profile's token
+        // and state, so it must be refused just like the exact seeded name.
+        var store = CreateStore();
+
+        Assert.Throws<ArgumentException>(() => store.Save(name, "https://example.com/"));
+    }
+
+    [Theory]
+    [InlineData("Production", "production", "https://dark-deeds.com/")]
+    [InlineData("LOCAL", "local", "http://localhost:5000/")]
+    public void TryResolve_SeededNameCaseVariant_ResolvesToCanonicalProfile(
+        string requested, string canonical, string expectedUrl)
+    {
+        var store = CreateStore();
+
+        Assert.True(store.TryResolve(requested, out var profile));
+        Assert.Equal(canonical, profile!.Name);
+        Assert.Equal(expectedUrl, profile.BaseUri.AbsoluteUri);
+    }
+
     [Fact]
     public void ProfileDirectories_AreIsolatedPerProfileUnderRoots()
     {
