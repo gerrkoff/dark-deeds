@@ -371,12 +371,12 @@ Every task must finish with both commands passing and zero warnings. This plan d
 - Create: `.github/workflows/terminal-client-release.yml`
 - Create: `code/backend/DD.TerminalClient/README.md`
 
-- [ ] Configure untrimmed self-contained single-file publish and a tested script that builds `osx-arm64`, `osx-x64`, `linux-x64`, and `linux-arm64`, sets executable archive contents, creates deterministic archives/checksums, and accepts a concrete output-directory argument.
-- [ ] Make the release workflow standalone from `ci.yml`, triggered only by `workflow_dispatch` and `v*` tags, and have it invoke the same publish script before uploading artifacts.
-- [ ] Smoke-run host-compatible output with `--version`, run `bash -n scripts/publish-terminal-client.sh`, and keep all workflow/script names and output English.
-- [ ] Document installation, profiles, login/token behavior, shortcuts, local state/reset/migration, conflict rules, local backend use, self-test environment, and troubleshooting.
-- [ ] Add a clearly labeled human-only checklist for Ghostty local rendering, SSH PTY allocation, remote `xterm-ghostty` terminfo, resize, and alternate-screen restoration; do not include it in unattended completion criteria.
-- [ ] Verify the fast checks pass with zero warnings.
+- [x] Configure untrimmed self-contained single-file publish and a tested script that builds `osx-arm64`, `osx-x64`, `linux-x64`, and `linux-arm64`, sets executable archive contents, creates deterministic archives/checksums, and accepts a concrete output-directory argument.
+- [x] Make the release workflow standalone from `ci.yml`, triggered only by `workflow_dispatch` and `v*` tags, and have it invoke the same publish script before uploading artifacts.
+- [x] Smoke-run host-compatible output with `--version`, run `bash -n scripts/publish-terminal-client.sh`, and keep all workflow/script names and output English.
+- [x] Document installation, profiles, login/token behavior, shortcuts, local state/reset/migration, conflict rules, local backend use, self-test environment, and troubleshooting.
+- [x] Add a clearly labeled human-only checklist for Ghostty local rendering, SSH PTY allocation, remote `xterm-ghostty` terminfo, resize, and alternate-screen restoration; do not include it in unattended completion criteria.
+- [x] Verify the fast checks pass with zero warnings.
 
 ### Task 18: Final validation
 

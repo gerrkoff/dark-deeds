@@ -7,6 +7,17 @@
     <NoWarn>$(NoWarn);CA1303;CA1849</NoWarn>
   </PropertyGroup>
 
+  <!-- Distribution build: untrimmed, self-contained, single-file binaries. These settings only take
+       effect when a RuntimeIdentifier is supplied (dotnet publish -r <rid> via
+       scripts/publish-terminal-client.sh), so a plain solution build/test stays framework-dependent
+       and unaffected. Trimming stays disabled for the first release. -->
+  <PropertyGroup Condition="'$(RuntimeIdentifier)' != ''">
+    <PublishSingleFile>true</PublishSingleFile>
+    <SelfContained>true</SelfContained>
+    <PublishTrimmed>false</PublishTrimmed>
+    <DebugType>none</DebugType>
+  </PropertyGroup>
+
   <ItemGroup>
     <InternalsVisibleTo Include="DD.Tests.Unit" />
   </ItemGroup>
