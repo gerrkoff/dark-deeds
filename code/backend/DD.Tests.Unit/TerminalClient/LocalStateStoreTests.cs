@@ -162,6 +162,68 @@ public sealed class LocalStateStoreTests : IDisposable
     }
 
     [Fact]
+    public void Load_ExplicitNullOutbox_ThrowsBlockingAndRetainsFile()
+    {
+        var paths = CreatePaths();
+
+        // A schema-valid document can still carry an explicit null outbox; treating it as an empty
+        // outbox would silently drop unsaved edits, so it must be a blocking, file-preserving error.
+        var json =
+            $"{{ \"SchemaVersion\": {PersistedTerminalState.CurrentSchemaVersion}, " +
+            "\"DataOwner\": \"alice\", \"CachedTasks\": [], \"Outbox\": null }";
+        WriteRawState(paths, json);
+
+        Assert.Throws<TerminalStateException>(() => new LocalStateStore(paths, Profile).Load());
+        Assert.True(File.Exists(StateFilePath(paths)));
+    }
+
+    [Fact]
+    public void Load_ExplicitNullCachedTasks_ThrowsBlockingAndRetainsFile()
+    {
+        var paths = CreatePaths();
+        var json =
+            $"{{ \"SchemaVersion\": {PersistedTerminalState.CurrentSchemaVersion}, " +
+            "\"DataOwner\": \"alice\", \"CachedTasks\": null, \"Outbox\": [] }";
+        WriteRawState(paths, json);
+
+        Assert.Throws<TerminalStateException>(() => new LocalStateStore(paths, Profile).Load());
+        Assert.True(File.Exists(StateFilePath(paths)));
+    }
+
+    [Fact]
+    public void Load_WhenFileExistsButUnreadable_ThrowsBlockingAndRetainsFile()
+    {
+        if (OperatingSystem.IsWindows())
+        {
+            return;
+        }
+
+        var paths = CreatePaths();
+        new LocalStateStore(paths, Profile).Save(SampleState());
+        var path = StateFilePath(paths);
+        File.SetUnixFileMode(path, UnixFileMode.None);
+
+        try
+        {
+            // A privileged (root) host bypasses file permissions, so the read would still succeed there;
+            // skip the assertion in that case rather than fail spuriously.
+            if (CanRead(path))
+            {
+                return;
+            }
+
+            // A file that exists but cannot be read must not be treated as "no state" (which would let a
+            // later save overwrite it): it surfaces as the same blocking, file-preserving error.
+            Assert.Throws<TerminalStateException>(() => new LocalStateStore(paths, Profile).Load());
+            Assert.True(File.Exists(path));
+        }
+        finally
+        {
+            File.SetUnixFileMode(path, UnixFileMode.UserRead | UnixFileMode.UserWrite);
+        }
+    }
+
+    [Fact]
     public void Token_SaveThenLoad_RoundTripsAndClearRemoves()
     {
         var paths = CreatePaths();
@@ -229,6 +291,23 @@ public sealed class LocalStateStoreTests : IDisposable
         Assert.True(File.Exists(LogFilePath(paths)));
         Assert.True(File.Exists(LogFilePath(paths) + ".1"));
         Assert.True(new FileInfo(LogFilePath(paths)).Length <= 256);
+    }
+
+    [Fact]
+    public void Logger_WhenWriteFails_DoesNotThrow()
+    {
+        var paths = CreatePaths();
+        using var provider = new TerminalFileLoggerProvider(paths, Profile, TimeProvider.System);
+        var logger = provider.CreateLogger("Cap");
+
+        // A directory sitting exactly at the log file path makes every append fail. An ILogger must never
+        // surface a disk failure into its caller (which could break the hub reconnect loop or shutdown),
+        // so the write is swallowed rather than thrown.
+        Directory.CreateDirectory(LogFilePath(paths));
+
+        var failure = Record.Exception(() => WriteLog(logger, "should never throw"));
+
+        Assert.Null(failure);
     }
 
     public void Dispose()
@@ -332,5 +411,22 @@ public sealed class LocalStateStoreTests : IDisposable
         var path = StateFilePath(paths);
         Directory.CreateDirectory(Path.GetDirectoryName(path)!);
         File.WriteAllText(path, content);
+    }
+
+    private static bool CanRead(string path)
+    {
+        try
+        {
+            _ = File.ReadAllText(path);
+            return true;
+        }
+        catch (UnauthorizedAccessException)
+        {
+            return false;
+        }
+        catch (IOException)
+        {
+            return false;
+        }
     }
 }

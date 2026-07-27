@@ -79,8 +79,17 @@ public sealed partial class TerminalFileLoggerProvider(
 
         lock (_gate)
         {
-            RollIfOversized(line);
-            File.AppendAllText(_logFilePath, line);
+            try
+            {
+                RollIfOversized(line);
+                File.AppendAllText(_logFilePath, line);
+            }
+            catch (Exception writeFailure) when (writeFailure is IOException or UnauthorizedAccessException)
+            {
+                // Logging is best-effort: a full, locked, or unwritable disk must never surface into the
+                // caller's control flow. An ILogger that threw here could break the hub reconnect loop or
+                // the shutdown/cleanup path that logs while tearing down.
+            }
         }
     }
 

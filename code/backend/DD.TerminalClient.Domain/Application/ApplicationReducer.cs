@@ -73,7 +73,10 @@ public sealed class ApplicationReducer(
 
         if (!required && next.Input.Mode == TerminalUiMode.ResizeRequired)
         {
-            return next with { Input = TerminalInputState.Normal };
+            // Restore the interaction suspended when the terminal dropped below the minimum (an open
+            // editor or delete confirmation and its draft), or fall back to Normal when nothing
+            // interactive was suspended (a plain resize-required screen).
+            return next with { Input = next.SuspendedInput ?? TerminalInputState.Normal, SuspendedInput = null };
         }
 
         return next;
@@ -127,12 +130,83 @@ public sealed class ApplicationReducer(
     private ApplicationTransition HandleReadyKey(ApplicationState state, ConsoleKeyInfo key)
     {
         var context = BuildContext(state);
-        var result = inputReducer.Reduce(state.Input, key, context);
-        var next = state with { Input = result.State, StatusMessage = result.StatusMessage };
+
+        // Gate before reducing as well as after: a terminal that first reaches Ready already below the
+        // minimum lands in Normal mode with no resize event to gate it, so reducing the raw Normal state
+        // would run a hidden command on the first key press. Gating the input first routes that key
+        // through resize-required (which accepts only ? and q) instead.
+        var result = inputReducer.Reduce(GateInputByResize(state, state.Input), key, context);
+
+        // Closing Help resumes a suspended interaction rather than dropping to Normal: when the terminal
+        // grew back to a usable size while Help was open, the grow-back resize could not consume the
+        // snapshot (the mode was Help, not ResizeRequired), so closing Help is the last chance to restore
+        // the editor/confirmation and its draft instead of discarding it.
+        var reduced = ResumeSuspendedInputOnHelpClose(state, result.State);
+        var next = state with
+        {
+            Input = GateInputByResize(state, reduced),
+            StatusMessage = result.StatusMessage,
+            SuspendedInput = SuspendInputForResize(state),
+        };
 
         return result.Command == TerminalCommand.None
             ? ApplicationTransition.Of(next)
             : ExecuteCommand(next, result.Command, result.CommittedText);
+    }
+
+    // When Help closes over a still-pending suspended interaction, resume that interaction instead of the
+    // Normal state the input reducer returns. This is the grow-back path HandleResize cannot cover: growing
+    // back to a usable size while Help is open leaves the snapshot in place (the mode is Help, not
+    // ResizeRequired, so the resize handler never consumes it), and at a usable size the next
+    // SuspendInputForResize would clear it - so restoring it as Help closes is the only remaining chance to
+    // avoid discarding the editor/confirmation and its draft. Below the minimum the resumed input is simply
+    // re-gated to resize-required, so this leaves the still-too-small case unchanged.
+    private static TerminalInputState ResumeSuspendedInputOnHelpClose(
+        ApplicationState state, TerminalInputState reduced)
+    {
+        return state.Input.Mode == TerminalUiMode.Help
+               && reduced.Mode != TerminalUiMode.Help
+               && state.SuspendedInput is { } suspended
+            ? suspended
+            : reduced;
+    }
+
+    // The interaction to restore when the terminal grows back to a usable size. Below the minimum it
+    // snapshots the live editor/confirmation (and its draft) the first time a key is gated, so gating that
+    // key into resize-required (and the eventual grow-back) does not silently discard it; once captured it
+    // is kept until grow-back consumes it, so an intervening Help overlay or ignored key cannot lose it.
+    // Nothing is suspended at a usable size, and Help/ResizeRequired are never snapshotted - Help rides on
+    // top of the already-snapshotted suspended state and ResizeRequired is the gated state itself.
+    private static TerminalInputState? SuspendInputForResize(ApplicationState state)
+    {
+        if (!ViewportState.IsResizeRequired(state.Width, state.Height))
+        {
+            return null;
+        }
+
+        return state.SuspendedInput
+               ?? (state.Input.Mode is TerminalUiMode.ResizeRequired or TerminalUiMode.Help
+                   ? null
+                   : state.Input);
+    }
+
+    // Forces resize-required whenever an input state would otherwise sit in an interactive mode while the
+    // terminal is below the supported minimum, keeping every hidden command unreachable. It gates every
+    // mode except ResizeRequired itself and Help: Normal (its keymap commands), Editor and
+    // DeleteConfirmation (whose Enter/'y' would otherwise commit or delete against a modal the size-gated
+    // renderer has hidden) all collapse to resize-required, while Help stays reachable because the resize
+    // screen advertises '? help' and the renderer shows Help even below the minimum. HandleReadyKey applies
+    // it both before reducing a key (so a terminal that first reached Ready below the minimum, or shrank
+    // while a modal was open, cannot run a hidden command on the next key press) and after (so closing Help
+    // returns to resize-required). This is necessary because the size timer only re-emits a resize event
+    // when the dimensions change, so a still-too-small terminal would otherwise never re-enter
+    // resize-required.
+    private static TerminalInputState GateInputByResize(ApplicationState state, TerminalInputState input)
+    {
+        return input.Mode is not (TerminalUiMode.ResizeRequired or TerminalUiMode.Help)
+               && ViewportState.IsResizeRequired(state.Width, state.Height)
+            ? input with { Mode = TerminalUiMode.ResizeRequired }
+            : input;
     }
 
     private ApplicationTransition ExecuteCommand(ApplicationState state, TerminalCommand command, string? text)

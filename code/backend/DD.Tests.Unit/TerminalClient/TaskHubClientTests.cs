@@ -256,6 +256,157 @@ public sealed class TaskHubClientTests
     }
 
     [Fact]
+    public async Task StartAsync_AfterUnauthorizedStartAndStop_ReconnectsWithAFreshConnection()
+    {
+        var collector = new EventCollector();
+        var starts = 0;
+
+        // The first connect is unauthorized (a hub-originated 401); a fresh connection built by a later
+        // StartAsync - the re-login - must be allowed to connect.
+        var factory = new FakeHubConnectionFactory(_ => Interlocked.Increment(ref starts) == 1 ? Unauthorized() : null);
+        await using var client = new TaskHubClient(
+            factory, () => "jwt", collector.Add, NullLogger<TaskHubClient>.Instance, ImmediateDelayAsync);
+
+        await client.StartAsync(CancellationToken.None);
+        var unauthorizedConnection = factory.Connection;
+        Assert.Equal(TaskHubEventKind.Unauthorized, Assert.Single(collector.Kinds()));
+
+        // Handle401 stops the hub while it is already unauthorized (_shouldBeConnected is false). The stop
+        // must still fully tear the client down instead of returning early, so the re-login below rebuilds
+        // it rather than leaving realtime permanently dead.
+        await client.StopAsync(CancellationToken.None);
+
+        await client.StartAsync(CancellationToken.None);
+
+        Assert.NotSame(unauthorizedConnection, factory.Connection);
+        Assert.Equal(1, factory.Connection.StartCount);
+        Assert.True(unauthorizedConnection.DisposeCount >= 1);
+    }
+
+    [Fact]
+    public async Task StartAsync_WhileAStopIsStillTearingDown_WaitsThenReconnectsWithAFreshConnection()
+    {
+        var collector = new EventCollector();
+        var factory = new FakeHubConnectionFactory();
+        await using var client = new TaskHubClient(
+            factory, () => "jwt", collector.Add, NullLogger<TaskHubClient>.Instance, ImmediateDelayAsync);
+
+        await client.StartAsync(CancellationToken.None);
+        var firstConnection = factory.Connection;
+
+        // Hold the transport teardown open so the stop is still in flight - its finally has not cleared
+        // _started - when the re-login's StartAsync arrives. This is the fire-and-forget 401 -> re-login
+        // race: without waiting, StartAsync would hit the stale _started guard and no-op, leaving realtime
+        // permanently dead.
+        var stopGate = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        firstConnection.StopGate = stopGate;
+
+        var stopTask = client.StopAsync(CancellationToken.None);
+        var startTask = client.StartAsync(CancellationToken.None);
+
+        // The re-login must not silently complete while the stop is mid-teardown; it waits for it.
+        Assert.False(startTask.IsCompleted);
+
+        stopGate.SetResult();
+        await stopTask;
+        await startTask;
+
+        // The re-login rebuilt and connected a fresh connection instead of returning early on the stale
+        // _started guard.
+        Assert.NotSame(firstConnection, factory.Connection);
+        Assert.Equal(1, factory.Connection.StartCount);
+        Assert.True(firstConnection.DisposeCount >= 1);
+    }
+
+    [Fact]
+    public async Task StartAsync_WhileAStopWhoseDisposalThrowsIsTearingDown_IsStillReleasedAndReconnects()
+    {
+        var collector = new EventCollector();
+        var factory = new FakeHubConnectionFactory();
+        await using var client = new TaskHubClient(
+            factory, () => "jwt", collector.Add, NullLogger<TaskHubClient>.Instance, ImmediateDelayAsync);
+
+        await client.StartAsync(CancellationToken.None);
+        var firstConnection = factory.Connection;
+
+        // Park the re-login's StartAsync on the in-flight stop, then make the old connection's disposal
+        // fail. The teardown must still signal the waiting start instead of stranding it (and the re-login
+        // it drives) forever on the completion it already detached from the field.
+        var stopGate = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        firstConnection.StopGate = stopGate;
+        firstConnection.DisposeFailure = new InvalidOperationException("dispose failed");
+
+        var stopTask = client.StopAsync(CancellationToken.None);
+        var startTask = client.StartAsync(CancellationToken.None);
+
+        Assert.False(startTask.IsCompleted);
+
+        stopGate.SetResult();
+
+        // The stop surfaces the disposal failure, but the waiting re-login is still released and rebuilds a
+        // fresh, connected connection instead of hanging forever with realtime and the snapshot never loaded.
+        await Assert.ThrowsAsync<InvalidOperationException>(() => stopTask);
+        await startTask;
+
+        Assert.NotSame(firstConnection, factory.Connection);
+        Assert.Equal(1, factory.Connection.StartCount);
+    }
+
+    [Fact]
+    public async Task StartAsync_CancelledWhileWaitingForAnInFlightStop_UnwindsWithoutWaitingForTheStop()
+    {
+        var collector = new EventCollector();
+        var factory = new FakeHubConnectionFactory();
+        await using var client = new TaskHubClient(
+            factory, () => "jwt", collector.Add, NullLogger<TaskHubClient>.Instance, ImmediateDelayAsync);
+
+        await client.StartAsync(CancellationToken.None);
+        var firstConnection = factory.Connection;
+
+        // Hold the stop open so the re-login parks on the in-flight teardown.
+        var stopGate = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        firstConnection.StopGate = stopGate;
+
+        var stopTask = client.StopAsync(CancellationToken.None);
+        using var cancellation = new CancellationTokenSource();
+        var startTask = client.StartAsync(cancellation.Token);
+
+        Assert.False(startTask.IsCompleted);
+
+        // Cancelling the start must release it from the wait at once - an app shutdown cannot be forced to
+        // park on a teardown that has not finished.
+        await cancellation.CancelAsync();
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() => startTask);
+
+        // Let the held stop finish so the client tears down cleanly.
+        stopGate.SetResult();
+        await stopTask;
+    }
+
+    [Fact]
+    public async Task StopAsync_DiscardsBufferedUpdates_SoALaterSessionCannotDrainThem()
+    {
+        var collector = new EventCollector();
+        var factory = new FakeHubConnectionFactory();
+        await using var client = new TaskHubClient(
+            factory, () => "jwt", collector.Add, NullLogger<TaskHubClient>.Instance, ImmediateDelayAsync);
+
+        await client.StartAsync(CancellationToken.None);
+
+        // A push arrives while buffering (before any snapshot drain) and is held in the buffer.
+        factory.Connection.RaiseUpdate([Dto("first-user")]);
+
+        // The session ends (a 401 stop) before those buffered updates were ever drained.
+        await client.StopAsync(CancellationToken.None);
+
+        // A different user signs in and the hub restarts.
+        await client.StartAsync(CancellationToken.None);
+
+        // The new session must not inherit and replay the previous session's buffered pushes.
+        Assert.Empty(client.DrainBufferedUpdates());
+    }
+
+    [Fact]
     public async Task StopAsync_CancelsAPendingReconnectWait()
     {
         var collector = new EventCollector();
@@ -501,6 +652,14 @@ public sealed class TaskHubClientTests
 
         public int DisposeCount { get; private set; }
 
+        // When set, StopAsync blocks on this gate so a test can hold a teardown open and drive the
+        // re-login-during-stop race deterministically.
+        public TaskCompletionSource? StopGate { get; set; }
+
+        // When set, DisposeAsync throws it, so a test can prove teardown still releases a waiting start
+        // even if disposing the old connection fails.
+        public Exception? DisposeFailure { get; set; }
+
         public Task StartAsync(CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
@@ -524,12 +683,14 @@ public sealed class TaskHubClientTests
 
         public Task StopAsync(CancellationToken cancellationToken)
         {
+            Task? gate;
             lock (_sync)
             {
                 StopCount++;
+                gate = StopGate?.Task;
             }
 
-            return Task.CompletedTask;
+            return gate ?? Task.CompletedTask;
         }
 
         public void OnUpdate(Action<IReadOnlyList<TaskDto>> handler)
@@ -549,12 +710,14 @@ public sealed class TaskHubClientTests
 
         public ValueTask DisposeAsync()
         {
+            Exception? failure;
             lock (_sync)
             {
                 DisposeCount++;
+                failure = DisposeFailure;
             }
 
-            return ValueTask.CompletedTask;
+            return failure is not null ? ValueTask.FromException(failure) : ValueTask.CompletedTask;
         }
 
         public void RaiseUpdate(IReadOnlyList<TaskDto> tasks)

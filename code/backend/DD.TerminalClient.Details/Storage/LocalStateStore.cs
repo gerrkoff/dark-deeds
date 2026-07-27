@@ -41,7 +41,21 @@ public sealed class LocalStateStore(ApplicationPathProvider paths, string profil
             return null;
         }
 
-        return Deserialize(File.ReadAllText(_stateFilePath), _stateFilePath);
+        string json;
+        try
+        {
+            json = File.ReadAllText(_stateFilePath);
+        }
+        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
+        {
+            // A file we know exists but cannot read must never be silently skipped: returning null here
+            // would let startup treat the profile as empty and a later save overwrite the unreadable file
+            // (and the cache/outbox it holds). Surface it as the same blocking, file-preserving error as
+            // malformed content so the overwrite guard stays engaged.
+            throw Blocking(_stateFilePath, "it could not be read", exception);
+        }
+
+        return Deserialize(json, _stateFilePath);
     }
 
     public void Save(PersistedTerminalState state)
@@ -64,15 +78,27 @@ public sealed class LocalStateStore(ApplicationPathProvider paths, string profil
 
         root = Migrate(root, version, path);
 
+        PersistedTerminalState state;
         try
         {
-            return root.Deserialize<PersistedTerminalState>(JsonOptions)
+            state = root.Deserialize<PersistedTerminalState>(JsonOptions)
                 ?? throw Blocking(path, "it is empty");
         }
         catch (JsonException exception)
         {
             throw Blocking(path, "its contents do not match the expected layout", exception);
         }
+
+        // A structurally valid document can still carry explicit null collections ("Outbox": null): those
+        // deserialize to null rather than the empty-list default, which would crash startup or, worse, be
+        // read as an empty outbox and overwrite the real queued edits. Reject them as blocking so the file
+        // is retained, never replaced.
+        if (state.CachedTasks is null || state.Outbox is null)
+        {
+            throw Blocking(path, "its cached tasks or outbox are missing");
+        }
+
+        return state;
     }
 
     private static JsonObject Migrate(JsonObject root, int version, string path)

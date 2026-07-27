@@ -430,6 +430,15 @@ internal sealed class TerminalApplication
 
         _dataOwner = persisted?.DataOwner;
         _priorOutboxCount = persisted?.Outbox.Count ?? 0;
+
+        // Preserve the durable outbox from the moment it is loaded until it is either replayed for the
+        // same user (RestorePersistedOutbox) or explicitly discarded for a different user (AcceptDataReset).
+        // Any path that reaches login or the data-owner reset prompt without first restoring it - an
+        // absent/unusable/expired token, or a startup that lands straight on a different-user reset because
+        // a usable token names another owner - would otherwise let a quit flush an empty outbox over the
+        // queued edits still on disk.
+        _preservedOutbox = persisted?.Outbox;
+
         State = State with
         {
             Cache = persisted?.CachedTasks ?? [],
@@ -439,7 +448,7 @@ internal sealed class TerminalApplication
         var token = _deps.TokenStore.Load();
         var session = token is null ? null : AuthSession.FromToken(token);
 
-        if (session is null || session.IsExpired(_deps.Clock.GetUtcNow()))
+        if (session is null || !session.HasUsableShape || session.IsExpired(_deps.Clock.GetUtcNow()))
         {
             _session = null;
             _deps.SetToken(null);
@@ -479,6 +488,7 @@ internal sealed class TerminalApplication
         {
             Phase = ApplicationPhase.Ready,
             Input = TerminalInputState.Normal,
+            SuspendedInput = null,
             StatusMessage = null,
         });
 
@@ -498,6 +508,7 @@ internal sealed class TerminalApplication
             Cache = [],
             Phase = ApplicationPhase.Ready,
             Input = TerminalInputState.Normal,
+            SuspendedInput = null,
             ConfirmUser = null,
             ConfirmOwner = null,
             StatusMessage = null,
@@ -526,8 +537,12 @@ internal sealed class TerminalApplication
         _sessionCts?.Cancel();
 
         // Preserve the durable outbox: Reset clears only the in-memory queues, so capture their contents
-        // first and keep persisting them until the same user signs back in and replays them.
-        _preservedOutbox = _sync.BuildOutboxContents();
+        // first and keep persisting them until the same user signs back in and replays them. Capture only
+        // once per unauthorized episode with ??=: a second 401 for the same expired token (for example a
+        // hub Unauthorized alongside a REST or renewal 401) must not recompute this from the already-Reset
+        // coordinator and overwrite the real contents with an empty list that the next PersistState would
+        // then flush to disk. RestorePersistedOutbox/AcceptDataReset clear it, so a later 401 recaptures.
+        _preservedOutbox ??= _sync.BuildOutboxContents();
         _ = StopHubQuietlyAsync();
         _sync.Reset();
         _firstSnapshotDone = false;
@@ -618,8 +633,12 @@ internal sealed class TerminalApplication
 
     private void Render()
     {
+        // Below the minimum size the renderer shows the resize screen instead of the (unfittable) frame,
+        // but Help stays visible there because the resize screen advertises '? help': the input gate keeps
+        // every other mode out of this state, so only Help suppresses the resize overlay.
         var resizeRequired = State.Phase == ApplicationPhase.Ready
-            && ViewportState.IsResizeRequired(State.Width, State.Height);
+            && ViewportState.IsResizeRequired(State.Width, State.Height)
+            && State.Input.Mode != TerminalUiMode.Help;
         _deps.Renderer.Render(BuildViewModel(), State.Width, State.Height, resizeRequired);
     }
 
@@ -928,12 +947,25 @@ internal sealed class TerminalApplication
         }
 
         PersistState();
-        await StopHubQuietlyAsync();
-        await _hub.DisposeAsync();
 
-        _deps.Renderer.End();
-        _lifetimeCts?.Dispose();
-        _sessionCts?.Dispose();
+#pragma warning disable CA1031 // Cleanup must restore the terminal whatever hub teardown throws.
+        try
+        {
+            await StopHubQuietlyAsync();
+            await _hub.DisposeAsync();
+        }
+        catch (Exception)
+        {
+            // Best-effort hub teardown: an exception here must never skip restoring the terminal screen
+            // (leaving the alternate screen active) or disposing the cancellation scopes below.
+        }
+#pragma warning restore CA1031
+        finally
+        {
+            _deps.Renderer.End();
+            _lifetimeCts?.Dispose();
+            _sessionCts?.Dispose();
+        }
     }
 
     private string? FocusedTitle()

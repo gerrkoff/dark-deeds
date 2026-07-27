@@ -40,10 +40,12 @@ internal sealed class TaskHubClient(
     private ITaskHubConnection? _connection;
     private CancellationTokenSource? _runCts;
     private TaskCompletionSource? _reconnectWake;
+    private TaskCompletionSource? _stopCompletion;
     private bool _started;
     private bool _shouldBeConnected;
     private bool _buffering;
     private bool _intentionalStop;
+    private bool _stopping;
     private bool _reconnectLoopRunning;
     private int _reconnectAttempt;
     private bool _disposed;
@@ -52,22 +54,46 @@ internal sealed class TaskHubClient(
     {
         ITaskHubConnection connection;
         CancellationToken runToken;
-        lock (_gate)
+
+        // A prior teardown (for example a 401's fire-and-forget StopAsync) clears _started only in its
+        // finally, so a fast re-login can reach here while that stop is still awaiting the transport. Wait
+        // for the in-flight stop to complete and then build a fresh connection, instead of hitting the
+        // stale _started guard and returning with realtime left permanently dead. The wait honours the
+        // caller's cancellation so an app shutdown (or a stop that outlives it) unwinds the start promptly
+        // instead of parking on the teardown.
+        while (true)
         {
-            ObjectDisposedException.ThrowIf(_disposed, this);
-            if (_started)
+            Task? pendingStop = null;
+            lock (_gate)
             {
-                return;
+                ObjectDisposedException.ThrowIf(_disposed, this);
+                if (_stopping)
+                {
+                    pendingStop = _stopCompletion?.Task;
+                }
+                else
+                {
+                    if (_started)
+                    {
+                        return;
+                    }
+
+                    _started = true;
+                    _shouldBeConnected = true;
+                    _buffering = true;
+                    _reconnectAttempt = 0;
+                    _runCts = CancellationTokenSource.CreateLinkedTokenSource(_lifetimeCts.Token);
+                    runToken = _runCts.Token;
+                    _connection = _connectionFactory.Create(_tokenProvider);
+                    connection = _connection;
+                    break;
+                }
             }
 
-            _started = true;
-            _shouldBeConnected = true;
-            _buffering = true;
-            _reconnectAttempt = 0;
-            _runCts = CancellationTokenSource.CreateLinkedTokenSource(_lifetimeCts.Token);
-            runToken = _runCts.Token;
-            _connection = _connectionFactory.Create(_tokenProvider);
-            connection = _connection;
+            if (pendingStop is not null)
+            {
+                await pendingStop.WaitAsync(cancellationToken);
+            }
         }
 
         connection.OnUpdate(HandleUpdate);
@@ -94,11 +120,19 @@ internal sealed class TaskHubClient(
         CancellationTokenSource? runCts;
         lock (_gate)
         {
-            if (_disposed || !_started || !_shouldBeConnected)
+            // Tear down any started client that is not already being stopped, even when a prior
+            // unauthorized outcome already cleared _shouldBeConnected: the reset in the finally
+            // (_started/_connection/_runCts) must still run so a later StartAsync after a 401 and a
+            // subsequent re-login rebuilds a fresh connection instead of returning early on the stale
+            // _started guard. _stopping keeps concurrent stops idempotent in place of that check, and its
+            // _stopCompletion lets a racing re-login's StartAsync wait for this teardown to finish.
+            if (_disposed || !_started || _stopping)
             {
                 return;
             }
 
+            _stopping = true;
+            _stopCompletion = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
             _shouldBeConnected = false;
             _intentionalStop = true;
             connection = _connection;
@@ -106,13 +140,13 @@ internal sealed class TaskHubClient(
             _reconnectWake?.TrySetResult();
         }
 
-        if (runCts is not null)
-        {
-            await runCts.CancelAsync();
-        }
-
         try
         {
+            if (runCts is not null)
+            {
+                await runCts.CancelAsync();
+            }
+
             if (connection is not null)
             {
                 await connection.StopAsync(cancellationToken);
@@ -120,9 +154,11 @@ internal sealed class TaskHubClient(
         }
         finally
         {
+            TaskCompletionSource? stopCompletion;
             lock (_gate)
             {
                 _intentionalStop = false;
+                _stopping = false;
 
                 // Reset the start/run state so a later StartAsync (for example after a 401 and a
                 // subsequent re-login) builds a fresh connection and reconnects, instead of returning
@@ -130,14 +166,33 @@ internal sealed class TaskHubClient(
                 _started = false;
                 _connection = null;
                 _runCts = null;
+
+                // Discard this session's buffered pushes so the next session (for example a different user
+                // after a 401 and re-login) cannot drain and replay them into its own data.
+                _buffer.Clear();
+                _buffering = false;
+
+                stopCompletion = _stopCompletion;
+                _stopCompletion = null;
             }
 
-            if (connection is not null)
+            try
             {
-                await connection.DisposeAsync();
-            }
+                if (connection is not null)
+                {
+                    await connection.DisposeAsync();
+                }
 
-            runCts?.Dispose();
+                runCts?.Dispose();
+            }
+            finally
+            {
+                // Always release any StartAsync waiting for this teardown before it rebuilds the client,
+                // even if disposing the old connection throws: the completion was already detached from the
+                // field above, so failing to signal it here would strand that waiter - and the re-login it
+                // is driving - forever with realtime and the snapshot never loaded.
+                stopCompletion?.TrySetResult();
+            }
         }
 
         Log.HubClosed(_logger);

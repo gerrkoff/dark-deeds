@@ -11,11 +11,26 @@ public sealed record AuthSession
     private const string UsernameClaim = "name";
     private const string ExpiryClaim = "exp";
 
+    // The inclusive Unix-second range DateTimeOffset.FromUnixTimeSeconds accepts; an exp outside it (a
+    // corrupt or hostile token) is treated as no expiry so startup routes it to login instead of throwing.
+    private static readonly long MinExpirySeconds = DateTimeOffset.MinValue.ToUnixTimeSeconds();
+    private static readonly long MaxExpirySeconds = DateTimeOffset.MaxValue.ToUnixTimeSeconds();
+
     public required string Token { get; init; }
 
     public string? Username { get; init; }
 
     public DateTimeOffset? ExpiresAt { get; init; }
+
+    // True when the token is shaped like a JWT this client can act on locally: three dot-separated
+    // segments carrying a parseable numeric expiry AND a username. Startup uses this to route an absent
+    // or structurally unusable token straight to masked login instead of starting online with a doomed
+    // token that renewal can never refresh. The username is required because the same/different-user
+    // data-owner guard can only protect the persisted cache and outbox when the token names an owner: a
+    // token with no attributable owner would set the owner to null and bypass that guard, so it is
+    // unusable for this client. A well-formed token is still verified by the server, so this never
+    // substitutes local parsing for server validation.
+    public bool HasUsableShape => ExpiresAt is not null && !string.IsNullOrWhiteSpace(Username);
 
     public static AuthSession FromToken(string token)
     {
@@ -84,6 +99,7 @@ public sealed record AuthSession
         return root.TryGetProperty(ExpiryClaim, out var element)
                && element.ValueKind == JsonValueKind.Number
                && element.TryGetInt64(out var seconds)
+               && seconds >= MinExpirySeconds && seconds <= MaxExpirySeconds
             ? DateTimeOffset.FromUnixTimeSeconds(seconds)
             : null;
     }

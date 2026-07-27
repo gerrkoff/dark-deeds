@@ -63,6 +63,11 @@ public sealed record ApplicationState
 
     public TerminalInputState Input { get; init; } = TerminalInputState.Normal;
 
+    // The interaction (an open editor or delete confirmation and its draft) suspended when the terminal
+    // dropped below the supported minimum, kept so growing back restores it instead of discarding it into
+    // resize-required. Null whenever nothing is suspended (a usable size, or an already-resumed session).
+    public TerminalInputState? SuspendedInput { get; init; }
+
     // A conflict/server-update notice that persists until replaced by a newer server event.
     public string? Notification { get; init; }
 

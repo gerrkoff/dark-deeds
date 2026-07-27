@@ -61,6 +61,72 @@ public sealed class TerminalApplicationTests
     }
 
     [Fact]
+    public async Task Startup_MalformedToken_EntersLoginWithoutStartingHub()
+    {
+        using var harness = new Harness();
+        harness.TokenStore.Save("this-is-not-a-jwt");
+
+        var run = harness.Start();
+        await WaitForAsync(() => harness.LastModel().Status.Kind == TerminalStatusKind.Login, "login prompt");
+
+        // A token whose shape cannot be parsed is unusable: startup enters login rather than starting
+        // online with a doomed token that would only reach login after a wasted 401 round-trip.
+        Assert.Equal(0, harness.Hub.StartCount);
+        Assert.Null(harness.CurrentToken);
+        await harness.StopAsync(run);
+    }
+
+    [Fact]
+    public async Task Startup_TokenWithoutExpiry_EntersLoginWithoutStartingHub()
+    {
+        using var harness = new Harness();
+        harness.TokenStore.Save(JwtWithoutExpiry("alice"));
+
+        var run = harness.Start();
+        await WaitForAsync(() => harness.LastModel().Status.Kind == TerminalStatusKind.Login, "login prompt");
+
+        // A well-formed token with no parseable expiry can never be renewed, so it is unusable and startup
+        // enters login instead of Ready.
+        Assert.Equal(0, harness.Hub.StartCount);
+        Assert.Null(harness.CurrentToken);
+        await harness.StopAsync(run);
+    }
+
+    [Fact]
+    public async Task Startup_TokenWithOutOfRangeExpiry_EntersLoginWithoutStartingHub()
+    {
+        using var harness = new Harness();
+        harness.TokenStore.Save(JwtWithRawExpiry("alice", "99999999999999"));
+
+        var run = harness.Start();
+        await WaitForAsync(() => harness.LastModel().Status.Kind == TerminalStatusKind.Login, "login prompt");
+
+        // An exp beyond the representable DateTimeOffset range is unusable, not fatal: parsing must not
+        // throw, so startup routes it to login instead of crashing while reading the stored token.
+        Assert.Equal(0, harness.Hub.StartCount);
+        Assert.Null(harness.CurrentToken);
+        await harness.StopAsync(run);
+    }
+
+    [Fact]
+    public async Task Startup_TokenWithoutUsername_EntersLoginWithoutStartingHub()
+    {
+        using var harness = new Harness();
+        harness.TokenStore.Save(JwtWithoutUsername(Now.AddDays(30)));
+        harness.StateStore.Set(new PersistedTerminalState { DataOwner = "alice" });
+
+        var run = harness.Start();
+        await WaitForAsync(() => harness.LastModel().Status.Kind == TerminalStatusKind.Login, "login prompt");
+
+        // A future-expiry token with no username cannot be attributed to a data owner, so the client
+        // cannot enforce the same/different-user guard. It is unusable: startup routes it to login and
+        // never starts the hub or replaces the persisted owner with a null owner.
+        Assert.Equal(0, harness.Hub.StartCount);
+        Assert.Null(harness.CurrentToken);
+        await harness.StopAsync(run);
+    }
+
+    [Fact]
     public async Task Login_ValidCredentials_ProceedsToReady()
     {
         using var harness = new Harness();
@@ -254,6 +320,29 @@ public sealed class TerminalApplicationTests
     }
 
     [Fact]
+    public async Task Resize_BelowMinimumThenHelp_RendersHelpInsteadOfResizeScreen()
+    {
+        using var harness = new Harness();
+        harness.TokenStore.Save(Jwt("alice", Now.AddDays(30)));
+        harness.StateStore.Set(new PersistedTerminalState { DataOwner = "alice" });
+
+        var run = harness.Start();
+        await WaitForAsync(() => harness.LastModel().Status.Kind == TerminalStatusKind.Normal, "ready");
+
+        harness.Enqueue(ApplicationEvent.Resized(100, 20));
+        await WaitForAsync(harness.LastResizeRequired, "resize-required frame");
+
+        // The resize screen advertises '? help', so pressing '?' must surface the help screen even below
+        // the minimum size instead of staying on the resize overlay.
+        harness.Enqueue(Key('?'));
+        await WaitForAsync(
+            () => harness.LastModel().Status.Kind == TerminalStatusKind.Help, "help shown below minimum");
+        Assert.False(harness.LastResizeRequired());
+
+        await harness.StopAsync(run);
+    }
+
+    [Fact]
     public async Task QuitKey_StopsLoopAndRestoresScreen()
     {
         using var harness = new Harness();
@@ -325,6 +414,110 @@ public sealed class TerminalApplicationTests
         await harness.StopAsync(run);
 
         Assert.Equal("a", Assert.Single(harness.StateStore.Saved!.Outbox).Uid);
+    }
+
+    [Fact]
+    public async Task RepeatedUnauthorized_StillPreservesDurableOutbox()
+    {
+        using var harness = new Harness();
+        harness.TokenStore.Save(Jwt("alice", Now.AddDays(30)));
+        harness.StateStore.Set(new PersistedTerminalState
+        {
+            DataOwner = "alice",
+            CachedTasks = [Task("a", "Task A")],
+            Outbox = [Task("a", "Task A")],
+        });
+        harness.Tasks.LoadResult = [Task("a", "Task A")];
+        harness.Tasks.HoldSaves();
+
+        var run = harness.Start();
+        await WaitForAsync(() => harness.Tasks.SavedBatches.Count >= 1, "outbox drain in flight");
+
+        // Two unauthorized outcomes for the same expired token (for example a hub Unauthorized alongside a
+        // REST or renewal 401) both reach Handle401. The second must not recompute the preserved outbox
+        // from the already-Reset coordinator and overwrite it with an empty list that shutdown then flushes.
+        harness.Hub.Raise(TaskHubEvent.Unauthorized);
+        harness.Hub.Raise(TaskHubEvent.Unauthorized);
+        await WaitForAsync(() => harness.Hub.StopCount >= 2, "both unauthorized outcomes processed");
+
+        await harness.StopAsync(run);
+
+        Assert.Equal("a", Assert.Single(harness.StateStore.Saved!.Outbox).Uid);
+    }
+
+    [Fact]
+    public async Task Startup_UnusableToken_QuitBeforeLogin_PreservesDurableOutbox()
+    {
+        using var harness = new Harness();
+
+        // A structurally intact token for the same owner that is nonetheless unusable (here, no parseable
+        // expiry) routes startup to login without loading the durable outbox into the sync coordinator.
+        // Quitting before a fresh sign-in must still persist that outbox verbatim - exactly like the 401
+        // path - so the owner's queued offline edits survive to be replayed after the next same-user login,
+        // instead of being flushed to an empty list by shutdown.
+        harness.TokenStore.Save(JwtWithoutExpiry("alice"));
+        harness.StateStore.Set(new PersistedTerminalState
+        {
+            DataOwner = "alice",
+            CachedTasks = [Task("a", "Task A")],
+            Outbox = [Task("a", "Task A")],
+        });
+
+        var run = harness.Start();
+        await WaitForAsync(() => harness.LastModel().Status.Kind == TerminalStatusKind.Login, "login prompt");
+
+        await harness.StopAsync(run);
+
+        Assert.Equal("a", Assert.Single(harness.StateStore.Saved!.Outbox).Uid);
+    }
+
+    [Fact]
+    public async Task Startup_DifferentUser_DeclineReset_PreservesDurableOutbox()
+    {
+        using var harness = new Harness();
+
+        // A usable token for a different owner routes startup straight to the data-owner reset prompt
+        // without loading the persisted outbox into the coordinator. Declining the reset quits, and that
+        // quit must persist the prior owner's cache/outbox verbatim rather than flushing them to empty -
+        // otherwise a mistaken sign-in that is then declined would silently destroy the owner's data.
+        harness.TokenStore.Save(Jwt("bob", Now.AddDays(30)));
+        harness.StateStore.Set(new PersistedTerminalState
+        {
+            DataOwner = "alice",
+            CachedTasks = [Task("a", "Alice task")],
+            Outbox = [Task("a", "Alice task")],
+        });
+
+        var run = harness.Start();
+        await WaitForAsync(
+            () => harness.LastModel().Status.Kind == TerminalStatusKind.Confirmation, "reset confirmation");
+
+        harness.Enqueue(Key('n'));
+        await run.WaitAsync(Timeout);
+
+        Assert.Equal("alice", harness.StateStore.Saved!.DataOwner);
+        Assert.Equal("a", Assert.Single(harness.StateStore.Saved!.Outbox).Uid);
+        Assert.Equal("a", Assert.Single(harness.StateStore.Saved!.CachedTasks).Uid);
+    }
+
+    [Fact]
+    public async Task Shutdown_WhenHubTeardownThrows_StillRestoresScreen()
+    {
+        using var harness = new Harness();
+        harness.TokenStore.Save(Jwt("alice", Now.AddDays(30)));
+        harness.StateStore.Set(new PersistedTerminalState { DataOwner = "alice" });
+        harness.Hub.ThrowOnDispose = true;
+
+        var run = harness.Start();
+        await WaitForAsync(() => harness.LastModel().Status.Kind == TerminalStatusKind.Normal, "ready");
+
+        harness.Enqueue(Key('q'));
+        await run.WaitAsync(Timeout);
+
+        // A hub stop/dispose failure during shutdown must never leave the alternate screen active: the
+        // terminal is always restored in a finally regardless of what hub teardown throws.
+        Assert.True(harness.Hub.DisposeCount >= 1);
+        Assert.True(harness.Renderer.EndCount >= 1);
     }
 
     [Fact]
@@ -452,15 +645,36 @@ public sealed class TerminalApplicationTests
 
     private static string Jwt(string user, DateTimeOffset expiry)
     {
-        static string Segment(string json)
-        {
-            return Convert.ToBase64String(Encoding.UTF8.GetBytes(json))
-                .TrimEnd('=').Replace('+', '-').Replace('/', '_');
-        }
+        var payload = $"{{\"name\":\"{user}\",\"exp\":{expiry.ToUnixTimeSeconds()}}}";
+        return $"{Base64UrlSegment("{\"alg\":\"none\"}")}.{Base64UrlSegment(payload)}.signature";
+    }
 
-        var header = Segment("{\"alg\":\"none\"}");
-        var payload = Segment($"{{\"name\":\"{user}\",\"exp\":{expiry.ToUnixTimeSeconds()}}}");
-        return $"{header}.{payload}.signature";
+    // A structurally valid JWT that carries a username but no exp claim, so its shape is unusable for the
+    // client's expiry/renewal logic.
+    private static string JwtWithoutExpiry(string user)
+    {
+        return $"{Base64UrlSegment("{\"alg\":\"none\"}")}.{Base64UrlSegment($"{{\"name\":\"{user}\"}}")}.signature";
+    }
+
+    // A structurally valid JWT with a parseable future expiry but no username claim, so it cannot be
+    // attributed to a data owner and is therefore unusable for the client's owner-isolation guard.
+    private static string JwtWithoutUsername(DateTimeOffset expiry)
+    {
+        return $"{Base64UrlSegment("{\"alg\":\"none\"}")}.{Base64UrlSegment($"{{\"exp\":{expiry.ToUnixTimeSeconds()}}}")}.signature";
+    }
+
+    // A structurally valid JWT whose exp is an arbitrary raw numeric literal, used to exercise values that
+    // parse as a JSON number but fall outside the representable DateTimeOffset range.
+    private static string JwtWithRawExpiry(string user, string rawExpiry)
+    {
+        var payload = $"{{\"name\":\"{user}\",\"exp\":{rawExpiry}}}";
+        return $"{Base64UrlSegment("{\"alg\":\"none\"}")}.{Base64UrlSegment(payload)}.signature";
+    }
+
+    private static string Base64UrlSegment(string json)
+    {
+        return Convert.ToBase64String(Encoding.UTF8.GetBytes(json))
+            .TrimEnd('=').Replace('+', '-').Replace('/', '_');
     }
 
     private sealed record Frame(TerminalViewModel Model, bool ResizeRequired);
@@ -686,6 +900,8 @@ public sealed class TerminalApplicationTests
 
         public int DisposeCount { get; private set; }
 
+        public bool ThrowOnDispose { get; set; }
+
         public Task StartAsync(CancellationToken cancellationToken)
         {
             lock (_gate)
@@ -726,6 +942,11 @@ public sealed class TerminalApplicationTests
             lock (_gate)
             {
                 DisposeCount++;
+            }
+
+            if (ThrowOnDispose)
+            {
+                throw new InvalidOperationException("Simulated hub dispose failure.");
             }
 
             return ValueTask.CompletedTask;
