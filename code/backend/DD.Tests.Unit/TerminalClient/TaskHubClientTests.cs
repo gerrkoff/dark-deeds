@@ -197,6 +197,43 @@ public sealed class TaskHubClientTests
     }
 
     [Fact]
+    public async Task ConnectionDrop_DuringReconnectSuccessExitWindow_RelaunchesLoopInsteadOfLeavingRealtimeDead()
+    {
+        var collector = new EventCollector();
+        var factory = new FakeHubConnectionFactory();
+        var droppedInWindow = false;
+
+        // The first time a reconnect succeeds, drop the just-reconnected connection synchronously from
+        // inside the sink. That fires the close while the reconnect loop is still in its success-exit window
+        // - it has connected and emitted Reconnected but has not yet cleared _reconnectLoopRunning in its
+        // finally. Without honouring that close, StartReconnectLoop sees the stale running flag, gives up,
+        // and the loop exits into a permanently closed connection with _shouldBeConnected still true, so
+        // realtime is silently dead until a manual Ctrl+R or restart.
+        void Sink(TaskHubEvent hubEvent)
+        {
+            collector.Add(hubEvent);
+            if (hubEvent.Kind == TaskHubEventKind.Reconnected && !droppedInWindow)
+            {
+                droppedInWindow = true;
+                factory.Connection.RaiseClosedAsync().GetAwaiter().GetResult();
+            }
+        }
+
+        await using var client = new TaskHubClient(
+            factory, () => "jwt", Sink, NullLogger<TaskHubClient>.Instance, ImmediateDelayAsync);
+
+        await client.StartAsync(CancellationToken.None);
+        await factory.Connection.RaiseClosedAsync();
+
+        // The in-window drop must relaunch the reconnect loop so the hub reconnects a second time (a third
+        // connect overall) rather than staying dead.
+        await WaitUntilAsync(
+            () => collector.Count(TaskHubEventKind.Reconnected) == 2,
+            "second reconnect after a drop inside the success-exit window");
+        Assert.Equal(3, factory.Connection.StartCount);
+    }
+
+    [Fact]
     public async Task UnauthorizedDuringReconnect_EmitsUnauthorizedAndStopsRetrying()
     {
         var collector = new EventCollector();

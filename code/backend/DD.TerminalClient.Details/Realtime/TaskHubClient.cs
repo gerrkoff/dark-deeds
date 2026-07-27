@@ -47,6 +47,7 @@ internal sealed class TaskHubClient(
     private bool _intentionalStop;
     private bool _stopping;
     private bool _reconnectLoopRunning;
+    private bool _reconnectPending;
     private int _reconnectAttempt;
     private bool _disposed;
 
@@ -82,6 +83,7 @@ internal sealed class TaskHubClient(
                     _shouldBeConnected = true;
                     _buffering = true;
                     _reconnectAttempt = 0;
+                    _reconnectPending = false;
                     _runCts = CancellationTokenSource.CreateLinkedTokenSource(_lifetimeCts.Token);
                     runToken = _runCts.Token;
                     _connection = _connectionFactory.Create(_tokenProvider);
@@ -395,12 +397,24 @@ internal sealed class TaskHubClient(
         CancellationToken runToken;
         lock (_gate)
         {
-            if (_reconnectLoopRunning || !_shouldBeConnected || _runCts is null)
+            if (!_shouldBeConnected || _runCts is null)
             {
                 return;
             }
 
+            if (_reconnectLoopRunning)
+            {
+                // A loop is already running and may be in the middle of its successful-connect exit, where
+                // it has stopped iterating but has not yet cleared _reconnectLoopRunning in its finally. A
+                // close that lands in that window (the just-reconnected connection dropping) would otherwise
+                // be lost here and leave realtime permanently dead with _shouldBeConnected still true.
+                // Record it so the loop relaunches from its finally instead of exiting into a dead socket.
+                _reconnectPending = true;
+                return;
+            }
+
             _reconnectLoopRunning = true;
+            _reconnectPending = false;
             runToken = _runCts.Token;
         }
 
@@ -465,9 +479,28 @@ internal sealed class TaskHubClient(
         }
         finally
         {
+            var relaunch = false;
+            CancellationToken relaunchToken = default;
             lock (_gate)
             {
                 _reconnectLoopRunning = false;
+
+                // A connection drop observed during this loop's exit window set _reconnectPending instead of
+                // starting a new loop (this one still looked running). Honour it now so a drop that lands
+                // right after a successful reconnect still triggers another reconnect instead of silently
+                // ending realtime while _shouldBeConnected is still true.
+                if (_reconnectPending && _shouldBeConnected && !_intentionalStop && _runCts is not null)
+                {
+                    _reconnectPending = false;
+                    _reconnectLoopRunning = true;
+                    relaunchToken = _runCts.Token;
+                    relaunch = true;
+                }
+            }
+
+            if (relaunch)
+            {
+                _ = RunReconnectLoopAsync(relaunchToken);
             }
         }
     }
