@@ -1,6 +1,5 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# 
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DD.App", "DD.App\DD.App.csproj", "{03FCA965-B1C5-499D-8507-B11B977B1CC0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DD.ServiceTask.Domain", "DD.ServiceTask.Domain\DD.ServiceTask.Domain.csproj", "{F1F64604-1D74-41BE-B46F-3F74F5AFB945}"

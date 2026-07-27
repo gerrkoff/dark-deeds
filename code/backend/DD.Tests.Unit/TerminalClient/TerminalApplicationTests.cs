@@ -328,6 +328,51 @@ public sealed class TerminalApplicationTests
     }
 
     [Fact]
+    public async Task Unauthorized_CancelsInFlightNetworkActivity()
+    {
+        using var harness = new Harness();
+        harness.TokenStore.Save(Jwt("alice", Now.AddDays(30)));
+        harness.StateStore.Set(new PersistedTerminalState
+        {
+            DataOwner = "alice",
+            CachedTasks = [Task("a", "Task A")],
+            Outbox = [Task("a", "Task A")],
+        });
+        harness.Tasks.LoadResult = [Task("a", "Task A")];
+        harness.Tasks.HoldSaves();
+
+        var run = harness.Start();
+        await WaitForAsync(() => harness.Tasks.SavedBatches.Count >= 1, "outbox drain in flight");
+        Assert.False(harness.Tasks.LastSaveToken.IsCancellationRequested);
+
+        harness.Hub.Raise(TaskHubEvent.Unauthorized);
+        await WaitForAsync(
+            () => harness.Tasks.LastSaveToken.IsCancellationRequested, "in-flight save cancelled on 401");
+
+        await harness.StopAsync(run);
+    }
+
+    [Fact]
+    public async Task UnreadableState_IsNotOverwrittenAndStopsWithFatalMessage()
+    {
+        using var harness = new Harness();
+        harness.StateStore.Set(new PersistedTerminalState
+        {
+            DataOwner = "alice",
+            CachedTasks = [Task("a", "Task A")],
+            Outbox = [Task("a", "Task A")],
+        });
+        harness.StateStore.LoadFault =
+            new TerminalStateException("Local state cannot be loaded because it is not valid JSON.");
+
+        var run = harness.Start();
+        await run.WaitAsync(Timeout);
+
+        Assert.NotNull(harness.App.FatalMessage);
+        Assert.Null(harness.StateStore.Saved);
+    }
+
+    [Fact]
     public async Task ReloadRetry_SurvivesHeartbeatWhileBuffering()
     {
         using var harness = new Harness();
@@ -590,6 +635,8 @@ public sealed class TerminalApplicationTests
 
         public int LoadCount { get; private set; }
 
+        public CancellationToken LastSaveToken { get; private set; }
+
         public void HoldSaves()
         {
             _saveGate = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
@@ -612,6 +659,7 @@ public sealed class TerminalApplicationTests
             lock (_gate)
             {
                 SavedBatches.Add([.. tasks]);
+                LastSaveToken = cancellationToken;
                 gate = _saveGate;
             }
 
@@ -695,6 +743,8 @@ public sealed class TerminalApplicationTests
 
         public PersistedTerminalState? Saved { get; private set; }
 
+        public TerminalStateException? LoadFault { get; set; }
+
         public void Set(PersistedTerminalState state)
         {
             _state = state;
@@ -702,6 +752,11 @@ public sealed class TerminalApplicationTests
 
         public PersistedTerminalState? Load()
         {
+            if (LoadFault is not null)
+            {
+                throw LoadFault;
+            }
+
             return _state;
         }
 

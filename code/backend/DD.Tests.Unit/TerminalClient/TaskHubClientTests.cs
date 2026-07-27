@@ -235,6 +235,27 @@ public sealed class TaskHubClientTests
     }
 
     [Fact]
+    public async Task StartAsync_AfterStop_ReconnectsWithAFreshConnection()
+    {
+        var collector = new EventCollector();
+        var factory = new FakeHubConnectionFactory();
+        await using var client = new TaskHubClient(
+            factory, () => "jwt", collector.Add, NullLogger<TaskHubClient>.Instance, ImmediateDelayAsync);
+
+        await client.StartAsync(CancellationToken.None);
+        var firstConnection = factory.Connection;
+        await client.StopAsync(CancellationToken.None);
+
+        await client.StartAsync(CancellationToken.None);
+
+        // A re-login after a 401 must restart the hub: Stop resets the client so Start builds and connects
+        // a fresh connection instead of returning early and leaving the client permanently disconnected.
+        Assert.NotSame(firstConnection, factory.Connection);
+        Assert.Equal(1, factory.Connection.StartCount);
+        Assert.True(firstConnection.DisposeCount >= 1);
+    }
+
+    [Fact]
     public async Task StopAsync_CancelsAPendingReconnectWait()
     {
         var collector = new EventCollector();

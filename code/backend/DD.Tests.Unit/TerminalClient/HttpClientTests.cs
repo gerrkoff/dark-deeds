@@ -85,6 +85,19 @@ public sealed class HttpClientTests
     }
 
     [Fact]
+    public async Task SignInAsync_SuccessResultButEmptyToken_ReturnsFailedWithoutSession()
+    {
+        var stub = new StubHttpMessageHandler((_, _) =>
+            Task.FromResult(JsonResponse(HttpStatusCode.OK, "{\"token\":\"   \",\"result\":1}")));
+        var client = new AuthApiClient(CreateHttpClient(stub));
+
+        var outcome = await client.SignInAsync("alice", "s3cret", CancellationToken.None);
+
+        Assert.Equal(TerminalSignInStatus.Failed, outcome.Status);
+        Assert.Null(outcome.Session);
+    }
+
+    [Fact]
     public async Task RenewTokenAsync_PostsToRenewRoute_AndReadsPlainTextToken()
     {
         var expiry = DateTimeOffset.FromUnixTimeSeconds(1900000000);

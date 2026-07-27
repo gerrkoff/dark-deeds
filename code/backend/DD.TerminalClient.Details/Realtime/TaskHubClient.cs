@@ -123,7 +123,21 @@ internal sealed class TaskHubClient(
             lock (_gate)
             {
                 _intentionalStop = false;
+
+                // Reset the start/run state so a later StartAsync (for example after a 401 and a
+                // subsequent re-login) builds a fresh connection and reconnects, instead of returning
+                // early on the stale _started guard and leaving the client permanently disconnected.
+                _started = false;
+                _connection = null;
+                _runCts = null;
             }
+
+            if (connection is not null)
+            {
+                await connection.DisposeAsync();
+            }
+
+            runCts?.Dispose();
         }
 
         Log.HubClosed(_logger);

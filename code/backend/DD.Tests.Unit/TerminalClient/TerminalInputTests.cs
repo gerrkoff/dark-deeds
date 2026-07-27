@@ -377,6 +377,19 @@ public sealed class TerminalInputTests
     }
 
     [Fact]
+    public void Editor_EnterOnEmptyMove_SubmitsMoveSoTheTaskCanGoToNoDate()
+    {
+        var reducer = Reducer();
+        var opened = reducer.Reduce(TerminalInputState.Normal, Key('m'), Focused()).State;
+
+        var result = reducer.Reduce(opened, Special(ConsoleKey.Enter, '\r'), NoFocus);
+
+        Assert.Equal(TerminalCommand.SubmitMove, result.Command);
+        Assert.Equal(string.Empty, result.CommittedText);
+        Assert.Equal(TerminalUiMode.Normal, result.State.Mode);
+    }
+
+    [Fact]
     public void Editor_EnterOnEmptyBuffer_CancelsInsteadOfCommitting()
     {
         var reducer = Reducer();

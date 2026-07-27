@@ -37,8 +37,10 @@ internal sealed class TerminalApplication
     private IReadOnlyList<TerminalTask>? _preservedOutbox;
     private bool _firstSnapshotDone;
     private bool _renewing;
+    private bool _stateLoadFailed;
     private CancellationToken _appToken;
     private CancellationTokenSource? _lifetimeCts;
+    private CancellationTokenSource? _sessionCts;
 
     public TerminalApplication(TerminalDependencies dependencies)
     {
@@ -57,6 +59,11 @@ internal sealed class TerminalApplication
 
     // The current immutable state snapshot. Exposed for tests; a reference read of an immutable value.
     internal ApplicationState State { get; private set; }
+
+    // The cancellation scope for the current signed-in session's REST activity (snapshot, save, renew).
+    // A fresh scope is created when online startup begins and is cancelled on a 401 so an in-flight
+    // request cannot complete and resurrect the session or mutate state after we return to login.
+    private CancellationToken SessionToken => _sessionCts?.Token ?? _appToken;
 
     public async Task RunAsync(CancellationToken cancellationToken)
     {
@@ -413,6 +420,9 @@ internal sealed class TerminalApplication
         }
         catch (TerminalStateException exception)
         {
+            // The existing file is malformed or newer-than-supported and must be retained, not silently
+            // replaced. Flag the failure so shutdown persistence never overwrites it with default state.
+            _stateLoadFailed = true;
             FatalMessage = exception.Message;
             State = State with { Quit = true };
             return;
@@ -511,6 +521,10 @@ internal sealed class TerminalApplication
 
     private void Handle401()
     {
+        // Stop this session's in-flight REST activity (snapshot, save, renew) so a late completion cannot
+        // resurrect the session or mutate state after we have returned to the login screen.
+        _sessionCts?.Cancel();
+
         // Preserve the durable outbox: Reset clears only the in-memory queues, so capture their contents
         // first and keep persisting them until the same user signs back in and replays them.
         _preservedOutbox = _sync.BuildOutboxContents();
@@ -534,6 +548,11 @@ internal sealed class TerminalApplication
 
     private void BeginOnlineStartup()
     {
+        // Open a fresh per-session cancellation scope for this sign-in's REST activity; a prior scope (from
+        // a session that ended in a 401) is already cancelled, so cancel-and-dispose it before replacing.
+        _sessionCts?.Cancel();
+        _sessionCts?.Dispose();
+        _sessionCts = CancellationTokenSource.CreateLinkedTokenSource(_appToken);
         State = State with { IsBuffering = true, IsOffline = false };
         _ = StartHubAndLoadAsync();
     }
@@ -572,6 +591,13 @@ internal sealed class TerminalApplication
 
     private void PersistState()
     {
+        // Never write over a state file we could not load (malformed or newer-than-supported): doing so
+        // would discard the very cache/outbox the blocking error told the user to fix or remove.
+        if (_stateLoadFailed)
+        {
+            return;
+        }
+
         var snapshot = new PersistedTerminalState
         {
             DataOwner = _dataOwner,
@@ -764,7 +790,7 @@ internal sealed class TerminalApplication
     {
         try
         {
-            var tasks = await _deps.Tasks.LoadTasksAsync(_appToken);
+            var tasks = await _deps.Tasks.LoadTasksAsync(SessionToken);
             Enqueue(ApplicationEvent.SnapshotLoaded(tasks));
         }
         catch (TerminalApiException exception)
@@ -786,7 +812,7 @@ internal sealed class TerminalApplication
     {
         try
         {
-            var saved = await _deps.Tasks.SaveTasksAsync(batch, _appToken);
+            var saved = await _deps.Tasks.SaveTasksAsync(batch, SessionToken);
             Enqueue(ApplicationEvent.SaveCompleted(saved));
         }
         catch (TerminalApiException exception)
@@ -825,7 +851,7 @@ internal sealed class TerminalApplication
     {
         try
         {
-            var session = await _deps.Auth.RenewTokenAsync(_appToken);
+            var session = await _deps.Auth.RenewTokenAsync(SessionToken);
             Enqueue(ApplicationEvent.RenewCompleted(session));
         }
         catch (TerminalApiException exception)
@@ -907,6 +933,7 @@ internal sealed class TerminalApplication
 
         _deps.Renderer.End();
         _lifetimeCts?.Dispose();
+        _sessionCts?.Dispose();
     }
 
     private string? FocusedTitle()

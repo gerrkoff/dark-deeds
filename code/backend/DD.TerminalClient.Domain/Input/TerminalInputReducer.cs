@@ -206,9 +206,10 @@ public sealed class TerminalInputReducer(ITaskTextParser parser, TaskTextFormatt
     {
         var text = state.Editor.Text;
 
-        // An empty add/edit/move commit is treated as a cancel: it can neither create nor rename a task.
-        // Login is left to the application to validate, so its (possibly empty) value is still submitted.
-        if (state.Purpose != EditorPurpose.Login && string.IsNullOrWhiteSpace(text))
+        // An empty add/edit commit is treated as a cancel: it can neither create nor rename a task. Login
+        // (validated by the application) and Move (where an empty value means "move to No Date") still
+        // submit their commands so those explicit actions remain reachable from the editor.
+        if (state.Purpose is not (EditorPurpose.Login or EditorPurpose.Move) && string.IsNullOrWhiteSpace(text))
             return Cancelled();
 
         var command = state.Purpose switch
