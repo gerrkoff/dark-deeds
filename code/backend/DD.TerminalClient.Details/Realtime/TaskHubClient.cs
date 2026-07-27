@@ -366,7 +366,13 @@ internal sealed class TaskHubClient(
     {
         lock (_gate)
         {
+            // Re-enter buffering and drop anything buffered before this (re)connect. A reconnect is always
+            // paired with a fresh full snapshot that supersedes earlier pushes, and nothing arrived while we
+            // were disconnected, so keeping stale pre-disconnect updates would let a later DrainBufferedUpdates
+            // replay an older task version over the newer reconnect snapshot. Startup begins with an empty
+            // buffer, so clearing here is a harmless no-op on the first connect.
             _buffering = true;
+            _buffer.Clear();
         }
 
         try

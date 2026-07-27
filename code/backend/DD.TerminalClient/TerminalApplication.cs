@@ -375,7 +375,6 @@ internal sealed class TerminalApplication
                 var session = outcome.Session;
                 _session = session;
                 _deps.SetToken(session.Token);
-                _deps.TokenStore.Save(session.Token);
                 ProceedAfterAuth(session.Username, startOnline: true);
                 break;
             case TerminalSignInStatus.InvalidCredentials:
@@ -500,6 +499,15 @@ internal sealed class TerminalApplication
         }
 
         _dataOwner = user;
+        if (startOnline && _session is not null)
+        {
+            // Persist the token only once the sign-in is committed to a session - past the different-user
+            // reset prompt - so declining that prompt never leaves the new user's token stored over the
+            // prior owner's local data (which would send the next launch straight back to the reset prompt
+            // with no path to login). Startup (startOnline: false) already loaded its token from disk.
+            _deps.TokenStore.Save(_session.Token);
+        }
+
         RestorePersistedOutbox();
         State = _deps.Reducer.Recompute(State with
         {
@@ -521,6 +529,13 @@ internal sealed class TerminalApplication
         _dataOwner = State.ConfirmUser;
         _preservedOutbox = null;
         _sync.Reset();
+        if (_session is not null)
+        {
+            // The different-user sign-in deferred persisting its token until the reset was accepted; now
+            // that the prior owner's local data is cleared, commit the new owner's token to disk.
+            _deps.TokenStore.Save(_session.Token);
+        }
+
         State = State with
         {
             Cache = [],

@@ -164,6 +164,37 @@ public sealed class TerminalApplicationTests
     }
 
     [Fact]
+    public async Task Login_DifferentUser_DeclineReset_DoesNotPersistTheNewToken()
+    {
+        using var harness = new Harness();
+
+        // Alice owns the local data, but her token is gone, so startup lands on the login screen.
+        harness.StateStore.Set(new PersistedTerminalState
+        {
+            DataOwner = "alice",
+            CachedTasks = [Task("old", "Alice task")],
+        });
+        harness.Auth.SignInHandler = (user, _) =>
+            new SignInOutcome(TerminalSignInStatus.Success, AuthSession.FromToken(Jwt(user, Now.AddDays(30))));
+
+        var run = harness.Start();
+        await WaitForAsync(() => harness.LastModel().Status.Kind == TerminalStatusKind.Login, "login prompt");
+
+        // Bob signs in by mistake and is asked to clear Alice's local data.
+        harness.TypeLine("bob");
+        harness.TypeLine("secret");
+        await WaitForAsync(
+            () => harness.LastModel().Status.Kind == TerminalStatusKind.Confirmation, "reset confirmation");
+
+        // Declining must not leave Bob's usable token persisted over Alice's data - otherwise the next launch
+        // would load it and route straight back to the reset prompt with no in-app path back to login.
+        harness.Enqueue(Key('n'));
+        await run.WaitAsync(Timeout);
+
+        Assert.Null(harness.TokenStore.Load());
+    }
+
+    [Fact]
     public async Task Startup_SameUser_DrainsPersistedOutbox()
     {
         using var harness = new Harness();

@@ -513,6 +513,30 @@ public sealed class TaskHubClientTests
     }
 
     [Fact]
+    public async Task Reconnect_DiscardsUpdatesBufferedBeforeTheDisconnect_SoTheyCannotRevertTheReconnectSnapshot()
+    {
+        var collector = new EventCollector();
+        var factory = new FakeHubConnectionFactory();
+        await using var client = new TaskHubClient(
+            factory, () => "jwt", collector.Add, NullLogger<TaskHubClient>.Instance, ImmediateDelayAsync);
+
+        await client.StartAsync(CancellationToken.None);
+
+        // A push arrives while buffering and is never drained (the application's snapshot load failed, so it
+        // kept the buffer for a retry). This "stale" update reflects a pre-disconnect server state.
+        factory.Connection.RaiseUpdate([Dto("stale")]);
+
+        // The connection then drops and the manual reconnect loop reconnects. The reconnect is paired with a
+        // fresh full snapshot that reflects the current (possibly advanced) server state.
+        await factory.Connection.RaiseClosedAsync();
+        await WaitUntilAsync(() => collector.Count(TaskHubEventKind.Reconnected) == 1, "reconnected");
+
+        // The stale pre-disconnect update must not survive to be replayed over the newer reconnect snapshot;
+        // otherwise DrainBufferedUpdates would revert a task the snapshot advanced while we were offline.
+        Assert.DoesNotContain(client.DrainBufferedUpdates(), e => e.Tasks[0].Uid == "stale");
+    }
+
+    [Fact]
     public async Task Reconnect_ReadsAFreshTokenOnEachConnect()
     {
         var collector = new EventCollector();

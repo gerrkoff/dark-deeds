@@ -58,6 +58,37 @@ public sealed class TerminalSelfTestTests
     }
 
     [Fact]
+    public async Task RunAsync_ObserverReconnectsMidRun_DrainsBufferedUpdateAfterReconnect()
+    {
+        var harness = new Harness();
+        var reconnected = false;
+        harness.Backend.OnSaved = saved =>
+        {
+            if (!reconnected)
+            {
+                reconnected = true;
+
+                // On the first save the observer reconnects and re-enters buffering, then the create push
+                // lands in the buffer - exactly what the real hub does after a reconnect. The self-test must
+                // drain on the Reconnected event to see it, or the run times out even though the push arrived.
+                harness.Observer.Reconnect();
+                harness.Observer.Raise(TaskHubEvent.Update(saved));
+            }
+            else
+            {
+                harness.Observer.Raise(TaskHubEvent.Update(saved));
+            }
+        };
+
+        var exitCode = await new TerminalSelfTest(harness.BuildContext(TimeSpan.FromSeconds(2)))
+            .RunAsync(CancellationToken.None)
+            .WaitAsync(RunTimeout);
+
+        Assert.Equal(TerminalSelfTest.SuccessExitCode, exitCode);
+        Assert.Contains(harness.Reports, line => line.Contains("create: observer received", StringComparison.Ordinal));
+    }
+
+    [Fact]
     public async Task RunAsync_FailsAfterCreate_SoftDeletesTheProbeInFinally()
     {
         var harness = new Harness();
@@ -303,6 +334,8 @@ public sealed class TerminalSelfTestTests
     private sealed class FakeHub : ITaskHubClient
     {
         private readonly object _gate = new();
+        private readonly List<TaskHubEvent> _buffer = [];
+        private bool _buffering;
 
         public Action<TaskHubEvent>? Sink { get; set; }
 
@@ -339,7 +372,18 @@ public sealed class TerminalSelfTestTests
 
         public IReadOnlyList<TaskHubEvent> DrainBufferedUpdates()
         {
-            return [];
+            lock (_gate)
+            {
+                _buffering = false;
+                if (_buffer.Count == 0)
+                {
+                    return [];
+                }
+
+                var events = _buffer.ToArray();
+                _buffer.Clear();
+                return events;
+            }
         }
 
         public ValueTask DisposeAsync()
@@ -352,8 +396,29 @@ public sealed class TerminalSelfTestTests
             return ValueTask.CompletedTask;
         }
 
+        // Mirrors the real hub re-entering buffering on a reconnect: after this, Update pushes are held in
+        // the buffer until the next DrainBufferedUpdates instead of reaching the sink live.
+        public void Reconnect()
+        {
+            lock (_gate)
+            {
+                _buffering = true;
+            }
+
+            Sink?.Invoke(TaskHubEvent.Reconnected);
+        }
+
         public void Raise(TaskHubEvent hubEvent)
         {
+            lock (_gate)
+            {
+                if (_buffering && hubEvent.Kind == TaskHubEventKind.Update)
+                {
+                    _buffer.Add(hubEvent);
+                    return;
+                }
+            }
+
             Sink?.Invoke(hubEvent);
         }
     }

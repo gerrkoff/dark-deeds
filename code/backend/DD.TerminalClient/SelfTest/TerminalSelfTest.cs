@@ -28,6 +28,8 @@ internal sealed class TerminalSelfTest
     private readonly Channel<TaskHubEvent> _observerEvents =
         Channel.CreateUnbounded<TaskHubEvent>(new UnboundedChannelOptions { SingleReader = true });
 
+    private ITaskHubClient? _observerHub;
+
     public TerminalSelfTest(SelfTestContext context)
     {
         ArgumentNullException.ThrowIfNull(context);
@@ -86,6 +88,7 @@ internal sealed class TerminalSelfTest
 
             observerHub = _context.ObserverHubFactory(hubEvent => _observerEvents.Writer.TryWrite(hubEvent));
             writerHub = _context.WriterHubFactory(_ => { });
+            _observerHub = observerHub;
             await StartHubAsync(observerHub, "observer hub", cancellationToken);
             await StartHubAsync(writerHub, "writer hub", cancellationToken);
             Report("hubs: writer and observer started with distinct client ids");
@@ -320,14 +323,24 @@ internal sealed class TerminalSelfTest
                     throw new SelfTestException(stage, "the observer hub connection was lost.", null);
                 }
 
-                if (hubEvent.Kind != TaskHubEventKind.Update)
+                if (hubEvent.Kind == TaskHubEventKind.Reconnected)
                 {
+                    // A reconnect re-enters buffering on the hub, so live pushes stop reaching the sink until
+                    // it is drained again (the same reason StartHubAsync drains after the initial connect).
+                    // Drain now so subsequent pushes flow, and check anything captured during the reconnect
+                    // window against the predicate rather than losing it in the buffer.
+                    foreach (var buffered in _observerHub!.DrainBufferedUpdates())
+                    {
+                        if (MatchesObserverUpdate(buffered, uid, predicate))
+                        {
+                            return;
+                        }
+                    }
+
                     continue;
                 }
 
-                var match = hubEvent.Tasks.FirstOrDefault(
-                    task => string.Equals(task.Uid, uid, StringComparison.Ordinal));
-                if (match is not null && predicate(match))
+                if (MatchesObserverUpdate(hubEvent, uid, predicate))
                 {
                     return;
                 }
@@ -338,6 +351,19 @@ internal sealed class TerminalSelfTest
         {
             throw new SelfTestException(stage, "timed out waiting for the observer update.", null);
         }
+    }
+
+    private static bool MatchesObserverUpdate(
+        TaskHubEvent hubEvent, string uid, Func<TerminalTask, bool> predicate)
+    {
+        if (hubEvent.Kind != TaskHubEventKind.Update)
+        {
+            return false;
+        }
+
+        var match = hubEvent.Tasks.FirstOrDefault(
+            task => string.Equals(task.Uid, uid, StringComparison.Ordinal));
+        return match is not null && predicate(match);
     }
 
     private async Task CleanupAsync(
