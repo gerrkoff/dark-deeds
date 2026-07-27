@@ -570,6 +570,14 @@ internal sealed class TerminalApplication
         // resurrect the session or mutate state after we have returned to the login screen.
         _sessionCts?.Cancel();
 
+        // Supersede any snapshot load still in flight from the now-dead session: cancellation cannot
+        // unwind a response that already returned before it propagated, so LoadSnapshotAsync can still
+        // enqueue SnapshotLoaded tagged with the current generation. Bumping the generation here - the
+        // same supersession the reconnect/retry reloads use - makes that stale load a no-op instead of
+        // letting it reconcile expired-session state and, worse, set _firstSnapshotDone at the login
+        // screen, which would make the next sign-in replay its outbox before the fresh snapshot reconciles.
+        _snapshotGeneration++;
+
         // Preserve the durable outbox: Reset clears only the in-memory queues, so capture their contents
         // first and keep persisting them until the same user signs back in and replays them. Capture only
         // once per unauthorized episode with ??=: a second 401 for the same expired token (for example a

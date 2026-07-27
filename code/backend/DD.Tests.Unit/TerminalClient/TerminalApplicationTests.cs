@@ -620,6 +620,44 @@ public sealed class TerminalApplicationTests
     }
 
     [Fact]
+    public async Task Unauthorized_DiscardsSnapshotLoadFromExpiredSession()
+    {
+        using var harness = new Harness();
+        harness.TokenStore.Save(Jwt("alice", Now.AddDays(30)));
+        harness.StateStore.Set(new PersistedTerminalState
+        {
+            DataOwner = "alice",
+            CachedTasks = [Task("a", "Task A")],
+        });
+        harness.Tasks.LoadResult = [Task("a", "Task A")];
+
+        var run = harness.Start();
+        await WaitForAsync(() => HasTask(harness.LastModel(), "a"), "startup snapshot reconciled");
+
+        harness.Hub.Raise(TaskHubEvent.Unauthorized);
+        await WaitForAsync(
+            () => harness.LastModel().Status.Kind == TerminalStatusKind.Login, "returned to login on 401");
+
+        // Simulate the pre-401 snapshot load completing after the 401: its response was already on the wire,
+        // so it enqueues SnapshotLoaded tagged with the startup generation (1 - BeginOnlineStartup
+        // pre-increments the counter from 0 for the single startup load). The 401 must have superseded that
+        // generation so the stale load is discarded; without the fix it reconciles the sentinel and, worse,
+        // marks the first snapshot done at the login screen. The follow-up hub Update is a strictly-later
+        // barrier: both are synchronous channel writes, so the single-reader loop drains the stale snapshot
+        // first and, once the barrier's task is persisted, the stale load has already been handled.
+        harness.Enqueue(ApplicationEvent.SnapshotLoaded([Task("a", "Task A"), Task("stale", "Stale Task")], 1));
+        harness.Hub.Raise(TaskHubEvent.Update([Task("marker", "Marker")]));
+        await WaitForAsync(
+            () => harness.StateStore.Saved?.CachedTasks.Any(task => task.Uid == "marker") == true,
+            "barrier update persisted after the stale snapshot was drained");
+
+        Assert.DoesNotContain(harness.StateStore.Saved!.CachedTasks, task => task.Uid == "stale");
+        Assert.Equal(TerminalStatusKind.Login, harness.LastModel().Status.Kind);
+
+        await harness.StopAsync(run);
+    }
+
+    [Fact]
     public async Task UnreadableState_IsNotOverwrittenAndStopsWithFatalMessage()
     {
         using var harness = new Harness();
