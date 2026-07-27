@@ -383,10 +383,10 @@ Every task must finish with both commands passing and zero warnings. This plan d
 **Files:**
 - Modify only files required to fix failures found by these gates.
 
-- [ ] Run `dotnet build code/backend/DarkDeeds.sln -c Release` and fix every error and warning.
-- [ ] Run `dotnet test code/backend/DarkDeeds.sln -c Release` and fix every failure.
-- [ ] Run `cd code/frontend && npm run ci` and fix every failure.
-- [ ] Create a concrete temporary publish directory, run the publish script, verify all four archives/checksums exist, and smoke-run every host-compatible binary:
+- [x] Run `dotnet build code/backend/DarkDeeds.sln -c Release` and fix every error and warning.
+- [x] Run `dotnet test code/backend/DarkDeeds.sln -c Release` and fix every failure.
+- [x] Run `cd code/frontend && npm run ci` and fix every failure.
+- [x] Create a concrete temporary publish directory, run the publish script, verify all four archives/checksums exist, and smoke-run every host-compatible binary:
 
   ```bash
   PUBLISH_DIR=$(mktemp -d)
@@ -394,7 +394,7 @@ Every task must finish with both commands passing and zero warnings. This plan d
   find "$PUBLISH_DIR" -maxdepth 1 -type f -print
   ```
 
-- [ ] Run `./infra/up.sh`; start `dotnet run --project code/backend/DD.App` on port 5000 and `cd code/frontend && npm run dev` on port 3000 as detached processes with recorded PIDs; wait for backend `Healthy` and frontend HTTP 200; create a fresh local test user and run the terminal self-test with a concrete temporary state root, iterating until exit code 0:
+- [x] Run `./infra/up.sh`; start `dotnet run --project code/backend/DD.App` on port 5000 and `cd code/frontend && npm run dev` on port 3000 as detached processes with recorded PIDs; wait for backend `Healthy` and frontend HTTP 200; create a fresh local test user and run the terminal self-test with a concrete temporary state root, iterating until exit code 0:
 
   ```bash
   STATE_ROOT=$(mktemp -d)
@@ -406,7 +406,7 @@ Every task must finish with both commands passing and zero warnings. This plan d
     --profile local --self-test --state-root "$STATE_ROOT"
   ```
 
-- [ ] Run the Selenium Grid suite and iterate until `Failed: 0, Passed: 11, Skipped: 1`; then stop the backend and frontend by their recorded PIDs and leave MongoDB/Selenium Grid running:
+- [x] Run the Selenium Grid suite and iterate until `Failed: 0, Passed: 11, Skipped: 1`; then stop the backend and frontend by their recorded PIDs and leave MongoDB/Selenium Grid running:
 
   ```bash
   CONTAINER=true \
