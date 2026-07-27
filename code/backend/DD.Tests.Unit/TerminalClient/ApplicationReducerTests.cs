@@ -32,6 +32,28 @@ public sealed class ApplicationReducerTests
     }
 
     [Fact]
+    public void Add_WithFocusDate_UsesDateCapturedWhenEditorOpened_NotTheMovedFocus()
+    {
+        var reducer = NewReducer();
+        var state = FocusOn(Ready(reducer, Task("a", Monday, "Existing")), "a");
+
+        // Open the add editor: it inherits the focused task's date (Monday) and previews that date.
+        var opened = reducer.HandleKey(state, Key('a'));
+        Assert.Equal(EditorPurpose.AddWithFocusDate, opened.State.Input.Purpose);
+        Assert.Equal(Monday, opened.State.Input.FallbackDate);
+
+        // A realtime update slides the focused task "a" onto a different day while the editor is open.
+        var focusMoved = reducer.Recompute(opened.State with { Cache = [Task("a", Monday.AddDays(2), "Existing")] });
+
+        // Committing must create the new task on the captured Monday (what the preview showed), not the
+        // task's now-current day - mirroring the captured-target semantics already enforced for edit/delete.
+        var committed = Feed(reducer, focusMoved, Then(Typed("Buy milk"), Enter()));
+
+        var created = committed.State.Cache.Single(task => task.Title == "Buy milk");
+        Assert.Equal(Monday, created.Date);
+    }
+
+    [Fact]
     public void AddNoDate_CreatesTaskWithoutDate()
     {
         var reducer = NewReducer();

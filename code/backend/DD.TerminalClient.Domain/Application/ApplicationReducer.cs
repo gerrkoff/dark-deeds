@@ -162,14 +162,16 @@ public sealed class ApplicationReducer(
             SuspendedInput = SuspendInputForResize(state),
         };
 
-        // The target captured when the modal opened (the pre-reduce input state still carries it; the
-        // commit resets the input to Normal). A commit uses this, not the live focus, so a realtime update
-        // that moved focus while the modal was open cannot redirect the edit/move/delete to another task.
+        // The target and the inherited add-date captured when the modal opened (the pre-reduce input state
+        // still carries them; the commit resets the input to Normal). A commit uses these, not the live
+        // focus, so a realtime update that moved or re-dated the focused task while the modal was open
+        // cannot redirect the edit/move/delete to another task or create the new task on another day.
         var targetUid = state.Input.TargetUid;
+        var fallbackDate = state.Input.FallbackDate;
 
         return result.Command == TerminalCommand.None
             ? ApplicationTransition.Of(next)
-            : ExecuteCommand(next, result.Command, result.CommittedText, targetUid);
+            : ExecuteCommand(next, result.Command, result.CommittedText, targetUid, fallbackDate);
     }
 
     // When Help closes over a still-pending suspended interaction, resume that interaction instead of the
@@ -228,7 +230,7 @@ public sealed class ApplicationReducer(
     }
 
     private ApplicationTransition ExecuteCommand(
-        ApplicationState state, TerminalCommand command, string? text, string? targetUid)
+        ApplicationState state, TerminalCommand command, string? text, string? targetUid, DateOnly? fallbackDate)
     {
         return command switch
         {
@@ -249,7 +251,7 @@ public sealed class ApplicationReducer(
                 state with { IsBuffering = true, StatusMessage = "Reconnecting..." },
                 ApplicationEffect.Reconnect),
             TerminalCommand.Quit => ApplicationTransition.Of(state with { Quit = true }),
-            TerminalCommand.SubmitAddWithFocusDate => Create(state, text, FindFocused(state)?.Date),
+            TerminalCommand.SubmitAddWithFocusDate => Create(state, text, fallbackDate),
             TerminalCommand.SubmitAddNoDate => Create(state, text, fallback: null),
             TerminalCommand.SubmitEdit => EditTarget(state, text, targetUid),
             TerminalCommand.SubmitMove => MoveTarget(state, text, targetUid),
