@@ -245,6 +245,49 @@ public sealed class TerminalApplicationTests
     }
 
     [Fact]
+    public async Task Unauthorized_WhileRenewing_ReenablesRenewalAfterReLogin()
+    {
+        using var harness = new Harness();
+        harness.TokenStore.Save(Jwt("alice", Now.AddHours(6)));
+        harness.StateStore.Set(new PersistedTerminalState { DataOwner = "alice" });
+        harness.Auth.HoldRenews();
+
+        var run = harness.Start();
+        await WaitForAsync(() => harness.Hub.StartCount >= 1, "hub started");
+
+        // The token expires within a day, so a RenewTick starts a renewal that is held in flight.
+        harness.Enqueue(ApplicationEvent.RenewTick);
+        await WaitForAsync(() => harness.Auth.RenewCount >= 1, "renewal in flight");
+        Assert.False(harness.Auth.LastRenewToken.IsCancellationRequested);
+
+        // A 401 arriving while the renewal is in flight cancels the session (and that renewal) and returns
+        // to login; the cancelled renewal completes via OperationCanceledException with no renewal event.
+        harness.Hub.Raise(TaskHubEvent.Unauthorized);
+        await WaitForAsync(
+            () => harness.LastModel().Status.Kind == TerminalStatusKind.Login, "returned to login on 401");
+        Assert.True(harness.Auth.LastRenewToken.IsCancellationRequested);
+
+        // Sign back in as the same user; the new session again expires within a day.
+        harness.Auth.ReleaseRenews();
+        var renewed = Jwt("alice", Now.AddDays(30));
+        harness.Auth.SignInHandler = (user, _) =>
+            new SignInOutcome(TerminalSignInStatus.Success, AuthSession.FromToken(Jwt(user, Now.AddHours(6))));
+        harness.Auth.RenewHandler = () => AuthSession.FromToken(renewed);
+        harness.TypeLine("alice");
+        harness.TypeLine("secret");
+        await WaitForAsync(
+            () => harness.LastModel().Status.Kind == TerminalStatusKind.Normal, "signed back in");
+
+        // The renewal guard must have been cleared on the 401, so the new session renews again. Without the
+        // fix the guard stays set and renewal is silently disabled for the rest of the process.
+        harness.Enqueue(ApplicationEvent.RenewTick);
+        await WaitForAsync(() => harness.Auth.RenewCount >= 2, "renewal re-enabled after re-login");
+        await WaitForAsync(() => harness.CurrentToken == renewed, "renewed token persisted");
+
+        await harness.StopAsync(run);
+    }
+
+    [Fact]
     public async Task Save_TransportError_SchedulesRetryThenSucceeds()
     {
         using var harness = new Harness(immediateDelay: true);
@@ -799,6 +842,7 @@ public sealed class TerminalApplicationTests
     private sealed class FakeAuthApi : IAuthApiClient
     {
         private readonly object _gate = new();
+        private TaskCompletionSource? _renewGate;
 
         public Func<string, string, SignInOutcome> SignInHandler { get; set; } =
             (_, _) => new SignInOutcome(TerminalSignInStatus.Failed, null);
@@ -810,6 +854,28 @@ public sealed class TerminalApplicationTests
 
         public int RenewCount { get; private set; }
 
+        public CancellationToken LastRenewToken { get; private set; }
+
+        public void HoldRenews()
+        {
+            lock (_gate)
+            {
+                _renewGate = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+            }
+        }
+
+        public void ReleaseRenews()
+        {
+            TaskCompletionSource? gate;
+            lock (_gate)
+            {
+                gate = _renewGate;
+                _renewGate = null;
+            }
+
+            gate?.TrySetResult();
+        }
+
         public Task<SignInOutcome> SignInAsync(string username, string password, CancellationToken cancellationToken)
         {
             lock (_gate)
@@ -820,14 +886,22 @@ public sealed class TerminalApplicationTests
             return System.Threading.Tasks.Task.FromResult(SignInHandler(username, password));
         }
 
-        public Task<AuthSession> RenewTokenAsync(CancellationToken cancellationToken)
+        public async Task<AuthSession> RenewTokenAsync(CancellationToken cancellationToken)
         {
+            TaskCompletionSource? gate;
             lock (_gate)
             {
                 RenewCount++;
+                LastRenewToken = cancellationToken;
+                gate = _renewGate;
             }
 
-            return System.Threading.Tasks.Task.FromResult(RenewHandler());
+            if (gate is not null)
+            {
+                await gate.Task.WaitAsync(cancellationToken);
+            }
+
+            return RenewHandler();
         }
     }
 

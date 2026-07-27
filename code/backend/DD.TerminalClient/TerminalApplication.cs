@@ -565,6 +565,12 @@ internal sealed class TerminalApplication
         _ = StopHubQuietlyAsync();
         _sync.Reset();
         _firstSnapshotDone = false;
+
+        // Cancelling the session above also cancels any in-flight token renewal, whose
+        // OperationCanceledException is swallowed without enqueuing RenewCompleted/RenewFaulted. Those two
+        // events are the only other places that clear _renewing, so without this reset the guard would stay
+        // set and MaybeRenew would never renew again for the rest of the process.
+        _renewing = false;
         _session = null;
         _deps.SetToken(null);
         State = State with
