@@ -7,11 +7,11 @@ using Xunit;
 
 namespace DD.Tests.Unit.TerminalClient;
 
-// Exercises the pure spatial navigation (TaskNavigationService) and focus fallback (TaskFocusService)
+// Exercises the pure stream navigation (TaskNavigationService) and focus fallback (TaskFocusService)
 // against real projections produced by OverviewProjectionService, so every VisualTaskAddress is the
-// genuine grid address. Covers the required uneven-column, empty-day, both-Current-row, wrapped-Future,
-// every-section-boundary, filtered-selection and remote-removal cases plus the initial-focus,
-// Uid-preservation and no-visible-task contracts.
+// genuine projected address. Covers task-order and day-order movement, empty days, every section
+// boundary, filtered selection and remote removal plus the initial-focus, Uid-preservation and
+// no-visible-task contracts.
 public sealed class TaskNavigationServiceTests
 {
     // Nov 4 2024 is a Monday, matching the projection tests' mocked local Monday.
@@ -65,9 +65,9 @@ public sealed class TaskNavigationServiceTests
         Assert.Equal(focus, TaskNavigationService.Move(projection, focus, NavigationDirection.Down));
     }
 
-    // --- Vertical crossing between rows ---------------------------------------------------------
+    // --- Vertical crossing between days ---------------------------------------------------------
     [Fact]
-    public void Move_Down_AtListBottom_CrossesToCellBelowSameColumn_FirstTask()
+    public void Move_Down_AtListBottom_EntersNextDay_FirstTask()
     {
         var projection = Project([
             Task("top", Monday),
@@ -81,7 +81,7 @@ public sealed class TaskNavigationServiceTests
     }
 
     [Fact]
-    public void Move_Up_AtListTop_CrossesToCellAboveSameColumn_LastTask()
+    public void Move_Up_AtListTop_EntersPreviousDay_LastTask()
     {
         var projection = Project([
             Task("above1", Monday, order: 1),
@@ -95,7 +95,7 @@ public sealed class TaskNavigationServiceTests
     }
 
     [Fact]
-    public void Move_Down_UnevenColumns_LandsOnFirstTaskRegardlessOfSourceIndex()
+    public void Move_Down_NextDay_LandsOnFirstTaskRegardlessOfSourceIndex()
     {
         var projection = Project([
             Task("a1", Monday, order: 1),
@@ -112,23 +112,23 @@ public sealed class TaskNavigationServiceTests
     }
 
     [Fact]
-    public void Move_Down_PrefersSameColumn_ThenNearestWithLowerColumnTieBreak()
+    public void Move_Down_FollowsDateOrderInsteadOfCalendarColumn()
     {
-        // Row 0 has a task on Wednesday (column 2). Row 1 leaves column 2 empty and fills the
-        // equidistant columns 1 and 3, so the tie resolves to the lower column (1).
+        // Wednesday is followed by next Monday in the rendered stream even though next Wednesday
+        // occupies the same calendar column.
         var projection = Project([
             Task("src", Monday.AddDays(2)),
-            Task("left", Monday.AddDays(8)),
-            Task("right", Monday.AddDays(10)),
+            Task("next", Monday.AddDays(7)),
+            Task("same-column", Monday.AddDays(9)),
         ]);
 
         var moved = Move(projection, "src", NavigationDirection.Down);
 
-        Assert.Equal("left", moved.Uid);
+        Assert.Equal("next", moved.Uid);
     }
 
     [Fact]
-    public void Move_Down_BothCurrentRows_KeepsColumn()
+    public void Move_Down_CrossesCurrentWeekBoundaryInDateOrder()
     {
         var projection = Project([
             Task("r0", Monday.AddDays(3)),
@@ -143,7 +143,7 @@ public sealed class TaskNavigationServiceTests
     }
 
     [Fact]
-    public void Move_Up_BothCurrentRows_KeepsColumn()
+    public void Move_Up_CrossesCurrentWeekBoundaryInDateOrder()
     {
         var projection = Project([
             Task("r0", Monday.AddDays(3)),
@@ -157,7 +157,7 @@ public sealed class TaskNavigationServiceTests
     }
 
     [Fact]
-    public void Move_Down_WrappedFutureRows_CrossesToSecondFutureRow()
+    public void Move_Down_Future_EntersNextRenderedDate()
     {
         var futureStart = Monday.AddDays(14);
         var tasks = Enumerable.Range(0, 8)
@@ -165,11 +165,10 @@ public sealed class TaskNavigationServiceTests
             .ToArray();
         var projection = Project(tasks);
 
-        // f0 is Future row 0 column 0; f7 wraps to row 1 column 0.
         var moved = Move(projection, "f0", NavigationDirection.Down);
 
-        Assert.Equal("f7", moved.Uid);
-        Assert.Equal((OverviewSection.Future, 1, 0), (moved.Address.Section, moved.Address.Row, moved.Address.Column));
+        Assert.Equal("f1", moved.Uid);
+        Assert.Equal((OverviewSection.Future, 0, 1), (moved.Address.Section, moved.Address.Row, moved.Address.Column));
     }
 
     // --- Vertical crossing between sections -----------------------------------------------------
@@ -258,9 +257,9 @@ public sealed class TaskNavigationServiceTests
         Assert.Equal((OverviewSection.Current, 1), (moved.Address.Section, moved.Address.Row));
     }
 
-    // --- Horizontal movement --------------------------------------------------------------------
+    // --- Day movement ---------------------------------------------------------------------------
     [Fact]
-    public void Move_Right_ToNearestNonEmptyCell_SkipsEmptyDays()
+    public void Move_Right_ToNextRenderedDay_SkipsDaysWithoutTasks()
     {
         // Monday (column 0) and Wednesday (column 2) hold tasks; Tuesday (column 1) is empty.
         var projection = Project([
@@ -275,7 +274,7 @@ public sealed class TaskNavigationServiceTests
     }
 
     [Fact]
-    public void Move_Left_ToNearestNonEmptyCell()
+    public void Move_Left_ToPreviousRenderedDay()
     {
         var projection = Project([
             Task("mon", Monday),
@@ -288,7 +287,7 @@ public sealed class TaskNavigationServiceTests
     }
 
     [Fact]
-    public void Move_Right_PreservesTaskIndex_WhenDestinationTallEnough()
+    public void Move_Right_LandsOnFirstTaskOfNextDay()
     {
         var projection = Project([
             Task("a1", Monday, order: 1),
@@ -301,12 +300,12 @@ public sealed class TaskNavigationServiceTests
 
         var moved = Move(projection, "a2", NavigationDirection.Right);
 
-        Assert.Equal("b2", moved.Uid);
-        Assert.Equal(1, moved.Address.TaskIndex);
+        Assert.Equal("b1", moved.Uid);
+        Assert.Equal(0, moved.Address.TaskIndex);
     }
 
     [Fact]
-    public void Move_Right_UnevenColumns_ClampsTaskIndexToShorterDestination()
+    public void Move_Right_FromLastTask_LandsOnFirstTaskOfShorterDay()
     {
         var projection = Project([
             Task("a1", Monday, order: 1),
@@ -322,7 +321,7 @@ public sealed class TaskNavigationServiceTests
     }
 
     [Fact]
-    public void Move_Right_WithNoCellToTheRight_DoesNotWrap()
+    public void Move_Right_WithNoLaterDay_DoesNotWrap()
     {
         var projection = Project([
             Task("mon", Monday),
@@ -334,7 +333,7 @@ public sealed class TaskNavigationServiceTests
     }
 
     [Fact]
-    public void Move_Left_InNoDate_IsNoOp()
+    public void Move_LeftOrRight_WithOnlyNoDate_IsNoOp()
     {
         var projection = Project([
             Task("n1", date: null, order: 1),
@@ -344,6 +343,39 @@ public sealed class TaskNavigationServiceTests
 
         Assert.Equal(focus, TaskNavigationService.Move(projection, focus, NavigationDirection.Left));
         Assert.Equal(focus, TaskNavigationService.Move(projection, focus, NavigationDirection.Right));
+    }
+
+    [Fact]
+    public void Move_Right_FromNoDate_EntersFirstDatedDay()
+    {
+        var projection = Project([
+            Task("nodate", date: null),
+            Task("current", Monday),
+        ]);
+
+        Assert.Equal("current", Move(projection, "nodate", NavigationDirection.Right).Uid);
+    }
+
+    [Fact]
+    public void Move_Left_FromCurrent_EntersNoDate()
+    {
+        var projection = Project([
+            Task("nodate", date: null),
+            Task("current", Monday),
+        ]);
+
+        Assert.Equal("nodate", Move(projection, "current", NavigationDirection.Left).Uid);
+    }
+
+    [Fact]
+    public void Move_Right_CrossesFromCurrentToFuture()
+    {
+        var projection = Project([
+            Task("current", Monday.AddDays(13)),
+            Task("future", Monday.AddDays(14)),
+        ]);
+
+        Assert.Equal("future", Move(projection, "current", NavigationDirection.Right).Uid);
     }
 
     // --- Initial focus --------------------------------------------------------------------------

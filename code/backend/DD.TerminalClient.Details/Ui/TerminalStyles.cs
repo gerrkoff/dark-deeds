@@ -10,7 +10,7 @@ namespace DD.TerminalClient.Details.Ui;
 // titles and hints. Colours are kept to the 16-colour palette so they render on a basic SSH terminal.
 internal static class TerminalStyles
 {
-    public static readonly Style DayHeader = new(Color.Silver, decoration: Decoration.Bold);
+    public static readonly Style DayHeader = new(Color.Blue, decoration: Decoration.Bold);
 
     public static readonly Style Today = new(Color.Yellow, decoration: Decoration.Bold);
 

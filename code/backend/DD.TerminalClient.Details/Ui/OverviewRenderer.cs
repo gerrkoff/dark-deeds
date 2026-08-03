@@ -14,6 +14,8 @@ namespace DD.TerminalClient.Details.Ui;
 // so a title containing "[" or Spectre tags can neither break the layout nor inject styling.
 public static class OverviewRenderer
 {
+    private const string AdditionalIndent = "            ";
+
     public static RenderedOverview Render(TerminalViewModel model, int width)
     {
         ArgumentNullException.ThrowIfNull(model);
@@ -43,6 +45,7 @@ public static class OverviewRenderer
             return;
         }
 
+        AppendCardSeparator(lines);
         lines.Add(SectionTitleLine("No Date", width));
         AppendTasks(lines, taskLines, day, focusUid, width);
     }
@@ -70,9 +73,16 @@ public static class OverviewRenderer
             return;
         }
 
+        AppendCardSeparator(lines);
         lines.Add(SectionTitleLine(title, width));
-        foreach (var day in visibleDays)
+        for (var i = 0; i < visibleDays.Count; i++)
         {
+            if (i > 0)
+            {
+                AppendCardSeparator(lines);
+            }
+
+            var day = visibleDays[i];
             lines.Add(DayHeaderLine(day, today, width));
             AppendTasks(lines, taskLines, day, focusUid, width);
         }
@@ -102,8 +112,9 @@ public static class OverviewRenderer
     private static Text TaskLineRenderable(TerminalTask task, bool isSelected, int width)
     {
         var marker = isSelected ? "> " : "  ";
+        var typeIndent = task.Type == TerminalTaskType.Additional ? AdditionalIndent : string.Empty;
         var time = task.Time is { } minutes ? TerminalText.FormatTime(minutes) + " " : string.Empty;
-        var prefix = marker + time;
+        var prefix = marker + typeIndent + time;
         var titleBudget = Math.Max(0, width - prefix.GetCellWidth());
         var line = prefix + TerminalText.Truncate(task.Title, titleBudget);
         return new Text(line, TerminalStyles.ForTask(task, isSelected)) { Overflow = Overflow.Ellipsis };
@@ -128,5 +139,13 @@ public static class OverviewRenderer
     {
         var label = "    +" + count.ToString(CultureInfo.InvariantCulture) + " routine";
         return new Text(TerminalText.Truncate(label, width), TerminalStyles.Hint);
+    }
+
+    private static void AppendCardSeparator(List<IRenderable> lines)
+    {
+        if (lines.Count > 0)
+        {
+            lines.Add(new Text(string.Empty));
+        }
     }
 }

@@ -72,7 +72,7 @@ internal sealed class SpectreTerminalRenderer(IAnsiConsole console) : ITerminalR
             return (empty, CountLines(empty, width), null);
         }
 
-        var focusedLine = ViewportRenderable.FindFocusedLine(rendered, model.Focus);
+        var focusedLine = ViewportRenderable.FindFocusedLine(rendered, model.Focus, _offset);
         return (new Rows(rendered.Lines), rendered.Lines.Count, focusedLine);
     }
 

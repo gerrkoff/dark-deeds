@@ -114,7 +114,8 @@ public static class TerminalFrame
         var grid = new Grid();
         grid.AddColumn(new GridColumn().NoWrap().PadRight(3));
         grid.AddColumn();
-        AddHelpRow(grid, "Arrows, h j k l", "Move between tasks");
+        AddHelpRow(grid, "Up/Down, k j", "Previous / next task");
+        AddHelpRow(grid, "Left/Right, h l", "Previous / next day");
         AddHelpRow(grid, "a", "Add a task on the focused day");
         AddHelpRow(grid, "A", "Add a No Date task");
         AddHelpRow(grid, "e", "Edit the focused task");

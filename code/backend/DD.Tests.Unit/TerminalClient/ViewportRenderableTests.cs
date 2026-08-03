@@ -202,6 +202,24 @@ public sealed class ViewportRenderableTests
     }
 
     [Fact]
+    public void Render_ReturningToFirstNoDateTask_RestoresCardHeader()
+    {
+        var projection = Project(NoDateTasks(25));
+        var (viewport, state, _) = Build(
+            Vm(projection, focus: FocusFor(projection, "u00")),
+            width: 120,
+            viewportHeight: 10,
+            previousOffset: 12);
+        var console = Plain(120);
+
+        console.Write(viewport);
+
+        Assert.Equal(0, state.Offset);
+        Assert.Contains("No Date", console.Output, StringComparison.Ordinal);
+        Assert.Contains("T00", console.Output, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public void Render_ContentShorterThanViewport_ShowsEverythingWithoutIndicators()
     {
         var projection = Project(NoDateTasks(3));
@@ -355,7 +373,7 @@ public sealed class ViewportRenderableTests
         int previousOffset = 0)
     {
         var rendered = OverviewRenderer.Render(model, width);
-        var focusedLine = ViewportRenderable.FindFocusedLine(rendered, model.Focus);
+        var focusedLine = ViewportRenderable.FindFocusedLine(rendered, model.Focus, previousOffset);
         var state = ViewportState.Calculate(rendered.Lines.Count, viewportHeight, focusedLine, previousOffset);
         return (new ViewportRenderable(new Rows(rendered.Lines), state), state, rendered);
     }

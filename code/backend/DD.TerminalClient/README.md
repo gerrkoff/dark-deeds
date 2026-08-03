@@ -113,7 +113,8 @@ Normal mode:
 
 | Keys                        | Action                                                                        |
 | --------------------------- | ----------------------------------------------------------------------------- |
-| Arrows, `h` `j` `k` `l`     | Move focus between tasks                                                       |
+| Up / Down, `k` / `j`         | Move to the previous / next task in the rendered stream                        |
+| Left / Right, `h` / `l`      | Move to the first task of the previous / next rendered day                     |
 | `a`                         | Add a task using the focused task's date; with no focus, add a No Date task   |
 | `A`                         | Add a No Date task                                                             |
 | `e`                         | Edit the focused task                                                          |

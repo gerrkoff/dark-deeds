@@ -82,6 +82,31 @@ public sealed class OverviewRendererTests
     }
 
     [Fact]
+    public void Render_Cards_AreSeparatedByBlankLines()
+    {
+        var projection = Project(
+            Task("nodate"),
+            Task("monday", date: Monday),
+            Task("tuesday", date: Monday.AddDays(1)),
+            Task("future", date: Monday.AddDays(14)));
+
+        var rendered = OverviewRenderer.Render(Vm(projection), 80);
+        var mondayLine = rendered.TaskLines.Single(line =>
+            line.Address is { Section: OverviewSection.Current, Column: 0 });
+        var tuesdayLine = rendered.TaskLines.Single(line =>
+            line.Address is { Section: OverviewSection.Current, Column: 1 });
+
+        Assert.Equal(1, rendered.TaskLines.Single(line => line.Address.Section == OverviewSection.NoDate).LineIndex);
+        Assert.Equal(5, mondayLine.LineIndex);
+        Assert.Equal(8, tuesdayLine.LineIndex);
+        Assert.Equal(12, rendered.TaskLines.Single(line => line.Address.Section == OverviewSection.Future).LineIndex);
+        Assert.Equal(string.Empty, RenderLine(rendered.Lines[2], 80));
+        Assert.Equal(string.Empty, RenderLine(rendered.Lines[6], 80));
+        Assert.Equal(string.Empty, RenderLine(rendered.Lines[9], 80));
+        Assert.Equal(13, rendered.Lines.Count);
+    }
+
+    [Fact]
     public void Render_LongTitle_IsEllipsizedToOneLine()
     {
         var projection = Project(Task("long", title: new string('a', 200)));
@@ -126,6 +151,35 @@ public sealed class OverviewRendererTests
         console.Write(new Rows(OverviewRenderer.Render(Vm(projection), 80).Lines));
 
         Assert.Contains("09:30", console.Output, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void Render_NonTodayDayHeader_IsBlueWithoutEdgeMarkers()
+    {
+        var projection = Project(Task("tomorrow", date: Monday.AddDays(1), title: "Later"));
+
+        var output = Ansi(new Rows(OverviewRenderer.Render(Vm(projection), 80).Lines), 80);
+
+        Assert.Contains("Tue 05 Nov", output, StringComparison.Ordinal);
+        Assert.DoesNotContain("--", output, StringComparison.Ordinal);
+        Assert.Contains("[1;38;5;12m", output, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void Render_AdditionalTask_HasExtraLeftIndent()
+    {
+        var projection = Project(
+            Task("simple", date: Monday, order: 1, title: "Simple"),
+            Task("additional", date: Monday, order: 2, type: TerminalTaskType.Additional, title: "Additional"));
+        var rendered = OverviewRenderer.Render(Vm(projection), 80);
+        var simpleLine = rendered.TaskLines.Single(line => line.Address.TaskIndex == 0).LineIndex;
+        var additionalLine = rendered.TaskLines.Single(line => line.Address.TaskIndex == 1).LineIndex;
+
+        Assert.StartsWith("  Simple", RenderLine(rendered.Lines[simpleLine], 80), StringComparison.Ordinal);
+        Assert.StartsWith(
+            "      Additional",
+            RenderLine(rendered.Lines[additionalLine], 80),
+            StringComparison.Ordinal);
     }
 
     [Fact]
@@ -288,7 +342,8 @@ public sealed class OverviewRendererTests
 
         Assert.Contains("Keyboard shortcuts", console.Output, StringComparison.Ordinal);
         Assert.Contains("Quit", console.Output, StringComparison.Ordinal);
-        Assert.Contains("Move between tasks", console.Output, StringComparison.Ordinal);
+        Assert.Contains("Previous / next task", console.Output, StringComparison.Ordinal);
+        Assert.Contains("Previous / next day", console.Output, StringComparison.Ordinal);
         Assert.DoesNotContain("Hidden", console.Output, StringComparison.Ordinal);
     }
 
@@ -397,6 +452,13 @@ public sealed class OverviewRendererTests
     {
         var console = new TestConsole().EmitAnsiSequences();
         console.Profile.Width = width;
+        console.Write(renderable);
+        return console.Output;
+    }
+
+    private static string RenderLine(IRenderable renderable, int width)
+    {
+        var console = Plain(width);
         console.Write(renderable);
         return console.Output;
     }

@@ -25,6 +25,10 @@ Rules specific to this repository. **If a rule is here — follow it. No excepti
 
 **When copying or re-emitting Spectre `Segment`s (e.g. clipping the terminal viewport), copy a `SegmentLine` with `list.AddRange(segmentLine)` or `foreach`, never the collection-expression spread `[.. segmentLine]`.** The spread injects `null` padding segments into the copy, which later throw `NullReferenceException` deep inside `Spectre.Console.Rendering.Segment.Merge` when the output is written. An empty `[]` is safe; only spreading a non-empty `SegmentLine` is affected.
 
+**Render terminal day cards as one top-to-bottom stream with a blank line between cards, but no trailing blank line after the final card.** Up/Down navigates the immediately previous/next visible task across all sections; Left/Right navigates the previous/next non-empty rendered day and lands on its first task.
+
+**When scrolling upward to the first task of a clipped terminal card, use the preceding card header as the viewport anchor so labels such as `No Date` reappear.** Render Today in yellow, other dated headers in a subtle contrasting colour without edge markers, and indent Additional tasks four extra spaces.
+
 ## Terminal client storage
 
 **Keep the terminal client portable by storing its default config and state under `data/` beside the executable.** Preserve `--state-root` as the explicit isolation override for tests and unattended self-tests.

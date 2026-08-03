@@ -64,9 +64,11 @@ public sealed class ViewportRenderable : Renderable
         }
     }
 
-    // Maps the focused task to the content line it occupies, so the viewport can scroll it into view.
-    // Returns null when nothing is focused or the focused address is no longer present in the metadata.
-    public static int? FindFocusedLine(RenderedOverview rendered, TaskFocus? focus)
+    // Maps the focused task to the content line the viewport should scroll into view. When moving back
+    // up to the first task of a card whose header is above the current window, the preceding header line
+    // becomes the scroll anchor so labels such as No Date reappear. Otherwise the task line itself stays
+    // the anchor, ensuring the focused task is never clipped below the window.
+    public static int? FindFocusedLine(RenderedOverview rendered, TaskFocus? focus, int previousOffset = 0)
     {
         ArgumentNullException.ThrowIfNull(rendered);
         if (focus is null)
@@ -78,6 +80,11 @@ public sealed class ViewportRenderable : Renderable
         {
             if (line.Address == focus.Address)
             {
+                if (line.Address.TaskIndex == 0 && previousOffset >= line.LineIndex)
+                {
+                    return Math.Max(0, line.LineIndex - 1);
+                }
+
                 return line.LineIndex;
             }
         }
