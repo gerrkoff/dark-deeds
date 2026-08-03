@@ -64,7 +64,7 @@ internal sealed class TaskHubClient(
         // instead of parking on the teardown.
         while (true)
         {
-            Task? pendingStop = null;
+            Task? pendingStop;
             lock (_gate)
             {
                 ObjectDisposedException.ThrowIf(_disposed, this);

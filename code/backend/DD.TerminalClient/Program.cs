@@ -100,11 +100,9 @@ internal static class Program
 
 #pragma warning disable CA2000 // HttpClient owns and disposes the handler chain when it is disposed.
         using var httpClient = new HttpClient(
-            new TerminalHttpHandler(GetToken, clientId) { InnerHandler = new SocketsHttpHandler() })
-        {
-            BaseAddress = profile.BaseUri,
-            Timeout = TimeSpan.FromSeconds(30),
-        };
+            new TerminalHttpHandler(GetToken, clientId) { InnerHandler = new SocketsHttpHandler() });
+        httpClient.BaseAddress = profile.BaseUri;
+        httpClient.Timeout = TimeSpan.FromSeconds(30);
 #pragma warning restore CA2000
 
         var dates = new SystemLocalDateProvider(TimeProvider.System);
@@ -208,11 +206,9 @@ internal static class Program
 
 #pragma warning disable CA2000 // HttpClient owns and disposes the handler chain when it is disposed.
         using var httpClient = new HttpClient(
-            new TerminalHttpHandler(GetToken, writerClientId) { InnerHandler = new SocketsHttpHandler() })
-        {
-            BaseAddress = profile.BaseUri,
-            Timeout = TimeSpan.FromSeconds(30),
-        };
+            new TerminalHttpHandler(GetToken, writerClientId) { InnerHandler = new SocketsHttpHandler() });
+        httpClient.BaseAddress = profile.BaseUri;
+        httpClient.Timeout = TimeSpan.FromSeconds(30);
 #pragma warning restore CA2000
 
         var dates = new SystemLocalDateProvider(TimeProvider.System);

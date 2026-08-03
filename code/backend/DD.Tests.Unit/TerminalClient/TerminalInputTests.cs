@@ -809,7 +809,7 @@ public sealed class TerminalInputTests
     {
         public async Task<ConsoleKeyInfo?> ReadKeyAsync(CancellationToken cancellationToken)
         {
-            await Task.Delay(System.Threading.Timeout.Infinite, cancellationToken);
+            await Task.Delay(Timeout.Infinite, cancellationToken);
             return null;
         }
     }

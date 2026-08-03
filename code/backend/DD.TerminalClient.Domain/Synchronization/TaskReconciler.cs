@@ -99,7 +99,6 @@ public sealed class TaskReconciler
                 _coordinator.DropConflictedEdit(task.Uid);
                 tasksConflicted.Add(task);
                 tasksToApply.Add(task);
-                continue;
             }
 
             // The pending edit is as new as the incoming task (same or older Version) - keep the

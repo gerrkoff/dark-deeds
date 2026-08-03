@@ -60,7 +60,7 @@ public sealed class ProfileStoreTests : IDisposable
 
         var reloaded = new ProfileStore(paths);
         Assert.True(reloaded.TryResolve("work", out var profile));
-        Assert.Equal("https://tasks.example.com/", profile!.BaseUri.AbsoluteUri);
+        Assert.Equal("https://tasks.example.com/", profile.BaseUri.AbsoluteUri);
         Assert.Contains(reloaded.List(), listed => listed.Name == "work");
     }
 
@@ -98,7 +98,7 @@ public sealed class ProfileStoreTests : IDisposable
         var store = CreateStore();
 
         Assert.True(store.TryResolve(requested, out var profile));
-        Assert.Equal(canonical, profile!.Name);
+        Assert.Equal(canonical, profile.Name);
         Assert.Equal(expectedUrl, profile.BaseUri.AbsoluteUri);
     }
 

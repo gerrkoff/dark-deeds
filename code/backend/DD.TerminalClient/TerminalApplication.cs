@@ -297,8 +297,6 @@ internal sealed class TerminalApplication
             case TaskHubEventKind.Unauthorized:
                 Handle401();
                 break;
-            default:
-                break;
         }
     }
 

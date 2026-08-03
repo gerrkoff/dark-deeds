@@ -16,7 +16,7 @@ public sealed record LineEditorState
 
     // Starts editing an existing value with the cursor parked at the end, matching how the web editor
     // opens a task for editing.
-    public static LineEditorState For(string text)
+    public static LineEditorState For(string? text)
     {
         var value = text ?? string.Empty;
         return new LineEditorState { Text = value, Cursor = value.Length };

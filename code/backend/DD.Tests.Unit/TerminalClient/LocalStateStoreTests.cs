@@ -90,7 +90,7 @@ public sealed class LocalStateStoreTests : IDisposable
         Assert.NotNull(failure);
         var reloaded = new LocalStateStore(paths, Profile).Load();
         Assert.NotNull(reloaded);
-        Assert.Equal("alice", reloaded!.DataOwner);
+        Assert.Equal("alice", reloaded.DataOwner);
     }
 
     [Fact]
@@ -128,7 +128,7 @@ public sealed class LocalStateStoreTests : IDisposable
         var loaded = new LocalStateStore(paths, Profile).Load();
 
         Assert.NotNull(loaded);
-        Assert.Equal("carol", loaded!.DataOwner);
+        Assert.Equal("carol", loaded.DataOwner);
         Assert.Empty(loaded.Outbox);
     }
 
@@ -153,7 +153,7 @@ public sealed class LocalStateStoreTests : IDisposable
         var loaded = new LocalStateStore(paths, Profile).Load();
 
         Assert.NotNull(loaded);
-        Assert.Equal(PersistedTerminalState.CurrentSchemaVersion, loaded!.SchemaVersion);
+        Assert.Equal(PersistedTerminalState.CurrentSchemaVersion, loaded.SchemaVersion);
         Assert.Equal("bob", loaded.DataOwner);
         Assert.True(loaded.ShowCompleted);
         var outboxItem = Assert.Single(loaded.Outbox);
