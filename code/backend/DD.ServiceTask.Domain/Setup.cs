@@ -1,5 +1,6 @@
 using DD.ServiceTask.Domain.Services;
 using DD.ServiceTask.Domain.Specifications;
+using DD.Shared.TaskText;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DD.ServiceTask.Domain;
@@ -10,6 +11,8 @@ public static class Setup
     {
         services.AddScoped<ITaskService, TaskService>();
         services.AddScoped<ITaskParserService, TaskParserService>();
+        services.AddScoped<ITaskTextParser, TaskTextParser>();
+        services.AddScoped<ITaskTextDateProvider, TaskTextDateProvider>();
         services.AddScoped<IRecurrenceCreatorService, RecurrenceCreatorService>();
         services.AddScoped<IDateService, DateService>();
         services.AddScoped<IRecurrenceService, RecurrenceService>();

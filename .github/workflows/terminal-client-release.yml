@@ -1,0 +1,49 @@
+name: Terminal Client Release
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - 'dd-terminal-v*'
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    name: Publish binaries
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: code/backend/global.json
+
+      - name: Publish terminal client binaries
+        run: ci/workflows/publish-terminal-client.sh "${{ runner.temp }}/terminal-client"
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: dd-terminal-binaries
+          path: |
+            ${{ runner.temp }}/terminal-client/*.tar.gz
+            ${{ runner.temp }}/terminal-client/*.zip
+            ${{ runner.temp }}/terminal-client/*.sha256
+          if-no-files-found: error
+
+      - name: Publish GitHub release
+        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REF_NAME: ${{ github.ref_name }}
+        run: |
+          gh release create "$REF_NAME" \
+            "${{ runner.temp }}"/terminal-client/*.tar.gz \
+            "${{ runner.temp }}"/terminal-client/*.zip \
+            "${{ runner.temp }}"/terminal-client/*.sha256 \
+            --title "$REF_NAME" \
+            --notes ""

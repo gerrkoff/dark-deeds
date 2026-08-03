@@ -9,11 +9,16 @@
     <ProjectReference Include="..\DD.McpClient.Domain\DD.McpClient.Domain.csproj" />
     <ProjectReference Include="..\DD.ServiceAuth.Domain\DD.ServiceAuth.Domain.csproj" />
     <ProjectReference Include="..\DD.Clients.Details\DD.Clients.Details.csproj" />
+    <ProjectReference Include="..\DD.Shared.TaskText\DD.Shared.TaskText.csproj" />
+    <ProjectReference Include="..\DD.TerminalClient.Domain\DD.TerminalClient.Domain.csproj" />
+    <ProjectReference Include="..\DD.TerminalClient.Details\DD.TerminalClient.Details.csproj" />
+    <ProjectReference Include="..\DD.TerminalClient\DD.TerminalClient.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
     <PackageReference Include="Moq" />
+    <PackageReference Include="Spectre.Console.Testing" />
     <PackageReference Include="xunit" />
     <PackageReference Include="xunit.runner.visualstudio">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
