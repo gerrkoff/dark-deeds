@@ -168,18 +168,12 @@ public sealed class OverviewRendererTests
     [Fact]
     public void Render_AdditionalTask_HasExtraLeftIndent()
     {
-        var projection = Project(
-            Task("simple", date: Monday, order: 1, title: "Simple"),
-            Task("additional", date: Monday, order: 2, type: TerminalTaskType.Additional, title: "Additional"));
-        var rendered = OverviewRenderer.Render(Vm(projection), 80);
-        var simpleLine = rendered.TaskLines.Single(line => line.Address.TaskIndex == 0).LineIndex;
-        var additionalLine = rendered.TaskLines.Single(line => line.Address.TaskIndex == 1).LineIndex;
+        var simple = Task("simple", date: Monday, title: "Simple");
+        var additional = Task("additional", date: Monday, type: TerminalTaskType.Additional, title: "Additional");
 
-        Assert.StartsWith("  Simple", RenderLine(rendered.Lines[simpleLine], 80), StringComparison.Ordinal);
-        Assert.StartsWith(
-            "      Additional",
-            RenderLine(rendered.Lines[additionalLine], 80),
-            StringComparison.Ordinal);
+        Assert.Equal("  ", OverviewRenderer.BuildTaskPrefix(simple, isSelected: false));
+        Assert.Equal(new string(' ', 14), OverviewRenderer.BuildTaskPrefix(additional, isSelected: false));
+        Assert.Equal("> " + new string(' ', 12), OverviewRenderer.BuildTaskPrefix(additional, isSelected: true));
     }
 
     [Fact]

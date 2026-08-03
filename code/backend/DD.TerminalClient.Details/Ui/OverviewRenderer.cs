@@ -33,6 +33,14 @@ public static class OverviewRenderer
         return new RenderedOverview { Lines = lines, TaskLines = taskLines };
     }
 
+    internal static string BuildTaskPrefix(TerminalTask task, bool isSelected)
+    {
+        var marker = isSelected ? "> " : "  ";
+        var typeIndent = task.Type == TerminalTaskType.Additional ? AdditionalIndent : string.Empty;
+        var time = task.Time is { } minutes ? TerminalText.FormatTime(minutes) + " " : string.Empty;
+        return marker + typeIndent + time;
+    }
+
     private static void AppendNoDate(
         List<IRenderable> lines,
         List<TaskLine> taskLines,
@@ -111,10 +119,7 @@ public static class OverviewRenderer
 
     private static Text TaskLineRenderable(TerminalTask task, bool isSelected, int width)
     {
-        var marker = isSelected ? "> " : "  ";
-        var typeIndent = task.Type == TerminalTaskType.Additional ? AdditionalIndent : string.Empty;
-        var time = task.Time is { } minutes ? TerminalText.FormatTime(minutes) + " " : string.Empty;
-        var prefix = marker + typeIndent + time;
+        var prefix = BuildTaskPrefix(task, isSelected);
         var titleBudget = Math.Max(0, width - prefix.GetCellWidth());
         var line = prefix + TerminalText.Truncate(task.Title, titleBudget);
         return new Text(line, TerminalStyles.ForTask(task, isSelected)) { Overflow = Overflow.Ellipsis };

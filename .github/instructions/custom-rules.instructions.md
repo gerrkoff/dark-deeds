@@ -27,7 +27,7 @@ Rules specific to this repository. **If a rule is here — follow it. No excepti
 
 **Render terminal day cards as one top-to-bottom stream with a blank line between cards, but no trailing blank line after the final card.** Up/Down navigates the immediately previous/next visible task across all sections; Left/Right navigates the previous/next non-empty rendered day and lands on its first task.
 
-**When scrolling upward to the first task of a clipped terminal card, use the preceding card header as the viewport anchor so labels such as `No Date` reappear.** Render Today in yellow, other dated headers in a subtle contrasting colour without edge markers, and indent Additional tasks four extra spaces.
+**When scrolling upward to the first task of a clipped terminal card, use the preceding card header as the viewport anchor so labels such as `No Date` reappear.** Render Today in yellow, other dated headers in a subtle contrasting colour without edge markers, and indent Additional tasks twelve extra spaces.
 
 ## Terminal client storage
 
