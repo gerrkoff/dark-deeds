@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
+    <!-- TODO: remove suppression -->
     <!-- Terminal UI application: user-facing strings are printed directly and are not localized.
          CA1849 is not meaningful for one-shot console CLI output. -->
     <NoWarn>$(NoWarn);CA1303;CA1849</NoWarn>
@@ -9,11 +10,12 @@
 
   <!-- Distribution build: untrimmed, self-contained, single-file binaries. These settings only take
        effect when a RuntimeIdentifier is supplied (dotnet publish -r <rid> via
-       scripts/publish-terminal-client.sh), so a plain solution build/test stays framework-dependent
+       ci/workflows/publish-terminal-client.sh), so a plain solution build/test stays framework-dependent
        and unaffected. Trimming stays disabled for the first release. -->
   <PropertyGroup Condition="'$(RuntimeIdentifier)' != ''">
     <PublishSingleFile>true</PublishSingleFile>
     <SelfContained>true</SelfContained>
+    <!-- TODO: support trimming and aot -->
     <PublishTrimmed>false</PublishTrimmed>
     <DebugType>none</DebugType>
   </PropertyGroup>
@@ -31,4 +33,5 @@
     <PackageReference Include="Microsoft.Extensions.Hosting" />
   </ItemGroup>
 
+  <!-- TODO: clear warnings from Rider -->
 </Project>

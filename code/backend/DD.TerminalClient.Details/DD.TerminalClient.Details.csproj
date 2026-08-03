@@ -2,6 +2,7 @@
 
   <ItemGroup>
     <InternalsVisibleTo Include="DD.Tests.Unit" />
+    <!-- TODO: unite it with DD.TerminalClient and remove this line -->
     <InternalsVisibleTo Include="DD.TerminalClient" />
   </ItemGroup>
 

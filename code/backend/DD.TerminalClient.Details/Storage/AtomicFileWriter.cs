@@ -2,10 +2,11 @@ using System.Runtime.Versioning;
 
 namespace DD.TerminalClient.Details.Storage;
 
-// Crash-safe, owner-private file writes shared by the local-state and token stores. Content is written
-// to a sibling temp file, flushed all the way to disk, tightened to Unix 0600, then atomically renamed
-// over the target. A partial or failed write therefore never corrupts, truncates, or exposes the
-// previous good file: on any failure the temp file is removed and the original is left untouched.
+// Crash-safe file writes shared by the local-state and token stores. Content is written to a sibling
+// temp file, flushed all the way to disk, tightened to Unix 0600 where supported, then atomically
+// renamed over the target. Windows files inherit the containing directory's ACL. A partial or failed
+// write therefore never corrupts or truncates the previous good file: on any failure the temp file is
+// removed and the original is left untouched.
 internal static class AtomicFileWriter
 {
     internal const UnixFileMode OwnerReadWrite = UnixFileMode.UserRead | UnixFileMode.UserWrite;

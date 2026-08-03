@@ -3,10 +3,10 @@
 # publish-terminal-client.sh
 #
 # Builds untrimmed, self-contained, single-file binaries of the Dark Deeds terminal client for every
-# supported runtime identifier and writes one deterministic .tar.gz archive plus a matching .sha256
+# supported runtime identifier and writes one deterministic platform archive plus a matching .sha256
 # checksum file per runtime identifier into the given output directory.
 #
-# Usage: scripts/publish-terminal-client.sh <output-directory>
+# Usage: ci/workflows/publish-terminal-client.sh <output-directory>
 #
 # The script is intended to be runnable locally (macOS or Linux) and from the release workflow.
 
@@ -14,7 +14,7 @@ set -euo pipefail
 
 readonly BINARY_NAME="dd-terminal"
 readonly CONFIGURATION="Release"
-readonly RUNTIME_IDENTIFIERS="osx-arm64 osx-x64 linux-x64 linux-arm64"
+readonly RUNTIME_IDENTIFIERS="osx-arm64 osx-x64 linux-x64 linux-arm64 win-x64"
 # Fixed modification time (2000-01-01 00:00:00) so archive contents are byte-stable across runs.
 readonly DETERMINISTIC_TIMESTAMP="200001010000.00"
 
@@ -22,8 +22,9 @@ usage() {
     cat <<'USAGE'
 Usage: publish-terminal-client.sh <output-directory>
 
-Builds the Dark Deeds terminal client for osx-arm64, osx-x64, linux-x64, and linux-arm64 and writes
-one .tar.gz archive and one .sha256 checksum per runtime identifier into <output-directory>.
+Builds the Dark Deeds terminal client for osx-arm64, osx-x64, linux-x64, linux-arm64, and win-x64.
+Unix binaries are packaged as .tar.gz; the Windows binary is packaged as .zip. A matching .sha256
+checksum is written for every archive.
 USAGE
 }
 
@@ -38,7 +39,7 @@ if [ "$#" -ne 1 ]; then
 fi
 
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-repo_root="$(cd "$script_dir/.." && pwd)"
+repo_root="$(cd "$script_dir/../.." && pwd)"
 project="$repo_root/code/backend/DD.TerminalClient/DD.TerminalClient.csproj"
 
 if [ ! -f "$project" ]; then
@@ -48,6 +49,11 @@ fi
 
 mkdir -p "$1"
 output_dir="$(cd "$1" && pwd)"
+
+if ! command -v zip >/dev/null 2>&1; then
+    echo "error: zip is required to package the Windows binary" >&2
+    exit 1
+fi
 
 # Pick the ownership-normalization flags for the local tar flavor so archives do not embed the
 # building user's uid/gid. GNU tar and BSD (macOS) tar spell these options differently.
@@ -78,28 +84,38 @@ for rid in $RUNTIME_IDENTIFIERS; do
     dotnet publish "$project" \
         --configuration "$CONFIGURATION" \
         --runtime "$rid" \
-        --self-contained true \
         --nologo \
-        -p:PublishSingleFile=true \
-        -p:PublishTrimmed=false \
         --output "$publish_dir"
+
+    if [[ "$rid" == win-* ]]; then
+        executable_name="$BINARY_NAME.exe"
+        produced="$publish_dir/DD.TerminalClient.exe"
+    else
+        executable_name="$BINARY_NAME"
+        produced="$publish_dir/DD.TerminalClient"
+    fi
 
     # The single-file apphost is emitted under the assembly name; rename it to the distributed
     # executable name so archives ship a consistent, user-facing binary.
-    produced="$publish_dir/DD.TerminalClient"
     if [ ! -f "$produced" ]; then
         echo "error: expected published binary not found at $produced" >&2
         exit 1
     fi
 
-    binary="$publish_dir/$BINARY_NAME"
+    binary="$publish_dir/$executable_name"
     mv "$produced" "$binary"
     chmod 0755 "$binary"
     touch -t "$DETERMINISTIC_TIMESTAMP" "$binary"
 
-    archive_name="$BINARY_NAME-$rid.tar.gz"
-    archive_path="$output_dir/$archive_name"
-    tar "${tar_owner_flags[@]}" -C "$publish_dir" -cf - "$BINARY_NAME" | gzip -9 -n -c > "$archive_path"
+    if [[ "$rid" == win-* ]]; then
+        archive_name="$BINARY_NAME-$rid.zip"
+        archive_path="$output_dir/$archive_name"
+        ( cd "$publish_dir" && zip -X -9 -q "$archive_path" "$executable_name" )
+    else
+        archive_name="$BINARY_NAME-$rid.tar.gz"
+        archive_path="$output_dir/$archive_name"
+        tar "${tar_owner_flags[@]}" -C "$publish_dir" -cf - "$executable_name" | gzip -9 -n -c > "$archive_path"
+    fi
 
     # Reference only the archive basename in the checksum file so it verifies from the output
     # directory with `shasum -a 256 -c <name>.sha256`.

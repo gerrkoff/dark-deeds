@@ -8,8 +8,6 @@ namespace DD.Tests.Unit.TerminalClient;
 // normalization. Every store is rooted in a throwaway override directory cleaned up on Dispose.
 public sealed class ProfileStoreTests : IDisposable
 {
-    private const string ApplicationFolderName = "dark-deeds-terminal";
-
     private readonly List<string> _tempRoots = [];
 
     [Theory]
@@ -133,14 +131,13 @@ public sealed class ProfileStoreTests : IDisposable
     }
 
     [Fact]
-    public void ApplicationPathProvider_WithoutOverride_UsesOsConventionRoots()
+    public void ApplicationPathProvider_WithoutOverride_UsesDataDirectoryBesideExecutable()
     {
         var paths = new ApplicationPathProvider();
+        var expectedRoot = Path.Combine(AppContext.BaseDirectory, "data");
 
-        Assert.False(string.IsNullOrWhiteSpace(paths.ConfigRoot));
-        Assert.False(string.IsNullOrWhiteSpace(paths.StateRoot));
-        Assert.Contains(ApplicationFolderName, paths.ConfigRoot, StringComparison.Ordinal);
-        Assert.Contains(ApplicationFolderName, paths.StateRoot, StringComparison.Ordinal);
+        Assert.Equal(expectedRoot, paths.ConfigRoot);
+        Assert.Equal(expectedRoot, paths.StateRoot);
     }
 
     [Theory]

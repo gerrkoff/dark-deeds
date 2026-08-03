@@ -9,10 +9,11 @@ the same backend-wins semantics as the web client.
 ## Installation
 
 Prebuilt, self-contained, single-file binaries are published for `osx-arm64`, `osx-x64`,
-`linux-x64`, and `linux-arm64`. Each release ships one archive and one checksum per platform:
+`linux-x64`, `linux-arm64`, and `win-x64`. Each release ships one archive and one checksum per
+platform:
 
-- `dd-terminal-<rid>.tar.gz`
-- `dd-terminal-<rid>.tar.gz.sha256`
+- macOS/Linux: `dd-terminal-<rid>.tar.gz` and `dd-terminal-<rid>.tar.gz.sha256`
+- Windows: `dd-terminal-win-x64.zip` and `dd-terminal-win-x64.zip.sha256`
 
 Download the archive for your platform, verify it, extract the binary, and run it:
 
@@ -28,24 +29,38 @@ tar -xzf dd-terminal-osx-arm64.tar.gz
 ./dd-terminal --profile production
 ```
 
-The archive contains a single self-contained executable named `dd-terminal`; no .NET runtime needs to
-be installed. On macOS, a downloaded binary may be quarantined by Gatekeeper; clear the attribute
-with `xattr -d com.apple.quarantine dd-terminal` if it refuses to launch.
+On Windows, compare the expected hash in the `.sha256` file with:
+
+```powershell
+Get-FileHash .\dd-terminal-win-x64.zip -Algorithm SHA256
+Expand-Archive .\dd-terminal-win-x64.zip
+.\dd-terminal-win-x64\dd-terminal.exe --version
+```
+
+The archive contains a single self-contained executable named `dd-terminal` or `dd-terminal.exe`;
+no .NET runtime needs to be installed. On macOS, a downloaded binary may be quarantined by
+Gatekeeper; clear the attribute with `xattr -d com.apple.quarantine dd-terminal` if it refuses to
+launch.
 
 ### Build from source
 
-The four binaries are produced by a script that any contributor can run locally (macOS or Linux;
+The five binaries are produced by a script that any contributor can run locally (macOS or Linux;
 requires the .NET 8 SDK):
 
 ```bash
-scripts/publish-terminal-client.sh <output-directory>
+ci/workflows/publish-terminal-client.sh <output-directory>
 ```
 
 The script performs an untrimmed, self-contained, single-file `dotnet publish` for every runtime
-identifier and writes deterministic `.tar.gz` archives plus `.sha256` checksums into the output
-directory. The same script is invoked by the `Terminal Client Release` GitHub workflow
-(`.github/workflows/terminal-client-release.yml`), which runs on `workflow_dispatch` and on `v*`
-tags.
+identifier and writes deterministic `.tar.gz` or `.zip` archives plus `.sha256` checksums into the
+output directory. The same script is invoked by the `Terminal Client Release` GitHub workflow
+(`.github/workflows/terminal-client-release.yml`), which runs on `workflow_dispatch` and on
+`dd-terminal-v*` tags.
+
+After `ci/deploy.sh` successfully pushes `staging`, it prompts for an optional terminal version.
+Entering a semantic version such as `1.2.0` creates and pushes the annotated tag
+`dd-terminal-v1.2.0` on the exact deployed staging commit, which starts the release workflow.
+Leaving the version empty skips the terminal release.
 
 ## Profiles
 
@@ -66,10 +81,10 @@ HTTP so the `local` profile can talk to a development backend.
 ### Custom profiles
 
 The three built-in names are reserved. To add your own target, create a `profile.json` in a new
-profile directory under the config root (see [Local state](#local-state-reset-and-migration)):
+profile directory under the data root (see [Local state](#local-state-reset-and-migration)):
 
 ```text
-<config-root>/profiles/<your-name>/profile.json
+<data-root>/profiles/<your-name>/profile.json
 ```
 
 ```json
@@ -85,8 +100,8 @@ slashes, no `..`).
 
 - On first use, or whenever no usable token is stored, the client opens a masked login prompt inside
   the TUI. Only the returned JWT is persisted; your password is never written to disk or logs.
-- The token is stored separately from application state in `token.jwt`, created with Unix permissions
-  `0600` (owner read/write only).
+- The token is stored separately from application state in `token.jwt`. On Unix it is created with
+  permissions `0600` (owner read/write only); on Windows it inherits the data directory's ACL.
 - While signed in, the client silently renews the token before it expires (when less than one day of
   lifetime remains).
 - On a `401`, the client stops network activity, keeps your persisted outbox, and returns to the
@@ -126,32 +141,28 @@ date range expands into one task per day).
 
 ## Local state, reset, and migration
 
-State locations follow OS conventions and are split into a config root and a state root:
-
-| OS    | Config root                                             | State root                                    |
-| ----- | ------------------------------------------------------- | --------------------------------------------- |
-| macOS | `~/Library/Application Support/dark-deeds-terminal`     | same as config root                           |
-| Linux | `${XDG_CONFIG_HOME:-~/.config}/dark-deeds-terminal`     | `${XDG_STATE_HOME:-~/.local/state}/dark-deeds-terminal` |
+By default, all persistent data is portable and stored in a `data` directory beside the
+`dd-terminal` executable. The executable directory must therefore be writable by the current user.
 
 Per profile:
 
-- `<config-root>/profiles/<profile>/profile.json` – custom profile definition (built-in profiles are
+- `<data-root>/profiles/<profile>/profile.json` – custom profile definition (built-in profiles are
   not written to disk).
-- `<state-root>/profiles/<profile>/state.json` – schema-versioned application state: data owner,
+- `<data-root>/profiles/<profile>/state.json` – schema-versioned application state: data owner,
   cached tasks, durable outbox, and local completed-visibility toggle.
-- `<state-root>/profiles/<profile>/token.jwt` – stored JWT (`0600`).
-- `<state-root>/profiles/<profile>/logs/terminal.log` – bounded diagnostic log.
+- `<data-root>/profiles/<profile>/token.jwt` – stored JWT (`0600`).
+- `<data-root>/profiles/<profile>/logs/terminal.log` – bounded diagnostic log.
 
-Pass `--state-root <dir>` to relocate **all** config and state under one directory (used by tests and
-the self-test to isolate a throwaway location).
+Pass `--state-root <dir>` to relocate all config and state under separate `config` and `state`
+subdirectories of that directory (used by tests and the self-test to isolate a throwaway location).
 
 **Migration.** `state.json` carries a schema version. On startup the client migrates older documents
 forward through an explicit pipeline that never drops the outbox, so unsaved edits survive an upgrade.
 A state file written by a newer version, or a malformed/unsupported one, is preserved untouched and
 surfaced as a blocking, actionable error rather than being overwritten.
 
-**Reset.** To start a profile from scratch, quit the client and delete that profile's state directory
-(`<state-root>/profiles/<profile>/`). Deleting `token.jwt` alone forces a fresh login; deleting the
+**Reset.** To start a profile from scratch, quit the client and delete that profile's data directory
+(`<data-root>/profiles/<profile>/`). Deleting `token.jwt` alone forces a fresh login; deleting the
 whole directory also clears cached tasks and any unsaved outbox edits.
 
 ## Conflict resolution
@@ -216,8 +227,8 @@ credentials or the JWT.
   tasks immediately and retries in the background without blocking the UI.
 - **Stale or stuck data.** Press `Ctrl+R` to force a hub reconnect and a full snapshot reload.
 - **Unknown profile.** `dd-terminal: unknown profile '<name>'` means the name is neither built in nor
-  present as a `profile.json`. Check the spelling and the config root path above.
-- **Diagnostics.** Consult `<state-root>/profiles/<profile>/logs/terminal.log`. Logs never contain
+  present as a `profile.json`. Check the spelling and the data root path above.
+- **Diagnostics.** Consult `<data-root>/profiles/<profile>/logs/terminal.log`. Logs never contain
   passwords, tokens, or authorization headers.
 
 ## Human-only terminal verification checklist
@@ -231,6 +242,8 @@ Verify by hand, ideally in [Ghostty](https://ghostty.org/):
 - [ ] **Local Ghostty rendering.** Launch `dd-terminal` in Ghostty and confirm colors, borders, task
       styles (selected, today, completed, probable, Additional/Routine/Weekly, timed), and the
       header/footer render correctly.
+- [ ] **Windows Terminal rendering.** Launch `dd-terminal.exe` in Windows Terminal and confirm input,
+      colors, alternate-screen switching, resize handling, and screen restoration work correctly.
 - [ ] **SSH PTY allocation.** Run the client over SSH with a PTY (`ssh -t <host> dd-terminal`) and
       confirm keyboard input and the alternate screen work.
 - [ ] **Remote `xterm-ghostty` terminfo.** When connecting from Ghostty to a remote host, ensure the
