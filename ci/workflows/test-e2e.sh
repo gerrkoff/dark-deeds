@@ -34,6 +34,7 @@ docker network create dd-test-e2e-network
 docker run -d \
   --network dd-test-e2e-network \
   --platform linux/x86_64 \
+  --shm-size=2g \
   -e TZ=America/New_York \
   --name dd-test-e2e-chrome \
   selenium/standalone-chrome:127.0-20240813
