@@ -123,7 +123,7 @@ public static class OverviewRenderer
         var time = task.Time is { } minutes ? TerminalText.FormatTime(minutes) + " " : string.Empty;
         var titleBudget = Math.Max(0, width - prefix.GetCellWidth() - time.GetCellWidth());
         var taskText = time + TerminalText.Truncate(task.Title, titleBudget);
-        return new StyledTaskLine(prefix, taskText, TerminalStyles.ForTask(task, isSelected));
+        return new StyledTaskLine(prefix, taskText, TerminalStyles.ForTask(task));
     }
 
     private static Text SectionTitleLine(string title, int width)
