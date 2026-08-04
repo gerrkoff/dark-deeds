@@ -95,11 +95,6 @@ The SPA computes its own backend as `http://<window.location.hostname>:5000`, so
 page from `host.docker.internal:3000` makes the browser call `host.docker.internal:5000`
 automatically — that is why `BE_URL` stays `localhost` and is not a contradiction.
 
-**Give the Selenium Chrome container 2 GB of shared memory and let Chrome use it.**
-Configure `docker run` with `--shm-size=2g` (Compose: `shm_size: 2gb`) and do not pass
-`--disable-dev-shm-usage`. On the older Drone Docker host, the overlay-filesystem fallback
-causes later browser sessions to fail with `tab crashed` or navigate without rendering.
-
 **Vite must allow the Grid's Host header.** Vite 5 blocks `host.docker.internal` with
 `403 Blocked request` unless it is in `server.allowedHosts` (already added in
 `code/frontend/vite.config.ts`; dev-server-only, no production effect). If a fresh checkout

@@ -65,6 +65,7 @@ public class BaseTest
         if (IsContainer)
         {
             options.AddArguments("--no-sandbox");
+            options.AddArguments("--disable-dev-shm-usage");
             options.AddArguments("--disable-gpu");
             options.AddArguments("--remote-debugging-port=9222");
             options.AddArguments("--headless");
