@@ -147,14 +147,39 @@ public sealed class ApplicationReducerTests
     }
 
     [Fact]
-    public void ToggleRoutine_MarksFocusedDateAsShown()
+    public void ToggleRoutine_ExpandsAndCollapsesAllDatedRoutineTasks()
     {
         var reducer = NewReducer();
-        var state = Ready(reducer, Task("a", Monday, "A"));
+        var state = Ready(
+            reducer,
+            Task("routine-1", Monday, "Routine 1", type: TerminalTaskType.Routine),
+            Task("routine-2", Monday.AddDays(1), "Routine 2", type: TerminalTaskType.Routine));
 
-        var result = Feed(reducer, state, Then(Key('r')));
+        var expanded = Feed(reducer, state, Then(Key('r')));
 
-        Assert.Contains(Monday, result.State.RoutineShownDates);
+        Assert.True(expanded.State.ShowRoutineTasks);
+        Assert.Equal("routine-1", Assert.Single(expanded.State.Projection.Current[0].Tasks).Task.Uid);
+        Assert.Equal("routine-2", Assert.Single(expanded.State.Projection.Current[1].Tasks).Task.Uid);
+
+        var withNewDate = reducer.Recompute(expanded.State with
+        {
+            Cache =
+            [
+                .. expanded.State.Cache,
+                Task("routine-3", Monday.AddDays(2), "Routine 3", type: TerminalTaskType.Routine),
+            ],
+        });
+        Assert.Equal("routine-3", Assert.Single(withNewDate.Projection.Current[2].Tasks).Task.Uid);
+
+        var collapsed = Feed(reducer, withNewDate, Then(Key('r')));
+
+        Assert.False(collapsed.State.ShowRoutineTasks);
+        Assert.Empty(collapsed.State.Projection.Current[0].Tasks);
+        Assert.Empty(collapsed.State.Projection.Current[1].Tasks);
+        Assert.Empty(collapsed.State.Projection.Current[2].Tasks);
+        Assert.True(collapsed.State.Projection.Current[0].HasCollapsedRoutineTasks);
+        Assert.True(collapsed.State.Projection.Current[1].HasCollapsedRoutineTasks);
+        Assert.True(collapsed.State.Projection.Current[2].HasCollapsedRoutineTasks);
     }
 
     [Fact]

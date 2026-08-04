@@ -178,9 +178,12 @@ public sealed class ViewportRenderableTests
 
         Assert.True(state.Offset > 0, "expected the focused task to require scrolling");
         var output = Ansi(viewport, 120);
+        var console = Plain(120);
+        console.Write(viewport);
 
         Assert.Contains("T20", output, StringComparison.Ordinal);
-        Assert.Contains("[38;5;0;48;5;7m", output, StringComparison.Ordinal);
+        Assert.Contains("> T20", console.Output, StringComparison.Ordinal);
+        Assert.Contains("[38;5;15m", output, StringComparison.Ordinal);
         Assert.DoesNotContain("T00", output, StringComparison.Ordinal);
     }
 

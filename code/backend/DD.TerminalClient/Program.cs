@@ -1,4 +1,5 @@
 using System.Reflection;
+using System.Text;
 using DD.Shared.TaskText;
 using DD.TerminalClient.Details.Api;
 using DD.TerminalClient.Details.Logging;
@@ -30,6 +31,9 @@ internal static class Program
 
     private static async Task<int> Main(string[] args)
     {
+        Console.InputEncoding = Encoding.UTF8;
+        Console.OutputEncoding = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false);
+
         if (ValidateArgs(args) is { } argumentError)
         {
             Console.Error.WriteLine($"{ExecutableName}: {argumentError}");

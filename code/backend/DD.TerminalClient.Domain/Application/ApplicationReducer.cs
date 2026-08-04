@@ -21,6 +21,8 @@ public sealed class ApplicationReducer(
     TaskTextFormatter formatter,
     Func<string> uidFactory)
 {
+    private static readonly IReadOnlySet<DateOnly> NoRoutineDates = new HashSet<DateOnly>();
+
     private static readonly VisualTaskAddress OriginAddress = new()
     {
         Section = OverviewSection.NoDate,
@@ -35,7 +37,13 @@ public sealed class ApplicationReducer(
     {
         ArgumentNullException.ThrowIfNull(state);
 
-        var projected = projection.Project(state.Cache, state.ShowCompleted, state.RoutineShownDates);
+        var routineShownDates = state.ShowRoutineTasks
+            ? state.Cache
+                .Where(task => !task.Deleted && task.Type == TerminalTaskType.Routine && task.Date is not null)
+                .Select(task => task.Date!.Value)
+                .ToHashSet()
+            : NoRoutineDates;
+        var projected = projection.Project(state.Cache, state.ShowCompleted, routineShownDates);
         var focus = TaskFocusService.Reconcile(projected, state.Focus);
         return state with { Projection = projected, Focus = focus };
     }
@@ -425,19 +433,7 @@ public sealed class ApplicationReducer(
 
     private ApplicationTransition ToggleRoutine(ApplicationState state)
     {
-        var focused = FindFocused(state);
-        if (focused?.Date is not { } date)
-        {
-            return Decline(state, "Routine visibility applies to a dated task.");
-        }
-
-        var set = new HashSet<DateOnly>(state.RoutineShownDates);
-        if (!set.Remove(date))
-        {
-            set.Add(date);
-        }
-
-        return ApplicationTransition.Of(Recompute(state with { RoutineShownDates = set }));
+        return ApplicationTransition.Of(Recompute(state with { ShowRoutineTasks = !state.ShowRoutineTasks }));
     }
 
     private ApplicationTransition CommitChanges(

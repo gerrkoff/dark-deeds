@@ -23,15 +23,16 @@ jobs:
   build-be:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v4
     - name: Setup .NET Core
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: 8.0.100
+        global-json-file: code/backend/global.json
     - name: Build BE
+      working-directory: code/backend
       run: |
-        dotnet build code/backend/DarkDeeds.sln
-        dotnet test code/backend/DarkDeeds.sln
+        dotnet build DarkDeeds.sln
+        dotnet test DarkDeeds.sln
 
   build-e2e-tests:
     runs-on: ubuntu-latest

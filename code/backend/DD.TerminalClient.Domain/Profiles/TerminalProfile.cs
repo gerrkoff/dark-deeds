@@ -7,7 +7,7 @@ namespace DD.TerminalClient.Domain.Profiles;
 public sealed record TerminalProfile
 {
     private static readonly char[] ForbiddenNameChars =
-        Path.GetInvalidFileNameChars().Append('/').Append('\\').Distinct().ToArray();
+        [.. Path.GetInvalidFileNameChars().Append('/').Append('\\').Distinct()];
 
     private TerminalProfile(string name, Uri baseUri)
     {

@@ -124,7 +124,7 @@ public static class TerminalFrame
         AddHelpRow(grid, "Shift+Up/Down, K J", "Reorder within the day");
         AddHelpRow(grid, "Shift+Left/Right, H L", "Move one day");
         AddHelpRow(grid, "m", "Move to an explicit date");
-        AddHelpRow(grid, "r", "Toggle Routine visibility");
+        AddHelpRow(grid, "r", "Toggle Routine visibility for all days");
         AddHelpRow(grid, "c", "Toggle completed visibility");
         AddHelpRow(grid, "Ctrl+R", "Reconnect and reload");
         AddHelpRow(grid, "?", "Toggle this help");

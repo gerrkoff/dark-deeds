@@ -3,11 +3,10 @@ using Spectre.Console;
 
 namespace DD.TerminalClient.Details.Ui;
 
-// The single source of terminal frame styling. Task styling mirrors the web DayCardItem rules: a focused
-// task inverts foreground and background; a completed task is struck through and dimmed; a probable task
-// is italic; and the task type tints the text (Additional/Routine/Weekly are secondary greys, Routine
-// dimmed and Weekly bold to stay distinguishable). Chrome styles cover day headers, today, section
-// titles and hints. Colours are kept to the 16-colour palette so they render on a basic SSH terminal.
+// The single source of terminal frame styling. Selection is represented by the task-line marker rather
+// than title highlighting. Completed tasks are struck through and dimmed, probable tasks are italic,
+// Additional tasks are dimmed, and every non-Simple type uses the secondary grey foreground. Chrome
+// styles cover day headers, today, section titles and hints. Colours stay within the 16-colour palette.
 internal static class TerminalStyles
 {
     public static readonly Style DayHeader = new(Color.Blue, decoration: Decoration.Bold);
@@ -26,6 +25,7 @@ internal static class TerminalStyles
         ArgumentNullException.ThrowIfNull(task);
 
         var decoration = Decoration.None;
+
         if (task.Completed)
         {
             decoration |= Decoration.Strikethrough;
@@ -38,17 +38,14 @@ internal static class TerminalStyles
 
         if (isSelected)
         {
-            return new Style(Color.Black, Color.Silver, decoration);
+            // important: Keep these fallback selected-task styles for quick restoration if needed.
+            // return new Style(Color.Black, Color.Silver, decoration);
+            // decoration |= Decoration.Underline;
         }
 
-        if (task.Type == TerminalTaskType.Routine)
+        if (task.Type == TerminalTaskType.Additional || task.Completed)
         {
             decoration |= Decoration.Dim;
-        }
-
-        if (task.Type == TerminalTaskType.Weekly)
-        {
-            decoration |= Decoration.Bold;
         }
 
         var foreground = task.Completed || task.Type != TerminalTaskType.Simple

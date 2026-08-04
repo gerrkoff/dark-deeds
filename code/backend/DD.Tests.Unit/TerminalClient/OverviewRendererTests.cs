@@ -38,19 +38,24 @@ public sealed class OverviewRendererTests
             Task("current", date: Monday, title: "Today thing"),
             Task("future", date: Monday.AddDays(20), title: "Later thing"));
         var console = Plain(80);
+        var contentConsole = Plain(80);
+        var model = Vm(projection);
 
-        console.Write(TerminalFrame.Render(Vm(projection), 80));
+        console.Write(TerminalFrame.Render(model, 80));
+        contentConsole.Write(TerminalFrame.RenderContent(model, 80));
         var output = console.Output;
+        var contentOutput = contentConsole.Output;
 
         Assert.Contains("Dark Deeds", output, StringComparison.Ordinal);
-        Assert.Contains("No Date", output, StringComparison.Ordinal);
-        Assert.Contains("Overdue", output, StringComparison.Ordinal);
-        Assert.Contains("Upcoming", output, StringComparison.Ordinal);
-        Assert.Contains("Buy milk", output, StringComparison.Ordinal);
-        Assert.Contains("Old thing", output, StringComparison.Ordinal);
-        Assert.Contains("Today thing", output, StringComparison.Ordinal);
-        Assert.Contains("Later thing", output, StringComparison.Ordinal);
-        Assert.Contains("Mon 04 Nov", output, StringComparison.Ordinal);
+        Assert.Contains("No Date", contentOutput, StringComparison.Ordinal);
+        Assert.Contains("Expired", contentOutput, StringComparison.Ordinal);
+        Assert.Contains("Current", contentOutput, StringComparison.Ordinal);
+        Assert.Contains("Future", contentOutput, StringComparison.Ordinal);
+        Assert.Contains("Buy milk", contentOutput, StringComparison.Ordinal);
+        Assert.Contains("Old thing", contentOutput, StringComparison.Ordinal);
+        Assert.Contains("Today thing", contentOutput, StringComparison.Ordinal);
+        Assert.Contains("Later thing", contentOutput, StringComparison.Ordinal);
+        Assert.Contains("Mon 04 Nov", contentOutput, StringComparison.Ordinal);
         Assert.Contains("? help", output, StringComparison.Ordinal);
     }
 
@@ -190,25 +195,45 @@ public sealed class OverviewRendererTests
         Assert.Contains("+1 routine", console.Output, StringComparison.Ordinal);
     }
 
+    [Fact]
+    public void Render_CompletedRoutinesCollapsed_ShowsZeroCount()
+    {
+        var projection = ProjectRaw(
+            [
+                Task("routine-1", date: Monday, completed: true, type: TerminalTaskType.Routine),
+                Task("routine-2", date: Monday, completed: true, type: TerminalTaskType.Routine),
+            ],
+            showCompleted: false,
+            routineShownDates: new HashSet<DateOnly>());
+        var console = Plain(80);
+
+        console.Write(new Rows(OverviewRenderer.Render(Vm(projection), 80).Lines));
+
+        Assert.Contains("+0 routine", console.Output, StringComparison.Ordinal);
+    }
+
     [Theory]
-    [InlineData(TerminalTaskType.Simple, false, false, false)]
-    [InlineData(TerminalTaskType.Additional, false, false, false)]
-    [InlineData(TerminalTaskType.Routine, false, false, false)]
-    [InlineData(TerminalTaskType.Weekly, false, false, false)]
-    public void ForTask_TypeStyles_AreDistinct(TerminalTaskType type, bool completed, bool probable, bool selected)
+    [InlineData(TerminalTaskType.Simple, false, false)]
+    [InlineData(TerminalTaskType.Additional, false, false)]
+    [InlineData(TerminalTaskType.Routine, false, false)]
+    [InlineData(TerminalTaskType.Weekly, false, false)]
+    public void ForTask_TypeStyles_UseCurrentForegroundAndDecorationRules(
+        TerminalTaskType type,
+        bool completed,
+        bool probable)
     {
         var style = TerminalStyles.ForTask(
             Task("x", type: type, completed: completed, probable: probable),
-            selected);
+            isSelected: false);
 
         var expectedForeground = type == TerminalTaskType.Simple ? Color.Default : Color.Grey;
         Assert.Equal(expectedForeground, style.Foreground);
-        Assert.Equal(type == TerminalTaskType.Routine, style.Decoration.HasFlag(Decoration.Dim));
-        Assert.Equal(type == TerminalTaskType.Weekly, style.Decoration.HasFlag(Decoration.Bold));
+        Assert.Equal(type == TerminalTaskType.Additional, style.Decoration.HasFlag(Decoration.Dim));
+        Assert.False(style.Decoration.HasFlag(Decoration.Bold));
     }
 
     [Fact]
-    public void ForTask_CompletedProbableAndSelected_ComposeDecorations()
+    public void ForTask_CompletedAndProbable_ComposeDecorations()
     {
         var completed = TerminalStyles.ForTask(Task("x", completed: true), isSelected: false);
         Assert.True(completed.Decoration.HasFlag(Decoration.Strikethrough));
@@ -216,20 +241,14 @@ public sealed class OverviewRendererTests
 
         var probable = TerminalStyles.ForTask(Task("x", probable: true), isSelected: false);
         Assert.True(probable.Decoration.HasFlag(Decoration.Italic));
-
-        var selected = TerminalStyles.ForTask(Task("x", completed: true), isSelected: true);
-        Assert.Equal(Color.Black, selected.Foreground);
-        Assert.Equal(Color.Silver, selected.Background);
-        Assert.True(selected.Decoration.HasFlag(Decoration.Strikethrough));
     }
 
     [Theory]
-    [InlineData(TerminalTaskType.Additional, false, false, false, "[38;5;8m")]
-    [InlineData(TerminalTaskType.Routine, false, false, false, "[2;38;5;8m")]
-    [InlineData(TerminalTaskType.Weekly, false, false, false, "[1;38;5;8m")]
-    [InlineData(TerminalTaskType.Simple, true, false, false, "[9;38;5;8m")]
+    [InlineData(TerminalTaskType.Additional, false, false, false, "[2;38;5;8m")]
+    [InlineData(TerminalTaskType.Routine, false, false, false, "[38;5;8m")]
+    [InlineData(TerminalTaskType.Weekly, false, false, false, "[38;5;8m")]
+    [InlineData(TerminalTaskType.Simple, true, false, false, "[2;9;38;5;8m")]
     [InlineData(TerminalTaskType.Simple, false, true, false, "[3m")]
-    [InlineData(TerminalTaskType.Simple, false, false, true, "[38;5;0;48;5;7m")]
     public void Render_TaskStyle_EmitsExpectedAnsi(
         TerminalTaskType type,
         bool completed,
@@ -246,6 +265,28 @@ public sealed class OverviewRendererTests
         var output = Ansi(new Rows(OverviewRenderer.Render(model, 80).Lines), 80);
 
         Assert.Contains(expectedSgr, output, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void Render_CompletedTask_KeepsMarkerAndIndentWhiteWithoutStrikethrough()
+    {
+        var task = Task(
+            "completed",
+            date: Monday,
+            completed: true,
+            type: TerminalTaskType.Additional,
+            title: "Completed");
+        var projection = ProjectRaw([task], showCompleted: true, routineShownDates: new HashSet<DateOnly>());
+        var model = Vm(projection, focus: FocusFor(projection, "completed"));
+
+        var output = Ansi(new Rows(OverviewRenderer.Render(model, 80).Lines), 80);
+        var prefixIndex = output.IndexOf("> " + new string(' ', 12), StringComparison.Ordinal);
+        var titleIndex = output.IndexOf("Completed", StringComparison.Ordinal);
+        var whiteIndex = output.LastIndexOf("[38;5;15m", prefixIndex, StringComparison.Ordinal);
+        var completedStyleIndex = output.LastIndexOf("[2;9;38;5;8m", titleIndex, StringComparison.Ordinal);
+
+        Assert.True(whiteIndex >= 0 && whiteIndex < prefixIndex);
+        Assert.True(completedStyleIndex > prefixIndex && completedStyleIndex < titleIndex);
     }
 
     [Fact]
@@ -439,6 +480,7 @@ public sealed class OverviewRendererTests
     {
         var console = new TestConsole();
         console.Profile.Width = width;
+        console.Profile.Height = 100;
         return console;
     }
 
@@ -446,6 +488,7 @@ public sealed class OverviewRendererTests
     {
         var console = new TestConsole().EmitAnsiSequences();
         console.Profile.Width = width;
+        console.Profile.Height = 100;
         console.Write(renderable);
         return console.Output;
     }

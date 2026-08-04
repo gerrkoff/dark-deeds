@@ -23,9 +23,11 @@ public sealed class TaskSyncState
     // uses it to tell an incoming server task apart from one the user is still editing locally.
     public IReadOnlyList<string> GetPendingUids()
     {
-        return PendingByUid.Keys
+        return
+        [
+            .. PendingByUid.Keys
             .Concat(InFlightByUid.Keys)
-            .Distinct(StringComparer.Ordinal)
-            .ToList();
+            .Distinct(StringComparer.Ordinal),
+        ];
     }
 }

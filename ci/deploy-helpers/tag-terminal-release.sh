@@ -20,6 +20,7 @@ if [ "$commit" != "$remote_staging" ]; then
     exit 1
 fi
 
+echo
 read -r -p "Terminal version (for example 1.2.0; leave empty to skip): " version
 if [ -z "$version" ]; then
     echo "Terminal release skipped."

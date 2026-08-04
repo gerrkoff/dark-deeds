@@ -23,9 +23,21 @@ Rules specific to this repository. **If a rule is here — follow it. No excepti
 
 ## Terminal client rendering (Spectre.Console)
 
+**Preserve the intentionally commented selected-task style alternatives in `TerminalStyles.ForTask`.** They are retained as a quick rollback option, not dead code.
+
+**Initialize `Console.InputEncoding` and `Console.OutputEncoding` to UTF-8 before any terminal client I/O.** This preserves non-ASCII task text and keyboard input on Windows consoles that otherwise default to a legacy code page.
+
+**For mixed styles on one terminal line, use a custom `Renderable` that emits separate `Segment`s.** The repository's Spectre.Console version applies only one style per `Text` and does not support a styled `Text.Append` overload.
+
 **When copying or re-emitting Spectre `Segment`s (e.g. clipping the terminal viewport), copy a `SegmentLine` with `list.AddRange(segmentLine)` or `foreach`, never the collection-expression spread `[.. segmentLine]`.** The spread injects `null` padding segments into the copy, which later throw `NullReferenceException` deep inside `Spectre.Console.Rendering.Segment.Merge` when the output is written. An empty `[]` is safe; only spreading a non-empty `SegmentLine` is affected.
 
 **Render terminal day cards as one top-to-bottom stream with a blank line between cards, but no trailing blank line after the final card.** Up/Down navigates the immediately previous/next visible task across all sections; Left/Right navigates the previous/next non-empty rendered day and lands on its first task.
+
+**For a collapsed dated Routine group, always render the summary when at least one nondeleted Routine task exists, and count only incomplete Routine tasks.** Therefore a day whose Routine tasks are all completed renders `+0 routine`; expanded Routine groups and No Date tasks do not render this summary.
+
+**The terminal `r` shortcut globally toggles dated Routine visibility for every day and does not require a focused task.** Keep this as a boolean view mode so Routine tasks added or received on new dates while expanded are shown automatically; pressing `r` again collapses every dated Routine group.
+
+**Preserve the terminal input reducer's `KeyChar` shortcut dispatch and normalize standard Russian-layout letters to their English-key equivalents immediately before that switch.** Keep the change minimal: use `ConsoleKey` only for arrows and service keys as before, and use the original localized `KeyChar` for editor and login text insertion.
 
 **When scrolling upward to the first task of a clipped terminal card, use the preceding card header as the viewport anchor so labels such as `No Date` reappear.** Render Today in yellow, other dated headers in a subtle contrasting colour without edge markers, and indent Additional tasks twelve extra spaces.
 
@@ -42,3 +54,5 @@ Rules specific to this repository. **If a rule is here — follow it. No excepti
 **Keep helper scripts used by `ci/deploy.sh` under `ci/deploy-helpers/`.**
 
 **Publish the terminal client for `win-x64` as a `.zip` containing `dd-terminal.exe`; keep macOS and Linux packages as `.tar.gz`.** Cross-publish Windows from the release runner, but treat interactive Windows Terminal behavior as requiring separate manual verification.
+
+**Run terminal release `dotnet` commands from `code/backend` so its nested `global.json` governs SDK resolution.** `setup-dotnet` installing an SDK does not force the resolver to select it when `global.json` is outside the command's working-directory ancestry; the runner may select a newer preinstalled SDK instead. Pin an exact SDK instead of using `latestFeature` to keep analyzer warnings-as-errors deterministic.

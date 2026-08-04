@@ -68,7 +68,7 @@ public static class TaskFocusService
     // each cell already lists its tasks by TaskIndex, so the flattened sequence is the reading order.
     private static List<OverviewTask> OrderedTasks(OverviewProjection projection)
     {
-        return AllCells(projection).SelectMany(cell => cell.Tasks).ToList();
+        return [.. AllCells(projection).SelectMany(cell => cell.Tasks)];
     }
 
     private static List<OverviewDay> AllCells(OverviewProjection projection)

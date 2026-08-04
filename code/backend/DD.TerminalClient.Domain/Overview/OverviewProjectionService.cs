@@ -32,7 +32,13 @@ public sealed class OverviewProjectionService(ILocalDateProvider localDateProvid
 
         foreach (var task in tasks)
         {
-            if (task.Deleted || (!showCompleted && task.Completed))
+            if (task.Deleted)
+                continue;
+
+            var preservesCollapsedRoutineSummary = task.Type == TerminalTaskType.Routine
+                && task.Date is { } routineDate
+                && !routineShownDates.Contains(routineDate);
+            if (!showCompleted && task.Completed && !preservesCollapsedRoutineSummary)
                 continue;
 
             if (task.Date is not { } date)
@@ -51,10 +57,17 @@ public sealed class OverviewProjectionService(ILocalDateProvider localDateProvid
 
         return new OverviewProjection
         {
-            NoDate = BuildCell(OverviewSection.NoDate, row: 0, column: 0, date: null, noDateTasks, routineShownDates),
-            Overdue = BuildWrappedCells(OverviewSection.Overdue, overdueByDate, routineShownDates),
-            Current = BuildCurrentCells(currentStart, currentByDate, routineShownDates),
-            Future = BuildWrappedCells(OverviewSection.Future, futureByDate, routineShownDates),
+            NoDate = BuildCell(
+                OverviewSection.NoDate,
+                row: 0,
+                column: 0,
+                date: null,
+                noDateTasks,
+                showCompleted,
+                routineShownDates),
+            Overdue = BuildWrappedCells(OverviewSection.Overdue, overdueByDate, showCompleted, routineShownDates),
+            Current = BuildCurrentCells(currentStart, currentByDate, showCompleted, routineShownDates),
+            Future = BuildWrappedCells(OverviewSection.Future, futureByDate, showCompleted, routineShownDates),
         };
     }
 
@@ -63,6 +76,7 @@ public sealed class OverviewProjectionService(ILocalDateProvider localDateProvid
     private static List<OverviewDay> BuildWrappedCells(
         OverviewSection section,
         SortedDictionary<DateOnly, List<TerminalTask>> tasksByDate,
+        bool showCompleted,
         IReadOnlySet<DateOnly> routineShownDates)
     {
         var cells = new List<OverviewDay>(tasksByDate.Count);
@@ -72,7 +86,7 @@ public sealed class OverviewProjectionService(ILocalDateProvider localDateProvid
         {
             var row = index / VisibleColumns;
             var column = index % VisibleColumns;
-            cells.Add(BuildCell(section, row, column, date, rawTasks, routineShownDates));
+            cells.Add(BuildCell(section, row, column, date, rawTasks, showCompleted, routineShownDates));
             index++;
         }
 
@@ -84,6 +98,7 @@ public sealed class OverviewProjectionService(ILocalDateProvider localDateProvid
     private static List<OverviewDay> BuildCurrentCells(
         DateOnly currentStart,
         Dictionary<DateOnly, List<TerminalTask>> currentByDate,
+        bool showCompleted,
         IReadOnlySet<DateOnly> routineShownDates)
     {
         var cells = new List<OverviewDay>(CurrentDayCount);
@@ -93,32 +108,52 @@ public sealed class OverviewProjectionService(ILocalDateProvider localDateProvid
             var date = currentStart.AddDays(i);
             var row = i / VisibleColumns;
             var column = i % VisibleColumns;
-            cells.Add(BuildCell(OverviewSection.Current, row, column, date, currentByDate[date], routineShownDates));
+            cells.Add(BuildCell(
+                OverviewSection.Current,
+                row,
+                column,
+                date,
+                currentByDate[date],
+                showCompleted,
+                routineShownDates));
         }
 
         return cells;
     }
 
     // Filters and orders one cell's tasks: sort by Order (stable), collapse Routine tasks on a dated cell
-    // whose date is not shown (counting them instead of listing them), and stamp each surviving task with
-    // its address. TaskIndex counts only visible tasks, so a collapsed Routine leaves no gap.
+    // whose date is not shown, record whether any exist while counting only incomplete ones, and stamp each
+    // surviving task with its address. TaskIndex counts only visible tasks, so a collapsed Routine leaves
+    // no gap.
     private static OverviewDay BuildCell(
         OverviewSection section,
         int row,
         int column,
         DateOnly? date,
         List<TerminalTask> rawTasks,
+        bool showCompleted,
         IReadOnlySet<DateOnly> routineShownDates)
     {
         var collapseRoutine = date is { } value && !routineShownDates.Contains(value);
         var visible = new List<OverviewTask>(rawTasks.Count);
         var collapsedRoutineCount = 0;
+        var hasCollapsedRoutineTasks = false;
 
         foreach (var task in rawTasks.OrderBy(task => task.Order))
         {
             if (collapseRoutine && task.Type == TerminalTaskType.Routine)
             {
-                collapsedRoutineCount++;
+                hasCollapsedRoutineTasks = true;
+                if (!task.Completed)
+                {
+                    collapsedRoutineCount++;
+                }
+
+                continue;
+            }
+
+            if (!showCompleted && task.Completed)
+            {
                 continue;
             }
 
@@ -143,6 +178,7 @@ public sealed class OverviewProjectionService(ILocalDateProvider localDateProvid
             Date = date,
             Tasks = visible,
             CollapsedRoutineCount = collapsedRoutineCount,
+            HasCollapsedRoutineTasks = hasCollapsedRoutineTasks,
         };
     }
 
