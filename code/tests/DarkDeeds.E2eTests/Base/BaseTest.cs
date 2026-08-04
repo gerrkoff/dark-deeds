@@ -27,6 +27,7 @@ public class BaseTest
         }
         catch (Exception)
         {
+            WriteBrowserDiagnostics(driver);
             var testName = new StackTrace().GetFrame(1)?.GetMethod()?.Name;
             var screenshotName = $"{GetType().Name}__{testName}";
             driver.TaskScreenshot(ArtifactsPath, screenshotName);
@@ -77,5 +78,13 @@ public class BaseTest
 
         driver.Navigate().GoToUrl(Url);
         return driver;
+    }
+
+    private static void WriteBrowserDiagnostics(RemoteWebDriver driver)
+    {
+        var pageSource = driver.PageSource;
+        Console.Error.WriteLine($"Browser URL: {driver.Url}");
+        Console.Error.WriteLine($"Browser title: {driver.Title}");
+        Console.Error.WriteLine($"Browser HTML: {pageSource[..Math.Min(pageSource.Length, 2000)]}");
     }
 }
