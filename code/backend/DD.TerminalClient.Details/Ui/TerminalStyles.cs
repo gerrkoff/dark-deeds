@@ -20,7 +20,7 @@ internal static class TerminalStyles
     public static readonly Style EmptyState = new(Color.Grey, decoration: Decoration.Italic);
 
     // Composes the style for one rendered task line from its type, completion, probability and focus.
-    public static Style ForTask(TerminalTask task)
+    public static Style ForTask(TerminalTask task, bool isSelected)
     {
         ArgumentNullException.ThrowIfNull(task);
 
@@ -34,6 +34,13 @@ internal static class TerminalStyles
         if (task.IsProbable)
         {
             decoration |= Decoration.Italic;
+        }
+
+        if (isSelected)
+        {
+            // important: Keep these fallback selected-task styles for quick restoration if needed.
+            // return new Style(Color.Black, Color.Silver, decoration);
+            // decoration |= Decoration.Underline;
         }
 
         if (task.Type == TerminalTaskType.Additional || task.Completed)

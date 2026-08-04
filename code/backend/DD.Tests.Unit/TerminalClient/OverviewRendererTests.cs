@@ -223,7 +223,8 @@ public sealed class OverviewRendererTests
         bool probable)
     {
         var style = TerminalStyles.ForTask(
-            Task("x", type: type, completed: completed, probable: probable));
+            Task("x", type: type, completed: completed, probable: probable),
+            isSelected: false);
 
         var expectedForeground = type == TerminalTaskType.Simple ? Color.Default : Color.Grey;
         Assert.Equal(expectedForeground, style.Foreground);
@@ -234,11 +235,11 @@ public sealed class OverviewRendererTests
     [Fact]
     public void ForTask_CompletedAndProbable_ComposeDecorations()
     {
-        var completed = TerminalStyles.ForTask(Task("x", completed: true));
+        var completed = TerminalStyles.ForTask(Task("x", completed: true), isSelected: false);
         Assert.True(completed.Decoration.HasFlag(Decoration.Strikethrough));
         Assert.Equal(Color.Grey, completed.Foreground);
 
-        var probable = TerminalStyles.ForTask(Task("x", probable: true));
+        var probable = TerminalStyles.ForTask(Task("x", probable: true), isSelected: false);
         Assert.True(probable.Decoration.HasFlag(Decoration.Italic));
     }
 

@@ -23,6 +23,8 @@ Rules specific to this repository. **If a rule is here — follow it. No excepti
 
 ## Terminal client rendering (Spectre.Console)
 
+**Preserve the intentionally commented selected-task style alternatives in `TerminalStyles.ForTask`.** They are retained as a quick rollback option, not dead code.
+
 **Initialize `Console.InputEncoding` and `Console.OutputEncoding` to UTF-8 before any terminal client I/O.** This preserves non-ASCII task text and keyboard input on Windows consoles that otherwise default to a legacy code page.
 
 **For mixed styles on one terminal line, use a custom `Renderable` that emits separate `Segment`s.** The repository's Spectre.Console version applies only one style per `Text` and does not support a styled `Text.Append` overload.
