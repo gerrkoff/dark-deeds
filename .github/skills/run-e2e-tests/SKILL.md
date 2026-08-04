@@ -95,6 +95,19 @@ The SPA computes its own backend as `http://<window.location.hostname>:5000`, so
 page from `host.docker.internal:3000` makes the browser call `host.docker.internal:5000`
 automatically — that is why `BE_URL` stays `localhost` and is not a contradiction.
 
+## Diagnosing `tab crashed`
+
+When Selenium returns `SessionNotCreated` with `tab crashed`, the browser failed while
+creating the session, before navigation or test assertions. Treat a single occurrence as a
+potential infrastructure flake and repeat the same job before changing container memory or
+Chrome flags. Only attribute it to `/dev/shm` or another resource limit after repeated
+failures or supporting container/host metrics; do not infer causation merely because the
+default shared-memory allocation is small.
+
+Do not pass a fixed `--remote-debugging-port` to Chrome sessions on the shared Grid.
+Successive browsers can overlap with cleanup from the preceding session and contend for
+that port; let ChromeDriver allocate an available debugging port.
+
 **Vite must allow the Grid's Host header.** Vite 5 blocks `host.docker.internal` with
 `403 Blocked request` unless it is in `server.allowedHosts` (already added in
 `code/frontend/vite.config.ts`; dev-server-only, no production effect). If a fresh checkout
