@@ -41,7 +41,7 @@ jobs:
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 8.0.100
+        dotnet-version: 8.0.302
     - name: Build E2E Tests
       run: |
         dotnet build code/tests/DarkDeeds.E2eTests/DarkDeeds.E2eTests.sln
@@ -53,7 +53,7 @@ jobs:
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 8.0.100
+        dotnet-version: 8.0.302
     - name: Build Load Tests
       run: |
         dotnet build code/tests/DarkDeeds.LoadTests/DarkDeeds.LoadTests.sln
