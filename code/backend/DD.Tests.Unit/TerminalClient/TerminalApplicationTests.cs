@@ -465,6 +465,13 @@ public sealed class TerminalApplicationTests
     }
 
     [Fact]
+    public void ShouldRenderHeartbeat_ReturnsTrueOnlyWhenConnectivityChanges()
+    {
+        Assert.True(TerminalApplication.ShouldRenderHeartbeat(isOffline: true));
+        Assert.False(TerminalApplication.ShouldRenderHeartbeat(isOffline: false));
+    }
+
+    [Fact]
     public async Task Unauthorized_PreservesDurableOutbox()
     {
         using var harness = new Harness();

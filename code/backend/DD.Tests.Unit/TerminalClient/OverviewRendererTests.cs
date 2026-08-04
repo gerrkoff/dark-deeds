@@ -55,7 +55,7 @@ public sealed class OverviewRendererTests
         Assert.Contains("Old thing", contentOutput, StringComparison.Ordinal);
         Assert.Contains("Today thing", contentOutput, StringComparison.Ordinal);
         Assert.Contains("Later thing", contentOutput, StringComparison.Ordinal);
-        Assert.Contains("Mon 04 Nov", contentOutput, StringComparison.Ordinal);
+        Assert.Contains("11/04 Mon", contentOutput, StringComparison.Ordinal);
         Assert.Contains("? help", output, StringComparison.Ordinal);
     }
 
@@ -165,7 +165,7 @@ public sealed class OverviewRendererTests
 
         var output = Ansi(new Rows(OverviewRenderer.Render(Vm(projection), 80).Lines), 80);
 
-        Assert.Contains("Tue 05 Nov", output, StringComparison.Ordinal);
+        Assert.Contains("11/05 Tue", output, StringComparison.Ordinal);
         Assert.DoesNotContain("--", output, StringComparison.Ordinal);
         Assert.Contains("[1;38;5;12m", output, StringComparison.Ordinal);
     }
@@ -206,10 +206,14 @@ public sealed class OverviewRendererTests
             showCompleted: false,
             routineShownDates: new HashSet<DateOnly>());
         var console = Plain(80);
+        var rendered = new Rows(OverviewRenderer.Render(Vm(projection), 80).Lines);
 
-        console.Write(new Rows(OverviewRenderer.Render(Vm(projection), 80).Lines));
+        console.Write(rendered);
+        var ansi = Ansi(rendered, 80);
 
         Assert.Contains("+0 routine", console.Output, StringComparison.Ordinal);
+        Assert.Contains("[2;38;5;8m", ansi, StringComparison.Ordinal);
+        Assert.DoesNotContain("[9;", ansi, StringComparison.Ordinal);
     }
 
     [Theory]

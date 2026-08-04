@@ -109,6 +109,11 @@ internal sealed class TerminalApplication
         return _channel.Writer.TryWrite(applicationEvent);
     }
 
+    internal static bool ShouldRenderHeartbeat(bool isOffline)
+    {
+        return isOffline;
+    }
+
     private async Task EventLoopAsync()
     {
         while (!State.Quit)
@@ -118,20 +123,24 @@ internal sealed class TerminalApplication
                 break;
             }
 
+            var shouldRender = false;
             while (_channel.Reader.TryRead(out var applicationEvent))
             {
-                Process(applicationEvent);
+                shouldRender |= Process(applicationEvent);
                 if (State.Quit)
                 {
                     break;
                 }
             }
 
-            Render();
+            if (shouldRender)
+            {
+                Render();
+            }
         }
     }
 
-    private void Process(ApplicationEvent applicationEvent)
+    private bool Process(ApplicationEvent applicationEvent)
     {
         switch (applicationEvent.Kind)
         {
@@ -142,8 +151,7 @@ internal sealed class TerminalApplication
                 State = ApplicationReducer.HandleResize(State, applicationEvent.Width, applicationEvent.Height);
                 break;
             case ApplicationEventKind.Hub:
-                HandleHub(applicationEvent.Hub!);
-                break;
+                return HandleHub(applicationEvent.Hub!);
             case ApplicationEventKind.SnapshotLoaded:
                 HandleSnapshotLoaded(applicationEvent.Tasks, applicationEvent.Generation);
                 break;
@@ -189,6 +197,8 @@ internal sealed class TerminalApplication
             default:
                 break;
         }
+
+        return true;
     }
 
     private void HandleKey(ConsoleKeyInfo key)
@@ -273,7 +283,7 @@ internal sealed class TerminalApplication
         State = _deps.Reducer.Recompute(State);
     }
 
-    private void HandleHub(TaskHubEvent hubEvent)
+    private bool HandleHub(TaskHubEvent hubEvent)
     {
         switch (hubEvent.Kind)
         {
@@ -283,6 +293,11 @@ internal sealed class TerminalApplication
                 PersistState();
                 break;
             case TaskHubEventKind.Heartbeat:
+                if (!ShouldRenderHeartbeat(State.IsOffline))
+                {
+                    return false;
+                }
+
                 State = State with { IsOffline = false };
                 break;
             case TaskHubEventKind.Reconnecting:
@@ -298,6 +313,8 @@ internal sealed class TerminalApplication
                 Handle401();
                 break;
         }
+
+        return true;
     }
 
     private void HandleSnapshotLoaded(IReadOnlyList<TerminalTask> tasks, int generation)

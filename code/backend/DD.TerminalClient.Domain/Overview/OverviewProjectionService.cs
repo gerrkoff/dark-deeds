@@ -12,6 +12,8 @@ public sealed class OverviewProjectionService(ILocalDateProvider localDateProvid
     private const int VisibleColumns = 7;
     private const int CurrentDayCount = 14;
 
+    public DateOnly Today => localDateProvider.Today;
+
     // Builds the projection. showCompleted toggles completed-task visibility everywhere; routineShownDates
     // are the dated days whose Routine tasks stay expanded (every other dated day collapses them).
     public OverviewProjection Project(
