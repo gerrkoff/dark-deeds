@@ -1,4 +1,4 @@
-FROM node:21.4-alpine as builder-fe
+FROM node:21.4-alpine AS builder-fe
 
 WORKDIR /code/frontend
 
@@ -12,7 +12,7 @@ COPY .editorconfig /code/frontend/.editorconfig
 
 RUN npm run build
 
-FROM mcr.microsoft.com/dotnet/sdk:8.0.100 AS builder-be
+FROM mcr.microsoft.com/dotnet/sdk:8.0.423 AS builder-be
 
 WORKDIR /code/backend
 
