@@ -153,13 +153,13 @@ public sealed class TerminalInputTests
     }
 
     [Fact]
-    public void Normal_RoutineToggle_RequiresDatedFocus()
+    public void Normal_RoutineToggle_DoesNotRequireFocus()
     {
         var reducer = Reducer();
 
         Assert.Equal(TerminalCommand.ToggleRoutine, reducer.Reduce(TerminalInputState.Normal, Key('r'), Focused(hasDate: true)).Command);
-        Assert.Equal(TerminalCommand.None, reducer.Reduce(TerminalInputState.Normal, Key('r'), Focused(hasDate: false)).Command);
-        Assert.False(string.IsNullOrEmpty(reducer.Reduce(TerminalInputState.Normal, Key('r'), NoFocus).StatusMessage));
+        Assert.Equal(TerminalCommand.ToggleRoutine, reducer.Reduce(TerminalInputState.Normal, Key('r'), Focused(hasDate: false)).Command);
+        Assert.Equal(TerminalCommand.ToggleRoutine, reducer.Reduce(TerminalInputState.Normal, Key('r'), NoFocus).Command);
     }
 
     [Fact]
@@ -277,6 +277,63 @@ public sealed class TerminalInputTests
         Assert.Equal(TerminalUiMode.Help, result.State.Mode);
     }
 
+    [Fact]
+    public void Normal_LetterShortcuts_AcceptRussianLayoutCharacters()
+    {
+        var reducer = Reducer();
+        var focused = Focused(hasDate: true);
+
+        Assert.Equal(
+            TerminalCommand.NavigateLeft,
+            reducer.Reduce(TerminalInputState.Normal, LocalizedKey('\u0440'), focused).Command);
+        Assert.Equal(
+            TerminalCommand.NavigateDown,
+            reducer.Reduce(TerminalInputState.Normal, LocalizedKey('\u043e'), focused).Command);
+        Assert.Equal(
+            TerminalCommand.ReorderUp,
+            reducer.Reduce(TerminalInputState.Normal, LocalizedKey('\u041b', shift: true), focused).Command);
+        Assert.Equal(
+            TerminalCommand.MoveDayForward,
+            reducer.Reduce(TerminalInputState.Normal, LocalizedKey('\u0414', shift: true), focused).Command);
+        Assert.Equal(
+            TerminalCommand.ToggleCompletedVisibility,
+            reducer.Reduce(TerminalInputState.Normal, LocalizedKey('\u0441'), NoFocus).Command);
+        Assert.Equal(
+            TerminalCommand.ToggleRoutine,
+            reducer.Reduce(TerminalInputState.Normal, LocalizedKey('\u043a'), NoFocus).Command);
+        Assert.Equal(
+            TerminalCommand.Quit,
+            reducer.Reduce(TerminalInputState.Normal, LocalizedKey('\u0439'), NoFocus).Command);
+    }
+
+    [Fact]
+    public void Normal_EditorShortcuts_AcceptRussianLayoutCharacters()
+    {
+        var reducer = Reducer();
+        var focusDate = new DateOnly(2024, 6, 12);
+        var focused = Focused(focusDate: focusDate);
+
+        var add = reducer.Reduce(TerminalInputState.Normal, LocalizedKey('\u0444'), focused);
+        Assert.Equal(EditorPurpose.AddWithFocusDate, add.State.Purpose);
+        Assert.Equal(focusDate, add.State.FallbackDate);
+
+        var addNoDate = reducer.Reduce(
+            TerminalInputState.Normal,
+            LocalizedKey('\u0424', shift: true),
+            focused);
+        Assert.Equal(EditorPurpose.AddNoDate, addNoDate.State.Purpose);
+
+        Assert.Equal(
+            EditorPurpose.Edit,
+            reducer.Reduce(TerminalInputState.Normal, LocalizedKey('\u0443'), focused).State.Purpose);
+        Assert.Equal(
+            EditorPurpose.Move,
+            reducer.Reduce(TerminalInputState.Normal, LocalizedKey('\u044c'), focused).State.Purpose);
+        Assert.Equal(
+            TerminalUiMode.DeleteConfirmation,
+            reducer.Reduce(TerminalInputState.Normal, LocalizedKey('\u0432'), focused).State.Mode);
+    }
+
     // ----- Editor operations -----
     [Fact]
     public void Editor_PrintableKeys_InsertText()
@@ -289,6 +346,23 @@ public sealed class TerminalInputTests
         Assert.Equal("Hi", result.State.Editor.Text);
         Assert.Equal(2, result.State.Editor.Cursor);
         Assert.Equal(TerminalCommand.None, result.Command);
+    }
+
+    [Fact]
+    public void Editor_LocalizedCharacters_AreInsertedFromKeyChar()
+    {
+        var reducer = Reducer();
+        var opened = reducer.Reduce(
+            TerminalInputState.Normal,
+            LocalizedKey('\u0444'),
+            NoFocus).State;
+
+        var result = reducer.Reduce(
+            opened,
+            LocalizedKey('\u043c'),
+            NoFocus);
+
+        Assert.Equal("\u043c", result.State.Editor.Text);
     }
 
     [Fact]
@@ -527,6 +601,23 @@ public sealed class TerminalInputTests
 
         Assert.Equal(TerminalCommand.ConfirmDelete, result.Command);
         Assert.Equal(TerminalUiMode.Normal, result.State.Mode);
+    }
+
+    [Fact]
+    public void Confirmation_AcceptsRussianLayoutCharacters()
+    {
+        var reducer = Reducer();
+        var confirming = reducer.Reduce(
+            TerminalInputState.Normal,
+            LocalizedKey('\u0432'),
+            Focused()).State;
+
+        var result = reducer.Reduce(
+            confirming,
+            LocalizedKey('\u043d'),
+            NoFocus);
+
+        Assert.Equal(TerminalCommand.ConfirmDelete, result.Command);
     }
 
     [Fact]
@@ -788,6 +879,11 @@ public sealed class TerminalInputTests
     private static ConsoleKeyInfo Special(ConsoleKey key, char character = '\0')
     {
         return new ConsoleKeyInfo(character, key, shift: false, alt: false, control: false);
+    }
+
+    private static ConsoleKeyInfo LocalizedKey(char character, bool shift = false)
+    {
+        return new ConsoleKeyInfo(character, ConsoleKey.None, shift, alt: false, control: false);
     }
 
     private static ConsoleKeyInfo Ctrl(ConsoleKey key, char character)

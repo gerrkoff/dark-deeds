@@ -190,6 +190,23 @@ public sealed class OverviewRendererTests
         Assert.Contains("+1 routine", console.Output, StringComparison.Ordinal);
     }
 
+    [Fact]
+    public void Render_CompletedRoutinesCollapsed_ShowsZeroCount()
+    {
+        var projection = ProjectRaw(
+            [
+                Task("routine-1", date: Monday, completed: true, type: TerminalTaskType.Routine),
+                Task("routine-2", date: Monday, completed: true, type: TerminalTaskType.Routine),
+            ],
+            showCompleted: false,
+            routineShownDates: new HashSet<DateOnly>());
+        var console = Plain(80);
+
+        console.Write(new Rows(OverviewRenderer.Render(Vm(projection), 80).Lines));
+
+        Assert.Contains("+0 routine", console.Output, StringComparison.Ordinal);
+    }
+
     [Theory]
     [InlineData(TerminalTaskType.Simple, false, false, false)]
     [InlineData(TerminalTaskType.Additional, false, false, false)]
@@ -246,6 +263,28 @@ public sealed class OverviewRendererTests
         var output = Ansi(new Rows(OverviewRenderer.Render(model, 80).Lines), 80);
 
         Assert.Contains(expectedSgr, output, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void Render_CompletedTask_KeepsMarkerAndIndentWhiteWithoutStrikethrough()
+    {
+        var task = Task(
+            "completed",
+            date: Monday,
+            completed: true,
+            type: TerminalTaskType.Additional,
+            title: "Completed");
+        var projection = ProjectRaw([task], showCompleted: true, routineShownDates: new HashSet<DateOnly>());
+        var model = Vm(projection, focus: FocusFor(projection, "completed"));
+
+        var output = Ansi(new Rows(OverviewRenderer.Render(model, 80).Lines), 80);
+        var prefixIndex = output.IndexOf("> " + new string(' ', 12), StringComparison.Ordinal);
+        var titleIndex = output.IndexOf("Completed", StringComparison.Ordinal);
+        var whiteIndex = output.LastIndexOf("[38;5;15m", prefixIndex, StringComparison.Ordinal);
+        var completedStyleIndex = output.LastIndexOf("[9;38;5;8m", titleIndex, StringComparison.Ordinal);
+
+        Assert.True(whiteIndex >= 0 && whiteIndex < prefixIndex);
+        Assert.True(completedStyleIndex > prefixIndex && completedStyleIndex < titleIndex);
     }
 
     [Fact]

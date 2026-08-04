@@ -26,6 +26,7 @@ internal static class TerminalStyles
         ArgumentNullException.ThrowIfNull(task);
 
         var decoration = Decoration.None;
+
         if (task.Completed)
         {
             decoration |= Decoration.Strikethrough;
@@ -38,17 +39,13 @@ internal static class TerminalStyles
 
         if (isSelected)
         {
-            return new Style(Color.Black, Color.Silver, decoration);
+            // return new Style(Color.Black, Color.Silver, decoration);
+            // decoration |= Decoration.Underline;
         }
 
-        if (task.Type == TerminalTaskType.Routine)
+        if (task.Type == TerminalTaskType.Additional || task.Completed)
         {
             decoration |= Decoration.Dim;
-        }
-
-        if (task.Type == TerminalTaskType.Weekly)
-        {
-            decoration |= Decoration.Bold;
         }
 
         var foreground = task.Completed || task.Type != TerminalTaskType.Simple

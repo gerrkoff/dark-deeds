@@ -15,6 +15,7 @@ namespace DD.TerminalClient.Details.Ui;
 public static class OverviewRenderer
 {
     private const string AdditionalIndent = "            ";
+    private static readonly Style TaskPrefixStyle = new(Color.White);
 
     public static RenderedOverview Render(TerminalViewModel model, int width)
     {
@@ -26,9 +27,9 @@ public static class OverviewRenderer
         var overview = model.Overview;
 
         AppendNoDate(lines, taskLines, overview.NoDate, focusUid, width);
-        AppendDatedSection(lines, taskLines, "Overdue", overview.Overdue, model.Today, focusUid, width);
-        AppendDatedSection(lines, taskLines, "This week", overview.Current, model.Today, focusUid, width);
-        AppendDatedSection(lines, taskLines, "Upcoming", overview.Future, model.Today, focusUid, width);
+        AppendDatedSection(lines, taskLines, "Expired", overview.Overdue, model.Today, focusUid, width);
+        AppendDatedSection(lines, taskLines, "Current", overview.Current, model.Today, focusUid, width);
+        AppendDatedSection(lines, taskLines, "Future", overview.Future, model.Today, focusUid, width);
 
         return new RenderedOverview { Lines = lines, TaskLines = taskLines };
     }
@@ -37,8 +38,7 @@ public static class OverviewRenderer
     {
         var marker = isSelected ? "> " : "  ";
         var typeIndent = task.Type == TerminalTaskType.Additional ? AdditionalIndent : string.Empty;
-        var time = task.Time is { } minutes ? TerminalText.FormatTime(minutes) + " " : string.Empty;
-        return marker + typeIndent + time;
+        return marker + typeIndent;
     }
 
     private static void AppendNoDate(
@@ -70,7 +70,7 @@ public static class OverviewRenderer
         var visibleDays = new List<OverviewDay>();
         foreach (var day in days)
         {
-            if (day.Tasks.Count > 0 || day.CollapsedRoutineCount > 0)
+            if (day.Tasks.Count > 0 || day.HasCollapsedRoutineTasks)
             {
                 visibleDays.Add(day);
             }
@@ -111,18 +111,19 @@ public static class OverviewRenderer
             lines.Add(TaskLineRenderable(overviewTask.Task, isSelected, width));
         }
 
-        if (day.CollapsedRoutineCount > 0)
+        if (day.HasCollapsedRoutineTasks)
         {
             lines.Add(CollapsedRoutineLine(day.CollapsedRoutineCount, width));
         }
     }
 
-    private static Text TaskLineRenderable(TerminalTask task, bool isSelected, int width)
+    private static StyledTaskLine TaskLineRenderable(TerminalTask task, bool isSelected, int width)
     {
         var prefix = BuildTaskPrefix(task, isSelected);
-        var titleBudget = Math.Max(0, width - prefix.GetCellWidth());
-        var line = prefix + TerminalText.Truncate(task.Title, titleBudget);
-        return new Text(line, TerminalStyles.ForTask(task, isSelected)) { Overflow = Overflow.Ellipsis };
+        var time = task.Time is { } minutes ? TerminalText.FormatTime(minutes) + " " : string.Empty;
+        var titleBudget = Math.Max(0, width - prefix.GetCellWidth() - time.GetCellWidth());
+        var taskText = time + TerminalText.Truncate(task.Title, titleBudget);
+        return new StyledTaskLine(prefix, taskText, TerminalStyles.ForTask(task, isSelected));
     }
 
     private static Text SectionTitleLine(string title, int width)
@@ -151,6 +152,23 @@ public static class OverviewRenderer
         if (lines.Count > 0)
         {
             lines.Add(new Text(string.Empty));
+        }
+    }
+
+    private sealed class StyledTaskLine(string prefix, string taskText, Style taskStyle) : Renderable
+    {
+        private readonly int _width = prefix.GetCellWidth() + taskText.GetCellWidth();
+
+        protected override Measurement Measure(RenderOptions options, int maxWidth)
+        {
+            var width = Math.Min(_width, maxWidth);
+            return new Measurement(width, width);
+        }
+
+        protected override IEnumerable<Segment> Render(RenderOptions options, int maxWidth)
+        {
+            yield return new Segment(prefix, TaskPrefixStyle, null);
+            yield return new Segment(taskText, taskStyle, null);
         }
     }
 }

@@ -40,7 +40,8 @@ fi
 
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 repo_root="$(cd "$script_dir/../.." && pwd)"
-project="$repo_root/code/backend/DD.TerminalClient/DD.TerminalClient.csproj"
+backend_dir="$repo_root/code/backend"
+project="$backend_dir/DD.TerminalClient/DD.TerminalClient.csproj"
 
 if [ ! -f "$project" ]; then
     echo "error: project not found at $project" >&2
@@ -81,11 +82,14 @@ for rid in $RUNTIME_IDENTIFIERS; do
     echo "Publishing $BINARY_NAME for $rid..."
     publish_dir="$publish_root/$rid"
 
-    dotnet publish "$project" \
-        --configuration "$CONFIGURATION" \
-        --runtime "$rid" \
-        --nologo \
-        --output "$publish_dir"
+    (
+        cd "$backend_dir"
+        dotnet publish "DD.TerminalClient/DD.TerminalClient.csproj" \
+            --configuration "$CONFIGURATION" \
+            --runtime "$rid" \
+            --nologo \
+            --output "$publish_dir"
+    )
 
     if [[ "$rid" == win-* ]]; then
         executable_name="$BINARY_NAME.exe"

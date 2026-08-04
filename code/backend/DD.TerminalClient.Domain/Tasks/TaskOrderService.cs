@@ -87,7 +87,7 @@ public static class TaskOrderService
             }
         }
 
-        return syncOrder.Select(uid => sync[uid]).ToList();
+        return [.. syncOrder.Select(uid => sync[uid])];
     }
 
     private static int DateKey(TerminalTask task)

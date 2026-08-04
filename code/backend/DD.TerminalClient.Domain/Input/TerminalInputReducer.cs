@@ -51,12 +51,15 @@ public sealed class TerminalInputReducer(ITaskTextParser parser, TaskTextFormatt
         if (key.Key == ConsoleKey.R && (key.Modifiers & ConsoleModifiers.Control) != 0)
             return Raise(state, TerminalCommand.ForceReconnect);
 
+        if ((key.Modifiers & (ConsoleModifiers.Control | ConsoleModifiers.Alt)) != 0)
+            return TerminalInputResult.Unchanged(state);
+
         if (key.Key == ConsoleKey.Spacebar || key.KeyChar == ' ')
             return context.HasFocus ? Raise(state, TerminalCommand.ToggleComplete) : Declined(state, "No task selected.");
 
-        // The h/j/k/l aliases and the letter commands are matched by KeyChar so case (Shift) is exact:
-        // the lowercase letter navigates, the uppercase letter reorders or moves by day.
-        return key.KeyChar switch
+        // Letter shortcuts keep the original KeyChar dispatch. A small normalization layer translates
+        // standard Russian-layout characters back to the equivalent English shortcut characters.
+        return NormalizeShortcutChar(key.KeyChar) switch
         {
             'k' => Navigate(state, context, TerminalCommand.NavigateUp),
             'j' => Navigate(state, context, TerminalCommand.NavigateDown),
@@ -77,9 +80,7 @@ public sealed class TerminalInputReducer(ITaskTextParser parser, TaskTextFormatt
             'd' => context.HasFocus
                 ? EnterMode(state, TerminalUiMode.DeleteConfirmation, context.FocusUid)
                 : Declined(state, "No task selected."),
-            'r' => context is { HasFocus: true, FocusHasDate: true }
-                ? Raise(state, TerminalCommand.ToggleRoutine)
-                : Declined(state, "Routine visibility applies to a dated task."),
+            'r' => Raise(state, TerminalCommand.ToggleRoutine),
             'c' => Raise(state, TerminalCommand.ToggleCompletedVisibility),
             '?' => EnterMode(state, TerminalUiMode.Help),
             'q' => Raise(state, TerminalCommand.Quit),
@@ -122,9 +123,13 @@ public sealed class TerminalInputReducer(ITaskTextParser parser, TaskTextFormatt
         if (key.Key == ConsoleKey.Escape)
             return Cancelled();
 
-        return key.KeyChar switch
+        return NormalizeShortcutChar(key.KeyChar) switch
         {
-            'y' or 'Y' => new TerminalInputResult { State = TerminalInputState.Normal, Command = TerminalCommand.ConfirmDelete },
+            'y' or 'Y' => new TerminalInputResult
+            {
+                State = TerminalInputState.Normal,
+                Command = TerminalCommand.ConfirmDelete,
+            },
             'n' or 'N' => Cancelled(),
             _ => TerminalInputResult.Unchanged(state),
         };
@@ -132,7 +137,7 @@ public sealed class TerminalInputReducer(ITaskTextParser parser, TaskTextFormatt
 
     private static TerminalInputResult ReduceHelp(TerminalInputState state, ConsoleKeyInfo key)
     {
-        if (key.KeyChar == '?' || key.Key == ConsoleKey.Escape)
+        if (NormalizeShortcutChar(key.KeyChar) == '?' || key.Key == ConsoleKey.Escape)
             return new TerminalInputResult { State = TerminalInputState.Normal };
 
         return TerminalInputResult.Unchanged(state);
@@ -140,9 +145,10 @@ public sealed class TerminalInputReducer(ITaskTextParser parser, TaskTextFormatt
 
     private static TerminalInputResult ReduceResizeRequired(TerminalInputState state, ConsoleKeyInfo key)
     {
-        if (key.KeyChar == '?')
+        var shortcutChar = NormalizeShortcutChar(key.KeyChar);
+        if (shortcutChar == '?')
             return new TerminalInputResult { State = state with { Mode = TerminalUiMode.Help } };
-        if (key.KeyChar == 'q')
+        if (shortcutChar == 'q')
             return new TerminalInputResult { State = state, Command = TerminalCommand.Quit };
 
         return TerminalInputResult.Unchanged(state);
@@ -154,6 +160,48 @@ public sealed class TerminalInputReducer(ITaskTextParser parser, TaskTextFormatt
             return false;
 
         return key.KeyChar is >= ' ' and not '\u007f';
+    }
+
+    private static char NormalizeShortcutChar(char character)
+    {
+        var normalized = char.ToLowerInvariant(character) switch
+        {
+            '\u0439' => 'q',
+            '\u0446' => 'w',
+            '\u0443' => 'e',
+            '\u043a' => 'r',
+            '\u0435' => 't',
+            '\u043d' => 'y',
+            '\u0433' => 'u',
+            '\u0448' => 'i',
+            '\u0449' => 'o',
+            '\u0437' => 'p',
+            '\u0445' => '[',
+            '\u044a' => ']',
+            '\u0444' => 'a',
+            '\u044b' => 's',
+            '\u0432' => 'd',
+            '\u0430' => 'f',
+            '\u043f' => 'g',
+            '\u0440' => 'h',
+            '\u043e' => 'j',
+            '\u043b' => 'k',
+            '\u0434' => 'l',
+            '\u0436' => ';',
+            '\u044d' => '\'',
+            '\u044f' => 'z',
+            '\u0447' => 'x',
+            '\u0441' => 'c',
+            '\u043c' => 'v',
+            '\u0438' => 'b',
+            '\u0442' => 'n',
+            '\u044c' => 'm',
+            '\u0431' => ',',
+            '\u044e' => '.',
+            _ => character,
+        };
+
+        return char.IsUpper(character) ? char.ToUpperInvariant(normalized) : normalized;
     }
 
     private static TerminalInputResult Navigate(TerminalInputState state, TerminalInputContext context, TerminalCommand command)

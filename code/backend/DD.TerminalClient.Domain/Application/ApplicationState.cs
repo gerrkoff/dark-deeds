@@ -29,8 +29,6 @@ public enum LoginStep
 // dimensions and the login sub-state. The save queues live in TaskSyncCoordinator, not here.
 public sealed record ApplicationState
 {
-    private static readonly IReadOnlySet<DateOnly> NoRoutineDates = new HashSet<DateOnly>();
-
     private static readonly OverviewProjection EmptyProjection = new()
     {
         NoDate = new OverviewDay { Section = OverviewSection.NoDate, Row = 0, Column = 0 },
@@ -46,8 +44,8 @@ public sealed record ApplicationState
 
     public bool ShowCompleted { get; init; }
 
-    // Dated days whose Routine tasks stay expanded; every other dated day collapses them.
-    public IReadOnlySet<DateOnly> RoutineShownDates { get; init; } = NoRoutineDates;
+    // When true, Routine tasks are expanded on every dated day; otherwise every dated day collapses them.
+    public bool ShowRoutineTasks { get; init; }
 
     // Derived from Cache + toggles by the reducer's Recompute; the renderer reads it directly.
     public OverviewProjection Projection { get; init; } = EmptyProjection;

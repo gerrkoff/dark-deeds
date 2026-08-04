@@ -66,12 +66,14 @@ public static class TaskNavigationService
 
     private static List<OverviewDay> NavigableDays(OverviewProjection projection)
     {
-        return new[] { projection.NoDate }
-            .Concat(projection.Overdue)
-            .Concat(projection.Current)
-            .Concat(projection.Future)
-            .Where(day => day.Tasks.Count > 0)
-            .ToList();
+        return
+        [
+            .. new[] { projection.NoDate }
+                .Concat(projection.Overdue)
+                .Concat(projection.Current)
+                .Concat(projection.Future)
+                .Where(day => day.Tasks.Count > 0),
+        ];
     }
 
     private static bool HasAddress(OverviewDay day, VisualTaskAddress address)

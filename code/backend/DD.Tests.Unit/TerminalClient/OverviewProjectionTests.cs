@@ -212,6 +212,7 @@ public sealed class OverviewProjectionTests
         var cell = result.Current[0];
         Assert.Equal(new[] { "s1", "s2" }, cell.Tasks.Select(task => task.Task.Uid).ToArray());
         Assert.Equal(1, cell.CollapsedRoutineCount);
+        Assert.True(cell.HasCollapsedRoutineTasks);
 
         // A collapsed Routine leaves no gap in the visible task indexes.
         Assert.Equal(new[] { 0, 1 }, cell.Tasks.Select(task => task.Address.TaskIndex).ToArray());
@@ -234,6 +235,7 @@ public sealed class OverviewProjectionTests
         var cell = result.Current[0];
         Assert.Equal(new[] { "s1", "r1" }, cell.Tasks.Select(task => task.Task.Uid).ToArray());
         Assert.Equal(0, cell.CollapsedRoutineCount);
+        Assert.False(cell.HasCollapsedRoutineTasks);
     }
 
     [Fact]
@@ -248,10 +250,13 @@ public sealed class OverviewProjectionTests
 
         Assert.Equal("r", Assert.Single(result.NoDate.Tasks).Task.Uid);
         Assert.Equal(0, result.NoDate.CollapsedRoutineCount);
+        Assert.False(result.NoDate.HasCollapsedRoutineTasks);
     }
 
-    [Fact]
-    public void Project_CountsCollapsedRoutine_AfterCompletedFilter()
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void Project_CollapsedRoutineCount_IncludesOnlyIncompleteTasks(bool showCompleted)
     {
         var service = CreateService();
 
@@ -260,15 +265,34 @@ public sealed class OverviewProjectionTests
                 Task("r-open", date: Monday, order: 1, type: TerminalTaskType.Routine),
                 Task("r-done", date: Monday, order: 2, type: TerminalTaskType.Routine, completed: true),
             ],
+            showCompleted,
+            NoRoutineShown);
+
+        var cell = result.Current[0];
+        Assert.Empty(cell.Tasks);
+        Assert.True(cell.IsEmpty);
+        Assert.Equal(1, cell.CollapsedRoutineCount);
+        Assert.True(cell.HasCollapsedRoutineTasks);
+    }
+
+    [Fact]
+    public void Project_CompletedCollapsedRoutines_KeepSummaryWithZeroCount()
+    {
+        var service = CreateService();
+
+        var result = service.Project(
+            [
+                Task("r-done-1", date: Monday, order: 1, type: TerminalTaskType.Routine, completed: true),
+                Task("r-done-2", date: Monday, order: 2, type: TerminalTaskType.Routine, completed: true),
+            ],
             showCompleted: false,
             NoRoutineShown);
 
         var cell = result.Current[0];
         Assert.Empty(cell.Tasks);
         Assert.True(cell.IsEmpty);
-
-        // The completed Routine is filtered out first, so only the open one counts as collapsed.
-        Assert.Equal(1, cell.CollapsedRoutineCount);
+        Assert.Equal(0, cell.CollapsedRoutineCount);
+        Assert.True(cell.HasCollapsedRoutineTasks);
     }
 
     [Fact]
@@ -297,6 +321,7 @@ public sealed class OverviewProjectionTests
 
         Assert.Empty(result.NoDate.Tasks);
         Assert.Equal(0, result.NoDate.CollapsedRoutineCount);
+        Assert.False(result.NoDate.HasCollapsedRoutineTasks);
         Assert.Empty(result.Overdue);
         Assert.Empty(result.Future);
         Assert.Equal(14, result.Current.Count);
