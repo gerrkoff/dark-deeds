@@ -5,8 +5,8 @@ namespace DD.TerminalClient.Domain.Navigation;
 // Pure focus resolution over the Overview grid, run after every re-projection so keyboard focus stays
 // on a real visible task. It is deliberate about which task keeps focus:
 //
-//   - ResolveInitial picks the first visible task in reading order (No Date, then Overdue, Current and
-//     Future; each section top to bottom, left to right), or null when nothing is visible.
+//   - ResolveInitial prefers the first visible task on the requested date, then falls back to reading
+//     order (No Date, then Overdue, Current and Future; each section top to bottom, left to right).
 //   - Reconcile preserves the focused task by Uid, so an edit, an explicit date move, a Routine
 //     expand or a server-wins conflict that keeps the same Uid simply follows the task to its new
 //     address. When the focused Uid is gone (deleted, completed-filtered, Routine-collapsed, removed
@@ -16,15 +16,18 @@ namespace DD.TerminalClient.Domain.Navigation;
 //     none and content now exists, and returns null only when nothing is visible.
 public static class TaskFocusService
 {
-    public static TaskFocus? ResolveInitial(OverviewProjection projection)
+    public static TaskFocus? ResolveInitial(OverviewProjection projection, DateOnly? preferredDate = null)
     {
         ArgumentNullException.ThrowIfNull(projection);
 
-        var first = OrderedTasks(projection).FirstOrDefault();
+        var first = InitialTask(OrderedTasks(projection), preferredDate);
         return first is null ? null : ToFocus(first);
     }
 
-    public static TaskFocus? Reconcile(OverviewProjection projection, TaskFocus? previous)
+    public static TaskFocus? Reconcile(
+        OverviewProjection projection,
+        TaskFocus? previous,
+        DateOnly? preferredInitialDate = null)
     {
         ArgumentNullException.ThrowIfNull(projection);
 
@@ -32,9 +35,9 @@ public static class TaskFocusService
         if (ordered.Count == 0)
             return null;
 
-        // No prior focus (startup or everything was hidden) but content exists: focus the first task.
+        // No prior focus (startup or everything was hidden) but content exists: prefer today's first task.
         if (previous is null)
-            return ToFocus(ordered[0]);
+            return ToFocus(InitialTask(ordered, preferredInitialDate)!);
 
         // Uid preservation: follow the same task wherever it now lives.
         var preserved = ordered.FirstOrDefault(task =>
@@ -62,6 +65,13 @@ public static class TaskFocusService
         // else the last remaining task.
         var after = ordered.FirstOrDefault(task => CompareAddress(task.Address, old) >= 0);
         return after ?? ordered[^1];
+    }
+
+    private static OverviewTask? InitialTask(List<OverviewTask> ordered, DateOnly? preferredDate)
+    {
+        return preferredDate is { } date
+            ? ordered.FirstOrDefault(task => task.Task.Date == date) ?? ordered.FirstOrDefault()
+            : ordered.FirstOrDefault();
     }
 
     // Every visible task in reading order. AllCells is globally ordered by (Section, Row, Column) and

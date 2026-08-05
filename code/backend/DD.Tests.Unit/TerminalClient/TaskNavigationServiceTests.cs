@@ -407,6 +407,18 @@ public sealed class TaskNavigationServiceTests
         Assert.Equal("overdue", TaskFocusService.ResolveInitial(projection)!.Uid);
     }
 
+    [Fact]
+    public void ResolveInitial_PreferredDate_PicksItsFirstTask()
+    {
+        var projection = Project([
+            Task("nodate", date: null),
+            Task("today-first", Monday, order: 1),
+            Task("today-second", Monday, order: 2),
+        ]);
+
+        Assert.Equal("today-first", TaskFocusService.ResolveInitial(projection, Monday)!.Uid);
+    }
+
     // --- Focus reconciliation -------------------------------------------------------------------
     [Fact]
     public void Reconcile_NoPreviousFocus_WithContent_EstablishesInitialFocus()
@@ -414,6 +426,17 @@ public sealed class TaskNavigationServiceTests
         var projection = Project([Task("first", Monday)]);
 
         Assert.Equal("first", TaskFocusService.Reconcile(projection, previous: null)!.Uid);
+    }
+
+    [Fact]
+    public void Reconcile_NoPreviousFocus_PrefersRequestedDate()
+    {
+        var projection = Project([
+            Task("nodate", date: null),
+            Task("today", Monday),
+        ]);
+
+        Assert.Equal("today", TaskFocusService.Reconcile(projection, previous: null, Monday)!.Uid);
     }
 
     [Fact]

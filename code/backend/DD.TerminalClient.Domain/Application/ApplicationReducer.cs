@@ -44,7 +44,7 @@ public sealed class ApplicationReducer(
                 .ToHashSet()
             : NoRoutineDates;
         var projected = projection.Project(state.Cache, state.ShowCompleted, routineShownDates);
-        var focus = TaskFocusService.Reconcile(projected, state.Focus);
+        var focus = TaskFocusService.Reconcile(projected, state.Focus, projection.Today);
         return state with { Projection = projected, Focus = focus };
     }
 

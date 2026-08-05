@@ -134,7 +134,7 @@ public static class OverviewRenderer
     private static Text DayHeaderLine(OverviewDay day, DateOnly today, int width)
     {
         var label = day.Date is { } date
-            ? date.ToString("ddd dd MMM", CultureInfo.InvariantCulture)
+            ? date.ToString("MM/dd ddd", CultureInfo.InvariantCulture)
             : "No Date";
         var isToday = day.Date is { } value && value == today;
         var style = isToday ? TerminalStyles.Today : TerminalStyles.DayHeader;
@@ -144,7 +144,8 @@ public static class OverviewRenderer
     private static Text CollapsedRoutineLine(int count, int width)
     {
         var label = "    +" + count.ToString(CultureInfo.InvariantCulture) + " routine";
-        return new Text(TerminalText.Truncate(label, width), TerminalStyles.Hint);
+        var style = count == 0 ? TerminalStyles.CompletedHint : TerminalStyles.Hint;
+        return new Text(TerminalText.Truncate(label, width), style);
     }
 
     private static void AppendCardSeparator(List<IRenderable> lines)
