@@ -12,6 +12,8 @@ using DD.TerminalClient.Domain.Overview;
 using DD.TerminalClient.Domain.Realtime;
 using DD.TerminalClient.Domain.State;
 using DD.TerminalClient.Domain.Time;
+using Spectre.Console;
+using Spectre.Console.Testing;
 using Xunit;
 
 namespace DD.Tests.Unit.TerminalClient;
@@ -42,7 +44,7 @@ public sealed class TerminalApplicationTests
     }
 
     [Fact]
-    public async Task Startup_LoadFails_ShowsCachedTasksOffline()
+    public async Task Startup_LoadFails_ShowsCachedTasksWithoutChangingConnectionStatus()
     {
         using var harness = new Harness();
         harness.TokenStore.Save(Jwt("alice", Now.AddDays(30)));
@@ -54,9 +56,56 @@ public sealed class TerminalApplicationTests
         harness.Tasks.LoadHandler = () => throw new TerminalApiException(TerminalApiErrorKind.Transport, "down");
 
         var run = harness.Start();
-        await WaitForAsync(() => harness.LastModel().IsOffline, "offline indicator");
+        await WaitForAsync(
+            () => harness.LastModel().IsSnapshotReloadPending,
+            "snapshot retry notice");
 
         Assert.True(HasTask(harness.LastModel(), "cached"));
+        Assert.False(harness.LastModel().IsOffline);
+
+        harness.Enqueue(Key('?'));
+        await WaitForAsync(
+            () => harness.LastModel().Status.Kind == TerminalStatusKind.Help
+                && harness.LastModel().IsSnapshotReloadPending,
+            "snapshot retry notice after navigation");
+        await harness.StopAsync(run);
+    }
+
+    [Fact]
+    public async Task Startup_HubDisconnected_ShowsOfflineEvenWhenSnapshotLoads()
+    {
+        using var harness = new Harness();
+        harness.TokenStore.Save(Jwt("alice", Now.AddDays(30)));
+        harness.StateStore.Set(new PersistedTerminalState { DataOwner = "alice" });
+        harness.Hub.StartEvent = TaskHubEvent.Reconnecting;
+        harness.Tasks.LoadResult = [Task("server", "Server task")];
+
+        var run = harness.Start();
+        await WaitForAsync(() => HasTask(harness.LastModel(), "server"), "snapshot loaded");
+
+        Assert.True(harness.LastModel().IsOffline);
+        await harness.StopAsync(run);
+    }
+
+    [Fact]
+    public async Task HubReconnecting_OfflinePersistsAcrossInputWithoutTransientMessage()
+    {
+        using var harness = new Harness();
+        harness.TokenStore.Save(Jwt("alice", Now.AddDays(30)));
+        harness.StateStore.Set(new PersistedTerminalState { DataOwner = "alice" });
+
+        var run = harness.Start();
+        await WaitForAsync(() => !harness.LastModel().IsOffline, "initial connection");
+
+        harness.Hub.Raise(TaskHubEvent.Reconnecting);
+        await WaitForAsync(() => harness.LastModel().IsOffline, "offline after connection loss");
+        Assert.Null(harness.LastModel().Notification);
+
+        harness.Enqueue(Key('?'));
+        await WaitForAsync(() => harness.LastModel().Status.Kind == TerminalStatusKind.Help, "help opened");
+        Assert.True(harness.LastModel().IsOffline);
+        Assert.Null(harness.LastModel().Notification);
+
         await harness.StopAsync(run);
     }
 
@@ -319,9 +368,9 @@ public sealed class TerminalApplicationTests
     }
 
     [Fact]
-    public async Task Save_TransportError_SchedulesRetryThenSucceeds()
+    public async Task Save_TransportError_ShowsUnsyncedUntilRetrySucceeds()
     {
-        using var harness = new Harness(immediateDelay: true);
+        using var harness = new Harness();
         harness.TokenStore.Save(Jwt("alice", Now.AddDays(30)));
         harness.StateStore.Set(new PersistedTerminalState
         {
@@ -342,8 +391,48 @@ public sealed class TerminalApplicationTests
         await WaitForAsync(() => HasTask(harness.LastModel(), "a"), "task rendered");
 
         harness.Enqueue(Space());
-        await WaitForAsync(() => harness.Tasks.SavedBatches.Count >= 2, "save retried");
+        await WaitForAsync(() => harness.LastModel().HasUnsyncedChanges, "unsynced marker");
 
+        Assert.False(harness.LastModel().IsOffline);
+        Assert.Null(harness.LastModel().Notification);
+
+        harness.Hub.Raise(TaskHubEvent.Reconnecting);
+        await WaitForAsync(
+            () => harness.LastModel().IsOffline && harness.LastModel().HasUnsyncedChanges,
+            "combined offline and unsynced state");
+        Assert.Contains("offline unsynced", RenderFooter(harness.LastModel()), StringComparison.Ordinal);
+
+        harness.Enqueue(Key('?'));
+        await WaitForAsync(() => harness.LastModel().Status.Kind == TerminalStatusKind.Help, "help opened");
+        Assert.Contains("offline unsynced", RenderFooter(harness.LastModel()), StringComparison.Ordinal);
+
+        harness.Enqueue(ApplicationEvent.RetryTick);
+        await WaitForAsync(() => harness.Tasks.SavedBatches.Count >= 2, "save retried");
+        await WaitForAsync(() => !harness.LastModel().HasUnsyncedChanges, "unsynced marker cleared");
+
+        await harness.StopAsync(run);
+    }
+
+    [Fact]
+    public async Task Save_FirstAttemptInFlight_DoesNotShowUnsynced()
+    {
+        using var harness = new Harness();
+        harness.TokenStore.Save(Jwt("alice", Now.AddDays(30)));
+        harness.StateStore.Set(new PersistedTerminalState
+        {
+            DataOwner = "alice",
+            CachedTasks = [Task("a", "Task A")],
+        });
+        harness.Tasks.LoadResult = [Task("a", "Task A")];
+        harness.Tasks.HoldSaves();
+
+        var run = harness.Start();
+        await WaitForAsync(() => HasTask(harness.LastModel(), "a"), "task rendered");
+
+        harness.Enqueue(Space());
+        await WaitForAsync(() => harness.Tasks.SavedBatches.Count >= 1, "first save in flight");
+
+        Assert.False(harness.LastModel().HasUnsyncedChanges);
         await harness.StopAsync(run);
     }
 
@@ -703,11 +792,16 @@ public sealed class TerminalApplicationTests
         };
 
         var run = harness.Start();
-        await WaitForAsync(() => harness.LastModel().IsOffline, "offline after failed snapshot");
+        await WaitForAsync(
+            () => harness.LastModel().IsSnapshotReloadPending,
+            "snapshot retry notice");
 
         harness.Hub.Raise(TaskHubEvent.Heartbeat);
         harness.Enqueue(ApplicationEvent.ReloadSnapshotTick);
         await WaitForAsync(() => harness.Tasks.LoadCount >= 2, "snapshot reloaded despite heartbeat");
+        await WaitForAsync(
+            () => !harness.LastModel().IsSnapshotReloadPending,
+            "snapshot retry notice cleared");
 
         await harness.StopAsync(run);
     }
@@ -724,6 +818,15 @@ public sealed class TerminalApplicationTests
 
             await System.Threading.Tasks.Task.Delay(10);
         }
+    }
+
+    private static string RenderFooter(TerminalViewModel model)
+    {
+        var console = new TestConsole();
+        console.Profile.Width = 140;
+        console.Profile.Height = 40;
+        console.Write(TerminalFrame.RenderFooter(model));
+        return console.Output;
     }
 
     private static bool HasTask(TerminalViewModel model, string uid)
@@ -1052,6 +1155,8 @@ public sealed class TerminalApplicationTests
 
         public bool ThrowOnDispose { get; set; }
 
+        public TaskHubEvent StartEvent { get; set; } = TaskHubEvent.Connected;
+
         public Task StartAsync(CancellationToken cancellationToken)
         {
             lock (_gate)
@@ -1059,6 +1164,7 @@ public sealed class TerminalApplicationTests
                 StartCount++;
             }
 
+            Sink?.Invoke(StartEvent);
             return System.Threading.Tasks.Task.CompletedTask;
         }
 

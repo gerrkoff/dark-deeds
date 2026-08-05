@@ -36,10 +36,6 @@ public static class TerminalFrame
             right.Add("[grey]completed shown[/]");
         }
 
-        right.Add(model.IsOffline
-            ? "[red bold]offline[/] [grey](cached tasks)[/]"
-            : "[green]online[/]");
-
         var grid = new Grid { Expand = true };
         grid.AddColumn(new GridColumn().NoWrap());
         grid.AddColumn(new GridColumn().NoWrap().RightAligned());
@@ -70,6 +66,11 @@ public static class TerminalFrame
         ArgumentNullException.ThrowIfNull(model);
 
         var body = new List<IRenderable>();
+        var persistentStatus = BuildPersistentStatus(model);
+        if (persistentStatus is not null)
+        {
+            body.Add(persistentStatus);
+        }
 
         if (model.Notification is { } notification && !string.IsNullOrWhiteSpace(notification))
         {
@@ -104,6 +105,29 @@ public static class TerminalFrame
             .Expand()
             .Border(BoxBorder.Rounded)
             .BorderColor(Color.Grey);
+    }
+
+    private static Markup? BuildPersistentStatus(TerminalViewModel model)
+    {
+        var statuses = new List<string>();
+        if (model.IsOffline)
+        {
+            statuses.Add("offline");
+        }
+
+        if (model.HasUnsyncedChanges)
+        {
+            statuses.Add("unsynced");
+        }
+
+        if (model.IsSnapshotReloadPending)
+        {
+            statuses.Add("stale");
+        }
+
+        return statuses.Count == 0
+            ? null
+            : new Markup("[yellow]" + string.Join(" ", statuses) + "[/]");
     }
 
     private static Panel RenderHelp(TerminalViewModel model)

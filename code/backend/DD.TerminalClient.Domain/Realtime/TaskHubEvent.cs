@@ -30,6 +30,8 @@ public sealed record TaskHubEvent
 
     public static TaskHubEvent Heartbeat { get; } = new(TaskHubEventKind.Heartbeat, NoTasks);
 
+    public static TaskHubEvent Connected { get; } = new(TaskHubEventKind.Connected, NoTasks);
+
     public static TaskHubEvent Update(IReadOnlyList<TerminalTask> tasks)
     {
         ArgumentNullException.ThrowIfNull(tasks);

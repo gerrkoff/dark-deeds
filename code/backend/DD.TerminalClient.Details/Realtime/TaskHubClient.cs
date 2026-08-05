@@ -112,7 +112,12 @@ internal sealed class TaskHubClient(
         }
         else if (outcome == TaskHubConnectOutcome.Failed)
         {
+            Emit(TaskHubEvent.Reconnecting);
             StartReconnectLoop();
+        }
+        else if (outcome == TaskHubConnectOutcome.Connected)
+        {
+            Emit(TaskHubEvent.Connected);
         }
     }
 
