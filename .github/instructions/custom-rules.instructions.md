@@ -31,7 +31,13 @@ Rules specific to this repository. **If a rule is here — follow it. No excepti
 
 **Wrap every full-screen alternate-buffer redraw in DEC synchronized output (`CSI ? 2026 h` / `CSI ? 2026 l`) and release it in a `finally` block.** Clearing before sequentially writing the header, content, and footer otherwise exposes partial frames as visible flicker during ordinary keyboard navigation.
 
-**Keep terminal connection, snapshot loading, and save synchronization as independent UI states, rendered together at the top of the footer as a compact lowercase yellow status strip.** Use `offline` only from SignalR lifecycle events, `unsynced` only after a save has failed and until all queued local changes settle, and `stale` while snapshot reload is pending; render every active marker together and never replace them with verbose or transient retry messages.
+**Leave the final terminal column unused and omit the frame's trailing line break when rendering a full-screen alternate-buffer frame.** Filling the bottom-right cell or advancing past a footer drawn on the final row can make native terminals scroll the buffer and hide the fixed header, even when IDE consoles render the same frame correctly; this avoids the scroll without wasting vertical space.
+
+**Keep terminal connection, snapshot loading, and save synchronization as independent UI states, rendered together at the right of the fixed header as a compact lowercase yellow status strip.** Use `offline` only from SignalR lifecycle events, `unsynced` only after a save has failed and until all queued local changes settle, and `stale` while snapshot reload is pending; render every active marker together, keep them out of the footer, and never replace them with verbose or transient retry messages.
+
+**Show the active terminal profile beside `Dark Deeds` only when it is not `production`, and never repeat profile or backend details inside Help.** The fixed header is the single location for environment identity.
+
+**Do not render a `completed shown` indicator in the terminal header.** Completed-task visibility remains a view mode controlled by `c`, not a persistent status.
 
 **Store persistent terminal warnings as explicit application state, not `StatusMessage`.** `StatusMessage` is transient and ordinary input replaces it; a snapshot-retry warning must remain rendered across navigation and editing until a successful snapshot clears its dedicated state.
 
@@ -39,7 +45,9 @@ Rules specific to this repository. **If a rule is here — follow it. No excepti
 
 **Render terminal day cards as one top-to-bottom stream with a blank line between cards, but no trailing blank line after the final card.** Up/Down navigates the immediately previous/next visible task across all sections; Left/Right navigates the previous/next non-empty rendered day and lands on its first task.
 
-**For a collapsed dated Routine group, always render the summary when at least one nondeleted Routine task exists, and count only incomplete Routine tasks.** Therefore a day whose Routine tasks are all completed renders `+0 routine`; expanded Routine groups and No Date tasks do not render this summary.
+**Always render all fourteen Current day cards, including days with no visible tasks, and visually separate the two weeks.** Replace the ordinary blank card separator between the first Sunday and second Monday with one short dim-grey line; do not add an extra row.
+
+**For a collapsed dated Routine group, render the summary when at least one Routine task is visible under the completed-task filter, and count only incomplete Routine tasks.** Therefore a day whose Routine tasks are all completed renders `+0 routine` only while completed tasks are shown; expanded Routine groups and No Date tasks do not render this summary.
 
 **The terminal `r` shortcut globally toggles dated Routine visibility for every day and does not require a focused task.** Keep this as a boolean view mode so Routine tasks added or received on new dates while expanded are shown automatically; pressing `r` again collapses every dated Routine group.
 

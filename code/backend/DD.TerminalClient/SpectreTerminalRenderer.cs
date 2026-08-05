@@ -8,9 +8,10 @@ namespace DD.TerminalClient;
 // The production terminal surface: an alternate-screen, full-frame renderer driven by the event loop.
 // Begin switches to the alternate buffer and hides the cursor; End restores both. Each Render replaces
 // the buffer inside a synchronized terminal update, so clearing and writing the header, viewport and
-// footer become visible as one frame instead of flickering through partial output. It never runs a
-// Spectre prompt inside the live frame and never logs, so the alternate screen stays the sole owner of
-// the console.
+// footer become visible as one frame instead of flickering through partial output. The frame leaves the
+// final terminal column unused and omits its trailing line break so writing the footer on the last row
+// cannot scroll a native terminal. It never runs a Spectre prompt inside the live frame and never logs,
+// so the alternate screen stays the sole owner of the console.
 internal sealed class SpectreTerminalRenderer(IAnsiConsole console) : ITerminalRenderer
 {
     private const string EnterAlternateScreen = "\u001b[?1049h";
@@ -45,16 +46,18 @@ internal sealed class SpectreTerminalRenderer(IAnsiConsole console) : ITerminalR
                 return;
             }
 
+            var renderWidth = Math.Max(1, width - 1);
             var header = TerminalFrame.RenderHeader(model);
             var footer = TerminalFrame.RenderFooter(model);
-            var (content, contentLines, focusedLine) = BuildContent(model, width);
+            var (content, contentLines, focusedLine) = BuildContent(model, renderWidth);
 
-            var reserved = CountLines(header, width) + CountLines(footer, width);
+            var reserved = CountLines(header, renderWidth) + CountLines(footer, renderWidth);
             var contentHeight = ViewportState.ContentHeight(height, reserved);
             var viewport = ViewportState.Calculate(contentLines, contentHeight, focusedLine, _offset);
             _offset = viewport.Offset;
 
-            console.Write(new Rows(header, new ViewportRenderable(content, viewport), footer));
+            var frame = new Rows(header, new ViewportRenderable(content, viewport), footer);
+            console.Write(new WidthConstrainedRenderable(frame, renderWidth));
         }
         finally
         {
@@ -93,5 +96,26 @@ internal sealed class SpectreTerminalRenderer(IAnsiConsole console) : ITerminalR
     {
         var options = RenderOptions.Create(console, console.Profile.Capabilities);
         return Segment.SplitLines(renderable.Render(options, width)).Count;
+    }
+
+    internal sealed class WidthConstrainedRenderable(IRenderable content, int width) : Renderable
+    {
+        private readonly int _width = Math.Max(1, width);
+
+        protected override Measurement Measure(RenderOptions options, int maxWidth)
+        {
+            return content.Measure(options, Math.Min(_width, maxWidth));
+        }
+
+        protected override IEnumerable<Segment> Render(RenderOptions options, int maxWidth)
+        {
+            var segments = content.Render(options, Math.Min(_width, maxWidth)).ToList();
+            while (segments.Count > 0 && ReferenceEquals(segments[^1], Segment.LineBreak))
+            {
+                segments.RemoveAt(segments.Count - 1);
+            }
+
+            return segments;
+        }
     }
 }

@@ -400,11 +400,11 @@ public sealed class TerminalApplicationTests
         await WaitForAsync(
             () => harness.LastModel().IsOffline && harness.LastModel().HasUnsyncedChanges,
             "combined offline and unsynced state");
-        Assert.Contains("offline unsynced", RenderFooter(harness.LastModel()), StringComparison.Ordinal);
+        Assert.Contains("offline unsynced", RenderHeader(harness.LastModel()), StringComparison.Ordinal);
 
         harness.Enqueue(Key('?'));
         await WaitForAsync(() => harness.LastModel().Status.Kind == TerminalStatusKind.Help, "help opened");
-        Assert.Contains("offline unsynced", RenderFooter(harness.LastModel()), StringComparison.Ordinal);
+        Assert.Contains("offline unsynced", RenderHeader(harness.LastModel()), StringComparison.Ordinal);
 
         harness.Enqueue(ApplicationEvent.RetryTick);
         await WaitForAsync(() => harness.Tasks.SavedBatches.Count >= 2, "save retried");
@@ -820,12 +820,12 @@ public sealed class TerminalApplicationTests
         }
     }
 
-    private static string RenderFooter(TerminalViewModel model)
+    private static string RenderHeader(TerminalViewModel model)
     {
         var console = new TestConsole();
         console.Profile.Width = 140;
         console.Profile.Height = 40;
-        console.Write(TerminalFrame.RenderFooter(model));
+        console.Write(TerminalFrame.RenderHeader(model));
         return console.Output;
     }
 

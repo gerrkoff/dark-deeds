@@ -19,6 +19,8 @@ internal static class TerminalStyles
 
     public static readonly Style CompletedHint = new(Color.Grey, decoration: Decoration.Dim);
 
+    public static readonly Style WeekSeparator = new(Color.Grey, decoration: Decoration.Dim);
+
     public static readonly Style EmptyState = new(Color.Grey, decoration: Decoration.Italic);
 
     // Composes the style for one rendered task line from its type, completion, probability and focus.

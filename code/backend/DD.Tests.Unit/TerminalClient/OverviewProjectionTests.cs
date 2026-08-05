@@ -275,8 +275,12 @@ public sealed class OverviewProjectionTests
         Assert.True(cell.HasCollapsedRoutineTasks);
     }
 
-    [Fact]
-    public void Project_CompletedCollapsedRoutines_KeepSummaryWithZeroCount()
+    [Theory]
+    [InlineData(false, false)]
+    [InlineData(true, true)]
+    public void Project_CompletedCollapsedRoutines_FollowCompletedVisibility(
+        bool showCompleted,
+        bool expectedSummary)
     {
         var service = CreateService();
 
@@ -285,14 +289,14 @@ public sealed class OverviewProjectionTests
                 Task("r-done-1", date: Monday, order: 1, type: TerminalTaskType.Routine, completed: true),
                 Task("r-done-2", date: Monday, order: 2, type: TerminalTaskType.Routine, completed: true),
             ],
-            showCompleted: false,
+            showCompleted,
             NoRoutineShown);
 
         var cell = result.Current[0];
         Assert.Empty(cell.Tasks);
         Assert.True(cell.IsEmpty);
         Assert.Equal(0, cell.CollapsedRoutineCount);
-        Assert.True(cell.HasCollapsedRoutineTasks);
+        Assert.Equal(expectedSummary, cell.HasCollapsedRoutineTasks);
     }
 
     [Fact]

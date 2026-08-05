@@ -733,7 +733,6 @@ internal sealed class TerminalApplication
             IsSnapshotReloadPending = State.IsSnapshotReloadPending,
             Notification = State.StatusMessage ?? State.Notification,
             ProfileName = _deps.ProfileName,
-            ConnectionUrl = _deps.ConnectionUrl,
             Status = BuildStatus(),
         };
     }
