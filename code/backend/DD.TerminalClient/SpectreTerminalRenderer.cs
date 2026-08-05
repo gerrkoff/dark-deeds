@@ -6,15 +6,17 @@ using Spectre.Console.Rendering;
 namespace DD.TerminalClient;
 
 // The production terminal surface: an alternate-screen, full-frame renderer driven by the event loop.
-// Begin switches to the alternate buffer and hides the cursor; End restores both. Each Render clears the
-// buffer and writes a fixed header, the scrollable Overview (or help/empty content) clipped into a
-// viewport that keeps the focused task visible, and a fixed footer - or the resize-required screen when
-// the terminal is below the supported minimum. It never runs a Spectre prompt inside the live frame and
-// never logs, so the alternate screen stays the sole owner of the console.
+// Begin switches to the alternate buffer and hides the cursor; End restores both. Each Render replaces
+// the buffer inside a synchronized terminal update, so clearing and writing the header, viewport and
+// footer become visible as one frame instead of flickering through partial output. It never runs a
+// Spectre prompt inside the live frame and never logs, so the alternate screen stays the sole owner of
+// the console.
 internal sealed class SpectreTerminalRenderer(IAnsiConsole console) : ITerminalRenderer
 {
     private const string EnterAlternateScreen = "\u001b[?1049h";
     private const string LeaveAlternateScreen = "\u001b[?1049l";
+    private const string BeginSynchronizedUpdate = "\u001b[?2026h";
+    private const string EndSynchronizedUpdate = "\u001b[?2026l";
 
     private int _offset;
 
@@ -30,24 +32,35 @@ internal sealed class SpectreTerminalRenderer(IAnsiConsole console) : ITerminalR
     {
         ArgumentNullException.ThrowIfNull(model);
 
-        console.Clear();
-        if (resizeRequired)
+        var writer = console.Profile.Out.Writer;
+        writer.Write(BeginSynchronizedUpdate);
+        writer.Flush();
+        try
         {
-            _offset = 0;
-            console.Write(ViewportRenderable.RenderResizeRequired(width, height));
-            return;
+            console.Clear();
+            if (resizeRequired)
+            {
+                _offset = 0;
+                console.Write(ViewportRenderable.RenderResizeRequired(width, height));
+                return;
+            }
+
+            var header = TerminalFrame.RenderHeader(model);
+            var footer = TerminalFrame.RenderFooter(model);
+            var (content, contentLines, focusedLine) = BuildContent(model, width);
+
+            var reserved = CountLines(header, width) + CountLines(footer, width);
+            var contentHeight = ViewportState.ContentHeight(height, reserved);
+            var viewport = ViewportState.Calculate(contentLines, contentHeight, focusedLine, _offset);
+            _offset = viewport.Offset;
+
+            console.Write(new Rows(header, new ViewportRenderable(content, viewport), footer));
         }
-
-        var header = TerminalFrame.RenderHeader(model);
-        var footer = TerminalFrame.RenderFooter(model);
-        var (content, contentLines, focusedLine) = BuildContent(model, width);
-
-        var reserved = CountLines(header, width) + CountLines(footer, width);
-        var contentHeight = ViewportState.ContentHeight(height, reserved);
-        var viewport = ViewportState.Calculate(contentLines, contentHeight, focusedLine, _offset);
-        _offset = viewport.Offset;
-
-        console.Write(new Rows(header, new ViewportRenderable(content, viewport), footer));
+        finally
+        {
+            writer.Write(EndSynchronizedUpdate);
+            writer.Flush();
+        }
     }
 
     public void End()

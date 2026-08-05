@@ -277,7 +277,7 @@ internal sealed class TerminalApplication
 
         if (effect.NotSaved > 0)
         {
-            State = State with { IsOffline = true, StatusMessage = "Offline - the save will be retried." };
+            State = State with { IsOffline = true, StatusMessage = "Save will be retried." };
         }
 
         State = _deps.Reducer.Recompute(State);
@@ -378,7 +378,7 @@ internal sealed class TerminalApplication
             return;
         }
 
-        State = State with { IsOffline = true, StatusMessage = "Offline - showing cached tasks." };
+        State = State with { IsOffline = true, StatusMessage = null };
         StartDelayedTick(ReloadRetryDelay, ApplicationEvent.ReloadSnapshotTick);
     }
 
@@ -717,6 +717,7 @@ internal sealed class TerminalApplication
             IsOffline = State.IsOffline,
             Notification = State.StatusMessage ?? State.Notification,
             ProfileName = _deps.ProfileName,
+            ConnectionUrl = _deps.ConnectionUrl,
             Status = BuildStatus(),
         };
     }

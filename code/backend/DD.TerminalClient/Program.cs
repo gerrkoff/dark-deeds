@@ -141,6 +141,9 @@ internal static class Program
             SetToken = SetToken,
             ReadDimensions = () => ViewportRenderable.ResolveDimensions(console, ViewportRenderable.ReadWindowSize),
             ProfileName = profile.Name,
+            ConnectionUrl = string.Equals(profile.Name, "production", StringComparison.OrdinalIgnoreCase)
+                ? null
+                : profile.BaseUri.AbsoluteUri,
         };
 
         using var cts = new CancellationTokenSource();
