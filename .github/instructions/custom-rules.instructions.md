@@ -31,6 +31,10 @@ Rules specific to this repository. **If a rule is here — follow it. No excepti
 
 **Wrap every full-screen alternate-buffer redraw in DEC synchronized output (`CSI ? 2026 h` / `CSI ? 2026 l`) and release it in a `finally` block.** Clearing before sequentially writing the header, content, and footer otherwise exposes partial frames as visible flicker during ordinary keyboard navigation.
 
+**Keep terminal connection, snapshot loading, and save synchronization as independent UI states, rendered together at the top of the footer as a compact lowercase yellow status strip.** Use `offline` only from SignalR lifecycle events, `unsynced` only after a save has failed and until all queued local changes settle, and `stale` while snapshot reload is pending; render every active marker together and never replace them with verbose or transient retry messages.
+
+**Store persistent terminal warnings as explicit application state, not `StatusMessage`.** `StatusMessage` is transient and ordinary input replaces it; a snapshot-retry warning must remain rendered across navigation and editing until a successful snapshot clears its dedicated state.
+
 **When copying or re-emitting Spectre `Segment`s (e.g. clipping the terminal viewport), copy a `SegmentLine` with `list.AddRange(segmentLine)` or `foreach`, never the collection-expression spread `[.. segmentLine]`.** The spread injects `null` padding segments into the copy, which later throw `NullReferenceException` deep inside `Spectre.Console.Rendering.Segment.Merge` when the output is written. An empty `[]` is safe; only spreading a non-empty `SegmentLine` is affected.
 
 **Render terminal day cards as one top-to-bottom stream with a blank line between cards, but no trailing blank line after the final card.** Up/Down navigates the immediately previous/next visible task across all sections; Left/Right navigates the previous/next non-empty rendered day and lands on its first task.

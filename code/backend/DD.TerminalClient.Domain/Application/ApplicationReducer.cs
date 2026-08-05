@@ -256,7 +256,7 @@ public sealed class ApplicationReducer(
             TerminalCommand.ToggleCompletedVisibility => ToggleCompletedVisibility(state),
             TerminalCommand.ToggleRoutine => ToggleRoutine(state),
             TerminalCommand.ForceReconnect => ApplicationTransition.Of(
-                state with { IsBuffering = true, StatusMessage = "Reconnecting..." },
+                state with { IsBuffering = true, IsOffline = true, StatusMessage = null },
                 ApplicationEffect.Reconnect),
             TerminalCommand.Quit => ApplicationTransition.Of(state with { Quit = true }),
             TerminalCommand.SubmitAddWithFocusDate => Create(state, text, fallbackDate),

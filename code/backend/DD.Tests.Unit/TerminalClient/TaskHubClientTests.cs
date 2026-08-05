@@ -55,7 +55,7 @@ public sealed class TaskHubClientTests
     }
 
     [Fact]
-    public async Task StartAsync_FirstConnectSucceeds_ReadsTokenAndEmitsNoEvent()
+    public async Task StartAsync_FirstConnectSucceeds_ReadsTokenAndEmitsConnected()
     {
         var collector = new EventCollector();
         var factory = new FakeHubConnectionFactory();
@@ -67,8 +67,7 @@ public sealed class TaskHubClientTests
         Assert.Equal(1, factory.Connection.StartCount);
         Assert.Equal("jwt-1", Assert.Single(factory.Connection.TokensSeen));
 
-        // The first connect is silent - startup loads the initial snapshot itself - so no reconnect fires.
-        Assert.Empty(collector.Snapshot());
+        Assert.Equal(TaskHubEventKind.Connected, Assert.Single(collector.Kinds()));
     }
 
     [Fact]
@@ -116,8 +115,7 @@ public sealed class TaskHubClientTests
         Assert.Equal(2, factory.Connection.StartCount);
         Assert.Equal(TimeSpan.FromSeconds(1), delay.Snapshot()[0]);
 
-        // An offline start emits no Reconnecting (nothing was ever connected to lose).
-        Assert.DoesNotContain(TaskHubEventKind.Reconnecting, collector.Kinds());
+        Assert.Contains(TaskHubEventKind.Reconnecting, collector.Kinds());
     }
 
     [Fact]

@@ -7,6 +7,7 @@ public enum TaskHubEventKind
 {
     Update,
     Heartbeat,
+    Connected,
     Reconnecting,
     Reconnected,
     Closed,

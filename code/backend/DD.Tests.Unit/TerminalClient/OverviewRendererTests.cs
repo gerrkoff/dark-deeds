@@ -416,25 +416,66 @@ public sealed class OverviewRendererTests
     }
 
     [Fact]
-    public void RenderHeader_Offline_ShowsOfflineIndicator()
-    {
-        var console = Plain(80);
-
-        console.Write(TerminalFrame.RenderHeader(Vm(Project(), offline: true)));
-
-        Assert.Contains("offline", console.Output, StringComparison.Ordinal);
-        Assert.Contains("cached tasks", console.Output, StringComparison.Ordinal);
-    }
-
-    [Fact]
-    public void RenderFooter_Offline_DoesNotRepeatOfflineStatus()
+    public void RenderFooter_Offline_ShowsPersistentStatus()
     {
         var console = Plain(80);
 
         console.Write(TerminalFrame.RenderFooter(Vm(Project(), offline: true)));
 
+        Assert.Contains("offline", console.Output, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void RenderFooter_Unsynced_ShowsIndependentStatus()
+    {
+        var console = Plain(80);
+
+        console.Write(TerminalFrame.RenderFooter(Vm(Project(), hasUnsyncedChanges: true)));
+
+        Assert.Contains("unsynced", console.Output, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void RenderFooter_MultipleProblems_ShowsCompactYellowStatusStrip()
+    {
+        var footer = TerminalFrame.RenderFooter(Vm(
+            Project(),
+            offline: true,
+            hasUnsyncedChanges: true,
+            snapshotReloadPending: true));
+        var console = Plain(80);
+        console.Write(footer);
+        var ansi = Ansi(footer, 80);
+
+        Assert.Contains("offline unsynced stale", console.Output, StringComparison.Ordinal);
+        Assert.Contains("[38;5;11m", ansi, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void RenderHeader_DoesNotRenderConnectionOrSyncStatus()
+    {
+        var console = Plain(80);
+
+        console.Write(TerminalFrame.RenderHeader(Vm(
+            Project(),
+            offline: true,
+            hasUnsyncedChanges: true,
+            snapshotReloadPending: true)));
+
         Assert.DoesNotContain("offline", console.Output, StringComparison.OrdinalIgnoreCase);
-        Assert.DoesNotContain("cached tasks", console.Output, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("unsynced", console.Output, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("stale", console.Output, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public void RenderFooter_SnapshotReloadPending_ShowsOnlyStaleStatus()
+    {
+        var console = Plain(80);
+
+        console.Write(TerminalFrame.RenderFooter(Vm(Project(), snapshotReloadPending: true)));
+
+        Assert.Contains("stale", console.Output, StringComparison.Ordinal);
+        Assert.DoesNotContain("retried", console.Output, StringComparison.OrdinalIgnoreCase);
     }
 
     [Fact]
@@ -482,6 +523,8 @@ public sealed class OverviewRendererTests
         string? notification = null,
         string profileName = "",
         string? connectionUrl = null,
+        bool hasUnsyncedChanges = false,
+        bool snapshotReloadPending = false,
         bool showCompleted = false)
     {
         return new TerminalViewModel
@@ -491,6 +534,8 @@ public sealed class OverviewRendererTests
             Today = Monday,
             ShowCompleted = showCompleted,
             IsOffline = offline,
+            HasUnsyncedChanges = hasUnsyncedChanges,
+            IsSnapshotReloadPending = snapshotReloadPending,
             Notification = notification,
             ProfileName = profileName,
             ConnectionUrl = connectionUrl,

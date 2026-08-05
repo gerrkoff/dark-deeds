@@ -252,7 +252,11 @@ internal sealed class TerminalApplication
                     StartDelayedTick(effect.RetryDelay, ApplicationEvent.RetryTick);
                     break;
                 case TaskSyncEffectKind.ReportSyncStatus:
-                    State = State with { IsSaving = effect.IsSaving };
+                    State = State with
+                    {
+                        IsSaving = effect.IsSaving,
+                        HasUnsyncedChanges = effect.IsSaving && State.HasUnsyncedChanges,
+                    };
                     break;
                 case TaskSyncEffectKind.SaveFinished:
                     ApplySaveFinished(effect);
@@ -277,7 +281,7 @@ internal sealed class TerminalApplication
 
         if (effect.NotSaved > 0)
         {
-            State = State with { IsOffline = true, StatusMessage = "Save will be retried." };
+            State = State with { HasUnsyncedChanges = true };
         }
 
         State = _deps.Reducer.Recompute(State);
@@ -300,8 +304,11 @@ internal sealed class TerminalApplication
 
                 State = State with { IsOffline = false };
                 break;
+            case TaskHubEventKind.Connected:
+                State = State with { IsOffline = false };
+                break;
             case TaskHubEventKind.Reconnecting:
-                State = State with { IsOffline = true, IsBuffering = true, StatusMessage = "Reconnecting..." };
+                State = State with { IsOffline = true, IsBuffering = true, StatusMessage = null };
                 break;
             case TaskHubEventKind.Reconnected:
                 State = State with { IsBuffering = true, IsOffline = false };
@@ -342,7 +349,12 @@ internal sealed class TerminalApplication
             DrainRestoredOutbox();
         }
 
-        State = _deps.Reducer.Recompute(State with { IsBuffering = false, IsOffline = false });
+        State = _deps.Reducer.Recompute(State with
+        {
+            IsBuffering = false,
+            IsSnapshotReloadPending = false,
+            StatusMessage = null,
+        });
         PersistState();
     }
 
@@ -378,7 +390,7 @@ internal sealed class TerminalApplication
             return;
         }
 
-        State = State with { IsOffline = true, StatusMessage = null };
+        State = State with { IsSnapshotReloadPending = true };
         StartDelayedTick(ReloadRetryDelay, ApplicationEvent.ReloadSnapshotTick);
     }
 
@@ -403,7 +415,6 @@ internal sealed class TerminalApplication
 
     private void HandleSaveCompleted(IReadOnlyList<TerminalTask> saved)
     {
-        State = State with { IsOffline = false };
         RunSyncEffects(_sync.OnSaveSucceeded(saved));
     }
 
@@ -415,7 +426,6 @@ internal sealed class TerminalApplication
             return;
         }
 
-        State = State with { IsOffline = true };
         RunSyncEffects(_sync.OnSaveFailed());
     }
 
@@ -557,6 +567,8 @@ internal sealed class TerminalApplication
             Phase = ApplicationPhase.Ready,
             Input = TerminalInputState.Normal,
             SuspendedInput = null,
+            HasUnsyncedChanges = false,
+            IsSnapshotReloadPending = false,
             ConfirmUser = null,
             ConfirmOwner = null,
             StatusMessage = null,
@@ -620,7 +632,9 @@ internal sealed class TerminalApplication
             Input = TerminalInputState.BeginLogin(),
             IsOffline = false,
             IsBuffering = false,
+            IsSnapshotReloadPending = false,
             IsSaving = false,
+            HasUnsyncedChanges = false,
             StatusMessage = "Session expired. Please sign in again.",
         };
     }
@@ -632,7 +646,7 @@ internal sealed class TerminalApplication
         _sessionCts?.Cancel();
         _sessionCts?.Dispose();
         _sessionCts = CancellationTokenSource.CreateLinkedTokenSource(_appToken);
-        State = State with { IsBuffering = true, IsOffline = false };
+        State = State with { IsBuffering = true, IsOffline = true };
         _ = StartHubAndLoadAsync(++_snapshotGeneration);
     }
 
@@ -715,6 +729,8 @@ internal sealed class TerminalApplication
             Today = _deps.LocalDate.Today,
             ShowCompleted = State.ShowCompleted,
             IsOffline = State.IsOffline,
+            HasUnsyncedChanges = State.HasUnsyncedChanges,
+            IsSnapshotReloadPending = State.IsSnapshotReloadPending,
             Notification = State.StatusMessage ?? State.Notification,
             ProfileName = _deps.ProfileName,
             ConnectionUrl = _deps.ConnectionUrl,

@@ -19,6 +19,10 @@ public sealed record TerminalViewModel
 
     public bool IsOffline { get; init; }
 
+    public bool HasUnsyncedChanges { get; init; }
+
+    public bool IsSnapshotReloadPending { get; init; }
+
     public string? Notification { get; init; }
 
     public string ProfileName { get; init; } = string.Empty;
