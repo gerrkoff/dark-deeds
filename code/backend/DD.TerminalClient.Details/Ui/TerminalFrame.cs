@@ -10,8 +10,8 @@ namespace DD.TerminalClient.Details.Ui;
 // keymap, or an empty-state message), and a fixed status footer. The footer reflects the current mode
 // without ever running a Spectre prompt inside the live display: it draws the supplied editor/login
 // buffer and cursor as ordinary styled text, shows the delete confirmation question, the full focused
-// task text in Normal mode, and the offline and conflict notifications. All user-supplied text (titles,
-// profile name, notifications, editor buffer) is escaped so it can never be interpreted as markup.
+// task text in Normal mode, and conflict/action notifications. All user-supplied text (titles, profile
+// name, connection URL, notifications, editor buffer) is escaped so it can never be interpreted as markup.
 public static class TerminalFrame
 {
     public static IRenderable Render(TerminalViewModel model, int width)
@@ -36,7 +36,9 @@ public static class TerminalFrame
             right.Add("[grey]completed shown[/]");
         }
 
-        right.Add(model.IsOffline ? "[red bold]offline[/]" : "[green]online[/]");
+        right.Add(model.IsOffline
+            ? "[red bold]offline[/] [grey](cached tasks)[/]"
+            : "[green]online[/]");
 
         var grid = new Grid { Expand = true };
         grid.AddColumn(new GridColumn().NoWrap());
@@ -51,7 +53,7 @@ public static class TerminalFrame
 
         if (model.Status.Kind == TerminalStatusKind.Help)
         {
-            return RenderHelp();
+            return RenderHelp(model);
         }
 
         var overview = OverviewRenderer.Render(model, width);
@@ -68,11 +70,6 @@ public static class TerminalFrame
         ArgumentNullException.ThrowIfNull(model);
 
         var body = new List<IRenderable>();
-
-        if (model.IsOffline)
-        {
-            body.Add(new Markup("[red bold]OFFLINE[/] [grey]showing cached tasks[/]"));
-        }
 
         if (model.Notification is { } notification && !string.IsNullOrWhiteSpace(notification))
         {
@@ -109,7 +106,7 @@ public static class TerminalFrame
             .BorderColor(Color.Grey);
     }
 
-    private static Panel RenderHelp()
+    private static Panel RenderHelp(TerminalViewModel model)
     {
         var grid = new Grid();
         grid.AddColumn(new GridColumn().NoWrap().PadRight(3));
@@ -129,6 +126,13 @@ public static class TerminalFrame
         AddHelpRow(grid, "Ctrl+R", "Reconnect and reload");
         AddHelpRow(grid, "?", "Toggle this help");
         AddHelpRow(grid, "q", "Quit");
+
+        if (!string.IsNullOrWhiteSpace(model.ConnectionUrl))
+        {
+            grid.AddEmptyRow();
+            grid.AddRow(new Markup("[bold]Debug[/]"), new Text(string.Empty));
+            AddHelpRow(grid, "Server", model.ConnectionUrl);
+        }
 
         return new Panel(grid)
             .Header(" Keyboard shortcuts ")

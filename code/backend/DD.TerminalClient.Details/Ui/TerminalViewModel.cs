@@ -23,5 +23,7 @@ public sealed record TerminalViewModel
 
     public string ProfileName { get; init; } = string.Empty;
 
+    public string? ConnectionUrl { get; init; }
+
     public TerminalStatus Status { get; init; } = new();
 }

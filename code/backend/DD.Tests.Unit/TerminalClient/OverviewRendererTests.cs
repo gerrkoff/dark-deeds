@@ -387,6 +387,35 @@ public sealed class OverviewRendererTests
     }
 
     [Fact]
+    public void RenderContent_Help_NonProductionProfileShowsConnectionUrl()
+    {
+        var status = new TerminalStatus { Kind = TerminalStatusKind.Help };
+        var console = Plain(100);
+
+        console.Write(TerminalFrame.RenderContent(
+            Vm(Project(), status: status, connectionUrl: "http://localhost:5000/"),
+            100));
+
+        Assert.Contains("Debug", console.Output, StringComparison.Ordinal);
+        Assert.Contains("Server", console.Output, StringComparison.Ordinal);
+        Assert.Contains("http://localhost:5000/", console.Output, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void RenderContent_Help_ProductionProfileDoesNotShowDebugSection()
+    {
+        var status = new TerminalStatus { Kind = TerminalStatusKind.Help };
+        var console = Plain(100);
+
+        console.Write(TerminalFrame.RenderContent(
+            Vm(Project(), status: status, profileName: "production"),
+            100));
+
+        Assert.DoesNotContain("Debug", console.Output, StringComparison.Ordinal);
+        Assert.DoesNotContain("Server", console.Output, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public void RenderHeader_Offline_ShowsOfflineIndicator()
     {
         var console = Plain(80);
@@ -394,6 +423,18 @@ public sealed class OverviewRendererTests
         console.Write(TerminalFrame.RenderHeader(Vm(Project(), offline: true)));
 
         Assert.Contains("offline", console.Output, StringComparison.Ordinal);
+        Assert.Contains("cached tasks", console.Output, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void RenderFooter_Offline_DoesNotRepeatOfflineStatus()
+    {
+        var console = Plain(80);
+
+        console.Write(TerminalFrame.RenderFooter(Vm(Project(), offline: true)));
+
+        Assert.DoesNotContain("offline", console.Output, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("cached tasks", console.Output, StringComparison.OrdinalIgnoreCase);
     }
 
     [Fact]
@@ -440,6 +481,7 @@ public sealed class OverviewRendererTests
         bool offline = false,
         string? notification = null,
         string profileName = "",
+        string? connectionUrl = null,
         bool showCompleted = false)
     {
         return new TerminalViewModel
@@ -451,6 +493,7 @@ public sealed class OverviewRendererTests
             IsOffline = offline,
             Notification = notification,
             ProfileName = profileName,
+            ConnectionUrl = connectionUrl,
             Status = status ?? new TerminalStatus(),
         };
     }

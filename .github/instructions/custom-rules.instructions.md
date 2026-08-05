@@ -29,6 +29,8 @@ Rules specific to this repository. **If a rule is here — follow it. No excepti
 
 **For mixed styles on one terminal line, use a custom `Renderable` that emits separate `Segment`s.** The repository's Spectre.Console version applies only one style per `Text` and does not support a styled `Text.Append` overload.
 
+**Wrap every full-screen alternate-buffer redraw in DEC synchronized output (`CSI ? 2026 h` / `CSI ? 2026 l`) and release it in a `finally` block.** Clearing before sequentially writing the header, content, and footer otherwise exposes partial frames as visible flicker during ordinary keyboard navigation.
+
 **When copying or re-emitting Spectre `Segment`s (e.g. clipping the terminal viewport), copy a `SegmentLine` with `list.AddRange(segmentLine)` or `foreach`, never the collection-expression spread `[.. segmentLine]`.** The spread injects `null` padding segments into the copy, which later throw `NullReferenceException` deep inside `Spectre.Console.Rendering.Segment.Merge` when the output is written. An empty `[]` is safe; only spreading a non-empty `SegmentLine` is affected.
 
 **Render terminal day cards as one top-to-bottom stream with a blank line between cards, but no trailing blank line after the final card.** Up/Down navigates the immediately previous/next visible task across all sections; Left/Right navigates the previous/next non-empty rendered day and lands on its first task.
