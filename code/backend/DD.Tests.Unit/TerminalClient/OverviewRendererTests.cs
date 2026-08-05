@@ -1,3 +1,4 @@
+using System.Globalization;
 using DD.TerminalClient.Details.Ui;
 using DD.TerminalClient.Domain.Models;
 using DD.TerminalClient.Domain.Navigation;
@@ -21,12 +22,46 @@ public sealed class OverviewRendererTests
     private static readonly DateOnly Monday = new(2024, 11, 4);
 
     [Fact]
-    public void Render_Empty_ShowsEmptyState()
+    public void Render_Empty_ShowsAllFourteenCurrentDays()
     {
         var console = Plain(80);
-        console.Write(TerminalFrame.Render(Vm(Project()), 80));
+        var rendered = OverviewRenderer.Render(Vm(Project()), 80);
+        console.Write(new Rows(rendered.Lines));
 
-        Assert.Contains("No tasks to show", console.Output, StringComparison.Ordinal);
+        Assert.Contains("Current", console.Output, StringComparison.Ordinal);
+        for (var i = 0; i < 14; i++)
+        {
+            Assert.Contains(
+                Monday.AddDays(i).ToString("MM/dd ddd", CultureInfo.InvariantCulture),
+                console.Output,
+                StringComparison.Ordinal);
+        }
+
+        Assert.DoesNotContain("No tasks to show", console.Output, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void Render_CurrentDayWithOnlyHiddenCompletedTasks_StillShowsDay()
+    {
+        var projection = ProjectRaw(
+            [Task("done", date: Monday.AddDays(3), completed: true)],
+            showCompleted: false,
+            routineShownDates: new HashSet<DateOnly>());
+        var console = Plain(80);
+
+        console.Write(new Rows(OverviewRenderer.Render(Vm(projection), 80).Lines));
+
+        Assert.Contains("11/07 Thu", console.Output, StringComparison.Ordinal);
+        Assert.DoesNotContain("done", console.Output, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void Render_CurrentWeeks_AreSeparatedBySubtleGreyLine()
+    {
+        var rendered = OverviewRenderer.Render(Vm(Project()), 80);
+
+        Assert.Equal("  ------------------------", RenderLine(rendered.Lines[14], 80));
+        Assert.Contains("[2;38;5;8m", Ansi(rendered.Lines[14], 80), StringComparison.Ordinal);
     }
 
     [Fact]
@@ -104,11 +139,12 @@ public sealed class OverviewRendererTests
         Assert.Equal(1, rendered.TaskLines.Single(line => line.Address.Section == OverviewSection.NoDate).LineIndex);
         Assert.Equal(5, mondayLine.LineIndex);
         Assert.Equal(8, tuesdayLine.LineIndex);
-        Assert.Equal(12, rendered.TaskLines.Single(line => line.Address.Section == OverviewSection.Future).LineIndex);
+        Assert.Equal(36, rendered.TaskLines.Single(line => line.Address.Section == OverviewSection.Future).LineIndex);
         Assert.Equal(string.Empty, RenderLine(rendered.Lines[2], 80));
         Assert.Equal(string.Empty, RenderLine(rendered.Lines[6], 80));
-        Assert.Equal(string.Empty, RenderLine(rendered.Lines[9], 80));
-        Assert.Equal(13, rendered.Lines.Count);
+        Assert.Equal("  ------------------------", RenderLine(rendered.Lines[19], 80));
+        Assert.Equal(string.Empty, RenderLine(rendered.Lines[33], 80));
+        Assert.Equal(37, rendered.Lines.Count);
     }
 
     [Fact]
@@ -162,8 +198,11 @@ public sealed class OverviewRendererTests
     public void Render_NonTodayDayHeader_IsBlueWithoutEdgeMarkers()
     {
         var projection = Project(Task("tomorrow", date: Monday.AddDays(1), title: "Later"));
+        var rendered = OverviewRenderer.Render(Vm(projection), 80);
+        var header = rendered.Lines.Single(line =>
+            string.Equals(RenderLine(line, 80), "  11/05 Tue", StringComparison.Ordinal));
 
-        var output = Ansi(new Rows(OverviewRenderer.Render(Vm(projection), 80).Lines), 80);
+        var output = Ansi(header, 80);
 
         Assert.Contains("11/05 Tue", output, StringComparison.Ordinal);
         Assert.DoesNotContain("--", output, StringComparison.Ordinal);
@@ -196,14 +235,14 @@ public sealed class OverviewRendererTests
     }
 
     [Fact]
-    public void Render_CompletedRoutinesCollapsed_ShowsZeroCount()
+    public void Render_CompletedRoutinesCollapsed_ShowsZeroCountWhenCompletedVisible()
     {
         var projection = ProjectRaw(
             [
                 Task("routine-1", date: Monday, completed: true, type: TerminalTaskType.Routine),
                 Task("routine-2", date: Monday, completed: true, type: TerminalTaskType.Routine),
             ],
-            showCompleted: false,
+            showCompleted: true,
             routineShownDates: new HashSet<DateOnly>());
         var console = Plain(80);
         var rendered = new Rows(OverviewRenderer.Render(Vm(projection), 80).Lines);
@@ -387,92 +426,58 @@ public sealed class OverviewRendererTests
     }
 
     [Fact]
-    public void RenderContent_Help_NonProductionProfileShowsConnectionUrl()
+    public void RenderContent_Help_DoesNotShowBackendDetails()
     {
         var status = new TerminalStatus { Kind = TerminalStatusKind.Help };
         var console = Plain(100);
 
         console.Write(TerminalFrame.RenderContent(
-            Vm(Project(), status: status, connectionUrl: "http://localhost:5000/"),
-            100));
-
-        Assert.Contains("Debug", console.Output, StringComparison.Ordinal);
-        Assert.Contains("Server", console.Output, StringComparison.Ordinal);
-        Assert.Contains("http://localhost:5000/", console.Output, StringComparison.Ordinal);
-    }
-
-    [Fact]
-    public void RenderContent_Help_ProductionProfileDoesNotShowDebugSection()
-    {
-        var status = new TerminalStatus { Kind = TerminalStatusKind.Help };
-        var console = Plain(100);
-
-        console.Write(TerminalFrame.RenderContent(
-            Vm(Project(), status: status, profileName: "production"),
+            Vm(Project(), status: status, profileName: "local"),
             100));
 
         Assert.DoesNotContain("Debug", console.Output, StringComparison.Ordinal);
         Assert.DoesNotContain("Server", console.Output, StringComparison.Ordinal);
+        Assert.DoesNotContain("local", console.Output, StringComparison.Ordinal);
     }
 
     [Fact]
-    public void RenderFooter_Offline_ShowsPersistentStatus()
+    public void RenderFooter_DoesNotShowPersistentStatuses()
     {
         var console = Plain(80);
 
-        console.Write(TerminalFrame.RenderFooter(Vm(Project(), offline: true)));
+        console.Write(TerminalFrame.RenderFooter(Vm(
+            Project(),
+            offline: true,
+            hasUnsyncedChanges: true,
+            snapshotReloadPending: true)));
 
-        Assert.Contains("offline", console.Output, StringComparison.Ordinal);
+        Assert.DoesNotContain("offline", console.Output, StringComparison.Ordinal);
+        Assert.DoesNotContain("unsynced", console.Output, StringComparison.Ordinal);
+        Assert.DoesNotContain("stale", console.Output, StringComparison.Ordinal);
     }
 
     [Fact]
-    public void RenderFooter_Unsynced_ShowsIndependentStatus()
+    public void RenderHeader_MultipleProblems_ShowsCompactYellowStatusStrip()
     {
-        var console = Plain(80);
-
-        console.Write(TerminalFrame.RenderFooter(Vm(Project(), hasUnsyncedChanges: true)));
-
-        Assert.Contains("unsynced", console.Output, StringComparison.Ordinal);
-    }
-
-    [Fact]
-    public void RenderFooter_MultipleProblems_ShowsCompactYellowStatusStrip()
-    {
-        var footer = TerminalFrame.RenderFooter(Vm(
+        var header = TerminalFrame.RenderHeader(Vm(
             Project(),
             offline: true,
             hasUnsyncedChanges: true,
             snapshotReloadPending: true));
         var console = Plain(80);
-        console.Write(footer);
-        var ansi = Ansi(footer, 80);
+        console.Write(header);
+        var ansi = Ansi(header, 80);
 
         Assert.Contains("offline unsynced stale", console.Output, StringComparison.Ordinal);
         Assert.Contains("[38;5;11m", ansi, StringComparison.Ordinal);
     }
 
     [Fact]
-    public void RenderHeader_DoesNotRenderConnectionOrSyncStatus()
+    public void RenderHeader_SnapshotReloadPending_ShowsOnlyStaleStatus()
     {
         var console = Plain(80);
 
-        console.Write(TerminalFrame.RenderHeader(Vm(
-            Project(),
-            offline: true,
-            hasUnsyncedChanges: true,
-            snapshotReloadPending: true)));
-
-        Assert.DoesNotContain("offline", console.Output, StringComparison.OrdinalIgnoreCase);
-        Assert.DoesNotContain("unsynced", console.Output, StringComparison.OrdinalIgnoreCase);
-        Assert.DoesNotContain("stale", console.Output, StringComparison.OrdinalIgnoreCase);
-    }
-
-    [Fact]
-    public void RenderFooter_SnapshotReloadPending_ShowsOnlyStaleStatus()
-    {
-        var console = Plain(80);
-
-        console.Write(TerminalFrame.RenderFooter(Vm(Project(), snapshotReloadPending: true)));
+        console.Write(TerminalFrame.RenderHeader(Vm(Project(), snapshotReloadPending: true)));
 
         Assert.Contains("stale", console.Output, StringComparison.Ordinal);
         Assert.DoesNotContain("retried", console.Output, StringComparison.OrdinalIgnoreCase);
@@ -489,14 +494,26 @@ public sealed class OverviewRendererTests
     }
 
     [Fact]
-    public void RenderHeader_ShowsProfileAndCompletedIndicator()
+    public void RenderHeader_ShowsNonProductionProfileWithoutCompletedIndicator()
     {
         var console = Plain(80);
 
-        console.Write(TerminalFrame.RenderHeader(Vm(Project(), profileName: "production", showCompleted: true)));
+        console.Write(TerminalFrame.RenderHeader(Vm(Project(), profileName: "test", showCompleted: true)));
 
-        Assert.Contains("production", console.Output, StringComparison.Ordinal);
-        Assert.Contains("completed shown", console.Output, StringComparison.Ordinal);
+        Assert.Contains("test", console.Output, StringComparison.Ordinal);
+        Assert.DoesNotContain("completed shown", console.Output, StringComparison.Ordinal);
+    }
+
+    [Theory]
+    [InlineData("production")]
+    [InlineData("Production")]
+    public void RenderHeader_HidesProductionProfile(string profileName)
+    {
+        var console = Plain(80);
+
+        console.Write(TerminalFrame.RenderHeader(Vm(Project(), profileName: profileName)));
+
+        Assert.DoesNotContain(profileName, console.Output, StringComparison.OrdinalIgnoreCase);
     }
 
     private static OverviewProjection Project(params TerminalTask[] tasks)
@@ -522,7 +539,6 @@ public sealed class OverviewRendererTests
         bool offline = false,
         string? notification = null,
         string profileName = "",
-        string? connectionUrl = null,
         bool hasUnsyncedChanges = false,
         bool snapshotReloadPending = false,
         bool showCompleted = false)
@@ -538,7 +554,6 @@ public sealed class OverviewRendererTests
             IsSnapshotReloadPending = snapshotReloadPending,
             Notification = notification,
             ProfileName = profileName,
-            ConnectionUrl = connectionUrl,
             Status = status ?? new TerminalStatus(),
         };
     }

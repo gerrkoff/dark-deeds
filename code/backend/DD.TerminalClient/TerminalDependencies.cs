@@ -40,8 +40,6 @@ internal sealed record TerminalDependencies
 
     public required string ProfileName { get; init; }
 
-    public string? ConnectionUrl { get; init; }
-
     // Injectable so retry and timer waits are immediate under test; production uses Task.Delay.
     public Func<TimeSpan, CancellationToken, Task> Delay { get; init; } = Task.Delay;
 

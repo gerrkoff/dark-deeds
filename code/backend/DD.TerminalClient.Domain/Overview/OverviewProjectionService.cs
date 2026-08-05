@@ -37,10 +37,7 @@ public sealed class OverviewProjectionService(ILocalDateProvider localDateProvid
             if (task.Deleted)
                 continue;
 
-            var preservesCollapsedRoutineSummary = task.Type == TerminalTaskType.Routine
-                && task.Date is { } routineDate
-                && !routineShownDates.Contains(routineDate);
-            if (!showCompleted && task.Completed && !preservesCollapsedRoutineSummary)
+            if (!showCompleted && task.Completed)
                 continue;
 
             if (task.Date is not { } date)
@@ -124,9 +121,9 @@ public sealed class OverviewProjectionService(ILocalDateProvider localDateProvid
     }
 
     // Filters and orders one cell's tasks: sort by Order (stable), collapse Routine tasks on a dated cell
-    // whose date is not shown, record whether any exist while counting only incomplete ones, and stamp each
-    // surviving task with its address. TaskIndex counts only visible tasks, so a collapsed Routine leaves
-    // no gap.
+    // whose date is not shown, record whether any visible under the completed filter exist while counting
+    // only incomplete ones, and stamp each surviving task with its address. TaskIndex counts only visible
+    // tasks, so a collapsed Routine leaves no gap.
     private static OverviewDay BuildCell(
         OverviewSection section,
         int row,

@@ -7,11 +7,12 @@ using Spectre.Console.Rendering;
 namespace DD.TerminalClient.Details.Ui;
 
 // Assembles the full terminal frame: a fixed one-line header, the scrollable Overview (or the help
-// keymap, or an empty-state message), and a fixed status footer. The footer reflects the current mode
+// keymap, or an empty-state message), and a fixed action footer. The header carries persistent connection
+// and synchronization statuses; the footer reflects the current mode
 // without ever running a Spectre prompt inside the live display: it draws the supplied editor/login
 // buffer and cursor as ordinary styled text, shows the delete confirmation question, the full focused
 // task text in Normal mode, and conflict/action notifications. All user-supplied text (titles, profile
-// name, connection URL, notifications, editor buffer) is escaped so it can never be interpreted as markup.
+// name, notifications, editor buffer) is escaped so it can never be interpreted as markup.
 public static class TerminalFrame
 {
     public static IRenderable Render(TerminalViewModel model, int width)
@@ -25,15 +26,16 @@ public static class TerminalFrame
         ArgumentNullException.ThrowIfNull(model);
 
         var left = "[bold]Dark Deeds[/]";
-        if (!string.IsNullOrEmpty(model.ProfileName))
+        if (!string.IsNullOrEmpty(model.ProfileName)
+            && !string.Equals(model.ProfileName, "production", StringComparison.OrdinalIgnoreCase))
         {
             left += " [grey]" + Markup.Escape(model.ProfileName) + "[/]";
         }
 
         var right = new List<string>();
-        if (model.ShowCompleted)
+        if (BuildPersistentStatus(model) is { } persistentStatus)
         {
-            right.Add("[grey]completed shown[/]");
+            right.Add("[yellow]" + persistentStatus + "[/]");
         }
 
         var grid = new Grid { Expand = true };
@@ -49,7 +51,7 @@ public static class TerminalFrame
 
         if (model.Status.Kind == TerminalStatusKind.Help)
         {
-            return RenderHelp(model);
+            return RenderHelp();
         }
 
         var overview = OverviewRenderer.Render(model, width);
@@ -66,12 +68,6 @@ public static class TerminalFrame
         ArgumentNullException.ThrowIfNull(model);
 
         var body = new List<IRenderable>();
-        var persistentStatus = BuildPersistentStatus(model);
-        if (persistentStatus is not null)
-        {
-            body.Add(persistentStatus);
-        }
-
         if (model.Notification is { } notification && !string.IsNullOrWhiteSpace(notification))
         {
             body.Add(new Markup("[yellow bold]" + Markup.Escape(TerminalText.Sanitize(notification)) + "[/]"));
@@ -107,7 +103,7 @@ public static class TerminalFrame
             .BorderColor(Color.Grey);
     }
 
-    private static Markup? BuildPersistentStatus(TerminalViewModel model)
+    private static string? BuildPersistentStatus(TerminalViewModel model)
     {
         var statuses = new List<string>();
         if (model.IsOffline)
@@ -125,12 +121,10 @@ public static class TerminalFrame
             statuses.Add("stale");
         }
 
-        return statuses.Count == 0
-            ? null
-            : new Markup("[yellow]" + string.Join(" ", statuses) + "[/]");
+        return statuses.Count == 0 ? null : string.Join(" ", statuses);
     }
 
-    private static Panel RenderHelp(TerminalViewModel model)
+    private static Panel RenderHelp()
     {
         var grid = new Grid();
         grid.AddColumn(new GridColumn().NoWrap().PadRight(3));
@@ -150,13 +144,6 @@ public static class TerminalFrame
         AddHelpRow(grid, "Ctrl+R", "Reconnect and reload");
         AddHelpRow(grid, "?", "Toggle this help");
         AddHelpRow(grid, "q", "Quit");
-
-        if (!string.IsNullOrWhiteSpace(model.ConnectionUrl))
-        {
-            grid.AddEmptyRow();
-            grid.AddRow(new Markup("[bold]Debug[/]"), new Text(string.Empty));
-            AddHelpRow(grid, "Server", model.ConnectionUrl);
-        }
 
         return new Panel(grid)
             .Header(" Keyboard shortcuts ")

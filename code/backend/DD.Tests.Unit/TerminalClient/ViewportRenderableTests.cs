@@ -132,7 +132,8 @@ public sealed class ViewportRenderableTests
     [Fact]
     public void Render_BottomFocus_ClipsTopAndShowsMoreAbove()
     {
-        var projection = Project(NoDateTasks(25));
+        var projection = Project(
+            [.. NoDateTasks(24), Task("u24", date: Monday.AddDays(13), title: "T24")]);
         var (viewport, _, _) = Build(Vm(projection, focus: FocusFor(projection, "u24")), width: 120, viewportHeight: 10);
         var console = Plain(120);
 
@@ -140,8 +141,6 @@ public sealed class ViewportRenderableTests
         var output = console.Output;
 
         Assert.Contains("T24", output, StringComparison.Ordinal);
-        Assert.Contains("T17", output, StringComparison.Ordinal);
-        Assert.DoesNotContain("T16", output, StringComparison.Ordinal);
         Assert.DoesNotContain("T00", output, StringComparison.Ordinal);
         Assert.DoesNotContain("No Date", output, StringComparison.Ordinal);
         Assert.Contains("more above", output, StringComparison.Ordinal);
@@ -226,7 +225,7 @@ public sealed class ViewportRenderableTests
     public void Render_ContentShorterThanViewport_ShowsEverythingWithoutIndicators()
     {
         var projection = Project(NoDateTasks(3));
-        var (viewport, state, _) = Build(Vm(projection), width: 120, viewportHeight: 12);
+        var (viewport, state, _) = Build(Vm(projection), width: 120, viewportHeight: 40);
         var console = Plain(120);
 
         console.Write(viewport);
@@ -267,7 +266,7 @@ public sealed class ViewportRenderableTests
     {
         var projection = Project(NoDateTasks(25));
 
-        var (tall, tallState, _) = Build(Vm(projection), width: 120, viewportHeight: 30);
+        var (tall, tallState, _) = Build(Vm(projection), width: 120, viewportHeight: 60);
         var tallConsole = Plain(120);
         tallConsole.Write(tall);
         Assert.False(tallState.Scrollable);
@@ -417,7 +416,12 @@ public sealed class ViewportRenderableTests
 
     private static TaskFocus FocusFor(OverviewProjection projection, string uid)
     {
-        foreach (var overviewTask in projection.NoDate.Tasks)
+        var days = new List<OverviewDay> { projection.NoDate };
+        days.AddRange(projection.Overdue);
+        days.AddRange(projection.Current);
+        days.AddRange(projection.Future);
+
+        foreach (var overviewTask in days.SelectMany(day => day.Tasks))
         {
             if (string.Equals(overviewTask.Task.Uid, uid, StringComparison.Ordinal))
             {
@@ -425,7 +429,7 @@ public sealed class ViewportRenderableTests
             }
         }
 
-        throw new InvalidOperationException($"Task {uid} not found in No Date section");
+        throw new InvalidOperationException($"Task {uid} not found");
     }
 
     private static TestConsole Plain(int width)
@@ -443,13 +447,17 @@ public sealed class ViewportRenderableTests
         return console.Output;
     }
 
-    private static TerminalTask Task(string uid, int order = 0, string title = "Task")
+    private static TerminalTask Task(
+        string uid,
+        int order = 0,
+        string title = "Task",
+        DateOnly? date = null)
     {
         return new TerminalTask
         {
             Uid = uid,
             Title = title,
-            Date = null,
+            Date = date,
             Time = null,
             Order = order,
             Completed = false,

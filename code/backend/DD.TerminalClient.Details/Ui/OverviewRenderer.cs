@@ -9,9 +9,10 @@ namespace DD.TerminalClient.Details.Ui;
 // Renders the Overview projection into a flat, top-to-bottom list of single-line renderables plus the
 // per-task line metadata the viewport consumes. Every visible task becomes exactly one ellipsized line,
 // so its VisualTaskAddress maps deterministically to a content line index regardless of title length.
-// Section titles, day headers and the collapsed-Routine summary each also occupy exactly one line. User
-// titles are sanitized, cell-width truncated and rendered as plain styled Text, never parsed as markup,
-// so a title containing "[" or Spectre tags can neither break the layout nor inject styling.
+// Section titles, day headers, the current-week separator and the collapsed-Routine summary each also
+// occupy exactly one line. User titles are sanitized, cell-width truncated and rendered as plain styled
+// Text, never parsed as markup, so a title containing "[" or Spectre tags can neither break the layout
+// nor inject styling.
 public static class OverviewRenderer
 {
     private const string AdditionalIndent = "            ";
@@ -28,7 +29,7 @@ public static class OverviewRenderer
 
         AppendNoDate(lines, taskLines, overview.NoDate, focusUid, width);
         AppendDatedSection(lines, taskLines, "Expired", overview.Overdue, model.Today, focusUid, width);
-        AppendDatedSection(lines, taskLines, "Current", overview.Current, model.Today, focusUid, width);
+        AppendCurrentSection(lines, taskLines, overview.Current, model.Today, focusUid, width);
         AppendDatedSection(lines, taskLines, "Future", overview.Future, model.Today, focusUid, width);
 
         return new RenderedOverview { Lines = lines, TaskLines = taskLines };
@@ -39,6 +40,29 @@ public static class OverviewRenderer
         var marker = isSelected ? "> " : "  ";
         var typeIndent = task.Type == TerminalTaskType.Additional ? AdditionalIndent : string.Empty;
         return marker + typeIndent;
+    }
+
+    private static void AppendCurrentSection(
+        List<IRenderable> lines,
+        List<TaskLine> taskLines,
+        IReadOnlyList<OverviewDay> days,
+        DateOnly today,
+        string? focusUid,
+        int width)
+    {
+        AppendCardSeparator(lines);
+        lines.Add(SectionTitleLine("Current", width));
+        for (var i = 0; i < days.Count; i++)
+        {
+            if (i > 0)
+            {
+                lines.Add(i == 7 ? WeekSeparatorLine(width) : new Text(string.Empty));
+            }
+
+            var day = days[i];
+            lines.Add(DayHeaderLine(day, today, width));
+            AppendTasks(lines, taskLines, day, focusUid, width);
+        }
     }
 
     private static void AppendNoDate(
@@ -146,6 +170,12 @@ public static class OverviewRenderer
         var label = "    +" + count.ToString(CultureInfo.InvariantCulture) + " routine";
         var style = count == 0 ? TerminalStyles.CompletedHint : TerminalStyles.Hint;
         return new Text(TerminalText.Truncate(label, width), style);
+    }
+
+    private static Text WeekSeparatorLine(int width)
+    {
+        var separatorWidth = Math.Min(24, Math.Max(0, width - 2));
+        return new Text("  " + new string('-', separatorWidth), TerminalStyles.WeekSeparator);
     }
 
     private static void AppendCardSeparator(List<IRenderable> lines)
