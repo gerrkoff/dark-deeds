@@ -92,10 +92,10 @@ public sealed class ViewportRenderableTests
     }
 
     [Theory]
-    [InlineData(119, 30, true)]
-    [InlineData(120, 29, true)]
-    [InlineData(119, 29, true)]
-    [InlineData(120, 30, false)]
+    [InlineData(74, 30, true)]
+    [InlineData(75, 29, true)]
+    [InlineData(74, 29, true)]
+    [InlineData(75, 30, false)]
     [InlineData(200, 60, false)]
     public void IsResizeRequired_BelowMinimum_IsTrue(int width, int height, bool expected)
     {
@@ -363,7 +363,10 @@ public sealed class ViewportRenderableTests
         var output = console.Output;
 
         Assert.Contains("80x20", output, StringComparison.Ordinal);
-        Assert.Contains("120x30", output, StringComparison.Ordinal);
+        Assert.Contains(
+            $"{ViewportState.MinimumWidth}x{ViewportState.MinimumHeight}",
+            output,
+            StringComparison.Ordinal);
         Assert.Contains("Syncing continues", output, StringComparison.Ordinal);
         Assert.Contains("q quit", output, StringComparison.Ordinal);
     }
