@@ -11,7 +11,7 @@ namespace DD.TerminalClient.Domain.Overview;
 // the loop keeps synchronizing while the resize-required screen is shown instead of the viewport.
 public sealed record ViewportState
 {
-    public const int MinimumWidth = 120;
+    public const int MinimumWidth = 75;
 
     public const int MinimumHeight = 30;
 
