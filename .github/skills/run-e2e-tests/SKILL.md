@@ -107,3 +107,36 @@ on a throwaway network with its own Grid — no host apps, no local .NET needed,
 pass a host/LAN URL both the test container and the browser can reach (e.g.
 `http://192.168.1.5:3000`), not `localhost`. Prefer the host-side Grid recipe above for
 iterating locally; use this only to reproduce CI exactly.
+
+## Diagnosing containerized CI failures
+
+When the first browser test fails with `SessionNotCreatedException: tab crashed` and later
+tests time out creating WebDriver sessions, treat the first crash as the primary failure.
+The later timeouts can be caused by the single-slot Grid remaining reserved after Chrome
+crashes.
+
+Check the runner before blaming the app:
+
+```bash
+free -h
+docker stats --no-stream
+for f in /proc/[0-9]*/status; do
+  swap=$(grep '^VmSwap:' "$f" 2>/dev/null | tr -s ' ' | cut -d' ' -f2)
+  [ "${swap:-0}" -gt 0 ] 2>/dev/null || continue
+  pid=${f#/proc/}
+  pid=${pid%/status}
+  comm=$(cat "/proc/$pid/comm" 2>/dev/null)
+  printf '%12s %8s %s\n' "$swap" "$pid" "$comm"
+done | sort -nr | head -30
+```
+
+On a memory-constrained runner, full swap can leave too little burst capacity for Chrome
+even when disk, inodes, container limits, and application connectivity are healthy and the
+kernel records no OOM kill. With approval, restart the identified swap-heavy services,
+remove the failed `dd-test-e2e-chrome` container and `dd-test-e2e-network`, then rerun the
+same E2E build to verify causality.
+
+Preserve failed-container logs and crash dumps before manually removing resources when
+diagnosis is still needed. `ci/workflows/test-e2e.sh` uses an `EXIT` trap to remove the test
+container, Grid container, and network after normal success or failure while preserving the
+original exit code.
