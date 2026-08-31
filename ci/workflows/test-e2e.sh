@@ -4,6 +4,24 @@ if [ $# -le 0 ]; then
   exit 1
 fi
 
+remove_test_resources() {
+  docker rm -f dd-test-e2e
+  docker rm -f dd-test-e2e-chrome
+  docker network rm dd-test-e2e-network
+}
+
+cleanup_on_exit() {
+  exit_code=$?
+  trap - EXIT
+
+  echo "----------- Removing containers and networks..."
+  remove_test_resources
+
+  exit "$exit_code"
+}
+
+trap cleanup_on_exit EXIT
+
 echo
 
 # https://hub.docker.com/r/selenium/standalone-chrome/tags?page=&page_size=&name=&ordering=last_updated
@@ -22,9 +40,7 @@ echo "BE_URL: $BE_URL"
 echo "PROD_BUILD_TESTS: $PROD_BUILD_TESTS"
 
 echo "----------- Removing previous containers and networks..."
-docker rm -f dd-test-e2e-chrome
-docker rm -f dd-test-e2e
-docker network rm dd-test-e2e-network
+remove_test_resources
 
 echo "----------- Starting Selenium Grid..."
 docker network create dd-test-e2e-network
@@ -61,7 +77,7 @@ docker run -t --rm \
   dd-test-e2e || exit $?
 
 echo "----------- Removing containers and networks..."
-docker rm -f dd-test-e2e-chrome
-docker network rm dd-test-e2e-network
+remove_test_resources
+trap - EXIT
 
 echo "----------- Completed!"
