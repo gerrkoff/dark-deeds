@@ -35,6 +35,19 @@ public class TaskMutationServiceTests
     }
 
     [Fact]
+    public void GetTasksToSync_AddNoDateTask_PrependsBeforeExistingTasks()
+    {
+        var result = TaskOrderService.GetTasksToSync(
+            [NewTask("existing", date: null, order: 1)],
+            [NewTask("new", date: null, order: TaskMutationService.PrependOrder)]);
+
+        var byUid = result.ToDictionary(task => task.Uid);
+        Assert.Equal(2, result.Count);
+        Assert.Equal(1, byUid["new"].Order);
+        Assert.Equal(2, byUid["existing"].Order);
+    }
+
+    [Fact]
     public void GetTasksToSync_UpdateTask_KeepsNewTitleAndVersion()
     {
         var result = TaskOrderService.GetTasksToSync(
@@ -221,7 +234,7 @@ public class TaskMutationServiceTests
 
     // --- Field mutation commands ---
     [Fact]
-    public void Create_UsesParsedFields_AndAppendsToEnd()
+    public void Create_UsesParsedFields_AndAppendsDatedTaskToEnd()
     {
         var parsed = new ParsedTaskText(DateA, 90, "Buy milk", TaskTextType.Routine, true);
 
@@ -257,6 +270,7 @@ public class TaskMutationServiceTests
         var task = TaskMutationService.Create(parsed, fallbackDate: null, uid: "x");
 
         Assert.Null(task.Date);
+        Assert.Equal(TaskMutationService.PrependOrder, task.Order);
     }
 
     [Fact]

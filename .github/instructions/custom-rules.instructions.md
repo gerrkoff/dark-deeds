@@ -21,6 +21,10 @@ Rules specific to this repository. **If a rule is here — follow it. No excepti
 
 **Before adding or changing code, preserve the existing patterns in the surrounding file/module** — naming conventions, ordering, error-handling style, validation flow, parsing semantics. Introduce a new pattern only when it is a clear improvement, and document the rationale.
 
+## Task ordering
+
+**Apply date-based edge ordering only in the web and terminal creation flows: No Date tasks use the first-order sentinel, while dated tasks use the last-order sentinel.** Do not apply this behavior to backend creation paths such as MCP, Telegram, or recurrences.
+
 ## Terminal client rendering (Spectre.Console)
 
 **Preserve the intentionally commented selected-task style alternatives in `TerminalStyles.ForTask`.** They are retained as a quick rollback option, not dead code.

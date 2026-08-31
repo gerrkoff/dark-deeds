@@ -509,6 +509,16 @@ test('[createTasksFromModel] no range creates one task', () => {
 
     expect(tasks.length).toBe(1)
     expect(tasks[0].date).toBe(dt(2019, 8, 9))
+    expect(tasks[0].order).toBe(Number.MAX_SAFE_INTEGER)
+})
+
+test('[createTasksFromModel] no-date task starts at the beginning', () => {
+    const service = createService()
+    const tasks = service.createTasksFromModel(service.convertStringToModel('venice'))
+
+    expect(tasks.length).toBe(1)
+    expect(tasks[0].date).toBeNull()
+    expect(tasks[0].order).toBe(Number.MIN_SAFE_INTEGER)
 })
 
 test('[convertTaskToString] no date', () => {

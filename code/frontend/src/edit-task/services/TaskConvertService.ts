@@ -22,7 +22,7 @@ export class TaskConvertService {
             uid: uuidv4(),
             title: result.title,
             date: result.date !== null ? result.date.getTime() : null,
-            order: 100500,
+            order: result.date === null ? Number.MIN_SAFE_INTEGER : Number.MAX_SAFE_INTEGER,
             completed: false,
             deleted: false,
             type: result.type,
