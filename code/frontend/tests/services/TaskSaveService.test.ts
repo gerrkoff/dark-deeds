@@ -35,6 +35,85 @@ test('[getTasksToSync] add task', () => {
     expect(result[0].order).toEqual(1)
 })
 
+test('[getTasksToSync] add no-date task at the beginning', () => {
+    const service = new TaskSaveService()
+
+    const result = service.getTasksToSync(
+        [
+            {
+                uid: 'existing',
+                date: null,
+                deleted: false,
+                completed: false,
+                isProbable: false,
+                type: 0,
+                title: 'Existing',
+                order: 1,
+                time: null,
+                version: 0,
+            },
+        ],
+        [
+            {
+                uid: 'new',
+                date: null,
+                deleted: false,
+                completed: false,
+                isProbable: false,
+                type: 0,
+                title: 'New',
+                order: Number.MIN_SAFE_INTEGER,
+                time: null,
+                version: 0,
+            },
+        ],
+    )
+
+    const byUid = new Map(result.map(task => [task.uid, task]))
+    expect(result).toHaveLength(2)
+    expect(byUid.get('new')?.order).toBe(1)
+    expect(byUid.get('existing')?.order).toBe(2)
+})
+
+test('[getTasksToSync] add dated task at the end', () => {
+    const service = new TaskSaveService()
+
+    const result = service.getTasksToSync(
+        [
+            {
+                uid: 'existing',
+                date: 1,
+                deleted: false,
+                completed: false,
+                isProbable: false,
+                type: 0,
+                title: 'Existing',
+                order: 1,
+                time: null,
+                version: 0,
+            },
+        ],
+        [
+            {
+                uid: 'new',
+                date: 1,
+                deleted: false,
+                completed: false,
+                isProbable: false,
+                type: 0,
+                title: 'New',
+                order: Number.MAX_SAFE_INTEGER,
+                time: null,
+                version: 0,
+            },
+        ],
+    )
+
+    expect(result).toHaveLength(1)
+    expect(result[0].uid).toBe('new')
+    expect(result[0].order).toBe(2)
+})
+
 test('[getTasksToSync] update task', () => {
     const service = new TaskSaveService()
 

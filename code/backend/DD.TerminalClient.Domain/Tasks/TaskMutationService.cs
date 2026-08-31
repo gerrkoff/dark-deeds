@@ -15,19 +15,22 @@ public enum ReorderDirection
 // dependency and fully deterministic under test.
 public static class TaskMutationService
 {
-    // A freshly created task is parked past every real order so it lands at the end of its date
-    // group; TaskOrderService then renumbers the group to a contiguous 1..N sequence.
+    // A freshly created task is parked before No Date tasks or after dated tasks; TaskOrderService
+    // then renumbers the affected group to a contiguous 1..N sequence.
+    public const int PrependOrder = int.MinValue;
     public const int AppendOrder = int.MaxValue;
 
     public static TerminalTask Create(ParsedTaskText parsed, DateOnly? fallbackDate, string uid)
     {
+        var date = parsed.Date ?? fallbackDate;
+
         return new TerminalTask
         {
             Uid = uid,
             Title = parsed.Title,
-            Date = parsed.Date ?? fallbackDate,
+            Date = date,
             Time = parsed.Time,
-            Order = AppendOrder,
+            Order = date.HasValue ? AppendOrder : PrependOrder,
             Completed = false,
             Deleted = false,
             Type = parsed.Type.ToTerminalTaskType(),
