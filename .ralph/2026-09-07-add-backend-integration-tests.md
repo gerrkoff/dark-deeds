@@ -91,11 +91,11 @@ dotnet test code/backend/DarkDeeds.sln -c Release
 - Create: `code/backend/DD.Tests.Integration/StartupIntegrationTests.cs`
 - Create: `code/backend/DD.Tests.Integration/AuthIntegrationTests.cs`
 
-- [ ] Prove a fresh random database starts `DD.App`, completes hosted migrations, and serves anonymous healthcheck and build-info requests without a separately running backend or MongoDB.
-- [ ] Cover anonymous current-user, successful SignUp, successful SignIn with a unique policy-compliant credential, authenticated current-user, and token renewal through the real Account endpoints.
-- [ ] Assert wrong credentials return HTTP 200 with `SignInResult.WrongUsernamePassword`, duplicate sign-up returns HTTP 200 with `SignUpResult.UsernameAlreadyExists`, and a protected Tasks request without a bearer token returns HTTP 401.
-- [ ] Keep authorization state in a test-owned `HttpClient` so parallel tests never share or overwrite bearer headers.
-- [ ] Verify the fast checks pass with 0 warnings, no external service call occurs, and no `dd-integration-tests-*` container remains afterward.
+- [x] Prove a fresh random database starts `DD.App`, completes hosted migrations, and serves anonymous healthcheck and build-info requests without a separately running backend or MongoDB.
+- [x] Cover anonymous current-user, successful SignUp, successful SignIn with a unique policy-compliant credential, authenticated current-user, and token renewal through the real Account endpoints.
+- [x] Assert wrong credentials return HTTP 200 with `SignInResult.WrongUsernamePassword`, duplicate sign-up returns HTTP 200 with `SignUpResult.UsernameAlreadyExists`, and a protected Tasks request without a bearer token returns HTTP 401.
+- [x] Keep authorization state in a test-owned `HttpClient` so parallel tests never share or overwrite bearer headers.
+- [x] Verify the fast checks pass with 0 warnings, no external service call occurs, and no `dd-integration-tests-*` container remains afterward.
 
 ### Task 5: Cover the Tasks lifecycle
 
