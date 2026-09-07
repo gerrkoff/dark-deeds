@@ -12,13 +12,17 @@ public sealed class DarkDeedsWebApplicationFactory(string sharedDbConnectionStri
     private const string AuthIssuer = "https://integration-tests.dark-deeds.test";
     private const string AuthAudience = "dark-deeds-integration-tests";
     private const string AuthKey = "dark-deeds-integration-test-signing-key-2026-abcdefghijklmnopqrstuvwxyz";
+    private readonly object _clientLock = new();
 
     public HttpClient CreateTestClient()
     {
-        return CreateClient(new WebApplicationFactoryClientOptions
+        lock (_clientLock)
         {
-            BaseAddress = new Uri("http://localhost"),
-        });
+            return CreateClient(new WebApplicationFactoryClientOptions
+            {
+                BaseAddress = new Uri("http://localhost"),
+            });
+        }
     }
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)

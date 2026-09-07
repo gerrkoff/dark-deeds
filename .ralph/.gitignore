@@ -1,4 +1,5 @@
 *.progress.txt
 *.debug.txt
 *.base-branch
+*.review-state.json*
 .pause
