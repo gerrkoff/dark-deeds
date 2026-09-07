@@ -78,12 +78,12 @@ dotnet test code/backend/DarkDeeds.sln -c Release
 - Create: `code/backend/DD.Tests.Integration/Infrastructure/IntegrationTestBase.cs`
 - Create: `code/backend/DD.Tests.Integration/Infrastructure/TestUserClient.cs`
 
-- [ ] Require `docker info` to succeed and run `docker image inspect mongo:4.4 >/dev/null 2>&1 || docker pull mongo:4.4` once before the first Testcontainers validation.
-- [ ] Implement static `Lazy<Task<IntegrationEnvironment>>` startup for one uniquely named `dd-integration-tests-*` Mongo container, one random database, and one shared factory without a replica-set connection option or shared xUnit collection.
-- [ ] Configure `WebApplicationFactory<Startup>` with environment `Testing`, the test Mongo connection, deterministic Auth/OAuth values, `Monitoring:MetricsEnabled=false`, `EnableTelegramIntegration=false`, and `EnableTestHandlers=false`.
-- [ ] Force factory startup and migration completion before publishing the environment; expose factory client creation and unique-data helpers without exposing mutable shared host configuration.
-- [ ] On partial initialization failure and process teardown, dispose the factory first, attempt bounded database deletion, and guarantee bounded container disposal in `finally`; guard duplicate callbacks and report cleanup failures without hiding the original failure.
-- [ ] Verify the fast checks pass with 0 warnings, then require `docker ps --filter name=dd-integration-tests --format '{{.Names}}'` to return no running container after the test process exits.
+- [x] Require `docker info` to succeed and run `docker image inspect mongo:4.4 >/dev/null 2>&1 || docker pull mongo:4.4` once before the first Testcontainers validation.
+- [x] Implement static `Lazy<Task<IntegrationEnvironment>>` startup for one uniquely named `dd-integration-tests-*` Mongo container, one random database, and one shared factory without a replica-set connection option or shared xUnit collection.
+- [x] Configure `WebApplicationFactory<Startup>` with environment `Testing`, the test Mongo connection, deterministic Auth/OAuth values, `Monitoring:MetricsEnabled=false`, `EnableTelegramIntegration=false`, and `EnableTestHandlers=false`.
+- [x] Force factory startup and migration completion before publishing the environment; expose factory client creation and unique-data helpers without exposing mutable shared host configuration.
+- [x] On partial initialization failure and process teardown, dispose the factory first, attempt bounded database deletion, and guarantee bounded container disposal in `finally`; guard duplicate callbacks and report cleanup failures without hiding the original failure.
+- [x] Verify the fast checks pass with 0 warnings, then require `docker ps --filter name=dd-integration-tests --format '{{.Names}}'` to return no running container after the test process exits.
 
 ### Task 4: Cover startup and authentication
 
