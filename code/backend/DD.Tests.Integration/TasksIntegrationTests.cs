@@ -1,4 +1,3 @@
-using System.Globalization;
 using System.Net;
 using System.Net.Http.Json;
 using DD.Shared.Details.Abstractions.Dto;
@@ -125,24 +124,9 @@ public sealed class TasksIntegrationTests : IntegrationTestBase
         Assert.Equal(3, loadedDeletedTask.Version);
 
         using var expiredGetResponse = await user.HttpClient.GetAsync(
-            CreateTasksUri(DateTime.UtcNow.Date.AddDays(8)));
+            CreateTasksUri(from.AddDays(8)));
         var expiredTasks = await ReadTasksAsync(expiredGetResponse);
         Assert.DoesNotContain(expiredTasks, item => item.Uid == task.Uid);
-    }
-
-    private static async Task<TaskDto[]> ReadTasksAsync(HttpResponseMessage response)
-    {
-        response.EnsureSuccessStatusCode();
-        return await response.Content.ReadFromJsonAsync<TaskDto[]>()
-            ?? throw new InvalidOperationException("The task response was empty.");
-    }
-
-    private static Uri CreateTasksUri(DateTime from)
-    {
-        var value = from.ToString("O", CultureInfo.InvariantCulture);
-        return new Uri(
-            $"api/task/tasks?from={Uri.EscapeDataString(value)}",
-            UriKind.Relative);
     }
 
     private static void AssertTaskFields(TaskDto actual, TaskDto expected, int expectedVersion)

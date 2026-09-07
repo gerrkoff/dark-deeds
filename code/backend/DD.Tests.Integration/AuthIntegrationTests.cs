@@ -12,6 +12,7 @@ namespace DD.Tests.Integration;
 public sealed class AuthIntegrationTests : IntegrationTestBase
 {
     private const string Password = "QWERTY123456qwerty!@#$%^";
+    private const string WrongPassword = "QWERTY123456qwerty!@#$%wrong";
 
     [Fact]
     public async Task CurrentUser_Anonymous_ReturnsUnauthenticatedUser()
@@ -85,16 +86,25 @@ public sealed class AuthIntegrationTests : IntegrationTestBase
     }
 
     [Fact]
-    public async Task SignIn_WrongCredentials_ReturnsWrongUsernamePassword()
+    public async Task SignIn_ExistingUserWithWrongPassword_ReturnsWrongUsernamePassword()
     {
         using var client = await CreateClientAsync();
+        var username = IntegrationEnvironment.CreateUniqueUsername("wrong-password");
+
+        using var signUpResponse = await client.PostAsJsonAsync(
+            "api/auth/account/signup",
+            new SignUpInfoDto { Username = username, Password = Password });
+        Assert.Equal(HttpStatusCode.OK, signUpResponse.StatusCode);
+        var signUpResult = await signUpResponse.Content.ReadFromJsonAsync<SignUpResultDto>();
+        Assert.NotNull(signUpResult);
+        Assert.Equal(SignUpResult.Success, signUpResult.Result);
 
         using var response = await client.PostAsJsonAsync(
             "api/auth/account/signin",
             new SignInInfoDto
             {
-                Username = IntegrationEnvironment.CreateUniqueUsername("unknown"),
-                Password = Password,
+                Username = username,
+                Password = WrongPassword,
             });
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -102,6 +112,17 @@ public sealed class AuthIntegrationTests : IntegrationTestBase
         Assert.NotNull(result);
         Assert.Equal(SignInResult.WrongUsernamePassword, result.Result);
         Assert.Empty(result.Token);
+    }
+
+    [Fact]
+    public async Task Renew_Anonymous_ReturnsUnauthorized()
+    {
+        using var client = await CreateClientAsync();
+
+        using var response =
+            await client.PostAsync(new Uri("api/auth/account/renew", UriKind.Relative), content: null);
+
+        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
     }
 
     [Fact]

@@ -1,4 +1,3 @@
-using System.Globalization;
 using System.Net;
 using System.Net.Http.Json;
 using DD.Shared.Details.Abstractions.Dto;
@@ -40,27 +39,41 @@ public sealed class TasksIsolationIntegrationTests : IntegrationTestBase
         await using var owner = await CreateUserClientAsync();
         await using var foreignUser = await CreateUserClientAsync();
         var from = DateTime.UtcNow.Date;
-        var task = CreateTask("Owner task", from);
+        var ownerTask = CreateTask("Owner task", from);
+        var foreignTask = CreateTask("Foreign task", from);
 
         using var createResponse = await owner.HttpClient.PostAsJsonAsync(
             "api/task/tasks",
-            new[] { task });
-        var createdTask = Assert.Single(await ReadTasksAsync(createResponse));
+            new[] { ownerTask });
+        var createdOwnerTask = Assert.Single(await ReadTasksAsync(createResponse));
+
+        using var createForeignResponse = await foreignUser.HttpClient.PostAsJsonAsync(
+            "api/task/tasks",
+            new[] { foreignTask });
+        var createdForeignTask = Assert.Single(await ReadTasksAsync(createForeignResponse));
 
         using var foreignGetResponse = await foreignUser.HttpClient.GetAsync(CreateTasksUri(from));
         var foreignTasks = await ReadTasksAsync(foreignGetResponse);
-        Assert.DoesNotContain(foreignTasks, item => item.Uid == createdTask.Uid);
-
-        createdTask.Title = "Foreign update";
-        using var foreignSaveResponse = await foreignUser.HttpClient.PostAsJsonAsync(
-            "api/task/tasks",
-            new[] { createdTask });
-        Assert.Equal(HttpStatusCode.OK, foreignSaveResponse.StatusCode);
-        Assert.Empty(await ReadTasksAsync(foreignSaveResponse));
+        Assert.DoesNotContain(foreignTasks, item => item.Uid == createdOwnerTask.Uid);
+        Assert.Contains(foreignTasks, item => item.Uid == createdForeignTask.Uid);
 
         using var ownerGetResponse = await owner.HttpClient.GetAsync(CreateTasksUri(from));
         var ownerTasks = await ReadTasksAsync(ownerGetResponse);
-        var unchangedTask = Assert.Single(ownerTasks, item => item.Uid == createdTask.Uid);
+        Assert.Contains(ownerTasks, item => item.Uid == createdOwnerTask.Uid);
+        Assert.DoesNotContain(ownerTasks, item => item.Uid == createdForeignTask.Uid);
+
+        createdOwnerTask.Title = "Foreign update";
+        using var foreignSaveResponse = await foreignUser.HttpClient.PostAsJsonAsync(
+            "api/task/tasks",
+            new[] { createdOwnerTask });
+        Assert.Equal(HttpStatusCode.OK, foreignSaveResponse.StatusCode);
+        Assert.Empty(await ReadTasksAsync(foreignSaveResponse));
+
+        using var ownerGetAfterSaveResponse = await owner.HttpClient.GetAsync(CreateTasksUri(from));
+        var ownerTasksAfterSave = await ReadTasksAsync(ownerGetAfterSaveResponse);
+        var unchangedTask = Assert.Single(
+            ownerTasksAfterSave,
+            item => item.Uid == createdOwnerTask.Uid);
         Assert.Equal("Owner task", unchangedTask.Title);
         Assert.Equal(1, unchangedTask.Version);
     }
@@ -210,20 +223,5 @@ public sealed class TasksIsolationIntegrationTests : IntegrationTestBase
             Type = task.Type,
             Version = task.Version,
         };
-    }
-
-    private static async Task<TaskDto[]> ReadTasksAsync(HttpResponseMessage response)
-    {
-        response.EnsureSuccessStatusCode();
-        return await response.Content.ReadFromJsonAsync<TaskDto[]>()
-            ?? throw new InvalidOperationException("The task response was empty.");
-    }
-
-    private static Uri CreateTasksUri(DateTime from)
-    {
-        var value = from.ToString("O", CultureInfo.InvariantCulture);
-        return new Uri(
-            $"api/task/tasks?from={Uri.EscapeDataString(value)}",
-            UriKind.Relative);
     }
 }

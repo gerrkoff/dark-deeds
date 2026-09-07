@@ -63,11 +63,6 @@ public sealed class IntegrationEnvironment : IAsyncDisposable
         return Guid.NewGuid().ToString();
     }
 
-    public static string CreateUniqueIdentifier(string prefix)
-    {
-        return $"{prefix}-{Guid.NewGuid():N}";
-    }
-
     public async ValueTask DisposeAsync()
     {
         await DisposeResourcesAsync();
