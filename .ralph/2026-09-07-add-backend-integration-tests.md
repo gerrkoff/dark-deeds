@@ -149,12 +149,12 @@ dotnet test code/backend/DarkDeeds.sln -c Release
 **Files:**
 - None (validation only)
 
-- [ ] From the repository root, run `dotnet build code/backend/DarkDeeds.sln -c Release`, then `dotnet test code/backend/DarkDeeds.sln -c Release`; fix all failures and warnings.
-- [ ] Run `cd code/frontend && npm run ci`; fix all failures and warnings, then return to the repository root.
-- [ ] Require `! nc -z localhost 5000 && ! nc -z localhost 3000`, run `./infra/up.sh`, and verify MongoDB plus Selenium Grid are ready on ports 27017 and 4444 without killing unknown processes.
-- [ ] Start `dotnet run --project code/backend/DD.App` and `cd code/frontend && npm run dev` as detached background processes with separate log files and recorded PIDs; poll until the backend healthcheck returns `Healthy` and the frontend returns HTTP 200.
-- [ ] Run `CONTAINER=true SELENIUM_GRID_URL=http://localhost:4444 URL=http://host.docker.internal:3000 BE_URL=http://localhost:5000 dotnet test code/tests/DarkDeeds.E2eTests` without piping output; require `Failed: 0, Passed: 11, Skipped: 1`, fix failures, and repeat affected gates until green.
-- [ ] Kill only the recorded backend/frontend PIDs, verify ports 5000/3000 are free, leave MongoDB/Grid running, and require `docker ps --filter name=dd-integration-tests --format '{{.Names}}'` to be empty.
+- [x] From the repository root, run `dotnet build code/backend/DarkDeeds.sln -c Release`, then `dotnet test code/backend/DarkDeeds.sln -c Release`; fix all failures and warnings.
+- [x] Run `cd code/frontend && npm run ci`; fix all failures and warnings, then return to the repository root.
+- [x] Require `! nc -z localhost 5000 && ! nc -z localhost 3000`, run `./infra/up.sh`, and verify MongoDB plus Selenium Grid are ready on ports 27017 and 4444 without killing unknown processes.
+- [x] Start `dotnet run --project code/backend/DD.App` and `cd code/frontend && npm run dev` as detached background processes with separate log files and recorded PIDs; poll until the backend healthcheck returns `Healthy` and the frontend returns HTTP 200.
+- [x] Run `CONTAINER=true SELENIUM_GRID_URL=http://localhost:4444 URL=http://host.docker.internal:3000 BE_URL=http://localhost:5000 dotnet test code/tests/DarkDeeds.E2eTests` without piping output; require `Failed: 0, Passed: 11, Skipped: 1`, fix failures, and repeat affected gates until green.
+- [x] Kill only the recorded backend/frontend PIDs, verify ports 5000/3000 are free, leave MongoDB/Grid running, and require `docker ps --filter name=dd-integration-tests --format '{{.Names}}'` to be empty.
 
 ## Notes
 
