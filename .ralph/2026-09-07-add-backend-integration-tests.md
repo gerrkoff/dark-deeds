@@ -64,11 +64,11 @@ dotnet test code/backend/DarkDeeds.sln -c Release
 - Create: `code/backend/DD.Tests.Integration/DD.Tests.Integration.csproj`
 - Create: `code/backend/DD.Tests.Integration/xunit.runner.json`
 
-- [ ] Add central package versions `Microsoft.AspNetCore.Mvc.Testing` 8.0.30 and `Testcontainers.MongoDb` 4.15.0, retaining the existing xUnit v2 packages.
-- [ ] Create the `net8.0` integration project with a project reference to `DD.App`, include `xunit.runner.json` in test output, and explicitly enable parallel test collections with the conservative algorithm.
-- [ ] Change only `Program.CreateHostBuilder` visibility from private to public; keep `Program` static and use `Startup`, not `Program`, as the factory marker type.
-- [ ] Add `DD.Tests.Integration` under the solution Tests folder and preserve all existing projects and configurations.
-- [ ] Verify the fast checks pass with 0 warnings.
+- [x] Add central package versions `Microsoft.AspNetCore.Mvc.Testing` 8.0.30 and `Testcontainers.MongoDb` 4.15.0, retaining the existing xUnit v2 packages.
+- [x] Create the `net8.0` integration project with a project reference to `DD.App`, include `xunit.runner.json` in test output, and explicitly enable parallel test collections with the conservative algorithm.
+- [x] Change only `Program.CreateHostBuilder` visibility from private to public; keep `Program` static and use `Startup`, not `Program`, as the factory marker type.
+- [x] Add `DD.Tests.Integration` under the solution Tests folder and preserve all existing projects and configurations.
+- [x] Verify the fast checks pass with 0 warnings.
 
 ### Task 3: Implement the shared parallel environment
 
