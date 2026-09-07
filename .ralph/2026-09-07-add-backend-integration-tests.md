@@ -114,12 +114,12 @@ dotnet test code/backend/DarkDeeds.sln -c Release
 **Files:**
 - Create: `code/backend/DD.Tests.Integration/TasksIsolationIntegrationTests.cs`
 
-- [ ] Through HTTP, prove current/future tasks and an overdue incomplete Simple task are returned, while an overdue completed dated task is excluded.
-- [ ] Create two authenticated users, prove neither can load the other's task, and prove a foreign re-POST returns HTTP 200 with an empty array while the owner's later GET remains unchanged.
-- [ ] Create and update a task, submit its stale pre-update version, assert the stale task is absent from the HTTP 200 POST response, and verify the later GET still returns the winning value/version.
-- [ ] Re-POST several tasks with their current versions and new `Order` values in one request, then verify every order and incremented version through a later GET.
-- [ ] Coordinate two independent user task flows concurrently with `Task.WhenAll`, then run `for i in 1 2 3; do dotnet test code/backend/DD.Tests.Integration/DD.Tests.Integration.csproj -c Release || exit 1; done` to expose identifier, auth, order, and cleanup leakage.
-- [ ] Verify the fast checks pass repeatedly with 0 warnings and no `dd-integration-tests-*` container remains afterward.
+- [x] Through HTTP, prove current/future tasks and an overdue incomplete Simple task are returned, while an overdue completed dated task is excluded.
+- [x] Create two authenticated users, prove neither can load the other's task, and prove a foreign re-POST returns HTTP 200 with an empty array while the owner's later GET remains unchanged.
+- [x] Create and update a task, submit its stale pre-update version, assert the stale task is absent from the HTTP 200 POST response, and verify the later GET still returns the winning value/version.
+- [x] Re-POST several tasks with their current versions and new `Order` values in one request, then verify every order and incremented version through a later GET.
+- [x] Coordinate two independent user task flows concurrently with `Task.WhenAll`, then run `for i in 1 2 3; do dotnet test code/backend/DD.Tests.Integration/DD.Tests.Integration.csproj -c Release || exit 1; done` to expose identifier, auth, order, and cleanup leakage.
+- [x] Verify the fast checks pass repeatedly with 0 warnings and no `dd-integration-tests-*` container remains afterward.
 
 ### Task 7: Remove only replaced TaskService units
 
