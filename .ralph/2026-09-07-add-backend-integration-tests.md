@@ -102,12 +102,12 @@ dotnet test code/backend/DarkDeeds.sln -c Release
 **Files:**
 - Create: `code/backend/DD.Tests.Integration/TasksIntegrationTests.cs`
 
-- [ ] Create no-date and dated tasks through `POST /api/task/tasks` and load them through `GET /api/task/tasks?from=...`.
-- [ ] Assert title, date, time, type, probable flag, order, UID, and version fields from public responses.
-- [ ] Re-POST a task with its current version and changed title/order, then assert the POST response and later GET contain the changes with an incremented version.
-- [ ] Re-POST a task with `Deleted=true` and its current version, then assert the delete response and immediate GET contain the tombstone with `Deleted=true` and an incremented version.
-- [ ] For the deleted no-date task, issue another GET with `from` more than seven days after deletion and assert the expired tombstone is absent without modifying production filtering.
-- [ ] Verify the fast checks pass with 0 warnings and no `dd-integration-tests-*` container remains afterward.
+- [x] Create no-date and dated tasks through `POST /api/task/tasks` and load them through `GET /api/task/tasks?from=...`.
+- [x] Assert title, date, time, type, probable flag, order, UID, and version fields from public responses.
+- [x] Re-POST a task with its current version and changed title/order, then assert the POST response and later GET contain the changes with an incremented version.
+- [x] Re-POST a task with `Deleted=true` and its current version, then assert the delete response and immediate GET contain the tombstone with `Deleted=true` and an incremented version.
+- [x] For the deleted no-date task, issue another GET with `from` more than seven days after deletion and assert the expired tombstone is absent without modifying production filtering.
+- [x] Verify the fast checks pass with 0 warnings and no `dd-integration-tests-*` container remains afterward.
 
 ### Task 6: Cover filters, isolation, conflicts, and parallelism
 
