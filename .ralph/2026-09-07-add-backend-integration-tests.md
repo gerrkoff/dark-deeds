@@ -138,11 +138,11 @@ dotnet test code/backend/DarkDeeds.sln -c Release
 **Files:**
 - Modify: `.github/workflows/ci.yml`
 
-- [ ] Add a `docker info` preflight to the existing backend job so Docker/Testcontainers failures are explicit.
-- [ ] Build `DarkDeeds.sln` in Release and run `dotnet test DarkDeeds.sln -c Release --no-build`; do not add a Mongo service container or job-level container.
-- [ ] Ensure the solution-wired integration project runs on the existing `ubuntu-latest` Docker daemon with no staging deployment or repository secret.
-- [ ] Preserve all other CI jobs, `.github/workflows/tests-integration.yml`, and Selenium sources unchanged.
-- [ ] Verify the workflow YAML and fast checks pass with 0 warnings and no `dd-integration-tests-*` container remains afterward.
+- [x] Add a `docker info` preflight to the existing backend job so Docker/Testcontainers failures are explicit.
+- [x] Build `DarkDeeds.sln` in Release and run `dotnet test DarkDeeds.sln -c Release --no-build`; do not add a Mongo service container or job-level container.
+- [x] Ensure the solution-wired integration project runs on the existing `ubuntu-latest` Docker daemon with no staging deployment or repository secret.
+- [x] Preserve all other CI jobs, `.github/workflows/tests-integration.yml`, and Selenium sources unchanged.
+- [x] Verify the workflow YAML and fast checks pass with 0 warnings and no `dd-integration-tests-*` container remains afterward.
 
 ### Task 9: Final validation
 
