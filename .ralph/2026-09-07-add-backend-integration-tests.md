@@ -127,11 +127,11 @@ dotnet test code/backend/DarkDeeds.sln -c Release
 - Delete: `code/backend/DD.Tests.Unit/ServiceTask/Services/TaskServiceTests/TaskServiceTest.LoadActualTasksAsync.cs`
 - Modify: `code/backend/DD.Tests.Unit/ServiceTask/Services/TaskServiceTests/TaskServiceTest.SaveTasksAsync.cs`
 
-- [ ] Delete the repository/specification interaction-only `LoadActualTasksAsync_Positive` test only after the HTTP filter cases pass.
-- [ ] Remove `SaveTasksAsync` unit cases replaced by integration scenarios for create, update, foreign ownership, soft delete, and stale-version omission; retain unmatched edge cases.
-- [ ] Leave `TaskServiceTest.LoadTasksByDateAsync.cs`, `TaskServiceTest.UpdateTasksAsync.cs`, shared mock helpers, recurrence tests, Terminal Client tests, parsers, rendering, and unrelated units unchanged because this REST slice does not cover those paths.
-- [ ] Keep the remaining TaskService setup compiling without broad test or production refactoring.
-- [ ] Verify the fast checks pass with 0 warnings and no `dd-integration-tests-*` container remains afterward.
+- [x] Delete the repository/specification interaction-only `LoadActualTasksAsync_Positive` test only after the HTTP filter cases pass.
+- [x] Remove `SaveTasksAsync` unit cases replaced by integration scenarios for create, update, foreign ownership, soft delete, and stale-version omission; retain unmatched edge cases.
+- [x] Leave `TaskServiceTest.LoadTasksByDateAsync.cs`, `TaskServiceTest.UpdateTasksAsync.cs`, shared mock helpers, recurrence tests, Terminal Client tests, parsers, rendering, and unrelated units unchanged because this REST slice does not cover those paths.
+- [x] Keep the remaining TaskService setup compiling without broad test or production refactoring.
+- [x] Verify the fast checks pass with 0 warnings and no `dd-integration-tests-*` container remains afterward.
 
 ### Task 8: Run integration tests in backend CI
 
