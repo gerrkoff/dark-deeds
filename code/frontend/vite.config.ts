@@ -12,6 +12,17 @@ export default defineConfig({
         // dev server via host.docker.internal when running e2e tests locally.
         allowedHosts: ['host.docker.internal'],
     },
+    build: {
+        rollupOptions: {
+            onwarn(warning, warn) {
+                if (warning.code === 'INVALID_ANNOTATION' && warning.id?.includes('@microsoft/signalr/')) {
+                    return
+                }
+
+                warn(warning)
+            },
+        },
+    },
     plugins: [
         react(),
         VitePWA({
