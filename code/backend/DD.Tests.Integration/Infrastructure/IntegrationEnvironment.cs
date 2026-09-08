@@ -39,6 +39,11 @@ internal sealed class IntegrationEnvironment : IAsyncDisposable
         return _factory.CreateTestClient();
     }
 
+    internal HttpMessageHandler CreateSignalRHandler()
+    {
+        return _factory.CreateTestServerHandler();
+    }
+
     internal static async Task<IntegrationEnvironment> CreateAsync()
     {
         await DockerHelper.EnsureImageAsync(MongoImage);

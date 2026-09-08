@@ -1,6 +1,5 @@
 using DD.ServiceTask.Domain.Entities;
 using DD.ServiceTask.Domain.Entities.Enums;
-using DD.Shared.Details.Abstractions.Dto;
 using Moq;
 using Xunit;
 
@@ -149,24 +148,5 @@ public partial class RecurrenceCreatorServiceTest
         _taskRepoMock.Verify(x => x.UpsertAsync(It.Is<TaskEntity>(
             y => y.Date == new DateTime(2019, 9, 12))));
         _taskRepoMock.VerifyNoOtherCalls();
-    }
-
-    [Fact]
-    public async Task CreateAsync_NotifyAboutCreatedTasks()
-    {
-        _dateServiceMock.SetupGet(x => x.Now).Returns(new DateTime(2019, 9, 6));
-
-        var service = Service(new PlannedRecurrenceEntity
-        {
-            StartDate = new DateTime(2019, 9, 6),
-            EveryMonthDay = "6",
-            UserId = "userId",
-            Recurrences = [],
-        });
-
-        await service.CreateAsync(0, "userId");
-
-        _notifierServiceMock.Verify(x => x.TaskUpdated(
-            It.Is<TasksUpdatedDto>(y => y.Tasks.Count == 1 && y.Tasks.First().Title == "Task")));
     }
 }

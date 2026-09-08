@@ -80,12 +80,12 @@ dotnet test code/backend/DarkDeeds.sln -c Release
 - Create: `code/backend/DD.Tests.Integration/SignalRIntegrationTests.cs`
 - Modify: `code/backend/DD.Tests.Unit/ServiceTask/Services/RecurrenceCreatorServiceTests/RecurrenceCreatorServiceTest.CreateAsync.cs`
 
-- [ ] Add a direct `Microsoft.AspNetCore.SignalR.Client` reference and factory/environment methods that create authenticated hub clients for `/ws/task/task` through a fresh `TestServer.CreateHandler`, force `HttpTransportType.LongPolling`, and leave shared host configuration immutable.
-- [ ] Add an `IAsyncDisposable` update collector that registers `update` before `StartAsync`, records arrival order by unique task UID, uses bounded waits and positive sentinel updates, and disposes every `HubConnection` with `await using`.
-- [ ] Assert anonymous hub negotiation is rejected and a real login token starts an authenticated connection.
-- [ ] Prove updates stay inside the authenticated user group, and prove `X-Client-Id` suppresses every matching logical client while a different client receives the target; use unsuppressed sentinel saves to complete all negative assertions without arbitrary sleeps.
-- [ ] Generate a recurrence through the public create endpoint while its user's hub is connected, assert the generated task arrives through `update`, then delete only `CreateAsync_NotifyAboutCreatedTasks`; retain `CreateAsync_CreateRecurrenceTaskForRecurrence` because recurrence-to-task linkage is not publicly observable.
-- [ ] Verify the fast checks pass with 0 warnings while retaining browser cross-tab smoke coverage for real WebSocket/Kestrel behavior.
+- [x] Add a direct `Microsoft.AspNetCore.SignalR.Client` reference and factory/environment methods that create authenticated hub clients for `/ws/task/task` through a fresh `TestServer.CreateHandler`, force `HttpTransportType.LongPolling`, and leave shared host configuration immutable.
+- [x] Add an `IAsyncDisposable` update collector that registers `update` before `StartAsync`, records arrival order by unique task UID, uses bounded waits and positive sentinel updates, and disposes every `HubConnection` with `await using`.
+- [x] Assert anonymous hub negotiation is rejected and a real login token starts an authenticated connection.
+- [x] Prove updates stay inside the authenticated user group, and prove `X-Client-Id` suppresses every matching logical client while a different client receives the target; use unsuppressed sentinel saves to complete all negative assertions without arbitrary sleeps.
+- [x] Generate a recurrence through the public create endpoint while its user's hub is connected, assert the generated task arrives through `update`, then delete only `CreateAsync_NotifyAboutCreatedTasks`; retain `CreateAsync_CreateRecurrenceTaskForRecurrence` because recurrence-to-task linkage is not publicly observable.
+- [x] Verify the fast checks pass with 0 warnings while retaining browser cross-tab smoke coverage for real WebSocket/Kestrel behavior.
 
 ### Task 4: Cover Telegram webhook behavior and remove replaced units
 

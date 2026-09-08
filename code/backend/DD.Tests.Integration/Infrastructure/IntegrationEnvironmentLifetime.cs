@@ -23,6 +23,12 @@ internal static class IntegrationEnvironmentLifetime
         return environment.CreateClient();
     }
 
+    internal static async Task<HttpMessageHandler> CreateSignalRHandlerAsync()
+    {
+        var environment = await Shared.Value;
+        return environment.CreateSignalRHandler();
+    }
+
     [SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "Process teardown must report cleanup failures without escaping the process-exit callback.")]
     private static void CleanupAtProcessExit()
     {

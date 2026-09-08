@@ -25,6 +25,14 @@ public sealed class DarkDeedsWebApplicationFactory(string sharedDbConnectionStri
         }
     }
 
+    public HttpMessageHandler CreateTestServerHandler()
+    {
+        lock (_clientLock)
+        {
+            return Server.CreateHandler();
+        }
+    }
+
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         builder

@@ -1,0 +1,123 @@
+using System.Net;
+using System.Net.Http.Json;
+using DD.Shared.Details.Abstractions.Dto;
+using DD.Tests.Integration.Helpers;
+using DD.Tests.Integration.Infrastructure;
+using Xunit;
+using static DD.Tests.Integration.Helpers.Helper;
+using static DD.Tests.Integration.Helpers.RecurrencesHelper;
+
+namespace DD.Tests.Integration;
+
+public sealed class SignalRIntegrationTests : IntegrationTestBase
+{
+    private static readonly TimeSpan UpdateTimeout = TimeSpan.FromSeconds(10);
+
+    [Fact]
+    public async Task TaskHub_AnonymousNegotiationIsRejected_AuthenticatedUserCanConnect()
+    {
+        using var client = await CreateClientAsync();
+
+        using var anonymousResponse = await client.PostAsync(
+            new Uri("ws/task/task/negotiate?negotiateVersion=1", UriKind.Relative),
+            content: null);
+        Assert.Equal(HttpStatusCode.Unauthorized, anonymousResponse.StatusCode);
+
+        await using var user = await CreateUserClientAsync();
+        await using var collector = await ConnectAsync(user.Token, "authenticated-client");
+    }
+
+    [Fact]
+    public async Task TaskHub_UpdatesStayInUserGroup_AndMatchingClientConnectionsAreSuppressed()
+    {
+        await using var user = await CreateUserClientAsync();
+        await using var foreignUser = await CreateUserClientAsync();
+        await using var matchingClientOne = await ConnectAsync(user.Token, "same-client");
+        await using var matchingClientTwo = await ConnectAsync(user.Token, "same-client");
+        await using var differentClient = await ConnectAsync(user.Token, "different-client");
+        await using var foreignCollector = await ConnectAsync(foreignUser.Token, "foreign-client");
+
+        var target = CreateTask("suppressed target");
+        await SaveTaskAsync(user, target, "same-client");
+
+        await differentClient.WaitForTaskAsync(target.Uid, UpdateTimeout);
+
+        var userSentinel = CreateTask("user sentinel");
+        await SaveTaskAsync(user, userSentinel);
+        await matchingClientOne.WaitForTaskAsync(userSentinel.Uid, UpdateTimeout);
+        await matchingClientTwo.WaitForTaskAsync(userSentinel.Uid, UpdateTimeout);
+        await differentClient.WaitForTaskAsync(userSentinel.Uid, UpdateTimeout);
+
+        Assert.False(matchingClientOne.HasReceived(target.Uid));
+        Assert.False(matchingClientTwo.HasReceived(target.Uid));
+        Assert.True(differentClient.HasReceived(target.Uid));
+        Assert.Equal(
+            [target.Uid, userSentinel.Uid],
+            differentClient.ArrivalOrder);
+        Assert.False(foreignCollector.HasReceived(target.Uid));
+        Assert.False(foreignCollector.HasReceived(userSentinel.Uid));
+
+        var foreignSentinel = CreateTask("foreign sentinel");
+        await SaveTaskAsync(foreignUser, foreignSentinel);
+        await foreignCollector.WaitForTaskAsync(foreignSentinel.Uid, UpdateTimeout);
+
+        Assert.False(matchingClientOne.HasReceived(foreignSentinel.Uid));
+        Assert.False(differentClient.HasReceived(foreignSentinel.Uid));
+    }
+
+    [Fact]
+    public async Task RecurrencesCreate_NotifiesConnectedUserThroughTaskHub()
+    {
+        await using var user = await CreateUserClientAsync();
+        await using var collector = await ConnectAsync(user.Token, "recurrence-client");
+        var today = DateTime.UtcNow.Date;
+        var title = $"Hub recurrence {CreateUniqueRecurrenceUid()}";
+        var recurrence = CreateRecurrence(title, today, today, everyNthDay: 1);
+
+        using var seedResponse = await user.HttpClient.PostAsJsonAsync(
+            RecurrencesRoute,
+            new[] { recurrence });
+        Assert.Equal(1, await ReadRecurrenceCountAsync(seedResponse));
+
+        var createdCount = await CreateRecurrencesAsync(user.HttpClient);
+        Assert.Equal(1, createdCount);
+
+        var generatedTask = await collector.WaitForTaskAsync(
+            task => task.Title == title,
+            UpdateTimeout);
+        Assert.Equal(today, generatedTask.Date);
+    }
+
+    private static async Task<SignalRUpdateCollector> ConnectAsync(string token, string clientId)
+    {
+        var handler = await CreateSignalRHandlerAsync();
+        return await SignalRUpdateCollector.ConnectAsync(handler, token, clientId);
+    }
+
+    private static async Task<TaskDto> SaveTaskAsync(
+        TestUserClient user,
+        TaskDto task,
+        string? clientId = null)
+    {
+        using var request = new HttpRequestMessage(HttpMethod.Post, "api/task/tasks")
+        {
+            Content = JsonContent.Create(new[] { task }),
+        };
+        if (!string.IsNullOrWhiteSpace(clientId))
+            request.Headers.Add("X-Client-Id", clientId);
+
+        using var response = await user.HttpClient.SendAsync(request);
+        return Assert.Single(await ReadTasksAsync(response));
+    }
+
+    private static TaskDto CreateTask(string title)
+    {
+        return new TaskDto
+        {
+            Uid = CreateUniqueTaskUid(),
+            Title = title,
+            Date = DateTime.UtcNow.Date,
+            Type = TaskTypeDto.Simple,
+        };
+    }
+}
