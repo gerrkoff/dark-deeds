@@ -3,6 +3,7 @@ using System.Net.Http.Json;
 using System.Text.Json;
 using DD.ServiceAuth.Domain.Dto;
 using DD.ServiceAuth.Domain.Enums;
+using static DD.Tests.Integration.Helpers.Helper;
 
 namespace DD.Tests.Integration.Infrastructure;
 
@@ -27,15 +28,14 @@ public sealed class TestUserClient : IAsyncDisposable
     public HttpClient HttpClient { get; }
 
     public static async Task<TestUserClient> CreateAsync(
-        IntegrationEnvironment environment,
         CancellationToken cancellationToken = default)
     {
-        var httpClient = environment.CreateClient();
+        var httpClient = await IntegrationEnvironmentLifetime.CreateClientAsync();
         var shouldDisposeClient = true;
 
         try
         {
-            var username = IntegrationEnvironment.CreateUniqueUsername();
+            var username = CreateUniqueUsername();
             const string password = "QWERTY123456qwerty!@#$%^";
             using var response = await httpClient.PostAsJsonAsync(
                 "api/auth/account/signup",

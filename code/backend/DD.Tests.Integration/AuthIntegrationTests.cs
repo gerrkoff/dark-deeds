@@ -6,6 +6,7 @@ using DD.ServiceAuth.Domain.Dto;
 using DD.ServiceAuth.Domain.Enums;
 using DD.Tests.Integration.Infrastructure;
 using Xunit;
+using static DD.Tests.Integration.Helpers.Helper;
 
 namespace DD.Tests.Integration;
 
@@ -33,7 +34,7 @@ public sealed class AuthIntegrationTests : IntegrationTestBase
     public async Task AccountEndpoints_SignUpSignInCurrentUserAndRenew_Succeed()
     {
         using var client = await CreateClientAsync();
-        var username = IntegrationEnvironment.CreateUniqueUsername("auth");
+        var username = CreateUniqueUsername("auth");
 
         using var signUpResponse = await client.PostAsJsonAsync(
             "api/auth/account/signup",
@@ -89,7 +90,7 @@ public sealed class AuthIntegrationTests : IntegrationTestBase
     public async Task SignIn_ExistingUserWithWrongPassword_ReturnsWrongUsernamePassword()
     {
         using var client = await CreateClientAsync();
-        var username = IntegrationEnvironment.CreateUniqueUsername("wrong-password");
+        var username = CreateUniqueUsername("wrong-password");
 
         using var signUpResponse = await client.PostAsJsonAsync(
             "api/auth/account/signup",
@@ -129,7 +130,7 @@ public sealed class AuthIntegrationTests : IntegrationTestBase
     public async Task SignUp_DuplicateUsername_ReturnsUsernameAlreadyExists()
     {
         using var client = await CreateClientAsync();
-        var username = IntegrationEnvironment.CreateUniqueUsername("duplicate");
+        var username = CreateUniqueUsername("duplicate");
         var signUpInfo = new SignUpInfoDto { Username = username, Password = Password };
 
         using var firstResponse = await client.PostAsJsonAsync("api/auth/account/signup", signUpInfo);

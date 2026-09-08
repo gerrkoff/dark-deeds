@@ -3,6 +3,7 @@ using System.Net.Http.Json;
 using DD.Shared.Details.Abstractions.Dto;
 using DD.Tests.Integration.Infrastructure;
 using Xunit;
+using static DD.Tests.Integration.Helpers.Helper;
 
 namespace DD.Tests.Integration;
 
@@ -200,7 +201,7 @@ public sealed class TasksIsolationIntegrationTests : IntegrationTestBase
     {
         return new TaskDto
         {
-            Uid = IntegrationEnvironment.CreateUniqueTaskUid(),
+            Uid = CreateUniqueTaskUid(),
             Title = title,
             Date = date,
             Order = order,

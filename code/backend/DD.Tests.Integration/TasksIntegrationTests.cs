@@ -3,6 +3,7 @@ using System.Net.Http.Json;
 using DD.Shared.Details.Abstractions.Dto;
 using DD.Tests.Integration.Infrastructure;
 using Xunit;
+using static DD.Tests.Integration.Helpers.Helper;
 
 namespace DD.Tests.Integration;
 
@@ -16,7 +17,7 @@ public sealed class TasksIntegrationTests : IntegrationTestBase
         var datedDate = from.AddDays(1);
         var noDate = new TaskDto
         {
-            Uid = IntegrationEnvironment.CreateUniqueTaskUid(),
+            Uid = CreateUniqueTaskUid(),
             Title = "No date task",
             Time = 615,
             Order = 4,
@@ -25,7 +26,7 @@ public sealed class TasksIntegrationTests : IntegrationTestBase
         };
         var dated = new TaskDto
         {
-            Uid = IntegrationEnvironment.CreateUniqueTaskUid(),
+            Uid = CreateUniqueTaskUid(),
             Title = "Dated task",
             Date = datedDate,
             Time = 1050,
@@ -71,7 +72,7 @@ public sealed class TasksIntegrationTests : IntegrationTestBase
         var from = DateTime.UtcNow.Date;
         var task = new TaskDto
         {
-            Uid = IntegrationEnvironment.CreateUniqueTaskUid(),
+            Uid = CreateUniqueTaskUid(),
             Title = "Task before update",
             Order = 10,
             Type = TaskTypeDto.Simple,
