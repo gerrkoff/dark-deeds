@@ -1,6 +1,33 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
+import type { RollupLog, WarningHandlerWithDefault } from 'rollup'
+
+const signalRUtilsPath = '/node_modules/@microsoft/signalr/dist/esm/Utils.js'
+const signalRAnnotationLines = new Set([189, 207])
+
+function isKnownSignalRAnnotationWarning(warning: RollupLog): boolean {
+    const normalizedId = warning.id?.replaceAll('\\', '/')
+
+    return (
+        warning.code === 'INVALID_ANNOTATION' &&
+        normalizedId?.endsWith(signalRUtilsPath) === true &&
+        warning.loc?.column === 0 &&
+        signalRAnnotationLines.has(warning.loc.line) &&
+        warning.message.includes('"/*#__PURE__*/"') &&
+        warning.message.includes(
+            'contains an annotation that Rollup cannot interpret due to the position of the comment',
+        )
+    )
+}
+
+export const handleRollupWarning: WarningHandlerWithDefault = (warning, warn) => {
+    if (isKnownSignalRAnnotationWarning(warning)) {
+        return
+    }
+
+    warn(warning)
+}
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -14,13 +41,7 @@ export default defineConfig({
     },
     build: {
         rollupOptions: {
-            onwarn(warning, warn) {
-                if (warning.code === 'INVALID_ANNOTATION' && warning.id?.includes('@microsoft/signalr/')) {
-                    return
-                }
-
-                warn(warning)
-            },
+            onwarn: handleRollupWarning,
         },
     },
     plugins: [
