@@ -23,6 +23,12 @@ internal static class IntegrationEnvironmentLifetime
         return environment.CreateClient();
     }
 
+    internal static async Task<HttpClient> CreateOAuthClientAsync()
+    {
+        var environment = await Shared.Value;
+        return environment.CreateOAuthClient();
+    }
+
     internal static async Task<HttpMessageHandler> CreateSignalRHandlerAsync()
     {
         var environment = await Shared.Value;

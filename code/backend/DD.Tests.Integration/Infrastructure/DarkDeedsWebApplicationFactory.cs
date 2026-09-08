@@ -11,10 +11,22 @@ namespace DD.Tests.Integration.Infrastructure;
 
 public sealed class DarkDeedsWebApplicationFactory(string sharedDbConnectionString) : WebApplicationFactory<Startup>
 {
-    private const string AuthIssuer = "https://integration-tests.dark-deeds.test";
+    internal const string AuthIssuer = "https://integration-tests.dark-deeds.test";
     private const string AuthAudience = "dark-deeds-integration-tests";
     private const string AuthKey = "dark-deeds-integration-test-signing-key-2026-abcdefghijklmnopqrstuvwxyz";
     private readonly object _clientLock = new();
+
+    public HttpClient CreateOAuthClient()
+    {
+        lock (_clientLock)
+        {
+            return CreateClient(new WebApplicationFactoryClientOptions
+            {
+                BaseAddress = new Uri("http://localhost"),
+                AllowAutoRedirect = false,
+            });
+        }
+    }
 
     public HttpClient CreateTestClient()
     {

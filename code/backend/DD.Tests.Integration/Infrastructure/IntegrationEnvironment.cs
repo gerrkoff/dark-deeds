@@ -34,6 +34,11 @@ internal sealed class IntegrationEnvironment : IAsyncDisposable
         await DisposeResourcesAsync(_mongoContainer, _factory);
     }
 
+    internal HttpClient CreateOAuthClient()
+    {
+        return _factory.CreateOAuthClient();
+    }
+
     internal HttpClient CreateClient()
     {
         return _factory.CreateTestClient();

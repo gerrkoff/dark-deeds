@@ -119,12 +119,12 @@ dotnet test code/backend/DarkDeeds.sln -c Release
 - Create: `code/backend/DD.Tests.Integration/Helpers/OAuthMcpHelper.cs`
 - Create: `code/backend/DD.Tests.Integration/OAuthIntegrationTests.cs`
 
-- [ ] Expose `AuthIssuer` as an internal constant for assertions while leaving the normal shared-client base address unchanged; add a narrow client option that disables automatic redirects for OAuth authorization-contract requests.
-- [ ] Add a disposable OAuth session that registers a fixed loopback callback on port 43123, computes the RFC 7636 S256 vector, submits authenticated allow consent, validates callback state, exchanges the form-encoded code, and owns login/access/refresh token state.
-- [ ] Assert exact authorization-server and MCP protected-resource metadata, valid registration, the original GET authorization redirect status/location with auto-redirect disabled, deny redirect with preserved state, and unauthenticated allow rejection.
-- [ ] Assert successful code exchange returns Bearer, scope `mcp`, expected expiry, non-empty access/refresh tokens, and `Cache-Control: no-store`; assert a wrong verifier returns HTTP 400 `invalid_grant`.
-- [ ] Exchange the refresh token and assert another valid access token without testing replayable code/refresh, ignored scope, or ignored resource behavior.
-- [ ] Verify the fast checks pass with 0 warnings.
+- [x] Expose `AuthIssuer` as an internal constant for assertions while leaving the normal shared-client base address unchanged; add a narrow client option that disables automatic redirects for OAuth authorization-contract requests.
+- [x] Add a disposable OAuth session that registers a fixed loopback callback on port 43123, computes the RFC 7636 S256 vector, submits authenticated allow consent, validates callback state, exchanges the form-encoded code, and owns login/access/refresh token state.
+- [x] Assert exact authorization-server and MCP protected-resource metadata, valid registration, the original GET authorization redirect status/location with auto-redirect disabled, deny redirect with preserved state, and unauthenticated allow rejection.
+- [x] Assert successful code exchange returns Bearer, scope `mcp`, expected expiry, non-empty access/refresh tokens, and `Cache-Control: no-store`; assert a wrong verifier returns HTTP 400 `invalid_grant`.
+- [x] Exchange the refresh token and assert another valid access token without testing replayable code/refresh, ignored scope, or ignored resource behavior.
+- [x] Verify the fast checks pass with 0 warnings.
 
 ### Task 6: Cover MCP tools and remove replaced units
 
