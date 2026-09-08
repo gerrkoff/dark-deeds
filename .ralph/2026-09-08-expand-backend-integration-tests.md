@@ -63,10 +63,10 @@ dotnet test code/backend/DarkDeeds.sln -c Release
 **Files:**
 - Create: `code/backend/DD.Tests.Integration/SettingsIntegrationTests.cs`
 
-- [ ] Assert a new authenticated user receives `showCompleted=false` from `GET /api/web/settings`.
-- [ ] Save true and false through `POST /api/web/settings` and verify each persisted value through a later GET.
-- [ ] Use two real users to prove settings isolation by authenticated user ID.
-- [ ] Verify the fast checks pass with 0 warnings.
+- [x] Assert a new authenticated user receives `showCompleted=false` from `GET /api/web/settings`.
+- [x] Save true and false through `POST /api/web/settings` and verify each persisted value through a later GET.
+- [x] Use two real users to prove settings isolation by authenticated user ID.
+- [x] Verify the fast checks pass with 0 warnings.
 
 ### Task 3: Cover SignalR notification contracts
 
