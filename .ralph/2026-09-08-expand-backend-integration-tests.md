@@ -156,12 +156,12 @@ dotnet test code/backend/DarkDeeds.sln -c Release
 - Create: `code/backend/DD.Tests.Integration/Helpers/MobileHelper.cs`
 - Create: `code/backend/DD.Tests.Integration/WatchIntegrationTests.cs`
 
-- [ ] Decode the `sub` claim from `TestUserClient.Token` and use the Task 4 scoped-execution hook with concrete `MobileUserRepository.UpsertAsync` only to seed the otherwise unprovisionable mapping with a unique mobile key.
-- [ ] Create captured-UTC-today Routine, Simple, Additional, completed, and timed tasks through Tasks HTTP, then assert exact anonymous widget/app filtering, ordering, counts, formatted text, `main`, `support`, and `isSupport` values.
-- [ ] After all setup writes, send a separate unmapped user's SignalR sentinel and wait for it to drain the shared FIFO notifier before warming either mobile cache.
-- [ ] Warm both caches, update only the mapped user's task through HTTP, and poll widget/app routes with a bounded eventual assertion until both payloads change, proving the tested notification invalidated both entries.
-- [ ] Assert an unknown mobile key returns HTTP 500 with ProblemDetails title `An unexpected error occurred` without changing production error handling; keep every pure `WatchPayloadControllerTests` case.
-- [ ] Verify the fast checks pass with 0 warnings.
+- [x] Decode the `sub` claim from `TestUserClient.Token` and use the Task 4 scoped-execution hook with concrete `MobileUserRepository.UpsertAsync` only to seed the otherwise unprovisionable mapping with a unique mobile key.
+- [x] Create captured-UTC-today Routine, Simple, Additional, completed, and timed tasks through Tasks HTTP, then assert exact anonymous widget/app filtering, ordering, counts, formatted text, `main`, `support`, and `isSupport` values.
+- [x] After all setup writes, send a separate unmapped user's SignalR sentinel and wait for it to drain the shared FIFO notifier before warming either mobile cache.
+- [x] Warm both caches, update only the mapped user's task through HTTP, and poll widget/app routes with a bounded eventual assertion until both payloads change, proving the tested notification invalidated both entries.
+- [x] Assert an unknown mobile key returns HTTP 500 with ProblemDetails title `An unexpected error occurred` without changing production error handling; keep every pure `WatchPayloadControllerTests` case.
+- [x] Verify the fast checks pass with 0 warnings.
 
 ### Task 8: Final validation
 
