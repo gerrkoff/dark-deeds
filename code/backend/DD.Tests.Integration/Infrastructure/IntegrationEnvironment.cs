@@ -44,6 +44,11 @@ internal sealed class IntegrationEnvironment : IAsyncDisposable
         return _factory.CreateTestClient();
     }
 
+    internal HttpClient CreateMcpClient()
+    {
+        return _factory.CreateMcpClient();
+    }
+
     internal HttpMessageHandler CreateSignalRHandler()
     {
         return _factory.CreateTestServerHandler();

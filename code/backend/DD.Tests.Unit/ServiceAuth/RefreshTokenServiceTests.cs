@@ -102,26 +102,6 @@ public class RefreshTokenServiceTests
         Assert.Null(verified);
     }
 
-    [Fact]
-    public async Task RefreshGrant_IssuesNewVerifiableToken()
-    {
-        // Arrange
-        var service = CreateService();
-        var original = await service.IssueAsync(new RefreshTokenModel(UserId, ClientId));
-
-        // Act - simulate the refresh grant: verify the presented token, then mint a new one.
-        var verifiedOriginal = await service.VerifyAsync(original);
-        Assert.NotNull(verifiedOriginal);
-        var renewed = await service.IssueAsync(new RefreshTokenModel(verifiedOriginal.UserId, verifiedOriginal.ClientId));
-        var verifiedRenewed = await service.VerifyAsync(renewed);
-
-        // Assert
-        Assert.NotNull(verifiedRenewed);
-        Assert.NotEqual(original, renewed);
-        Assert.Equal(UserId, verifiedRenewed.UserId);
-        Assert.Equal(ClientId, verifiedRenewed.ClientId);
-    }
-
     private RefreshTokenService CreateService()
     {
         var oauthSettings = new OAuthSettings

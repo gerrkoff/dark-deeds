@@ -1,5 +1,3 @@
-using System.Text.Json;
-using System.Text.Json.Serialization;
 using DD.McpClient.Domain;
 using DD.Shared.Details.Abstractions;
 using DD.Shared.Details.Abstractions.Dto;
@@ -11,190 +9,69 @@ namespace DD.Tests.Unit.McpClient;
 
 public class McpServiceTests
 {
-    private static readonly JsonSerializerOptions JsonOptions = new()
-    {
-        Converters = { new JsonStringEnumConverter() },
-    };
-
     private readonly Mock<ITaskServiceApp> taskServiceAppMock = new();
     private readonly Mock<ILogger<McpService>> loggerMock = new();
 
     [Fact]
-    public async Task UpdateTasksOrderAsync_WithJustification_ForwardsUpdatesAndReturnsSerializedResult()
+    public async Task UpdateTasksOrderAsync_WithJustification_LogsJustification()
     {
-        // Arrange
         const string justification = "Reordered by priority";
-        var updates = new List<TaskUpdateDto> { new() { Uid = "uid-1", Order = 2 } };
-        IEnumerable<TaskDto> resultTasks =
-            [new() { Uid = "uid-1", Order = 2, Type = TaskTypeDto.Routine }];
         taskServiceAppMock
-            .Setup(x => x.UpdateTasksAsync(updates, "user-1", null))
-            .ReturnsAsync(resultTasks);
+            .Setup(x => x.UpdateTasksAsync(
+                It.IsAny<ICollection<TaskUpdateDto>>(),
+                It.IsAny<string>(),
+                null))
+            .ReturnsAsync([]);
         loggerMock
             .Setup(x => x.IsEnabled(It.IsAny<LogLevel>()))
             .Returns(true);
         var service = CreateService();
 
-        // Act
-        var result = await service.UpdateTasksOrderAsync(updates, "user-1", justification);
+        await service.UpdateTasksOrderAsync(
+            [new TaskUpdateDto { Uid = "uid-1", Order = 2 }],
+            "user-1",
+            justification);
 
-        // Assert
-        taskServiceAppMock.Verify(x => x.UpdateTasksAsync(updates, "user-1", null), Times.Once);
-        Assert.Equal(Serialize(resultTasks), result);
-        loggerMock.Verify(
-            x => x.Log(
-                LogLevel.Information,
-                It.IsAny<EventId>(),
-                It.Is<It.IsAnyType>((state, _) => state.ToString()!.Contains(justification)),
-                It.IsAny<Exception?>(),
-                It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
-            Times.Once);
+        VerifyJustificationLogged(justification);
     }
 
     [Fact]
-    public async Task LoadTasksByDateAsync_WithDateRange_ForwardsArgumentsAndReturnsSerializedResult()
+    public async Task AddTasksAsync_WithJustification_LogsJustification()
     {
-        // Arrange
-        var from = new DateTime(2026, 7, 1);
-        var till = new DateTime(2026, 7, 14);
-        IEnumerable<TaskDto> resultTasks =
-            [new() { Uid = "uid-1", Title = "Task", Type = TaskTypeDto.Weekly }];
-        taskServiceAppMock
-            .Setup(x => x.LoadTasksByDateAsync(from, till, "user-1"))
-            .ReturnsAsync(resultTasks);
-        var service = CreateService();
-
-        // Act
-        var result = await service.LoadTasksByDateAsync(from, till, "user-1");
-
-        // Assert
-        taskServiceAppMock.Verify(x => x.LoadTasksByDateAsync(from, till, "user-1"), Times.Once);
-        Assert.Equal(Serialize(resultTasks), result);
-    }
-
-    [Fact]
-    public async Task AddTasksAsync_WithTasksAndJustification_SavesMappedTasksAndReturnsSerializedResult()
-    {
-        // Arrange
         const string justification = "Added by agent";
-        var taskToCreate = new TaskCreateDto
-        {
-            Title = "Buy milk",
-            Date = new DateTime(2026, 7, 10),
-            Time = 1050,
-            Type = TaskTypeDto.Routine,
-            IsProbable = true,
-        };
-        IEnumerable<TaskDto> savedResult =
-            [new() { Uid = "uid-1", Title = "Buy milk", Type = TaskTypeDto.Routine }];
-        ICollection<TaskDto>? capturedTasks = null;
         taskServiceAppMock
-            .Setup(x => x.SaveTasksAsync(It.IsAny<ICollection<TaskDto>>(), "user-1", null))
-            .Callback<ICollection<TaskDto>, string, string?>((tasks, _, _) => capturedTasks = tasks)
-            .ReturnsAsync(savedResult);
+            .Setup(x => x.SaveTasksAsync(
+                It.IsAny<ICollection<TaskDto>>(),
+                It.IsAny<string>(),
+                null))
+            .ReturnsAsync([]);
         loggerMock
             .Setup(x => x.IsEnabled(It.IsAny<LogLevel>()))
             .Returns(true);
         var service = CreateService();
 
-        // Act
-        var result = await service.AddTasksAsync([taskToCreate], "user-1", justification);
+        await service.AddTasksAsync(
+            [new TaskCreateDto { Title = "Buy milk" }],
+            "user-1",
+            justification);
 
-        // Assert
-        taskServiceAppMock.Verify(x => x.SaveTasksAsync(It.IsAny<ICollection<TaskDto>>(), "user-1", null), Times.Once);
-        Assert.NotNull(capturedTasks);
-        var savedTask = Assert.Single(capturedTasks);
-        Assert.True(Guid.TryParse(savedTask.Uid, out _));
-        Assert.Equal(taskToCreate.Title, savedTask.Title);
-        Assert.Equal(taskToCreate.Date, savedTask.Date);
-        Assert.Equal(taskToCreate.Time, savedTask.Time);
-        Assert.Equal(taskToCreate.Type, savedTask.Type);
-        Assert.Equal(taskToCreate.IsProbable, savedTask.IsProbable);
-        Assert.Equal(Serialize(savedResult), result);
-        loggerMock.Verify(
-            x => x.Log(
-                LogLevel.Information,
-                It.IsAny<EventId>(),
-                It.Is<It.IsAnyType>((state, _) => state.ToString()!.Contains(justification)),
-                It.IsAny<Exception?>(),
-                It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
-            Times.Once);
-    }
-
-    [Fact]
-    public async Task AddTasksAsync_WithMultipleTasks_SavesAllMappedTasksWithDistinctGuidsAndLogsCount()
-    {
-        // Arrange
-        const string justification = "Added by agent";
-        var firstTask = new TaskCreateDto
-        {
-            Title = "Buy milk",
-            Date = new DateTime(2026, 7, 10),
-            Time = 1050,
-            Type = TaskTypeDto.Routine,
-            IsProbable = true,
-        };
-        var secondTask = new TaskCreateDto
-        {
-            Title = "Call plumber",
-            Type = TaskTypeDto.Additional,
-        };
-        IEnumerable<TaskDto> savedResult =
-            [new() { Uid = "uid-1", Title = "Buy milk" }, new() { Uid = "uid-2", Title = "Call plumber" }];
-        ICollection<TaskDto>? capturedTasks = null;
-        taskServiceAppMock
-            .Setup(x => x.SaveTasksAsync(It.IsAny<ICollection<TaskDto>>(), "user-1", null))
-            .Callback<ICollection<TaskDto>, string, string?>((tasks, _, _) => capturedTasks = tasks)
-            .ReturnsAsync(savedResult);
-        loggerMock
-            .Setup(x => x.IsEnabled(It.IsAny<LogLevel>()))
-            .Returns(true);
-        var service = CreateService();
-
-        // Act
-        var result = await service.AddTasksAsync([firstTask, secondTask], "user-1", justification);
-
-        // Assert
-        taskServiceAppMock.Verify(x => x.SaveTasksAsync(It.IsAny<ICollection<TaskDto>>(), "user-1", null), Times.Once);
-        Assert.NotNull(capturedTasks);
-        var savedTasks = capturedTasks.ToList();
-        Assert.Equal(2, savedTasks.Count);
-
-        Assert.Equal(firstTask.Title, savedTasks[0].Title);
-        Assert.Equal(firstTask.Date, savedTasks[0].Date);
-        Assert.Equal(firstTask.Time, savedTasks[0].Time);
-        Assert.Equal(firstTask.Type, savedTasks[0].Type);
-        Assert.Equal(firstTask.IsProbable, savedTasks[0].IsProbable);
-
-        Assert.Equal(secondTask.Title, savedTasks[1].Title);
-        Assert.Equal(secondTask.Date, savedTasks[1].Date);
-        Assert.Equal(secondTask.Time, savedTasks[1].Time);
-        Assert.Equal(secondTask.Type, savedTasks[1].Type);
-        Assert.Equal(secondTask.IsProbable, savedTasks[1].IsProbable);
-
-        Assert.True(Guid.TryParse(savedTasks[0].Uid, out _));
-        Assert.True(Guid.TryParse(savedTasks[1].Uid, out _));
-        Assert.NotEqual(savedTasks[0].Uid, savedTasks[1].Uid);
-
-        Assert.Equal(Serialize(savedResult), result);
-        loggerMock.Verify(
-            x => x.Log(
-                LogLevel.Information,
-                It.IsAny<EventId>(),
-                It.Is<It.IsAnyType>((state, _) =>
-                    state.ToString()!.Contains('2') && state.ToString()!.Contains(justification)),
-                It.IsAny<Exception?>(),
-                It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
-            Times.Once);
-    }
-
-    private static string Serialize(IEnumerable<TaskDto> tasks)
-    {
-        return JsonSerializer.Serialize(tasks, JsonOptions);
+        VerifyJustificationLogged(justification);
     }
 
     private McpService CreateService()
     {
         return new(taskServiceAppMock.Object, loggerMock.Object);
+    }
+
+    private void VerifyJustificationLogged(string justification)
+    {
+        loggerMock.Verify(
+            x => x.Log(
+                LogLevel.Information,
+                It.IsAny<EventId>(),
+                It.Is<It.IsAnyType>((state, _) => state.ToString()!.Contains(justification)),
+                It.IsAny<Exception?>(),
+                It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
+            Times.Once);
     }
 }

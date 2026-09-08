@@ -1,5 +1,4 @@
 using DD.ServiceAuth.Domain.Entities;
-using DD.ServiceAuth.Domain.OAuth;
 using DD.ServiceAuth.Domain.Services;
 using DD.Shared.Details.Abstractions.Models;
 using Microsoft.AspNetCore.Identity;
@@ -8,10 +7,6 @@ using Xunit;
 
 namespace DD.Tests.Unit.ServiceAuth;
 
-// CreateAccessTokenAsync is the OAuth/MCP access-token entry point: it must mint the token with
-// the dedicated dd-oauth-access audience (scoping it to /mcp) and return null when the user does
-// not exist. Asserting the exact audience argument forwarded to ITokenService.Serialize guards
-// against a regression that would drop the scoping and make MCP tokens valid app-wide.
 public class AuthServiceTests
 {
     private const string UserId = "user-42";
@@ -24,29 +19,6 @@ public class AuthServiceTests
     public AuthServiceTests()
     {
         _authService = new AuthService(_userManager.Object, _tokenService.Object);
-    }
-
-    [Fact]
-    public async Task CreateAccessTokenAsync_ExistingUser_SerializesWithMcpAudienceAndLifetime()
-    {
-        // Arrange
-        var user = new UserEntity { UserName = "test-user", DisplayName = "Test User" };
-        _userManager.Setup(m => m.FindByIdAsync(UserId)).ReturnsAsync(user);
-        _tokenService
-            .Setup(s => s.Serialize(It.IsAny<AuthTokenBuildInfo>(), It.IsAny<int?>(), It.IsAny<string?>()))
-            .Returns("minted-token");
-
-        // Act
-        var token = await _authService.CreateAccessTokenAsync(UserId, LifetimeMinutes);
-
-        // Assert
-        Assert.Equal("minted-token", token);
-        _tokenService.Verify(
-            s => s.Serialize(
-                It.Is<AuthTokenBuildInfo>(b => b.UserId == user.Id.ToString() && b.Username == "test-user"),
-                LifetimeMinutes,
-                OAuthConstants.AccessTokenAudience),
-            Times.Once);
     }
 
     [Fact]

@@ -39,6 +39,18 @@ public sealed class DarkDeedsWebApplicationFactory(string sharedDbConnectionStri
         }
     }
 
+    public HttpClient CreateMcpClient()
+    {
+        lock (_clientLock)
+        {
+            return CreateClient(new WebApplicationFactoryClientOptions
+            {
+                BaseAddress = new Uri("http://localhost"),
+                AllowAutoRedirect = false,
+            });
+        }
+    }
+
     public HttpMessageHandler CreateTestServerHandler()
     {
         lock (_clientLock)

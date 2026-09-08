@@ -33,6 +33,8 @@ public sealed class OAuthMcpTestSession : IAsyncDisposable
 
     public string LoginToken => _user.Token;
 
+    public HttpClient LoginHttpClient => _user.HttpClient;
+
     public string ClientId { get; }
 
     public string CodeVerifier { get; }
@@ -40,6 +42,8 @@ public sealed class OAuthMcpTestSession : IAsyncDisposable
     public string CodeChallenge { get; }
 
     public string State { get; }
+
+    public string AuthorizationCode { get; private set; } = string.Empty;
 
     public string? AccessToken { get; private set; }
 
@@ -82,6 +86,7 @@ public sealed class OAuthMcpTestSession : IAsyncDisposable
                     $"OAuth callback state mismatch: expected '{state}', got '{callbackState}'.");
             }
 
+            session.AuthorizationCode = code;
             await session.ExchangeCodeInternalAsync(code, codeVerifier, cancellationToken);
 
             shouldDispose = false;

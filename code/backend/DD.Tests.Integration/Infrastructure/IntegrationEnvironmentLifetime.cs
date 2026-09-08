@@ -35,6 +35,12 @@ internal static class IntegrationEnvironmentLifetime
         return environment.CreateSignalRHandler();
     }
 
+    internal static async Task<HttpClient> CreateMcpClientAsync()
+    {
+        var environment = await Shared.Value;
+        return environment.CreateMcpClient();
+    }
+
     internal static async Task<T> ExecuteScopedAsync<T>(Func<IServiceProvider, Task<T>> action)
     {
         var environment = await Shared.Value;
