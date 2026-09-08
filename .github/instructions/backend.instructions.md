@@ -68,6 +68,15 @@ You are a senior .NET backend developer and an expert in C#, ASP.NET Core, and E
 ## Testing Requirements
 
 <testing_standards>
+### Backend Test Pyramid
+
+- Unit tests cover pure logic and isolated components without infrastructure dependencies.
+- API integration tests cover the application through HTTP, including authentication, persistence, migrations, repositories, serialization, and service orchestration.
+- Smoke/E2E tests cover whole-application behavior, browser and deployment concerns, and real external boundaries; every existing smoke test remains required.
+- Backend use cases involving HTTP, authentication, persistence, migrations, repositories, serialization, or service orchestration default to API integration tests.
+- In unit tests, mock external dependencies at their boundaries. API integration tests must use a real MongoDB instance; third-party services remain replaced at their boundary.
+- Remove a unit test only when equivalent or stronger API integration coverage exists. Keep pure parsers, date matrices, reducers, formatting, rendering, and client-local behavior unit-tested.
+
 ### Test Structure
 - Follow AAA pattern (Arrange, Act, Assert)
 - Use descriptive test method names following the pattern: `MethodName_Scenario_ExpectedResult`
@@ -82,7 +91,7 @@ You are a senior .NET backend developer and an expert in C#, ASP.NET Core, and E
 - Use Moq for mocking dependencies
 - Use TestContainers for integration tests with real MongoDB instances
 - Use AutoFixture to generate test data and reduce boilerplate
-- Mock all external dependencies (databases, external services, file systems)
+- In unit tests, mock external dependencies such as databases, external services, and file systems at their boundaries
 
 ### Test Quality
 - Ensure tests are isolated and can run independently in any order

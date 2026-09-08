@@ -28,11 +28,13 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
         global-json-file: code/backend/global.json
+    - name: Check Docker
+      run: docker info
     - name: Build BE
       working-directory: code/backend
       run: |
-        dotnet build DarkDeeds.sln
-        dotnet test DarkDeeds.sln
+        dotnet build DarkDeeds.sln -c Release
+        dotnet test DarkDeeds.sln -c Release --no-build
 
   build-e2e-tests:
     runs-on: ubuntu-latest
