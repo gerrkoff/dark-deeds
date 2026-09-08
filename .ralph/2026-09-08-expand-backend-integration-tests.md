@@ -168,12 +168,12 @@ dotnet test code/backend/DarkDeeds.sln -c Release
 **Files:**
 - None (validation only)
 
-- [ ] From the repository root, run `dotnet build code/backend/DarkDeeds.sln -c Release`, then `dotnet test code/backend/DarkDeeds.sln -c Release`; fix every failure, audit finding, and warning.
-- [ ] Run `cd code/frontend && npm run ci`; fix every failure and warning, then return to the repository root.
-- [ ] Store owned server PIDs in `/tmp/dd-ralph-backend.pid` and `/tmp/dd-ralph-frontend.pid`; before startup, if port 5000 or 3000 is occupied, kill only a still-running process whose matching PID file, command, and port ownership identify the backend project or frontend Vite process, then re-check; abort naming the occupied port if no owned process can be proven.
-- [ ] Run `./infra/up.sh`, verify MongoDB and Selenium Grid on ports 27017/4444, start `dotnet run --project code/backend/DD.App` and `cd code/frontend && npm run dev` as detached processes with separate logs and PID files, and poll with deadlines until backend health is `Healthy` and frontend returns HTTP 200.
-- [ ] Run `CONTAINER=true SELENIUM_GRID_URL=http://localhost:4444 URL=http://host.docker.internal:3000 BE_URL=http://localhost:5000 dotnet test code/tests/DarkDeeds.E2eTests` without piping; require `Failed: 0, Passed: 11, Skipped: 1`; after any code fix, stop the owned servers, rerun affected backend/frontend gates, restart both servers, wait for readiness, and rerun the entire E2E suite.
-- [ ] Kill only recorded backend/frontend PIDs, verify ports 5000/3000 are free, leave MongoDB/Grid running, and confirm no `dd-integration-tests-*` container remains after testhost exit.
+- [x] From the repository root, run `dotnet build code/backend/DarkDeeds.sln -c Release`, then `dotnet test code/backend/DarkDeeds.sln -c Release`; fix every failure, audit finding, and warning.
+- [x] Run `cd code/frontend && npm run ci`; fix every failure and warning, then return to the repository root.
+- [x] Store owned server PIDs in `/tmp/dd-ralph-backend.pid` and `/tmp/dd-ralph-frontend.pid`; before startup, if port 5000 or 3000 is occupied, kill only a still-running process whose matching PID file, command, and port ownership identify the backend project or frontend Vite process, then re-check; abort naming the occupied port if no owned process can be proven.
+- [x] Run `./infra/up.sh`, verify MongoDB and Selenium Grid on ports 27017/4444, start `dotnet run --project code/backend/DD.App` and `cd code/frontend && npm run dev` as detached processes with separate logs and PID files, and poll with deadlines until backend health is `Healthy` and frontend returns HTTP 200.
+- [x] Run `CONTAINER=true SELENIUM_GRID_URL=http://localhost:4444 URL=http://host.docker.internal:3000 BE_URL=http://localhost:5000 dotnet test code/tests/DarkDeeds.E2eTests` without piping; require `Failed: 0, Passed: 11, Skipped: 1`; after any code fix, stop the owned servers, rerun affected backend/frontend gates, restart both servers, wait for readiness, and rerun the entire E2E suite.
+- [x] Kill only recorded backend/frontend PIDs, verify ports 5000/3000 are free, leave MongoDB/Grid running, and confirm no `dd-integration-tests-*` container remains after testhost exit.
 
 ## Notes
 
