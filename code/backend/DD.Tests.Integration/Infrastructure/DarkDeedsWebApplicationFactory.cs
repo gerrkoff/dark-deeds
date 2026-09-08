@@ -1,9 +1,11 @@
 using DD.App;
+using DD.TelegramClient.Domain.Services;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace DD.Tests.Integration.Infrastructure;
 
@@ -33,6 +35,12 @@ public sealed class DarkDeedsWebApplicationFactory(string sharedDbConnectionStri
         }
     }
 
+    public async Task<T> ExecuteScopedAsync<T>(Func<IServiceProvider, Task<T>> action)
+    {
+        await using var scope = Services.CreateAsyncScope();
+        return await action(scope.ServiceProvider);
+    }
+
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         builder
@@ -59,6 +67,8 @@ public sealed class DarkDeedsWebApplicationFactory(string sharedDbConnectionStri
             .ConfigureServices(services =>
             {
                 services.AddDataProtection().UseEphemeralDataProtectionProvider();
+                services.RemoveAll<IBotSendMessageService>();
+                services.AddSingleton<IBotSendMessageService, RecordingBotSendMessageService>();
             });
     }
 }

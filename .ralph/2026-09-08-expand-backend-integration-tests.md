@@ -102,12 +102,12 @@ dotnet test code/backend/DarkDeeds.sln -c Release
 - Delete: `code/backend/DD.Tests.Unit/TelegramClient/Services/CommandProcessor/ShowTodoCommandProcessorTest.cs`
 - Modify: `code/backend/DD.Tests.Unit/TelegramClient/Services/CommandProcessor/CreateTaskCommandProcessorTest.cs`
 
-- [ ] Add a shared scoped-execution hook, then register a thread-safe recorder with `services.RemoveAll<IBotSendMessageService>()` and `services.AddSingleton<IBotSendMessageService, RecordingBotSendMessageService>()`; assert from a created scope that the resolved service is the recorder.
-- [ ] Assert anonymous start access is 401, then POST `api/tlgm/start?timezoneOffset=0`, parse the sole non-empty start key from `TelegramStartDto.Url`, POST `/start <key>` to `/api/tlgm/bot/integration-tests`, and observe `Registered` for a unique negative chat ID.
-- [ ] POST a unique task command through the webhook, observe `Task created`, and verify persistence and two-user isolation through Tasks HTTP.
-- [ ] Cover `/todo` with tasks, `/todo` with no tasks, and an unknown command by asserting exact recorded messages through bounded per-chat channels.
-- [ ] Delete the complete BotProcess, StartCommand, and ShowTodo mock test files; delete only `CreateTaskCommandProcessorTest.ProcessAsync` and retain `ProcessAsync_WhenParseThrows_SendsFailedAndDoesNotSave`, parser/value tests, and `BaseCommandProcessor` failure policy.
-- [ ] Verify the fast checks pass with 0 warnings and leave the existing Selenium Telegram test unchanged.
+- [x] Add a shared scoped-execution hook, then register a thread-safe recorder with `services.RemoveAll<IBotSendMessageService>()` and `services.AddSingleton<IBotSendMessageService, RecordingBotSendMessageService>()`; assert from a created scope that the resolved service is the recorder.
+- [x] Assert anonymous start access is 401, then POST `api/tlgm/start?timezoneOffset=0`, parse the sole non-empty start key from `TelegramStartDto.Url`, POST `/start <key>` to `/api/tlgm/bot/integration-tests`, and observe `Registered` for a unique negative chat ID.
+- [x] POST a unique task command through the webhook, observe `Task created`, and verify persistence and two-user isolation through Tasks HTTP.
+- [x] Cover `/todo` with tasks, `/todo` with no tasks, and an unknown command by asserting exact recorded messages through bounded per-chat channels.
+- [x] Delete the complete BotProcess, StartCommand, and ShowTodo mock test files; delete only `CreateTaskCommandProcessorTest.ProcessAsync` and retain `ProcessAsync_WhenParseThrows_SendsFailedAndDoesNotSave`, parser/value tests, and `BaseCommandProcessor` failure policy.
+- [x] Verify the fast checks pass with 0 warnings and leave the existing Selenium Telegram test unchanged.
 
 ### Task 5: Cover OAuth discovery and token flow
 

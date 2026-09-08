@@ -44,6 +44,11 @@ internal sealed class IntegrationEnvironment : IAsyncDisposable
         return _factory.CreateTestServerHandler();
     }
 
+    internal Task<T> ExecuteScopedAsync<T>(Func<IServiceProvider, Task<T>> action)
+    {
+        return _factory.ExecuteScopedAsync(action);
+    }
+
     internal static async Task<IntegrationEnvironment> CreateAsync()
     {
         await DockerHelper.EnsureImageAsync(MongoImage);
