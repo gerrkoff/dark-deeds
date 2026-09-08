@@ -51,12 +51,12 @@ dotnet test code/backend/DarkDeeds.sln -c Release
 - Modify: `code/backend/DD.Tests.Unit/ServiceTask/Mocks/MocksCreator.Repo.cs`
 - Modify: `code/backend/DD.Tests.Unit/ServiceTask/Mocks/MocksCreator.Spec.cs`
 
-- [ ] Add authenticated HTTP coverage for empty load, create, unchanged no-op count, update, soft delete, UTC round-trip, weekday flags, and deleted-item exclusion through `/api/task/recurrences`, using only `DateTime.UtcNow.Date`-derived values.
-- [ ] Add two-user isolation; assert a foreign recurrence UID returns HTTP 500 with ProblemDetails title `An unexpected error occurred`, and verify the owner's recurrence remains unchanged without modifying error handling.
-- [ ] Seed `StartDate == EndDate == DateTime.UtcNow.Date` with `EveryNthDay=1`; prove concurrent and repeated `POST /api/task/recurrences/create?timezoneOffset=0` calls have result counts summing to one and Tasks HTTP contains exactly one generated task; add a no-schedule recurrence and assert it creates zero tasks.
-- [ ] Delete all seven RecurrenceService interaction facts and delete only `CreateAsync_DoNothingIfNoNonDeletedRecurrences`, `CreateAsync_CreateTaskForRecurrence`, `CreateAsync_IgnoreAlreadyExistingRecurrences`, `CreateAsync_FilterPlannedRecurrencesByUser`, and `CreateAsync_NoRepeats` from the creator tests.
-- [ ] Retain `CreateAsync_CreateRecurrenceTaskForRecurrence`, `CreateAsync_NotifyAboutCreatedTasks`, `CreateAsync_CreateEntitiesExpectedNumberOfTimes`, the four simple/combined schedule facts, and every EvaluatePeriod/MatchPeriod/MatchNthDay/MatchWeekday/MatchMonthDay matrix; remove only mock helpers proven unused afterward.
-- [ ] Verify the fast checks pass with 0 warnings and leave the `// important` task predicate unchanged.
+- [x] Add authenticated HTTP coverage for empty load, create, unchanged no-op count, update, soft delete, UTC round-trip, weekday flags, and deleted-item exclusion through `/api/task/recurrences`, using only `DateTime.UtcNow.Date`-derived values.
+- [x] Add two-user isolation; assert a foreign recurrence UID returns HTTP 500 with ProblemDetails title `An unexpected error occurred`, and verify the owner's recurrence remains unchanged without modifying error handling.
+- [x] Seed `StartDate == EndDate == DateTime.UtcNow.Date` with `EveryNthDay=1`; prove concurrent and repeated `POST /api/task/recurrences/create?timezoneOffset=0` calls have result counts summing to one and Tasks HTTP contains exactly one generated task; add a no-schedule recurrence and assert it creates zero tasks.
+- [x] Delete all seven RecurrenceService interaction facts and delete only `CreateAsync_DoNothingIfNoNonDeletedRecurrences`, `CreateAsync_CreateTaskForRecurrence`, `CreateAsync_IgnoreAlreadyExistingRecurrences`, `CreateAsync_FilterPlannedRecurrencesByUser`, and `CreateAsync_NoRepeats` from the creator tests.
+- [x] Retain `CreateAsync_CreateRecurrenceTaskForRecurrence`, `CreateAsync_NotifyAboutCreatedTasks`, `CreateAsync_CreateEntitiesExpectedNumberOfTimes`, the four simple/combined schedule facts, and every EvaluatePeriod/MatchPeriod/MatchNthDay/MatchWeekday/MatchMonthDay matrix; remove only mock helpers proven unused afterward.
+- [x] Verify the fast checks pass with 0 warnings and leave the `// important` task predicate unchanged.
 
 ### Task 2: Cover Web BFF Settings
 
