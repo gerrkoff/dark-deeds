@@ -151,7 +151,8 @@ public sealed class RecurrencesIntegrationTests : IntegrationTestBase
 
         using var tasksResponse = await user.HttpClient.GetAsync(CreateTasksUri(today));
         var tasks = await ReadTasksAsync(tasksResponse);
-        Assert.Single(tasks, task => task.Title == scheduledTitle);
+        var generatedTask = Assert.Single(tasks);
+        Assert.Equal(scheduledTitle, generatedTask.Title);
 
         var noScheduleTitle = $"No schedule task {CreateUniqueRecurrenceUid()}";
         var noScheduleRecurrence = CreateRecurrence(noScheduleTitle, today);
@@ -165,8 +166,8 @@ public sealed class RecurrencesIntegrationTests : IntegrationTestBase
 
         using var finalTasksResponse = await user.HttpClient.GetAsync(CreateTasksUri(today));
         var finalTasks = await ReadTasksAsync(finalTasksResponse);
-        Assert.Single(finalTasks, task => task.Title == scheduledTitle);
-        Assert.DoesNotContain(finalTasks, task => task.Title == noScheduleTitle);
+        var remainingTask = Assert.Single(finalTasks);
+        Assert.Equal(scheduledTitle, remainingTask.Title);
     }
 
     [Fact]
