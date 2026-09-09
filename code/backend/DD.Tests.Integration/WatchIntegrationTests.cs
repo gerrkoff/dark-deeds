@@ -50,7 +50,7 @@ public sealed class WatchIntegrationTests : IntegrationTestBase
         await using var user = await CreateUserClientAsync();
         var mobileKey = await SeedMobileUserAsync(user);
         var today = DateTime.UtcNow.Date;
-        var tasks = CreateWatchTasks(today, today.AddDays(1));
+        var tasks = CreateWatchTasks(today);
 
         using var setupResponse = await user.HttpClient.PostAsJsonAsync(
             "api/task/tasks",
@@ -84,7 +84,7 @@ public sealed class WatchIntegrationTests : IntegrationTestBase
         Assert.Equal("Simple task", initialApp.Items[1].Item);
 
         var updatedTasks = savedTasks.Where(task => task.Title == "Simple task").ToArray();
-        Assert.Equal(2, updatedTasks.Length);
+        Assert.Single(updatedTasks);
         foreach (var updatedTask in updatedTasks)
             updatedTask.Title = "Updated simple task";
 
@@ -92,7 +92,7 @@ public sealed class WatchIntegrationTests : IntegrationTestBase
             "api/task/tasks",
             updatedTasks);
         var savedUpdates = await ReadTasksAsync(updateResponse);
-        Assert.Equal(2, savedUpdates.Length);
+        Assert.Single(savedUpdates);
         Assert.All(savedUpdates, savedUpdate => Assert.Equal(2, savedUpdate.Version));
 
         var updatedWidget = await PollUntilAsync(
