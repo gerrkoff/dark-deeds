@@ -156,10 +156,9 @@ public sealed class McpIntegrationTests : IntegrationTestBase
         var validTask = CreateTask("MCP valid task", today, 1);
         var secondValidTask = CreateTask("MCP second valid task", today, 2);
         var deletedTask = CreateTask("MCP deleted task", today, 3);
-        var staleTask = CreateTask("MCP stale task", today, 4);
         var foreignTask = CreateTask("MCP foreign task", today, 5);
 
-        _ = await SaveTasksAsync(session.LoginHttpClient, validTask, secondValidTask, deletedTask, staleTask);
+        _ = await SaveTasksAsync(session.LoginHttpClient, validTask, secondValidTask, deletedTask);
         _ = await SaveTasksAsync(foreignUser.HttpClient, foreignTask);
 
         deletedTask.Deleted = true;
@@ -214,7 +213,6 @@ public sealed class McpIntegrationTests : IntegrationTestBase
         AssertTaskOrder(persistedTasks, validTask.Uid, 101, 2);
         AssertTaskOrder(persistedTasks, secondValidTask.Uid, 105, 2);
         AssertTaskOrder(persistedTasks, deletedTask.Uid, 3, 2);
-        AssertTaskOrder(persistedTasks, staleTask.Uid, 4, 1);
         Assert.DoesNotContain(persistedTasks, task => task.Uid == foreignTask.Uid);
 
         using var foreignRestResponse = await foreignUser.HttpClient.GetAsync(
@@ -222,30 +220,6 @@ public sealed class McpIntegrationTests : IntegrationTestBase
             CreateTimeoutToken());
         var foreignPersistedTasks = await ReadTasksAsync(foreignRestResponse);
         AssertTaskOrder(foreignPersistedTasks, foreignTask.Uid, 5, 1);
-
-        await using var staleClient = await McpTestClient.ConnectAsync(
-            session.AccessToken!,
-            CreateTimeoutToken());
-        await ArmTaskUpdateBarrierAsync(staleTask.Uid, participantCount: 2);
-        var staleResults = await Task.WhenAll(
-            UpdateOrderAsync(mcpClient, staleTask.Uid, 201),
-            UpdateOrderAsync(staleClient, staleTask.Uid, 202));
-        var staleTaskResults = staleResults.Select(ReadTaskResult).ToArray();
-
-        var staleSuccess = Assert.Single(staleTaskResults, tasks => tasks.Length == 1);
-        Assert.Single(staleTaskResults, tasks => tasks.Length == 0);
-        Assert.Equal(staleTask.Uid, staleSuccess[0].Uid);
-        Assert.Equal(2, staleSuccess[0].Version);
-
-        using var staleRestResponse = await session.LoginHttpClient.GetAsync(
-            CreateTasksUri(today),
-            CreateTimeoutToken());
-        var persistedAfterStaleUpdate = await ReadTasksAsync(staleRestResponse);
-        var persistedStaleTask = Assert.Single(
-            persistedAfterStaleUpdate,
-            task => task.Uid == staleTask.Uid);
-        Assert.True(persistedStaleTask.Order is 201 or 202);
-        Assert.Equal(2, persistedStaleTask.Version);
     }
 
     private static async Task AssertInitializationRejectedAsync(string token)
@@ -258,21 +232,6 @@ public sealed class McpIntegrationTests : IntegrationTestBase
                 cancellationTokenSource.Token);
         });
         Assert.Equal(HttpStatusCode.Unauthorized, exception.StatusCode);
-    }
-
-    private static async Task<CallToolResult> UpdateOrderAsync(
-        McpTestClient client,
-        string uid,
-        int order)
-    {
-        return await client.Client.CallToolAsync(
-            "UpdateTasksOrder",
-            new Dictionary<string, object?>
-            {
-                ["updates"] = new[] { new TaskUpdateDto { Uid = uid, Order = order } },
-                ["justification"] = "Integration coverage for stale MCP updates.",
-            },
-            cancellationToken: CreateTimeoutToken());
     }
 
     private static async Task<TaskDto[]> SaveTasksAsync(HttpClient client, params TaskDto[] tasks)

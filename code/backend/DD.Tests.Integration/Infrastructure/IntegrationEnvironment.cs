@@ -49,11 +49,6 @@ internal sealed class IntegrationEnvironment : IAsyncDisposable
         return _factory.CreateTestServerHandler();
     }
 
-    internal void ArmTaskUpdateBarrier(string uid, int participantCount)
-    {
-        _factory.ArmTaskUpdateBarrier(uid, participantCount);
-    }
-
     internal Task<T> ExecuteScopedAsync<T>(Func<IServiceProvider, Task<T>> action)
     {
         return _factory.ExecuteScopedAsync(action);

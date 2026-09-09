@@ -12,11 +12,6 @@ public abstract class IntegrationTestBase
         return IntegrationEnvironmentLifetime.CreateSignalRHandlerAsync();
     }
 
-    protected static Task ArmTaskUpdateBarrierAsync(string uid, int participantCount)
-    {
-        return IntegrationEnvironmentLifetime.ArmTaskUpdateBarrierAsync(uid, participantCount);
-    }
-
     protected static Task<T> ExecuteScopedAsync<T>(Func<IServiceProvider, Task<T>> action)
     {
         return IntegrationEnvironmentLifetime.ExecuteScopedAsync(action);

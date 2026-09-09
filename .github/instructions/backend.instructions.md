@@ -133,3 +133,12 @@ You are a senior .NET backend developer and an expert in C#, ASP.NET Core, and E
 - [ ] Proper logging at appropriate levels (Debug, Info, Warning, Error)
 - [ ] No hardcoded values; use configuration or constants
 </verification_checklist>
+
+# Learned Lessons
+
+## Integration testing
+
+**Prefer backend integration tests that exercise the application as a black box through public
+contracts with minimal test infrastructure.** Do not introduce test-only wrappers, barriers, or
+other coordination around core application services solely to force complex edge cases unless the
+developer explicitly approves the resulting maintenance cost.

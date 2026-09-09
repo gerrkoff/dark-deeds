@@ -41,12 +41,6 @@ internal static class IntegrationEnvironmentLifetime
         return await environment.ExecuteScopedAsync(action);
     }
 
-    internal static async Task ArmTaskUpdateBarrierAsync(string uid, int participantCount)
-    {
-        var environment = await Shared.Value;
-        environment.ArmTaskUpdateBarrier(uid, participantCount);
-    }
-
     [SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "Process teardown must report cleanup failures without escaping the process-exit callback.")]
     private static void CleanupAtProcessExit()
     {

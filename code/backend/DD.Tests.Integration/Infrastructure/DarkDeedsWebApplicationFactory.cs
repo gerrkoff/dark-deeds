@@ -1,6 +1,4 @@
 using DD.App;
-using DD.ServiceTask.Details.Data;
-using DD.ServiceTask.Domain.Infrastructure.EntityRepository;
 using DD.TelegramClient.Domain.Services;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
@@ -19,7 +17,6 @@ public sealed class DarkDeedsWebApplicationFactory(string sharedDbConnectionStri
     private const string AuthAudience = "dark-deeds-integration-tests";
     private const string AuthKey = "dark-deeds-integration-test-signing-key-2026-abcdefghijklmnopqrstuvwxyz";
     private readonly object _clientLock = new();
-    private readonly TaskUpdateBarrier _taskUpdateBarrier = new();
 
     public HttpClient CreateNoRedirectClient()
     {
@@ -58,11 +55,6 @@ public sealed class DarkDeedsWebApplicationFactory(string sharedDbConnectionStri
         return await action(scope.ServiceProvider);
     }
 
-    public void ArmTaskUpdateBarrier(string uid, int participantCount)
-    {
-        _taskUpdateBarrier.Arm(uid, participantCount);
-    }
-
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         builder
@@ -89,11 +81,6 @@ public sealed class DarkDeedsWebApplicationFactory(string sharedDbConnectionStri
             .ConfigureServices(services =>
             {
                 services.AddDataProtection().UseEphemeralDataProtectionProvider();
-                services.RemoveAll<ITaskRepository>();
-                services.AddScoped<ITaskRepository>(provider =>
-                    new CoordinatedTaskRepository(
-                        provider.GetRequiredService<TaskRepository>(),
-                        _taskUpdateBarrier));
                 services.RemoveAll<IBotSendMessageService>();
                 services.AddSingleton<IBotSendMessageService, RecordingBotSendMessageService>();
                 services.RemoveAll<ServiceTaskDateService>();
