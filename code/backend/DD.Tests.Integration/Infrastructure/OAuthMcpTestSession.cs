@@ -1,5 +1,4 @@
 using System.Net.Http.Json;
-using System.Text.Json;
 using DD.ServiceAuth.Domain.OAuth.Dto;
 using DD.Tests.Integration.Helpers;
 
@@ -9,8 +8,6 @@ public sealed class OAuthMcpTestSession : IAsyncDisposable
 {
     public const string CallbackUri = "http://127.0.0.1:43123/callback";
 
-    private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
-
     private readonly TestUserClient _user;
 
     private readonly HttpClient _oauthClient;
@@ -18,17 +15,11 @@ public sealed class OAuthMcpTestSession : IAsyncDisposable
     private OAuthMcpTestSession(
         TestUserClient user,
         HttpClient oauthClient,
-        string clientId,
-        string codeVerifier,
-        string codeChallenge,
-        string state)
+        string clientId)
     {
         _user = user;
         _oauthClient = oauthClient;
         ClientId = clientId;
-        CodeVerifier = codeVerifier;
-        CodeChallenge = codeChallenge;
-        State = state;
     }
 
     public string LoginToken => _user.Token;
@@ -36,12 +27,6 @@ public sealed class OAuthMcpTestSession : IAsyncDisposable
     public HttpClient LoginHttpClient => _user.HttpClient;
 
     public string ClientId { get; }
-
-    public string CodeVerifier { get; }
-
-    public string CodeChallenge { get; }
-
-    public string State { get; }
 
     public string AuthorizationCode { get; private set; } = string.Empty;
 
@@ -60,7 +45,7 @@ public sealed class OAuthMcpTestSession : IAsyncDisposable
     public static async Task<OAuthMcpTestSession> CreateAsync(
         CancellationToken cancellationToken = default)
     {
-        var oauthClient = await IntegrationEnvironmentLifetime.CreateOAuthClientAsync();
+        var oauthClient = await IntegrationEnvironmentLifetime.CreateNoRedirectClientAsync();
         TestUserClient? user = null;
         var shouldDispose = true;
 
@@ -74,8 +59,7 @@ public sealed class OAuthMcpTestSession : IAsyncDisposable
             var clientId = await OAuthMcpHelper.RegisterClientAsync(
                 oauthClient, CallbackUri, cancellationToken);
 
-            var session = new OAuthMcpTestSession(
-                user, oauthClient, clientId, codeVerifier, codeChallenge, state);
+            var session = new OAuthMcpTestSession(user, oauthClient, clientId);
 
             var (code, callbackState) = await OAuthMcpHelper.ConsentAllowAsync(
                 user.HttpClient, clientId, codeChallenge, state, CallbackUri, cancellationToken);
@@ -133,7 +117,7 @@ public sealed class OAuthMcpTestSession : IAsyncDisposable
 
         ExchangeCacheControlNoStore = response.Headers.CacheControl?.NoStore == true;
         LastTokenResponse = await response.Content.ReadFromJsonAsync<TokenResponseDto>(
-            JsonOptions, cancellationToken)
+            cancellationToken)
             ?? throw new InvalidOperationException("Token exchange returned an empty response.");
         AccessToken = LastTokenResponse.AccessToken;
         RefreshToken = LastTokenResponse.RefreshToken;

@@ -1,19 +1,19 @@
+using System.Globalization;
+using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 using System.Net.Http.Json;
-using System.Text.Json;
 using System.Text.Json.Serialization;
 using DD.ServiceAuth.Domain.OAuth;
 using DD.ServiceAuth.Domain.OAuth.Dto;
 using DD.Tests.Integration.Helpers;
 using DD.Tests.Integration.Infrastructure;
+using Microsoft.AspNetCore.WebUtilities;
 using Xunit;
 
 namespace DD.Tests.Integration;
 
 public sealed class OAuthIntegrationTests : IntegrationTestBase
 {
-    private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
-
     [Fact]
     public async Task Metadata_AuthorizationServer_ReturnsExpectedFields()
     {
@@ -23,7 +23,7 @@ public sealed class OAuthIntegrationTests : IntegrationTestBase
             new Uri(".well-known/oauth-authorization-server", UriKind.Relative));
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        var metadata = await response.Content.ReadFromJsonAsync<AuthServerMetadataDto>(JsonOptions);
+        var metadata = await response.Content.ReadFromJsonAsync<AuthServerMetadataDto>();
         Assert.NotNull(metadata);
         Assert.Equal(DarkDeedsWebApplicationFactory.AuthIssuer, metadata.Issuer);
         Assert.Equal(
@@ -57,7 +57,7 @@ public sealed class OAuthIntegrationTests : IntegrationTestBase
             new Uri(".well-known/oauth-protected-resource/mcp", UriKind.Relative));
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        var metadata = await response.Content.ReadFromJsonAsync<ProtectedResourceMetadataDto>(JsonOptions);
+        var metadata = await response.Content.ReadFromJsonAsync<ProtectedResourceMetadataDto>();
         Assert.NotNull(metadata);
         Assert.Equal(
             $"{DarkDeedsWebApplicationFactory.AuthIssuer}/mcp",
@@ -77,11 +77,10 @@ public sealed class OAuthIntegrationTests : IntegrationTestBase
 
         using var response = await client.PostAsJsonAsync(
             new Uri("/register", UriKind.Relative),
-            new ClientRegistrationRequestDto([OAuthMcpTestSession.CallbackUri]),
-            JsonOptions);
+            new ClientRegistrationRequestDto([OAuthMcpTestSession.CallbackUri]));
 
         Assert.Equal(HttpStatusCode.Created, response.StatusCode);
-        var registration = await response.Content.ReadFromJsonAsync<ClientRegistrationResponseDto>(JsonOptions);
+        var registration = await response.Content.ReadFromJsonAsync<ClientRegistrationResponseDto>();
         Assert.NotNull(registration);
         Assert.False(string.IsNullOrEmpty(registration.ClientId));
         Assert.Equal("none", registration.TokenEndpointAuthMethod);
@@ -91,8 +90,7 @@ public sealed class OAuthIntegrationTests : IntegrationTestBase
     [Fact]
     public async Task Authorize_Get_Returns302RedirectToSpaWithQueryParameters()
     {
-        await using var user = await CreateUserClientAsync();
-        using var oauthClient = await IntegrationEnvironmentLifetime.CreateOAuthClientAsync();
+        using var oauthClient = await IntegrationEnvironmentLifetime.CreateNoRedirectClientAsync();
 
         var verifier = OAuthMcpHelper.GenerateCodeVerifier();
         var challenge = OAuthMcpHelper.ComputeS256Challenge(verifier);
@@ -106,12 +104,17 @@ public sealed class OAuthIntegrationTests : IntegrationTestBase
         using var response = await oauthClient.GetAsync(authorizeUri);
 
         Assert.Equal(HttpStatusCode.Redirect, response.StatusCode);
-        var location = response.Headers.Location?.ToString();
+        var location = response.Headers.Location;
         Assert.NotNull(location);
-        Assert.Contains("response_type=code", location, StringComparison.Ordinal);
-        Assert.Contains($"client_id={Uri.EscapeDataString(clientId)}", location, StringComparison.Ordinal);
-        Assert.Contains("code_challenge=", location, StringComparison.Ordinal);
-        Assert.Contains($"state={Uri.EscapeDataString(state)}", location, StringComparison.Ordinal);
+        var expectedLocation = new Uri(
+            $"/?response_type={OAuthConstants.ResponseTypeCode}" +
+            $"&client_id={Uri.EscapeDataString(clientId)}" +
+            $"&redirect_uri={Uri.EscapeDataString(OAuthMcpTestSession.CallbackUri)}" +
+            $"&code_challenge={Uri.EscapeDataString(challenge)}" +
+            $"&code_challenge_method={OAuthConstants.CodeChallengeMethodS256}" +
+            $"&state={Uri.EscapeDataString(state)}",
+            UriKind.Relative);
+        Assert.Equal(expectedLocation, location);
     }
 
     [Fact]
@@ -133,18 +136,18 @@ public sealed class OAuthIntegrationTests : IntegrationTestBase
             State: state);
 
         using var response = await client.PostAsJsonAsync(
-            new Uri("/authorize", UriKind.Relative), request, JsonOptions);
+            new Uri("/authorize", UriKind.Relative), request);
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        var result = await response.Content.ReadFromJsonAsync<OAuthRedirectResponseDto>(JsonOptions);
+        var result = await response.Content.ReadFromJsonAsync<OAuthRedirectResponseDto>();
         Assert.NotNull(result);
         Assert.NotNull(result.RedirectUrl);
-        Assert.Contains("error=access_denied", result.RedirectUrl, StringComparison.Ordinal);
-        Assert.Contains(
-            $"state={Uri.EscapeDataString(state)}",
-            result.RedirectUrl,
-            StringComparison.Ordinal);
-        Assert.DoesNotContain("code=", result.RedirectUrl, StringComparison.Ordinal);
+        var redirect = new Uri(result.RedirectUrl, UriKind.Absolute);
+        AssertCallbackDestination(redirect, OAuthMcpTestSession.CallbackUri);
+        var query = QueryHelpers.ParseQuery(redirect.Query);
+        Assert.Equal(2, query.Count);
+        Assert.Equal(OAuthConstants.AccessDeniedError, Assert.Single(query["error"]));
+        Assert.Equal(state, Assert.Single(query["state"]));
     }
 
     [Fact]
@@ -166,7 +169,7 @@ public sealed class OAuthIntegrationTests : IntegrationTestBase
             State: state);
 
         using var response = await client.PostAsJsonAsync(
-            new Uri("/authorize", UriKind.Relative), request, JsonOptions);
+            new Uri("/authorize", UriKind.Relative), request);
 
         Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
     }
@@ -183,13 +186,22 @@ public sealed class OAuthIntegrationTests : IntegrationTestBase
         Assert.False(string.IsNullOrEmpty(session.AccessToken));
         Assert.False(string.IsNullOrEmpty(session.RefreshToken));
         Assert.True(session.ExchangeCacheControlNoStore);
+
+        var jwt = new JwtSecurityTokenHandler().ReadJwtToken(session.AccessToken);
+        var issuedAt = long.Parse(
+            jwt.Claims.Single(claim => claim.Type == JwtRegisteredClaimNames.Iat).Value,
+            CultureInfo.InvariantCulture);
+        var expiresAt = long.Parse(
+            jwt.Claims.Single(claim => claim.Type == JwtRegisteredClaimNames.Exp).Value,
+            CultureInfo.InvariantCulture);
+        Assert.Equal(3600, expiresAt - issuedAt);
     }
 
     [Fact]
     public async Task Token_WrongCodeVerifier_Returns400InvalidGrant()
     {
         await using var user = await CreateUserClientAsync();
-        using var oauthClient = await IntegrationEnvironmentLifetime.CreateOAuthClientAsync();
+        using var oauthClient = await IntegrationEnvironmentLifetime.CreateNoRedirectClientAsync();
 
         var verifier = OAuthMcpHelper.GenerateCodeVerifier();
         var challenge = OAuthMcpHelper.ComputeS256Challenge(verifier);
@@ -208,7 +220,7 @@ public sealed class OAuthIntegrationTests : IntegrationTestBase
             codeVerifier: "wrong-verifier-" + Guid.NewGuid().ToString("N"));
 
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-        var error = await response.Content.ReadFromJsonAsync<OAuthErrorDto>(JsonOptions);
+        var error = await response.Content.ReadFromJsonAsync<OAuthErrorDto>();
         Assert.NotNull(error);
         Assert.Equal("invalid_grant", error.Error);
     }
@@ -224,6 +236,19 @@ public sealed class OAuthIntegrationTests : IntegrationTestBase
         Assert.Equal("Bearer", refreshed.TokenType);
         Assert.False(string.IsNullOrEmpty(refreshed.AccessToken));
         Assert.NotEqual(session.AccessToken, refreshed.AccessToken);
+
+        using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(10));
+        await using var mcpClient = await McpTestClient.ConnectAsync(
+            refreshed.AccessToken,
+            timeout.Token);
+    }
+
+    private static void AssertCallbackDestination(Uri actual, string expectedCallbackUri)
+    {
+        var expected = new Uri(expectedCallbackUri, UriKind.Absolute);
+        Assert.Equal(expected.Scheme, actual.Scheme, ignoreCase: true);
+        Assert.Equal(expected.Authority, actual.Authority, ignoreCase: true);
+        Assert.Equal(expected.AbsolutePath, actual.AbsolutePath);
     }
 
     // Local DTO for reading protected-resource metadata without importing SDK implementation types.

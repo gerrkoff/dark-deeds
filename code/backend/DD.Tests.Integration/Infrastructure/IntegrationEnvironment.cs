@@ -34,9 +34,9 @@ internal sealed class IntegrationEnvironment : IAsyncDisposable
         await DisposeResourcesAsync(_mongoContainer, _factory);
     }
 
-    internal HttpClient CreateOAuthClient()
+    internal HttpClient CreateNoRedirectClient()
     {
-        return _factory.CreateOAuthClient();
+        return _factory.CreateNoRedirectClient();
     }
 
     internal HttpClient CreateClient()
@@ -44,14 +44,14 @@ internal sealed class IntegrationEnvironment : IAsyncDisposable
         return _factory.CreateTestClient();
     }
 
-    internal HttpClient CreateMcpClient()
-    {
-        return _factory.CreateMcpClient();
-    }
-
     internal HttpMessageHandler CreateSignalRHandler()
     {
         return _factory.CreateTestServerHandler();
+    }
+
+    internal void ArmTaskUpdateBarrier(string uid, int participantCount)
+    {
+        _factory.ArmTaskUpdateBarrier(uid, participantCount);
     }
 
     internal Task<T> ExecuteScopedAsync<T>(Func<IServiceProvider, Task<T>> action)

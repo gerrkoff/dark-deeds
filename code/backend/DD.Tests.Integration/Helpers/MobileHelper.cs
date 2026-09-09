@@ -55,13 +55,22 @@ internal static class MobileHelper
         ArgumentNullException.ThrowIfNull(predicate);
 
         var started = Stopwatch.GetTimestamp();
-        while (Stopwatch.GetElapsedTime(started) < timeout)
+        while (true)
         {
-            var result = await loadAsync();
+            var remaining = timeout - Stopwatch.GetElapsedTime(started);
+            if (remaining <= TimeSpan.Zero)
+                break;
+
+            var result = await loadAsync().WaitAsync(remaining);
             if (predicate(result))
                 return result;
 
-            await Task.Delay(TimeSpan.FromMilliseconds(50));
+            remaining = timeout - Stopwatch.GetElapsedTime(started);
+            if (remaining <= TimeSpan.Zero)
+                break;
+
+            var pollingDelay = TimeSpan.FromMilliseconds(50);
+            await Task.Delay(pollingDelay < remaining ? pollingDelay : remaining);
         }
 
         throw new TimeoutException($"The expected mobile payload was not observed within {timeout}.");

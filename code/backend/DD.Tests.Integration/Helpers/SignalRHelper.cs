@@ -10,7 +10,6 @@ internal sealed class SignalRUpdateCollector : IAsyncDisposable
     private readonly object _sync = new();
     private readonly Dictionary<string, TaskDto> _tasksByUid = [];
     private readonly List<string> _arrivalOrder = [];
-    private readonly HashSet<string> _arrivalUids = [];
     private readonly List<Waiter> _waiters = [];
 
     private SignalRUpdateCollector(HubConnection connection)
@@ -26,17 +25,6 @@ internal sealed class SignalRUpdateCollector : IAsyncDisposable
             lock (_sync)
             {
                 return [.. _arrivalOrder];
-            }
-        }
-    }
-
-    public IReadOnlyList<string> ReceivedTaskUids
-    {
-        get
-        {
-            lock (_sync)
-            {
-                return [.. _tasksByUid.Keys];
             }
         }
     }
@@ -70,10 +58,7 @@ internal sealed class SignalRUpdateCollector : IAsyncDisposable
         }
         catch
         {
-            await using (connection.ConfigureAwait(false))
-            {
-            }
-
+            await connection.DisposeAsync().ConfigureAwait(false);
             throw;
         }
     }
@@ -143,9 +128,10 @@ internal sealed class SignalRUpdateCollector : IAsyncDisposable
         {
             foreach (var task in tasks)
             {
-                _tasksByUid[task.Uid] = task;
-                if (_arrivalUids.Add(task.Uid))
+                if (!_tasksByUid.ContainsKey(task.Uid))
                     _arrivalOrder.Add(task.Uid);
+
+                _tasksByUid[task.Uid] = task;
 
                 foreach (var waiter in _waiters)
                 {

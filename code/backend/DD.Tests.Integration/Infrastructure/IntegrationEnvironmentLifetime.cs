@@ -23,10 +23,10 @@ internal static class IntegrationEnvironmentLifetime
         return environment.CreateClient();
     }
 
-    internal static async Task<HttpClient> CreateOAuthClientAsync()
+    internal static async Task<HttpClient> CreateNoRedirectClientAsync()
     {
         var environment = await Shared.Value;
-        return environment.CreateOAuthClient();
+        return environment.CreateNoRedirectClient();
     }
 
     internal static async Task<HttpMessageHandler> CreateSignalRHandlerAsync()
@@ -35,16 +35,16 @@ internal static class IntegrationEnvironmentLifetime
         return environment.CreateSignalRHandler();
     }
 
-    internal static async Task<HttpClient> CreateMcpClientAsync()
-    {
-        var environment = await Shared.Value;
-        return environment.CreateMcpClient();
-    }
-
     internal static async Task<T> ExecuteScopedAsync<T>(Func<IServiceProvider, Task<T>> action)
     {
         var environment = await Shared.Value;
         return await environment.ExecuteScopedAsync(action);
+    }
+
+    internal static async Task ArmTaskUpdateBarrierAsync(string uid, int participantCount)
+    {
+        var environment = await Shared.Value;
+        environment.ArmTaskUpdateBarrier(uid, participantCount);
     }
 
     [SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "Process teardown must report cleanup failures without escaping the process-exit callback.")]

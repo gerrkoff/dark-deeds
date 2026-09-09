@@ -1,8 +1,8 @@
 using System.Net.Http.Json;
-using System.Text.Json;
 using DD.Clients.Details.TelegramClient.Dto;
 using DD.TelegramClient.Domain.Dto;
 using DD.Tests.Integration.Infrastructure;
+using Microsoft.AspNetCore.WebUtilities;
 
 namespace DD.Tests.Integration.Helpers;
 
@@ -32,17 +32,16 @@ internal static class TelegramHelper
         if (result is null || string.IsNullOrWhiteSpace(result.Url))
             throw new InvalidOperationException("The Telegram start response did not contain a URL.");
 
-        var startValues = new Uri(result.Url).Query
-            .TrimStart('?')
-            .Split('&', StringSplitOptions.RemoveEmptyEntries)
-            .Where(pair => pair.StartsWith("start=", StringComparison.Ordinal))
-            .Select(pair => Uri.UnescapeDataString(pair["start=".Length..]))
-            .Where(value => !string.IsNullOrWhiteSpace(value))
-            .ToArray();
+        var query = QueryHelpers.ParseQuery(new Uri(result.Url).Query);
+        if (!query.TryGetValue("start", out var startValues) ||
+            startValues.Count != 1 ||
+            string.IsNullOrWhiteSpace(startValues[0]))
+        {
+            throw new InvalidOperationException(
+                "The Telegram start URL did not contain one start key.");
+        }
 
-        return startValues.Length == 1
-            ? startValues[0]
-            : throw new InvalidOperationException("The Telegram start URL did not contain one start key.");
+        return startValues[0]!;
     }
 
     public static UpdateDto CreateUpdate(int chatId, string text)
@@ -67,7 +66,6 @@ internal static class TelegramHelper
         using var response = await client.PostAsJsonAsync(
             BotRoute,
             CreateUpdate(chatId, text),
-            new JsonSerializerOptions(JsonSerializerDefaults.Web),
             cancellationToken);
         response.EnsureSuccessStatusCode();
     }

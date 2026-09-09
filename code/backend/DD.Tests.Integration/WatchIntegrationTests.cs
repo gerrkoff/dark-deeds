@@ -1,6 +1,7 @@
 using System.Net;
 using System.Net.Http.Json;
 using DD.Clients.Details.MobileClient.Data;
+using DD.MobileClient.Domain.Dto;
 using DD.MobileClient.Domain.Entities;
 using DD.Shared.Details.Abstractions.Dto;
 using DD.Tests.Integration.Helpers;
@@ -24,7 +25,7 @@ public sealed class WatchIntegrationTests : IntegrationTestBase
         await using var user = await CreateUserClientAsync();
         var mobileKey = await SeedMobileUserAsync(user);
         var today = DateTime.UtcNow.Date;
-        var tasks = CreateWatchTasks(today);
+        var tasks = CreateWatchTasks(today, today.AddDays(1));
 
         using var saveResponse = await user.HttpClient.PostAsJsonAsync(
             "api/task/tasks",
@@ -40,23 +41,7 @@ public sealed class WatchIntegrationTests : IntegrationTestBase
 
         var app = await ReadAppAsync(anonymousClient, mobileKey);
         Assert.Equal("\ud83d\udccc 2 remaining", app.Header);
-        Assert.Collection(
-            app.Items,
-            item =>
-            {
-                Assert.Equal("Routine task", item.Item);
-                Assert.True(item.IsSupport);
-            },
-            item =>
-            {
-                Assert.Equal("Simple task", item.Item);
-                Assert.False(item.IsSupport);
-            },
-            item =>
-            {
-                Assert.Equal("10:15 Timed task", item.Item);
-                Assert.False(item.IsSupport);
-            });
+        AssertAppItems(app, "Simple task");
     }
 
     [Fact]
@@ -65,7 +50,7 @@ public sealed class WatchIntegrationTests : IntegrationTestBase
         await using var user = await CreateUserClientAsync();
         var mobileKey = await SeedMobileUserAsync(user);
         var today = DateTime.UtcNow.Date;
-        var tasks = CreateWatchTasks(today);
+        var tasks = CreateWatchTasks(today, today.AddDays(1));
 
         using var setupResponse = await user.HttpClient.PostAsJsonAsync(
             "api/task/tasks",
@@ -98,13 +83,17 @@ public sealed class WatchIntegrationTests : IntegrationTestBase
         Assert.Equal("Simple task", initialWidget.Main);
         Assert.Equal("Simple task", initialApp.Items[1].Item);
 
-        var updatedTask = savedTasks.Single(task => task.Title == "Simple task");
-        updatedTask.Title = "Updated simple task";
+        var updatedTasks = savedTasks.Where(task => task.Title == "Simple task").ToArray();
+        Assert.Equal(2, updatedTasks.Length);
+        foreach (var updatedTask in updatedTasks)
+            updatedTask.Title = "Updated simple task";
+
         using var updateResponse = await user.HttpClient.PostAsJsonAsync(
             "api/task/tasks",
-            new[] { updatedTask });
-        var savedUpdate = Assert.Single(await ReadTasksAsync(updateResponse));
-        Assert.Equal(2, savedUpdate.Version);
+            updatedTasks);
+        var savedUpdates = await ReadTasksAsync(updateResponse);
+        Assert.Equal(2, savedUpdates.Length);
+        Assert.All(savedUpdates, savedUpdate => Assert.Equal(2, savedUpdate.Version));
 
         var updatedWidget = await PollUntilAsync(
             () => ReadWidgetAsync(anonymousClient, mobileKey),
@@ -118,23 +107,7 @@ public sealed class WatchIntegrationTests : IntegrationTestBase
             payload => payload.Items.Any(item => item.Item == "Updated simple task"),
             PayloadTimeout);
         Assert.Equal(initialApp.Header, updatedApp.Header);
-        Assert.Collection(
-            updatedApp.Items,
-            item =>
-            {
-                Assert.Equal("Routine task", item.Item);
-                Assert.True(item.IsSupport);
-            },
-            item =>
-            {
-                Assert.Equal("Updated simple task", item.Item);
-                Assert.False(item.IsSupport);
-            },
-            item =>
-            {
-                Assert.Equal("10:15 Timed task", item.Item);
-                Assert.False(item.IsSupport);
-            });
+        AssertAppItems(updatedApp, "Updated simple task");
     }
 
     [Fact]
@@ -149,6 +122,27 @@ public sealed class WatchIntegrationTests : IntegrationTestBase
         var problemDetails = await response.Content.ReadFromJsonAsync<ProblemDetails>();
         Assert.NotNull(problemDetails);
         Assert.Equal("An unexpected error occurred", problemDetails.Title);
+    }
+
+    private static void AssertAppItems(WatchAppStatusDto app, string simpleTaskTitle)
+    {
+        Assert.Collection(
+            app.Items,
+            item =>
+            {
+                Assert.Equal("Routine task", item.Item);
+                Assert.True(item.IsSupport);
+            },
+            item =>
+            {
+                Assert.Equal(simpleTaskTitle, item.Item);
+                Assert.False(item.IsSupport);
+            },
+            item =>
+            {
+                Assert.Equal("10:15 Timed task", item.Item);
+                Assert.False(item.IsSupport);
+            });
     }
 
     private static async Task<string> SeedMobileUserAsync(TestUserClient user)
@@ -170,52 +164,53 @@ public sealed class WatchIntegrationTests : IntegrationTestBase
         return mobileKey;
     }
 
-    private static TaskDto[] CreateWatchTasks(DateTime date)
+    private static TaskDto[] CreateWatchTasks(params DateTime[] dates)
     {
-        return
-        [
-            new TaskDto
+        return dates.SelectMany(date =>
+            new TaskDto[]
             {
-                Uid = CreateUniqueTaskUid(),
-                Date = date,
-                Order = 1,
-                Title = "Routine task",
-                Type = TaskTypeDto.Routine,
-            },
-            new TaskDto
-            {
-                Uid = CreateUniqueTaskUid(),
-                Date = date,
-                Order = 2,
-                Title = "Simple task",
-                Type = TaskTypeDto.Simple,
-            },
-            new TaskDto
-            {
-                Uid = CreateUniqueTaskUid(),
-                Date = date,
-                Order = 3,
-                Title = "Additional task",
-                Type = TaskTypeDto.Additional,
-            },
-            new TaskDto
-            {
-                Uid = CreateUniqueTaskUid(),
-                Date = date,
-                Order = 4,
-                Title = "Completed task",
-                Completed = true,
-                Type = TaskTypeDto.Simple,
-            },
-            new TaskDto
-            {
-                Uid = CreateUniqueTaskUid(),
-                Date = date,
-                Order = 5,
-                Time = 615,
-                Title = "Timed task",
-                Type = TaskTypeDto.Simple,
-            },
-        ];
+                new()
+                {
+                    Uid = CreateUniqueTaskUid(),
+                    Date = date,
+                    Order = 1,
+                    Title = "Routine task",
+                    Type = TaskTypeDto.Routine,
+                },
+                new()
+                {
+                    Uid = CreateUniqueTaskUid(),
+                    Date = date,
+                    Order = 2,
+                    Title = "Simple task",
+                    Type = TaskTypeDto.Simple,
+                },
+                new()
+                {
+                    Uid = CreateUniqueTaskUid(),
+                    Date = date,
+                    Order = 3,
+                    Title = "Additional task",
+                    Type = TaskTypeDto.Additional,
+                },
+                new()
+                {
+                    Uid = CreateUniqueTaskUid(),
+                    Date = date,
+                    Order = 4,
+                    Title = "Completed task",
+                    Completed = true,
+                    Type = TaskTypeDto.Simple,
+                },
+                new()
+                {
+                    Uid = CreateUniqueTaskUid(),
+                    Date = date,
+                    Order = 5,
+                    Time = 615,
+                    Title = "Timed task",
+                    Type = TaskTypeDto.Simple,
+                },
+            }).ToArray();
     }
 }

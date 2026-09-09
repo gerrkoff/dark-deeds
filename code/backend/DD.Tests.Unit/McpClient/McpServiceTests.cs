@@ -16,12 +16,6 @@ public class McpServiceTests
     public async Task UpdateTasksOrderAsync_WithJustification_LogsJustification()
     {
         const string justification = "Reordered by priority";
-        taskServiceAppMock
-            .Setup(x => x.UpdateTasksAsync(
-                It.IsAny<ICollection<TaskUpdateDto>>(),
-                It.IsAny<string>(),
-                null))
-            .ReturnsAsync([]);
         loggerMock
             .Setup(x => x.IsEnabled(It.IsAny<LogLevel>()))
             .Returns(true);
@@ -39,12 +33,6 @@ public class McpServiceTests
     public async Task AddTasksAsync_WithJustification_LogsJustification()
     {
         const string justification = "Added by agent";
-        taskServiceAppMock
-            .Setup(x => x.SaveTasksAsync(
-                It.IsAny<ICollection<TaskDto>>(),
-                It.IsAny<string>(),
-                null))
-            .ReturnsAsync([]);
         loggerMock
             .Setup(x => x.IsEnabled(It.IsAny<LogLevel>()))
             .Returns(true);

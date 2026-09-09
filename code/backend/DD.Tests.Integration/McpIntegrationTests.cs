@@ -99,7 +99,17 @@ public sealed class McpIntegrationTests : IntegrationTestBase
             },
             cancellationToken: CreateTimeoutToken());
 
-        var addedTasks = ReadTaskResult(addResult);
+        var addText = ReadTaskText(addResult);
+        using var addJson = JsonDocument.Parse(addText);
+        var routineTaskJson = Assert.Single(
+            addJson.RootElement.EnumerateArray(),
+            task => task.GetProperty(nameof(TaskDto.Title)).GetString() == todayTitle);
+        Assert.Equal(
+            nameof(TaskTypeDto.Routine),
+            routineTaskJson.GetProperty(nameof(TaskDto.Type)).GetString());
+
+        var addedTasks = JsonSerializer.Deserialize<TaskDto[]>(addText, JsonOptions)
+            ?? throw new InvalidOperationException("MCP tool returned empty task JSON.");
         Assert.Equal(2, addedTasks.Length);
         Assert.Contains(
             addedTasks,
@@ -190,8 +200,12 @@ public sealed class McpIntegrationTests : IntegrationTestBase
             updatedTasks,
             task => task.Uid == secondValidTask.Uid && task.Order == 105 && task.Version == 2);
 
-        await collector.WaitForTaskAsync(validTask.Uid, ProtocolTimeout);
-        await collector.WaitForTaskAsync(secondValidTask.Uid, ProtocolTimeout);
+        await collector.WaitForTaskAsync(
+            task => task.Uid == validTask.Uid && task.Order == 101 && task.Version == 2,
+            ProtocolTimeout);
+        await collector.WaitForTaskAsync(
+            task => task.Uid == secondValidTask.Uid && task.Order == 105 && task.Version == 2,
+            ProtocolTimeout);
 
         using var restResponse = await session.LoginHttpClient.GetAsync(
             CreateTasksUri(today),
@@ -203,20 +217,25 @@ public sealed class McpIntegrationTests : IntegrationTestBase
         AssertTaskOrder(persistedTasks, staleTask.Uid, 4, 1);
         Assert.DoesNotContain(persistedTasks, task => task.Uid == foreignTask.Uid);
 
+        using var foreignRestResponse = await foreignUser.HttpClient.GetAsync(
+            CreateTasksUri(today),
+            CreateTimeoutToken());
+        var foreignPersistedTasks = await ReadTasksAsync(foreignRestResponse);
+        AssertTaskOrder(foreignPersistedTasks, foreignTask.Uid, 5, 1);
+
         await using var staleClient = await McpTestClient.ConnectAsync(
             session.AccessToken!,
             CreateTimeoutToken());
+        await ArmTaskUpdateBarrierAsync(staleTask.Uid, participantCount: 2);
         var staleResults = await Task.WhenAll(
             UpdateOrderAsync(mcpClient, staleTask.Uid, 201),
             UpdateOrderAsync(staleClient, staleTask.Uid, 202));
-        var staleSuccesses = staleResults
-            .Select(ReadTaskResult)
-            .Where(tasks => tasks.Length == 1)
-            .ToArray();
+        var staleTaskResults = staleResults.Select(ReadTaskResult).ToArray();
 
-        Assert.Single(staleSuccesses);
-        Assert.Equal(staleTask.Uid, staleSuccesses[0][0].Uid);
-        Assert.Equal(2, staleSuccesses[0][0].Version);
+        var staleSuccess = Assert.Single(staleTaskResults, tasks => tasks.Length == 1);
+        Assert.Single(staleTaskResults, tasks => tasks.Length == 0);
+        Assert.Equal(staleTask.Uid, staleSuccess[0].Uid);
+        Assert.Equal(2, staleSuccess[0].Version);
 
         using var staleRestResponse = await session.LoginHttpClient.GetAsync(
             CreateTasksUri(today),
@@ -232,14 +251,13 @@ public sealed class McpIntegrationTests : IntegrationTestBase
     private static async Task AssertInitializationRejectedAsync(string token)
     {
         using var cancellationTokenSource = new CancellationTokenSource(ProtocolTimeout);
-        var exception = await Record.ExceptionAsync(async () =>
+        var exception = await Assert.ThrowsAsync<HttpRequestException>(async () =>
         {
             await using var client = await McpTestClient.ConnectAsync(
                 token,
                 cancellationTokenSource.Token);
         });
-
-        Assert.NotNull(exception);
+        Assert.Equal(HttpStatusCode.Unauthorized, exception.StatusCode);
     }
 
     private static async Task<CallToolResult> UpdateOrderAsync(
@@ -291,11 +309,17 @@ public sealed class McpIntegrationTests : IntegrationTestBase
 
     private static TaskDto[] ReadTaskResult(CallToolResult result)
     {
+        var text = ReadTaskText(result);
+        return JsonSerializer.Deserialize<TaskDto[]>(text, JsonOptions)
+               ?? throw new InvalidOperationException("MCP tool returned empty task JSON.");
+    }
+
+    private static string ReadTaskText(CallToolResult result)
+    {
         Assert.NotEqual(true, result.IsError);
         var textBlock = Assert.IsType<TextContentBlock>(Assert.Single(result.Content));
         Assert.NotEmpty(textBlock.Text);
-        return JsonSerializer.Deserialize<TaskDto[]>(textBlock.Text, JsonOptions)
-               ?? throw new InvalidOperationException("MCP tool returned empty task JSON.");
+        return textBlock.Text;
     }
 
     private static CancellationToken CreateTimeoutToken()

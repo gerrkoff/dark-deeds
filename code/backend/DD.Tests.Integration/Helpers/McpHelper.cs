@@ -24,7 +24,7 @@ internal sealed class McpTestClient : IAsyncDisposable
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(token);
 
-        var httpClient = await IntegrationEnvironmentLifetime.CreateMcpClientAsync();
+        var httpClient = await IntegrationEnvironmentLifetime.CreateNoRedirectClientAsync();
         httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
         var transport = new HttpClientTransport(
             new HttpClientTransportOptions

@@ -51,18 +51,26 @@ public sealed class SignalRIntegrationTests : IntegrationTestBase
         Assert.False(matchingClientOne.HasReceived(target.Uid));
         Assert.False(matchingClientTwo.HasReceived(target.Uid));
         Assert.True(differentClient.HasReceived(target.Uid));
-        Assert.Equal(
-            [target.Uid, userSentinel.Uid],
-            differentClient.ArrivalOrder);
-        Assert.False(foreignCollector.HasReceived(target.Uid));
-        Assert.False(foreignCollector.HasReceived(userSentinel.Uid));
 
         var foreignSentinel = CreateTask("foreign sentinel");
         await SaveTaskAsync(foreignUser, foreignSentinel);
         await foreignCollector.WaitForTaskAsync(foreignSentinel.Uid, UpdateTimeout);
 
+        Assert.False(foreignCollector.HasReceived(target.Uid));
+        Assert.False(foreignCollector.HasReceived(userSentinel.Uid));
+
+        var postForeignUserSentinel = CreateTask("post-foreign user sentinel");
+        await SaveTaskAsync(user, postForeignUserSentinel);
+        await matchingClientOne.WaitForTaskAsync(postForeignUserSentinel.Uid, UpdateTimeout);
+        await matchingClientTwo.WaitForTaskAsync(postForeignUserSentinel.Uid, UpdateTimeout);
+        await differentClient.WaitForTaskAsync(postForeignUserSentinel.Uid, UpdateTimeout);
+
         Assert.False(matchingClientOne.HasReceived(foreignSentinel.Uid));
+        Assert.False(matchingClientTwo.HasReceived(foreignSentinel.Uid));
         Assert.False(differentClient.HasReceived(foreignSentinel.Uid));
+        Assert.Equal(
+            [target.Uid, userSentinel.Uid, postForeignUserSentinel.Uid],
+            differentClient.ArrivalOrder);
     }
 
     [Fact]
@@ -70,7 +78,7 @@ public sealed class SignalRIntegrationTests : IntegrationTestBase
     {
         await using var user = await CreateUserClientAsync();
         await using var collector = await ConnectAsync(user.Token, "recurrence-client");
-        var today = DateTime.UtcNow.Date;
+        var today = IntegrationTestClock.UtcToday;
         var title = $"Hub recurrence {CreateUniqueRecurrenceUid()}";
         var recurrence = CreateRecurrence(title, today, today, everyNthDay: 1);
 
@@ -116,7 +124,7 @@ public sealed class SignalRIntegrationTests : IntegrationTestBase
         {
             Uid = CreateUniqueTaskUid(),
             Title = title,
-            Date = DateTime.UtcNow.Date,
+            Date = IntegrationTestClock.UtcToday,
             Type = TaskTypeDto.Simple,
         };
     }

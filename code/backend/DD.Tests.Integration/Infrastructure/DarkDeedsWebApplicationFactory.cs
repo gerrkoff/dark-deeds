@@ -1,4 +1,6 @@
 using DD.App;
+using DD.ServiceTask.Details.Data;
+using DD.ServiceTask.Domain.Infrastructure.EntityRepository;
 using DD.TelegramClient.Domain.Services;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
@@ -6,6 +8,8 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using ServiceTaskDateService = DD.ServiceTask.Domain.Services.IDateService;
+using TelegramDateService = DD.TelegramClient.Domain.Services.IDateService;
 
 namespace DD.Tests.Integration.Infrastructure;
 
@@ -15,8 +19,9 @@ public sealed class DarkDeedsWebApplicationFactory(string sharedDbConnectionStri
     private const string AuthAudience = "dark-deeds-integration-tests";
     private const string AuthKey = "dark-deeds-integration-test-signing-key-2026-abcdefghijklmnopqrstuvwxyz";
     private readonly object _clientLock = new();
+    private readonly TaskUpdateBarrier _taskUpdateBarrier = new();
 
-    public HttpClient CreateOAuthClient()
+    public HttpClient CreateNoRedirectClient()
     {
         lock (_clientLock)
         {
@@ -39,18 +44,6 @@ public sealed class DarkDeedsWebApplicationFactory(string sharedDbConnectionStri
         }
     }
 
-    public HttpClient CreateMcpClient()
-    {
-        lock (_clientLock)
-        {
-            return CreateClient(new WebApplicationFactoryClientOptions
-            {
-                BaseAddress = new Uri("http://localhost"),
-                AllowAutoRedirect = false,
-            });
-        }
-    }
-
     public HttpMessageHandler CreateTestServerHandler()
     {
         lock (_clientLock)
@@ -63,6 +56,11 @@ public sealed class DarkDeedsWebApplicationFactory(string sharedDbConnectionStri
     {
         await using var scope = Services.CreateAsyncScope();
         return await action(scope.ServiceProvider);
+    }
+
+    public void ArmTaskUpdateBarrier(string uid, int participantCount)
+    {
+        _taskUpdateBarrier.Arm(uid, participantCount);
     }
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
@@ -91,8 +89,20 @@ public sealed class DarkDeedsWebApplicationFactory(string sharedDbConnectionStri
             .ConfigureServices(services =>
             {
                 services.AddDataProtection().UseEphemeralDataProtectionProvider();
+                services.RemoveAll<ITaskRepository>();
+                services.AddScoped<ITaskRepository>(provider =>
+                    new CoordinatedTaskRepository(
+                        provider.GetRequiredService<TaskRepository>(),
+                        _taskUpdateBarrier));
                 services.RemoveAll<IBotSendMessageService>();
                 services.AddSingleton<IBotSendMessageService, RecordingBotSendMessageService>();
+                services.RemoveAll<ServiceTaskDateService>();
+                services.RemoveAll<TelegramDateService>();
+                services.AddSingleton<FixedDateService>();
+                services.AddSingleton<ServiceTaskDateService>(
+                    provider => provider.GetRequiredService<FixedDateService>());
+                services.AddSingleton<TelegramDateService>(
+                    provider => provider.GetRequiredService<FixedDateService>());
             });
     }
 }
