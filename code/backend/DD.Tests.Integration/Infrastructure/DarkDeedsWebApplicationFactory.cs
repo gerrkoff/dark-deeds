@@ -85,11 +85,11 @@ public sealed class DarkDeedsWebApplicationFactory(string sharedDbConnectionStri
                 services.AddSingleton<IBotSendMessageService, RecordingBotSendMessageService>();
                 services.RemoveAll<ServiceTaskDateService>();
                 services.RemoveAll<TelegramDateService>();
-                services.AddSingleton<FixedDateService>();
+                services.AddSingleton<IntegrationTestClock>();
                 services.AddSingleton<ServiceTaskDateService>(
-                    provider => provider.GetRequiredService<FixedDateService>());
+                    provider => provider.GetRequiredService<IntegrationTestClock>());
                 services.AddSingleton<TelegramDateService>(
-                    provider => provider.GetRequiredService<FixedDateService>());
+                    provider => provider.GetRequiredService<IntegrationTestClock>());
             });
     }
 }
