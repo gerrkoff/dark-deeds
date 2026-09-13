@@ -1,6 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Loader;
-using static DD.Tests.Integration.Helpers.Helper;
 
 namespace DD.Tests.Integration.Infrastructure;
 
@@ -58,7 +57,7 @@ internal static class IntegrationEnvironmentLifetime
         }
         catch (Exception exception)
         {
-            ReportCleanupFailure(exception);
+            IntegrationCleanup.ReportFailure(exception);
         }
     }
 }

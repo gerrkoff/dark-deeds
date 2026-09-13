@@ -4,7 +4,7 @@ using DD.Tests.Integration.Infrastructure;
 using DD.Tests.Integration.Infrastructure.Api;
 using DD.Tests.Integration.Infrastructure.Readers;
 using Xunit;
-using static DD.Tests.Integration.Helpers.Helper;
+using static DD.Tests.Integration.Helpers.TasksTestData;
 
 namespace DD.Tests.Integration;
 

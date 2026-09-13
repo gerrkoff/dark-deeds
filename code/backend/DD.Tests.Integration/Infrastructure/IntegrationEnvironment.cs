@@ -3,7 +3,6 @@ using System.Runtime.ExceptionServices;
 using DD.Tests.Integration.Helpers;
 using MongoDB.Driver;
 using Testcontainers.MongoDb;
-using static DD.Tests.Integration.Helpers.Helper;
 
 namespace DD.Tests.Integration.Infrastructure;
 
@@ -104,7 +103,7 @@ internal sealed class IntegrationEnvironment : IAsyncDisposable
         }
         catch (Exception exception)
         {
-            ReportCleanupFailure(exception);
+            IntegrationCleanup.ReportFailure(exception);
         }
         finally
         {
@@ -117,7 +116,7 @@ internal sealed class IntegrationEnvironment : IAsyncDisposable
             }
             catch (Exception exception)
             {
-                ReportCleanupFailure(exception);
+                IntegrationCleanup.ReportFailure(exception);
             }
         }
     }
