@@ -1,0 +1,50 @@
+using System.Diagnostics;
+using System.IdentityModel.Tokens.Jwt;
+
+namespace DD.Tests.Integration.Helpers;
+
+internal static class MobileHelper
+{
+    internal static string CreateUniqueMobileKey()
+    {
+        return $"mobile-{Guid.NewGuid():N}";
+    }
+
+    internal static string GetUserId(string token)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(token);
+
+        var jwt = new JwtSecurityTokenHandler().ReadJwtToken(token);
+        return jwt.Claims.Single(claim => claim.Type == JwtRegisteredClaimNames.Sub).Value;
+    }
+
+    internal static async Task<T> PollUntilAsync<T>(
+        Func<Task<T>> loadAsync,
+        Func<T, bool> predicate,
+        TimeSpan timeout)
+    {
+        ArgumentNullException.ThrowIfNull(loadAsync);
+        ArgumentNullException.ThrowIfNull(predicate);
+
+        var started = Stopwatch.GetTimestamp();
+        while (true)
+        {
+            var remaining = timeout - Stopwatch.GetElapsedTime(started);
+            if (remaining <= TimeSpan.Zero)
+                break;
+
+            var result = await loadAsync().WaitAsync(remaining);
+            if (predicate(result))
+                return result;
+
+            remaining = timeout - Stopwatch.GetElapsedTime(started);
+            if (remaining <= TimeSpan.Zero)
+                break;
+
+            var pollingDelay = TimeSpan.FromMilliseconds(50);
+            await Task.Delay(pollingDelay < remaining ? pollingDelay : remaining);
+        }
+
+        throw new TimeoutException($"The expected mobile payload was not observed within {timeout}.");
+    }
+}

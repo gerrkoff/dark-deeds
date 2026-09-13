@@ -1,13 +1,16 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Loader;
-using static DD.Tests.Integration.Helpers.Helper;
+using DD.Tests.Integration.Infrastructure.ExternalDependencies;
 
 namespace DD.Tests.Integration.Infrastructure;
 
 internal static class IntegrationEnvironmentLifetime
 {
+    private static readonly IntegrationExternalDependencies ExternalDependencies = new();
     private static readonly Lazy<Task<IntegrationEnvironment>> Shared =
-        new(IntegrationEnvironment.CreateAsync, LazyThreadSafetyMode.ExecutionAndPublication);
+        new(
+            () => IntegrationEnvironment.CreateAsync(ExternalDependencies),
+            LazyThreadSafetyMode.ExecutionAndPublication);
 
     private static int _cleanupStarted;
 
@@ -17,10 +20,22 @@ internal static class IntegrationEnvironmentLifetime
         AppDomain.CurrentDomain.ProcessExit += (_, _) => CleanupAtProcessExit();
     }
 
-    internal static async Task<HttpClient> CreateClientAsync()
+    internal static async Task<HttpClient> CreateClientAsync(bool allowAutoRedirect = true)
     {
         var environment = await Shared.Value;
-        return environment.CreateClient();
+        return environment.CreateClient(allowAutoRedirect);
+    }
+
+    internal static async Task<HttpMessageHandler> CreateSignalRHandlerAsync()
+    {
+        var environment = await Shared.Value;
+        return environment.CreateSignalRHandler();
+    }
+
+    internal static async Task<TestBotSendMessageService> GetBotMessagesAsync()
+    {
+        _ = await Shared.Value;
+        return ExternalDependencies.BotMessages;
     }
 
     [SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "Process teardown must report cleanup failures without escaping the process-exit callback.")]
@@ -43,7 +58,7 @@ internal static class IntegrationEnvironmentLifetime
         }
         catch (Exception exception)
         {
-            ReportCleanupFailure(exception);
+            IntegrationCleanup.ReportFailure(exception);
         }
     }
 }

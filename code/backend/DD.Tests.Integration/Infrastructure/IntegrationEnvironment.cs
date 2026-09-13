@@ -3,7 +3,6 @@ using System.Runtime.ExceptionServices;
 using DD.Tests.Integration.Helpers;
 using MongoDB.Driver;
 using Testcontainers.MongoDb;
-using static DD.Tests.Integration.Helpers.Helper;
 
 namespace DD.Tests.Integration.Infrastructure;
 
@@ -34,12 +33,18 @@ internal sealed class IntegrationEnvironment : IAsyncDisposable
         await DisposeResourcesAsync(_mongoContainer, _factory);
     }
 
-    internal HttpClient CreateClient()
+    internal HttpClient CreateClient(bool allowAutoRedirect = true)
     {
-        return _factory.CreateTestClient();
+        return _factory.CreateTestClient(allowAutoRedirect);
     }
 
-    internal static async Task<IntegrationEnvironment> CreateAsync()
+    internal HttpMessageHandler CreateSignalRHandler()
+    {
+        return _factory.CreateTestServerHandler();
+    }
+
+    internal static async Task<IntegrationEnvironment> CreateAsync(
+        IntegrationExternalDependencies externalDependencies)
     {
         await DockerHelper.EnsureImageAsync(MongoImage);
 
@@ -59,7 +64,9 @@ internal sealed class IntegrationEnvironment : IAsyncDisposable
             var databaseConnectionString = CreateDatabaseConnectionString(
                 mongoContainer.GetConnectionString(),
                 databaseName);
-            factory = new DarkDeedsWebApplicationFactory(databaseConnectionString);
+            factory = new DarkDeedsWebApplicationFactory(
+                databaseConnectionString,
+                externalDependencies);
 
             using var client = factory.CreateTestClient();
 
@@ -96,7 +103,7 @@ internal sealed class IntegrationEnvironment : IAsyncDisposable
         }
         catch (Exception exception)
         {
-            ReportCleanupFailure(exception);
+            IntegrationCleanup.ReportFailure(exception);
         }
         finally
         {
@@ -109,7 +116,7 @@ internal sealed class IntegrationEnvironment : IAsyncDisposable
             }
             catch (Exception exception)
             {
-                ReportCleanupFailure(exception);
+                IntegrationCleanup.ReportFailure(exception);
             }
         }
     }

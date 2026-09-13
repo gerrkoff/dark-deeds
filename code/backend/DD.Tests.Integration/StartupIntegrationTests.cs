@@ -1,7 +1,7 @@
 using System.Net;
-using System.Net.Http.Json;
-using System.Text.Json;
 using DD.Tests.Integration.Infrastructure;
+using DD.Tests.Integration.Infrastructure.Api;
+using DD.Tests.Integration.Infrastructure.Readers;
 using Xunit;
 
 namespace DD.Tests.Integration;
@@ -13,18 +13,15 @@ public sealed class StartupIntegrationTests : IntegrationTestBase
     {
         using var client = await CreateClientAsync();
 
-        using var healthResponse = await client.GetAsync(new Uri("healthcheck", UriKind.Relative));
+        using var healthResponse = await SystemApi.GetHealthAsync(client);
 
         Assert.Equal(HttpStatusCode.OK, healthResponse.StatusCode);
-        Assert.Equal("Healthy", (await healthResponse.Content.ReadAsStringAsync()).Trim());
+        Assert.Equal("Healthy", await SystemReader.ReadHealthAsync(healthResponse));
 
-        using var buildInfoResponse =
-            await client.GetAsync(new Uri("api/be/build-info", UriKind.Relative));
+        using var buildInfoResponse = await SystemApi.GetBuildInfoAsync(client);
         Assert.Equal(HttpStatusCode.OK, buildInfoResponse.StatusCode);
 
-        using var buildInfo = await buildInfoResponse.Content.ReadFromJsonAsync<JsonDocument>();
-
-        Assert.NotNull(buildInfo);
+        using var buildInfo = await SystemReader.ReadBuildInfoAsync(buildInfoResponse);
         Assert.True(buildInfo.RootElement.TryGetProperty("appVersion", out var appVersion));
         Assert.False(string.IsNullOrWhiteSpace(appVersion.GetString()));
     }

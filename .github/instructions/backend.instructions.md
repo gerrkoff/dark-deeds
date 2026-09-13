@@ -133,3 +133,51 @@ You are a senior .NET backend developer and an expert in C#, ASP.NET Core, and E
 - [ ] Proper logging at appropriate levels (Debug, Info, Warning, Error)
 - [ ] No hardcoded values; use configuration or constants
 </verification_checklist>
+
+# Learned Lessons
+
+## Integration testing
+
+**Prefer backend integration tests that exercise the application as a black box through public
+contracts with minimal test infrastructure.** Do not introduce test-only wrappers, barriers, or
+other coordination around core application services solely to force complex edge cases unless the
+developer explicitly approves the resulting maintenance cost.
+
+**Use narrow `BaseControllerTest` handlers for setup that cannot be performed through production
+APIs; never expose a generic `IServiceProvider` escape hatch to integration tests.** For replaced
+outbound dependencies, the test harness owns the concrete fake, registers that same instance in
+application DI, and retains the reference for assertions.
+
+**Model authenticated integration-test clients as an explicit composition graph under a common
+`Clients` folder: `TestUserClient` => `TestOAuthClient` => `TestMcpClient`, and
+`TestUserClient` => `TestSignalRClient`.** Use consistent `Test...Client` names and `CreateAsync`
+factories, pass the preceding client object rather than flattening relationships into token
+strings, reuse its configured transport where possible, and make ownership/disposal boundaries
+explicit. Keep credential producers resource-neutral: `TestOAuthClient` performs OAuth and
+exposes its artifacts but never mentions MCP; only `TestMcpClient` and MCP endpoint tests know
+that those credentials are consumed by MCP.
+
+**Keep authentication assertions at the boundary that owns them.** OAuth tests verify issued
+token kinds, claims, audiences, and refresh behavior; a resource integration test verifies only
+that its accepted credential works and that the one relevant foreign credential is rejected.
+Do not replay every OAuth artifact against every resource endpoint.
+
+**Represent integration-test HTTP contracts with paired `<Domain>Api` and `<Domain>Reader`
+classes.** API classes own typed inputs, routes, query construction, and return raw
+`HttpResponseMessage` instances so tests can assert status and headers; reader classes own
+successful and error-body parsing. Keep test-data creation, polling, cryptography, and external
+fake observation out of both layers.
+
+**Derive reader diagnostics from the typed response contract instead of passing duplicated string
+labels.** Prefer `typeof(T).Name` or `nameof(...)` whenever the compiler already knows the name.
+
+**Name integration-support files after their primary type and place protocol clients under
+`Infrastructure/Clients`.** Do not use generic `*Helper.cs` filenames for concrete clients,
+collectors, readers, or API contracts.
+
+**Keep miscellaneous domain test utilities named `<Domain>Helper`; do not invent a `TestData`
+suffix when the repository already uses the helper convention.** Keep calls explicitly qualified
+and do not use `using static`.
+
+**Place replaced external services under `Infrastructure/ExternalDependencies` and name them
+`Test<ProductionRole>`, such as `TestDateService` and `TestBotSendMessageService`.**

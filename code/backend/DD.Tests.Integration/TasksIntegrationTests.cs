@@ -1,9 +1,10 @@
 using System.Net;
-using System.Net.Http.Json;
 using DD.Shared.Details.Abstractions.Dto;
+using DD.Tests.Integration.Helpers;
 using DD.Tests.Integration.Infrastructure;
+using DD.Tests.Integration.Infrastructure.Api;
+using DD.Tests.Integration.Infrastructure.Readers;
 using Xunit;
-using static DD.Tests.Integration.Helpers.Helper;
 
 namespace DD.Tests.Integration;
 
@@ -17,7 +18,7 @@ public sealed class TasksIntegrationTests : IntegrationTestBase
         var datedDate = from.AddDays(1);
         var noDate = new TaskDto
         {
-            Uid = CreateUniqueTaskUid(),
+            Uid = TasksHelper.CreateUniqueTaskUid(),
             Title = "No date task",
             Time = 615,
             Order = 4,
@@ -26,7 +27,7 @@ public sealed class TasksIntegrationTests : IntegrationTestBase
         };
         var dated = new TaskDto
         {
-            Uid = CreateUniqueTaskUid(),
+            Uid = TasksHelper.CreateUniqueTaskUid(),
             Title = "Dated task",
             Date = datedDate,
             Time = 1050,
@@ -34,12 +35,12 @@ public sealed class TasksIntegrationTests : IntegrationTestBase
             Type = TaskTypeDto.Weekly,
         };
 
-        using var saveResponse = await user.HttpClient.PostAsJsonAsync(
-            "api/task/tasks",
-            new[] { noDate, dated });
+        using var saveResponse = await TasksApi.SaveAsync(
+            user.HttpClient,
+            [noDate, dated]);
 
         Assert.Equal(HttpStatusCode.OK, saveResponse.StatusCode);
-        var savedTasks = await ReadTasksAsync(saveResponse);
+        var savedTasks = await TasksReader.ReadAsync(saveResponse);
         Assert.Equal(2, savedTasks.Length);
 
         var savedNoDate = Assert.Single(savedTasks, task => task.Uid == noDate.Uid);
@@ -50,10 +51,10 @@ public sealed class TasksIntegrationTests : IntegrationTestBase
         AssertTaskFields(savedDated, dated, expectedVersion: 1);
         Assert.Equal(datedDate, savedDated.Date);
 
-        using var getResponse = await user.HttpClient.GetAsync(CreateTasksUri(from));
+        using var getResponse = await TasksApi.LoadAsync(user.HttpClient, from);
 
         Assert.Equal(HttpStatusCode.OK, getResponse.StatusCode);
-        var loadedTasks = await ReadTasksAsync(getResponse);
+        var loadedTasks = await TasksReader.ReadAsync(getResponse);
         Assert.Equal(2, loadedTasks.Length);
         AssertTaskFields(
             Assert.Single(loadedTasks, task => task.Uid == noDate.Uid),
@@ -72,61 +73,60 @@ public sealed class TasksIntegrationTests : IntegrationTestBase
         var from = DateTime.UtcNow.Date;
         var task = new TaskDto
         {
-            Uid = CreateUniqueTaskUid(),
+            Uid = TasksHelper.CreateUniqueTaskUid(),
             Title = "Task before update",
             Order = 10,
             Type = TaskTypeDto.Simple,
         };
 
-        using var createResponse = await user.HttpClient.PostAsJsonAsync(
-            "api/task/tasks",
-            new[] { task });
-        var createdTask = Assert.Single(await ReadTasksAsync(createResponse));
+        using var createResponse = await TasksApi.SaveAsync(user.HttpClient, [task]);
+        var createdTask = Assert.Single(await TasksReader.ReadAsync(createResponse));
         Assert.Equal(1, createdTask.Version);
 
         createdTask.Title = "Task after update";
         createdTask.Order = 2;
-        using var updateResponse = await user.HttpClient.PostAsJsonAsync(
-            "api/task/tasks",
-            new[] { createdTask });
+        using var updateResponse = await TasksApi.SaveAsync(
+            user.HttpClient,
+            [createdTask]);
 
         Assert.Equal(HttpStatusCode.OK, updateResponse.StatusCode);
-        var updatedTask = Assert.Single(await ReadTasksAsync(updateResponse));
+        var updatedTask = Assert.Single(await TasksReader.ReadAsync(updateResponse));
         Assert.Equal(createdTask.Uid, updatedTask.Uid);
         Assert.Equal("Task after update", updatedTask.Title);
         Assert.Equal(2, updatedTask.Order);
         Assert.Equal(2, updatedTask.Version);
         Assert.False(updatedTask.Deleted);
 
-        using var updatedGetResponse = await user.HttpClient.GetAsync(CreateTasksUri(from));
+        using var updatedGetResponse = await TasksApi.LoadAsync(user.HttpClient, from);
         var loadedUpdatedTask = Assert.Single(
-            await ReadTasksAsync(updatedGetResponse),
+            await TasksReader.ReadAsync(updatedGetResponse),
             item => item.Uid == task.Uid);
         Assert.Equal("Task after update", loadedUpdatedTask.Title);
         Assert.Equal(2, loadedUpdatedTask.Order);
         Assert.Equal(2, loadedUpdatedTask.Version);
 
         updatedTask.Deleted = true;
-        using var deleteResponse = await user.HttpClient.PostAsJsonAsync(
-            "api/task/tasks",
-            new[] { updatedTask });
+        using var deleteResponse = await TasksApi.SaveAsync(
+            user.HttpClient,
+            [updatedTask]);
 
         Assert.Equal(HttpStatusCode.OK, deleteResponse.StatusCode);
-        var deletedTask = Assert.Single(await ReadTasksAsync(deleteResponse));
+        var deletedTask = Assert.Single(await TasksReader.ReadAsync(deleteResponse));
         Assert.Equal(task.Uid, deletedTask.Uid);
         Assert.True(deletedTask.Deleted);
         Assert.Equal(3, deletedTask.Version);
 
-        using var deletedGetResponse = await user.HttpClient.GetAsync(CreateTasksUri(from));
+        using var deletedGetResponse = await TasksApi.LoadAsync(user.HttpClient, from);
         var loadedDeletedTask = Assert.Single(
-            await ReadTasksAsync(deletedGetResponse),
+            await TasksReader.ReadAsync(deletedGetResponse),
             item => item.Uid == task.Uid);
         Assert.True(loadedDeletedTask.Deleted);
         Assert.Equal(3, loadedDeletedTask.Version);
 
-        using var expiredGetResponse = await user.HttpClient.GetAsync(
-            CreateTasksUri(from.AddDays(8)));
-        var expiredTasks = await ReadTasksAsync(expiredGetResponse);
+        using var expiredGetResponse = await TasksApi.LoadAsync(
+            user.HttpClient,
+            from.AddDays(8));
+        var expiredTasks = await TasksReader.ReadAsync(expiredGetResponse);
         Assert.DoesNotContain(expiredTasks, item => item.Uid == task.Uid);
     }
 

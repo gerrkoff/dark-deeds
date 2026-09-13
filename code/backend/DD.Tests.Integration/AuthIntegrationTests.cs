@@ -1,12 +1,12 @@
 using System.Net;
 using System.Net.Http.Headers;
-using System.Net.Http.Json;
-using DD.ServiceAuth.Details.Web;
 using DD.ServiceAuth.Domain.Dto;
 using DD.ServiceAuth.Domain.Enums;
+using DD.Tests.Integration.Helpers;
 using DD.Tests.Integration.Infrastructure;
+using DD.Tests.Integration.Infrastructure.Api;
+using DD.Tests.Integration.Infrastructure.Readers;
 using Xunit;
-using static DD.Tests.Integration.Helpers.Helper;
 
 namespace DD.Tests.Integration;
 
@@ -20,11 +20,10 @@ public sealed class AuthIntegrationTests : IntegrationTestBase
     {
         using var client = await CreateClientAsync();
 
-        using var response = await client.GetAsync(new Uri("api/auth/account", UriKind.Relative));
+        using var response = await AuthApi.GetCurrentUserAsync(client);
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        var currentUser = await response.Content.ReadFromJsonAsync<CurrentUserDto>();
-        Assert.NotNull(currentUser);
+        var currentUser = await AuthReader.ReadCurrentUserAsync(response);
         Assert.False(currentUser.UserAuthenticated);
         Assert.Null(currentUser.Username);
         Assert.Null(currentUser.Expires);
@@ -34,54 +33,47 @@ public sealed class AuthIntegrationTests : IntegrationTestBase
     public async Task AccountEndpoints_SignUpSignInCurrentUserAndRenew_Succeed()
     {
         using var client = await CreateClientAsync();
-        var username = CreateUniqueUsername("auth");
+        var username = AuthHelper.CreateUniqueUsername("auth");
 
-        using var signUpResponse = await client.PostAsJsonAsync(
-            "api/auth/account/signup",
+        using var signUpResponse = await AuthApi.SignUpAsync(
+            client,
             new SignUpInfoDto { Username = username, Password = Password });
 
         Assert.Equal(HttpStatusCode.OK, signUpResponse.StatusCode);
-        var signUpResult = await signUpResponse.Content.ReadFromJsonAsync<SignUpResultDto>();
-        Assert.NotNull(signUpResult);
+        var signUpResult = await AuthReader.ReadSignUpAsync(signUpResponse);
         Assert.Equal(SignUpResult.Success, signUpResult.Result);
         Assert.False(string.IsNullOrWhiteSpace(signUpResult.Token));
 
-        using var signInResponse = await client.PostAsJsonAsync(
-            "api/auth/account/signin",
+        using var signInResponse = await AuthApi.SignInAsync(
+            client,
             new SignInInfoDto { Username = username, Password = Password });
 
         Assert.Equal(HttpStatusCode.OK, signInResponse.StatusCode);
-        var signInResult = await signInResponse.Content.ReadFromJsonAsync<SignInResultDto>();
-        Assert.NotNull(signInResult);
+        var signInResult = await AuthReader.ReadSignInAsync(signInResponse);
         Assert.Equal(SignInResult.Success, signInResult.Result);
         Assert.False(string.IsNullOrWhiteSpace(signInResult.Token));
 
         client.DefaultRequestHeaders.Authorization =
             new AuthenticationHeaderValue("Bearer", signInResult.Token);
 
-        using var currentUserResponse =
-            await client.GetAsync(new Uri("api/auth/account", UriKind.Relative));
+        using var currentUserResponse = await AuthApi.GetCurrentUserAsync(client);
         Assert.Equal(HttpStatusCode.OK, currentUserResponse.StatusCode);
-        var currentUser = await currentUserResponse.Content.ReadFromJsonAsync<CurrentUserDto>();
-        Assert.NotNull(currentUser);
+        var currentUser = await AuthReader.ReadCurrentUserAsync(currentUserResponse);
         Assert.True(currentUser.UserAuthenticated);
         Assert.Equal(username, currentUser.Username);
         Assert.NotNull(currentUser.Expires);
 
-        using var renewResponse =
-            await client.PostAsync(new Uri("api/auth/account/renew", UriKind.Relative), content: null);
+        using var renewResponse = await AuthApi.RenewAsync(client);
         Assert.Equal(HttpStatusCode.OK, renewResponse.StatusCode);
-        var renewedToken = (await renewResponse.Content.ReadAsStringAsync()).Trim();
+        var renewedToken = await AuthReader.ReadTokenAsync(renewResponse);
         Assert.False(string.IsNullOrWhiteSpace(renewedToken));
 
         client.DefaultRequestHeaders.Authorization =
             new AuthenticationHeaderValue("Bearer", renewedToken);
-        using var renewedCurrentUserResponse =
-            await client.GetAsync(new Uri("api/auth/account", UriKind.Relative));
+        using var renewedCurrentUserResponse = await AuthApi.GetCurrentUserAsync(client);
         Assert.Equal(HttpStatusCode.OK, renewedCurrentUserResponse.StatusCode);
-        var renewedCurrentUser =
-            await renewedCurrentUserResponse.Content.ReadFromJsonAsync<CurrentUserDto>();
-        Assert.NotNull(renewedCurrentUser);
+        var renewedCurrentUser = await AuthReader.ReadCurrentUserAsync(
+            renewedCurrentUserResponse);
         Assert.True(renewedCurrentUser.UserAuthenticated);
         Assert.Equal(username, renewedCurrentUser.Username);
     }
@@ -90,18 +82,17 @@ public sealed class AuthIntegrationTests : IntegrationTestBase
     public async Task SignIn_ExistingUserWithWrongPassword_ReturnsWrongUsernamePassword()
     {
         using var client = await CreateClientAsync();
-        var username = CreateUniqueUsername("wrong-password");
+        var username = AuthHelper.CreateUniqueUsername("wrong-password");
 
-        using var signUpResponse = await client.PostAsJsonAsync(
-            "api/auth/account/signup",
+        using var signUpResponse = await AuthApi.SignUpAsync(
+            client,
             new SignUpInfoDto { Username = username, Password = Password });
         Assert.Equal(HttpStatusCode.OK, signUpResponse.StatusCode);
-        var signUpResult = await signUpResponse.Content.ReadFromJsonAsync<SignUpResultDto>();
-        Assert.NotNull(signUpResult);
+        var signUpResult = await AuthReader.ReadSignUpAsync(signUpResponse);
         Assert.Equal(SignUpResult.Success, signUpResult.Result);
 
-        using var response = await client.PostAsJsonAsync(
-            "api/auth/account/signin",
+        using var response = await AuthApi.SignInAsync(
+            client,
             new SignInInfoDto
             {
                 Username = username,
@@ -109,8 +100,7 @@ public sealed class AuthIntegrationTests : IntegrationTestBase
             });
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        var result = await response.Content.ReadFromJsonAsync<SignInResultDto>();
-        Assert.NotNull(result);
+        var result = await AuthReader.ReadSignInAsync(response);
         Assert.Equal(SignInResult.WrongUsernamePassword, result.Result);
         Assert.Empty(result.Token);
     }
@@ -120,8 +110,7 @@ public sealed class AuthIntegrationTests : IntegrationTestBase
     {
         using var client = await CreateClientAsync();
 
-        using var response =
-            await client.PostAsync(new Uri("api/auth/account/renew", UriKind.Relative), content: null);
+        using var response = await AuthApi.RenewAsync(client);
 
         Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
     }
@@ -130,19 +119,16 @@ public sealed class AuthIntegrationTests : IntegrationTestBase
     public async Task SignUp_DuplicateUsername_ReturnsUsernameAlreadyExists()
     {
         using var client = await CreateClientAsync();
-        var username = CreateUniqueUsername("duplicate");
+        var username = AuthHelper.CreateUniqueUsername("duplicate");
         var signUpInfo = new SignUpInfoDto { Username = username, Password = Password };
 
-        using var firstResponse = await client.PostAsJsonAsync("api/auth/account/signup", signUpInfo);
+        using var firstResponse = await AuthApi.SignUpAsync(client, signUpInfo);
         Assert.Equal(HttpStatusCode.OK, firstResponse.StatusCode);
 
-        using var duplicateResponse = await client.PostAsJsonAsync(
-            "api/auth/account/signup",
-            signUpInfo);
+        using var duplicateResponse = await AuthApi.SignUpAsync(client, signUpInfo);
 
         Assert.Equal(HttpStatusCode.OK, duplicateResponse.StatusCode);
-        var result = await duplicateResponse.Content.ReadFromJsonAsync<SignUpResultDto>();
-        Assert.NotNull(result);
+        var result = await AuthReader.ReadSignUpAsync(duplicateResponse);
         Assert.Equal(SignUpResult.UsernameAlreadyExists, result.Result);
         Assert.Empty(result.Token);
     }
@@ -152,10 +138,9 @@ public sealed class AuthIntegrationTests : IntegrationTestBase
     {
         using var client = await CreateClientAsync();
 
-        using var response = await client.GetAsync(
-            new Uri(
-                "api/task/tasks?from=2026-01-01T00%3A00%3A00.0000000Z",
-                UriKind.Relative));
+        using var response = await TasksApi.LoadAsync(
+            client,
+            new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc));
 
         Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
     }
