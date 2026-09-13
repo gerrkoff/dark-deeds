@@ -5,7 +5,7 @@ using DD.ServiceAuth.Domain.Dto;
 using DD.ServiceAuth.Domain.Enums;
 using static DD.Tests.Integration.Helpers.Helper;
 
-namespace DD.Tests.Integration.Infrastructure;
+namespace DD.Tests.Integration.Infrastructure.Clients;
 
 public sealed class TestUserClient : IAsyncDisposable
 {

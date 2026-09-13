@@ -3,6 +3,7 @@ using System.Net.Http.Json;
 using DD.Shared.Details.Abstractions.Dto;
 using DD.Tests.Integration.Helpers;
 using DD.Tests.Integration.Infrastructure;
+using DD.Tests.Integration.Infrastructure.Clients;
 using Xunit;
 using static DD.Tests.Integration.Helpers.Helper;
 using static DD.Tests.Integration.Helpers.RecurrencesHelper;

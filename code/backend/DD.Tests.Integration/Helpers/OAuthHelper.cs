@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.WebUtilities;
 
 namespace DD.Tests.Integration.Helpers;
 
-internal static class OAuthMcpHelper
+internal static class OAuthHelper
 {
     public static string GenerateCodeVerifier()
     {

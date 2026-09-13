@@ -2,6 +2,7 @@ using System.Net.Http.Json;
 using DD.Clients.Details.TelegramClient.Dto;
 using DD.TelegramClient.Domain.Dto;
 using DD.Tests.Integration.Infrastructure;
+using DD.Tests.Integration.Infrastructure.Clients;
 using Microsoft.AspNetCore.WebUtilities;
 
 namespace DD.Tests.Integration.Helpers;

@@ -7,6 +7,7 @@ using DD.ServiceAuth.Domain.OAuth;
 using DD.ServiceAuth.Domain.OAuth.Dto;
 using DD.Tests.Integration.Helpers;
 using DD.Tests.Integration.Infrastructure;
+using DD.Tests.Integration.Infrastructure.Clients;
 using Microsoft.AspNetCore.WebUtilities;
 using Xunit;
 
@@ -77,14 +78,14 @@ public sealed class OAuthIntegrationTests : IntegrationTestBase
 
         using var response = await client.PostAsJsonAsync(
             new Uri("/register", UriKind.Relative),
-            new ClientRegistrationRequestDto([OAuthMcpTestSession.CallbackUri]));
+            new ClientRegistrationRequestDto([TestOAuthClient.CallbackUri]));
 
         Assert.Equal(HttpStatusCode.Created, response.StatusCode);
         var registration = await response.Content.ReadFromJsonAsync<ClientRegistrationResponseDto>();
         Assert.NotNull(registration);
         Assert.False(string.IsNullOrEmpty(registration.ClientId));
         Assert.Equal("none", registration.TokenEndpointAuthMethod);
-        Assert.Contains(OAuthMcpTestSession.CallbackUri, registration.RedirectUris);
+        Assert.Contains(TestOAuthClient.CallbackUri, registration.RedirectUris);
     }
 
     [Fact]
@@ -93,14 +94,14 @@ public sealed class OAuthIntegrationTests : IntegrationTestBase
         using var oauthClient = await IntegrationEnvironmentLifetime.CreateClientAsync(
             allowAutoRedirect: false);
 
-        var verifier = OAuthMcpHelper.GenerateCodeVerifier();
-        var challenge = OAuthMcpHelper.ComputeS256Challenge(verifier);
+        var verifier = OAuthHelper.GenerateCodeVerifier();
+        var challenge = OAuthHelper.ComputeS256Challenge(verifier);
         var state = Guid.NewGuid().ToString("N");
-        var clientId = await OAuthMcpHelper.RegisterClientAsync(
-            oauthClient, OAuthMcpTestSession.CallbackUri);
+        var clientId = await OAuthHelper.RegisterClientAsync(
+            oauthClient, TestOAuthClient.CallbackUri);
 
-        var authorizeUri = OAuthMcpHelper.BuildAuthorizeUri(
-            clientId, challenge, state, OAuthMcpTestSession.CallbackUri);
+        var authorizeUri = OAuthHelper.BuildAuthorizeUri(
+            clientId, challenge, state, TestOAuthClient.CallbackUri);
 
         using var response = await oauthClient.GetAsync(authorizeUri);
 
@@ -110,7 +111,7 @@ public sealed class OAuthIntegrationTests : IntegrationTestBase
         var expectedLocation = new Uri(
             $"/?response_type={OAuthConstants.ResponseTypeCode}" +
             $"&client_id={Uri.EscapeDataString(clientId)}" +
-            $"&redirect_uri={Uri.EscapeDataString(OAuthMcpTestSession.CallbackUri)}" +
+            $"&redirect_uri={Uri.EscapeDataString(TestOAuthClient.CallbackUri)}" +
             $"&code_challenge={Uri.EscapeDataString(challenge)}" +
             $"&code_challenge_method={OAuthConstants.CodeChallengeMethodS256}" +
             $"&state={Uri.EscapeDataString(state)}",
@@ -123,16 +124,16 @@ public sealed class OAuthIntegrationTests : IntegrationTestBase
     {
         using var client = await CreateClientAsync();
 
-        var verifier = OAuthMcpHelper.GenerateCodeVerifier();
-        var challenge = OAuthMcpHelper.ComputeS256Challenge(verifier);
+        var verifier = OAuthHelper.GenerateCodeVerifier();
+        var challenge = OAuthHelper.ComputeS256Challenge(verifier);
         var state = Guid.NewGuid().ToString("N");
-        var clientId = await OAuthMcpHelper.RegisterClientAsync(
-            client, OAuthMcpTestSession.CallbackUri);
+        var clientId = await OAuthHelper.RegisterClientAsync(
+            client, TestOAuthClient.CallbackUri);
 
         var request = new OAuthAuthorizeRequestDto(
             Action: "deny",
             ClientId: clientId,
-            RedirectUri: OAuthMcpTestSession.CallbackUri,
+            RedirectUri: TestOAuthClient.CallbackUri,
             CodeChallenge: challenge,
             State: state);
 
@@ -144,7 +145,7 @@ public sealed class OAuthIntegrationTests : IntegrationTestBase
         Assert.NotNull(result);
         Assert.NotNull(result.RedirectUrl);
         var redirect = new Uri(result.RedirectUrl, UriKind.Absolute);
-        AssertCallbackDestination(redirect, OAuthMcpTestSession.CallbackUri);
+        AssertCallbackDestination(redirect, TestOAuthClient.CallbackUri);
         var query = QueryHelpers.ParseQuery(redirect.Query);
         Assert.Equal(2, query.Count);
         Assert.Equal(OAuthConstants.AccessDeniedError, Assert.Single(query["error"]));
@@ -156,16 +157,16 @@ public sealed class OAuthIntegrationTests : IntegrationTestBase
     {
         using var client = await CreateClientAsync();
 
-        var verifier = OAuthMcpHelper.GenerateCodeVerifier();
-        var challenge = OAuthMcpHelper.ComputeS256Challenge(verifier);
+        var verifier = OAuthHelper.GenerateCodeVerifier();
+        var challenge = OAuthHelper.ComputeS256Challenge(verifier);
         var state = Guid.NewGuid().ToString("N");
-        var clientId = await OAuthMcpHelper.RegisterClientAsync(
-            client, OAuthMcpTestSession.CallbackUri);
+        var clientId = await OAuthHelper.RegisterClientAsync(
+            client, TestOAuthClient.CallbackUri);
 
         var request = new OAuthAuthorizeRequestDto(
             Action: OAuthConstants.ActionAllow,
             ClientId: clientId,
-            RedirectUri: OAuthMcpTestSession.CallbackUri,
+            RedirectUri: TestOAuthClient.CallbackUri,
             CodeChallenge: challenge,
             State: state);
 
@@ -178,17 +179,18 @@ public sealed class OAuthIntegrationTests : IntegrationTestBase
     [Fact]
     public async Task Token_AuthorizationCodeExchange_ReturnsBearerWithMcpScopeAndNoStore()
     {
-        await using var session = await OAuthMcpTestSession.CreateAsync();
+        await using var user = await CreateUserClientAsync();
+        await using var oauth = await TestOAuthClient.CreateAsync(user);
 
-        Assert.NotNull(session.LastTokenResponse);
-        Assert.Equal("Bearer", session.LastTokenResponse.TokenType);
-        Assert.Equal("mcp", session.LastTokenResponse.Scope);
-        Assert.Equal(3600, session.LastTokenResponse.ExpiresIn);
-        Assert.False(string.IsNullOrEmpty(session.AccessToken));
-        Assert.False(string.IsNullOrEmpty(session.RefreshToken));
-        Assert.True(session.ExchangeCacheControlNoStore);
+        Assert.Equal("Bearer", oauth.Tokens.TokenType);
+        Assert.Equal("mcp", oauth.Tokens.Scope);
+        Assert.Equal(3600, oauth.Tokens.ExpiresIn);
+        Assert.False(string.IsNullOrEmpty(oauth.Tokens.AccessToken));
+        Assert.False(string.IsNullOrEmpty(oauth.Tokens.RefreshToken));
+        Assert.True(oauth.CodeExchangeCacheControlNoStore);
 
-        var jwt = new JwtSecurityTokenHandler().ReadJwtToken(session.AccessToken);
+        var jwt = new JwtSecurityTokenHandler().ReadJwtToken(oauth.Tokens.AccessToken);
+        Assert.Contains(OAuthConstants.AccessTokenAudience, jwt.Audiences);
         var issuedAt = long.Parse(
             jwt.Claims.Single(claim => claim.Type == JwtRegisteredClaimNames.Iat).Value,
             CultureInfo.InvariantCulture);
@@ -204,19 +206,19 @@ public sealed class OAuthIntegrationTests : IntegrationTestBase
         await using var user = await CreateUserClientAsync();
         using var oauthClient = await IntegrationEnvironmentLifetime.CreateClientAsync();
 
-        var verifier = OAuthMcpHelper.GenerateCodeVerifier();
-        var challenge = OAuthMcpHelper.ComputeS256Challenge(verifier);
+        var verifier = OAuthHelper.GenerateCodeVerifier();
+        var challenge = OAuthHelper.ComputeS256Challenge(verifier);
         var state = Guid.NewGuid().ToString("N");
-        var clientId = await OAuthMcpHelper.RegisterClientAsync(
-            oauthClient, OAuthMcpTestSession.CallbackUri);
+        var clientId = await OAuthHelper.RegisterClientAsync(
+            oauthClient, TestOAuthClient.CallbackUri);
 
-        var (code, _) = await OAuthMcpHelper.ConsentAllowAsync(
-            user.HttpClient, clientId, challenge, state, OAuthMcpTestSession.CallbackUri);
+        var (code, _) = await OAuthHelper.ConsentAllowAsync(
+            user.HttpClient, clientId, challenge, state, TestOAuthClient.CallbackUri);
 
-        using var response = await OAuthMcpHelper.ExchangeCodeRawAsync(
+        using var response = await OAuthHelper.ExchangeCodeRawAsync(
             oauthClient,
             code,
-            OAuthMcpTestSession.CallbackUri,
+            TestOAuthClient.CallbackUri,
             clientId,
             codeVerifier: "wrong-verifier-" + Guid.NewGuid().ToString("N"));
 
@@ -229,19 +231,19 @@ public sealed class OAuthIntegrationTests : IntegrationTestBase
     [Fact]
     public async Task Token_RefreshTokenExchange_ReturnsNewValidAccessToken()
     {
-        await using var session = await OAuthMcpTestSession.CreateAsync();
+        await using var user = await CreateUserClientAsync();
+        await using var oauth = await TestOAuthClient.CreateAsync(user);
+        var originalAccessToken = oauth.Tokens.AccessToken;
 
-        var refreshed = await session.ExchangeRefreshAsync();
+        var refreshed = await oauth.RefreshAsync();
 
-        Assert.NotNull(refreshed);
         Assert.Equal("Bearer", refreshed.TokenType);
         Assert.False(string.IsNullOrEmpty(refreshed.AccessToken));
-        Assert.NotEqual(session.AccessToken, refreshed.AccessToken);
+        Assert.NotEqual(originalAccessToken, refreshed.AccessToken);
 
-        using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(10));
-        await using var mcpClient = await McpTestClient.ConnectAsync(
-            refreshed.AccessToken,
-            timeout.Token);
+        var jwt = new JwtSecurityTokenHandler().ReadJwtToken(refreshed.AccessToken);
+        Assert.Contains(OAuthConstants.AccessTokenAudience, jwt.Audiences);
+        Assert.True(jwt.ValidTo > DateTime.UtcNow);
     }
 
     private static void AssertCallbackDestination(Uri actual, string expectedCallbackUri)

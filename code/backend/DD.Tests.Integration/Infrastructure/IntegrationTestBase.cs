@@ -1,3 +1,5 @@
+using DD.Tests.Integration.Infrastructure.Clients;
+
 namespace DD.Tests.Integration.Infrastructure;
 
 public abstract class IntegrationTestBase

@@ -1,11 +1,11 @@
 using System.Net;
-using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using DD.Shared.Details.Abstractions.Dto;
 using DD.Tests.Integration.Helpers;
 using DD.Tests.Integration.Infrastructure;
+using DD.Tests.Integration.Infrastructure.Clients;
 using ModelContextProtocol.Protocol;
 using Xunit;
 using static DD.Tests.Integration.Helpers.Helper;
@@ -22,23 +22,12 @@ public sealed class McpIntegrationTests : IntegrationTestBase
     private static readonly TimeSpan ProtocolTimeout = TimeSpan.FromSeconds(10);
 
     [Fact]
-    public async Task Mcp_RejectsLoginRefreshAndAuthorizationCodeTokens_AndScopesOAuthAccessToken()
+    public async Task Mcp_LoginToken_IsRejected()
     {
-        await using var session = await OAuthMcpTestSession.CreateAsync();
+        await using var user = await CreateUserClientAsync();
 
-        await AssertInitializationRejectedAsync(session.LoginToken);
-        await AssertInitializationRejectedAsync(session.RefreshToken!);
-        await AssertInitializationRejectedAsync(session.AuthorizationCode);
-
-        await using var mcpClient = await McpTestClient.ConnectAsync(
-            session.AccessToken!,
-            CreateTimeoutToken());
-        using var restClient = await CreateClientAsync();
-        restClient.DefaultRequestHeaders.Authorization =
-            new AuthenticationHeaderValue("Bearer", session.AccessToken);
-
-        using var response = await restClient.GetAsync(
-            CreateTasksUri(DateTime.UtcNow.Date),
+        using var response = await user.HttpClient.GetAsync(
+            new Uri("/mcp", UriKind.Relative),
             CreateTimeoutToken());
 
         Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
@@ -47,9 +36,10 @@ public sealed class McpIntegrationTests : IntegrationTestBase
     [Fact]
     public async Task Mcp_ListsOnlySupportedTools()
     {
-        await using var session = await OAuthMcpTestSession.CreateAsync();
-        await using var mcpClient = await McpTestClient.ConnectAsync(
-            session.AccessToken!,
+        await using var user = await CreateUserClientAsync();
+        await using var oauth = await TestOAuthClient.CreateAsync(user);
+        await using var mcpClient = await TestMcpClient.CreateAsync(
+            oauth,
             CreateTimeoutToken());
 
         var tools = await mcpClient.Client.ListToolsAsync(
@@ -63,9 +53,10 @@ public sealed class McpIntegrationTests : IntegrationTestBase
     [Fact]
     public async Task Mcp_AddAndLoadTasks_ReturnsJsonTextAndHonorsExclusiveDateRange()
     {
-        await using var session = await OAuthMcpTestSession.CreateAsync();
-        await using var mcpClient = await McpTestClient.ConnectAsync(
-            session.AccessToken!,
+        await using var user = await CreateUserClientAsync();
+        await using var oauth = await TestOAuthClient.CreateAsync(user);
+        await using var mcpClient = await TestMcpClient.CreateAsync(
+            oauth,
             CreateTimeoutToken());
 
         var today = DateTime.UtcNow.Date;
@@ -138,7 +129,7 @@ public sealed class McpIntegrationTests : IntegrationTestBase
         Assert.Equal(today, loadedTodayTask.Date);
         Assert.DoesNotContain(loadedTasks, task => task.Title == tomorrowTitle);
 
-        using var restResponse = await session.LoginHttpClient.GetAsync(
+        using var restResponse = await user.HttpClient.GetAsync(
             CreateTasksUri(today),
             CreateTimeoutToken());
         var persistedTasks = await ReadTasksAsync(restResponse);
@@ -149,7 +140,8 @@ public sealed class McpIntegrationTests : IntegrationTestBase
     [Fact]
     public async Task Mcp_UpdateTasksOrder_UpdatesOnlyEligibleTasksAndNotifiesWithoutSuppression()
     {
-        await using var session = await OAuthMcpTestSession.CreateAsync();
+        await using var user = await CreateUserClientAsync();
+        await using var oauth = await TestOAuthClient.CreateAsync(user);
         await using var foreignUser = await CreateUserClientAsync();
         var today = DateTime.UtcNow.Date;
 
@@ -158,19 +150,19 @@ public sealed class McpIntegrationTests : IntegrationTestBase
         var deletedTask = CreateTask("MCP deleted task", today, 3);
         var foreignTask = CreateTask("MCP foreign task", today, 5);
 
-        _ = await SaveTasksAsync(session.LoginHttpClient, validTask, secondValidTask, deletedTask);
+        _ = await SaveTasksAsync(user.HttpClient, validTask, secondValidTask, deletedTask);
         _ = await SaveTasksAsync(foreignUser.HttpClient, foreignTask);
 
         deletedTask.Deleted = true;
-        var deletedResponse = await SaveTasksAsync(session.LoginHttpClient, deletedTask);
+        var deletedResponse = await SaveTasksAsync(user.HttpClient, deletedTask);
         Assert.True(Assert.Single(deletedResponse).Deleted);
 
         using var signalRHandler = await CreateSignalRHandlerAsync();
         await using var collector = await SignalRUpdateCollector.ConnectAsync(
             signalRHandler,
-            session.LoginToken);
-        await using var mcpClient = await McpTestClient.ConnectAsync(
-            session.AccessToken!,
+            user.Token);
+        await using var mcpClient = await TestMcpClient.CreateAsync(
+            oauth,
             CreateTimeoutToken());
 
         var updateResult = await mcpClient.Client.CallToolAsync(
@@ -206,7 +198,7 @@ public sealed class McpIntegrationTests : IntegrationTestBase
             task => task.Uid == secondValidTask.Uid && task.Order == 105 && task.Version == 2,
             ProtocolTimeout);
 
-        using var restResponse = await session.LoginHttpClient.GetAsync(
+        using var restResponse = await user.HttpClient.GetAsync(
             CreateTasksUri(today),
             CreateTimeoutToken());
         var persistedTasks = await ReadTasksAsync(restResponse);
@@ -220,18 +212,6 @@ public sealed class McpIntegrationTests : IntegrationTestBase
             CreateTimeoutToken());
         var foreignPersistedTasks = await ReadTasksAsync(foreignRestResponse);
         AssertTaskOrder(foreignPersistedTasks, foreignTask.Uid, 5, 1);
-    }
-
-    private static async Task AssertInitializationRejectedAsync(string token)
-    {
-        using var cancellationTokenSource = new CancellationTokenSource(ProtocolTimeout);
-        var exception = await Assert.ThrowsAsync<HttpRequestException>(async () =>
-        {
-            await using var client = await McpTestClient.ConnectAsync(
-                token,
-                cancellationTokenSource.Token);
-        });
-        Assert.Equal(HttpStatusCode.Unauthorized, exception.StatusCode);
     }
 
     private static async Task<TaskDto[]> SaveTasksAsync(HttpClient client, params TaskDto[] tasks)

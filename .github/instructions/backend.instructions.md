@@ -147,3 +147,16 @@ developer explicitly approves the resulting maintenance cost.
 APIs; never expose a generic `IServiceProvider` escape hatch to integration tests.** For replaced
 outbound dependencies, the test harness owns the concrete fake, registers that same instance in
 application DI, and retains the reference for assertions.
+
+**Model authenticated integration-test clients as one explicit composition chain under a common
+`Clients` folder: `TestUserClient` => `TestOAuthClient` => `TestMcpClient`.** Use consistent
+`Test...Client` names, pass the preceding client object rather than flattening relationships into
+token strings, reuse its configured `HttpClient` as the next protocol transport where possible,
+and make ownership/disposal boundaries explicit. Keep credential producers resource-neutral:
+`TestOAuthClient` performs OAuth and exposes its artifacts but never mentions MCP; only
+`TestMcpClient` and MCP endpoint tests know that those credentials are consumed by MCP.
+
+**Keep authentication assertions at the boundary that owns them.** OAuth tests verify issued
+token kinds, claims, audiences, and refresh behavior; a resource integration test verifies only
+that its accepted credential works and that the one relevant foreign credential is rejected.
+Do not replay every OAuth artifact against every resource endpoint.
