@@ -2,9 +2,9 @@ using System.Collections.Concurrent;
 using System.Threading.Channels;
 using DD.TelegramClient.Domain.Services;
 
-namespace DD.Tests.Integration.Infrastructure;
+namespace DD.Tests.Integration.Infrastructure.ExternalDependencies;
 
-public sealed class RecordingBotSendMessageService : IBotSendMessageService
+public sealed class TestBotSendMessageService : IBotSendMessageService
 {
     private const int ChannelCapacity = 32;
     private readonly ConcurrentDictionary<int, Channel<string>> _messages = new();

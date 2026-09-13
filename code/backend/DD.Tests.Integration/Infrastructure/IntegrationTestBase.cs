@@ -1,4 +1,5 @@
 using DD.Tests.Integration.Infrastructure.Clients;
+using DD.Tests.Integration.Infrastructure.ExternalDependencies;
 
 namespace DD.Tests.Integration.Infrastructure;
 
@@ -14,8 +15,8 @@ public abstract class IntegrationTestBase
         return TestUserClient.CreateAsync();
     }
 
-    protected static Task<RecordingBotSendMessageService> GetTelegramMessagesAsync()
+    protected static Task<TestBotSendMessageService> GetBotMessagesAsync()
     {
-        return IntegrationEnvironmentLifetime.GetTelegramMessagesAsync();
+        return IntegrationEnvironmentLifetime.GetBotMessagesAsync();
     }
 }

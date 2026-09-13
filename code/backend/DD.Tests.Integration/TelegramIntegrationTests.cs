@@ -4,9 +4,9 @@ using DD.Tests.Integration.Helpers;
 using DD.Tests.Integration.Infrastructure;
 using DD.Tests.Integration.Infrastructure.Api;
 using DD.Tests.Integration.Infrastructure.Clients;
+using DD.Tests.Integration.Infrastructure.ExternalDependencies;
 using DD.Tests.Integration.Infrastructure.Readers;
 using Xunit;
-using static DD.Tests.Integration.Helpers.TasksTestData;
 
 namespace DD.Tests.Integration;
 
@@ -24,7 +24,7 @@ public sealed class TelegramIntegrationTests : IntegrationTestBase
 
         Assert.Equal(HttpStatusCode.Unauthorized, anonymousResponse.StatusCode);
 
-        var recorder = await GetTelegramMessagesAsync();
+        var botMessages = await GetBotMessagesAsync();
         await using var user = await CreateUserClientAsync();
         var chatId = TelegramHelper.CreateUniqueChatId();
         using var startResponse = await TelegramApi.StartAsync(user.HttpClient);
@@ -37,18 +37,18 @@ public sealed class TelegramIntegrationTests : IntegrationTestBase
             Bot);
         commandResponse.EnsureSuccessStatusCode();
 
-        var message = await recorder.ReadAsync(chatId, MessageTimeout);
+        var message = await botMessages.ReadAsync(chatId, MessageTimeout);
         Assert.Equal("Registered", message);
     }
 
     [Fact]
     public async Task CreateTaskCommand_PersistsTaskForOwner_AndDoesNotExposeItToAnotherUser()
     {
-        var recorder = await GetTelegramMessagesAsync();
+        var botMessages = await GetBotMessagesAsync();
         using var anonymousClient = await CreateClientAsync();
         await using var owner = await CreateUserClientAsync();
         await using var foreignUser = await CreateUserClientAsync();
-        var chatId = await RegisterChatAsync(owner, anonymousClient, recorder);
+        var chatId = await RegisterChatAsync(owner, anonymousClient, botMessages);
         var title = $"Telegram task {Guid.NewGuid():N}";
 
         using var commandResponse = await TelegramApi.SendCommandAsync(
@@ -58,18 +58,18 @@ public sealed class TelegramIntegrationTests : IntegrationTestBase
             Bot);
         commandResponse.EnsureSuccessStatusCode();
 
-        var message = await recorder.ReadAsync(chatId, MessageTimeout);
+        var message = await botMessages.ReadAsync(chatId, MessageTimeout);
         Assert.Equal("Task created", message);
 
         using var ownerTasksResponse = await TasksApi.LoadAsync(
             owner.HttpClient,
-            IntegrationTestClock.UtcToday);
+            TestDateService.UtcToday);
         var ownerTasks = await TasksReader.ReadAsync(ownerTasksResponse);
         Assert.Contains(ownerTasks, task => task.Title == title);
 
         using var foreignTasksResponse = await TasksApi.LoadAsync(
             foreignUser.HttpClient,
-            IntegrationTestClock.UtcToday);
+            TestDateService.UtcToday);
         var foreignTasks = await TasksReader.ReadAsync(foreignTasksResponse);
         Assert.DoesNotContain(foreignTasks, task => task.Title == title);
     }
@@ -77,13 +77,13 @@ public sealed class TelegramIntegrationTests : IntegrationTestBase
     [Fact]
     public async Task BotCommands_WithTasksWithoutTasksAndUnknownCommand_RecordExactMessagesPerChat()
     {
-        var recorder = await GetTelegramMessagesAsync();
+        var botMessages = await GetBotMessagesAsync();
         using var anonymousClient = await CreateClientAsync();
         await using var taskUser = await CreateUserClientAsync();
         await using var emptyUser = await CreateUserClientAsync();
-        var taskChatId = await RegisterChatAsync(taskUser, anonymousClient, recorder);
-        var emptyChatId = await RegisterChatAsync(emptyUser, anonymousClient, recorder);
-        var today = IntegrationTestClock.UtcToday;
+        var taskChatId = await RegisterChatAsync(taskUser, anonymousClient, botMessages);
+        var emptyChatId = await RegisterChatAsync(emptyUser, anonymousClient, botMessages);
+        var today = TestDateService.UtcToday;
         var taskTitle = $"Telegram todo {Guid.NewGuid():N}";
 
         using var saveResponse = await TasksApi.SaveAsync(
@@ -91,7 +91,7 @@ public sealed class TelegramIntegrationTests : IntegrationTestBase
             [
                 new TaskDto
                 {
-                    Uid = CreateUniqueTaskUid(),
+                    Uid = TasksHelper.CreateUniqueTaskUid(),
                     Date = today,
                     Time = 495,
                     Title = taskTitle,
@@ -109,7 +109,7 @@ public sealed class TelegramIntegrationTests : IntegrationTestBase
         todoResponse.EnsureSuccessStatusCode();
         Assert.Equal(
             $"08:15 {taskTitle}",
-            await recorder.ReadAsync(taskChatId, MessageTimeout));
+            await botMessages.ReadAsync(taskChatId, MessageTimeout));
 
         using var emptyTodoResponse = await TelegramApi.SendCommandAsync(
             anonymousClient,
@@ -119,7 +119,7 @@ public sealed class TelegramIntegrationTests : IntegrationTestBase
         emptyTodoResponse.EnsureSuccessStatusCode();
         Assert.Equal(
             "No tasks",
-            await recorder.ReadAsync(emptyChatId, MessageTimeout));
+            await botMessages.ReadAsync(emptyChatId, MessageTimeout));
 
         using var unknownResponse = await TelegramApi.SendCommandAsync(
             anonymousClient,
@@ -129,13 +129,13 @@ public sealed class TelegramIntegrationTests : IntegrationTestBase
         unknownResponse.EnsureSuccessStatusCode();
         Assert.Equal(
             "Unknown command",
-            await recorder.ReadAsync(emptyChatId, MessageTimeout));
+            await botMessages.ReadAsync(emptyChatId, MessageTimeout));
     }
 
     private static async Task<int> RegisterChatAsync(
         TestUserClient user,
         HttpClient anonymousClient,
-        RecordingBotSendMessageService recorder)
+        TestBotSendMessageService botMessages)
     {
         var chatId = TelegramHelper.CreateUniqueChatId();
         using var startResponse = await TelegramApi.StartAsync(user.HttpClient);
@@ -147,7 +147,7 @@ public sealed class TelegramIntegrationTests : IntegrationTestBase
             Bot);
         commandResponse.EnsureSuccessStatusCode();
 
-        var message = await recorder.ReadAsync(chatId, MessageTimeout);
+        var message = await botMessages.ReadAsync(chatId, MessageTimeout);
         Assert.Equal("Registered", message);
         return chatId;
     }

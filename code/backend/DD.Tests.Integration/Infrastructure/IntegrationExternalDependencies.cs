@@ -1,6 +1,8 @@
+using DD.Tests.Integration.Infrastructure.ExternalDependencies;
+
 namespace DD.Tests.Integration.Infrastructure;
 
 internal sealed class IntegrationExternalDependencies
 {
-    internal RecordingBotSendMessageService TelegramMessages { get; } = new();
+    internal TestBotSendMessageService BotMessages { get; } = new();
 }

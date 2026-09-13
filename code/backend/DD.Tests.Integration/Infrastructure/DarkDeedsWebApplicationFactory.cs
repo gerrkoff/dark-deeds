@@ -1,5 +1,6 @@
 using DD.App;
 using DD.TelegramClient.Domain.Services;
+using DD.Tests.Integration.Infrastructure.ExternalDependencies;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -69,14 +70,14 @@ internal sealed class DarkDeedsWebApplicationFactory(
                 services.AddDataProtection().UseEphemeralDataProtectionProvider();
                 services.RemoveAll<IBotSendMessageService>();
                 services.AddSingleton<IBotSendMessageService>(
-                    externalDependencies.TelegramMessages);
+                    externalDependencies.BotMessages);
                 services.RemoveAll<ServiceTaskDateService>();
                 services.RemoveAll<TelegramDateService>();
-                services.AddSingleton<IntegrationTestClock>();
+                services.AddSingleton<TestDateService>();
                 services.AddSingleton<ServiceTaskDateService>(
-                    provider => provider.GetRequiredService<IntegrationTestClock>());
+                    provider => provider.GetRequiredService<TestDateService>());
                 services.AddSingleton<TelegramDateService>(
-                    provider => provider.GetRequiredService<IntegrationTestClock>());
+                    provider => provider.GetRequiredService<TestDateService>());
             });
     }
 }

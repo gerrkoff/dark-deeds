@@ -1,12 +1,12 @@
 using System.Net;
 using DD.Shared.Details.Abstractions.Dto;
+using DD.Tests.Integration.Helpers;
 using DD.Tests.Integration.Infrastructure;
 using DD.Tests.Integration.Infrastructure.Api;
 using DD.Tests.Integration.Infrastructure.Clients;
+using DD.Tests.Integration.Infrastructure.ExternalDependencies;
 using DD.Tests.Integration.Infrastructure.Readers;
 using Xunit;
-using static DD.Tests.Integration.Helpers.RecurrencesHelper;
-using static DD.Tests.Integration.Helpers.TasksTestData;
 
 namespace DD.Tests.Integration;
 
@@ -89,9 +89,13 @@ public sealed class SignalRIntegrationTests : IntegrationTestBase
         await using var client = await TestSignalRClient.CreateAsync(
             user,
             "recurrence-client");
-        var today = IntegrationTestClock.UtcToday;
-        var title = $"Hub recurrence {CreateUniqueRecurrenceUid()}";
-        var recurrence = CreateRecurrence(title, today, today, everyNthDay: 1);
+        var today = TestDateService.UtcToday;
+        var title = $"Hub recurrence {RecurrencesHelper.CreateUniqueRecurrenceUid()}";
+        var recurrence = RecurrencesHelper.CreateRecurrence(
+            title,
+            today,
+            today,
+            everyNthDay: 1);
 
         using var seedResponse = await RecurrencesApi.SaveAsync(
             user.HttpClient,
@@ -124,9 +128,9 @@ public sealed class SignalRIntegrationTests : IntegrationTestBase
     {
         return new TaskDto
         {
-            Uid = CreateUniqueTaskUid(),
+            Uid = TasksHelper.CreateUniqueTaskUid(),
             Title = title,
-            Date = IntegrationTestClock.UtcToday,
+            Date = TestDateService.UtcToday,
             Type = TaskTypeDto.Simple,
         };
     }

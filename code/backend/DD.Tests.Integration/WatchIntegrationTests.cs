@@ -1,13 +1,12 @@
 using System.Net;
 using DD.MobileClient.Domain.Dto;
 using DD.Shared.Details.Abstractions.Dto;
+using DD.Tests.Integration.Helpers;
 using DD.Tests.Integration.Infrastructure;
 using DD.Tests.Integration.Infrastructure.Api;
 using DD.Tests.Integration.Infrastructure.Clients;
 using DD.Tests.Integration.Infrastructure.Readers;
 using Xunit;
-using static DD.Tests.Integration.Helpers.MobileHelper;
-using static DD.Tests.Integration.Helpers.TasksTestData;
 
 namespace DD.Tests.Integration;
 
@@ -61,7 +60,7 @@ public sealed class WatchIntegrationTests : IntegrationTestBase
 
         var sentinel = new TaskDto
         {
-            Uid = CreateUniqueTaskUid(),
+            Uid = TasksHelper.CreateUniqueTaskUid(),
             Date = today,
             Title = $"Mobile sentinel {Guid.NewGuid():N}",
             Type = TaskTypeDto.Simple,
@@ -94,7 +93,7 @@ public sealed class WatchIntegrationTests : IntegrationTestBase
         Assert.Single(savedUpdates);
         Assert.All(savedUpdates, savedUpdate => Assert.Equal(2, savedUpdate.Version));
 
-        var updatedWidget = await PollUntilAsync(
+        var updatedWidget = await MobileHelper.PollUntilAsync(
             async () =>
             {
                 using var response = await MobileApi.GetWidgetAsync(
@@ -107,7 +106,7 @@ public sealed class WatchIntegrationTests : IntegrationTestBase
         Assert.Equal(initialWidget.Header, updatedWidget.Header);
         Assert.Equal("Routine task", updatedWidget.Support);
 
-        var updatedApp = await PollUntilAsync(
+        var updatedApp = await MobileHelper.PollUntilAsync(
             async () =>
             {
                 using var response = await MobileApi.GetAppAsync(
@@ -125,7 +124,7 @@ public sealed class WatchIntegrationTests : IntegrationTestBase
     public async Task Watch_UnknownMobileKey_ReturnsUnexpectedErrorProblemDetails()
     {
         using var client = await CreateClientAsync();
-        var mobileKey = CreateUniqueMobileKey();
+        var mobileKey = MobileHelper.CreateUniqueMobileKey();
 
         using var response = await MobileApi.GetWidgetAsync(client, mobileKey);
 
@@ -157,8 +156,8 @@ public sealed class WatchIntegrationTests : IntegrationTestBase
 
     private static async Task<string> SeedMobileUserAsync(TestUserClient user)
     {
-        var mobileKey = CreateUniqueMobileKey();
-        var userId = GetUserId(user.Token);
+        var mobileKey = MobileHelper.CreateUniqueMobileKey();
+        var userId = MobileHelper.GetUserId(user.Token);
 
         using var response = await MobileApi.CreateUserMappingAsync(
             user.HttpClient,
@@ -176,7 +175,7 @@ public sealed class WatchIntegrationTests : IntegrationTestBase
             {
                 new()
                 {
-                    Uid = CreateUniqueTaskUid(),
+                    Uid = TasksHelper.CreateUniqueTaskUid(),
                     Date = date,
                     Order = 1,
                     Title = "Routine task",
@@ -184,7 +183,7 @@ public sealed class WatchIntegrationTests : IntegrationTestBase
                 },
                 new()
                 {
-                    Uid = CreateUniqueTaskUid(),
+                    Uid = TasksHelper.CreateUniqueTaskUid(),
                     Date = date,
                     Order = 2,
                     Title = "Simple task",
@@ -192,7 +191,7 @@ public sealed class WatchIntegrationTests : IntegrationTestBase
                 },
                 new()
                 {
-                    Uid = CreateUniqueTaskUid(),
+                    Uid = TasksHelper.CreateUniqueTaskUid(),
                     Date = date,
                     Order = 3,
                     Title = "Additional task",
@@ -200,7 +199,7 @@ public sealed class WatchIntegrationTests : IntegrationTestBase
                 },
                 new()
                 {
-                    Uid = CreateUniqueTaskUid(),
+                    Uid = TasksHelper.CreateUniqueTaskUid(),
                     Date = date,
                     Order = 4,
                     Title = "Completed task",
@@ -209,7 +208,7 @@ public sealed class WatchIntegrationTests : IntegrationTestBase
                 },
                 new()
                 {
-                    Uid = CreateUniqueTaskUid(),
+                    Uid = TasksHelper.CreateUniqueTaskUid(),
                     Date = date,
                     Order = 5,
                     Time = 615,

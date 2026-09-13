@@ -1,5 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Loader;
+using DD.Tests.Integration.Infrastructure.ExternalDependencies;
 
 namespace DD.Tests.Integration.Infrastructure;
 
@@ -31,10 +32,10 @@ internal static class IntegrationEnvironmentLifetime
         return environment.CreateSignalRHandler();
     }
 
-    internal static async Task<RecordingBotSendMessageService> GetTelegramMessagesAsync()
+    internal static async Task<TestBotSendMessageService> GetBotMessagesAsync()
     {
         _ = await Shared.Value;
-        return ExternalDependencies.TelegramMessages;
+        return ExternalDependencies.BotMessages;
     }
 
     [SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "Process teardown must report cleanup failures without escaping the process-exit callback.")]

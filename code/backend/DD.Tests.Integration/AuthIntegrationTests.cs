@@ -2,11 +2,11 @@ using System.Net;
 using System.Net.Http.Headers;
 using DD.ServiceAuth.Domain.Dto;
 using DD.ServiceAuth.Domain.Enums;
+using DD.Tests.Integration.Helpers;
 using DD.Tests.Integration.Infrastructure;
 using DD.Tests.Integration.Infrastructure.Api;
 using DD.Tests.Integration.Infrastructure.Readers;
 using Xunit;
-using static DD.Tests.Integration.Helpers.AuthTestData;
 
 namespace DD.Tests.Integration;
 
@@ -33,7 +33,7 @@ public sealed class AuthIntegrationTests : IntegrationTestBase
     public async Task AccountEndpoints_SignUpSignInCurrentUserAndRenew_Succeed()
     {
         using var client = await CreateClientAsync();
-        var username = CreateUniqueUsername("auth");
+        var username = AuthHelper.CreateUniqueUsername("auth");
 
         using var signUpResponse = await AuthApi.SignUpAsync(
             client,
@@ -82,7 +82,7 @@ public sealed class AuthIntegrationTests : IntegrationTestBase
     public async Task SignIn_ExistingUserWithWrongPassword_ReturnsWrongUsernamePassword()
     {
         using var client = await CreateClientAsync();
-        var username = CreateUniqueUsername("wrong-password");
+        var username = AuthHelper.CreateUniqueUsername("wrong-password");
 
         using var signUpResponse = await AuthApi.SignUpAsync(
             client,
@@ -119,7 +119,7 @@ public sealed class AuthIntegrationTests : IntegrationTestBase
     public async Task SignUp_DuplicateUsername_ReturnsUsernameAlreadyExists()
     {
         using var client = await CreateClientAsync();
-        var username = CreateUniqueUsername("duplicate");
+        var username = AuthHelper.CreateUniqueUsername("duplicate");
         var signUpInfo = new SignUpInfoDto { Username = username, Password = Password };
 
         using var firstResponse = await AuthApi.SignUpAsync(client, signUpInfo);

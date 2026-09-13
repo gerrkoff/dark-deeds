@@ -1,6 +1,6 @@
 namespace DD.Tests.Integration.Helpers;
 
-internal static class TasksTestData
+internal static class TasksHelper
 {
     internal static string CreateUniqueTaskUid()
     {

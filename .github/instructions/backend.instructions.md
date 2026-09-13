@@ -174,3 +174,10 @@ labels.** Prefer `typeof(T).Name` or `nameof(...)` whenever the compiler already
 **Name integration-support files after their primary type and place protocol clients under
 `Infrastructure/Clients`.** Do not use generic `*Helper.cs` filenames for concrete clients,
 collectors, readers, or API contracts.
+
+**Keep miscellaneous domain test utilities named `<Domain>Helper`; do not invent a `TestData`
+suffix when the repository already uses the helper convention.** Keep calls explicitly qualified
+and do not use `using static`.
+
+**Place replaced external services under `Infrastructure/ExternalDependencies` and name them
+`Test<ProductionRole>`, such as `TestDateService` and `TestBotSendMessageService`.**

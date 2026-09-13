@@ -1,9 +1,9 @@
 using System.Net.Http.Headers;
 using DD.ServiceAuth.Domain.Dto;
 using DD.ServiceAuth.Domain.Enums;
+using DD.Tests.Integration.Helpers;
 using DD.Tests.Integration.Infrastructure.Api;
 using DD.Tests.Integration.Infrastructure.Readers;
-using static DD.Tests.Integration.Helpers.AuthTestData;
 
 namespace DD.Tests.Integration.Infrastructure.Clients;
 
@@ -33,7 +33,7 @@ public sealed class TestUserClient : IAsyncDisposable
 
         try
         {
-            var username = CreateUniqueUsername();
+            var username = AuthHelper.CreateUniqueUsername();
             const string password = "QWERTY123456qwerty!@#$%^";
             using var response = await AuthApi.SignUpAsync(
                 httpClient,

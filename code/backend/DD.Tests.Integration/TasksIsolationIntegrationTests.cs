@@ -1,11 +1,11 @@
 using System.Net;
 using DD.Shared.Details.Abstractions.Dto;
+using DD.Tests.Integration.Helpers;
 using DD.Tests.Integration.Infrastructure;
 using DD.Tests.Integration.Infrastructure.Api;
 using DD.Tests.Integration.Infrastructure.Clients;
 using DD.Tests.Integration.Infrastructure.Readers;
 using Xunit;
-using static DD.Tests.Integration.Helpers.TasksTestData;
 
 namespace DD.Tests.Integration;
 
@@ -188,7 +188,7 @@ public sealed class TasksIsolationIntegrationTests : IntegrationTestBase
     {
         return new TaskDto
         {
-            Uid = CreateUniqueTaskUid(),
+            Uid = TasksHelper.CreateUniqueTaskUid(),
             Title = title,
             Date = date,
             Order = order,

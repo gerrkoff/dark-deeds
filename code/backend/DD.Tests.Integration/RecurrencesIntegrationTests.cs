@@ -1,10 +1,11 @@
 using System.Net;
 using DD.ServiceTask.Domain.Entities.Enums;
+using DD.Tests.Integration.Helpers;
 using DD.Tests.Integration.Infrastructure;
 using DD.Tests.Integration.Infrastructure.Api;
+using DD.Tests.Integration.Infrastructure.ExternalDependencies;
 using DD.Tests.Integration.Infrastructure.Readers;
 using Xunit;
-using static DD.Tests.Integration.Helpers.RecurrencesHelper;
 
 namespace DD.Tests.Integration;
 
@@ -14,13 +15,13 @@ public sealed class RecurrencesIntegrationTests : IntegrationTestBase
     public async Task Recurrences_LifecycleThroughCreateUpdateDeleteRoundTrip_ReturnsPersistedContract()
     {
         await using var user = await CreateUserClientAsync();
-        var today = IntegrationTestClock.UtcToday;
+        var today = TestDateService.UtcToday;
 
         using var emptyGetResponse = await RecurrencesApi.LoadAsync(user.HttpClient);
         Assert.Equal(HttpStatusCode.OK, emptyGetResponse.StatusCode);
         Assert.Empty(await RecurrencesReader.ReadAsync(emptyGetResponse));
 
-        var recurrence = CreateRecurrence(
+        var recurrence = RecurrencesHelper.CreateRecurrence(
             "Weekly task",
             today,
             today.AddDays(30),
@@ -74,7 +75,9 @@ public sealed class RecurrencesIntegrationTests : IntegrationTestBase
         Assert.Equal(RecurrenceWeekday.Tuesday | RecurrenceWeekday.Thursday, updatedLoaded.EveryWeekday);
         Assert.Equal("2,16", updatedLoaded.EveryMonthDay);
 
-        var secondRecurrence = CreateRecurrence("Second recurrence", today);
+        var secondRecurrence = RecurrencesHelper.CreateRecurrence(
+            "Second recurrence",
+            today);
         using var secondCreateResponse = await RecurrencesApi.SaveAsync(
             user.HttpClient,
             [secondRecurrence]);
@@ -98,8 +101,10 @@ public sealed class RecurrencesIntegrationTests : IntegrationTestBase
     {
         await using var owner = await CreateUserClientAsync();
         await using var foreignUser = await CreateUserClientAsync();
-        var today = IntegrationTestClock.UtcToday;
-        var ownerRecurrence = CreateRecurrence("Owner recurrence", today);
+        var today = TestDateService.UtcToday;
+        var ownerRecurrence = RecurrencesHelper.CreateRecurrence(
+            "Owner recurrence",
+            today);
 
         using var createResponse = await RecurrencesApi.SaveAsync(
             owner.HttpClient,
@@ -126,9 +131,14 @@ public sealed class RecurrencesIntegrationTests : IntegrationTestBase
     public async Task RecurrencesCreate_ConcurrentAndRepeatedCalls_GenerateExactlyOneTaskAndNoScheduleRecurrenceCreatesNone()
     {
         await using var user = await CreateUserClientAsync();
-        var today = IntegrationTestClock.UtcToday;
-        var scheduledTitle = $"Recurring task {CreateUniqueRecurrenceUid()}";
-        var scheduledRecurrence = CreateRecurrence(scheduledTitle, today, today, everyNthDay: 1);
+        var today = TestDateService.UtcToday;
+        var scheduledTitle =
+            $"Recurring task {RecurrencesHelper.CreateUniqueRecurrenceUid()}";
+        var scheduledRecurrence = RecurrencesHelper.CreateRecurrence(
+            scheduledTitle,
+            today,
+            today,
+            everyNthDay: 1);
 
         using var seedResponse = await RecurrencesApi.SaveAsync(
             user.HttpClient,
@@ -148,8 +158,11 @@ public sealed class RecurrencesIntegrationTests : IntegrationTestBase
         var generatedTask = Assert.Single(tasks);
         Assert.Equal(scheduledTitle, generatedTask.Title);
 
-        var noScheduleTitle = $"No schedule task {CreateUniqueRecurrenceUid()}";
-        var noScheduleRecurrence = CreateRecurrence(noScheduleTitle, today);
+        var noScheduleTitle =
+            $"No schedule task {RecurrencesHelper.CreateUniqueRecurrenceUid()}";
+        var noScheduleRecurrence = RecurrencesHelper.CreateRecurrence(
+            noScheduleTitle,
+            today);
         using var noScheduleSeedResponse = await RecurrencesApi.SaveAsync(
             user.HttpClient,
             [noScheduleRecurrence]);
@@ -169,11 +182,21 @@ public sealed class RecurrencesIntegrationTests : IntegrationTestBase
     {
         await using var firstUser = await CreateUserClientAsync();
         await using var secondUser = await CreateUserClientAsync();
-        var today = IntegrationTestClock.UtcToday;
-        var firstTitle = $"First recurrence {CreateUniqueRecurrenceUid()}";
-        var secondTitle = $"Second recurrence {CreateUniqueRecurrenceUid()}";
-        var firstRecurrence = CreateRecurrence(firstTitle, today, today, everyNthDay: 1);
-        var secondRecurrence = CreateRecurrence(secondTitle, today, today, everyNthDay: 1);
+        var today = TestDateService.UtcToday;
+        var firstTitle =
+            $"First recurrence {RecurrencesHelper.CreateUniqueRecurrenceUid()}";
+        var secondTitle =
+            $"Second recurrence {RecurrencesHelper.CreateUniqueRecurrenceUid()}";
+        var firstRecurrence = RecurrencesHelper.CreateRecurrence(
+            firstTitle,
+            today,
+            today,
+            everyNthDay: 1);
+        var secondRecurrence = RecurrencesHelper.CreateRecurrence(
+            secondTitle,
+            today,
+            today,
+            everyNthDay: 1);
 
         using var firstSeedResponse = await RecurrencesApi.SaveAsync(
             firstUser.HttpClient,
