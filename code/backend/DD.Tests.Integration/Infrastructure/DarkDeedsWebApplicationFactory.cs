@@ -11,7 +11,10 @@ using TelegramDateService = DD.TelegramClient.Domain.Services.IDateService;
 
 namespace DD.Tests.Integration.Infrastructure;
 
-public sealed class DarkDeedsWebApplicationFactory(string sharedDbConnectionString) : WebApplicationFactory<Startup>
+internal sealed class DarkDeedsWebApplicationFactory(
+    string sharedDbConnectionString,
+    IntegrationExternalDependencies externalDependencies)
+    : WebApplicationFactory<Startup>
 {
     internal const string AuthIssuer = "https://integration-tests.dark-deeds.test";
     private const string AuthAudience = "dark-deeds-integration-tests";
@@ -49,12 +52,6 @@ public sealed class DarkDeedsWebApplicationFactory(string sharedDbConnectionStri
         }
     }
 
-    public async Task<T> ExecuteScopedAsync<T>(Func<IServiceProvider, Task<T>> action)
-    {
-        await using var scope = Services.CreateAsyncScope();
-        return await action(scope.ServiceProvider);
-    }
-
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         builder
@@ -74,7 +71,7 @@ public sealed class DarkDeedsWebApplicationFactory(string sharedDbConnectionStri
                     ["OAuth:ScopesSupported:0"] = "mcp",
                     ["Monitoring:MetricsEnabled"] = "false",
                     ["EnableTelegramIntegration"] = "false",
-                    ["EnableTestHandlers"] = "false",
+                    ["EnableTestHandlers"] = "true",
                     ["Bot"] = "integration-tests",
                 });
             })
@@ -82,7 +79,8 @@ public sealed class DarkDeedsWebApplicationFactory(string sharedDbConnectionStri
             {
                 services.AddDataProtection().UseEphemeralDataProtectionProvider();
                 services.RemoveAll<IBotSendMessageService>();
-                services.AddSingleton<IBotSendMessageService, RecordingBotSendMessageService>();
+                services.AddSingleton<IBotSendMessageService>(
+                    externalDependencies.TelegramMessages);
                 services.RemoveAll<ServiceTaskDateService>();
                 services.RemoveAll<TelegramDateService>();
                 services.AddSingleton<IntegrationTestClock>();

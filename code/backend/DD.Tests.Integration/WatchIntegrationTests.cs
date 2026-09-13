@@ -1,13 +1,10 @@
 using System.Net;
 using System.Net.Http.Json;
-using DD.Clients.Details.MobileClient.Data;
 using DD.MobileClient.Domain.Dto;
-using DD.MobileClient.Domain.Entities;
 using DD.Shared.Details.Abstractions.Dto;
 using DD.Tests.Integration.Helpers;
 using DD.Tests.Integration.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 using static DD.Tests.Integration.Helpers.Helper;
 using static DD.Tests.Integration.Helpers.MobileHelper;
@@ -150,16 +147,13 @@ public sealed class WatchIntegrationTests : IntegrationTestBase
         var mobileKey = CreateUniqueMobileKey();
         var userId = GetUserId(user.Token);
 
-        await ExecuteScopedAsync(async services =>
-        {
-            var repository = services.GetRequiredService<MobileUserRepository>();
-            await repository.UpsertAsync(new MobileUserEntity
-            {
-                MobileKey = mobileKey,
-                UserId = userId,
-            });
-            return true;
-        });
+        var uri = new Uri(
+            $"api/test/CreateMobileUserMapping?userId={Uri.EscapeDataString(userId)}&mobileKey={Uri.EscapeDataString(mobileKey)}",
+            UriKind.Relative);
+        using var response = await user.HttpClient.PostAsync(
+            uri,
+            content: null);
+        response.EnsureSuccessStatusCode();
 
         return mobileKey;
     }

@@ -142,3 +142,8 @@ You are a senior .NET backend developer and an expert in C#, ASP.NET Core, and E
 contracts with minimal test infrastructure.** Do not introduce test-only wrappers, barriers, or
 other coordination around core application services solely to force complex edge cases unless the
 developer explicitly approves the resulting maintenance cost.
+
+**Use narrow `BaseControllerTest` handlers for setup that cannot be performed through production
+APIs; never expose a generic `IServiceProvider` escape hatch to integration tests.** For replaced
+outbound dependencies, the test harness owns the concrete fake, registers that same instance in
+application DI, and retains the reference for assertions.

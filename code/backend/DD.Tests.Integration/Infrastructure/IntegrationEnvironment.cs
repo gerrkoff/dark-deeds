@@ -49,12 +49,8 @@ internal sealed class IntegrationEnvironment : IAsyncDisposable
         return _factory.CreateTestServerHandler();
     }
 
-    internal Task<T> ExecuteScopedAsync<T>(Func<IServiceProvider, Task<T>> action)
-    {
-        return _factory.ExecuteScopedAsync(action);
-    }
-
-    internal static async Task<IntegrationEnvironment> CreateAsync()
+    internal static async Task<IntegrationEnvironment> CreateAsync(
+        IntegrationExternalDependencies externalDependencies)
     {
         await DockerHelper.EnsureImageAsync(MongoImage);
 
@@ -74,7 +70,9 @@ internal sealed class IntegrationEnvironment : IAsyncDisposable
             var databaseConnectionString = CreateDatabaseConnectionString(
                 mongoContainer.GetConnectionString(),
                 databaseName);
-            factory = new DarkDeedsWebApplicationFactory(databaseConnectionString);
+            factory = new DarkDeedsWebApplicationFactory(
+                databaseConnectionString,
+                externalDependencies);
 
             using var client = factory.CreateTestClient();
 

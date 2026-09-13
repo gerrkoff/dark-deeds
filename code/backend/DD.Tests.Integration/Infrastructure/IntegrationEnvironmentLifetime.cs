@@ -6,8 +6,11 @@ namespace DD.Tests.Integration.Infrastructure;
 
 internal static class IntegrationEnvironmentLifetime
 {
+    private static readonly IntegrationExternalDependencies ExternalDependencies = new();
     private static readonly Lazy<Task<IntegrationEnvironment>> Shared =
-        new(IntegrationEnvironment.CreateAsync, LazyThreadSafetyMode.ExecutionAndPublication);
+        new(
+            () => IntegrationEnvironment.CreateAsync(ExternalDependencies),
+            LazyThreadSafetyMode.ExecutionAndPublication);
 
     private static int _cleanupStarted;
 
@@ -35,10 +38,10 @@ internal static class IntegrationEnvironmentLifetime
         return environment.CreateSignalRHandler();
     }
 
-    internal static async Task<T> ExecuteScopedAsync<T>(Func<IServiceProvider, Task<T>> action)
+    internal static async Task<RecordingBotSendMessageService> GetTelegramMessagesAsync()
     {
-        var environment = await Shared.Value;
-        return await environment.ExecuteScopedAsync(action);
+        _ = await Shared.Value;
+        return ExternalDependencies.TelegramMessages;
     }
 
     [SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "Process teardown must report cleanup failures without escaping the process-exit callback.")]

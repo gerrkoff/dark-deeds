@@ -12,13 +12,13 @@ public abstract class IntegrationTestBase
         return IntegrationEnvironmentLifetime.CreateSignalRHandlerAsync();
     }
 
-    protected static Task<T> ExecuteScopedAsync<T>(Func<IServiceProvider, Task<T>> action)
-    {
-        return IntegrationEnvironmentLifetime.ExecuteScopedAsync(action);
-    }
-
     protected static Task<TestUserClient> CreateUserClientAsync()
     {
         return TestUserClient.CreateAsync();
+    }
+
+    protected static Task<RecordingBotSendMessageService> GetTelegramMessagesAsync()
+    {
+        return IntegrationEnvironmentLifetime.GetTelegramMessagesAsync();
     }
 }

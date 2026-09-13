@@ -1,10 +1,8 @@
 using System.Net;
 using System.Net.Http.Json;
 using DD.Shared.Details.Abstractions.Dto;
-using DD.TelegramClient.Domain.Services;
 using DD.Tests.Integration.Helpers;
 using DD.Tests.Integration.Infrastructure;
-using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 using static DD.Tests.Integration.Helpers.Helper;
 
@@ -25,7 +23,7 @@ public sealed class TelegramIntegrationTests : IntegrationTestBase
 
         Assert.Equal(HttpStatusCode.Unauthorized, anonymousResponse.StatusCode);
 
-        var recorder = await GetRecorderAsync();
+        var recorder = await GetTelegramMessagesAsync();
         await using var user = await CreateUserClientAsync();
         var chatId = TelegramHelper.CreateUniqueChatId();
         var startKey = await TelegramHelper.CreateStartKeyAsync(user);
@@ -39,7 +37,7 @@ public sealed class TelegramIntegrationTests : IntegrationTestBase
     [Fact]
     public async Task CreateTaskCommand_PersistsTaskForOwner_AndDoesNotExposeItToAnotherUser()
     {
-        var recorder = await GetRecorderAsync();
+        var recorder = await GetTelegramMessagesAsync();
         using var anonymousClient = await CreateClientAsync();
         await using var owner = await CreateUserClientAsync();
         await using var foreignUser = await CreateUserClientAsync();
@@ -65,7 +63,7 @@ public sealed class TelegramIntegrationTests : IntegrationTestBase
     [Fact]
     public async Task BotCommands_WithTasksWithoutTasksAndUnknownCommand_RecordExactMessagesPerChat()
     {
-        var recorder = await GetRecorderAsync();
+        var recorder = await GetTelegramMessagesAsync();
         using var anonymousClient = await CreateClientAsync();
         await using var taskUser = await CreateUserClientAsync();
         await using var emptyUser = await CreateUserClientAsync();
@@ -118,12 +116,5 @@ public sealed class TelegramIntegrationTests : IntegrationTestBase
         var message = await TelegramHelper.ReadMessageAsync(recorder, chatId, MessageTimeout);
         Assert.Equal("Registered", message);
         return chatId;
-    }
-
-    private static Task<RecordingBotSendMessageService> GetRecorderAsync()
-    {
-        return ExecuteScopedAsync(static services =>
-            Task.FromResult(Assert.IsType<RecordingBotSendMessageService>(
-                services.GetRequiredService<IBotSendMessageService>())));
     }
 }
