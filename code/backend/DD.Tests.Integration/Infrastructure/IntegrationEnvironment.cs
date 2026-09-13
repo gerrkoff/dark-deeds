@@ -34,14 +34,9 @@ internal sealed class IntegrationEnvironment : IAsyncDisposable
         await DisposeResourcesAsync(_mongoContainer, _factory);
     }
 
-    internal HttpClient CreateNoRedirectClient()
+    internal HttpClient CreateClient(bool allowAutoRedirect = true)
     {
-        return _factory.CreateNoRedirectClient();
-    }
-
-    internal HttpClient CreateClient()
-    {
-        return _factory.CreateTestClient();
+        return _factory.CreateTestClient(allowAutoRedirect);
     }
 
     internal HttpMessageHandler CreateSignalRHandler()

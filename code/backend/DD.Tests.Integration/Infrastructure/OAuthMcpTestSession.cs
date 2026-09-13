@@ -45,7 +45,7 @@ public sealed class OAuthMcpTestSession : IAsyncDisposable
     public static async Task<OAuthMcpTestSession> CreateAsync(
         CancellationToken cancellationToken = default)
     {
-        var oauthClient = await IntegrationEnvironmentLifetime.CreateNoRedirectClientAsync();
+        var oauthClient = await IntegrationEnvironmentLifetime.CreateClientAsync();
         TestUserClient? user = null;
         var shouldDispose = true;
 

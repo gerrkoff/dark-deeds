@@ -90,7 +90,8 @@ public sealed class OAuthIntegrationTests : IntegrationTestBase
     [Fact]
     public async Task Authorize_Get_Returns302RedirectToSpaWithQueryParameters()
     {
-        using var oauthClient = await IntegrationEnvironmentLifetime.CreateNoRedirectClientAsync();
+        using var oauthClient = await IntegrationEnvironmentLifetime.CreateClientAsync(
+            allowAutoRedirect: false);
 
         var verifier = OAuthMcpHelper.GenerateCodeVerifier();
         var challenge = OAuthMcpHelper.ComputeS256Challenge(verifier);
@@ -201,7 +202,7 @@ public sealed class OAuthIntegrationTests : IntegrationTestBase
     public async Task Token_WrongCodeVerifier_Returns400InvalidGrant()
     {
         await using var user = await CreateUserClientAsync();
-        using var oauthClient = await IntegrationEnvironmentLifetime.CreateNoRedirectClientAsync();
+        using var oauthClient = await IntegrationEnvironmentLifetime.CreateClientAsync();
 
         var verifier = OAuthMcpHelper.GenerateCodeVerifier();
         var challenge = OAuthMcpHelper.ComputeS256Challenge(verifier);

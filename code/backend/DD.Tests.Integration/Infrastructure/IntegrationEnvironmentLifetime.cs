@@ -20,16 +20,10 @@ internal static class IntegrationEnvironmentLifetime
         AppDomain.CurrentDomain.ProcessExit += (_, _) => CleanupAtProcessExit();
     }
 
-    internal static async Task<HttpClient> CreateClientAsync()
+    internal static async Task<HttpClient> CreateClientAsync(bool allowAutoRedirect = true)
     {
         var environment = await Shared.Value;
-        return environment.CreateClient();
-    }
-
-    internal static async Task<HttpClient> CreateNoRedirectClientAsync()
-    {
-        var environment = await Shared.Value;
-        return environment.CreateNoRedirectClient();
+        return environment.CreateClient(allowAutoRedirect);
     }
 
     internal static async Task<HttpMessageHandler> CreateSignalRHandlerAsync()

@@ -21,25 +21,14 @@ internal sealed class DarkDeedsWebApplicationFactory(
     private const string AuthKey = "dark-deeds-integration-test-signing-key-2026-abcdefghijklmnopqrstuvwxyz";
     private readonly object _clientLock = new();
 
-    public HttpClient CreateNoRedirectClient()
+    public HttpClient CreateTestClient(bool allowAutoRedirect = true)
     {
         lock (_clientLock)
         {
             return CreateClient(new WebApplicationFactoryClientOptions
             {
                 BaseAddress = new Uri("http://localhost"),
-                AllowAutoRedirect = false,
-            });
-        }
-    }
-
-    public HttpClient CreateTestClient()
-    {
-        lock (_clientLock)
-        {
-            return CreateClient(new WebApplicationFactoryClientOptions
-            {
-                BaseAddress = new Uri("http://localhost"),
+                AllowAutoRedirect = allowAutoRedirect,
             });
         }
     }
