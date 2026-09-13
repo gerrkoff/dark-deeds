@@ -11,7 +11,6 @@ internal static class TelegramReader
     {
         var result = await HttpResponseReader.ReadJsonAsync<TelegramStartDto>(
             response,
-            "Telegram start",
             cancellationToken);
         if (string.IsNullOrWhiteSpace(result.Url))
         {

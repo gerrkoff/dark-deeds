@@ -10,7 +10,6 @@ internal static class TasksReader
     {
         return HttpResponseReader.ReadJsonAsync<TaskDto[]>(
             response,
-            "tasks",
             cancellationToken);
     }
 }

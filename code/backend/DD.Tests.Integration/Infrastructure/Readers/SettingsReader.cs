@@ -10,7 +10,6 @@ internal static class SettingsReader
     {
         return HttpResponseReader.ReadJsonAsync<UserSettingsDto>(
             response,
-            "settings",
             cancellationToken);
     }
 }

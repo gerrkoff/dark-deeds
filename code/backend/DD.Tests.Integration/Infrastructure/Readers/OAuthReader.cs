@@ -12,7 +12,6 @@ internal static class OAuthReader
     {
         return HttpResponseReader.ReadJsonAsync<AuthServerMetadataDto>(
             response,
-            "OAuth authorization metadata",
             cancellationToken);
     }
 
@@ -22,7 +21,6 @@ internal static class OAuthReader
     {
         return HttpResponseReader.ReadJsonAsync<ProtectedResourceMetadataContract>(
             response,
-            "OAuth protected-resource metadata",
             cancellationToken);
     }
 
@@ -32,7 +30,6 @@ internal static class OAuthReader
     {
         return HttpResponseReader.ReadJsonAsync<ClientRegistrationResponseDto>(
             response,
-            "OAuth client registration",
             cancellationToken);
     }
 
@@ -42,7 +39,6 @@ internal static class OAuthReader
     {
         return HttpResponseReader.ReadJsonAsync<OAuthRedirectResponseDto>(
             response,
-            "OAuth redirect",
             cancellationToken);
     }
 
@@ -52,7 +48,6 @@ internal static class OAuthReader
     {
         return HttpResponseReader.ReadJsonAsync<TokenResponseDto>(
             response,
-            "OAuth token",
             cancellationToken);
     }
 
@@ -62,7 +57,6 @@ internal static class OAuthReader
     {
         return HttpResponseReader.ReadJsonAsync<OAuthErrorDto>(
             response,
-            "OAuth error",
             ensureSuccess: false,
             cancellationToken);
     }

@@ -10,7 +10,6 @@ internal static class MobileReader
     {
         return HttpResponseReader.ReadJsonAsync<WatchWidgetStatusDto>(
             response,
-            "mobile widget",
             cancellationToken);
     }
 
@@ -20,7 +19,6 @@ internal static class MobileReader
     {
         return HttpResponseReader.ReadJsonAsync<WatchAppStatusDto>(
             response,
-            "mobile app",
             cancellationToken);
     }
 }

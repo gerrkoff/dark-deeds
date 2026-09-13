@@ -17,7 +17,6 @@ internal static class SystemReader
     {
         return HttpResponseReader.ReadJsonAsync<JsonDocument>(
             response,
-            "build info",
             cancellationToken);
     }
 }

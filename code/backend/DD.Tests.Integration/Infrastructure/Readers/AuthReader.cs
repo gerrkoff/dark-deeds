@@ -11,7 +11,6 @@ internal static class AuthReader
     {
         return HttpResponseReader.ReadJsonAsync<CurrentUserDto>(
             response,
-            "current user",
             cancellationToken);
     }
 
@@ -21,7 +20,6 @@ internal static class AuthReader
     {
         return HttpResponseReader.ReadJsonAsync<SignUpResultDto>(
             response,
-            "sign-up",
             cancellationToken);
     }
 
@@ -31,7 +29,6 @@ internal static class AuthReader
     {
         return HttpResponseReader.ReadJsonAsync<SignInResultDto>(
             response,
-            "sign-in",
             cancellationToken);
     }
 

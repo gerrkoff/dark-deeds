@@ -166,3 +166,6 @@ classes.** API classes own typed inputs, routes, query construction, and return 
 `HttpResponseMessage` instances so tests can assert status and headers; reader classes own
 successful and error-body parsing. Keep test-data creation, polling, cryptography, and external
 fake observation out of both layers.
+
+**Derive reader diagnostics from the typed response contract instead of passing duplicated string
+labels.** Prefer `typeof(T).Name` or `nameof(...)` whenever the compiler already knows the name.

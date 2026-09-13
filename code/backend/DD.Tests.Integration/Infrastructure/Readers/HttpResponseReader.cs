@@ -6,19 +6,16 @@ internal static class HttpResponseReader
 {
     internal static async Task<T> ReadJsonAsync<T>(
         HttpResponseMessage response,
-        string contractName,
         CancellationToken cancellationToken = default)
     {
         return await ReadJsonAsync<T>(
             response,
-            contractName,
             ensureSuccess: true,
             cancellationToken);
     }
 
     internal static async Task<T> ReadJsonAsync<T>(
         HttpResponseMessage response,
-        string contractName,
         bool ensureSuccess,
         CancellationToken cancellationToken = default)
     {
@@ -28,7 +25,7 @@ internal static class HttpResponseReader
 
         return await response.Content.ReadFromJsonAsync<T>(cancellationToken)
                ?? throw new InvalidOperationException(
-                   $"The {contractName} response was empty.");
+                   $"The {typeof(T).Name} response was empty.");
     }
 
     internal static async Task<string> ReadStringAsync(

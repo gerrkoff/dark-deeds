@@ -10,7 +10,6 @@ internal static class RecurrencesReader
     {
         return HttpResponseReader.ReadJsonAsync<PlannedRecurrenceDto[]>(
             response,
-            "recurrences",
             cancellationToken);
     }
 
@@ -20,7 +19,6 @@ internal static class RecurrencesReader
     {
         return HttpResponseReader.ReadJsonAsync<int>(
             response,
-            "recurrence count",
             cancellationToken);
     }
 }

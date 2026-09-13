@@ -10,7 +10,6 @@ internal static class ProblemDetailsReader
     {
         return HttpResponseReader.ReadJsonAsync<ProblemDetails>(
             response,
-            "problem details",
             ensureSuccess: false,
             cancellationToken);
     }
