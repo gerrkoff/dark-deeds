@@ -160,3 +160,9 @@ and make ownership/disposal boundaries explicit. Keep credential producers resou
 token kinds, claims, audiences, and refresh behavior; a resource integration test verifies only
 that its accepted credential works and that the one relevant foreign credential is rejected.
 Do not replay every OAuth artifact against every resource endpoint.
+
+**Represent integration-test HTTP contracts with paired `<Domain>Api` and `<Domain>Reader`
+classes.** API classes own typed inputs, routes, query construction, and return raw
+`HttpResponseMessage` instances so tests can assert status and headers; reader classes own
+successful and error-body parsing. Keep test-data creation, polling, cryptography, and external
+fake observation out of both layers.

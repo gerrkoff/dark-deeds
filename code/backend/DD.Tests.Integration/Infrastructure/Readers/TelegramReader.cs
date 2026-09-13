@@ -1,4 +1,4 @@
-using DD.TelegramClient.Domain.Dto;
+using DD.Clients.Details.TelegramClient.Dto;
 using Microsoft.AspNetCore.WebUtilities;
 
 namespace DD.Tests.Integration.Infrastructure.Readers;

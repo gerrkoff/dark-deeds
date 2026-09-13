@@ -1,6 +1,5 @@
 using System.Net;
 using System.Net.Http.Headers;
-using DD.ServiceAuth.Details.Web;
 using DD.ServiceAuth.Domain.Dto;
 using DD.ServiceAuth.Domain.Enums;
 using DD.Tests.Integration.Infrastructure;

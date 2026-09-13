@@ -1,5 +1,4 @@
 using System.Net;
-using System.Net.Http.Json;
 using DD.Shared.Details.Abstractions.Dto;
 using DD.Tests.Integration.Helpers;
 using DD.Tests.Integration.Infrastructure;
@@ -21,9 +20,7 @@ public sealed class SignalRIntegrationTests : IntegrationTestBase
     {
         using var client = await CreateClientAsync();
 
-        using var anonymousResponse = await client.PostAsync(
-            new Uri("ws/task/task/negotiate?negotiateVersion=1", UriKind.Relative),
-            content: null);
+        using var anonymousResponse = await SignalRApi.NegotiateTaskHubAsync(client);
         Assert.Equal(HttpStatusCode.Unauthorized, anonymousResponse.StatusCode);
 
         await using var user = await CreateUserClientAsync();
@@ -90,7 +87,8 @@ public sealed class SignalRIntegrationTests : IntegrationTestBase
             [recurrence]);
         Assert.Equal(1, await RecurrencesReader.ReadCountAsync(seedResponse));
 
-        var createdCount = await CreateRecurrencesAsync(user.HttpClient);
+        using var createResponse = await RecurrencesApi.CreateTasksAsync(user.HttpClient);
+        var createdCount = await RecurrencesReader.ReadCountAsync(createResponse);
         Assert.Equal(1, createdCount);
 
         var generatedTask = await collector.WaitForTaskAsync(

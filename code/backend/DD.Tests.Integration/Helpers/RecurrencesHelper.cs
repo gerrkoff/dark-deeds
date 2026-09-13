@@ -1,7 +1,5 @@
 using DD.ServiceTask.Domain.Dto;
 using DD.ServiceTask.Domain.Entities.Enums;
-using DD.Tests.Integration.Infrastructure.Api;
-using DD.Tests.Integration.Infrastructure.Readers;
 
 namespace DD.Tests.Integration.Helpers;
 
@@ -30,13 +28,5 @@ internal static class RecurrencesHelper
             EveryWeekday = everyWeekday,
             EveryMonthDay = everyMonthDay,
         };
-    }
-
-    public static async Task<int> CreateRecurrencesAsync(HttpClient httpClient, int timezoneOffset = 0)
-    {
-        using var response = await RecurrencesApi.CreateTasksAsync(
-            httpClient,
-            timezoneOffset);
-        return await RecurrencesReader.ReadCountAsync(response);
     }
 }

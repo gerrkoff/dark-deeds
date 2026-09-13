@@ -1,3 +1,4 @@
+using DD.ServiceAuth.Details.Web;
 using DD.ServiceAuth.Domain.Dto;
 
 namespace DD.Tests.Integration.Infrastructure.Readers;

@@ -18,5 +18,4 @@ internal static class PkceHelper
         var bytes = Encoding.ASCII.GetBytes(codeVerifier);
         return WebEncoders.Base64UrlEncode(SHA256.HashData(bytes));
     }
-
 }

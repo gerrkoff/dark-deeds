@@ -1,5 +1,5 @@
 using System.Net.Http.Json;
-using DD.Clients.Details.TelegramClient.Dto;
+using DD.TelegramClient.Domain.Dto;
 
 namespace DD.Tests.Integration.Infrastructure.Api;
 

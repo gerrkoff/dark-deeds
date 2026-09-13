@@ -1,14 +1,11 @@
 using System.Net;
-using System.Net.Http.Json;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using DD.Shared.Details.Abstractions.Dto;
 using DD.Tests.Integration.Helpers;
 using DD.Tests.Integration.Infrastructure;
 using DD.Tests.Integration.Infrastructure.Api;
 using DD.Tests.Integration.Infrastructure.Clients;
 using DD.Tests.Integration.Infrastructure.Readers;
-using ModelContextProtocol.Protocol;
 using Xunit;
 using static DD.Tests.Integration.Helpers.Helper;
 
@@ -16,11 +13,6 @@ namespace DD.Tests.Integration;
 
 public sealed class McpIntegrationTests : IntegrationTestBase
 {
-    private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web)
-    {
-        Converters = { new JsonStringEnumConverter() },
-    };
-
     private static readonly TimeSpan ProtocolTimeout = TimeSpan.FromSeconds(10);
 
     [Fact]
@@ -90,7 +82,7 @@ public sealed class McpIntegrationTests : IntegrationTestBase
             },
             cancellationToken: CreateTimeoutToken());
 
-        var addText = ReadTaskText(addResult);
+        var addText = McpReader.ReadText(addResult);
         using var addJson = JsonDocument.Parse(addText);
         var routineTaskJson = Assert.Single(
             addJson.RootElement.EnumerateArray(),
@@ -99,8 +91,7 @@ public sealed class McpIntegrationTests : IntegrationTestBase
             nameof(TaskTypeDto.Routine),
             routineTaskJson.GetProperty(nameof(TaskDto.Type)).GetString());
 
-        var addedTasks = JsonSerializer.Deserialize<TaskDto[]>(addText, JsonOptions)
-            ?? throw new InvalidOperationException("MCP tool returned empty task JSON.");
+        var addedTasks = McpReader.ReadTasks(addResult);
         Assert.Equal(2, addedTasks.Length);
         Assert.Contains(
             addedTasks,
@@ -124,7 +115,7 @@ public sealed class McpIntegrationTests : IntegrationTestBase
             },
             cancellationToken: CreateTimeoutToken());
 
-        var loadedTasks = ReadTaskResult(loadResult);
+        var loadedTasks = McpReader.ReadTasks(loadResult);
         var loadedTodayTask = Assert.Single(loadedTasks, task => task.Title == todayTitle);
         Assert.Equal(today, loadedTodayTask.Date);
         Assert.DoesNotContain(loadedTasks, task => task.Title == tomorrowTitle);
@@ -183,7 +174,7 @@ public sealed class McpIntegrationTests : IntegrationTestBase
             },
             cancellationToken: CreateTimeoutToken());
 
-        var updatedTasks = ReadTaskResult(updateResult);
+        var updatedTasks = McpReader.ReadTasks(updateResult);
         Assert.Equal(2, updatedTasks.Length);
         Assert.Contains(
             updatedTasks,
@@ -247,21 +238,6 @@ public sealed class McpIntegrationTests : IntegrationTestBase
         var task = Assert.Single(tasks, item => item.Uid == uid);
         Assert.Equal(order, task.Order);
         Assert.Equal(version, task.Version);
-    }
-
-    private static TaskDto[] ReadTaskResult(CallToolResult result)
-    {
-        var text = ReadTaskText(result);
-        return JsonSerializer.Deserialize<TaskDto[]>(text, JsonOptions)
-               ?? throw new InvalidOperationException("MCP tool returned empty task JSON.");
-    }
-
-    private static string ReadTaskText(CallToolResult result)
-    {
-        Assert.NotEqual(true, result.IsError);
-        var textBlock = Assert.IsType<TextContentBlock>(Assert.Single(result.Content));
-        Assert.NotEmpty(textBlock.Text);
-        return textBlock.Text;
     }
 
     private static CancellationToken CreateTimeoutToken()

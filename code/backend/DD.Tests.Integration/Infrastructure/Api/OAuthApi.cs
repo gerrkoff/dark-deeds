@@ -8,10 +8,14 @@ internal static class OAuthApi
 {
     private static readonly Uri AuthorizationMetadataUri =
         new(".well-known/oauth-authorization-server", UriKind.Relative);
+
     private static readonly Uri AuthorizeUri = new("/authorize", UriKind.Relative);
+
     private static readonly Uri ProtectedResourceMetadataUri =
         new(".well-known/oauth-protected-resource/mcp", UriKind.Relative);
+
     private static readonly Uri RegisterUri = new("/register", UriKind.Relative);
+
     private static readonly Uri TokenUri = new("/token", UriKind.Relative);
 
     internal static Task<HttpResponseMessage> GetAuthorizationMetadataAsync(

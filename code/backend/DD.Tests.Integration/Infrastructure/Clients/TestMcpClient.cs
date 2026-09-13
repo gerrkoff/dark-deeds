@@ -1,6 +1,6 @@
+using DD.Tests.Integration.Infrastructure.Api;
 using Microsoft.Extensions.Logging.Abstractions;
 using ModelContextProtocol.Client;
-using DD.Tests.Integration.Infrastructure.Api;
 using SdkMcpClient = ModelContextProtocol.Client.McpClient;
 
 namespace DD.Tests.Integration.Infrastructure.Clients;

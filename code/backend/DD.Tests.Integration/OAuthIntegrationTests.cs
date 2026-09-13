@@ -267,5 +267,4 @@ public sealed class OAuthIntegrationTests : IntegrationTestBase
         Assert.Equal(expected.Authority, actual.Authority, ignoreCase: true);
         Assert.Equal(expected.AbsolutePath, actual.AbsolutePath);
     }
-
 }

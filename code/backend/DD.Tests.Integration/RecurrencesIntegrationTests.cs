@@ -4,7 +4,6 @@ using DD.Tests.Integration.Infrastructure;
 using DD.Tests.Integration.Infrastructure.Api;
 using DD.Tests.Integration.Infrastructure.Readers;
 using Xunit;
-using static DD.Tests.Integration.Helpers.Helper;
 using static DD.Tests.Integration.Helpers.RecurrencesHelper;
 
 namespace DD.Tests.Integration;
@@ -202,5 +201,11 @@ public sealed class RecurrencesIntegrationTests : IntegrationTestBase
         var secondTasks = await TasksReader.ReadAsync(secondTasksResponse);
         Assert.DoesNotContain(secondTasks, task => task.Title == firstTitle);
         Assert.DoesNotContain(secondTasks, task => task.Title == secondTitle);
+    }
+
+    private static async Task<int> CreateRecurrencesAsync(HttpClient client)
+    {
+        using var response = await RecurrencesApi.CreateTasksAsync(client);
+        return await RecurrencesReader.ReadCountAsync(response);
     }
 }

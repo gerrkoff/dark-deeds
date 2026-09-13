@@ -7,7 +7,19 @@ internal static class HttpResponseReader
     internal static async Task<T> ReadJsonAsync<T>(
         HttpResponseMessage response,
         string contractName,
-        bool ensureSuccess = true,
+        CancellationToken cancellationToken = default)
+    {
+        return await ReadJsonAsync<T>(
+            response,
+            contractName,
+            ensureSuccess: true,
+            cancellationToken);
+    }
+
+    internal static async Task<T> ReadJsonAsync<T>(
+        HttpResponseMessage response,
+        string contractName,
+        bool ensureSuccess,
         CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(response);
