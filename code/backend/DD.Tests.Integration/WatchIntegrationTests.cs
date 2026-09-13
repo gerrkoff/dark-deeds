@@ -1,11 +1,11 @@
 using System.Net;
-using System.Net.Http.Json;
 using DD.MobileClient.Domain.Dto;
 using DD.Shared.Details.Abstractions.Dto;
 using DD.Tests.Integration.Helpers;
 using DD.Tests.Integration.Infrastructure;
+using DD.Tests.Integration.Infrastructure.Api;
 using DD.Tests.Integration.Infrastructure.Clients;
-using Microsoft.AspNetCore.Mvc;
+using DD.Tests.Integration.Infrastructure.Readers;
 using Xunit;
 using static DD.Tests.Integration.Helpers.Helper;
 using static DD.Tests.Integration.Helpers.MobileHelper;
@@ -25,19 +25,21 @@ public sealed class WatchIntegrationTests : IntegrationTestBase
         var today = DateTime.UtcNow.Date;
         var tasks = CreateWatchTasks(today, today.AddDays(1));
 
-        using var saveResponse = await user.HttpClient.PostAsJsonAsync(
-            "api/task/tasks",
-            tasks);
+        using var saveResponse = await TasksApi.SaveAsync(user.HttpClient, tasks);
         Assert.Equal(HttpStatusCode.OK, saveResponse.StatusCode);
-        Assert.Equal(tasks.Length, (await ReadTasksAsync(saveResponse)).Length);
+        Assert.Equal(tasks.Length, (await TasksReader.ReadAsync(saveResponse)).Length);
 
         using var anonymousClient = await CreateClientAsync();
-        var widget = await ReadWidgetAsync(anonymousClient, mobileKey);
+        using var widgetResponse = await MobileApi.GetWidgetAsync(
+            anonymousClient,
+            mobileKey);
+        var widget = await MobileReader.ReadWidgetAsync(widgetResponse);
         Assert.Equal("\ud83d\udccc 2 remaining", widget.Header);
         Assert.Equal("Simple task", widget.Main);
         Assert.Equal("Routine task", widget.Support);
 
-        var app = await ReadAppAsync(anonymousClient, mobileKey);
+        using var appResponse = await MobileApi.GetAppAsync(anonymousClient, mobileKey);
+        var app = await MobileReader.ReadAppAsync(appResponse);
         Assert.Equal("\ud83d\udccc 2 remaining", app.Header);
         AssertAppItems(app, "Simple task");
     }
@@ -50,10 +52,8 @@ public sealed class WatchIntegrationTests : IntegrationTestBase
         var today = DateTime.UtcNow.Date;
         var tasks = CreateWatchTasks(today);
 
-        using var setupResponse = await user.HttpClient.PostAsJsonAsync(
-            "api/task/tasks",
-            tasks);
-        var savedTasks = await ReadTasksAsync(setupResponse);
+        using var setupResponse = await TasksApi.SaveAsync(user.HttpClient, tasks);
+        var savedTasks = await TasksReader.ReadAsync(setupResponse);
 
         await using var sentinelUser = await CreateUserClientAsync();
         using var sentinelHandler = await CreateSignalRHandlerAsync();
@@ -69,15 +69,21 @@ public sealed class WatchIntegrationTests : IntegrationTestBase
             Title = $"Mobile sentinel {Guid.NewGuid():N}",
             Type = TaskTypeDto.Simple,
         };
-        using var sentinelResponse = await sentinelUser.HttpClient.PostAsJsonAsync(
-            "api/task/tasks",
-            new[] { sentinel });
-        _ = await ReadTasksAsync(sentinelResponse);
+        using var sentinelResponse = await TasksApi.SaveAsync(
+            sentinelUser.HttpClient,
+            [sentinel]);
+        _ = await TasksReader.ReadAsync(sentinelResponse);
         await sentinelCollector.WaitForTaskAsync(sentinel.Uid, NotificationTimeout);
 
         using var anonymousClient = await CreateClientAsync();
-        var initialWidget = await ReadWidgetAsync(anonymousClient, mobileKey);
-        var initialApp = await ReadAppAsync(anonymousClient, mobileKey);
+        using var initialWidgetResponse = await MobileApi.GetWidgetAsync(
+            anonymousClient,
+            mobileKey);
+        var initialWidget = await MobileReader.ReadWidgetAsync(initialWidgetResponse);
+        using var initialAppResponse = await MobileApi.GetAppAsync(
+            anonymousClient,
+            mobileKey);
+        var initialApp = await MobileReader.ReadAppAsync(initialAppResponse);
         Assert.Equal("Simple task", initialWidget.Main);
         Assert.Equal("Simple task", initialApp.Items[1].Item);
 
@@ -86,22 +92,32 @@ public sealed class WatchIntegrationTests : IntegrationTestBase
         foreach (var updatedTask in updatedTasks)
             updatedTask.Title = "Updated simple task";
 
-        using var updateResponse = await user.HttpClient.PostAsJsonAsync(
-            "api/task/tasks",
-            updatedTasks);
-        var savedUpdates = await ReadTasksAsync(updateResponse);
+        using var updateResponse = await TasksApi.SaveAsync(user.HttpClient, updatedTasks);
+        var savedUpdates = await TasksReader.ReadAsync(updateResponse);
         Assert.Single(savedUpdates);
         Assert.All(savedUpdates, savedUpdate => Assert.Equal(2, savedUpdate.Version));
 
         var updatedWidget = await PollUntilAsync(
-            () => ReadWidgetAsync(anonymousClient, mobileKey),
+            async () =>
+            {
+                using var response = await MobileApi.GetWidgetAsync(
+                    anonymousClient,
+                    mobileKey);
+                return await MobileReader.ReadWidgetAsync(response);
+            },
             payload => payload.Main == "Updated simple task",
             PayloadTimeout);
         Assert.Equal(initialWidget.Header, updatedWidget.Header);
         Assert.Equal("Routine task", updatedWidget.Support);
 
         var updatedApp = await PollUntilAsync(
-            () => ReadAppAsync(anonymousClient, mobileKey),
+            async () =>
+            {
+                using var response = await MobileApi.GetAppAsync(
+                    anonymousClient,
+                    mobileKey);
+                return await MobileReader.ReadAppAsync(response);
+            },
             payload => payload.Items.Any(item => item.Item == "Updated simple task"),
             PayloadTimeout);
         Assert.Equal(initialApp.Header, updatedApp.Header);
@@ -114,11 +130,10 @@ public sealed class WatchIntegrationTests : IntegrationTestBase
         using var client = await CreateClientAsync();
         var mobileKey = CreateUniqueMobileKey();
 
-        using var response = await client.GetAsync(CreateWidgetUri(mobileKey));
+        using var response = await MobileApi.GetWidgetAsync(client, mobileKey);
 
         Assert.Equal(HttpStatusCode.InternalServerError, response.StatusCode);
-        var problemDetails = await response.Content.ReadFromJsonAsync<ProblemDetails>();
-        Assert.NotNull(problemDetails);
+        var problemDetails = await ProblemDetailsReader.ReadAsync(response);
         Assert.Equal("An unexpected error occurred", problemDetails.Title);
     }
 
@@ -148,12 +163,10 @@ public sealed class WatchIntegrationTests : IntegrationTestBase
         var mobileKey = CreateUniqueMobileKey();
         var userId = GetUserId(user.Token);
 
-        var uri = new Uri(
-            $"api/test/CreateMobileUserMapping?userId={Uri.EscapeDataString(userId)}&mobileKey={Uri.EscapeDataString(mobileKey)}",
-            UriKind.Relative);
-        using var response = await user.HttpClient.PostAsync(
-            uri,
-            content: null);
+        using var response = await MobileApi.CreateUserMappingAsync(
+            user.HttpClient,
+            userId,
+            mobileKey);
         response.EnsureSuccessStatusCode();
 
         return mobileKey;

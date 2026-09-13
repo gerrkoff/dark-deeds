@@ -1,9 +1,10 @@
 using System.Net;
-using System.Net.Http.Json;
 using DD.Shared.Details.Abstractions.Dto;
 using DD.Tests.Integration.Helpers;
 using DD.Tests.Integration.Infrastructure;
+using DD.Tests.Integration.Infrastructure.Api;
 using DD.Tests.Integration.Infrastructure.Clients;
+using DD.Tests.Integration.Infrastructure.Readers;
 using Xunit;
 using static DD.Tests.Integration.Helpers.Helper;
 
@@ -18,9 +19,7 @@ public sealed class TelegramIntegrationTests : IntegrationTestBase
     {
         using var anonymousClient = await CreateClientAsync();
 
-        using var anonymousResponse = await anonymousClient.PostAsync(
-            new Uri("api/tlgm/start?timezoneOffset=0", UriKind.Relative),
-            content: null);
+        using var anonymousResponse = await TelegramApi.StartAsync(anonymousClient);
 
         Assert.Equal(HttpStatusCode.Unauthorized, anonymousResponse.StatusCode);
 
@@ -50,14 +49,16 @@ public sealed class TelegramIntegrationTests : IntegrationTestBase
         var message = await TelegramHelper.ReadMessageAsync(recorder, chatId, MessageTimeout);
         Assert.Equal("Task created", message);
 
-        using var ownerTasksResponse = await owner.HttpClient.GetAsync(
-            CreateTasksUri(IntegrationTestClock.UtcToday));
-        var ownerTasks = await ReadTasksAsync(ownerTasksResponse);
+        using var ownerTasksResponse = await TasksApi.LoadAsync(
+            owner.HttpClient,
+            IntegrationTestClock.UtcToday);
+        var ownerTasks = await TasksReader.ReadAsync(ownerTasksResponse);
         Assert.Contains(ownerTasks, task => task.Title == title);
 
-        using var foreignTasksResponse = await foreignUser.HttpClient.GetAsync(
-            CreateTasksUri(IntegrationTestClock.UtcToday));
-        var foreignTasks = await ReadTasksAsync(foreignTasksResponse);
+        using var foreignTasksResponse = await TasksApi.LoadAsync(
+            foreignUser.HttpClient,
+            IntegrationTestClock.UtcToday);
+        var foreignTasks = await TasksReader.ReadAsync(foreignTasksResponse);
         Assert.DoesNotContain(foreignTasks, task => task.Title == title);
     }
 
@@ -73,10 +74,9 @@ public sealed class TelegramIntegrationTests : IntegrationTestBase
         var today = IntegrationTestClock.UtcToday;
         var taskTitle = $"Telegram todo {Guid.NewGuid():N}";
 
-        using var saveResponse = await taskUser.HttpClient.PostAsJsonAsync(
-            "api/task/tasks",
-            new[]
-            {
+        using var saveResponse = await TasksApi.SaveAsync(
+            taskUser.HttpClient,
+            [
                 new TaskDto
                 {
                     Uid = CreateUniqueTaskUid(),
@@ -85,9 +85,9 @@ public sealed class TelegramIntegrationTests : IntegrationTestBase
                     Title = taskTitle,
                     Type = TaskTypeDto.Simple,
                 },
-            });
+            ]);
         Assert.Equal(HttpStatusCode.OK, saveResponse.StatusCode);
-        _ = await ReadTasksAsync(saveResponse);
+        _ = await TasksReader.ReadAsync(saveResponse);
 
         await TelegramHelper.SendCommandAsync(anonymousClient, taskChatId, "/todo");
         Assert.Equal(

@@ -1,16 +1,14 @@
 using System.Net.Http.Headers;
-using System.Net.Http.Json;
-using System.Text.Json;
 using DD.ServiceAuth.Domain.Dto;
 using DD.ServiceAuth.Domain.Enums;
+using DD.Tests.Integration.Infrastructure.Api;
+using DD.Tests.Integration.Infrastructure.Readers;
 using static DD.Tests.Integration.Helpers.Helper;
 
 namespace DD.Tests.Integration.Infrastructure.Clients;
 
 public sealed class TestUserClient : IAsyncDisposable
 {
-    private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
-
     private TestUserClient(HttpClient httpClient, string username, string password, string token)
     {
         HttpClient = httpClient;
@@ -37,21 +35,17 @@ public sealed class TestUserClient : IAsyncDisposable
         {
             var username = CreateUniqueUsername();
             const string password = "QWERTY123456qwerty!@#$%^";
-            using var response = await httpClient.PostAsJsonAsync(
-                "api/auth/account/signup",
+            using var response = await AuthApi.SignUpAsync(
+                httpClient,
                 new SignUpInfoDto
                 {
                     Username = username,
                     Password = password,
                 },
-                JsonOptions,
                 cancellationToken);
-            response.EnsureSuccessStatusCode();
 
-            var result = await response.Content.ReadFromJsonAsync<SignUpResultDto>(
-                JsonOptions,
-                cancellationToken);
-            if (result is null || result.Result != SignUpResult.Success || string.IsNullOrEmpty(result.Token))
+            var result = await AuthReader.ReadSignUpAsync(response, cancellationToken);
+            if (result.Result != SignUpResult.Success || string.IsNullOrEmpty(result.Token))
             {
                 throw new InvalidOperationException("The integration test user could not be created.");
             }

@@ -5,7 +5,9 @@ using System.Text.Json.Serialization;
 using DD.Shared.Details.Abstractions.Dto;
 using DD.Tests.Integration.Helpers;
 using DD.Tests.Integration.Infrastructure;
+using DD.Tests.Integration.Infrastructure.Api;
 using DD.Tests.Integration.Infrastructure.Clients;
+using DD.Tests.Integration.Infrastructure.Readers;
 using ModelContextProtocol.Protocol;
 using Xunit;
 using static DD.Tests.Integration.Helpers.Helper;
@@ -26,9 +28,7 @@ public sealed class McpIntegrationTests : IntegrationTestBase
     {
         await using var user = await CreateUserClientAsync();
 
-        using var response = await user.HttpClient.GetAsync(
-            new Uri("/mcp", UriKind.Relative),
-            CreateTimeoutToken());
+        using var response = await McpApi.GetAsync(user.HttpClient, CreateTimeoutToken());
 
         Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
     }
@@ -129,10 +129,11 @@ public sealed class McpIntegrationTests : IntegrationTestBase
         Assert.Equal(today, loadedTodayTask.Date);
         Assert.DoesNotContain(loadedTasks, task => task.Title == tomorrowTitle);
 
-        using var restResponse = await user.HttpClient.GetAsync(
-            CreateTasksUri(today),
+        using var restResponse = await TasksApi.LoadAsync(
+            user.HttpClient,
+            today,
             CreateTimeoutToken());
-        var persistedTasks = await ReadTasksAsync(restResponse);
+        var persistedTasks = await TasksReader.ReadAsync(restResponse);
         Assert.Contains(persistedTasks, task => task.Title == todayTitle);
         Assert.Contains(persistedTasks, task => task.Title == tomorrowTitle);
     }
@@ -198,29 +199,31 @@ public sealed class McpIntegrationTests : IntegrationTestBase
             task => task.Uid == secondValidTask.Uid && task.Order == 105 && task.Version == 2,
             ProtocolTimeout);
 
-        using var restResponse = await user.HttpClient.GetAsync(
-            CreateTasksUri(today),
+        using var restResponse = await TasksApi.LoadAsync(
+            user.HttpClient,
+            today,
             CreateTimeoutToken());
-        var persistedTasks = await ReadTasksAsync(restResponse);
+        var persistedTasks = await TasksReader.ReadAsync(restResponse);
         AssertTaskOrder(persistedTasks, validTask.Uid, 101, 2);
         AssertTaskOrder(persistedTasks, secondValidTask.Uid, 105, 2);
         AssertTaskOrder(persistedTasks, deletedTask.Uid, 3, 2);
         Assert.DoesNotContain(persistedTasks, task => task.Uid == foreignTask.Uid);
 
-        using var foreignRestResponse = await foreignUser.HttpClient.GetAsync(
-            CreateTasksUri(today),
+        using var foreignRestResponse = await TasksApi.LoadAsync(
+            foreignUser.HttpClient,
+            today,
             CreateTimeoutToken());
-        var foreignPersistedTasks = await ReadTasksAsync(foreignRestResponse);
+        var foreignPersistedTasks = await TasksReader.ReadAsync(foreignRestResponse);
         AssertTaskOrder(foreignPersistedTasks, foreignTask.Uid, 5, 1);
     }
 
     private static async Task<TaskDto[]> SaveTasksAsync(HttpClient client, params TaskDto[] tasks)
     {
-        using var response = await client.PostAsJsonAsync(
-            "api/task/tasks",
+        using var response = await TasksApi.SaveAsync(
+            client,
             tasks,
             cancellationToken: CreateTimeoutToken());
-        return await ReadTasksAsync(response);
+        return await TasksReader.ReadAsync(response);
     }
 
     private static TaskDto CreateTask(string title, DateTime date, int order)

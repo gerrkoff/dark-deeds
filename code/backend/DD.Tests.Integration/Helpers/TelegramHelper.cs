@@ -1,15 +1,13 @@
-using System.Net.Http.Json;
-using DD.Clients.Details.TelegramClient.Dto;
-using DD.TelegramClient.Domain.Dto;
 using DD.Tests.Integration.Infrastructure;
+using DD.Tests.Integration.Infrastructure.Api;
 using DD.Tests.Integration.Infrastructure.Clients;
-using Microsoft.AspNetCore.WebUtilities;
+using DD.Tests.Integration.Infrastructure.Readers;
 
 namespace DD.Tests.Integration.Helpers;
 
 internal static class TelegramHelper
 {
-    public const string BotRoute = "api/tlgm/bot/integration-tests";
+    private const string Bot = "integration-tests";
 
     private static int _nextChatId = -100000;
 
@@ -22,40 +20,10 @@ internal static class TelegramHelper
         TestUserClient user,
         CancellationToken cancellationToken = default)
     {
-        using var response = await user.HttpClient.PostAsync(
-            new Uri("api/tlgm/start?timezoneOffset=0", UriKind.Relative),
-            content: null,
+        using var response = await TelegramApi.StartAsync(
+            user.HttpClient,
             cancellationToken);
-        response.EnsureSuccessStatusCode();
-
-        var result = await response.Content.ReadFromJsonAsync<TelegramStartDto>(
-            cancellationToken);
-        if (result is null || string.IsNullOrWhiteSpace(result.Url))
-            throw new InvalidOperationException("The Telegram start response did not contain a URL.");
-
-        var query = QueryHelpers.ParseQuery(new Uri(result.Url).Query);
-        if (!query.TryGetValue("start", out var startValues) ||
-            startValues.Count != 1 ||
-            string.IsNullOrWhiteSpace(startValues[0]))
-        {
-            throw new InvalidOperationException(
-                "The Telegram start URL did not contain one start key.");
-        }
-
-        return startValues[0]!;
-    }
-
-    public static UpdateDto CreateUpdate(int chatId, string text)
-    {
-        return new UpdateDto
-        {
-            UpdateId = Random.Shared.Next(),
-            Message = new MessageDto
-            {
-                Chat = new ChatDto { Id = chatId },
-                Text = text,
-            },
-        };
+        return await TelegramReader.ReadStartKeyAsync(response, cancellationToken);
     }
 
     public static async Task SendCommandAsync(
@@ -64,9 +32,11 @@ internal static class TelegramHelper
         string text,
         CancellationToken cancellationToken = default)
     {
-        using var response = await client.PostAsJsonAsync(
-            BotRoute,
-            CreateUpdate(chatId, text),
+        using var response = await TelegramApi.SendCommandAsync(
+            client,
+            chatId,
+            text,
+            Bot,
             cancellationToken);
         response.EnsureSuccessStatusCode();
     }

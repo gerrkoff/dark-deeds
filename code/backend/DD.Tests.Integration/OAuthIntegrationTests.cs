@@ -1,13 +1,13 @@
 using System.Globalization;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net;
-using System.Net.Http.Json;
-using System.Text.Json.Serialization;
 using DD.ServiceAuth.Domain.OAuth;
 using DD.ServiceAuth.Domain.OAuth.Dto;
 using DD.Tests.Integration.Helpers;
 using DD.Tests.Integration.Infrastructure;
+using DD.Tests.Integration.Infrastructure.Api;
 using DD.Tests.Integration.Infrastructure.Clients;
+using DD.Tests.Integration.Infrastructure.Readers;
 using Microsoft.AspNetCore.WebUtilities;
 using Xunit;
 
@@ -20,12 +20,10 @@ public sealed class OAuthIntegrationTests : IntegrationTestBase
     {
         using var client = await CreateClientAsync();
 
-        using var response = await client.GetAsync(
-            new Uri(".well-known/oauth-authorization-server", UriKind.Relative));
+        using var response = await OAuthApi.GetAuthorizationMetadataAsync(client);
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        var metadata = await response.Content.ReadFromJsonAsync<AuthServerMetadataDto>();
-        Assert.NotNull(metadata);
+        var metadata = await OAuthReader.ReadAuthorizationMetadataAsync(response);
         Assert.Equal(DarkDeedsWebApplicationFactory.AuthIssuer, metadata.Issuer);
         Assert.Equal(
             $"{DarkDeedsWebApplicationFactory.AuthIssuer}/authorize",
@@ -54,12 +52,10 @@ public sealed class OAuthIntegrationTests : IntegrationTestBase
     {
         using var client = await CreateClientAsync();
 
-        using var response = await client.GetAsync(
-            new Uri(".well-known/oauth-protected-resource/mcp", UriKind.Relative));
+        using var response = await OAuthApi.GetProtectedResourceMetadataAsync(client);
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        var metadata = await response.Content.ReadFromJsonAsync<ProtectedResourceMetadataDto>();
-        Assert.NotNull(metadata);
+        var metadata = await OAuthReader.ReadProtectedResourceMetadataAsync(response);
         Assert.Equal(
             $"{DarkDeedsWebApplicationFactory.AuthIssuer}/mcp",
             metadata.Resource);
@@ -76,13 +72,12 @@ public sealed class OAuthIntegrationTests : IntegrationTestBase
     {
         using var client = await CreateClientAsync();
 
-        using var response = await client.PostAsJsonAsync(
-            new Uri("/register", UriKind.Relative),
-            new ClientRegistrationRequestDto([TestOAuthClient.CallbackUri]));
+        using var response = await OAuthApi.RegisterClientAsync(
+            client,
+            TestOAuthClient.CallbackUri);
 
         Assert.Equal(HttpStatusCode.Created, response.StatusCode);
-        var registration = await response.Content.ReadFromJsonAsync<ClientRegistrationResponseDto>();
-        Assert.NotNull(registration);
+        var registration = await OAuthReader.ReadClientRegistrationAsync(response);
         Assert.False(string.IsNullOrEmpty(registration.ClientId));
         Assert.Equal("none", registration.TokenEndpointAuthMethod);
         Assert.Contains(TestOAuthClient.CallbackUri, registration.RedirectUris);
@@ -94,23 +89,27 @@ public sealed class OAuthIntegrationTests : IntegrationTestBase
         using var oauthClient = await IntegrationEnvironmentLifetime.CreateClientAsync(
             allowAutoRedirect: false);
 
-        var verifier = OAuthHelper.GenerateCodeVerifier();
-        var challenge = OAuthHelper.ComputeS256Challenge(verifier);
+        var verifier = PkceHelper.GenerateCodeVerifier();
+        var challenge = PkceHelper.ComputeS256Challenge(verifier);
         var state = Guid.NewGuid().ToString("N");
-        var clientId = await OAuthHelper.RegisterClientAsync(
-            oauthClient, TestOAuthClient.CallbackUri);
+        using var registrationResponse = await OAuthApi.RegisterClientAsync(
+            oauthClient,
+            TestOAuthClient.CallbackUri);
+        var registration = await OAuthReader.ReadClientRegistrationAsync(registrationResponse);
 
-        var authorizeUri = OAuthHelper.BuildAuthorizeUri(
-            clientId, challenge, state, TestOAuthClient.CallbackUri);
-
-        using var response = await oauthClient.GetAsync(authorizeUri);
+        using var response = await OAuthApi.GetAuthorizeAsync(
+            oauthClient,
+            registration.ClientId,
+            challenge,
+            state,
+            TestOAuthClient.CallbackUri);
 
         Assert.Equal(HttpStatusCode.Redirect, response.StatusCode);
         var location = response.Headers.Location;
         Assert.NotNull(location);
         var expectedLocation = new Uri(
             $"/?response_type={OAuthConstants.ResponseTypeCode}" +
-            $"&client_id={Uri.EscapeDataString(clientId)}" +
+            $"&client_id={Uri.EscapeDataString(registration.ClientId)}" +
             $"&redirect_uri={Uri.EscapeDataString(TestOAuthClient.CallbackUri)}" +
             $"&code_challenge={Uri.EscapeDataString(challenge)}" +
             $"&code_challenge_method={OAuthConstants.CodeChallengeMethodS256}" +
@@ -124,25 +123,25 @@ public sealed class OAuthIntegrationTests : IntegrationTestBase
     {
         using var client = await CreateClientAsync();
 
-        var verifier = OAuthHelper.GenerateCodeVerifier();
-        var challenge = OAuthHelper.ComputeS256Challenge(verifier);
+        var verifier = PkceHelper.GenerateCodeVerifier();
+        var challenge = PkceHelper.ComputeS256Challenge(verifier);
         var state = Guid.NewGuid().ToString("N");
-        var clientId = await OAuthHelper.RegisterClientAsync(
-            client, TestOAuthClient.CallbackUri);
+        using var registrationResponse = await OAuthApi.RegisterClientAsync(
+            client,
+            TestOAuthClient.CallbackUri);
+        var registration = await OAuthReader.ReadClientRegistrationAsync(registrationResponse);
 
         var request = new OAuthAuthorizeRequestDto(
             Action: "deny",
-            ClientId: clientId,
+            ClientId: registration.ClientId,
             RedirectUri: TestOAuthClient.CallbackUri,
             CodeChallenge: challenge,
             State: state);
 
-        using var response = await client.PostAsJsonAsync(
-            new Uri("/authorize", UriKind.Relative), request);
+        using var response = await OAuthApi.AuthorizeAsync(client, request);
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        var result = await response.Content.ReadFromJsonAsync<OAuthRedirectResponseDto>();
-        Assert.NotNull(result);
+        var result = await OAuthReader.ReadRedirectAsync(response);
         Assert.NotNull(result.RedirectUrl);
         var redirect = new Uri(result.RedirectUrl, UriKind.Absolute);
         AssertCallbackDestination(redirect, TestOAuthClient.CallbackUri);
@@ -157,21 +156,22 @@ public sealed class OAuthIntegrationTests : IntegrationTestBase
     {
         using var client = await CreateClientAsync();
 
-        var verifier = OAuthHelper.GenerateCodeVerifier();
-        var challenge = OAuthHelper.ComputeS256Challenge(verifier);
+        var verifier = PkceHelper.GenerateCodeVerifier();
+        var challenge = PkceHelper.ComputeS256Challenge(verifier);
         var state = Guid.NewGuid().ToString("N");
-        var clientId = await OAuthHelper.RegisterClientAsync(
-            client, TestOAuthClient.CallbackUri);
+        using var registrationResponse = await OAuthApi.RegisterClientAsync(
+            client,
+            TestOAuthClient.CallbackUri);
+        var registration = await OAuthReader.ReadClientRegistrationAsync(registrationResponse);
 
         var request = new OAuthAuthorizeRequestDto(
             Action: OAuthConstants.ActionAllow,
-            ClientId: clientId,
+            ClientId: registration.ClientId,
             RedirectUri: TestOAuthClient.CallbackUri,
             CodeChallenge: challenge,
             State: state);
 
-        using var response = await client.PostAsJsonAsync(
-            new Uri("/authorize", UriKind.Relative), request);
+        using var response = await OAuthApi.AuthorizeAsync(client, request);
 
         Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
     }
@@ -206,25 +206,39 @@ public sealed class OAuthIntegrationTests : IntegrationTestBase
         await using var user = await CreateUserClientAsync();
         using var oauthClient = await IntegrationEnvironmentLifetime.CreateClientAsync();
 
-        var verifier = OAuthHelper.GenerateCodeVerifier();
-        var challenge = OAuthHelper.ComputeS256Challenge(verifier);
+        var verifier = PkceHelper.GenerateCodeVerifier();
+        var challenge = PkceHelper.ComputeS256Challenge(verifier);
         var state = Guid.NewGuid().ToString("N");
-        var clientId = await OAuthHelper.RegisterClientAsync(
-            oauthClient, TestOAuthClient.CallbackUri);
+        using var registrationResponse = await OAuthApi.RegisterClientAsync(
+            oauthClient,
+            TestOAuthClient.CallbackUri);
+        var registration = await OAuthReader.ReadClientRegistrationAsync(registrationResponse);
 
-        var (code, _) = await OAuthHelper.ConsentAllowAsync(
-            user.HttpClient, clientId, challenge, state, TestOAuthClient.CallbackUri);
+        using var authorizeResponse = await OAuthApi.AuthorizeAsync(
+            user.HttpClient,
+            new OAuthAuthorizeRequestDto(
+                OAuthConstants.ActionAllow,
+                registration.ClientId,
+                TestOAuthClient.CallbackUri,
+                challenge,
+                state));
+        var redirect = await OAuthReader.ReadRedirectAsync(authorizeResponse);
+        var redirectUrl = redirect.RedirectUrl
+            ?? throw new InvalidOperationException(
+                "Consent response did not include a redirect URL.");
+        var (code, _) = OAuthReader.ReadCallback(
+            redirectUrl,
+            TestOAuthClient.CallbackUri);
 
-        using var response = await OAuthHelper.ExchangeCodeRawAsync(
+        using var response = await OAuthApi.ExchangeCodeAsync(
             oauthClient,
             code,
             TestOAuthClient.CallbackUri,
-            clientId,
+            registration.ClientId,
             codeVerifier: "wrong-verifier-" + Guid.NewGuid().ToString("N"));
 
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-        var error = await response.Content.ReadFromJsonAsync<OAuthErrorDto>();
-        Assert.NotNull(error);
+        var error = await OAuthReader.ReadErrorAsync(response);
         Assert.Equal("invalid_grant", error.Error);
     }
 
@@ -254,9 +268,4 @@ public sealed class OAuthIntegrationTests : IntegrationTestBase
         Assert.Equal(expected.AbsolutePath, actual.AbsolutePath);
     }
 
-    // Local DTO for reading protected-resource metadata without importing SDK implementation types.
-    private sealed record ProtectedResourceMetadataDto(
-        [property: JsonPropertyName("resource")] string? Resource,
-        [property: JsonPropertyName("authorization_servers")] IReadOnlyList<string>? AuthorizationServers,
-        [property: JsonPropertyName("scopes_supported")] IReadOnlyList<string>? ScopesSupported);
 }

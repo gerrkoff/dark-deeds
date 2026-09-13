@@ -1,8 +1,8 @@
 using System.Net;
-using System.Net.Http.Json;
 using DD.ServiceTask.Domain.Entities.Enums;
 using DD.Tests.Integration.Infrastructure;
-using Microsoft.AspNetCore.Mvc;
+using DD.Tests.Integration.Infrastructure.Api;
+using DD.Tests.Integration.Infrastructure.Readers;
 using Xunit;
 using static DD.Tests.Integration.Helpers.Helper;
 using static DD.Tests.Integration.Helpers.RecurrencesHelper;
@@ -17,9 +17,9 @@ public sealed class RecurrencesIntegrationTests : IntegrationTestBase
         await using var user = await CreateUserClientAsync();
         var today = IntegrationTestClock.UtcToday;
 
-        using var emptyGetResponse = await user.HttpClient.GetAsync(RecurrencesUri);
+        using var emptyGetResponse = await RecurrencesApi.LoadAsync(user.HttpClient);
         Assert.Equal(HttpStatusCode.OK, emptyGetResponse.StatusCode);
-        Assert.Empty(await ReadRecurrencesAsync(emptyGetResponse));
+        Assert.Empty(await RecurrencesReader.ReadAsync(emptyGetResponse));
 
         var recurrence = CreateRecurrence(
             "Weekly task",
@@ -29,15 +29,15 @@ public sealed class RecurrencesIntegrationTests : IntegrationTestBase
             everyWeekday: RecurrenceWeekday.Monday | RecurrenceWeekday.Wednesday,
             everyMonthDay: "1,15");
 
-        using var createResponse = await user.HttpClient.PostAsJsonAsync(
-            RecurrencesRoute,
-            new[] { recurrence });
+        using var createResponse = await RecurrencesApi.SaveAsync(
+            user.HttpClient,
+            [recurrence]);
         Assert.Equal(HttpStatusCode.OK, createResponse.StatusCode);
-        Assert.Equal(1, await ReadRecurrenceCountAsync(createResponse));
+        Assert.Equal(1, await RecurrencesReader.ReadCountAsync(createResponse));
 
-        using var afterCreateGetResponse = await user.HttpClient.GetAsync(RecurrencesUri);
+        using var afterCreateGetResponse = await RecurrencesApi.LoadAsync(user.HttpClient);
         var loaded = Assert.Single(
-            await ReadRecurrencesAsync(afterCreateGetResponse),
+            await RecurrencesReader.ReadAsync(afterCreateGetResponse),
             item => item.Uid == recurrence.Uid);
         Assert.Equal(recurrence.Task, loaded.Task);
         Assert.Equal(DateTimeKind.Utc, loaded.StartDate.Kind);
@@ -50,11 +50,9 @@ public sealed class RecurrencesIntegrationTests : IntegrationTestBase
         Assert.False(loaded.IsDeleted);
 
         // Re-posting the unchanged loaded snapshot must not count as an update.
-        using var noopResponse = await user.HttpClient.PostAsJsonAsync(
-            RecurrencesRoute,
-            new[] { loaded });
+        using var noopResponse = await RecurrencesApi.SaveAsync(user.HttpClient, [loaded]);
         Assert.Equal(HttpStatusCode.OK, noopResponse.StatusCode);
-        Assert.Equal(0, await ReadRecurrenceCountAsync(noopResponse));
+        Assert.Equal(0, await RecurrencesReader.ReadCountAsync(noopResponse));
 
         loaded.Task = "Updated weekly task";
         loaded.StartDate = today.AddDays(1);
@@ -62,15 +60,13 @@ public sealed class RecurrencesIntegrationTests : IntegrationTestBase
         loaded.EveryNthDay = 5;
         loaded.EveryWeekday = RecurrenceWeekday.Tuesday | RecurrenceWeekday.Thursday;
         loaded.EveryMonthDay = "2,16";
-        using var updateResponse = await user.HttpClient.PostAsJsonAsync(
-            RecurrencesRoute,
-            new[] { loaded });
+        using var updateResponse = await RecurrencesApi.SaveAsync(user.HttpClient, [loaded]);
         Assert.Equal(HttpStatusCode.OK, updateResponse.StatusCode);
-        Assert.Equal(1, await ReadRecurrenceCountAsync(updateResponse));
+        Assert.Equal(1, await RecurrencesReader.ReadCountAsync(updateResponse));
 
-        using var afterUpdateGetResponse = await user.HttpClient.GetAsync(RecurrencesUri);
+        using var afterUpdateGetResponse = await RecurrencesApi.LoadAsync(user.HttpClient);
         var updatedLoaded = Assert.Single(
-            await ReadRecurrencesAsync(afterUpdateGetResponse),
+            await RecurrencesReader.ReadAsync(afterUpdateGetResponse),
             item => item.Uid == recurrence.Uid);
         Assert.Equal("Updated weekly task", updatedLoaded.Task);
         Assert.Equal(today.AddDays(1), updatedLoaded.StartDate);
@@ -80,20 +76,20 @@ public sealed class RecurrencesIntegrationTests : IntegrationTestBase
         Assert.Equal("2,16", updatedLoaded.EveryMonthDay);
 
         var secondRecurrence = CreateRecurrence("Second recurrence", today);
-        using var secondCreateResponse = await user.HttpClient.PostAsJsonAsync(
-            RecurrencesRoute,
-            new[] { secondRecurrence });
-        Assert.Equal(1, await ReadRecurrenceCountAsync(secondCreateResponse));
+        using var secondCreateResponse = await RecurrencesApi.SaveAsync(
+            user.HttpClient,
+            [secondRecurrence]);
+        Assert.Equal(1, await RecurrencesReader.ReadCountAsync(secondCreateResponse));
 
         updatedLoaded.IsDeleted = true;
-        using var deleteResponse = await user.HttpClient.PostAsJsonAsync(
-            RecurrencesRoute,
-            new[] { updatedLoaded });
+        using var deleteResponse = await RecurrencesApi.SaveAsync(
+            user.HttpClient,
+            [updatedLoaded]);
         Assert.Equal(HttpStatusCode.OK, deleteResponse.StatusCode);
-        Assert.Equal(1, await ReadRecurrenceCountAsync(deleteResponse));
+        Assert.Equal(1, await RecurrencesReader.ReadCountAsync(deleteResponse));
 
-        using var afterDeleteGetResponse = await user.HttpClient.GetAsync(RecurrencesUri);
-        var remaining = await ReadRecurrencesAsync(afterDeleteGetResponse);
+        using var afterDeleteGetResponse = await RecurrencesApi.LoadAsync(user.HttpClient);
+        var remaining = await RecurrencesReader.ReadAsync(afterDeleteGetResponse);
         Assert.DoesNotContain(remaining, item => item.Uid == recurrence.Uid);
         Assert.Contains(remaining, item => item.Uid == secondRecurrence.Uid);
     }
@@ -106,24 +102,23 @@ public sealed class RecurrencesIntegrationTests : IntegrationTestBase
         var today = IntegrationTestClock.UtcToday;
         var ownerRecurrence = CreateRecurrence("Owner recurrence", today);
 
-        using var createResponse = await owner.HttpClient.PostAsJsonAsync(
-            RecurrencesRoute,
-            new[] { ownerRecurrence });
-        Assert.Equal(1, await ReadRecurrenceCountAsync(createResponse));
+        using var createResponse = await RecurrencesApi.SaveAsync(
+            owner.HttpClient,
+            [ownerRecurrence]);
+        Assert.Equal(1, await RecurrencesReader.ReadCountAsync(createResponse));
 
         ownerRecurrence.Task = "Foreign update attempt";
-        using var foreignResponse = await foreignUser.HttpClient.PostAsJsonAsync(
-            RecurrencesRoute,
-            new[] { ownerRecurrence });
+        using var foreignResponse = await RecurrencesApi.SaveAsync(
+            foreignUser.HttpClient,
+            [ownerRecurrence]);
 
         Assert.Equal(HttpStatusCode.InternalServerError, foreignResponse.StatusCode);
-        var problemDetails = await foreignResponse.Content.ReadFromJsonAsync<ProblemDetails>();
-        Assert.NotNull(problemDetails);
+        var problemDetails = await ProblemDetailsReader.ReadAsync(foreignResponse);
         Assert.Equal("An unexpected error occurred", problemDetails.Title);
 
-        using var ownerGetResponse = await owner.HttpClient.GetAsync(RecurrencesUri);
+        using var ownerGetResponse = await RecurrencesApi.LoadAsync(owner.HttpClient);
         var unchanged = Assert.Single(
-            await ReadRecurrencesAsync(ownerGetResponse),
+            await RecurrencesReader.ReadAsync(ownerGetResponse),
             item => item.Uid == ownerRecurrence.Uid);
         Assert.Equal("Owner recurrence", unchanged.Task);
     }
@@ -136,10 +131,10 @@ public sealed class RecurrencesIntegrationTests : IntegrationTestBase
         var scheduledTitle = $"Recurring task {CreateUniqueRecurrenceUid()}";
         var scheduledRecurrence = CreateRecurrence(scheduledTitle, today, today, everyNthDay: 1);
 
-        using var seedResponse = await user.HttpClient.PostAsJsonAsync(
-            RecurrencesRoute,
-            new[] { scheduledRecurrence });
-        Assert.Equal(1, await ReadRecurrenceCountAsync(seedResponse));
+        using var seedResponse = await RecurrencesApi.SaveAsync(
+            user.HttpClient,
+            [scheduledRecurrence]);
+        Assert.Equal(1, await RecurrencesReader.ReadCountAsync(seedResponse));
 
         var concurrentResults = await Task.WhenAll(
             CreateRecurrencesAsync(user.HttpClient),
@@ -149,23 +144,23 @@ public sealed class RecurrencesIntegrationTests : IntegrationTestBase
 
         Assert.Equal(1, concurrentResults.Sum() + repeatedResult);
 
-        using var tasksResponse = await user.HttpClient.GetAsync(CreateTasksUri(today));
-        var tasks = await ReadTasksAsync(tasksResponse);
+        using var tasksResponse = await TasksApi.LoadAsync(user.HttpClient, today);
+        var tasks = await TasksReader.ReadAsync(tasksResponse);
         var generatedTask = Assert.Single(tasks);
         Assert.Equal(scheduledTitle, generatedTask.Title);
 
         var noScheduleTitle = $"No schedule task {CreateUniqueRecurrenceUid()}";
         var noScheduleRecurrence = CreateRecurrence(noScheduleTitle, today);
-        using var noScheduleSeedResponse = await user.HttpClient.PostAsJsonAsync(
-            RecurrencesRoute,
-            new[] { noScheduleRecurrence });
-        Assert.Equal(1, await ReadRecurrenceCountAsync(noScheduleSeedResponse));
+        using var noScheduleSeedResponse = await RecurrencesApi.SaveAsync(
+            user.HttpClient,
+            [noScheduleRecurrence]);
+        Assert.Equal(1, await RecurrencesReader.ReadCountAsync(noScheduleSeedResponse));
 
         var afterNoScheduleResult = await CreateRecurrencesAsync(user.HttpClient);
         Assert.Equal(0, afterNoScheduleResult);
 
-        using var finalTasksResponse = await user.HttpClient.GetAsync(CreateTasksUri(today));
-        var finalTasks = await ReadTasksAsync(finalTasksResponse);
+        using var finalTasksResponse = await TasksApi.LoadAsync(user.HttpClient, today);
+        var finalTasks = await TasksReader.ReadAsync(finalTasksResponse);
         var remainingTask = Assert.Single(finalTasks);
         Assert.Equal(scheduledTitle, remainingTask.Title);
     }
@@ -181,30 +176,30 @@ public sealed class RecurrencesIntegrationTests : IntegrationTestBase
         var firstRecurrence = CreateRecurrence(firstTitle, today, today, everyNthDay: 1);
         var secondRecurrence = CreateRecurrence(secondTitle, today, today, everyNthDay: 1);
 
-        using var firstSeedResponse = await firstUser.HttpClient.PostAsJsonAsync(
-            RecurrencesRoute,
-            new[] { firstRecurrence });
-        Assert.Equal(1, await ReadRecurrenceCountAsync(firstSeedResponse));
-        using var secondSeedResponse = await secondUser.HttpClient.PostAsJsonAsync(
-            RecurrencesRoute,
-            new[] { secondRecurrence });
-        Assert.Equal(1, await ReadRecurrenceCountAsync(secondSeedResponse));
+        using var firstSeedResponse = await RecurrencesApi.SaveAsync(
+            firstUser.HttpClient,
+            [firstRecurrence]);
+        Assert.Equal(1, await RecurrencesReader.ReadCountAsync(firstSeedResponse));
+        using var secondSeedResponse = await RecurrencesApi.SaveAsync(
+            secondUser.HttpClient,
+            [secondRecurrence]);
+        Assert.Equal(1, await RecurrencesReader.ReadCountAsync(secondSeedResponse));
 
-        using var firstLoadResponse = await firstUser.HttpClient.GetAsync(RecurrencesUri);
-        var firstLoaded = Assert.Single(await ReadRecurrencesAsync(firstLoadResponse));
+        using var firstLoadResponse = await RecurrencesApi.LoadAsync(firstUser.HttpClient);
+        var firstLoaded = Assert.Single(await RecurrencesReader.ReadAsync(firstLoadResponse));
         Assert.Equal(firstRecurrence.Uid, firstLoaded.Uid);
-        using var secondLoadResponse = await secondUser.HttpClient.GetAsync(RecurrencesUri);
-        var secondLoaded = Assert.Single(await ReadRecurrencesAsync(secondLoadResponse));
+        using var secondLoadResponse = await RecurrencesApi.LoadAsync(secondUser.HttpClient);
+        var secondLoaded = Assert.Single(await RecurrencesReader.ReadAsync(secondLoadResponse));
         Assert.Equal(secondRecurrence.Uid, secondLoaded.Uid);
 
         Assert.Equal(1, await CreateRecurrencesAsync(firstUser.HttpClient));
-        using var firstTasksResponse = await firstUser.HttpClient.GetAsync(CreateTasksUri(today));
-        var firstTasks = await ReadTasksAsync(firstTasksResponse);
+        using var firstTasksResponse = await TasksApi.LoadAsync(firstUser.HttpClient, today);
+        var firstTasks = await TasksReader.ReadAsync(firstTasksResponse);
         Assert.Single(firstTasks, task => task.Title == firstTitle);
         Assert.DoesNotContain(firstTasks, task => task.Title == secondTitle);
 
-        using var secondTasksResponse = await secondUser.HttpClient.GetAsync(CreateTasksUri(today));
-        var secondTasks = await ReadTasksAsync(secondTasksResponse);
+        using var secondTasksResponse = await TasksApi.LoadAsync(secondUser.HttpClient, today);
+        var secondTasks = await TasksReader.ReadAsync(secondTasksResponse);
         Assert.DoesNotContain(secondTasks, task => task.Title == firstTitle);
         Assert.DoesNotContain(secondTasks, task => task.Title == secondTitle);
     }

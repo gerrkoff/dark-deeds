@@ -1,6 +1,7 @@
 using System.Net;
-using System.Net.Http.Json;
 using DD.Tests.Integration.Infrastructure;
+using DD.Tests.Integration.Infrastructure.Api;
+using DD.Tests.Integration.Infrastructure.Readers;
 using DD.WebClientBff.Domain.Dto;
 using Xunit;
 
@@ -8,18 +9,15 @@ namespace DD.Tests.Integration;
 
 public sealed class SettingsIntegrationTests : IntegrationTestBase
 {
-    private static readonly Uri SettingsUri = new("api/web/settings", UriKind.Relative);
-
     [Fact]
     public async Task GetSettings_NewUser_ReturnsShowCompletedFalse()
     {
         await using var user = await CreateUserClientAsync();
 
-        using var response = await user.HttpClient.GetAsync(SettingsUri);
+        using var response = await SettingsApi.LoadAsync(user.HttpClient);
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        var settings = await response.Content.ReadFromJsonAsync<UserSettingsDto>();
-        Assert.NotNull(settings);
+        var settings = await SettingsReader.ReadAsync(response);
         Assert.False(settings.ShowCompleted);
     }
 
@@ -28,26 +26,24 @@ public sealed class SettingsIntegrationTests : IntegrationTestBase
     {
         await using var user = await CreateUserClientAsync();
 
-        using var saveTrueResponse = await user.HttpClient.PostAsJsonAsync(
-            "api/web/settings",
+        using var saveTrueResponse = await SettingsApi.SaveAsync(
+            user.HttpClient,
             new UserSettingsDto { ShowCompleted = true });
         Assert.Equal(HttpStatusCode.OK, saveTrueResponse.StatusCode);
 
-        using var getTrueResponse = await user.HttpClient.GetAsync(SettingsUri);
+        using var getTrueResponse = await SettingsApi.LoadAsync(user.HttpClient);
         Assert.Equal(HttpStatusCode.OK, getTrueResponse.StatusCode);
-        var trueSettings = await getTrueResponse.Content.ReadFromJsonAsync<UserSettingsDto>();
-        Assert.NotNull(trueSettings);
+        var trueSettings = await SettingsReader.ReadAsync(getTrueResponse);
         Assert.True(trueSettings.ShowCompleted);
 
-        using var saveFalseResponse = await user.HttpClient.PostAsJsonAsync(
-            "api/web/settings",
+        using var saveFalseResponse = await SettingsApi.SaveAsync(
+            user.HttpClient,
             new UserSettingsDto { ShowCompleted = false });
         Assert.Equal(HttpStatusCode.OK, saveFalseResponse.StatusCode);
 
-        using var getFalseResponse = await user.HttpClient.GetAsync(SettingsUri);
+        using var getFalseResponse = await SettingsApi.LoadAsync(user.HttpClient);
         Assert.Equal(HttpStatusCode.OK, getFalseResponse.StatusCode);
-        var falseSettings = await getFalseResponse.Content.ReadFromJsonAsync<UserSettingsDto>();
-        Assert.NotNull(falseSettings);
+        var falseSettings = await SettingsReader.ReadAsync(getFalseResponse);
         Assert.False(falseSettings.ShowCompleted);
     }
 
@@ -57,21 +53,19 @@ public sealed class SettingsIntegrationTests : IntegrationTestBase
         await using var firstUser = await CreateUserClientAsync();
         await using var secondUser = await CreateUserClientAsync();
 
-        using var saveResponse = await firstUser.HttpClient.PostAsJsonAsync(
-            "api/web/settings",
+        using var saveResponse = await SettingsApi.SaveAsync(
+            firstUser.HttpClient,
             new UserSettingsDto { ShowCompleted = true });
         Assert.Equal(HttpStatusCode.OK, saveResponse.StatusCode);
 
-        using var firstResponse = await firstUser.HttpClient.GetAsync(SettingsUri);
+        using var firstResponse = await SettingsApi.LoadAsync(firstUser.HttpClient);
         Assert.Equal(HttpStatusCode.OK, firstResponse.StatusCode);
-        var firstSettings = await firstResponse.Content.ReadFromJsonAsync<UserSettingsDto>();
-        Assert.NotNull(firstSettings);
+        var firstSettings = await SettingsReader.ReadAsync(firstResponse);
         Assert.True(firstSettings.ShowCompleted);
 
-        using var secondResponse = await secondUser.HttpClient.GetAsync(SettingsUri);
+        using var secondResponse = await SettingsApi.LoadAsync(secondUser.HttpClient);
         Assert.Equal(HttpStatusCode.OK, secondResponse.StatusCode);
-        var secondSettings = await secondResponse.Content.ReadFromJsonAsync<UserSettingsDto>();
-        Assert.NotNull(secondSettings);
+        var secondSettings = await SettingsReader.ReadAsync(secondResponse);
         Assert.False(secondSettings.ShowCompleted);
     }
 }

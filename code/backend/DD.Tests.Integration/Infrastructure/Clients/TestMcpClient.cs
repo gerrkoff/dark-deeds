@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Logging.Abstractions;
 using ModelContextProtocol.Client;
+using DD.Tests.Integration.Infrastructure.Api;
 using SdkMcpClient = ModelContextProtocol.Client.McpClient;
 
 namespace DD.Tests.Integration.Infrastructure.Clients;
@@ -21,7 +22,7 @@ internal sealed class TestMcpClient : IAsyncDisposable
         var transport = new HttpClientTransport(
             new HttpClientTransportOptions
             {
-                Endpoint = new Uri("http://localhost/mcp"),
+                Endpoint = McpApi.Endpoint,
                 TransportMode = HttpTransportMode.StreamableHttp,
                 ConnectionTimeout = TimeSpan.FromSeconds(5),
             },

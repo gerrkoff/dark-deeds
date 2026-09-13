@@ -3,7 +3,9 @@ using System.Net.Http.Json;
 using DD.Shared.Details.Abstractions.Dto;
 using DD.Tests.Integration.Helpers;
 using DD.Tests.Integration.Infrastructure;
+using DD.Tests.Integration.Infrastructure.Api;
 using DD.Tests.Integration.Infrastructure.Clients;
+using DD.Tests.Integration.Infrastructure.Readers;
 using Xunit;
 using static DD.Tests.Integration.Helpers.Helper;
 using static DD.Tests.Integration.Helpers.RecurrencesHelper;
@@ -83,10 +85,10 @@ public sealed class SignalRIntegrationTests : IntegrationTestBase
         var title = $"Hub recurrence {CreateUniqueRecurrenceUid()}";
         var recurrence = CreateRecurrence(title, today, today, everyNthDay: 1);
 
-        using var seedResponse = await user.HttpClient.PostAsJsonAsync(
-            RecurrencesRoute,
-            new[] { recurrence });
-        Assert.Equal(1, await ReadRecurrenceCountAsync(seedResponse));
+        using var seedResponse = await RecurrencesApi.SaveAsync(
+            user.HttpClient,
+            [recurrence]);
+        Assert.Equal(1, await RecurrencesReader.ReadCountAsync(seedResponse));
 
         var createdCount = await CreateRecurrencesAsync(user.HttpClient);
         Assert.Equal(1, createdCount);
@@ -108,15 +110,11 @@ public sealed class SignalRIntegrationTests : IntegrationTestBase
         TaskDto task,
         string? clientId = null)
     {
-        using var request = new HttpRequestMessage(HttpMethod.Post, "api/task/tasks")
-        {
-            Content = JsonContent.Create(new[] { task }),
-        };
-        if (!string.IsNullOrWhiteSpace(clientId))
-            request.Headers.Add("X-Client-Id", clientId);
-
-        using var response = await user.HttpClient.SendAsync(request);
-        return Assert.Single(await ReadTasksAsync(response));
+        using var response = await TasksApi.SaveAsync(
+            user.HttpClient,
+            [task],
+            clientId);
+        return Assert.Single(await TasksReader.ReadAsync(response));
     }
 
     private static TaskDto CreateTask(string title)

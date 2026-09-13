@@ -1,15 +1,12 @@
-using System.Net.Http.Json;
 using DD.ServiceTask.Domain.Dto;
 using DD.ServiceTask.Domain.Entities.Enums;
+using DD.Tests.Integration.Infrastructure.Api;
+using DD.Tests.Integration.Infrastructure.Readers;
 
 namespace DD.Tests.Integration.Helpers;
 
 internal static class RecurrencesHelper
 {
-    public const string RecurrencesRoute = "api/task/recurrences";
-
-    public static readonly Uri RecurrencesUri = new(RecurrencesRoute, UriKind.Relative);
-
     public static string CreateUniqueRecurrenceUid()
     {
         return Guid.NewGuid().ToString();
@@ -35,24 +32,11 @@ internal static class RecurrencesHelper
         };
     }
 
-    public static async Task<PlannedRecurrenceDto[]> ReadRecurrencesAsync(HttpResponseMessage response)
-    {
-        response.EnsureSuccessStatusCode();
-        return await response.Content.ReadFromJsonAsync<PlannedRecurrenceDto[]>()
-               ?? throw new InvalidOperationException("The recurrence response was empty.");
-    }
-
-    public static async Task<int> ReadRecurrenceCountAsync(HttpResponseMessage response)
-    {
-        response.EnsureSuccessStatusCode();
-        return await response.Content.ReadFromJsonAsync<int>();
-    }
-
     public static async Task<int> CreateRecurrencesAsync(HttpClient httpClient, int timezoneOffset = 0)
     {
-        using var response = await httpClient.PostAsync(
-            new Uri($"{RecurrencesRoute}/create?timezoneOffset={timezoneOffset}", UriKind.Relative),
-            content: null);
-        return await ReadRecurrenceCountAsync(response);
+        using var response = await RecurrencesApi.CreateTasksAsync(
+            httpClient,
+            timezoneOffset);
+        return await RecurrencesReader.ReadCountAsync(response);
     }
 }
