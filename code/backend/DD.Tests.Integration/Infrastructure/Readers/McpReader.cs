@@ -9,7 +9,7 @@ internal static class McpReader
 {
     private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web)
     {
-        Converters = { new JsonStringEnumConverter() },
+        Converters = { new JsonStringEnumConverter(allowIntegerValues: false) },
     };
 
     internal static TaskDto[] ReadTasks(CallToolResult result)
@@ -20,7 +20,7 @@ internal static class McpReader
                    "MCP tool returned empty task JSON.");
     }
 
-    internal static string ReadText(CallToolResult result)
+    private static string ReadText(CallToolResult result)
     {
         ArgumentNullException.ThrowIfNull(result);
         if (result.IsError == true)

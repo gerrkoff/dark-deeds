@@ -1,5 +1,4 @@
 using System.Net;
-using System.Text.Json;
 using DD.Shared.Details.Abstractions.Dto;
 using DD.Tests.Integration.Helpers;
 using DD.Tests.Integration.Infrastructure;
@@ -81,15 +80,6 @@ public sealed class McpIntegrationTests : IntegrationTestBase
                 ["justification"] = "Integration coverage for MCP task creation.",
             },
             cancellationToken: CreateTimeoutToken());
-
-        var addText = McpReader.ReadText(addResult);
-        using var addJson = JsonDocument.Parse(addText);
-        var routineTaskJson = Assert.Single(
-            addJson.RootElement.EnumerateArray(),
-            task => task.GetProperty(nameof(TaskDto.Title)).GetString() == todayTitle);
-        Assert.Equal(
-            nameof(TaskTypeDto.Routine),
-            routineTaskJson.GetProperty(nameof(TaskDto.Type)).GetString());
 
         var addedTasks = McpReader.ReadTasks(addResult);
         Assert.Equal(2, addedTasks.Length);
