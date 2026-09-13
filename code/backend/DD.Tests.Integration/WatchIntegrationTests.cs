@@ -1,7 +1,6 @@
 using System.Net;
 using DD.MobileClient.Domain.Dto;
 using DD.Shared.Details.Abstractions.Dto;
-using DD.Tests.Integration.Helpers;
 using DD.Tests.Integration.Infrastructure;
 using DD.Tests.Integration.Infrastructure.Api;
 using DD.Tests.Integration.Infrastructure.Clients;
@@ -56,10 +55,8 @@ public sealed class WatchIntegrationTests : IntegrationTestBase
         var savedTasks = await TasksReader.ReadAsync(setupResponse);
 
         await using var sentinelUser = await CreateUserClientAsync();
-        using var sentinelHandler = await CreateSignalRHandlerAsync();
-        await using var sentinelCollector = await SignalRUpdateCollector.ConnectAsync(
-            sentinelHandler,
-            sentinelUser.Token,
+        await using var sentinelClient = await TestSignalRClient.CreateAsync(
+            sentinelUser,
             "mobile-cache-sentinel");
 
         var sentinel = new TaskDto
@@ -73,7 +70,7 @@ public sealed class WatchIntegrationTests : IntegrationTestBase
             sentinelUser.HttpClient,
             [sentinel]);
         _ = await TasksReader.ReadAsync(sentinelResponse);
-        await sentinelCollector.WaitForTaskAsync(sentinel.Uid, NotificationTimeout);
+        await sentinelClient.WaitForTaskAsync(sentinel.Uid, NotificationTimeout);
 
         using var anonymousClient = await CreateClientAsync();
         using var initialWidgetResponse = await MobileApi.GetWidgetAsync(

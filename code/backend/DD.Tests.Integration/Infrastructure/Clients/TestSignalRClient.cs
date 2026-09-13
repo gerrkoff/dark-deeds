@@ -2,19 +2,21 @@ using DD.Shared.Details.Abstractions.Dto;
 using Microsoft.AspNetCore.Http.Connections;
 using Microsoft.AspNetCore.SignalR.Client;
 
-namespace DD.Tests.Integration.Helpers;
+namespace DD.Tests.Integration.Infrastructure.Clients;
 
-internal sealed class SignalRUpdateCollector : IAsyncDisposable
+internal sealed class TestSignalRClient : IAsyncDisposable
 {
     private readonly HubConnection _connection;
+    private readonly HttpMessageHandler _handler;
     private readonly object _sync = new();
     private readonly Dictionary<string, TaskDto> _tasksByUid = [];
     private readonly List<string> _arrivalOrder = [];
     private readonly List<Waiter> _waiters = [];
 
-    private SignalRUpdateCollector(HubConnection connection)
+    private TestSignalRClient(HubConnection connection, HttpMessageHandler handler)
     {
         _connection = connection;
+        _handler = handler;
         _connection.On<List<TaskDto>>("update", RecordUpdate);
     }
 
@@ -29,22 +31,21 @@ internal sealed class SignalRUpdateCollector : IAsyncDisposable
         }
     }
 
-    public static async Task<SignalRUpdateCollector> ConnectAsync(
-        HttpMessageHandler handler,
-        string token,
+    public static async Task<TestSignalRClient> CreateAsync(
+        TestUserClient user,
         string? clientId = null,
         CancellationToken cancellationToken = default)
     {
-        ArgumentNullException.ThrowIfNull(handler);
-        ArgumentException.ThrowIfNullOrWhiteSpace(token);
+        ArgumentNullException.ThrowIfNull(user);
 
+        var handler = await IntegrationEnvironmentLifetime.CreateSignalRHandlerAsync();
         var hubUrl = new Uri(
             $"http://localhost/ws/task/task{BuildClientIdQuery(clientId)}",
             UriKind.Absolute);
         var connection = new HubConnectionBuilder()
             .WithUrl(hubUrl, options =>
             {
-                options.AccessTokenProvider = () => Task.FromResult<string?>(token);
+                options.AccessTokenProvider = () => Task.FromResult<string?>(user.Token);
                 options.HttpMessageHandlerFactory = _ => handler;
                 options.Transports = HttpTransportType.LongPolling;
             })
@@ -52,13 +53,14 @@ internal sealed class SignalRUpdateCollector : IAsyncDisposable
 
         try
         {
-            var collector = new SignalRUpdateCollector(connection);
+            var client = new TestSignalRClient(connection, handler);
             await connection.StartAsync(cancellationToken);
-            return collector;
+            return client;
         }
         catch
         {
             await connection.DisposeAsync().ConfigureAwait(false);
+            handler.Dispose();
             throw;
         }
     }
@@ -109,9 +111,16 @@ internal sealed class SignalRUpdateCollector : IAsyncDisposable
         }
     }
 
-    public ValueTask DisposeAsync()
+    public async ValueTask DisposeAsync()
     {
-        return _connection.DisposeAsync();
+        try
+        {
+            await _connection.DisposeAsync();
+        }
+        finally
+        {
+            _handler.Dispose();
+        }
     }
 
     private static string BuildClientIdQuery(string? clientId)

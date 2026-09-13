@@ -1,6 +1,5 @@
 using System.Net;
 using DD.Shared.Details.Abstractions.Dto;
-using DD.Tests.Integration.Helpers;
 using DD.Tests.Integration.Infrastructure;
 using DD.Tests.Integration.Infrastructure.Api;
 using DD.Tests.Integration.Infrastructure.Clients;
@@ -24,7 +23,9 @@ public sealed class SignalRIntegrationTests : IntegrationTestBase
         Assert.Equal(HttpStatusCode.Unauthorized, anonymousResponse.StatusCode);
 
         await using var user = await CreateUserClientAsync();
-        await using var collector = await ConnectAsync(user.Token, "authenticated-client");
+        await using var signalRClient = await TestSignalRClient.CreateAsync(
+            user,
+            "authenticated-client");
     }
 
     [Fact]
@@ -32,10 +33,18 @@ public sealed class SignalRIntegrationTests : IntegrationTestBase
     {
         await using var user = await CreateUserClientAsync();
         await using var foreignUser = await CreateUserClientAsync();
-        await using var matchingClientOne = await ConnectAsync(user.Token, "same-client");
-        await using var matchingClientTwo = await ConnectAsync(user.Token, "same-client");
-        await using var differentClient = await ConnectAsync(user.Token, "different-client");
-        await using var foreignCollector = await ConnectAsync(foreignUser.Token, "foreign-client");
+        await using var matchingClientOne = await TestSignalRClient.CreateAsync(
+            user,
+            "same-client");
+        await using var matchingClientTwo = await TestSignalRClient.CreateAsync(
+            user,
+            "same-client");
+        await using var differentClient = await TestSignalRClient.CreateAsync(
+            user,
+            "different-client");
+        await using var foreignClient = await TestSignalRClient.CreateAsync(
+            foreignUser,
+            "foreign-client");
 
         var target = CreateTask("suppressed target");
         await SaveTaskAsync(user, target, "same-client");
@@ -54,10 +63,10 @@ public sealed class SignalRIntegrationTests : IntegrationTestBase
 
         var foreignSentinel = CreateTask("foreign sentinel");
         await SaveTaskAsync(foreignUser, foreignSentinel);
-        await foreignCollector.WaitForTaskAsync(foreignSentinel.Uid, UpdateTimeout);
+        await foreignClient.WaitForTaskAsync(foreignSentinel.Uid, UpdateTimeout);
 
-        Assert.False(foreignCollector.HasReceived(target.Uid));
-        Assert.False(foreignCollector.HasReceived(userSentinel.Uid));
+        Assert.False(foreignClient.HasReceived(target.Uid));
+        Assert.False(foreignClient.HasReceived(userSentinel.Uid));
 
         var postForeignUserSentinel = CreateTask("post-foreign user sentinel");
         await SaveTaskAsync(user, postForeignUserSentinel);
@@ -77,7 +86,9 @@ public sealed class SignalRIntegrationTests : IntegrationTestBase
     public async Task RecurrencesCreate_NotifiesConnectedUserThroughTaskHub()
     {
         await using var user = await CreateUserClientAsync();
-        await using var collector = await ConnectAsync(user.Token, "recurrence-client");
+        await using var client = await TestSignalRClient.CreateAsync(
+            user,
+            "recurrence-client");
         var today = IntegrationTestClock.UtcToday;
         var title = $"Hub recurrence {CreateUniqueRecurrenceUid()}";
         var recurrence = CreateRecurrence(title, today, today, everyNthDay: 1);
@@ -91,16 +102,10 @@ public sealed class SignalRIntegrationTests : IntegrationTestBase
         var createdCount = await RecurrencesReader.ReadCountAsync(createResponse);
         Assert.Equal(1, createdCount);
 
-        var generatedTask = await collector.WaitForTaskAsync(
+        var generatedTask = await client.WaitForTaskAsync(
             task => task.Title == title,
             UpdateTimeout);
         Assert.Equal(today, generatedTask.Date);
-    }
-
-    private static async Task<SignalRUpdateCollector> ConnectAsync(string token, string clientId)
-    {
-        var handler = await CreateSignalRHandlerAsync();
-        return await SignalRUpdateCollector.ConnectAsync(handler, token, clientId);
     }
 
     private static async Task<TaskDto> SaveTaskAsync(

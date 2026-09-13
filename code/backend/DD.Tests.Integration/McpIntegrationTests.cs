@@ -1,6 +1,5 @@
 using System.Net;
 using DD.Shared.Details.Abstractions.Dto;
-using DD.Tests.Integration.Helpers;
 using DD.Tests.Integration.Infrastructure;
 using DD.Tests.Integration.Infrastructure.Api;
 using DD.Tests.Integration.Infrastructure.Clients;
@@ -139,10 +138,7 @@ public sealed class McpIntegrationTests : IntegrationTestBase
         var deletedResponse = await SaveTasksAsync(user.HttpClient, deletedTask);
         Assert.True(Assert.Single(deletedResponse).Deleted);
 
-        using var signalRHandler = await CreateSignalRHandlerAsync();
-        await using var collector = await SignalRUpdateCollector.ConnectAsync(
-            signalRHandler,
-            user.Token);
+        await using var signalRClient = await TestSignalRClient.CreateAsync(user);
         await using var mcpClient = await TestMcpClient.CreateAsync(
             oauth,
             CreateTimeoutToken());
@@ -173,10 +169,10 @@ public sealed class McpIntegrationTests : IntegrationTestBase
             updatedTasks,
             task => task.Uid == secondValidTask.Uid && task.Order == 105 && task.Version == 2);
 
-        await collector.WaitForTaskAsync(
+        await signalRClient.WaitForTaskAsync(
             task => task.Uid == validTask.Uid && task.Order == 101 && task.Version == 2,
             ProtocolTimeout);
-        await collector.WaitForTaskAsync(
+        await signalRClient.WaitForTaskAsync(
             task => task.Uid == secondValidTask.Uid && task.Order == 105 && task.Version == 2,
             ProtocolTimeout);
 

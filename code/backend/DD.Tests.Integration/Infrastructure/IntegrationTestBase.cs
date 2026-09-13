@@ -9,11 +9,6 @@ public abstract class IntegrationTestBase
         return IntegrationEnvironmentLifetime.CreateClientAsync();
     }
 
-    protected static Task<HttpMessageHandler> CreateSignalRHandlerAsync()
-    {
-        return IntegrationEnvironmentLifetime.CreateSignalRHandlerAsync();
-    }
-
     protected static Task<TestUserClient> CreateUserClientAsync()
     {
         return TestUserClient.CreateAsync();
