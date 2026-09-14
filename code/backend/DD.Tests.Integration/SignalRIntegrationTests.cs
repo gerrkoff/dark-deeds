@@ -112,7 +112,7 @@ public sealed class SignalRIntegrationTests : IntegrationTestBase
         Assert.Equal(today, generatedTask.Date);
     }
 
-    private static async Task<TaskDto> SaveTaskAsync(
+    private static async Task SaveTaskAsync(
         TestUserClient user,
         TaskDto task,
         string? clientId = null)
@@ -121,7 +121,7 @@ public sealed class SignalRIntegrationTests : IntegrationTestBase
             user.HttpClient,
             [task],
             clientId);
-        return Assert.Single(await TasksReader.ReadAsync(response));
+        Assert.Single(await TasksReader.ReadAsync(response));
     }
 
     private static TaskDto CreateTask(string title)

@@ -9,8 +9,8 @@ namespace DD.Tests.Unit.McpClient;
 
 public class AddTasksToolTests
 {
-    private readonly Mock<IMcpService> mcpServiceMock = new();
-    private readonly Mock<IUserAuth> userAuthMock = new();
+    private readonly Mock<IMcpService> _mcpServiceMock = new();
+    private readonly Mock<IUserAuth> _userAuthMock = new();
 
     [Theory]
     [InlineData(null)]
@@ -19,15 +19,15 @@ public class AddTasksToolTests
     public async Task Do_MissingJustification_ThrowsArgumentExceptionAndDoesNotCallService(string? justification)
     {
         // Arrange
-        var tasks = new List<TaskCreateDto> { new() { Title = "Buy milk" } };
+        var tasks = new List<TaskCreateDto?> { new() { Title = "Buy milk" } };
 
         // Act
         var exception = await Assert.ThrowsAsync<ArgumentException>(
-            () => AddTasksTool.Do(mcpServiceMock.Object, userAuthMock.Object, tasks, justification!));
+            () => AddTasksTool.Do(_mcpServiceMock.Object, _userAuthMock.Object, tasks, justification!));
 
         // Assert
         Assert.Equal("justification", exception.ParamName);
-        mcpServiceMock.Verify(
+        _mcpServiceMock.Verify(
             x => x.AddTasksAsync(It.IsAny<ICollection<TaskCreateDto>>(), It.IsAny<string>(), It.IsAny<string>()),
             Times.Never);
     }
@@ -40,22 +40,22 @@ public class AddTasksToolTests
     public async Task Do_InvalidTasks_ThrowsArgumentExceptionAndDoesNotCallService(string scenario)
     {
         // Arrange
-        ICollection<TaskCreateDto>? tasks = scenario switch
+        ICollection<TaskCreateDto?>? tasks = scenario switch
         {
             "null" => null,
             "empty" => [],
-            "null-element" => [null!],
+            "null-element" => [null],
             "whitespace-title" => [new() { Title = "   " }],
             _ => throw new ArgumentOutOfRangeException(nameof(scenario)),
         };
 
         // Act
         var exception = await Assert.ThrowsAsync<ArgumentException>(
-            () => AddTasksTool.Do(mcpServiceMock.Object, userAuthMock.Object, tasks!, "Added by agent"));
+            () => AddTasksTool.Do(_mcpServiceMock.Object, _userAuthMock.Object, tasks, "Added by agent"));
 
         // Assert
         Assert.Equal("tasks", exception.ParamName);
-        mcpServiceMock.Verify(
+        _mcpServiceMock.Verify(
             x => x.AddTasksAsync(It.IsAny<ICollection<TaskCreateDto>>(), It.IsAny<string>(), It.IsAny<string>()),
             Times.Never);
     }

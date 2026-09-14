@@ -800,8 +800,7 @@ public sealed class TerminalInputTests
 
         var key = await reader.ReadKeyAsync(CancellationToken.None).WaitAsync(WaitTimeout);
 
-        Assert.True(key.HasValue);
-        Assert.Equal('x', key.Value.KeyChar);
+        Assert.Equal('x', key?.KeyChar);
     }
 
     [Fact]
@@ -815,8 +814,8 @@ public sealed class TerminalInputTests
         var first = await reader.ReadKeyAsync(CancellationToken.None).WaitAsync(WaitTimeout);
         var second = await reader.ReadKeyAsync(CancellationToken.None).WaitAsync(WaitTimeout);
 
-        Assert.Equal('a', first.Value.KeyChar);
-        Assert.Equal(ConsoleKey.UpArrow, second.Value.Key);
+        Assert.Equal('a', first?.KeyChar);
+        Assert.Equal(ConsoleKey.UpArrow, second?.Key);
     }
 
     [Fact]

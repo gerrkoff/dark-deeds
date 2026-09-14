@@ -26,10 +26,8 @@ internal static class TasksApi
         string? clientId = null,
         CancellationToken cancellationToken = default)
     {
-        using var request = new HttpRequestMessage(HttpMethod.Post, TasksUri)
-        {
-            Content = JsonContent.Create(tasks),
-        };
+        using var request = new HttpRequestMessage(HttpMethod.Post, TasksUri);
+        request.Content = JsonContent.Create(tasks);
         if (!string.IsNullOrWhiteSpace(clientId))
             request.Headers.Add("X-Client-Id", clientId);
 

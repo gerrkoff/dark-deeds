@@ -106,7 +106,7 @@ public sealed partial class TerminalFileLoggerProvider(
 
     private sealed class FileLogger(TerminalFileLoggerProvider provider, string category) : ILogger
     {
-        public IDisposable? BeginScope<TState>(TState state)
+        public IDisposable BeginScope<TState>(TState state)
             where TState : notnull
         {
             return NullScope.Instance;

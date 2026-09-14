@@ -194,8 +194,6 @@ internal sealed class TerminalApplication
                 }
 
                 break;
-            default:
-                break;
         }
 
         return true;
@@ -226,8 +224,6 @@ internal sealed class TerminalApplication
                 case ApplicationEffectKind.AcceptDataReset:
                     AcceptDataReset();
                     break;
-                default:
-                    break;
             }
         }
     }
@@ -254,14 +250,11 @@ internal sealed class TerminalApplication
                 case TaskSyncEffectKind.ReportSyncStatus:
                     State = State with
                     {
-                        IsSaving = effect.IsSaving,
                         HasUnsyncedChanges = effect.IsSaving && State.HasUnsyncedChanges,
                     };
                     break;
                 case TaskSyncEffectKind.SaveFinished:
                     ApplySaveFinished(effect);
-                    break;
-                default:
                     break;
             }
         }
@@ -633,7 +626,6 @@ internal sealed class TerminalApplication
             IsOffline = false,
             IsBuffering = false,
             IsSnapshotReloadPending = false,
-            IsSaving = false,
             HasUnsyncedChanges = false,
             StatusMessage = "Session expired. Please sign in again.",
         };
@@ -727,7 +719,6 @@ internal sealed class TerminalApplication
             Overview = State.Projection,
             Focus = State.Focus,
             Today = _deps.LocalDate.Today,
-            ShowCompleted = State.ShowCompleted,
             IsOffline = State.IsOffline,
             HasUnsyncedChanges = State.HasUnsyncedChanges,
             IsSnapshotReloadPending = State.IsSnapshotReloadPending,

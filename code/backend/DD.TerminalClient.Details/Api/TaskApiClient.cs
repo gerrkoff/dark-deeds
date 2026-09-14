@@ -41,10 +41,8 @@ internal sealed class TaskApiClient(HttpClient httpClient, ILocalDateProvider lo
 
         var payload = tasks.Select(TaskTransportMapper.ToDto).ToList();
 
-        using var request = new HttpRequestMessage(HttpMethod.Post, TasksPath)
-        {
-            Content = JsonContent.Create(payload, options: JsonOptions),
-        };
+        using var request = new HttpRequestMessage(HttpMethod.Post, TasksPath);
+        request.Content = JsonContent.Create(payload, options: JsonOptions);
 
         using var response = await SendAsync(request, cancellationToken);
         EnsureSuccess(response);

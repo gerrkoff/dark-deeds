@@ -136,6 +136,25 @@ You are a senior .NET backend developer and an expert in C#, ASP.NET Core, and E
 
 # Learned Lessons
 
+## Build configuration
+
+**When auditing effective analyzer or warning settings, inspect MSBuild properties imported by
+`gerrkoff.CodingStandards` and verify them with `dotnet msbuild -getProperty`; do not infer coverage
+from explicit declarations in project files.** The package is referenced for every backend project
+through `Directory.Packages.props` and supplies analyzer, code-style, and CI warning settings.
+
+**Keep shared JetBrains inspection severities in one source of truth.** Distinguish the ignored,
+personal `DarkDeeds.sln.DotSettings.user` from a tracked team-shared `DarkDeeds.sln.DotSettings`;
+do not duplicate the same severity in `.editorconfig`, which overrides DotSettings.
+
+**Run `dotnet tool restore` after checkout or a tool-manifest change, then run
+`ci/workflows/analyse-code-jb.sh <solution-path>` for every changed .NET solution.** The manifest
+owns the InspectCode version, the script owns the Warning/Error quality gate, and shared exceptions
+belong in `code/.editorconfig`. Never use `jb inspectcode` directly as a gate because it exits
+successfully when it finds issues; the wrapper parses its report and enforces zero Warning/Error
+findings. Keep the report threshold at Warning; emitting all Suggestion findings is too noisy for
+both agents and CI logs.
+
 ## Integration testing
 
 **Prefer backend integration tests that exercise the application as a black box through public

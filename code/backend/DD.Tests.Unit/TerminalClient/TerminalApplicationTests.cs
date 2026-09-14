@@ -12,7 +12,6 @@ using DD.TerminalClient.Domain.Overview;
 using DD.TerminalClient.Domain.Realtime;
 using DD.TerminalClient.Domain.State;
 using DD.TerminalClient.Domain.Time;
-using Spectre.Console;
 using Spectre.Console.Testing;
 using Xunit;
 
@@ -939,7 +938,7 @@ public sealed class TerminalApplicationTests
                 ProfileName = "test",
                 Delay = immediateDelay
                     ? (_, _) => System.Threading.Tasks.Task.CompletedTask
-                    : (delay, cancellationToken) => System.Threading.Tasks.Task.Delay(
+                    : (_, cancellationToken) => System.Threading.Tasks.Task.Delay(
                         System.Threading.Timeout.InfiniteTimeSpan, cancellationToken),
                 StartBackgroundTimers = false,
             };

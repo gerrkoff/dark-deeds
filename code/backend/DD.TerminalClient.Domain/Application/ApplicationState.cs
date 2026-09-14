@@ -60,8 +60,6 @@ public sealed record ApplicationState
     // True after a snapshot transport failure until a later reload succeeds.
     public bool IsSnapshotReloadPending { get; init; }
 
-    public bool IsSaving { get; init; }
-
     // True after a save transport failure until the queued local changes are accepted by the backend.
     public bool HasUnsyncedChanges { get; init; }
 

@@ -7,16 +7,14 @@ namespace DD.Tests.Integration.Infrastructure.Clients;
 internal sealed class TestSignalRClient : IAsyncDisposable
 {
     private readonly HubConnection _connection;
-    private readonly HttpMessageHandler _handler;
     private readonly object _sync = new();
     private readonly Dictionary<string, TaskDto> _tasksByUid = [];
     private readonly List<string> _arrivalOrder = [];
     private readonly List<Waiter> _waiters = [];
 
-    private TestSignalRClient(HubConnection connection, HttpMessageHandler handler)
+    private TestSignalRClient(HubConnection connection)
     {
         _connection = connection;
-        _handler = handler;
         _connection.On<List<TaskDto>>("update", RecordUpdate);
     }
 
@@ -53,14 +51,13 @@ internal sealed class TestSignalRClient : IAsyncDisposable
 
         try
         {
-            var client = new TestSignalRClient(connection, handler);
+            var client = new TestSignalRClient(connection);
             await connection.StartAsync(cancellationToken);
             return client;
         }
         catch
         {
             await connection.DisposeAsync().ConfigureAwait(false);
-            handler.Dispose();
             throw;
         }
     }
@@ -113,14 +110,7 @@ internal sealed class TestSignalRClient : IAsyncDisposable
 
     public async ValueTask DisposeAsync()
     {
-        try
-        {
-            await _connection.DisposeAsync();
-        }
-        finally
-        {
-            _handler.Dispose();
-        }
+        await _connection.DisposeAsync();
     }
 
     private static string BuildClientIdQuery(string? clientId)

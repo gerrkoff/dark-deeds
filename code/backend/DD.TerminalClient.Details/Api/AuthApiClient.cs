@@ -16,7 +16,6 @@ internal sealed class AuthApiClient(HttpClient httpClient)
 
     private enum SignInResultCode
     {
-        Unknown = 0,
         Success = 1,
         WrongUsernamePassword = 2,
     }
@@ -27,10 +26,14 @@ internal sealed class AuthApiClient(HttpClient httpClient)
         ArgumentNullException.ThrowIfNull(username);
         ArgumentNullException.ThrowIfNull(password);
 
-        using var request = new HttpRequestMessage(HttpMethod.Post, SignInPath)
-        {
-            Content = JsonContent.Create(new SignInRequest(username, password), options: JsonOptions),
-        };
+        using var request = new HttpRequestMessage(HttpMethod.Post, SignInPath);
+        request.Content = JsonContent.Create(
+            new
+            {
+                Username = username,
+                Password = password,
+            },
+            options: JsonOptions);
 
         using var response = await SendAsync(request, cancellationToken);
         EnsureSuccess(response);
@@ -63,12 +66,12 @@ internal sealed class AuthApiClient(HttpClient httpClient)
             : AuthSession.FromToken(token);
     }
 
-    private sealed record SignInRequest(string Username, string Password);
-
     private sealed record SignInResponse
     {
         public string Token { get; init; } = string.Empty;
 
+        // System.Text.Json sets this member through reflection.
+        // ReSharper disable once UnusedAutoPropertyAccessor.Local
         public SignInResultCode Result { get; init; }
     }
 }

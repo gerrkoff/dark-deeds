@@ -27,7 +27,7 @@ internal sealed class SignalRTaskHubConnectionFactory : ITaskHubConnectionFactor
 
         var url = TaskHubProtocol.BuildHubUrl(_baseUrl, _clientId);
         var connection = new HubConnectionBuilder()
-            .WithUrl(url, options => options.AccessTokenProvider = () => Task.FromResult<string?>(tokenProvider()))
+            .WithUrl(url, options => options.AccessTokenProvider = () => Task.FromResult(tokenProvider()))
             .AddJsonProtocol(options =>
                 options.PayloadSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase)
             .Build();

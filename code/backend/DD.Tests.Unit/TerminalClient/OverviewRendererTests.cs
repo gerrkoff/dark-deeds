@@ -498,7 +498,7 @@ public sealed class OverviewRendererTests
     {
         var console = Plain(80);
 
-        console.Write(TerminalFrame.RenderHeader(Vm(Project(), profileName: "test", showCompleted: true)));
+        console.Write(TerminalFrame.RenderHeader(Vm(Project(), profileName: "test")));
 
         Assert.Contains("test", console.Output, StringComparison.Ordinal);
         Assert.DoesNotContain("completed shown", console.Output, StringComparison.Ordinal);
@@ -540,15 +540,13 @@ public sealed class OverviewRendererTests
         string? notification = null,
         string profileName = "",
         bool hasUnsyncedChanges = false,
-        bool snapshotReloadPending = false,
-        bool showCompleted = false)
+        bool snapshotReloadPending = false)
     {
         return new TerminalViewModel
         {
             Overview = projection,
             Focus = focus,
             Today = Monday,
-            ShowCompleted = showCompleted,
             IsOffline = offline,
             HasUnsyncedChanges = hasUnsyncedChanges,
             IsSnapshotReloadPending = snapshotReloadPending,

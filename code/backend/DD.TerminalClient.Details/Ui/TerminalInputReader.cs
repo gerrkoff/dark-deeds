@@ -9,10 +9,10 @@ namespace DD.TerminalClient.Details.Ui;
 // event loop awaits it and hands each key to TerminalInputReducer.
 public sealed class TerminalInputReader(IAnsiConsole console) : IKeyInputSource
 {
-    private readonly IAnsiConsole console = console ?? throw new ArgumentNullException(nameof(console));
+    private readonly IAnsiConsole _console = console ?? throw new ArgumentNullException(nameof(console));
 
     public Task<ConsoleKeyInfo?> ReadKeyAsync(CancellationToken cancellationToken)
     {
-        return console.Input.ReadKeyAsync(intercept: true, cancellationToken);
+        return _console.Input.ReadKeyAsync(intercept: true, cancellationToken);
     }
 }

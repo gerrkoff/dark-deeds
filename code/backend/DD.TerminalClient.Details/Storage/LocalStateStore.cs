@@ -119,9 +119,9 @@ public sealed class LocalStateStore(ApplicationPathProvider paths, string profil
     {
         // The outbox is the one thing an upgrade must never drop: carry the legacy "PendingTasks"
         // array over to its schema-1 "Outbox" name with its contents untouched.
-        if (legacy[OutboxProperty] is null && legacy[LegacyOutboxProperty] is JsonNode pending)
+        if (legacy[OutboxProperty] is null && legacy[LegacyOutboxProperty] is not null)
         {
-            legacy[OutboxProperty] = pending.DeepClone();
+            legacy[OutboxProperty] = legacy[LegacyOutboxProperty]!.DeepClone();
         }
 
         legacy.Remove(LegacyOutboxProperty);

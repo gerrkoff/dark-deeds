@@ -33,6 +33,5 @@
     <PackageReference Include="Microsoft.Extensions.Hosting" />
   </ItemGroup>
 
-  <!-- TODO: clear warnings from Rider -->
   <!-- TODO: support versioning -->
 </Project>
