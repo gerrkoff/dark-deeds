@@ -198,8 +198,8 @@ public static class OverviewRenderer
 
         protected override IEnumerable<Segment> Render(RenderOptions options, int maxWidth)
         {
-            yield return new Segment(prefix, TaskPrefixStyle, null);
-            yield return new Segment(taskText, taskStyle, null);
+            yield return new Segment(prefix, TaskPrefixStyle);
+            yield return new Segment(taskText, taskStyle);
         }
     }
 }

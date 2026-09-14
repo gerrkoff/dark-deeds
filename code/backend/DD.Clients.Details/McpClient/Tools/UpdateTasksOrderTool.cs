@@ -15,7 +15,7 @@ internal sealed class UpdateTasksOrderTool
         IMcpService mcpService,
         IUserAuth userAuth,
         [Description("Array of task updates with UID and new order")]
-        ICollection<TaskUpdateDto> updates,
+        ICollection<TaskUpdateDto?>? updates,
         [Description("Explain why this new ordering is correct. State the concrete evidence and reasoning that justify reordering the user's tasks this way.")]
         string justification)
     {
@@ -30,6 +30,6 @@ internal sealed class UpdateTasksOrderTool
         }
 
         var userId = userAuth.UserId();
-        return mcpService.UpdateTasksOrderAsync(updates, userId, justification);
+        return mcpService.UpdateTasksOrderAsync(updates.Select(update => update!).ToArray(), userId, justification);
     }
 }

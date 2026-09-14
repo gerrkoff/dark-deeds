@@ -9,14 +9,14 @@ namespace DD.Tests.Unit.McpClient;
 
 public class McpServiceTests
 {
-    private readonly Mock<ITaskServiceApp> taskServiceAppMock = new();
-    private readonly Mock<ILogger<McpService>> loggerMock = new();
+    private readonly Mock<ITaskServiceApp> _taskServiceAppMock = new();
+    private readonly Mock<ILogger<McpService>> _loggerMock = new();
 
     [Fact]
     public async Task UpdateTasksOrderAsync_WithJustification_LogsJustification()
     {
         const string justification = "Reordered by priority";
-        loggerMock
+        _loggerMock
             .Setup(x => x.IsEnabled(It.IsAny<LogLevel>()))
             .Returns(true);
         var service = CreateService();
@@ -33,7 +33,7 @@ public class McpServiceTests
     public async Task AddTasksAsync_WithJustification_LogsJustification()
     {
         const string justification = "Added by agent";
-        loggerMock
+        _loggerMock
             .Setup(x => x.IsEnabled(It.IsAny<LogLevel>()))
             .Returns(true);
         var service = CreateService();
@@ -48,12 +48,12 @@ public class McpServiceTests
 
     private McpService CreateService()
     {
-        return new(taskServiceAppMock.Object, loggerMock.Object);
+        return new(_taskServiceAppMock.Object, _loggerMock.Object);
     }
 
     private void VerifyJustificationLogged(string justification)
     {
-        loggerMock.Verify(
+        _loggerMock.Verify(
             x => x.Log(
                 LogLevel.Information,
                 It.IsAny<EventId>(),

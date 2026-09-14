@@ -115,7 +115,7 @@ public sealed class ViewportRenderableTests
     public void Render_TopFocus_ClipsBottomAndShowsMoreBelow()
     {
         var projection = Project(NoDateTasks(25));
-        var (viewport, _, _) = Build(Vm(projection, focus: FocusFor(projection, "u00")), width: 120, viewportHeight: 10);
+        var (viewport, _) = Build(Vm(projection, focus: FocusFor(projection, "u00")), width: 120, viewportHeight: 10);
         var console = Plain(120);
 
         console.Write(viewport);
@@ -134,7 +134,7 @@ public sealed class ViewportRenderableTests
     {
         var projection = Project(
             [.. NoDateTasks(24), Task("u24", date: Monday.AddDays(13), title: "T24")]);
-        var (viewport, _, _) = Build(Vm(projection, focus: FocusFor(projection, "u24")), width: 120, viewportHeight: 10);
+        var (viewport, _) = Build(Vm(projection, focus: FocusFor(projection, "u24")), width: 120, viewportHeight: 10);
         var console = Plain(120);
 
         console.Write(viewport);
@@ -151,7 +151,7 @@ public sealed class ViewportRenderableTests
     public void Render_MiddleWindow_ClipsBothEndsAndShowsBothIndicators()
     {
         var projection = Project(NoDateTasks(25));
-        var (viewport, _, _) = Build(
+        var (viewport, _) = Build(
             Vm(projection, focus: FocusFor(projection, "u12")),
             width: 120,
             viewportHeight: 10,
@@ -173,7 +173,7 @@ public sealed class ViewportRenderableTests
     public void Render_ScrolledFocusedLine_PreservesItsStyle()
     {
         var projection = Project(NoDateTasks(25));
-        var (viewport, state, _) = Build(Vm(projection, focus: FocusFor(projection, "u20")), width: 120, viewportHeight: 10);
+        var (viewport, state) = Build(Vm(projection, focus: FocusFor(projection, "u20")), width: 120, viewportHeight: 10);
 
         Assert.True(state.Offset > 0, "expected the focused task to require scrolling");
         var output = Ansi(viewport, 120);
@@ -191,12 +191,12 @@ public sealed class ViewportRenderableTests
     {
         var projection = Project(NoDateTasks(25));
 
-        var (top, _, _) = Build(Vm(projection, focus: FocusFor(projection, "u00")), width: 120, viewportHeight: 10);
+        var (top, _) = Build(Vm(projection, focus: FocusFor(projection, "u00")), width: 120, viewportHeight: 10);
         var topConsole = Plain(120);
         topConsole.Write(top);
         Assert.DoesNotContain("T24", topConsole.Output, StringComparison.Ordinal);
 
-        var (bottom, _, _) = Build(Vm(projection, focus: FocusFor(projection, "u24")), width: 120, viewportHeight: 10);
+        var (bottom, _) = Build(Vm(projection, focus: FocusFor(projection, "u24")), width: 120, viewportHeight: 10);
         var bottomConsole = Plain(120);
         bottomConsole.Write(bottom);
         Assert.Contains("T24", bottomConsole.Output, StringComparison.Ordinal);
@@ -207,7 +207,7 @@ public sealed class ViewportRenderableTests
     public void Render_ReturningToFirstNoDateTask_RestoresCardHeader()
     {
         var projection = Project(NoDateTasks(25));
-        var (viewport, state, _) = Build(
+        var (viewport, state) = Build(
             Vm(projection, focus: FocusFor(projection, "u00")),
             width: 120,
             viewportHeight: 10,
@@ -225,7 +225,7 @@ public sealed class ViewportRenderableTests
     public void Render_ContentShorterThanViewport_ShowsEverythingWithoutIndicators()
     {
         var projection = Project(NoDateTasks(3));
-        var (viewport, state, _) = Build(Vm(projection), width: 120, viewportHeight: 40);
+        var (viewport, state) = Build(Vm(projection), width: 120, viewportHeight: 40);
         var console = Plain(120);
 
         console.Write(viewport);
@@ -243,7 +243,7 @@ public sealed class ViewportRenderableTests
     public void Render_ReservesFixedHeight_PinsTrailingFooter()
     {
         var projection = Project(NoDateTasks(3));
-        var (viewport, state, _) = Build(Vm(projection), width: 120, viewportHeight: 12);
+        var (viewport, state) = Build(Vm(projection), width: 120, viewportHeight: 12);
         var console = Plain(120);
 
         console.Write(new Rows(viewport, new Text("FOOTER_SENTINEL")));
@@ -266,14 +266,14 @@ public sealed class ViewportRenderableTests
     {
         var projection = Project(NoDateTasks(25));
 
-        var (tall, tallState, _) = Build(Vm(projection), width: 120, viewportHeight: 60);
+        var (tall, tallState) = Build(Vm(projection), width: 120, viewportHeight: 60);
         var tallConsole = Plain(120);
         tallConsole.Write(tall);
         Assert.False(tallState.Scrollable);
         Assert.Contains("T24", tallConsole.Output, StringComparison.Ordinal);
         Assert.DoesNotContain("more below", tallConsole.Output, StringComparison.Ordinal);
 
-        var (shortViewport, shortState, _) = Build(Vm(projection), width: 120, viewportHeight: 10);
+        var (shortViewport, shortState) = Build(Vm(projection), width: 120, viewportHeight: 10);
         var shortConsole = Plain(120);
         shortConsole.Write(shortViewport);
         Assert.True(shortState.Scrollable);
@@ -371,7 +371,7 @@ public sealed class ViewportRenderableTests
         Assert.Contains("q quit", output, StringComparison.Ordinal);
     }
 
-    private static (ViewportRenderable Viewport, ViewportState State, RenderedOverview Rendered) Build(
+    private static (ViewportRenderable Viewport, ViewportState State) Build(
         TerminalViewModel model,
         int width,
         int viewportHeight,
@@ -380,7 +380,7 @@ public sealed class ViewportRenderableTests
         var rendered = OverviewRenderer.Render(model, width);
         var focusedLine = ViewportRenderable.FindFocusedLine(rendered, model.Focus, previousOffset);
         var state = ViewportState.Calculate(rendered.Lines.Count, viewportHeight, focusedLine, previousOffset);
-        return (new ViewportRenderable(new Rows(rendered.Lines), state), state, rendered);
+        return (new ViewportRenderable(new Rows(rendered.Lines), state), state);
     }
 
     private static TerminalTask[] NoDateTasks(int count)
@@ -409,7 +409,6 @@ public sealed class ViewportRenderableTests
             Overview = projection,
             Focus = focus,
             Today = Monday,
-            ShowCompleted = false,
             IsOffline = false,
             Notification = null,
             ProfileName = string.Empty,

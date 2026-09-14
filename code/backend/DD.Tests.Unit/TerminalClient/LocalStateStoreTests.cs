@@ -36,7 +36,7 @@ public sealed class LocalStateStoreTests : IDisposable
         var loaded = new LocalStateStore(paths, Profile).Load();
 
         Assert.NotNull(loaded);
-        Assert.Equal("alice", loaded!.DataOwner);
+        Assert.Equal("alice", loaded.DataOwner);
         Assert.True(loaded.ShowCompleted);
         Assert.Equal(PersistedTerminalState.CurrentSchemaVersion, loaded.SchemaVersion);
         Assert.Equal(SampleState().CachedTasks, loaded.CachedTasks);

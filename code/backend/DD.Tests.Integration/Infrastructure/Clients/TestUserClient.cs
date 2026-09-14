@@ -9,17 +9,11 @@ namespace DD.Tests.Integration.Infrastructure.Clients;
 
 public sealed class TestUserClient : IAsyncDisposable
 {
-    private TestUserClient(HttpClient httpClient, string username, string password, string token)
+    private TestUserClient(HttpClient httpClient, string token)
     {
         HttpClient = httpClient;
-        Username = username;
-        Password = password;
         Token = token;
     }
-
-    public string Username { get; }
-
-    public string Password { get; }
 
     public string Token { get; }
 
@@ -53,7 +47,7 @@ public sealed class TestUserClient : IAsyncDisposable
             httpClient.DefaultRequestHeaders.Authorization =
                 new AuthenticationHeaderValue("Bearer", result.Token);
             shouldDisposeClient = false;
-            return new TestUserClient(httpClient, username, password, result.Token);
+            return new TestUserClient(httpClient, result.Token);
         }
         finally
         {

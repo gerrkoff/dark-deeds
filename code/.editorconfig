@@ -1,0 +1,17 @@
+# JetBrains solution-wide usage analysis cannot see members consumed through serialization,
+# persistence mapping, or generated equality. Keep those signals visible in the IDE without
+# making them part of the Warning/Error quality gate.
+[*.cs]
+resharper_collection_never_updated_global_highlighting = suggestion
+resharper_not_accessed_positional_property_global_highlighting = suggestion
+resharper_unused_auto_property_accessor_global_highlighting = suggestion
+
+# Roslyn IDE0072 requires explicit enum arms that JetBrains considers equivalent to the fallback.
+resharper_redundant_switch_expression_arms_highlighting = suggestion
+
+# Test assertion callbacks intentionally use their parameters only to verify preconditions.
+[backend/DD.Tests.Integration/**/*.cs]
+resharper_parameter_only_used_for_precondition_check_local_highlighting = suggestion
+
+[backend/DD.Tests.Unit/**/*.cs]
+resharper_parameter_only_used_for_precondition_check_local_highlighting = suggestion

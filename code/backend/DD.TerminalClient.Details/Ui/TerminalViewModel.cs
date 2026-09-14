@@ -16,8 +16,6 @@ public sealed record TerminalViewModel
 
     public required DateOnly Today { get; init; }
 
-    public bool ShowCompleted { get; init; }
-
     public bool IsOffline { get; init; }
 
     public bool HasUnsyncedChanges { get; init; }

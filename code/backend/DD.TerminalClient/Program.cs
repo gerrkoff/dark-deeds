@@ -115,6 +115,7 @@ internal static class Program
 
         using var loggerFactory = LoggerFactory.Create(builder =>
             builder.AddProvider(new TerminalFileLoggerProvider(paths, profile.Name, TimeProvider.System)));
+        var hubLogger = loggerFactory.CreateLogger<TaskHubClient>();
 
         var console = AnsiConsole.Console;
         var dependencies = new TerminalDependencies
@@ -125,7 +126,7 @@ internal static class Program
                 new SignalRTaskHubConnectionFactory(profile.BaseUri.AbsoluteUri, clientId),
                 GetToken,
                 sink,
-                loggerFactory.CreateLogger<TaskHubClient>()),
+                hubLogger),
             StateStore = new LocalStateStore(paths, profile.Name),
             TokenStore = new TokenStore(paths, profile.Name),
             Keys = new TerminalInputReader(console),
@@ -143,15 +144,9 @@ internal static class Program
             ProfileName = profile.Name,
         };
 
-        using var cts = new CancellationTokenSource();
-        Console.CancelKeyPress += (_, eventArgs) =>
-        {
-            eventArgs.Cancel = true;
-            cts.Cancel();
-        };
-
+        using var cancellation = new ConsoleCancellationScope();
         var application = new TerminalApplication(dependencies);
-        await application.RunAsync(cts.Token);
+        await application.RunAsync(cancellation.Token);
 
         if (application.FatalMessage is { } message)
         {
@@ -237,16 +232,11 @@ internal static class Program
             Credentials = credentials,
         };
 
-        using var cts = new CancellationTokenSource();
-        Console.CancelKeyPress += (_, eventArgs) =>
-        {
-            eventArgs.Cancel = true;
-            cts.Cancel();
-        };
+        using var cancellation = new ConsoleCancellationScope();
 
         try
         {
-            return await new TerminalSelfTest(context).RunAsync(cts.Token);
+            return await new TerminalSelfTest(context).RunAsync(cancellation.Token);
         }
         finally
         {
@@ -347,5 +337,29 @@ internal static class Program
               --version          Print version information and exit.
               --help, -h         Print this help text and exit.
             """;
+    }
+
+    private sealed class ConsoleCancellationScope : IDisposable
+    {
+        private readonly CancellationTokenSource _source = new();
+
+        public ConsoleCancellationScope()
+        {
+            Console.CancelKeyPress += HandleCancelKeyPress;
+        }
+
+        public CancellationToken Token => _source.Token;
+
+        public void Dispose()
+        {
+            Console.CancelKeyPress -= HandleCancelKeyPress;
+            _source.Dispose();
+        }
+
+        private void HandleCancelKeyPress(object? sender, ConsoleCancelEventArgs eventArgs)
+        {
+            eventArgs.Cancel = true;
+            _source.Cancel();
+        }
     }
 }

@@ -21,6 +21,7 @@ public abstract class BaseTest : IDisposable
     private const string TestSuite = "LoadTests";
     private const string Password = "Qwerty!1";
     private static readonly string DateFolder = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture);
+    private static readonly HttpClient AuthClient = new() { BaseAddress = Url };
     private readonly StringBuilder _output = new();
 
     protected static int Timeout => Config.Timeout;
@@ -79,16 +80,14 @@ public abstract class BaseTest : IDisposable
 
     protected static async Task<string> CreateUserAndObtainToken(string username)
     {
-        using var client = new HttpClient();
-        client.BaseAddress = Url;
         var payload = JsonSerializer.Serialize(new { username, password = Password });
         using var content = new StringContent(payload, Encoding.UTF8, MediaTypeNames.Application.Json);
-        var response = await client.PostAsync(new Uri("api/auth/account/signup", UriKind.Relative), content);
+        using var response = await AuthClient.PostAsync(new Uri("api/auth/account/signup", UriKind.Relative), content);
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
         var responseBody = await response.Content.ReadAsStringAsync();
-        var responseBodyParsed = JsonDocument.Parse(responseBody);
+        using var responseBodyParsed = JsonDocument.Parse(responseBody);
         var token = responseBodyParsed.RootElement.GetProperty("token").GetString();
 
         Assert.NotNull(token);

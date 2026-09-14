@@ -10,6 +10,8 @@ public static class DriverNetworkExtensions
     private static readonly Uri SeleniumGridUrl =
         new(Environment.GetEnvironmentVariable("SELENIUM_GRID_URL") ?? "http://localhost:4444");
 
+    private static readonly HttpClient SeleniumClient = new();
+
     public static void GoOffline(this RemoteWebDriver driver)
     {
         driver.SetNetworkOffline(true);
@@ -53,9 +55,8 @@ public static class DriverNetworkExtensions
             },
         });
 
-        using var client = new HttpClient();
         using var content = new StringContent(payload, Encoding.UTF8, "application/json");
-        var response = client.PostAsync(endpoint, content).GetAwaiter().GetResult();
+        using var response = SeleniumClient.PostAsync(endpoint, content).GetAwaiter().GetResult();
         response.EnsureSuccessStatusCode();
     }
 }

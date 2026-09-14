@@ -15,7 +15,7 @@ internal sealed class AddTasksTool
         IMcpService mcpService,
         IUserAuth userAuth,
         [Description("Array of new tasks to create")]
-        ICollection<TaskCreateDto> tasks,
+        ICollection<TaskCreateDto?>? tasks,
         [Description("Explain why these tasks should be created. State the concrete evidence and reasoning that justify adding these tasks to the user's list.")]
         string justification)
     {
@@ -30,6 +30,6 @@ internal sealed class AddTasksTool
         }
 
         var userId = userAuth.UserId();
-        return mcpService.AddTasksAsync(tasks, userId, justification);
+        return mcpService.AddTasksAsync(tasks.Select(task => task!).ToArray(), userId, justification);
     }
 }

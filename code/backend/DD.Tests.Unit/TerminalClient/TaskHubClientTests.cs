@@ -539,12 +539,11 @@ public sealed class TaskHubClientTests
     {
         var collector = new EventCollector();
         var factory = new FakeHubConnectionFactory();
-        var token = "jwt-1";
+        var tokens = new Queue<string>(["jwt-1", "jwt-2"]);
         await using var client = new TaskHubClient(
-            factory, () => token, collector.Add, NullLogger<TaskHubClient>.Instance, ImmediateDelayAsync);
+            factory, tokens.Dequeue, collector.Add, NullLogger<TaskHubClient>.Instance, ImmediateDelayAsync);
 
         await client.StartAsync(CancellationToken.None);
-        token = "jwt-2";
         await factory.Connection.RaiseClosedAsync();
         await WaitUntilAsync(() => collector.Count(TaskHubEventKind.Reconnected) == 1, "reconnected");
 
