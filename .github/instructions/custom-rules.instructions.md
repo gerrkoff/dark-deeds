@@ -31,6 +31,8 @@ Rules specific to this repository. **If a rule is here — follow it. No excepti
 
 **Initialize `Console.InputEncoding` and `Console.OutputEncoding` to UTF-8 before any terminal client I/O.** This preserves non-ASCII task text and keyboard input on Windows consoles that otherwise default to a legacy code page.
 
+**Do not suppress CA1849 for the terminal executable.** Await `Console.Error.WriteLineAsync` from async entry points; keep synchronous console APIs only where no asynchronous alternative exists.
+
 **For mixed styles on one terminal line, use a custom `Renderable` that emits separate `Segment`s.** The repository's Spectre.Console version applies only one style per `Text` and does not support a styled `Text.Append` overload.
 
 **Wrap every full-screen alternate-buffer redraw in DEC synchronized output (`CSI ? 2026 h` / `CSI ? 2026 l`) and release it in a `finally` block.** Clearing before sequentially writing the header, content, and footer otherwise exposes partial frames as visible flicker during ordinary keyboard navigation.
@@ -66,6 +68,8 @@ Rules specific to this repository. **If a rule is here — follow it. No excepti
 ## Terminal client releases
 
 **Trigger terminal client releases only from `dd-terminal-v*` tags.** Create releases without generated notes so unrelated monorepo changes are not included automatically.
+
+**Use the semantic version from the `dd-terminal-v<version>` tag as the terminal binary's build-time `Version`; do not hardcode release versions in the project file.** Pass the tag-derived value to `dotnet publish` and disable automatic source-revision suffixes so `dd-terminal --version` matches the release version exactly.
 
 **Offer terminal release tagging only after `staging` has been pushed successfully.** An empty version skips the release; otherwise create the annotated `dd-terminal-v<version>` tag on the exact deployed staging commit and push that tag separately.
 

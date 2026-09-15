@@ -143,6 +143,10 @@ You are a senior .NET backend developer and an expert in C#, ASP.NET Core, and E
 from explicit declarations in project files.** The package is referenced for every backend project
 through `Directory.Packages.props` and supplies analyzer, code-style, and CI warning settings.
 
+**Always append project-specific warning suppressions with `<NoWarn>$(NoWarn);...</NoWarn>`.**
+Assigning a literal `NoWarn` value after package props are imported discards suppressions supplied by
+`gerrkoff.CodingStandards`.
+
 **Keep shared JetBrains inspection severities in one source of truth.** Distinguish the ignored,
 personal `DarkDeeds.sln.DotSettings.user` from a tracked team-shared `DarkDeeds.sln.DotSettings`;
 do not duplicate the same severity in `.editorconfig`, which overrides DotSettings.

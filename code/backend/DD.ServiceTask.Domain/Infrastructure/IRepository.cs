@@ -13,7 +13,6 @@ public interface IRepository<T>
 
     Task<bool> AnyAsync(ISpecification<T> spec);
 
-    // TODO: split on update & insert
     Task UpsertAsync(T entity);
 
     Task<(bool Success, T? CurrentEntity)> TryUpdateVersionAsync(T entity);

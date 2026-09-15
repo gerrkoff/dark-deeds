@@ -48,14 +48,16 @@ The five binaries are produced by a script that any contributor can run locally 
 requires the .NET 8 SDK):
 
 ```bash
-ci/workflows/publish-terminal-client.sh <output-directory>
+ci/workflows/publish-terminal-client.sh <output-directory> <version>
 ```
 
 The script performs an untrimmed, self-contained, single-file `dotnet publish` for every runtime
 identifier and writes deterministic `.tar.gz` or `.zip` archives plus `.sha256` checksums into the
-output directory. The same script is invoked by the `Terminal Client Release` GitHub workflow
+output directory. The supplied semantic version is embedded into each binary and returned by
+`dd-terminal --version`. The same script is invoked by the `Terminal Client Release` GitHub workflow
 (`.github/workflows/terminal-client-release.yml`), which runs on `workflow_dispatch` and on
-`dd-terminal-v*` tags.
+`dd-terminal-v*` tags. Tag runs derive the binary version from the tag name; manual runs use the
+workflow's version input.
 
 After `ci/deploy.sh` successfully pushes `staging`, it prompts for an optional terminal version.
 Entering a semantic version such as `1.2.0` creates and pushes the annotated tag

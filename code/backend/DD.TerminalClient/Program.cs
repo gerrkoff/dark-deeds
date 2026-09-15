@@ -36,8 +36,8 @@ internal static class Program
 
         if (ValidateArgs(args) is { } argumentError)
         {
-            Console.Error.WriteLine($"{ExecutableName}: {argumentError}");
-            Console.Error.WriteLine($"Run '{ExecutableName} --help' for usage.");
+            await Console.Error.WriteLineAsync($"{ExecutableName}: {argumentError}");
+            await Console.Error.WriteLineAsync($"Run '{ExecutableName} --help' for usage.");
             return 1;
         }
 
@@ -62,7 +62,7 @@ internal static class Program
 
         if (Console.IsInputRedirected || Console.IsOutputRedirected)
         {
-            Console.Error.WriteLine(
+            await Console.Error.WriteLineAsync(
                 $"{ExecutableName} requires an interactive terminal. " +
                 "Run it directly in a TTY, or pass --help, --version, or --self-test for noninteractive output.");
             return 1;
@@ -78,7 +78,7 @@ internal static class Program
         var paths = new ApplicationPathProvider(stateRoot);
         if (!new ProfileStore(paths).TryResolve(profileName, out var profile))
         {
-            Console.Error.WriteLine($"{ExecutableName}: unknown profile '{profileName}'.");
+            await Console.Error.WriteLineAsync($"{ExecutableName}: unknown profile '{profileName}'.");
             return 1;
         }
 
@@ -150,7 +150,7 @@ internal static class Program
 
         if (application.FatalMessage is { } message)
         {
-            Console.Error.WriteLine(message);
+            await Console.Error.WriteLineAsync(message);
             return 1;
         }
 
@@ -162,7 +162,7 @@ internal static class Program
         if (!TerminalSelfTest.TryReadCredentials(
             Environment.GetEnvironmentVariable, out var credentials, out var credentialsError))
         {
-            Console.Error.WriteLine($"{ExecutableName}: {credentialsError}");
+            await Console.Error.WriteLineAsync($"{ExecutableName}: {credentialsError}");
             return TerminalSelfTest.UsageExitCode;
         }
 
@@ -176,7 +176,7 @@ internal static class Program
         var paths = new ApplicationPathProvider(resolvedRoot);
         if (!new ProfileStore(paths).TryResolve(profileName, out var profile))
         {
-            Console.Error.WriteLine($"{ExecutableName}: unknown profile '{profileName}'.");
+            await Console.Error.WriteLineAsync($"{ExecutableName}: unknown profile '{profileName}'.");
             return TerminalSelfTest.UsageExitCode;
         }
 
@@ -314,13 +314,9 @@ internal static class Program
             .GetCustomAttribute<AssemblyInformationalVersionAttribute>()?
             .InformationalVersion;
 
-        if (!string.IsNullOrEmpty(informationalVersion))
-        {
-            var plusIndex = informationalVersion.IndexOf('+', StringComparison.Ordinal);
-            return plusIndex >= 0 ? informationalVersion[..plusIndex] : informationalVersion;
-        }
-
-        return assembly.GetName().Version?.ToString() ?? "0.0.0";
+        return !string.IsNullOrEmpty(informationalVersion)
+            ? informationalVersion
+            : assembly.GetName().Version?.ToString() ?? "0.0.0";
     }
 
     private static string BuildHelpText()

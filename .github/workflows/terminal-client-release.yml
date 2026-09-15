@@ -2,6 +2,12 @@ name: Terminal Client Release
 
 on:
   workflow_dispatch:
+    inputs:
+      version:
+        description: Semantic version to embed in manually built binaries
+        required: true
+        default: 0.0.0-dev
+        type: string
   push:
     tags:
       - 'dd-terminal-v*'
@@ -22,8 +28,25 @@ jobs:
         with:
           global-json-file: code/backend/global.json
 
+      - name: Resolve terminal version
+        id: version
+        env:
+          REF_TYPE: ${{ github.ref_type }}
+          REF_NAME: ${{ github.ref_name }}
+          INPUT_VERSION: ${{ inputs.version }}
+        run: |
+          if [ "$REF_TYPE" = "tag" ]; then
+            version="${REF_NAME#dd-terminal-v}"
+          else
+            version="$INPUT_VERSION"
+          fi
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
       - name: Publish terminal client binaries
-        run: ci/workflows/publish-terminal-client.sh "${{ runner.temp }}/terminal-client"
+        run: |
+          ci/workflows/publish-terminal-client.sh \
+            "${{ runner.temp }}/terminal-client" \
+            "${{ steps.version.outputs.version }}"
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
