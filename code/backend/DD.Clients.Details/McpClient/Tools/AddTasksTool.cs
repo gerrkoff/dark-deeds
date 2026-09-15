@@ -30,6 +30,6 @@ internal sealed class AddTasksTool
         }
 
         var userId = userAuth.UserId();
-        return mcpService.AddTasksAsync(tasks.Select(task => task!).ToArray(), userId, justification);
+        return mcpService.AddTasksAsync([.. tasks.Select(task => task!)], userId, justification);
     }
 }

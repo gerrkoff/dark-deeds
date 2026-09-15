@@ -174,8 +174,8 @@ public sealed class OverviewProjectionTests
             NoRoutineShown);
 
         Assert.Equal(
-            new[] { Monday.AddDays(-3), Monday.AddDays(-1) },
-            result.Overdue.Select(cell => cell.Date!.Value).ToArray());
+            [Monday.AddDays(-3), Monday.AddDays(-1)],
+            [.. result.Overdue.Select(cell => cell.Date!.Value)]);
         Assert.DoesNotContain(result.Overdue, cell => cell.Date == Monday);
         Assert.Equal("monday", result.Current[0].Tasks.Single().Task.Uid);
     }
@@ -215,7 +215,7 @@ public sealed class OverviewProjectionTests
         Assert.True(cell.HasCollapsedRoutineTasks);
 
         // A collapsed Routine leaves no gap in the visible task indexes.
-        Assert.Equal(new[] { 0, 1 }, cell.Tasks.Select(task => task.Address.TaskIndex).ToArray());
+        Assert.Equal([0, 1], [.. cell.Tasks.Select(task => task.Address.TaskIndex)]);
     }
 
     [Fact]

@@ -23,8 +23,7 @@ public class BotProcessMessageService(
         var userChatId = update.Message?.Chat?.Id ?? throw new InvalidOperationException("Chat id is not found");
 
         var command = await botCommandParserService.ParseCommand(text, userChatId);
-        if (command != null)
-            command.UserChatId = userChatId;
+        command?.UserChatId = userChatId;
 
         if (command is ShowTodoCommand showTodoCommand)
         {

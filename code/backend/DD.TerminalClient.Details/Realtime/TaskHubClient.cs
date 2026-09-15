@@ -35,7 +35,7 @@ internal sealed class TaskHubClient(
 
     private readonly List<TaskHubEvent> _buffer = [];
     private readonly CancellationTokenSource _lifetimeCts = new();
-    private readonly object _gate = new();
+    private readonly Lock _gate = new();
 
     private ITaskHubConnection? _connection;
     private CancellationTokenSource? _runCts;

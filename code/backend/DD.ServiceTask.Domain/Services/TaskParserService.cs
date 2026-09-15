@@ -19,7 +19,7 @@ public class TaskParserService(ITaskTextParser parser) : ITaskParserService
     {
         try
         {
-            return parser.Parse(task).Select(ToDto).ToList();
+            return [.. parser.Parse(task).Select(ToDto)];
         }
         catch (TaskTextParseException e)
         {

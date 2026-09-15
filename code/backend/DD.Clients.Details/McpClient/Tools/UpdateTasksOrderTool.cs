@@ -30,6 +30,6 @@ internal sealed class UpdateTasksOrderTool
         }
 
         var userId = userAuth.UserId();
-        return mcpService.UpdateTasksOrderAsync(updates.Select(update => update!).ToArray(), userId, justification);
+        return mcpService.UpdateTasksOrderAsync([.. updates.Select(update => update!)], userId, justification);
     }
 }

@@ -20,7 +20,7 @@ internal sealed class DarkDeedsWebApplicationFactory(
     internal const string AuthIssuer = "https://integration-tests.dark-deeds.test";
     private const string AuthAudience = "dark-deeds-integration-tests";
     private const string AuthKey = "dark-deeds-integration-test-signing-key-2026-abcdefghijklmnopqrstuvwxyz";
-    private readonly object _clientLock = new();
+    private readonly Lock _clientLock = new();
 
     public HttpClient CreateTestClient(bool allowAutoRedirect = true)
     {

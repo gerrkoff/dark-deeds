@@ -100,6 +100,6 @@ public sealed class WatchService(
     private async Task<List<TaskDto>> GetTasks(MobileUserEntity user, DateTime from)
     {
         var till = from.AddDays(1);
-        return (await taskServiceApp.LoadTasksByDateAsync(from, till, user.UserId)).ToList();
+        return [.. await taskServiceApp.LoadTasksByDateAsync(from, till, user.UserId)];
     }
 }

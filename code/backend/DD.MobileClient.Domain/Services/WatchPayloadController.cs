@@ -15,7 +15,7 @@ public class WatchPayloadController(ITaskPrinter taskPrinter) : IWatchPayloadCon
 {
     public WatchWidgetStatusDto GetWidgetStatus(IReadOnlyCollection<TaskDto> tasks)
     {
-        tasks = FilterTasksForStatus(tasks).ToList();
+        tasks = [.. FilterTasksForStatus(tasks)];
 
         var header = GetHeader(tasks);
 
@@ -38,7 +38,7 @@ public class WatchPayloadController(ITaskPrinter taskPrinter) : IWatchPayloadCon
 
     public WatchAppStatusDto GetAppStatus(IReadOnlyCollection<TaskDto> tasks)
     {
-        tasks = FilterTasksForStatus(tasks).ToList();
+        tasks = [.. FilterTasksForStatus(tasks)];
 
         var header = GetHeader(tasks);
 

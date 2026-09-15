@@ -7,7 +7,7 @@ namespace DD.Tests.Integration.Infrastructure.Clients;
 internal sealed class TestSignalRClient : IAsyncDisposable
 {
     private readonly HubConnection _connection;
-    private readonly object _sync = new();
+    private readonly Lock _sync = new();
     private readonly Dictionary<string, TaskDto> _tasksByUid = [];
     private readonly List<string> _arrivalOrder = [];
     private readonly List<Waiter> _waiters = [];

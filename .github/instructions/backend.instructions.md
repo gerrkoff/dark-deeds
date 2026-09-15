@@ -147,6 +147,16 @@ through `Directory.Packages.props` and supplies analyzer, code-style, and CI war
 Assigning a literal `NoWarn` value after package props are imported discards suppressions supplied by
 `gerrkoff.CodingStandards`.
 
+**When retargeting .NET, build with the new SDK before planning broad NuGet upgrades.** Remove BCL
+package references that the new target framework supplies, align `Microsoft.AspNetCore.Mvc.Testing`
+with the target major when TestHost is incompatible, and resolve `NU190x` failures in standalone
+legacy test projects with the narrowest safe dependency update before considering major upgrades.
+
+**Suppress `CA1515` at project level for `DD.App` and every test project.** ASP.NET Core and xUnit
+rely on public types for framework discovery and cross-assembly test infrastructure; consistently
+append `CA1515` to `NoWarn` instead of adding per-type suppressions. Preserve existing type
+accessibility instead of changing public helpers to `internal` solely to satisfy this rule.
+
 **Keep shared JetBrains inspection severities in one source of truth.** Distinguish the ignored,
 personal `DarkDeeds.sln.DotSettings.user` from a tracked team-shared `DarkDeeds.sln.DotSettings`;
 do not duplicate the same severity in `.editorconfig`, which overrides DotSettings.

@@ -125,7 +125,7 @@ public class RecurrenceCreatorService(
         List<int> dayList;
         try
         {
-            dayList = plannedRecurrence.EveryMonthDay.Split(',').Select(int.Parse).ToList();
+            dayList = [.. plannedRecurrence.EveryMonthDay.Split(',').Select(int.Parse)];
         }
         catch (Exception e)
         {
