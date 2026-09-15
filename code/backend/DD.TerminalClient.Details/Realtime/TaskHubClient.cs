@@ -398,7 +398,11 @@ internal sealed class TaskHubClient(
         catch (Exception exception)
 #pragma warning restore CA1031
         {
-            Log.HubConnectAttemptFailed(_logger, DescribeFailure(exception));
+            if (_logger.IsEnabled(LogLevel.Debug))
+            {
+                Log.HubConnectAttemptFailed(_logger, DescribeFailure(exception));
+            }
+
             return TaskHubConnectOutcome.Failed;
         }
     }
@@ -592,7 +596,11 @@ internal sealed class TaskHubClient(
             _buffering = true;
         }
 
-        Log.HubConnectionLost(_logger, DescribeClose(error));
+        if (_logger.IsEnabled(LogLevel.Information))
+        {
+            Log.HubConnectionLost(_logger, DescribeClose(error));
+        }
+
         Emit(TaskHubEvent.Reconnecting);
         StartReconnectLoop();
         return Task.CompletedTask;
