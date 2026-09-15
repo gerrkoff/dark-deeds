@@ -23,7 +23,7 @@ For custom project rules established through experience and learning, see [custo
 <local_development>
 The application can be run locally for manual or browser-based verification. `DD.App` is an all-in-one host (monolith) that exposes both the REST API and the SignalR hub on port `5000` and only depends on MongoDB; RabbitMQ and Consul are replaced by in-process implementations.
 
-**Prerequisites**: Docker, .NET 8 SDK, Node.js 22.
+**Prerequisites**: Docker, .NET 10 SDK, Node.js 22.
 
 **Components** (three separate processes, all started from the repository root):
 

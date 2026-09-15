@@ -65,6 +65,6 @@ public static class BackendApi
         var content = await response.Content.ReadAsStringAsync();
         var tasks = JsonSerializer.Deserialize<List<BackendTaskDto>>(content, JsonOptions.I) ?? [];
 
-        return tasks.Where(task => !task.Deleted).Select(task => task.Title).ToList();
+        return [.. tasks.Where(task => !task.Deleted).Select(task => task.Title)];
     }
 }

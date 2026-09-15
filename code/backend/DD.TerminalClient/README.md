@@ -45,7 +45,7 @@ launch.
 ### Build from source
 
 The five binaries are produced by a script that any contributor can run locally (macOS or Linux;
-requires the .NET 8 SDK):
+requires the .NET 10 SDK):
 
 ```bash
 ci/workflows/publish-terminal-client.sh <output-directory> <version>

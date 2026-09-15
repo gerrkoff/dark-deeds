@@ -27,7 +27,7 @@ public class RecurrenceService(
 
         var recurrences = await plannedRecurrenceRepository.GetBySpecAsync(spec);
 
-        return recurrences.Select(r => r.ToDto()).ToList();
+        return [.. recurrences.Select(r => r.ToDto())];
     }
 
     public async Task<int> SaveAsync(ICollection<PlannedRecurrenceDto> recurrences, string userId)

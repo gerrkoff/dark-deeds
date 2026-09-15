@@ -58,7 +58,7 @@ internal sealed class TaskApiClient(HttpClient httpClient, ILocalDateProvider lo
     {
         try
         {
-            return dtos.Select(TaskTransportMapper.ToTerminalTask).ToList();
+            return [.. dtos.Select(TaskTransportMapper.ToTerminalTask)];
         }
         catch (ArgumentException exception)
         {
