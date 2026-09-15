@@ -6,7 +6,7 @@
 # supported runtime identifier and writes one deterministic platform archive plus a matching .sha256
 # checksum file per runtime identifier into the given output directory.
 #
-# Usage: ci/workflows/publish-terminal-client.sh <output-directory>
+# Usage: ci/workflows/publish-terminal-client.sh <output-directory> <version>
 #
 # The script is intended to be runnable locally (macOS or Linux) and from the release workflow.
 
@@ -20,11 +20,11 @@ readonly DETERMINISTIC_TIMESTAMP="200001010000.00"
 
 usage() {
     cat <<'USAGE'
-Usage: publish-terminal-client.sh <output-directory>
+Usage: publish-terminal-client.sh <output-directory> <version>
 
 Builds the Dark Deeds terminal client for osx-arm64, osx-x64, linux-x64, linux-arm64, and win-x64.
 Unix binaries are packaged as .tar.gz; the Windows binary is packaged as .zip. A matching .sha256
-checksum is written for every archive.
+checksum is written for every archive. The semantic version is embedded in every binary.
 USAGE
 }
 
@@ -33,8 +33,14 @@ if [ "${1:-}" = "-h" ] || [ "${1:-}" = "--help" ]; then
     exit 0
 fi
 
-if [ "$#" -ne 1 ]; then
+if [ "$#" -ne 2 ]; then
     usage >&2
+    exit 2
+fi
+
+readonly VERSION="$2"
+if [[ ! "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?(\+[0-9A-Za-z.-]+)?$ ]]; then
+    echo "error: version must be a semantic version such as 1.2.0 or 1.2.0-beta.1" >&2
     exit 2
 fi
 
@@ -87,6 +93,8 @@ for rid in $RUNTIME_IDENTIFIERS; do
         dotnet publish "DD.TerminalClient/DD.TerminalClient.csproj" \
             --configuration "$CONFIGURATION" \
             --runtime "$rid" \
+            --property:Version="$VERSION" \
+            --property:IncludeSourceRevisionInInformationalVersion=false \
             --nologo \
             --output "$publish_dir"
     )

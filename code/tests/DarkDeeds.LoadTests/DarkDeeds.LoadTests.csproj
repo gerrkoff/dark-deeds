@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="gerrkoff.CodingStandards" Version="0.1.4" />
+    <PackageReference Include="gerrkoff.CodingStandards" Version="0.1.5" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
     <PackageReference Include="NBomber" Version="3.3.0" />
     <PackageReference Include="NBomber.Http" Version="3.0.3" />
