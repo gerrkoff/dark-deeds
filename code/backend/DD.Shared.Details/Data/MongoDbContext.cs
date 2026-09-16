@@ -18,9 +18,11 @@ public class MongoDbContext : IMigratorMongoDbContext
     {
         Client = new MongoClient(connectionString);
 
-        // TODO: This is a hack, fix it
-        var db = connectionString.Split('/').Last().Split('?').First();
-        Database = Client.GetDatabase(db);
+        var databaseName = new MongoUrl(connectionString).DatabaseName
+            ?? throw new ArgumentException(
+                "The MongoDB connection string must contain a database name.",
+                nameof(connectionString));
+        Database = Client.GetDatabase(databaseName);
     }
 
     public IMongoClient Client { get; }
