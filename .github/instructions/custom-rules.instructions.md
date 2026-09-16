@@ -69,6 +69,8 @@ Rules specific to this repository. **If a rule is here — follow it. No excepti
 
 **Trigger terminal client releases only from `dd-terminal-v*` tags.** Create releases without generated notes so unrelated monorepo changes are not included automatically.
 
+**Set `GH_REPO` explicitly in terminal release jobs that use the GitHub CLI without checking out the repository.** Artifact-only jobs have no local Git metadata for `gh` to infer the target repository.
+
 **Use the semantic version from the `dd-terminal-v<version>` tag as the terminal binary's build-time `Version`; do not hardcode release versions in the project file.** Pass the tag-derived value to `dotnet publish` and disable automatic source-revision suffixes so `dd-terminal --version` matches the release version exactly.
 
 **Keep terminal SemVer validation only in `ci/deploy-helpers/tag-terminal-release.sh`.** The release workflow and publish script should forward the trusted version without duplicating the regex; prefer surgical CI changes and one owning validation point over defensive repetition.
