@@ -42,6 +42,8 @@ jobs:
   build:
     name: Publish ${{ matrix.rid }}
     needs: metadata
+    env:
+      TERMINAL_VERSION: ${{ needs.metadata.outputs.version }}
     strategy:
       fail-fast: false
       matrix:
@@ -65,7 +67,7 @@ jobs:
         run: |
           ci/workflows/publish-terminal-client.sh \
             "${{ runner.temp }}/terminal-client" \
-            "${{ needs.metadata.outputs.version }}" \
+            "$TERMINAL_VERSION" \
             "${{ matrix.rid }}"
 
       - name: Verify terminal client package
@@ -73,7 +75,7 @@ jobs:
         run: |
           ci/workflows/verify-terminal-client-package.sh \
             "${{ runner.temp }}/terminal-client" \
-            "${{ needs.metadata.outputs.version }}" \
+            "$TERMINAL_VERSION" \
             "${{ matrix.rid }}"
 
       - name: Upload build artifacts
