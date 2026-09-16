@@ -27,7 +27,7 @@ jobs:
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v4
       with:
-        global-json-file: code/backend/global.json
+        global-json-file: global.json
     - name: Restore .NET tools
       run: dotnet tool restore
     - name: Check Docker
@@ -45,9 +45,9 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - name: Setup .NET Core
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: 8.0.100
+        global-json-file: global.json
     - name: Restore .NET tools
       run: dotnet tool restore
     - name: Build E2E Tests
@@ -61,9 +61,9 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - name: Setup .NET Core
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: 8.0.100
+        global-json-file: global.json
     - name: Restore .NET tools
       run: dotnet tool restore
     - name: Build Load Tests

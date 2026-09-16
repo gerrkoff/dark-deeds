@@ -53,7 +53,7 @@ public sealed class HttpClientTests
 
         Assert.Equal(TerminalSignInStatus.Success, outcome.Status);
         Assert.NotNull(outcome.Session);
-        Assert.Equal(token, outcome.Session!.Token);
+        Assert.Equal(token, outcome.Session.Token);
         Assert.Equal("alice", outcome.Session.Username);
         Assert.Equal(expiry, outcome.Session.ExpiresAt);
     }

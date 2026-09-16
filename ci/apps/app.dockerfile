@@ -12,7 +12,7 @@ COPY .editorconfig /code/frontend/.editorconfig
 
 RUN npm run build
 
-FROM mcr.microsoft.com/dotnet/sdk:8.0.100 AS builder-be
+FROM mcr.microsoft.com/dotnet/sdk:10.0.100 AS builder-be
 
 WORKDIR /code/backend
 
@@ -32,7 +32,7 @@ ARG BUILD_VERSION
 RUN dotnet build --no-restore -c Release --version-suffix ${BUILD_VERSION} /code/backend/DarkDeeds.sln
 RUN dotnet publish --no-restore --no-build -c Release -o /build /code/backend/DD.App/DD.App.csproj
 
-FROM mcr.microsoft.com/dotnet/aspnet:8.0
+FROM mcr.microsoft.com/dotnet/aspnet:10.0
 
 WORKDIR /app
 

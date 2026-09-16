@@ -36,7 +36,7 @@ internal sealed class MigrationProvider(
     {
         var collection = context.GetCollection<MigrationRecord>(MigrationRunner.MigrationsCollectionName);
         var migrations = collection.Find(FilterDefinition<MigrationRecord>.Empty).ToList();
-        return migrations.Select(x => x.Name).ToHashSet();
+        return [.. migrations.Select(x => x.Name)];
     }
 
     private static List<Migration> LoadMigrations(IEnumerable<IMigrationBody> migrationBodies)

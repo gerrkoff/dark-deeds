@@ -170,51 +170,54 @@ public sealed class WatchIntegrationTests : IntegrationTestBase
 
     private static TaskDto[] CreateWatchTasks(params DateTime[] dates)
     {
-        return dates.SelectMany(date =>
-            new TaskDto[]
-            {
-                new()
+        return
+        [
+            .. dates.SelectMany(date =>
+                new TaskDto[]
                 {
-                    Uid = TasksHelper.CreateUniqueTaskUid(),
-                    Date = date,
-                    Order = 1,
-                    Title = "Routine task",
-                    Type = TaskTypeDto.Routine,
-                },
-                new()
-                {
-                    Uid = TasksHelper.CreateUniqueTaskUid(),
-                    Date = date,
-                    Order = 2,
-                    Title = "Simple task",
-                    Type = TaskTypeDto.Simple,
-                },
-                new()
-                {
-                    Uid = TasksHelper.CreateUniqueTaskUid(),
-                    Date = date,
-                    Order = 3,
-                    Title = "Additional task",
-                    Type = TaskTypeDto.Additional,
-                },
-                new()
-                {
-                    Uid = TasksHelper.CreateUniqueTaskUid(),
-                    Date = date,
-                    Order = 4,
-                    Title = "Completed task",
-                    Completed = true,
-                    Type = TaskTypeDto.Simple,
-                },
-                new()
-                {
-                    Uid = TasksHelper.CreateUniqueTaskUid(),
-                    Date = date,
-                    Order = 5,
-                    Time = 615,
-                    Title = "Timed task",
-                    Type = TaskTypeDto.Simple,
-                },
-            }).ToArray();
+                    new()
+                    {
+                        Uid = TasksHelper.CreateUniqueTaskUid(),
+                        Date = date,
+                        Order = 1,
+                        Title = "Routine task",
+                        Type = TaskTypeDto.Routine,
+                    },
+                    new()
+                    {
+                        Uid = TasksHelper.CreateUniqueTaskUid(),
+                        Date = date,
+                        Order = 2,
+                        Title = "Simple task",
+                        Type = TaskTypeDto.Simple,
+                    },
+                    new()
+                    {
+                        Uid = TasksHelper.CreateUniqueTaskUid(),
+                        Date = date,
+                        Order = 3,
+                        Title = "Additional task",
+                        Type = TaskTypeDto.Additional,
+                    },
+                    new()
+                    {
+                        Uid = TasksHelper.CreateUniqueTaskUid(),
+                        Date = date,
+                        Order = 4,
+                        Title = "Completed task",
+                        Completed = true,
+                        Type = TaskTypeDto.Simple,
+                    },
+                    new()
+                    {
+                        Uid = TasksHelper.CreateUniqueTaskUid(),
+                        Date = date,
+                        Order = 5,
+                        Time = 615,
+                        Title = "Timed task",
+                        Type = TaskTypeDto.Simple,
+                    },
+                }),
+        ];
     }
 }

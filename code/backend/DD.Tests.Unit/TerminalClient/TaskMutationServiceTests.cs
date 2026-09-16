@@ -360,7 +360,7 @@ public class TaskMutationServiceTests
 
     private static HashSet<string> Visible(params string[] uids)
     {
-        return new HashSet<string>(uids);
+        return [.. uids];
     }
 
     private static TerminalTask NewTask(

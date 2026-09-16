@@ -77,7 +77,7 @@ Rules specific to this repository. **If a rule is here — follow it. No excepti
 
 **Publish the terminal client for `win-x64` as a `.zip` containing `dd-terminal.exe`; keep macOS and Linux packages as `.tar.gz`.** Cross-publish Windows from the release runner, but treat interactive Windows Terminal behavior as requiring separate manual verification.
 
-**Use .NET SDK `8.0.100` across CI and Docker build surfaces, while `code/backend/global.json` uses `latestFeature` so local development can roll forward to an installed .NET 8 feature band.** Run terminal release and CI `dotnet` commands from `code/backend` so the nested `global.json` governs SDK resolution; `setup-dotnet` installing an SDK does not force selection when `global.json` is outside the command's working-directory ancestry.
+**Use .NET SDK `10.0.100` across CI and Docker build surfaces, while the repository-root `global.json` uses `latestFeature` so local development can roll forward to an installed .NET 10 feature band.** Keep the SDK pin at the repository root so IDEs and commands for backend, E2E, and load-test projects all resolve .NET 10 consistently. Every `actions/setup-dotnet` job must use that `global.json`; keep explicit SDK versions only on surfaces such as Docker base images that cannot consume it.
 
 ## Public repository security
 

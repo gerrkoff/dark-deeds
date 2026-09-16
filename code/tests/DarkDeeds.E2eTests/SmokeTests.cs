@@ -19,7 +19,8 @@ public class SmokeTests(ITestOutputHelper output) : UserLoginTest
         using var httpClient = BackendApi.CreateHttpClient();
         var url = new Uri("api/be/build-info", UriKind.Relative);
         var result = await httpClient.GetStringAsync(url);
-        var version = (string)JObject.Parse(result)["appVersion"];
+        var version = (string?)JObject.Parse(result)["appVersion"]
+                      ?? throw new InvalidOperationException("Build info response did not include appVersion.");
         output.WriteLine($"App Version: {version}");
     }
 

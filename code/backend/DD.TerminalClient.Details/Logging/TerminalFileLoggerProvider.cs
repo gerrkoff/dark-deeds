@@ -23,7 +23,7 @@ public sealed partial class TerminalFileLoggerProvider(
     private readonly string _logFilePath = EnsureLogDirectory(paths, profileName);
     private readonly TimeProvider _timeProvider = timeProvider;
     private readonly long _maxBytes = maxBytes;
-    private readonly object _gate = new();
+    private readonly Lock _gate = new();
 
     public ILogger CreateLogger(string categoryName)
     {

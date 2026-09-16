@@ -1064,9 +1064,11 @@ internal sealed class TerminalApplication
         }
 
         var byUid = versions.ToDictionary(version => version.Uid, version => version.Version, StringComparer.Ordinal);
-        return cache
-            .Select(task => byUid.TryGetValue(task.Uid, out var version) ? task with { Version = version } : task)
-            .ToList();
+        return
+        [
+            .. cache.Select(
+                task => byUid.TryGetValue(task.Uid, out var version) ? task with { Version = version } : task),
+        ];
     }
 
     private static IReadOnlyList<TerminalTask> MergeIncoming(

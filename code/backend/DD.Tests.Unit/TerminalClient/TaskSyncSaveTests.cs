@@ -342,7 +342,7 @@ public sealed class TaskSyncSaveTests
 
     private static string[] Uids(IEnumerable<TerminalTask> tasks)
     {
-        return tasks.Select(task => task.Uid).ToArray();
+        return [.. tasks.Select(task => task.Uid)];
     }
 
     private static IReadOnlyList<TerminalTask> ApplyOutbox(

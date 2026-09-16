@@ -51,7 +51,7 @@ public class TaskService(
 
         var tasks = await tasksRepository.GetBySpecAsync(spec);
 
-        return tasks.Select(t => t.ToDto()).ToList();
+        return [.. tasks.Select(t => t.ToDto())];
     }
 
     public async Task<IEnumerable<TaskDto>> LoadTasksByDateAsync(string userId, DateTime from, DateTime till)
@@ -63,7 +63,7 @@ public class TaskService(
 
         var tasks = await tasksRepository.GetBySpecAsync(spec);
 
-        return tasks.Select(t => t.ToDto()).ToList();
+        return [.. tasks.Select(t => t.ToDto())];
     }
 
     public async Task<IEnumerable<TaskDto>> SaveTasksAsync(ICollection<TaskDto> tasks, string userId, string? clientId)

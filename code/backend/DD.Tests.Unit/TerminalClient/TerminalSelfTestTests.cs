@@ -282,7 +282,7 @@ public sealed class TerminalSelfTestTests
 
         public Task<IReadOnlyList<TerminalTask>> LoadTasksAsync(CancellationToken cancellationToken)
         {
-            IReadOnlyList<TerminalTask> snapshot = _store.Values.Where(task => !task.Deleted).ToList();
+            IReadOnlyList<TerminalTask> snapshot = [.. _store.Values.Where(task => !task.Deleted)];
             return Task.FromResult(snapshot);
         }
 
@@ -294,7 +294,7 @@ public sealed class TerminalSelfTestTests
                 throw new TerminalApiException(TerminalApiErrorKind.Transport, "the save failed.");
             }
 
-            IReadOnlyList<TerminalTask> saved = tasks.Select(ApplyServerLogic).ToList();
+            IReadOnlyList<TerminalTask> saved = [.. tasks.Select(ApplyServerLogic)];
             OnSaved?.Invoke(saved);
             return Task.FromResult(saved);
         }
@@ -333,7 +333,7 @@ public sealed class TerminalSelfTestTests
 
     private sealed class FakeHub : ITaskHubClient
     {
-        private readonly object _gate = new();
+        private readonly Lock _gate = new();
         private readonly List<TaskHubEvent> _buffer = [];
         private bool _buffering;
 

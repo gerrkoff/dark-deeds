@@ -147,6 +147,21 @@ through `Directory.Packages.props` and supplies analyzer, code-style, and CI war
 Assigning a literal `NoWarn` value after package props are imported discards suppressions supplied by
 `gerrkoff.CodingStandards`.
 
+**When retargeting .NET, build with the new SDK before planning broad NuGet upgrades.** Remove BCL
+package references that the new target framework supplies, align `Microsoft.AspNetCore.Mvc.Testing`
+with the target major when TestHost is incompatible, and resolve `NU190x` failures in standalone
+legacy test projects with the narrowest safe dependency update before considering major upgrades.
+
+**When `global.json` permits feature-band roll-forward, record the resolved `dotnet --version` before
+comparing local, Rider, and CI diagnostics.** Different .NET SDK feature bands can ship different
+analyzer behavior; use a forced rebuild with the exact CI SDK before claiming CI parity, and treat
+Rider's background Problems view as distinct from Roslyn diagnostics emitted by MSBuild.
+
+**Suppress `CA1515` at project level for `DD.App` and every test project.** ASP.NET Core and xUnit
+rely on public types for framework discovery and cross-assembly test infrastructure; consistently
+append `CA1515` to `NoWarn` instead of adding per-type suppressions. Preserve existing type
+accessibility instead of changing public helpers to `internal` solely to satisfy this rule.
+
 **Keep shared JetBrains inspection severities in one source of truth.** Distinguish the ignored,
 personal `DarkDeeds.sln.DotSettings.user` from a tracked team-shared `DarkDeeds.sln.DotSettings`;
 do not duplicate the same severity in `.editorconfig`, which overrides DotSettings.
@@ -157,7 +172,8 @@ owns the InspectCode version, the script owns the Warning/Error quality gate, an
 belong in `code/.editorconfig`. Never use `jb inspectcode` directly as a gate because it exits
 successfully when it finds issues; the wrapper parses its report and enforces zero Warning/Error
 findings. Keep the report threshold at Warning; emitting all Suggestion findings is too noisy for
-both agents and CI logs.
+both agents and CI logs. Also inspect console output for Roslyn source-generator warnings that may
+not appear in the XML issue count, such as duplicate `LoggerMessage` event IDs.
 
 ## Integration testing
 
@@ -184,6 +200,11 @@ that those credentials are consumed by MCP.
 token kinds, claims, audiences, and refresh behavior; a resource integration test verifies only
 that its accepted credential works and that the one relevant foreign credential is rejected.
 Do not replay every OAuth artifact against every resource endpoint.
+
+**When `CA1873` flags a Moq expression that verifies `ILogger.Log`, do not suppress it.** Inspect
+the mock's recorded `Invocations`, select the single `Log` call, and assert its level and formatted
+state; matcher calls inside the expression are test infrastructure, but the analyzer interprets
+them as eagerly evaluated logging arguments.
 
 **Represent integration-test HTTP contracts with paired `<Domain>Api` and `<Domain>Reader`
 classes.** API classes own typed inputs, routes, query construction, and return raw

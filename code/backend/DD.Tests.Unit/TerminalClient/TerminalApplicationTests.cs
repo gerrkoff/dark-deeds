@@ -840,7 +840,7 @@ public sealed class TerminalApplicationTests
 
     private static List<TerminalTask> Echo(IReadOnlyCollection<TerminalTask> batch)
     {
-        return batch.Select(task => task with { Version = task.Version + 1 }).ToList();
+        return [.. batch.Select(task => task with { Version = task.Version + 1 })];
     }
 
     private static TerminalTask Task(string uid, string title, int version = 0)
@@ -1019,7 +1019,7 @@ public sealed class TerminalApplicationTests
 
     private sealed class FakeAuthApi : IAuthApiClient
     {
-        private readonly object _gate = new();
+        private readonly Lock _gate = new();
         private TaskCompletionSource? _renewGate;
 
         public Func<string, string, SignInOutcome> SignInHandler { get; set; } =
@@ -1085,7 +1085,7 @@ public sealed class TerminalApplicationTests
 
     private sealed class FakeTaskApi : ITaskApiClient
     {
-        private readonly object _gate = new();
+        private readonly Lock _gate = new();
         private TaskCompletionSource? _saveGate;
 
         public Func<IReadOnlyList<TerminalTask>> LoadHandler { get; set; } = () => [];
@@ -1140,7 +1140,7 @@ public sealed class TerminalApplicationTests
 
     private sealed class FakeHub : ITaskHubClient
     {
-        private readonly object _gate = new();
+        private readonly Lock _gate = new();
 
         public Action<TaskHubEvent>? Sink { get; set; }
 
@@ -1276,7 +1276,7 @@ public sealed class TerminalApplicationTests
 
     private sealed class CaptureRenderer : ITerminalRenderer
     {
-        private readonly object _gate = new();
+        private readonly Lock _gate = new();
         private readonly List<Frame> _frames = [];
 
         public int BeginCount { get; private set; }

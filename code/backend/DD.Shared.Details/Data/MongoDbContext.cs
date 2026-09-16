@@ -9,7 +9,7 @@ public interface IMongoDbContext
 
 public interface IMigratorMongoDbContext : IMongoDbContext
 {
-    public IMongoClient Client { get; }
+    IMongoClient Client { get; }
 }
 
 public class MongoDbContext : IMigratorMongoDbContext

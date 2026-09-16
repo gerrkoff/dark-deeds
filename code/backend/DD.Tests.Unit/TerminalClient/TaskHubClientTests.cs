@@ -135,8 +135,8 @@ public sealed class TaskHubClientTests
 
         var delays = delay.Snapshot();
         Assert.Equal(
-            new[] { 1, 2, 4, 8, 16, 30, 30, 30 },
-            delays.Take(8).Select(d => (int)d.TotalSeconds).ToArray());
+            [1, 2, 4, 8, 16, 30, 30, 30],
+            [.. delays.Take(8).Select(d => (int)d.TotalSeconds)]);
         Assert.Equal(9, factory.Connection.StartCount);
     }
 
@@ -623,7 +623,7 @@ public sealed class TaskHubClientTests
 
     private sealed class EventCollector
     {
-        private readonly object _sync = new();
+        private readonly Lock _sync = new();
         private readonly List<TaskHubEvent> _events = [];
 
         public void Add(TaskHubEvent hubEvent)
@@ -646,7 +646,7 @@ public sealed class TaskHubClientTests
         {
             lock (_sync)
             {
-                return _events.Select(e => e.Kind).ToArray();
+                return [.. _events.Select(e => e.Kind)];
             }
         }
 
@@ -661,7 +661,7 @@ public sealed class TaskHubClientTests
 
     private sealed class RecordingDelay
     {
-        private readonly object _sync = new();
+        private readonly Lock _sync = new();
         private readonly List<TimeSpan> _delays = [];
 
         public Task DelayAsync(TimeSpan delay, CancellationToken cancellationToken)
@@ -697,7 +697,7 @@ public sealed class TaskHubClientTests
     private sealed class FakeHubConnection(Func<string?> tokenProvider, Func<int, Exception?>? startBehavior)
         : ITaskHubConnection
     {
-        private readonly object _sync = new();
+        private readonly Lock _sync = new();
         private Action<IReadOnlyList<TaskDto>>? _onUpdate;
         private Action? _onHeartbeat;
         private Func<Exception?, Task>? _onClosed;

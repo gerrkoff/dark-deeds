@@ -96,7 +96,7 @@ public sealed class TaskReconcilerTests
 
         Assert.Equal(new[] { "a" }, Uids(result.TasksConflicted));
         Assert.NotNull(result.OutboxToPersist);
-        Assert.Equal(new[] { "b" }, Uids(result.OutboxToPersist!));
+        Assert.Equal(new[] { "b" }, Uids(result.OutboxToPersist));
     }
 
     [Fact]
@@ -108,7 +108,7 @@ public sealed class TaskReconcilerTests
         var result = reconciler.ProcessOnlineUpdate([NewTask("1", version: 6)]);
 
         Assert.NotNull(result.OutboxToPersist);
-        Assert.Empty(result.OutboxToPersist!);
+        Assert.Empty(result.OutboxToPersist);
     }
 
     [Fact]
@@ -281,7 +281,7 @@ public sealed class TaskReconcilerTests
         if (result.KeepUids is not null)
         {
             var keep = result.KeepUids.ToHashSet(StringComparer.Ordinal);
-            list = list.Where(task => keep.Contains(task.Uid)).ToList();
+            list = [.. list.Where(task => keep.Contains(task.Uid))];
         }
 
         foreach (var task in result.TasksToApply)
@@ -319,6 +319,6 @@ public sealed class TaskReconcilerTests
 
     private static string[] Uids(IEnumerable<TerminalTask> tasks)
     {
-        return tasks.Select(task => task.Uid).ToArray();
+        return [.. tasks.Select(task => task.Uid)];
     }
 }

@@ -53,13 +53,13 @@ public class McpServiceTests
 
     private void VerifyJustificationLogged(string justification)
     {
-        _loggerMock.Verify(
-            x => x.Log(
-                LogLevel.Information,
-                It.IsAny<EventId>(),
-                It.Is<It.IsAnyType>((state, _) => state.ToString()!.Contains(justification)),
-                It.IsAny<Exception?>(),
-                It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
-            Times.Once);
+        var invocation = Assert.Single(
+            _loggerMock.Invocations,
+            invocation => invocation.Method.Name == nameof(ILogger.Log));
+        Assert.Equal(LogLevel.Information, invocation.Arguments[0]);
+
+        var message = invocation.Arguments[2].ToString();
+        Assert.NotNull(message);
+        Assert.Contains(justification, message, StringComparison.Ordinal);
     }
 }

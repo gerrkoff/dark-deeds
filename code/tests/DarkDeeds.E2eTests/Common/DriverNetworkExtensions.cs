@@ -55,8 +55,9 @@ public static class DriverNetworkExtensions
             },
         });
 
-        using var content = new StringContent(payload, Encoding.UTF8, "application/json");
-        using var response = SeleniumClient.PostAsync(endpoint, content).GetAwaiter().GetResult();
+        using var request = new HttpRequestMessage(HttpMethod.Post, endpoint);
+        request.Content = new StringContent(payload, Encoding.UTF8, "application/json");
+        using var response = SeleniumClient.Send(request);
         response.EnsureSuccessStatusCode();
     }
 }

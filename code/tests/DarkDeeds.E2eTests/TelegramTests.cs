@@ -33,7 +33,7 @@ public class TelegramTests : BaseTest
     {
         using var client = BackendApi.CreateHttpClient();
         var url = new Uri($"api/test/GetTestChatIdForUser?userId={userId}", UriKind.Relative);
-        var result = await client.PostAsync(url, null!);
+        var result = await client.PostAsync(url, null);
         result.EnsureSuccessStatusCode();
         var content = await result.Content.ReadAsStringAsync();
         return int.Parse(content, CultureInfo.InvariantCulture);
