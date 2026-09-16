@@ -15,7 +15,6 @@
     <ProjectReference Include="..\DD.Clients.Details\DD.Clients.Details.csproj" />
     <ProjectReference Include="..\DD.Shared.TaskText\DD.Shared.TaskText.csproj" />
     <ProjectReference Include="..\DD.TerminalClient.Domain\DD.TerminalClient.Domain.csproj" />
-    <ProjectReference Include="..\DD.TerminalClient.Details\DD.TerminalClient.Details.csproj" />
     <ProjectReference Include="..\DD.TerminalClient\DD.TerminalClient.csproj" />
   </ItemGroup>
 

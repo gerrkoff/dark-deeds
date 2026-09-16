@@ -1,4 +1,4 @@
-using DD.TerminalClient.Details.Storage;
+using DD.TerminalClient.Storage;
 using Xunit;
 
 namespace DD.Tests.Unit.TerminalClient;

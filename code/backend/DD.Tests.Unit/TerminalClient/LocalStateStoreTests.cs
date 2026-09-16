@@ -1,7 +1,7 @@
-using DD.TerminalClient.Details.Logging;
-using DD.TerminalClient.Details.Storage;
 using DD.TerminalClient.Domain.Models;
 using DD.TerminalClient.Domain.State;
+using DD.TerminalClient.Logging;
+using DD.TerminalClient.Storage;
 using Microsoft.Extensions.Logging;
 using Xunit;
 

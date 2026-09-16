@@ -1,7 +1,5 @@
 using System.Text;
 using DD.Shared.TaskText;
-using DD.TerminalClient;
-using DD.TerminalClient.Details.Ui;
 using DD.TerminalClient.Domain.Abstractions;
 using DD.TerminalClient.Domain.Application;
 using DD.TerminalClient.Domain.Authentication;
@@ -12,6 +10,8 @@ using DD.TerminalClient.Domain.Overview;
 using DD.TerminalClient.Domain.Realtime;
 using DD.TerminalClient.Domain.State;
 using DD.TerminalClient.Domain.Time;
+using DD.TerminalClient.Runtime;
+using DD.TerminalClient.Ui;
 using Spectre.Console.Testing;
 using Xunit;
 

@@ -1,9 +1,9 @@
 using DD.Shared.TaskText;
-using DD.TerminalClient.Details.Ui;
 using DD.TerminalClient.Domain.Abstractions;
 using DD.TerminalClient.Domain.Editing;
 using DD.TerminalClient.Domain.Input;
 using DD.TerminalClient.Domain.Time;
+using DD.TerminalClient.Ui;
 using Spectre.Console.Testing;
 using Xunit;
 
