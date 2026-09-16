@@ -71,11 +71,15 @@ Rules specific to this repository. **If a rule is here — follow it. No excepti
 
 **Use the semantic version from the `dd-terminal-v<version>` tag as the terminal binary's build-time `Version`; do not hardcode release versions in the project file.** Pass the tag-derived value to `dotnet publish` and disable automatic source-revision suffixes so `dd-terminal --version` matches the release version exactly.
 
+**Keep terminal SemVer validation only in `ci/deploy-helpers/tag-terminal-release.sh`.** The release workflow and publish script should forward the trusted version without duplicating the regex; prefer surgical CI changes and one owning validation point over defensive repetition.
+
 **Offer terminal release tagging only after `staging` has been pushed successfully.** An empty version skips the release; otherwise create the annotated `dd-terminal-v<version>` tag on the exact deployed staging commit and push that tag separately.
 
 **Keep helper scripts used by `ci/deploy.sh` under `ci/deploy-helpers/`.**
 
-**Publish the terminal client for `win-x64` as a `.zip` containing `dd-terminal.exe`; keep macOS and Linux packages as `.tar.gz`.** Cross-publish Windows from the release runner, but treat interactive Windows Terminal behavior as requiring separate manual verification.
+**Publish the terminal client only for Apple Silicon (`osx-arm64`) and Windows x64 (`win-x64`).** Package macOS as a `.tar.gz` containing `dd-terminal` and Windows as a `.zip` containing `dd-terminal.exe`; treat interactive Windows Terminal behavior as requiring separate manual verification.
+
+**Publish terminal releases as warning-free NativeAOT binaries, one executable per archive, built on a native runner for each target OS and architecture.** Use System.Text.Json source generation with reflection fallback disabled and allow only system macOS dylibs. Treat the publish and package-verification scripts as CI-only helpers: the workflow matrix owns SDK, runner, and RID selection, so do not add local-machine environment guards to those scripts.
 
 **Use .NET SDK `10.0.100` across CI and Docker build surfaces, while the repository-root `global.json` uses `latestFeature` so local development can roll forward to an installed .NET 10 feature band.** Keep the SDK pin at the repository root so IDEs and commands for backend, E2E, and load-test projects all resolve .NET 10 consistently. Every `actions/setup-dotnet` job must use that `global.json`; keep explicit SDK versions only on surfaces such as Docker base images that cannot consume it.
 

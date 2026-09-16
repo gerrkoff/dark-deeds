@@ -62,6 +62,34 @@ public sealed class ProfileStoreTests : IDisposable
         Assert.Contains(reloaded.List(), listed => listed.Name == "work");
     }
 
+    [Fact]
+    public void Save_WritesIndentedPascalCaseProfileContract()
+    {
+        var paths = CreatePaths();
+        var store = new ProfileStore(paths);
+
+        store.Save("work", "https://tasks.example.com");
+
+        var file = Path.Combine(paths.ConfigRoot, "profiles", "work", "profile.json");
+        var json = File.ReadAllText(file);
+        Assert.Contains("\n  \"BaseUrl\": \"https://tasks.example.com/\"\n", json, StringComparison.Ordinal);
+        Assert.DoesNotContain("\"baseUrl\"", json, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void TryResolve_LowercasePersistedProperty_IsRejected()
+    {
+        var paths = CreatePaths();
+        var directory = paths.GetProfileConfigDirectory("work");
+        Directory.CreateDirectory(directory);
+        File.WriteAllText(
+            Path.Combine(directory, "profile.json"),
+            """{ "baseUrl": "https://tasks.example.com/" }""");
+        var store = new ProfileStore(paths);
+
+        Assert.Throws<InvalidOperationException>(() => store.TryResolve("work", out _));
+    }
+
     [Theory]
     [InlineData("production")]
     [InlineData("test")]

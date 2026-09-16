@@ -27,11 +27,6 @@ public sealed class ProfileStore(ApplicationPathProvider paths) : IProfileStore
             ["local"] = "http://localhost:5000/",
         };
 
-    private static readonly JsonSerializerOptions JsonOptions = new()
-    {
-        WriteIndented = true,
-    };
-
     public IReadOnlyList<TerminalProfile> List()
     {
         var profiles = new List<TerminalProfile>();
@@ -98,7 +93,8 @@ public sealed class ProfileStore(ApplicationPathProvider paths) : IProfileStore
 
         var document = new PersistedProfile(profile.BaseUri.AbsoluteUri);
         File.WriteAllText(
-            Path.Combine(directory, ProfileFileName), JsonSerializer.Serialize(document, JsonOptions));
+            Path.Combine(directory, ProfileFileName),
+            JsonSerializer.Serialize(document, TerminalProfileJsonContext.Default.PersistedProfile));
 
         return profile;
     }
@@ -124,7 +120,9 @@ public sealed class ProfileStore(ApplicationPathProvider paths) : IProfileStore
         PersistedProfile? document;
         try
         {
-            document = JsonSerializer.Deserialize<PersistedProfile>(File.ReadAllText(file));
+            document = JsonSerializer.Deserialize(
+                File.ReadAllText(file),
+                TerminalProfileJsonContext.Default.PersistedProfile);
         }
         catch (JsonException exception)
         {
@@ -140,6 +138,4 @@ public sealed class ProfileStore(ApplicationPathProvider paths) : IProfileStore
 
         return TerminalProfile.Create(name, document.BaseUrl);
     }
-
-    private sealed record PersistedProfile(string BaseUrl);
 }

@@ -29,7 +29,10 @@ internal sealed class TaskApiClient(HttpClient httpClient, ILocalDateProvider lo
         using var request = new HttpRequestMessage(HttpMethod.Get, requestUri);
         using var response = await SendAsync(request, cancellationToken);
         EnsureSuccess(response);
-        var dtos = await ReadJsonAsync<List<TaskDto>>(response, cancellationToken);
+        var dtos = await ReadJsonAsync(
+            response,
+            TerminalApiJsonContext.Default.ListTaskDto,
+            cancellationToken);
 
         return MapTasks(dtos);
     }
@@ -42,11 +45,16 @@ internal sealed class TaskApiClient(HttpClient httpClient, ILocalDateProvider lo
         var payload = tasks.Select(TaskTransportMapper.ToDto).ToList();
 
         using var request = new HttpRequestMessage(HttpMethod.Post, TasksPath);
-        request.Content = JsonContent.Create(payload, options: JsonOptions);
+        request.Content = JsonContent.Create(
+            payload,
+            TerminalApiJsonContext.Default.ListTaskDto);
 
         using var response = await SendAsync(request, cancellationToken);
         EnsureSuccess(response);
-        var dtos = await ReadJsonAsync<List<TaskDto>>(response, cancellationToken);
+        var dtos = await ReadJsonAsync(
+            response,
+            TerminalApiJsonContext.Default.ListTaskDto,
+            cancellationToken);
 
         return MapTasks(dtos);
     }

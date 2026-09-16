@@ -133,6 +133,22 @@ public sealed class LocalStateStoreTests : IDisposable
     }
 
     [Fact]
+    public void Load_CurrentSchema_AcceptsCaseInsensitivePropertyNames()
+    {
+        var paths = CreatePaths();
+        var json =
+            $"{{ \"schemaVersion\": {PersistedTerminalState.CurrentSchemaVersion}, " +
+            "\"dataOwner\": \"carol\", \"cachedTasks\": [], \"outbox\": [], \"showCompleted\": true }";
+        WriteRawState(paths, json);
+
+        var loaded = new LocalStateStore(paths, Profile).Load();
+
+        Assert.NotNull(loaded);
+        Assert.Equal("carol", loaded.DataOwner);
+        Assert.True(loaded.ShowCompleted);
+    }
+
+    [Fact]
     public void Load_LegacySchemaZero_MigratesAndPreservesOutbox()
     {
         var paths = CreatePaths();

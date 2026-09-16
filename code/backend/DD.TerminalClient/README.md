@@ -8,11 +8,10 @@ the same backend-wins semantics as the web client.
 
 ## Installation
 
-Prebuilt, self-contained, single-file binaries are published for `osx-arm64`, `osx-x64`,
-`linux-x64`, `linux-arm64`, and `win-x64`. Each release ships one archive and one checksum per
-platform:
+Prebuilt, self-contained NativeAOT binaries are published for Apple Silicon (`osx-arm64`) and
+Windows x64 (`win-x64`). Each release ships one archive and one checksum per platform:
 
-- macOS/Linux: `dd-terminal-<rid>.tar.gz` and `dd-terminal-<rid>.tar.gz.sha256`
+- macOS: `dd-terminal-<rid>.tar.gz` and `dd-terminal-<rid>.tar.gz.sha256`
 - Windows: `dd-terminal-win-x64.zip` and `dd-terminal-win-x64.zip.sha256`
 
 Download the archive for your platform, verify it, extract the binary, and run it:
@@ -20,7 +19,6 @@ Download the archive for your platform, verify it, extract the binary, and run i
 ```bash
 # Verify the checksum (run from the directory that holds both files).
 shasum -a 256 -c dd-terminal-osx-arm64.tar.gz.sha256   # macOS
-sha256sum -c dd-terminal-linux-x64.tar.gz.sha256       # Linux
 
 # Extract and run.
 tar -xzf dd-terminal-osx-arm64.tar.gz
@@ -44,20 +42,14 @@ launch.
 
 ### Build from source
 
-The five binaries are produced by a script that any contributor can run locally (macOS or Linux;
-requires the .NET 10 SDK):
+NativeAOT cannot cross-compile between operating systems. The `Terminal Client Release` GitHub
+workflow builds each runtime identifier on its matching macOS or Windows runner, embeds the supplied
+semantic version, packages exactly one executable, and verifies the result before upload. The
+workflow runs on `workflow_dispatch` and on `dd-terminal-v*` tags; tag runs derive the version from
+the tag name, while manual runs use the workflow's version input.
 
-```bash
-ci/workflows/publish-terminal-client.sh <output-directory> <version>
-```
-
-The script performs an untrimmed, self-contained, single-file `dotnet publish` for every runtime
-identifier and writes deterministic `.tar.gz` or `.zip` archives plus `.sha256` checksums into the
-output directory. The supplied semantic version is embedded into each binary and returned by
-`dd-terminal --version`. The same script is invoked by the `Terminal Client Release` GitHub workflow
-(`.github/workflows/terminal-client-release.yml`), which runs on `workflow_dispatch` and on
-`dd-terminal-v*` tags. Tag runs derive the binary version from the tag name; manual runs use the
-workflow's version input.
+The scripts under `ci/workflows/` are internal workflow helpers rather than a supported local build
+interface.
 
 After `ci/deploy.sh` successfully pushes `staging`, it prompts for an optional terminal version.
 Entering a semantic version such as `1.2.0` creates and pushes the annotated tag
