@@ -11,7 +11,7 @@ internal static partial class Log
     public static partial void LookingForMigrations(ILogger logger);
 
     [LoggerMessage(
-        EventId = 3003,
+        EventId = 3008,
         Level = LogLevel.Information,
         Message = "Found no migrations to apply")]
     public static partial void FoundNoMigrations(ILogger logger);
