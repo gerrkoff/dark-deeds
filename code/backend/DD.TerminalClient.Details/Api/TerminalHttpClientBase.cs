@@ -1,6 +1,7 @@
 using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json;
+using System.Text.Json.Serialization.Metadata;
 using DD.TerminalClient.Domain.Abstractions;
 
 namespace DD.TerminalClient.Details.Api;
@@ -11,8 +12,6 @@ namespace DD.TerminalClient.Details.Api;
 // allowed to propagate; only a timeout (the token was not the caller's) is reclassified as transport.
 internal abstract class TerminalHttpClientBase(HttpClient httpClient)
 {
-    protected static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
-
     protected HttpClient HttpClient { get; } =
         httpClient ?? throw new ArgumentNullException(nameof(httpClient));
 
@@ -56,7 +55,9 @@ internal abstract class TerminalHttpClientBase(HttpClient httpClient)
     }
 
     protected static async Task<T> ReadJsonAsync<T>(
-        HttpResponseMessage response, CancellationToken cancellationToken)
+        HttpResponseMessage response,
+        JsonTypeInfo<T> jsonTypeInfo,
+        CancellationToken cancellationToken)
     {
         if (response.Content.Headers.ContentType?.MediaType is not "application/json")
         {
@@ -66,7 +67,7 @@ internal abstract class TerminalHttpClientBase(HttpClient httpClient)
 
         try
         {
-            var value = await response.Content.ReadFromJsonAsync<T>(JsonOptions, cancellationToken);
+            var value = await response.Content.ReadFromJsonAsync(jsonTypeInfo, cancellationToken);
             return value ?? throw new TerminalApiException(
                 TerminalApiErrorKind.Protocol, "The server returned an empty response body.");
         }

@@ -14,12 +14,6 @@ internal sealed class AuthApiClient(HttpClient httpClient)
     private const string SignInPath = "api/auth/account/signin";
     private const string RenewPath = "api/auth/account/renew";
 
-    private enum SignInResultCode
-    {
-        Success = 1,
-        WrongUsernamePassword = 2,
-    }
-
     public async Task<SignInOutcome> SignInAsync(
         string username, string password, CancellationToken cancellationToken)
     {
@@ -28,16 +22,15 @@ internal sealed class AuthApiClient(HttpClient httpClient)
 
         using var request = new HttpRequestMessage(HttpMethod.Post, SignInPath);
         request.Content = JsonContent.Create(
-            new
-            {
-                Username = username,
-                Password = password,
-            },
-            options: JsonOptions);
+            new SignInRequest(username, password),
+            TerminalApiJsonContext.Default.SignInRequest);
 
         using var response = await SendAsync(request, cancellationToken);
         EnsureSuccess(response);
-        var body = await ReadJsonAsync<SignInResponse>(response, cancellationToken);
+        var body = await ReadJsonAsync(
+            response,
+            TerminalApiJsonContext.Default.SignInResponse,
+            cancellationToken);
 
         if (body.Result == SignInResultCode.Success && !string.IsNullOrWhiteSpace(body.Token))
         {
@@ -59,19 +52,9 @@ internal sealed class AuthApiClient(HttpClient httpClient)
         using var response = await SendAsync(request, cancellationToken);
         EnsureSuccess(response);
         var token = (await ReadTextAsync(response, cancellationToken)).Trim();
-
         return token.Length == 0
             ? throw new TerminalApiException(
                 TerminalApiErrorKind.Protocol, "The renew response contained no token.")
             : AuthSession.FromToken(token);
-    }
-
-    private sealed record SignInResponse
-    {
-        public string Token { get; init; } = string.Empty;
-
-        // System.Text.Json sets this member through reflection.
-        // ReSharper disable once UnusedAutoPropertyAccessor.Local
-        public SignInResultCode Result { get; init; }
     }
 }

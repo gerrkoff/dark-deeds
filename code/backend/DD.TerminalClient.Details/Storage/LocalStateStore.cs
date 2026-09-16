@@ -17,12 +17,6 @@ public sealed class LocalStateStore(ApplicationPathProvider paths, string profil
     private const string LegacyOutboxProperty = "PendingTasks";
     private const string OutboxProperty = "Outbox";
 
-    private static readonly JsonSerializerOptions JsonOptions = new()
-    {
-        WriteIndented = true,
-        PropertyNameCaseInsensitive = true,
-    };
-
     // Ordered upgrade steps keyed by the schema they migrate away from; each step must preserve the
     // outbox. Schema 0 = pre-versioning documents (no SchemaVersion field) whose outbox lived under
     // the earlier "PendingTasks" name.
@@ -61,7 +55,9 @@ public sealed class LocalStateStore(ApplicationPathProvider paths, string profil
     public void Save(PersistedTerminalState state)
     {
         var stamped = state with { SchemaVersion = PersistedTerminalState.CurrentSchemaVersion };
-        var bytes = JsonSerializer.SerializeToUtf8Bytes(stamped, JsonOptions);
+        var bytes = JsonSerializer.SerializeToUtf8Bytes(
+            stamped,
+            TerminalStateJsonContext.Default.PersistedTerminalState);
         AtomicFileWriter.WriteAllBytes(_stateFilePath, bytes);
     }
 
@@ -81,7 +77,7 @@ public sealed class LocalStateStore(ApplicationPathProvider paths, string profil
         PersistedTerminalState state;
         try
         {
-            state = root.Deserialize<PersistedTerminalState>(JsonOptions)
+            state = root.Deserialize(TerminalStateJsonContext.Default.PersistedTerminalState)
                 ?? throw Blocking(path, "it is empty");
         }
         catch (JsonException exception)

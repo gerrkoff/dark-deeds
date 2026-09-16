@@ -3,7 +3,7 @@
   "profiles": {
     "DarkDeeds.Backend.App": {
       "commandName": "Project",
-      "dotnetRunMessages": "true",
+      "dotnetRunMessages": true,
       "launchBrowser": false,
       "launchUrl": "swagger",
       "applicationUrl": "http://0.0.0.0:5000",

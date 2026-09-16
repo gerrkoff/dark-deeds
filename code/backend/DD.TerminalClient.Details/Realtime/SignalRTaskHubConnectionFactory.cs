@@ -1,4 +1,5 @@
 using System.Text.Json;
+using DD.TerminalClient.Details.Api;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -29,7 +30,12 @@ internal sealed class SignalRTaskHubConnectionFactory : ITaskHubConnectionFactor
         var connection = new HubConnectionBuilder()
             .WithUrl(url, options => options.AccessTokenProvider = () => Task.FromResult(tokenProvider()))
             .AddJsonProtocol(options =>
-                options.PayloadSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase)
+            {
+                options.PayloadSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+                options.PayloadSerializerOptions.TypeInfoResolverChain.Insert(
+                    0,
+                    TerminalApiJsonContext.Default);
+            })
             .Build();
 
         return new SignalRTaskHubConnection(connection);

@@ -3,6 +3,7 @@ using System.Net;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
+using DD.Shared.Details.Abstractions.Dto;
 using DD.TerminalClient.Details.Api;
 using DD.TerminalClient.Domain.Abstractions;
 using DD.TerminalClient.Domain.Authentication;
@@ -21,6 +22,12 @@ public sealed class HttpClientTests
 {
     private const string BaseAddress = "https://example.test/";
     private const string ClientId = "11111111-1111-1111-1111-111111111111";
+
+    [Fact]
+    public void ApiJsonContext_ContainsSignalRTaskPayloadMetadata()
+    {
+        Assert.NotNull(TerminalApiJsonContext.Default.GetTypeInfo(typeof(List<TaskDto>)));
+    }
 
     [Fact]
     public async Task SignInAsync_PostsToSignInRoute_WithCamelCaseJsonBody()
