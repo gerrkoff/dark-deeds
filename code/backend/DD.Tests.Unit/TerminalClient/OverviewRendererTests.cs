@@ -1,9 +1,9 @@
 using System.Globalization;
-using DD.TerminalClient.Details.Ui;
 using DD.TerminalClient.Domain.Models;
 using DD.TerminalClient.Domain.Navigation;
 using DD.TerminalClient.Domain.Overview;
 using DD.TerminalClient.Domain.Time;
+using DD.TerminalClient.Ui;
 using Moq;
 using Spectre.Console;
 using Spectre.Console.Rendering;

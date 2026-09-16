@@ -1,6 +1,6 @@
-using DD.TerminalClient;
-using DD.TerminalClient.Details.Ui;
 using DD.TerminalClient.Domain.Application;
+using DD.TerminalClient.Runtime;
+using DD.TerminalClient.Ui;
 using Spectre.Console;
 using Spectre.Console.Testing;
 using Xunit;

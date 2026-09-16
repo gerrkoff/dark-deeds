@@ -1,9 +1,9 @@
 using System.Diagnostics;
 using System.Net;
 using DD.Shared.Details.Abstractions.Dto;
-using DD.TerminalClient.Details.Realtime;
 using DD.TerminalClient.Domain.Models;
 using DD.TerminalClient.Domain.Realtime;
+using DD.TerminalClient.Realtime;
 using Microsoft.Extensions.Logging.Abstractions;
 using Xunit;
 

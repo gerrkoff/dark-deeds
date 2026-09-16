@@ -1,4 +1,4 @@
-using DD.TerminalClient.Details.Time;
+using DD.TerminalClient.Time;
 using Xunit;
 
 namespace DD.Tests.Unit.TerminalClient;

@@ -4,7 +4,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 using DD.Shared.Details.Abstractions.Dto;
-using DD.TerminalClient.Details.Api;
+using DD.TerminalClient.Api;
 using DD.TerminalClient.Domain.Abstractions;
 using DD.TerminalClient.Domain.Authentication;
 using DD.TerminalClient.Domain.Models;

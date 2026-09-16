@@ -25,6 +25,10 @@ Rules specific to this repository. **If a rule is here — follow it. No excepti
 
 **Apply date-based edge ordering only in the web and terminal creation flows: No Date tasks use the first-order sentinel, while dated tasks use the last-order sentinel.** Do not apply this behavior to backend creation paths such as MCP, Telegram, or recurrences.
 
+## Terminal client architecture
+
+**Keep `DD.TerminalClient.Domain` independent from concrete terminal and infrastructure concerns.** Business/application logic and its ports belong in `DD.TerminalClient.Domain`; Spectre.Console rendering, HTTP, SignalR, logging, filesystem storage, and executable runtime composition belong in `DD.TerminalClient`.
+
 ## Terminal client rendering (Spectre.Console)
 
 **Preserve the intentionally commented selected-task style alternatives in `TerminalStyles.ForTask`.** They are retained as a quick rollback option, not dead code.

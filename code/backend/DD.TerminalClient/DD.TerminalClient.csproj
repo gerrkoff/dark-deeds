@@ -19,10 +19,14 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DD.TerminalClient.Domain\DD.TerminalClient.Domain.csproj" />
-    <ProjectReference Include="..\DD.TerminalClient.Details\DD.TerminalClient.Details.csproj" />
+    <ProjectReference Include="..\DD.Shared.TaskText\DD.Shared.TaskText.csproj" />
+    <ProjectReference Include="..\DD.Shared.Details.Abstractions\DD.Shared.Details.Abstractions.csproj" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" />
     <PackageReference Include="Microsoft.Extensions.Hosting" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
+    <PackageReference Include="Spectre.Console" />
   </ItemGroup>
 </Project>
